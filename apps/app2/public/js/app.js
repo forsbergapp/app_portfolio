@@ -23,18 +23,23 @@ const AppDocument = document;
  *              focus:              function,
  *              blur:               function,
  *              dispatchEvent:      function,
+ *              parentNode:         HTMLElement,
+ *              options:            HTMLOptionsCollection,
+ *              selectedIndex:      number,
  *              classList:          {contains:function}
  *              className:          string
  *            }}  target
+ * @typedef {{  originalEvent:AppEvent,
+ *              latlng:{lat:string, 
+ *                      lng:string}}} AppEventLeaflet
  */
-
 const APP_GLOBAL = {
     app_default_startup_page:0,
     app_report_timetable:'',
 
     regional_default_direction:'',
-    regional_default_locale_second:'',
-    regional_default_coltitle:'',
+    regional_default_locale_second:0,
+    regional_default_coltitle:0,
     regional_default_arabic_script:'',
     regional_default_calendartype:'',
     regional_default_calendar_hijri_type:'',
@@ -42,30 +47,30 @@ const APP_GLOBAL = {
     gps_default_place_id:0,
     gps_module_leaflet_container:'',
     gps_module_leaflet_qibbla_title:'',
-    gps_module_leaflet_qibbla_text_size:'',
-    gps_module_leaflet_qibbla_lat:'',
-    gps_module_leaflet_qibbla_long:'',
+    gps_module_leaflet_qibbla_text_size:0,
+    gps_module_leaflet_qibbla_lat:0,
+    gps_module_leaflet_qibbla_long:0,
     gps_module_leaflet_qibbla_color:'',
-    gps_module_leaflet_qibbla_width:'',
-    gps_module_leaflet_qibbla_opacity:'',
+    gps_module_leaflet_qibbla_width:0,
+    gps_module_leaflet_qibbla_opacity:0,
     gps_module_leaflet_qibbla_old_title:'',
-    gps_module_leaflet_qibbla_old_text_size:'',
-    gps_module_leaflet_qibbla_old_lat:'',
-    gps_module_leaflet_qibbla_old_long:'',
+    gps_module_leaflet_qibbla_old_text_size:0,
+    gps_module_leaflet_qibbla_old_lat:0,
+    gps_module_leaflet_qibbla_old_long:0,
     gps_module_leaflet_qibbla_old_color:'',
-    gps_module_leaflet_qibbla_old_width:'',
-    gps_module_leaflet_qibbla_old_opacity:'',
+    gps_module_leaflet_qibbla_old_width:0,
+    gps_module_leaflet_qibbla_old_opacity:0,
 
     design_default_theme_day:'',
     design_default_theme_month:'',
     design_default_theme_year:'',
     design_default_papersize:'',
-    design_default_highlight_row:'',
-    design_default_show_weekday:'',
-    design_default_show_calendartype:'',
-    design_default_show_notes:'',
-    design_default_show_gps:'',
-    design_default_show_timezone:'',
+    design_default_highlight_row:0,
+    design_default_show_weekday:false,
+    design_default_show_calendartype:false,
+    design_default_show_notes:false,
+    design_default_show_gps:false,
+    design_default_show_timezone:false,
 
     image_default_report_header_src:'',
     image_default_report_footer_src:'',
@@ -89,9 +94,9 @@ const APP_GLOBAL = {
     prayer_default_iqamat_title_asr:'',
     prayer_default_iqamat_title_maghrib:'',
     prayer_default_iqamat_title_isha:'',
-    prayer_default_show_imsak:'',
-    prayer_default_show_sunset:'',
-    prayer_default_show_midnight:'',
+    prayer_default_show_imsak:false,
+    prayer_default_show_sunset:false,
+    prayer_default_show_midnight:false,
     prayer_default_show_fast_start_end:'',
 
     //session variables
@@ -912,7 +917,7 @@ const update_ui = async (option, item_id=null) => {
                     if (AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
                         map_update_app( settings.gps_long_input.innerHTML,
                                         settings.gps_lat_input.innerHTML,
-                                        '', //do not change zoom 
+                                        null, //do not change zoom 
                                         gps_place,
                                         null,
                                         common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
@@ -1243,9 +1248,9 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
 /**
  * 
  * @param {number} detailchoice 
- * @param {string} rest_url_app 
+ * @param {string|null} rest_url_app 
  * @param {boolean} fetch_detail 
- * @param {function} click_function 
+ * @param {function|null} click_function 
  * @returns {void}
  */
 const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, click_function) => {
@@ -1894,9 +1899,13 @@ const set_default_settings = async () => {
     //Hide user tab
     AppDocument.querySelector('#tab_nav_7').style.display = 'none';
     //open regional tab in settings
-    openTab('1');
+    openTab(1);
 };
 
+/**
+ * Set setting select
+ * @returns {void}
+ */
 const set_settings_select = () => {
     const option = AppDocument.querySelector('#setting_select_user_setting').options[AppDocument.querySelector('#setting_select_user_setting').selectedIndex];
     option.text = AppDocument.querySelector('#setting_input_place').innerHTML;
@@ -1964,17 +1973,25 @@ const set_settings_select = () => {
     option.setAttribute('prayer_column_midnight_checked', Number(AppDocument.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')));
     option.setAttribute('prayer_column_fast_start_end', AppDocument.querySelector('#setting_select_report_show_fast_start_end').value);
 };
-
-const profile_user_setting_stat = (id) => {
+/**
+ * Profile user setting stat
+ * @param {number} id
+ * @returns {void}
+ */
+const profile_user_setting_stat = id => {
     common.FFB('DB_API', `/user_account_app_data_post/profile?id=${id}`, 'GET', 'APP_DATA', null)
-    .then(result=>{
+    .then((/**@type{string}*/result)=>{
         AppDocument.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
         AppDocument.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
     })
     .catch(()=>null);
 };
-
-const profile_user_setting_link = (item) => {
+/**
+ * Profile user setting show link
+ * @param {HTMLElement} item 
+ * @returns {void}
+ */
+const profile_user_setting_link = item => {
     const select_user_setting = AppDocument.querySelector('#profile_select_user_settings');
     const user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     const sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
@@ -1999,6 +2016,13 @@ const profile_user_setting_link = (item) => {
         }
     }
 };
+/**
+ * Profile show user setting detail
+ * @param {number} liked 
+ * @param {number} count_likes 
+ * @param {number} count_views 
+ * @returns {void}
+ */
 const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
     
     AppDocument.querySelector('#profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
@@ -2007,12 +2031,16 @@ const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
     AppDocument.querySelector('#profile_user_settings_info_likes_count').innerHTML = count_likes;
     AppDocument.querySelector('#profile_user_settings_info_views_count').innerHTML = count_views;
 };
+/**
+ * Profile show user setting
+ * @returns {void}
+ */
 const profile_show_user_setting = () => {
     AppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
 
     common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${AppDocument.querySelector('#common_profile_id').innerHTML}` + 
                       '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null)
-    .then(result=>{
+    .then((/**@type{string}*/result)=>{
         const profile_select_user_settings = AppDocument.querySelector('#profile_select_user_settings');
         profile_select_user_settings.innerHTML='';
         let html = '';
@@ -2037,11 +2065,15 @@ const profile_show_user_setting = () => {
     })
     .catch(()=>null);
 };
+/**
+ * Profile user setting update stat
+ * @returns {void}
+ */
 const profile_user_setting_update_stat = () => {
     const profile_id = AppDocument.querySelector('#common_profile_id').innerHTML;
     common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${profile_id}` +
                       '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null)
-    .then(result=>{
+    .then((/**@type{string}*/result)=>{
         const profile_select_user_settings = AppDocument.querySelector('#profile_select_user_settings');
         for (const profile_setting of JSON.parse(result)) {
             if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==profile_setting.id){
@@ -2059,7 +2091,12 @@ const profile_user_setting_update_stat = () => {
     })
     .catch(()=>null);
 };
-const user_settings_like = (user_account_app_data_post_id) => {
+/**
+ * User settings like
+ * @param {number} user_account_app_data_post_id 
+ * @returns {void}
+ */
+const user_settings_like = user_account_app_data_post_id => {
     let method;
     const json_data = {user_account_app_data_post_id: user_account_app_data_post_id};
     if (common.COMMON_GLOBAL.user_account_id == '')
@@ -2074,13 +2111,14 @@ const user_settings_like = (user_account_app_data_post_id) => {
         .catch(()=>null);
     }
 };
-/*----------------------- */
-/* EVENTS                 */
-/*----------------------- */
+/**
+ * App event click
+ * @param {AppEvent} event 
+ */
 const app_event_click = event => {
     if (event==null){
         //javascript framework
-        AppDocument.querySelector('#app').addEventListener('click',(event) => {
+        AppDocument.querySelector('#app').addEventListener('click',(/**@type{AppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
@@ -2181,33 +2219,18 @@ const app_event_click = event => {
                     break;
                 }
                 //tab navigation
-                case 'tab_nav_1':{
-                    openTab('1');
-                    break;
-                }
-                case 'tab_nav_2':{
-                    openTab('2');
-                    break;
-                }
-                case 'tab_nav_3':{
-                    openTab('3');
-                    break;
-                }
-                case 'tab_nav_4':{
-                    openTab('4');
-                    break;
-                }
-                case 'tab_nav_5':{
-                    openTab('5');
-                    break;
-                }
+                case 'tab_nav_1':
+                case 'tab_nav_2':
+                case 'tab_nav_3':
+                case 'tab_nav_4':
+                case 'tab_nav_5':
                 case 'tab_nav_6':{
-                    openTab('6');
+                    openTab(event_target_id.substring(event_target_id.length-1));
                     break;
                 }
                 case 'tab_nav_7':
                 case 'user_setting_avatar_img':{
-                    openTab('7');
+                    openTab(7);
                     break;
                 }
                 case 'scan_open_mobile_close':{
@@ -2307,15 +2330,15 @@ const app_event_click = event => {
                 }
                 //profile
                 case 'profile_main_btn_user_settings':{
-                    AppDocument.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                    AppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(0, '/user_account_app_data_post/profile/detail', false);
+                    profile_detail_app(0, '/user_account_app_data_post/profile/detail', false, null);
                     break;
                 }
                 case 'profile_main_btn_user_setting_likes':
                 case 'profile_main_btn_user_setting_likes_heart':
                 case 'profile_main_btn_user_setting_likes_user_setting':{
-                    AppDocument.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                    AppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                     profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, show_profile_function);
                     break;
@@ -2323,7 +2346,7 @@ const app_event_click = event => {
                 case 'profile_main_btn_user_setting_liked':
                 case 'profile_main_btn_user_setting_liked_heart':
                 case 'profile_main_btn_user_setting_liked_user_setting':{
-                    AppDocument.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                    AppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                     profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, show_profile_function);
                     break;
@@ -2340,7 +2363,7 @@ const app_event_click = event => {
                 case 'profile_user_settings_month':
                 case 'profile_user_settings_year':
                 case 'profile_user_settings_like':{
-                    profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target);
+                    profile_user_setting_link(AppDocument.querySelector(`#${event_target_id}`));
                     break;
                 }
                 //common
@@ -2437,10 +2460,15 @@ const app_event_click = event => {
         });
     }
 };
+/**
+ * App event change
+ * @param {AppEvent} event 
+ * @returns {void}
+ */
 const app_event_change = event => {
     if (event==null){
         //javascript framework
-        AppDocument.querySelector('#app').addEventListener('change',(event) => {
+        AppDocument.querySelector('#app').addEventListener('change',(/**@type{AppEvent}*/event) => {
             app_event_change(event);
         }, true);
     }
@@ -2493,9 +2521,9 @@ const app_event_change = event => {
                 }
                 //profile
                 case 'profile_select_user_settings':{
-                    profile_show_user_setting_detail(   event.target.options[event.target.selectedIndex].getAttribute('liked'), 
-                                                        event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
-                                                        event.target.options[event.target.selectedIndex].getAttribute('count_views'));
+                    profile_show_user_setting_detail(   Number(event.target.options[event.target.selectedIndex].getAttribute('liked')), 
+                                                        Number(event.target.options[event.target.selectedIndex].getAttribute('count_likes')), 
+                                                        Number(event.target.options[event.target.selectedIndex].getAttribute('count_views')));
                     break;
                 }
                 //common
@@ -2544,16 +2572,21 @@ const app_event_change = event => {
         });
     }
 };
+/**
+ * App event keyup
+ * @param {AppEvent} event 
+ * @returns {void}
+ */
 const app_event_keyup = event => {
     if (event==null){
         //javascript framework
-        AppDocument.querySelector('#app').addEventListener('change',(event) => {
+        AppDocument.querySelector('#app').addEventListener('keyup',(/**@type{AppEvent}*/event) => {
             app_event_keyup(event);
         }, true);
     }
     else{
         const event_target_id = common.element_id(event.target);
-        common.common_event('change',event)
+        common.common_event('keyup',event)
         .then(()=>{
             switch(event_target_id){
                 //settings gps
@@ -2583,37 +2616,27 @@ const app_event_keyup = event => {
                     break;
                 }
                 //dialogue verify
-                case 'common_user_verify_verification_char1':{
-                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char2');
-                    break;
-                }
-                case 'common_user_verify_verification_char2':{
-                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char3');
-                    break;
-                }
-                case 'common_user_verify_verification_char3':{
-                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char4');
-                    break;
-                }
-                case 'common_user_verify_verification_char4':{
-                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char5');
-                    break;
-                }
+                case 'common_user_verify_verification_char1':
+                case 'common_user_verify_verification_char2':
+                case 'common_user_verify_verification_char3':
+                case 'common_user_verify_verification_char4':
                 case 'common_user_verify_verification_char5':{
-                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char6');
+                    user_verify_check_input_app(AppDocument.querySelector(`#${event_target_id}`), 
+                                                'common_user_verify_verification_char' + Number(event_target_id.substring(event_target_id.length-1))+1);
                     break;
                 }
                 case 'common_user_verify_verification_char6':{
-                    user_verify_check_input_app(event.target, '');
+                    user_verify_check_input_app(AppDocument.querySelector(`#${event_target_id}`), '');
                     break;
                 }
             }
         });
     }
 };
-/*----------------------- */
-/* SERVICE WORKER         */
-/*----------------------- */
+/**
+ * Serviceworker
+ * @returns {void}
+ */
 const serviceworker = () => {
     if (!window.Promise) {
         window.Promise = Promise;
@@ -2622,9 +2645,10 @@ const serviceworker = () => {
         navigator.serviceWorker.register('/sw.js', {scope: '/'});
     }
 };
-/*----------------------- */
-/* MODULE LEAFLET         */
-/*----------------------- */
+/**
+ * Map init
+ * @returns {Promise.<void>}
+ */
 const init_map = async () => {
     return await new Promise((resolve) => {
         common.map_init(APP_GLOBAL.gps_module_leaflet_container,
@@ -2647,14 +2671,14 @@ const init_map = async () => {
                         update_ui(6);
                     }
                 });
-            }        
-            common.map_setevent('dblclick', (e) => {
-                if (e.originalEvent.target.id == APP_GLOBAL.gps_module_leaflet_container){
-                    AppDocument.querySelector('#setting_input_lat').innerHTML = e.latlng.lat;
-                    AppDocument.querySelector('#setting_input_long').innerHTML = e.latlng.lng;
+            }
+            common.map_setevent('dblclick', (/**@type{AppEventLeaflet}*/event) => {
+                if (event.originalEvent.target.id == APP_GLOBAL.gps_module_leaflet_container){
+                    AppDocument.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
+                    AppDocument.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
                     //Update GPS position
                     update_ui(9);
-                    const timezone = getTimezone(   e.latlng.lat, e.latlng.lng);
+                    const timezone = getTimezone(   event.latlng.lat, event.latlng.lng);
                     app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
                 }   
             });
@@ -2662,7 +2686,10 @@ const init_map = async () => {
         });
     });
 };
-
+/**
+ * Map show qibbla
+ * @returns {void}
+ */
 const map_show_qibbla = () => {
     common.map_line_removeall();
     common.map_line_create('qibbla', 
@@ -2685,17 +2712,31 @@ const map_show_qibbla = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_color,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_width,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity);
-    return null;
 };
-
+/**
+ * Map update
+ * @param {string} longitude 
+ * @param {string} latitude 
+ * @param {number|null} zoom 
+ * @param {string} text1 
+ * @param {string|null} text2 
+ * @param {string} marker_id 
+ * @param {number} to_method 
+ * @returns {Promise.<string>}
+ */
 const map_update_app = async (longitude, latitude, zoom, text1, text2, marker_id, to_method) => {
     return new Promise((resolve) => {
         map_show_qibbla();
-        common.map_update(longitude, latitude, zoom, text1, text2, marker_id, to_method).then((timezonetext)=> {
+        common.map_update(longitude, latitude, zoom, text1, text2, marker_id, to_method).then((/**@type{string}*/timezonetext)=> {
             resolve(timezonetext);
         });
     });
 };
+/**
+ * Map show search on map
+ * @param {*} data 
+ * @returns {Promise.<void>}
+ */
 const map_show_search_on_map_app = async (data) =>{
     common.map_show_search_on_map(data);
     map_show_qibbla();
@@ -2707,16 +2748,20 @@ const map_show_search_on_map_app = async (data) =>{
                                                                                     AppDocument.querySelector('#setting_input_long').innerHTML);
     app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(AppDocument.querySelector('#setting_select_report_timezone').value);
 };
-/*----------------------- */
-/* EXCEPTION              */
-/*----------------------- */
+/**
+ * App exception function
+ * @param {Error} error
+ * @returns {void}
+ */
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
 };
-/*----------------------- */
-/* INIT                   */
-/*----------------------- */
-const mount_app_app = async framework => {
+/**
+ * Mount app
+ * @param {string|null} framework 
+ * @returns {Promise.<void>}
+ */
+const mount_app_app = async (framework=null) => {
     await common.mount_app(framework,
         {   Click: app_event_click,
             Change: app_event_change,
@@ -2760,7 +2805,13 @@ const mount_app_app = async framework => {
         });
     });
 };
-
+/**
+ * 
+ * @param {{app:{   parameter_name:string, 
+ *                  parameter_value:string}[],
+ *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @returns {void}
+ */
 const init_app = (parameters) => {
     for (const parameter of parameters.app) {
         if (parameter.parameter_name=='APP_DEFAULT_STARTUP_PAGE')
@@ -2922,7 +2973,6 @@ const init_app = (parameters) => {
     app_report.REPORT_GLOBAL.session_currentHijriDate[1] = parseInt(new Date(app_report.REPORT_GLOBAL.session_currentDate.getFullYear(),
         app_report.REPORT_GLOBAL.session_currentDate.getMonth(),
         app_report.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
-        APP_GLOBAL.timetable_type = '';
 
     //set initial default language from clients settings
     common.SearchAndSetSelectedIndex(navigator.language.toLowerCase(), AppDocument.querySelector('#setting_select_locale'),1);
@@ -2956,6 +3006,12 @@ const init_app = (parameters) => {
         mount_app_app();
     });
 };
+/**
+ * 
+ * @param {{app:{   parameter_name:string, 
+ *                  parameter_value:string}[],
+ *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ */
 const init = (parameters) => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{

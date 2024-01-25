@@ -699,7 +699,7 @@ const count_users = async () => {
             for (const user of JSON.parse(result)){
                 html +=  `<div id='list_user_stat_row_${i}' class='list_user_stat_row'>
                                 <div class='list_user_stat_col'>
-                                    <div>${common.get_null_or_value(user.identity_provider_id)}</div>
+                                    <div>${user.identity_provider_id ?? ''}</div>
                                 </div>
                                 <div class='list_user_stat_col'>
                                     <div class='${user.provider_name==null?'list_user_start_common_logo':''}'>${user.provider_name==null?'':user.provider_name}</div>
@@ -833,56 +833,56 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
                     <div class='list_readonly'>${user.id}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit ${lov_class}' defaultValue='${common.get_null_or_value(user.app_role_id)}'/>${common.get_null_or_value(user.app_role_id)}</div>
+                    <div ${input_contentEditable} class='common_input list_edit ${lov_class}' defaultValue='${user.app_role_id ?? ''}'/>${user.app_role_id ?? ''}</div>
                     ${lov_div}
                 </div>
                 <div class='list_user_account_col'>
                     <div class='list_readonly common_lov_value'>${user.app_role_icon}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.active)}</div>
+                    <div ${input_contentEditable} class='common_input list_edit'/>${user.active ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.level)}</div>
+                    <div ${input_contentEditable} class='common_input list_edit'/>${user.level ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.private)}</div>
+                    <div ${input_contentEditable} class='common_input list_edit'/>${user.private ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.username)}</div>
+                    <div ${input_contentEditable} class='common_input list_edit'/>${user.username ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.bio)}</div>
+                    <div ${input_contentEditable} class='common_input list_edit'/>${user.bio ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.email)}</div>
+                    <div ${input_contentEditable} class='common_input list_edit'/>${user.email ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.email_unverified)}</div>
+                    <div ${input_contentEditable} class='common_input list_edit'/>${user.email_unverified ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
                     <div ${input_contentEditable} class='common_input list_edit common_input_password' placeholder='******'/></div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.password_reminder)}</div>
+                    <div ${input_contentEditable} class='common_input list_edit'/>${user.password_reminder ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.verification_code)}</div>
+                    <div ${input_contentEditable} class='common_input list_edit'/>${user.verification_code ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user.identity_provider)}</div>
+                    <div class='list_readonly'>${user.identity_provider ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user.provider_name)}</div>
+                    <div class='list_readonly'>${user.provider_name ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user.provider_id)}</div>
+                    <div class='list_readonly'>${user.provider_id ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user.provider_first_name)}</div>
+                    <div class='list_readonly'>${user.provider_first_name ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user.provider_last_name)}</div>                        
+                    <div class='list_readonly'>${user.provider_last_name ?? ''}</div>                        
                 </div>
                 <div class='list_user_account_col'>
                     <div class='list_readonly'>
@@ -890,16 +890,16 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
                     </div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user.provider_image_url)}</div>
+                    <div class='list_readonly'>${user.provider_image_url ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user.provider_email)}</div>
+                    <div class='list_readonly'>${user.provider_email ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user.date_created)}</div>
+                    <div class='list_readonly'>${user.date_created ?? ''}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user.date_modified)}</div>
+                    <div class='list_readonly'>${user.date_modified ?? ''}</div>
                 </div>
             </div>`;
         }
@@ -956,7 +956,7 @@ const show_user_account_logon = async (user_account_id) => {
                     <div class='list_readonly'>${user_account_logon.user_account_id}</div>
                 </div>
                 <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user_account_logon.date_created)}</div>
+                    <div class='list_readonly'>${user_account_logon.date_created ?? ''}</div>
                 </div>
                 <div class='list_user_account_logon_col'>
                     <div class='list_readonly'>${user_account_logon.app_id}</div>
@@ -968,16 +968,16 @@ const show_user_account_logon = async (user_account_id) => {
                     <div class='list_readonly'>${user_account_logon.client_ip}</div>
                 </div>
                 <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user_account_logon.client_longitude)}</div>
+                    <div class='list_readonly'>${user_account_logon.client_longitude ?? ''}</div>
                 </div>
                 <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user_account_logon.client_latitude)}</div>
+                    <div class='list_readonly'>${user_account_logon.client_latitude ?? ''}</div>
                 </div>
                 <div class='list_user_account_logon_col'>
                     <div class='list_readonly'>${user_account_logon.client_user_agent}</div>
                 </div>
                 <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${common.get_null_or_value(user_account_logon.access_token)}</div>
+                    <div class='list_readonly'>${user_account_logon.access_token ?? ''}</div>
                 </div>
             </div>`;
             i++;
@@ -1034,11 +1034,11 @@ const show_apps = async () => {
                     <div class='list_readonly' class='list_readonly'>${app.STATUS}</div>
                 </div>
                 <div class='list_apps_col'>
-                    <div contenteditable=true class='common_input list_edit common_input_lov' defaultValue='${common.get_null_or_value(app.APP_CATEGORY_ID)}'/>${common.get_null_or_value(app.APP_CATEGORY_ID)}</div>
+                    <div contenteditable=true class='common_input list_edit common_input_lov' defaultValue='${app.APP_CATEGORY_ID ?? ''}'/>${app.APP_CATEGORY_ID ?? ''}</div>
                     <div class='common_lov_button common_list_lov_click common_icon'></div>
                 </div>
                 <div class='list_apps_col'>
-                    <div class='list_readonly common_lov_value'>${common.get_null_or_value(app.APP_CATEGORY_TEXT)} </div>
+                    <div class='list_readonly common_lov_value'>${app.APP_CATEGORY_TEXT ?? ''} </div>
                 </div>
             </div>`;
         }
@@ -1086,10 +1086,10 @@ const show_app_parameter = (app_id) => {
                     <div class='list_readonly'>${app_parameter.parameter_name}</div>
                 </div>
                 <div class='list_app_parameter_col'>
-                    <div contenteditable=true class='common_input list_edit'/>${common.get_null_or_value(app_parameter.parameter_value)}</div>
+                    <div contenteditable=true class='common_input list_edit'/>${app_parameter.parameter_value ?? ''}</div>
                 </div>
                 <div class='list_app_parameter_col'>
-                    <div contenteditable=true class='common_input list_edit'/>${common.get_null_or_value(app_parameter.parameter_comment)}</div>
+                    <div contenteditable=true class='common_input list_edit'/>${app_parameter.parameter_comment ?? ''}</div>
                 </div>
             </div>`;
         }
@@ -1886,7 +1886,7 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
                                             ${app_role_icon}
                                         </div>
                                         <div class='list_connected_col'>
-                                            ${common.get_null_or_value(log.user_account_id)}
+                                            ${log.user_account_id ?? ''}
                                         </div>
                                         <div class='list_connected_col'>
                                             ${log.system_admin}
@@ -1895,17 +1895,17 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
                                             ${log.ip.replace('::ffff:','')}
                                         </div>
                                         <div class='list_connected_col gps_click' 
-                                            data-latitude='${common.get_null_or_value(log.gps_latitude)}'
-                                            data-longitude='${common.get_null_or_value(log.gps_longitude)}'>
-                                            ${common.get_null_or_value(log.gps_latitude)}
+                                            data-latitude='${log.gps_latitude ?? ''}'
+                                            data-longitude='${log.gps_longitude ?? ''}'>
+                                            ${log.gps_latitude ?? ''}
                                         </div>
                                         <div class='list_connected_col gps_click'
-                                            data-latitude='${common.get_null_or_value(log.gps_latitude)}'
-                                            data-longitude='${common.get_null_or_value(log.gps_longitude)}'>
-                                            ${common.get_null_or_value(log.gps_longitude)}
+                                            data-latitude='${log.gps_latitude ?? ''}'
+                                            data-longitude='${log.gps_longitude ?? ''}'>
+                                            ${log.gps_longitude ?? ''}
                                         </div>
                                         <div class='list_connected_col common_wide_list_column'>
-                                            ${common.get_null_or_value(show_user_agent(log.user_agent))}
+                                            ${show_user_agent(log.user_agent) ?? ''}
                                         </div>
                                         <div class='list_connected_col chat_click common_icon' data-id='${log.id}'></div>
                                     </div>`;
@@ -1944,14 +1944,14 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
                                             ${log.server_remote_addr.replace('::ffff:','')}
                                         </div>
                                         <div class='list_app_log_col gps_click'
-                                            data-latitude='${common.get_null_or_value(log.client_latitude)}'
-                                            data-longitude='${common.get_null_or_value(log.client_longitude)}'>
-                                            ${common.get_null_or_value(log.client_latitude)}
+                                            data-latitude='${log.client_latitude ?? ''}'
+                                            data-longitude='${log.client_longitude ?? ''}'>
+                                            ${log.client_latitude ?? ''}
                                         </div>
                                         <div class='list_app_log_col gps_click'
-                                            data-latitude='${common.get_null_or_value(log.client_latitude)}'
-                                            data-longitude='${common.get_null_or_value(log.client_longitude)}'>>
-                                            ${common.get_null_or_value(log.client_longitude)}
+                                            data-latitude='${log.client_latitude ?? ''}'
+                                            data-longitude='${log.client_longitude ?? ''}'>>
+                                            ${log.client_longitude ?? ''}
                                         </div>
                                         <div class='list_app_log_col common_wide_list_column'>
                                             ${log.user_language}
