@@ -303,28 +303,17 @@ const app_event_keyup = event => {
                     break;
                 }
                 //dialouge verify
-                case 'common_user_verify_verification_char1':{
-                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char2');
-                    break;
-                }
-                case 'common_user_verify_verification_char2':{
-                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char3');
-                    break;
-                }
-                case 'common_user_verify_verification_char3':{
-                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char4');
-                    break;
-                }
-                case 'common_user_verify_verification_char4':{
-                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char5');
-                    break;
-                }
+                case 'common_user_verify_verification_char1':
+                case 'common_user_verify_verification_char2':
+                case 'common_user_verify_verification_char3':
+                case 'common_user_verify_verification_char4':
                 case 'common_user_verify_verification_char5':{
-                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char6');
+                    user_verify_check_input_app(AppDocument.querySelector(`#${event_target_id}`), 
+                                                'common_user_verify_verification_char' + Number(event_target_id.substring(event_target_id.length-1))+1);
                     break;
                 }
                 case 'common_user_verify_verification_char6':{
-                    user_verify_check_input_app(event.target, '');
+                    user_verify_check_input_app(AppDocument.querySelector(`#${event_target_id}`), '');
                     break;
                 }
             }
@@ -495,7 +484,9 @@ const mount_app_app = async (framework=null) => {
 };
 /**
  * Init app
- * @param {*} parameters 
+ * @param {{app:{   parameter_name:string, 
+ *                  parameter_value:string}[],
+ *          app_service:{system_admin_only:number, first_time:number}}} parameters 
  * @returns {Promise.<void>}
  */
 const init_app = async (parameters) => {
@@ -528,14 +519,16 @@ const init_app = async (parameters) => {
     AppDocument.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
     AppDocument.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
 
-    common.zoom_info('');
-    common.move_info(null,null);
+    common.zoom_info();
+    common.move_info();
 
     mount_app_app();
 };
 /**
  * Init common
- * @param {*} parameters 
+ * @param {{app:{   parameter_name:string, 
+ *                  parameter_value:string}[],
+ *          app_service:{system_admin_only:number, first_time:number}}} parameters 
  */
 const init = (parameters) => {
     AppDocument.querySelector('#apps').classList.add('common_icon', 'css_spinner');

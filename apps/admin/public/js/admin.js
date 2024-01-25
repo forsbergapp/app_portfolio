@@ -351,7 +351,9 @@ const mount_app_app = async (framework=null) => {
 };
 /**
  * App init
- * @param {*} parameters 
+ * @param {{app:{   parameter_name:string, 
+ *                  parameter_value:string}[],
+ *          app_service:{system_admin_only:number, first_time:number}}} parameters 
  */
 const init_app = (parameters) => {
     AppDocument.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
@@ -386,7 +388,9 @@ const init_app = (parameters) => {
 };
 /**
  * Init common
- * @param {*} parameters 
+ * @param {{app:{   parameter_name:string, 
+ *                  parameter_value:string}[],
+ *          app_service:{system_admin_only:number, first_time:number}}} parameters 
  */
 const init = (parameters) => {
     //show admin login as default
