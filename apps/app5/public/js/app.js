@@ -1,11 +1,44 @@
+/**@type{{body:{className:string, classList:{add:function}},
+ *        querySelector:function}} */
+ const AppDocument = document;
+
+ /**
+ * @typedef {object}        AppEvent
+ * @property {string}       code
+ * @property {function}     preventDefault
+ * @property {function}     stopPropagation
+ * @property {{ id:                 string,
+  *              innerHTML:          string,
+  *              value:              string,
+  *              parentNode:         {nextElementSibling:{querySelector:function}},
+  *              nextElementSibling: {dispatchEvent:function},
+  *              focus:              function,
+  *              blur:               function,
+  *              getAttribute:       function,
+  *              setAttribute:       function,
+  *              dispatchEvent:      function,
+  *              classList:          {contains:function}
+  *              className:          string
+  *            }}  target
+  */
+/**@ts-ignore */
 const common = await import('common');
+/**
+ * App exception function
+ * @param {Error} error 
+ * @returns {void}
+ */
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
 };
+/**
+ * App event click
+ * @param {AppEvent} event 
+ * @returns {void}
+ */
 const app_event_click = event => {
     if (event==null){
-        //javascript framework
-        document.querySelector('#app').addEventListener('click',(event) => {
+        AppDocument.querySelector('#app').addEventListener('click',(/**@type{AppEvent}*/event) => {
             app_event_click(event);
         });
     }
@@ -30,7 +63,12 @@ const app_event_click = event => {
         });
     }
 };
-const mount_app_app = async framework => {
+/**
+ * Mount app
+ * @param {string|null} framework 
+ * @returns {Promise.<void>}
+ */
+const mount_app_app = async (framework=null) => {
     await common.mount_app(framework,
         {   Click: app_event_click,
             Change: null,
@@ -39,13 +77,24 @@ const mount_app_app = async framework => {
             Focus: null,
             Input:null})
     .then(()=> {
-        document.querySelector('#dialogue_documents').style.visibility ='visible';
+        AppDocument.querySelector('#dialogue_documents').style.visibility ='visible';
     });
 };
+/**
+ * Init app
+ * @returns {void}
+ */
 const init_app = () => {
     mount_app_app();
 };
-const init = (parameters) => {
+/**
+ * Init common
+ * @param {{app:{   parameter_name:string, 
+ *                  parameter_value:string}[],
+ *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @returns {void}
+ */
+const init = parameters => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         init_app();

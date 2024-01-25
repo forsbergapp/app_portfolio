@@ -1,10 +1,7 @@
-/**@ts-ignore */
-const common = await import('common');
-
 /**@type{{body:{className:string},
  *        querySelector:function,
  *        querySelectorAll:function}} */
-const AppDocument = document;
+ const AppDocument = document;
 
 /**
  * @typedef {object}        AppEvent
@@ -23,6 +20,10 @@ const AppDocument = document;
  *              classList:          {contains:function}
  *            }}  target
  */
+ 
+/**@ts-ignore */
+const common = await import('common');
+
 /**
  * App globals
  */

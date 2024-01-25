@@ -1,31 +1,30 @@
-/**@ts-ignore */
-const common = await import('common');
-
 /**@type{{body:{className:string, classList:{add:function}},
  *        querySelector:function,
  *        querySelectorAll:function}} */
-const AppDocument = document;
+ const AppDocument = document;
 
-/**
- * @typedef {object}        AppEvent
- * @property {string}       code
- * @property {function}     preventDefault
- * @property {function}     stopPropagation
- * @property {{ id:                 string,
- *              innerHTML:          string,
- *              value:              string,
- *              parentNode:         {nextElementSibling:{querySelector:function}},
- *              nextElementSibling: {dispatchEvent:function},
- *              focus:              function,
- *              blur:               function,
- *              getAttribute:       function,
- *              setAttribute:       function,
- *              dispatchEvent:      function,
- *              classList:          {contains:function}
- *              className:          string
- *            }}  target
- */
-
+ /**
+  * @typedef {object}        AppEvent
+  * @property {string}       code
+  * @property {function}     preventDefault
+  * @property {function}     stopPropagation
+  * @property {{ id:                 string,
+  *              innerHTML:          string,
+  *              value:              string,
+  *              parentNode:         {nextElementSibling:{querySelector:function}},
+  *              nextElementSibling: {dispatchEvent:function},
+  *              focus:              function,
+  *              blur:               function,
+  *              getAttribute:       function,
+  *              setAttribute:       function,
+  *              dispatchEvent:      function,
+  *              classList:          {contains:function}
+  *              className:          string
+  *            }}  target
+  */
+ 
+/**@ts-ignore */
+const common = await import('common');
 
 const APP_GLOBAL = {
     'img_diagram_img':'/common/documents/app_portfolio.webp',
@@ -58,7 +57,6 @@ const show_hide_apps_dialogue = () => {
  */
 const app_event_click = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('click', (/**@type{AppEvent}*/event) => {
             app_event_click(event);
         }, true);
@@ -242,11 +240,10 @@ const app_event_click = event => {
 /**
  * App event change
  * @param {AppEvent} event 
- * @returns {void>}
+ * @returns {void}
  */
 const app_event_change = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('change', (/**@type{AppEvent}*/event) => {
             app_event_change(event);
         }, true);
@@ -275,7 +272,6 @@ const app_event_change = event => {
  */
 const app_event_keyup = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('keyup', (/**@type{AppEvent}*/event) => {
             app_event_keyup(event);
         });
@@ -529,8 +525,9 @@ const init_app = async (parameters) => {
  * @param {{app:{   parameter_name:string, 
  *                  parameter_value:string}[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @returns {void}
  */
-const init = (parameters) => {
+const init = parameters => {
     AppDocument.querySelector('#apps').classList.add('common_icon', 'css_spinner');
     AppDocument.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
     common.COMMON_GLOBAL.exception_app_function = app_exception;

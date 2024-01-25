@@ -1,13 +1,8 @@
-/**@ts-ignore */
-const common = await import('common');
-/**@ts-ignore */
-const app_secure = await import('app_secure');
-
 /**@type{{body:{className:string},
  *        querySelector:function,
- *        querySelectorAll:function}} */
-const AppDocument = document;
-
+ *        querySelectorAll:function}} 
+ */
+ const AppDocument = document;
 /**
  * @typedef {object} AppEvent
  * @property {string} code
@@ -16,8 +11,15 @@ const AppDocument = document;
  * @property {string} target.id
  * @property {string} target.value
  */
+
+/**@ts-ignore */
+const common = await import('common');
+/**@ts-ignore */
+const app_secure = await import('app_secure');
+
 /**
  * Admin log off
+ * @returns {void}
  */
 const admin_logoff_app = () => {
     const clear_common = () => {
@@ -39,6 +41,7 @@ const admin_logoff_app = () => {
 };
 /**
  * Admin login
+ * @returns {Promise.<void>}
  */
 const admin_login = async () => {
     let system_admin = false;
@@ -65,10 +68,10 @@ const admin_login = async () => {
 /**
  * Event click
  * @param {AppEvent} event 
+ * @returns {void}
  */
 const app_event_click = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('click', (/**@type{AppEvent}*/event) => {
             app_event_click(event);
         }, true);
@@ -191,10 +194,10 @@ const app_event_click = event => {
 /**
  * Event change
  * @param {AppEvent} event 
+ * @returns {void}
  */
 const app_event_change = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('change',(/**@type{AppEvent}*/event) => {
             app_event_change(event);
         });
@@ -230,10 +233,10 @@ const app_event_change = event => {
 /**
  * Event keyup
  * @param {AppEvent} event 
+ * @returns {void}
  */
 const app_event_keyup = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('keyup',(/**@type{AppEvent}*/event) => {
             app_event_keyup(event);
         });
@@ -267,10 +270,10 @@ const app_event_keyup = event => {
 /**
  * Event keydown
  * @param {AppEvent} event 
+ * @returns {void}
  */
 const app_event_keydown = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('keydown',(/**@type{AppEvent}*/event) => {
             app_event_keydown(event);
         });
@@ -286,10 +289,10 @@ const app_event_keydown = event => {
 /**
  * Event input
  * @param {AppEvent} event 
+ * @returns {void}
  */
 const app_event_input = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('input',(/**@type{AppEvent}*/event) => {
             app_event_input(event);
         }, true);
@@ -305,10 +308,10 @@ const app_event_input = event => {
 /**
  * Event focus
  * @param {AppEvent} event 
+ * @returns {void}
  */
 const app_event_focus = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('focus',(/**@type{AppEvent}*/event) => {
             app_event_focus(event);
         }, true);
@@ -324,7 +327,8 @@ const app_event_focus = event => {
 
 /**
  * Exception function
- * @param {Error} error 
+ * @param {Error} error
+ * @returns {void}
  */
 const admin_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
@@ -332,6 +336,7 @@ const admin_exception = (error) => {
 /**
  * Mounts app
  * @param {string|null} framework 
+ * @returns {Promise.<void>}
  */
 const mount_app_app = async (framework=null) => {
     await common.mount_app(framework,
@@ -354,6 +359,7 @@ const mount_app_app = async (framework=null) => {
  * @param {{app:{   parameter_name:string, 
  *                  parameter_value:string}[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @returns {void}
  */
 const init_app = (parameters) => {
     AppDocument.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
@@ -391,6 +397,7 @@ const init_app = (parameters) => {
  * @param {{app:{   parameter_name:string, 
  *                  parameter_value:string}[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @returns {void}
  */
 const init = (parameters) => {
     //show admin login as default
