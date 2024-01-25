@@ -325,7 +325,7 @@ const getGregorian = (HijriDate, adjustment) =>{
             new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getDate()];
 };
 /**
- * 
+ * Get Hanidec number string or return same number
  * @param {string} numbersystem 
  * @param {number} number 
  * @returns {string|number}
@@ -729,17 +729,8 @@ const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri
 		return month==9;
 	
 };
-/*
- * @param {{'*':{	name:string,
- * 							params:{fajr:string, 
- * 									isha:string, 
- * 									maghrib:string, 
- * 									midnight:string}
- *						}
- *			}} settings_method 
- */
 /**
- * 
+ * Set method praytimes
  * @param {*} prayTimes 
  * @param {string} settings_method
  * @param {string} settings_asr 
@@ -783,7 +774,7 @@ const setMethod_praytimes = (prayTimes, settings_method, settings_asr, settings_
  * Get style for header and footer
  * @param {string} img_src 
  * @param {string} align 
- * @returns 
+ * @returns {string}
  */
 const getstyle = (img_src, align) => {
 	const img_style = img_src==null?'':`background-image:url(${img_src});`;
@@ -871,7 +862,7 @@ const show_col = (timetable, col, value, col_data) => {
  * Timetable headers
  * @param {number} reporttype
  * @param {type_settings_report} settings 
- * @returns 
+ * @returns {string}
  */
 const timetable_headers = (reporttype, settings) => {
 	let html ='';
@@ -1139,7 +1130,7 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 																										/**@ts-ignore */
 																										settings.calendar_hijri_type, options_weekday)}</div>`;
 					}
-				else{							
+				else{
 					/**@ts-ignore */
 					html += `<div class='timetable_month_data_col timetable_month_data_date'>${new Date(date[0],date[1]-1,date[2]).toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
 																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
@@ -1451,7 +1442,7 @@ const create_header_row = (report_type, col_titles, settings) => {
  * @param {*} prayTimes 
  * @param {type_settings_report} settings 
  * @param {type_day_user_account_app_data_posts[]} user_account_app_data_posts 
- * @returns 
+ * @returns {string}
  */
 const displayDay = (prayTimes, settings, user_account_app_data_posts) => {
 	let times; 
@@ -1492,7 +1483,7 @@ const displayDay = (prayTimes, settings, user_account_app_data_posts) => {
 		 * @param {string} user_format 
 		 * @param {number} user_hijri_adjustment 
 		 * @param {string} user_place 
-		 * @returns 
+		 * @returns {string}
 		 */
 		const day_timetable = (	user_locale, user_timezone, user_number_system, user_calendar_hijri_type,
 								user_gps_latitude, user_gps_longitude, user_format, user_hijri_adjustment, user_place) =>{
@@ -1606,7 +1597,7 @@ const displayDay = (prayTimes, settings, user_account_app_data_posts) => {
  * @param {*} prayTimes 
  * @param {type_settings_report} settings 
  * @param {string} year_class 
- * @returns 
+ * @returns {string}
  */
 const displayMonth = (prayTimes, settings, year_class='') => {
 	const timezone_offset = getTimezoneOffset(settings.timezone);

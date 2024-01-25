@@ -46,21 +46,12 @@ const {getTimezone} = await import('regional');
  *              className:          string
  *            }}  target
  */
-/*-----------------------
-  GLOBALS               
 
-  local objects:
-  icon_string
-  icon_string_svg
-  
-  ----------------------- */
-
-//CONTINUE
 const COMMON_GLOBAL = {
-    common_app_id:'',
+    common_app_id:0,
     app_id:null,
     app_logo:'',
-    app_sound:'',
+    app_sound:0,
     app_email:'',
     app_copyright:'',
     app_link_url:'',
@@ -74,7 +65,6 @@ const COMMON_GLOBAL = {
     info_link_disclaimer_url:'',
     info_link_terms_url:'',
     info_link_about_url:'',
-    ui:'',
     exception_app_function:'',
     user_app_role_id:'',
     system_admin:'',
@@ -103,16 +93,16 @@ const COMMON_GLOBAL = {
     user_direction:'',
     user_arabic_script:'',
     user_preference_save:'',
-    module_leaflet_flyto:'',
-    module_leaflet_jumpto:'',
-    module_leaflet_popup_offset:'',
+    module_leaflet_flyto:0,
+    module_leaflet_jumpto:0,
+    module_leaflet_popup_offset:0,
     module_leaflet_style:'',
     module_leaflet_session_map:'',
     module_leaflet_session_map_layer:'',
     module_leaflet_countries:'',
-    module_leaflet_zoom:'', 
-    module_leaflet_zoom_city:'',
-    module_leaflet_zoom_pp:'',
+    module_leaflet_zoom:0, 
+    module_leaflet_zoom_city:0,
+    module_leaflet_zoom_pp:0,
     module_leaflet_marker_div_gps:'',
     module_leaflet_marker_div_city:'',
     module_leaflet_marker_div_pp:'',
@@ -133,52 +123,60 @@ const ICONS = {
     'infinite':                 '∞',
 };
 Object.seal(ICONS);
-/*-----------------------
-  MISC                   
 
-  local objects:
-  checkconnected
-  format_json_date
-  convert_image
-  get_uservariables
-  
-  ----------------------- */
 /**
  * Finds recursive parent id. Use when current element can be an image or svg attached to an event element
  * @param {*} element 
- * @returns {*} 
+ * @returns {string} 
  */
 const element_id = element => element.id==''?element_id(element.parentNode):element.id;
 /**
  * Finds recursive parent row with class common_row. Use when clicking in a list of records
  * @param {*} element 
- * @returns {*} 
+ * @returns {HTMLElement} 
  */
 const element_row = element => element.classList.contains('common_row')?element:element_row(element.parentNode);
 /**
  * Returns current target or parent with class list_title or returns empty. Use when clicking in a list title
  * @param {*} element 
- * @returns {*} 
+ * @returns {HTMLElement} 
  */
- const element_list_title = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
-
+const element_list_title = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
+/**
+ * Length without diacrites
+ * @param {string} str 
+ * @returns {number}
+ */
 const LengthWithoutDiacrites = (str) =>{
     return str.normalize('NFD').replace(/\p{Diacritic}/gu, '').length;
 };
+/**
+ * Get timezone offset
+ * @param {string} local_timezone 
+ * @returns {number}
+ */
 const getTimezoneOffset = (local_timezone) =>{
+    /**@ts-ignore */
     const utc = new Date(	new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'}),
+                            /**@ts-ignore */
                             new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'})-1,
                             new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'}),
                             new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false}),
                             new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})).valueOf();
-
+    /**@ts-ignore */
     const local = new Date(	new Date().toLocaleString('en', {timeZone: local_timezone, year:'numeric'}),
+                            /**@ts-ignore */
                             new Date().toLocaleString('en', {timeZone: local_timezone, month:'numeric'})-1,
                             new Date().toLocaleString('en', {timeZone: local_timezone, day:'numeric'}),
                             new Date().toLocaleString('en', {timeZone: local_timezone, hour:'numeric', hour12:false}),
                             new Date().toLocaleString('en', {timeZone: local_timezone, minute:'numeric'})).valueOf();
     return (local-utc) / 1000 / 60 / 60;
 };
+/**
+ * Get timezone date
+ * @param {string} timezone 
+ * @returns {Date}
+ */
 const getTimezoneDate = timezone =>{
     const utc = new Date(	Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
@@ -187,12 +185,18 @@ const getTimezoneDate = timezone =>{
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})));
     return new Date(utc.setHours(  utc.getHours() + getTimezoneOffset(timezone)));
 };
+/**
+ * Get Gregorian date from Hijri date
+ * The epoch of Hijri calendar for 1 Muharram, AH 1
+ * The civil and the Friday epoch will be used here
+ * @param {*} HijriDate 
+ * @param {*} adjustment 
+ * @returns {[number, number, number]}      [year, month, day]
+ */
 const getGregorian = (HijriDate, adjustment) =>{
     const DAY = 86400000; // a day in milliseconds
     const UNIX_EPOCH_JULIAN_DATE = 2440587.5; // January 1, 1970 GMT
 
-    //The epoch of Hijri calendar for 1 Muharram, AH 1
-    //The civil and the Friday epoch will be used here
     //const hijri_epoch_julian_astronomical 	= 1948439;	//Gregorian: Thursday 15 July 622
 	const hijri_epoch_julian_civil 		    = 1948440;	//Gregorian: Friday 16 July 622	
 
@@ -207,10 +211,19 @@ const getGregorian = (HijriDate, adjustment) =>{
             new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getMonth() + 1,
             new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getDate()];
 };
-const checkconnected = async () => navigator.onLine;
+/**
+ * Checks if online
+ * @returns {boolean}
+ */
+const checkconnected = () => navigator.onLine;
+
 let timer = 0;
-//delay API calls when typing to avoid too many calls 
-// ES6 spread operator, arrow function without function keyword
+/**
+ * Delay API calls when typing to avoid too many calls 
+ * ES6 spread operator, arrow function without function keyword 
+ * @param {*} function_name 
+ * @param  {...any} parameter 
+ */
 const typewatch = (function_name, ...parameter) =>{
     let type_delay=250;
     if (parameter.length>0 && parameter[0] !=null)
@@ -225,16 +238,31 @@ const typewatch = (function_name, ...parameter) =>{
             }
         }
     clearTimeout(timer);
-    timer = setTimeout(() => {
+    timer = window.setTimeout(() => {
         function_name(...parameter);
     }, type_delay);
 };
-const toBase64 = (str) => {
+/**
+ * Convert string to Base64
+ * @param {string} str 
+ * @returns {string}
+ */
+const toBase64 = str => {
     return window.btoa(unescape(encodeURIComponent(str)));
 };	
+/**
+ * Convert base64 to string
+ * @param {string} str 
+ * @returns {string}
+ */
 const fromBase64 = (str) => {
     return decodeURIComponent(escape(window.atob(str)));
 };
+/**
+ * Translate ui
+ * @param {string} lang_code 
+ * @returns {Promise.<void>}
+ */
 const common_translate_ui = async (lang_code) => {
     let path='';
     if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
@@ -332,12 +360,12 @@ const common_translate_ui = async (lang_code) => {
     select_locale.value = lang_code;
     await map_country(lang_code);
 };
-const get_null_or_value = (value) => {
-    if (value == null)
-        return '';
-    else
-        return value;
-};
+/**
+ * Format JSON date with user timezone
+ * @param {string} db_date 
+ * @param {boolean} short 
+ * @returns {string|null}
+ */
 const format_json_date = (db_date, short) => {
     if (db_date == null)
         return null;
@@ -366,36 +394,55 @@ const format_json_date = (db_date, short) => {
                 timeZoneName: 'long'
             };
         const utc_date = new Date(Date.UTC(
-            db_date.substr(0, 4), //year
-            db_date.substr(5, 2) - 1, //month
-            db_date.substr(8, 2), //day
-            db_date.substr(11, 2), //hour
-            db_date.substr(14, 2), //min
-            db_date.substr(17, 2) //sec
+            Number(db_date.substring(0, 4)), //year
+            Number(db_date.substring(5, 7)) - 1, //month
+            Number(db_date.substring(8, 10)), //day
+            Number(db_date.substring(11, 13)), //hour
+            Number(db_date.substring(14, 16)), //min
+            Number(db_date.substring(17, 19)) //sec
         ));
         /**@ts-ignore */
         const format_date = utc_date.toLocaleDateString(COMMON_GLOBAL.user_locale, options);
         return format_date;
     }
 };
-
+/**
+ * 
+ * Check if mobile
+ * @returns {boolean}
+ */
 const mobile = () =>{
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 };
-const image_format = (image) => {
+/**
+ * Image format
+ * @param {string|null} image 
+ * @returns {string}
+ */
+const image_format = image => {
     if (image == '' || image == null )
         return '';
     else
         return image;
             
 };
-const list_image_format_src = (image) => {
+/**
+ * List image format src
+ * @param {string|null} image 
+ * @returns {string}
+ */
+const list_image_format_src = image => {
     if (image == '' || image == null)
         return '';
     else
         return `src='${image_format(image)}'`;
 };
-const recreate_img = (img_item) => {
+/**
+ * Recreate image
+ * @param {HTMLImageElement} img_item 
+ * @returns {void}
+ */
+const recreate_img = img_item => {
     //cant set img src to null, it will containt url or show corrupt image
     //recreating the img is the workaround
     const parentnode = img_item.parentNode;
@@ -403,12 +450,18 @@ const recreate_img = (img_item) => {
     const alt = img_item.alt;
     const img = AppDocument.createElement('img');
 
-    parentnode.removeChild(img_item);
+    parentnode?parentnode.removeChild(img_item):null;
     img.id = id;
     img.alt = alt;
-    parentnode.appendChild(img);
-    return null;
+    parentnode?parentnode.appendChild(img):null;
 };
+/**
+ * Converts image
+ * @param {string} image_url 
+ * @param {number} image_width 
+ * @param {number} image_height 
+ * @returns {Promise.<string>}
+ */
 const convert_image = async (image_url, image_width, image_height) => {
     //function to convert images to specified size and mime type according to parameters
     return new Promise((resolve) => {
@@ -431,13 +484,21 @@ const convert_image = async (image_url, image_width, image_height) => {
         }
     });
 };
+/**
+ * Set avatar
+ * @param {string} avatar 
+ * @param {HTMLImageElement} item 
+ */
 const set_avatar = (avatar, item) => {
     if (avatar == null || avatar == '')
         recreate_img(item);
     else
         item.src = image_format(avatar);
 };
-/* check if run inside an iframe*/
+/**
+ * Checks if running inside and iframe
+ * @returns {boolean}
+ */
 const inIframe = () => {
     try {
         return window.self !== window.top;
@@ -445,6 +506,14 @@ const inIframe = () => {
         return true;
     }
 };
+/**
+ * Show image
+ * @param {HTMLImageElement} item_img 
+ * @param {string} item_input 
+ * @param {number} image_width 
+ * @param {number} image_height 
+ * @returns {void}
+ */
 const show_image = (item_img, item_input, image_width, image_height) => {
     const file = AppDocument.querySelector('#' + item_input).files[0];
     const reader = new FileReader();
@@ -459,46 +528,66 @@ const show_image = (item_img, item_input, image_width, image_height) => {
     const fileExtension = fileName.split('.').pop();
     if (!allowedExtensions.includes(fileExtension)){
         //File type not allowed
-        show_message('ERROR', 20307, null,null, null, COMMON_GLOBAL.common_app_id);
+        show_message('ERROR', '20307', null,null, null, COMMON_GLOBAL.common_app_id);
     }
     else
         if (fileSize > COMMON_GLOBAL.image_file_max_size){
             //File size too large
-            show_message('ERROR', 20308, null, null, null, COMMON_GLOBAL.common_app_id);
+            show_message('ERROR', '20308', null, null, null, COMMON_GLOBAL.common_app_id);
         }
         else {
-            reader.onloadend = (event) => {
-                convert_image(event.target.result, image_width, image_height).then((srcEncoded)=>{
-                    item_img.src = srcEncoded;
-                });
+            reader.onloadend = /**@type{AppEvent}*/event => {
+                if (event.target)
+                    convert_image(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
+                        item_img.src = srcEncoded;
+                    });
             };
         }
     if (file)
         reader.readAsDataURL(file); //reads the data as a URL
     else
         item_img.src = '';
-    return null;
 };
+/**
+ * Get hostname with protocol and port
+ * @returns {string}
+ */
 const getHostname = () =>{
     return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
 };
+/**
+ * Input control
+ * @param {HTMLElement} dialogue 
+ * @param {*} elements 
+ * @returns {boolean}
+ */
 const input_control = (dialogue, elements) =>{
     let result = true;
-    const valid_text = (element) =>{
+    /**
+     * Valid text
+     * @param {HTMLElement} element 
+     * @returns {boolean}
+     */
+    const valid_text = element =>{
         //remove any html
         element.innerHTML = element.innerText;
         if (element.innerText.indexOf(':') > -1 || element.innerText.includes('"') || element.innerText.includes('\\') )
             return false;
         else
             try {
-                if (JSON.parse(JSON.stringify(element.innerText)))
-                    return true;
+                JSON.parse(JSON.stringify(element.innerText));
+                return true;
                 
             } catch (error) {
                 return false;
             }
     };
-    const set_error = (element, element2) => {
+    /**
+     * Set error
+     * @param {HTMLElement} element 
+     * @param {HTMLElement|null} element2 
+     */
+    const set_error = (element, element2=null) => {
         element.classList.add('common_input_error');
         element2?element.classList.add('common_input_error'):null;
         result = false;
@@ -581,6 +670,7 @@ const input_control = (dialogue, elements) =>{
     if (elements.password_new && elements.password_new.innerText.length > 0 && (elements.password_new.innerText != elements.password_new_confirm.innerText)){
         set_error(elements.password_new, elements.password_new_confirm);
     }
+    /**@ts-ignore */
     if (result==false){
         show_message('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
         return false;
@@ -588,6 +678,16 @@ const input_control = (dialogue, elements) =>{
     else
         return true;
 };
+/**
+ * Get user variables
+ * @returns {{  user_language:string,
+ *              user_timezone:string,
+ *              user_number_system:string,
+ *              user_platform:string,
+ *              client_latitude:string,
+ *              client_longitude:string,
+ *              client_place:string}}
+ */
 const get_uservariables = () => {
     return {    user_language:      navigator.language,
                 user_timezone:      Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -598,38 +698,35 @@ const get_uservariables = () => {
                 client_place:       COMMON_GLOBAL.client_place
             };
 };
+/**
+ * Search and set selected index
+ * colcheck=0 search id
+ * colcheck=1 search value
+ * @param {string} search 
+ * @param {HTMLSelectElement} select_item 
+ * @param {number} colcheck 
+ * @returns {void}
+ */
 const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
-    //colcheck=0 search id
-    //colcheck=1 search value
+    
     try {
         for (let i = 0; i < select_item.options.length; i++) {
             if ((colcheck==0 && select_item.options[i].id == search) ||
                 (colcheck==1 && select_item.options[i].value == search)) {
                 select_item.selectedIndex = i;
-                return null;
+                break;
             }
         }    
     } catch (error) {
         exception(COMMON_GLOBAL.exception_app_function, error);
     }
-    
-    return null;
 };
-/*----------------------- 
-  MESSAGE & DIALOGUE     
-
-  local objects: 
-  dialogue_verify_clear
-  dialogue_password_new_clear
-  dialogue_user_edit_clear
-  dialogue_profile_clear
-  dialogue_user_edit_remove_error
-  lov_keys
-  lov_filter
-
- ----------------------- */
- 
-const show_message_info_list = (list_obj) =>{
+/**
+ * Show message info list
+ * @param {{}[]} list_obj 
+ * @returns {string}
+ */
+const show_message_info_list = list_obj =>{
     let html = '';
     for (const item of list_obj){
         html += `<div id='common_message_info_list'>
@@ -645,7 +742,12 @@ const show_message_info_list = (list_obj) =>{
     }
     return html;
 };
-const dialogue_close = async (dialogue) => {
+/**
+ * Dialogue close
+ * @param {string} dialogue 
+ * @returns {Promise.<null>}
+ */
+const dialogue_close = async dialogue => {
     return new Promise(resolve=>{
         const animationDuration = 400;
         let soundDuration;
@@ -664,13 +766,21 @@ const dialogue_close = async (dialogue) => {
             setTimeout(()=>{
                 AppDocument.querySelector('#' + dialogue).style.visibility = 'hidden';
                 AppDocument.querySelector('#' + dialogue).classList.remove('common_dialogue_close');
-                resolve();
+                resolve(null);
             }, animationDuration);
         }, soundDuration);
     });
     
 };
-const show_common_dialogue = (dialogue, user_verification_type, title=null, click_cancel_event) => {
+/**
+ * Show common dialogue
+ * @param {string} dialogue 
+ * @param {string|null} user_verification_type 
+ * @param {string|null} title 
+ * @param {function|null} click_cancel_event 
+ * @returns {void}
+ */
+const show_common_dialogue = (dialogue, user_verification_type=null, title=null, click_cancel_event=null) => {
     switch (dialogue) {
         case 'PROFILE':
             {    
@@ -736,15 +846,15 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, clic
             break;
         }
     }
-    return null;   
 };
 /**
  * 
  * @param {'ERROR'|'INFO'|'EXCEPTION'|'CONFIRM'|'LOG'|'PROGRESS'} message_type 
- * @param {string} code 
- * @param {function} function_event 
- * @param {string|{part: number, total:number, text:string}} message 
- * @param {*} data_app_id 
+ * @param {string|null} code
+ * @param {function|null} function_event 
+ * @param {string|null} text_class
+ * @param {string|{part: number, total:number, text:string}|null} message 
+ * @param {number|null} data_app_id 
  */
 const show_message = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
     const confirm_question = AppDocument.querySelector('#common_confirm_question');
@@ -873,6 +983,10 @@ const show_message = async (message_type, code, function_event, text_class=null,
         }
     }
 };
+/**
+ * Dialogue verify clear
+ * @returns {void}
+ */
 const dialogue_verify_clear = () => {
     AppDocument.querySelector('#common_dialogue_user_verify').style.visibility = 'hidden';
     AppDocument.querySelector('#common_user_verification_type').innerHTML='';
@@ -885,6 +999,10 @@ const dialogue_verify_clear = () => {
     AppDocument.querySelector('#common_user_verify_verification_char6').innerHTML = '';
     AppDocument.querySelector('#common_user_verify_cancel')['data-function'] = null;
 };
+/**
+ * Dialogue password new clear
+ * @returns {void}
+ */
 const dialogue_password_new_clear = () => {
     AppDocument.querySelector('#common_dialogue_user_password_new').style.visibility = 'hidden';
     AppDocument.querySelector('#common_user_password_new_auth').innerHTML='';
@@ -893,6 +1011,10 @@ const dialogue_password_new_clear = () => {
     COMMON_GLOBAL.user_account_id = '';
     COMMON_GLOBAL.rest_at = '';
 };
+/**
+ * Dialogue user edit clear
+ * @returns {void}
+ */
 const dialogue_user_edit_clear = () => {
     AppDocument.querySelector('#common_dialogue_user_edit').style.visibility = 'hidden';
     AppDocument.querySelector('#common_user_edit_avatar').style.display = 'none';
@@ -924,6 +1046,10 @@ const dialogue_user_edit_clear = () => {
     AppDocument.querySelector('#common_user_edit_label_data_account_created').innerHTML = '';
     AppDocument.querySelector('#common_user_edit_label_data_account_modified').innerHTML = '';
 };
+/**
+ * Dialogue user start clear
+ * @returns {void}
+ */
 const dialogue_user_start_clear = () => {
     AppDocument.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
     AppDocument.querySelector('#common_user_start_login_username').innerHTML = '';
@@ -940,6 +1066,10 @@ const dialogue_user_start_clear = () => {
 
     AppDocument.querySelector('#common_user_start_forgot_email').innerHTML = '';
 };
+/**
+ * Dialogue profile clear
+ * @returns {void}
+ */
 const dialogue_profile_clear = () => {
     AppDocument.querySelector('#common_profile_info').style.display = 'none';
     AppDocument.querySelector('#common_profile_top').style.display = 'none';
@@ -965,6 +1095,10 @@ const dialogue_profile_clear = () => {
     AppDocument.querySelector('#common_profile_detail_list').innerHTML = '';
     AppDocument.querySelector('#common_profile_top_list').innerHTML = '';
 };
+/**
+ * Lov close
+ * @returns {void}
+ */
 const lov_close = () => {
     AppDocument.querySelector('#common_dialogue_lov').style.visibility = 'hidden';
     AppDocument.querySelector('#common_lov_title').innerHTML='';
@@ -972,6 +1106,12 @@ const lov_close = () => {
     AppDocument.querySelector('#common_lov_list').innerHTML='';
     AppDocument.querySelector('#common_lov_list')['data-function'] = null;
 };
+/**
+ * Lov show
+ * @param {string} lov 
+ * @param {function} function_event
+ * @returns {void} 
+ */
 const lov_show = (lov, function_event) => {
     
     AppDocument.querySelector('#common_dialogue_lov').style.visibility = 'visible';
@@ -981,7 +1121,7 @@ const lov_show = (lov, function_event) => {
     let path = '';
     let token_type = '';
     let lov_column_value='';
-    let service;
+    let service = '';
     switch (lov){
         case 'PARAMETER_TYPE':{
             AppDocument.querySelector('#common_lov_title').classList.add('parameter_type');
@@ -1038,7 +1178,12 @@ const lov_show = (lov, function_event) => {
     .catch(()=>AppDocument.querySelector('#common_lov_list').classList.remove('css_spinner'));
         
 };
-const lov_keys = (event) => {
+/**
+ * Lov keys
+ * @param {AppEvent} event 
+ * @returns {void}
+ */
+const lov_keys = event => {
     switch (event.code){
         case 'ArrowLeft':
         case 'ArrowRight':{
@@ -1048,6 +1193,10 @@ const lov_keys = (event) => {
         case 'ArrowDown':{
             //loop rows not hidden
             const rows = AppDocument.querySelectorAll('.common_list_lov_row:not(.list_lov_row_hide)');
+            /**
+             * Focus item
+             * @param {HTMLElement} element 
+             */
             const focus_item = (element) =>{
                 element.focus();
                 AppDocument.querySelector('#common_lov_search_input').focus();
@@ -1071,7 +1220,7 @@ const lov_keys = (event) => {
                             rows[0].classList.add ('common_list_lov_row_selected');
                             focus_item(rows[0]);
                         }
-                        return;
+                        break;
                     }
                     else{
                         if(event.code=='ArrowUp'){
@@ -1087,7 +1236,7 @@ const lov_keys = (event) => {
                             rows[i+1].classList.add ('common_list_lov_row_selected');
                             focus_item(rows[i+1]);
                         }
-                        return;
+                        break;
                     }
                 }
                 i++;
@@ -1117,7 +1266,11 @@ const lov_keys = (event) => {
         }    
     }
 };
-const lov_filter = (text_filter) => {
+/**
+ * Lov filter
+ * @param {string} text_filter 
+ */
+const lov_filter = text_filter => {
     const rows = AppDocument.querySelectorAll('.common_list_lov_row');
     for (const row of rows) {
         row.classList.remove ('common_list_lov_row_hide');
@@ -1135,28 +1288,35 @@ const lov_filter = (text_filter) => {
     }
 };
 
-/*----------------------- */
-/* WINDOW INFO            */
-/*----------------------- */
-const zoom_info = (zoomvalue = '') => {
+/**
+ * Window zoom info
+ * @param {number|null} zoomvalue 
+ * @returns {void}
+ */
+const zoom_info = (zoomvalue = null) => {
     let old;
     let old_scale;
     const div = AppDocument.querySelector('#common_window_info_info');
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
-    if (zoomvalue == '') {
+    if (zoomvalue == null) {
         div.style.transform = 'scale(1)';
     } else {
         old = div.style.transform;
         old_scale = parseFloat(old.substr(old.indexOf('(') + 1, old.indexOf(')') - 1));
         div.style.transform = 'scale(' + (old_scale + ((zoomvalue*5) / 10)) + ')';
     }
-    return null;
 };
-const move_info = (move1, move2) => {
+/**
+ * Window move info
+ * @param {number|null} move1 
+ * @param {number|null} move2 
+ * @returns {void}
+ */
+const move_info = (move1=null, move2=null) => {
     let old;
     const div = AppDocument.querySelector('#common_window_info_info');
-    if (move1==null && move2==null) {
+    if (move1==null || move2==null) {
         div.style.transformOrigin = '50% 50%';
     } else {
         old = div.style.transformOrigin;
@@ -1164,12 +1324,19 @@ const move_info = (move1, move2) => {
         const old_move2 = parseFloat(old.substr(old.indexOf('%') +1, old.length -1));
         div.style.transformOrigin =  `${old_move1 + (move1*5)}% ${old_move2 + (move2*5)}%`;
     }
-    return null;
 };
+/**
+ * Window show info
+ * @param {number} info 
+ * @param {string} url 
+ * @param {string} content_type 
+ * @param {string} iframe_content 
+ * @returns {void}
+ */
 const show_window_info = (info, url, content_type, iframe_content) => {
     //reset zoom and move
-    zoom_info('');
-    move_info(null,null);
+    zoom_info();
+    move_info();
     switch(info){
         case 0:{
             //show image
@@ -1232,6 +1399,10 @@ const show_window_info = (info, url, content_type, iframe_content) => {
         }
     }
 };
+/**
+ * Show or hide window info toolbar
+ * @returns {void}
+ */
 const show_hide_window_info_toolbar = () => {
     if (AppDocument.querySelector('#common_window_info_toolbar').style.display=='flex' ||
         AppDocument.querySelector('#common_window_info_toolbar').style.display=='')
@@ -1239,17 +1410,22 @@ const show_hide_window_info_toolbar = () => {
     else
         AppDocument.querySelector('#common_window_info_toolbar').style.display='flex';
 };
-/*-----------------------
-  PROFILE               
-
-  local objects:
-  search_profile
-  ----------------------- */
+/**
+ * Profile follow or like and then update stat
+ * @param {string} function_name 
+ */
 const profile_follow_like = async (function_name) => {
     await user_function(function_name)
     .then(()=>profile_update_stat())
     .catch(()=>null);
 };
+/**
+ * Profil etop
+ * @param {number} statchoice 
+ * @param {string|null} app_rest_url 
+ * @param {function|null} click_function 
+ * @returns {void}
+ */
 const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
     let path;
     const profile_top_list = AppDocument.querySelector('#common_profile_top_list');
@@ -1299,6 +1475,14 @@ const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
     .catch(()=> profile_top_list.classList.remove('css_spinner'));
         
 };
+/**
+ * Profile detail
+ * @param {number} detailchoice 
+ * @param {string} rest_url_app 
+ * @param {boolean} fetch_detail 
+ * @param {function} click_function 
+ * @returns {void}
+ */
 const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function) => {
     let path;
     const profile_detail_list = AppDocument.querySelector('#common_profile_detail_list');
@@ -1382,7 +1566,12 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
     } else
         show_common_dialogue('LOGIN');
 };
-const search_profile = (click_function) => {
+/**
+ * Profile search
+ * @param {function} click_function 
+ * @returns {void}
+ */
+const search_profile = click_function => {
     AppDocument.querySelector('#common_profile_search_input').classList.remove('common_input_error');
     const profile_search_list = AppDocument.querySelector('#common_profile_search_list');
     AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
@@ -1451,14 +1640,15 @@ const search_profile = (click_function) => {
     }
 };
 /**
+ * Profile show
  * profile_show(null, null)     from dropdown menu in apps or choosing logged in users profile
- * profile_show(userid, null) 	 from choosing profile in profile_top, profile_detail and search_profile
+ * profile_show(userid, null) 	from choosing profile in profile_top, profile_detail and search_profile
  * profile_show(null, username) from init startup when user enters url
  * 
- * @param {number} user_account_id_other 
- * @param {string} username 
- * @returns {{  profile_id:number,
- *              private:number}}
+ * @param {number|null} user_account_id_other 
+ * @param {string|null} username 
+ * @returns {Promise.<{ profile_id:number,
+ *                      private:number}|null>}
  */
 const profile_show = async (user_account_id_other = null, username = null) => {
     return new Promise((resolve, reject)=>{
@@ -1495,7 +1685,7 @@ const profile_show = async (user_account_id_other = null, username = null) => {
                 //show local username
                 AppDocument.querySelector('#common_profile_username').innerHTML = profile.username;
     
-                AppDocument.querySelector('#common_profile_bio').innerHTML = get_null_or_value(profile.bio);
+                AppDocument.querySelector('#common_profile_bio').innerHTML = profile.bio ?? '';
                 AppDocument.querySelector('#common_profile_joined_date').innerHTML = format_json_date(profile.date_created, true);
                 AppDocument.querySelector('#common_profile_qr').innerHTML = '';
                 create_qr('common_profile_qr', getHostname() + '/' + profile.username);
@@ -1545,10 +1735,18 @@ const profile_show = async (user_account_id_other = null, username = null) => {
     });
     
 };
+/**
+ * Profile close
+ * @returns {void}
+ */
 const profile_close = () => {
     AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
     dialogue_profile_clear();
 };
+/**
+ * Profile update stat
+ * @returns {Promise.<{id:number}>}
+ */
 const profile_update_stat = async () => {
     return new Promise((resolve, reject) => {
         const profile_id = AppDocument.querySelector('#common_profile_id');
@@ -1571,6 +1769,13 @@ const profile_update_stat = async () => {
         .catch(err=>reject(err));
     });
 };
+/**
+ * Search input
+ * @param {AppEvent} event 
+ * @param {string} module 
+ * @param {function} event_function 
+ * @returns {void}
+ */
 const search_input = (event, module, event_function) => {
     switch (event.code){
         case 'ArrowLeft':
@@ -1581,6 +1786,10 @@ const search_input = (event, module, event_function) => {
         case 'ArrowDown':{
             if (AppDocument.querySelector(`#common_${module}_search_list`)){
                 const rows = AppDocument.querySelectorAll(`.common_${module}_search_list_row`);
+                /**
+                 * 
+                 * @param {HTMLElement} element 
+                 */
                 const focus_item = (element) =>{
                     element.focus();
                     AppDocument.querySelector(`#common_${module}_search_input`).focus();
@@ -1605,7 +1814,7 @@ const search_input = (event, module, event_function) => {
                                 rows[0].classList.add (`common_${module}_search_list_selected`);
                                 focus_item(rows[0]);
                             }
-                            return;
+                            break;
                         }
                         else{
                             if(event.code=='ArrowUp'){
@@ -1621,14 +1830,14 @@ const search_input = (event, module, event_function) => {
                                 rows[i+1].classList.add (`common_${module}_search_list_selected`);
                                 focus_item(rows[i+1]);
                             }
-                            return;
+                            break;
                         }
                     i++;
                 }
                 //no highlight found, highlight first
                 rows[0].classList.add (`common_${module}_search_list_selected`);
                 focus_item(rows[0]);
-                return;
+                break;
             }
             break;
         }
@@ -1675,18 +1884,14 @@ const search_input = (event, module, event_function) => {
         }            
     }
 };
-/*-----------------------
-  USER                   
-  
-  local objects:
-  user_account_app_delete
-  user_forgot
-  user_preference_save
-  user_preference_get
-  user_preferences_set_default_globals
-  user_preferences_update_select
-
-  ----------------------- */
+/**
+ * User login
+ * @param {boolean} system_admin 
+ * @returns {Promise. <{    user_id: number|null,
+ *                          username: string,
+ *                          bio: string|null,
+ *                          avatar: string|null}>}
+ */
 const user_login = async (system_admin=false) => {
     return new Promise((resolve,reject)=>{
         let path = '';
@@ -1738,12 +1943,14 @@ const user_login = async (system_admin=false) => {
                 AppDocument.querySelector('#common_user_preferences').style.display = 'none';
                 AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
                 AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-                dialogue_user_start_clear();
-                AppDocument.querySelector('#common_user_start_login_system_admin_button').classList.remove('css_spinner');
-                resolve({   user_id: null,
-                            username: JSON.parse(result).username,
-                            bio: null,
-                            avatar: null});
+                dialogue_close('common_dialogue_user_start').then(() => {
+                    dialogue_user_start_clear();
+                    AppDocument.querySelector('#common_user_start_login_system_admin_button').classList.remove('css_spinner');
+                    resolve({   user_id: null,
+                                username: JSON.parse(result).username,
+                                bio: null,
+                                avatar: null});
+                })
             }
             else{
                 const user = JSON.parse(result).items[0];
@@ -1775,12 +1982,14 @@ const user_login = async (system_admin=false) => {
                     updateOnlineStatus();
                     user_preference_get()
                     .then(()=>{
-                        dialogue_user_start_clear();
-                        AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
-                        resolve({   user_id: user.id,
-                                    username: user.username,
-                                    bio: user.bio,
-                                    avatar: user.avatar});
+                        dialogue_close('common_dialogue_user_start').then(() => {
+                            dialogue_user_start_clear();
+                            AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+                            resolve({   user_id: user.id,
+                                        username: user.username,
+                                        bio: user.bio,
+                                        avatar: user.avatar});
+                        })
                     });
                 }
             }
@@ -1793,6 +2002,10 @@ const user_login = async (system_admin=false) => {
             reject(err);});
     });
 };
+/**
+ * User logoff
+ * @param {*} system_admin 
+ */
 const user_logoff = async (system_admin) => {
     if (system_admin){
         COMMON_GLOBAL.rest_admin_at = '';
@@ -1846,7 +2059,7 @@ const user_edit = async () => {
                 AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
 
             AppDocument.querySelector('#common_user_edit_input_username').innerHTML = user.username;
-            AppDocument.querySelector('#common_user_edit_input_bio').innerHTML = get_null_or_value(user.bio);
+            AppDocument.querySelector('#common_user_edit_input_bio').innerHTML = user.bio ?? '';
 
             if (user.provider_id == null) {
                 AppDocument.querySelector('#common_user_edit_local').style.display = 'block';
@@ -1880,7 +2093,7 @@ const user_edit = async () => {
             set_avatar(user.avatar ?? user.provider_image, AppDocument.querySelector('#common_user_menu_avatar_img'));
         } else {
             //User not found
-            show_message('ERROR', 20305, null, null, null, COMMON_GLOBAL.common_app_id);
+            show_message('ERROR', '20305', null, null, null, COMMON_GLOBAL.common_app_id);
         }
     })
     .catch(()=>null);
@@ -2066,7 +2279,7 @@ const user_verify_check_input = async (item, nextField) => {
                         AppDocument.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
                         AppDocument.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
                         //code not valid
-                        show_message('ERROR', 20306, null, null, null, COMMON_GLOBAL.common_app_id);
+                        show_message('ERROR', '20306', null, null, null, COMMON_GLOBAL.common_app_id);
                         reject('ERROR');
                     }
                 })
@@ -2456,7 +2669,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, doublec
                             get_place_from_gps(lng, lat).then((gps_place) => {
                                 map_update(lng,
                                             lat,
-                                            '', //do not change zoom 
+                                            null, //do not change zoom 
                                             gps_place,
                                             null,
                                             COMMON_GLOBAL.module_leaflet_marker_div_gps,
@@ -2641,13 +2854,24 @@ const map_setstyle = async (mapstyle) => {
 const map_update_popup = (title) => {
     AppDocument.querySelector('#common_module_leaflet_popup_title').innerHTML = title;
 };
+/**
+ * Map update
+ * @param {string} longitude 
+ * @param {string} latitude 
+ * @param {number|null} zoomvalue 
+ * @param {string} text_place 
+ * @param {string|null} timezone_text 
+ * @param {string} marker_id 
+ * @param {number} to_method 
+ * @returns {Promise.<void>}
+ */
 const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_text = null, marker_id, to_method) => {
     return new Promise((resolve)=> {
         if (checkconnected()) {
             const map_update_gps = (to_method, zoomvalue, longitude, latitude) => {
                 switch (Number(to_method)){
                     case 0:{
-                        if (zoomvalue == '')
+                        if (zoomvalue == null)
                             COMMON_GLOBAL.module_leaflet_session_map.setView(new Leaflet.LatLng(latitude, longitude));
                         else
                             COMMON_GLOBAL.module_leaflet_session_map.setView(new Leaflet.LatLng(latitude, longitude), zoomvalue);
@@ -2695,7 +2919,7 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
  * @param {*} json_data 
  * @returns {Promise.<*>} 
  */
-const FFB = async (service, path, method, authorization_type, json_data) => {
+const FFB = async (service, path, method, authorization_type, json_data=null) => {
     let status;
     let authorization;
     let bff_path;
@@ -3467,7 +3691,7 @@ const common_event = async (event_type,event) =>{
                         case 'common_profile_main_btn_liked_heart':
                         case 'common_profile_main_btn_liked_users':
                         case 'common_profile_main_btn_cloud':{    
-                            AppDocument.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                            AppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                             AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                             break;
                         }
@@ -3810,7 +4034,7 @@ const mount_app = async (framework, events) => {
             events.Focus();
             events.Input();
             events.KeyDown();
-            events.KeyUp();            
+            events.KeyUp();
             break;
         }
     }
@@ -3840,7 +4064,7 @@ export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS,
        /* MISC */
        element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
-       get_null_or_value, mobile, image_format,
+       mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
        inIframe, show_image, getHostname, input_control, SearchAndSetSelectedIndex,
        /* MESSAGE & DIALOGUE */

@@ -394,6 +394,7 @@ select {
 .common_dialogue_close{
 	animation-name: common_roadRunnerOut;
 	animation-duration: 0.4s;
+	background-color: unset;
 }
 
 /* add animation effects */
