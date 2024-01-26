@@ -2593,7 +2593,7 @@ const installation_function = (id, db_icon, path, method, tokentype, data) => {
  */
 const db_install = () =>{
     AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-    const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}&optional=${Number(AppDocument.querySelector('#install_db_country_language_translations').classList.contains('checked'))}`;
+    const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}&optional=${Number(AppDocument.querySelector('#install_db_country_language_translations').classList.contains('checked'))}`;
     installation_function('install_db_button_install', true, path, 'POST', 'SYSTEMADMIN', null);
 };
 /**
@@ -2602,7 +2602,7 @@ const db_install = () =>{
  */
 const db_uninstall = () =>{
     AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-    const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`;
+    const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`;
     installation_function('install_db_button_uninstall', false, path, 'DELETE', 'SYSTEMADMIN', null);
 };
 /**
@@ -2615,7 +2615,7 @@ const demo_install = () =>{
                         check_valid_list:[[AppDocument.querySelector('#install_demo_password'),null]]
                         })==true){
         const json_data = {demo_password: AppDocument.querySelector('#install_demo_password').innerHTML};
-        const path = `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`;
+        const path = `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`;
         installation_function('install_db_demo_button_install', null, path, 'POST', 'APP_ACCESS', json_data);
     }
 };
@@ -2624,7 +2624,7 @@ const demo_install = () =>{
  * @returns {void}
  */
 const demo_uninstall = () =>{
-    const path = `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`;
+    const path = `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`;
     installation_function('install_db_demo_button_uninstall', null, path, 'DELETE', 'APP_ACCESS', null);
 };
 /**

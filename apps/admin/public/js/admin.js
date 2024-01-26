@@ -83,15 +83,15 @@ const app_event_click = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'common_toolbar_framework_js':{
-                    mount_app_app('1');
+                    mount_app_app(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                    mount_app_app('2');
+                    mount_app_app(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                    mount_app_app('3');
+                    mount_app_app(3);
                     break;
                 }
                 case 'common_user_start_login_button':
@@ -335,7 +335,7 @@ const admin_exception = (error) => {
 };
 /**
  * Mounts app
- * @param {string|null} framework 
+ * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
 const mount_app_app = async (framework=null) => {
@@ -347,7 +347,7 @@ const mount_app_app = async (framework=null) => {
             Focus: app_event_focus,
             Input:app_event_input})
     .then(()=>{
-        if (common.COMMON_GLOBAL.user_account_id =='' && common.COMMON_GLOBAL.system_admin=='')
+        if (common.COMMON_GLOBAL.user_account_id ==null && common.COMMON_GLOBAL.system_admin=='')
             if (common.COMMON_GLOBAL.system_admin_only == 1)
                 common.show_common_dialogue('LOGIN_SYSTEM_ADMIN');
             else

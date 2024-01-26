@@ -27,8 +27,8 @@ const init = (parameters) => {
     common.COMMON_GLOBAL.app_id = parameters.app_id;
     common.COMMON_GLOBAL.exception_app_function = app_exception; 
     common.COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
-    common.COMMON_GLOBAL.user_account_id = '';
-    common.COMMON_GLOBAL.user_identity_provider_id = '';
+    common.COMMON_GLOBAL.user_account_id = null;
+    common.COMMON_GLOBAL.user_identity_provider_id = null;
     common.COMMON_GLOBAL.system_admin = '';
     common.connectOnline();    
     common.show_maintenance(null,1);

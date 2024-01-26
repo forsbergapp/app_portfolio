@@ -53,15 +53,15 @@ const app_event_click = event =>{
         .then(()=>{
             switch (event_target_id){
                 case 'common_toolbar_framework_js':{
-                    init_map('1');
+                    init_map(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                    init_map('2');
+                    init_map(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                    init_map('3');
+                    init_map(3);
                     break;
                 }
             }
@@ -71,7 +71,7 @@ const app_event_click = event =>{
 };
 /**
  * Mount app
- * @param {string|null} framework 
+ * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
 const init_map = async (framework=null)=>{
