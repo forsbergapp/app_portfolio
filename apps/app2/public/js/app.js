@@ -286,7 +286,7 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
         module_parameters += '&type=2';
     if (profile_display){
         //send viewing user account id if logged in or set empty
-        const uid_view = common.COMMON_GLOBAL.user_account_id==''?'':parseInt(common.COMMON_GLOBAL.user_account_id);
+        const uid_view = common.COMMON_GLOBAL.user_account_id==null?'':common.COMMON_GLOBAL.user_account_id;
         module_parameters += `&uid_view=${uid_view}`;
     }
     const language_parameter = `&lang_code=${common.COMMON_GLOBAL.user_locale}`;
@@ -1227,14 +1227,14 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
     
     profile_clear_app();
 
-    if (user_account_id_other == null && common.COMMON_GLOBAL.user_account_id == '' && username == null) {
+    if (user_account_id_other == null && common.COMMON_GLOBAL.user_account_id == null && username == null) {
         AppDocument.querySelector('#common_profile_info').style.display = 'none';
     }
     else
         await common.profile_show(user_account_id_other, username)
         .then((/**@type{{profile_id:number, private:number}}*/result)=>{
             if (result.profile_id != null){
-                if (result.private==1 && parseInt(common.COMMON_GLOBAL.user_account_id) !== result.profile_id) {
+                if (result.private==1 && common.COMMON_GLOBAL.user_account_id !== result.profile_id) {
                     //private
                     null;
                 } else {
@@ -1255,7 +1255,7 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
  * @returns {void}
  */
 const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, click_function) => {
-    if (parseInt(common.COMMON_GLOBAL.user_account_id) || 0 !== 0) {
+    if (common.COMMON_GLOBAL.user_account_id || 0 !== 0) {
         if (detailchoice == 0){
             //user settings
             AppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
@@ -1278,7 +1278,7 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, click_func
  */
 const user_settings_get = async () => {
     const select = AppDocument.querySelector('#setting_select_user_setting');
-    await common.FFB('DB_API', `/user_account_app_data_post/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_DATA', null)
+    await common.FFB('DB_API', `/user_account_app_data_post/all?user_account_id=${common.COMMON_GLOBAL.user_account_id??''}`, 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         select.innerHTML = '';
         //fill select
@@ -1692,7 +1692,7 @@ const user_settings_function = async (function_name, initial_user_setting) => {
                     //save current settings to new option with 
                     //returned user_setting_id + common.COMMON_GLOBAL.user_account_id (then call set_settings_select)
                     const select = AppDocument.querySelector('#setting_select_user_setting');
-                    select.innerHTML += `<option id=${JSON.parse(result).id} user_account_id=${common.COMMON_GLOBAL.user_account_id} >${description}</option>`;
+                    select.innerHTML += `<option id=${JSON.parse(result).id} user_account_id=${common.COMMON_GLOBAL.user_account_id??''} >${description}</option>`;
                     select.selectedIndex = select.options[select.options.length - 1].index;
                     select.options[select.options.length - 1].value = select.selectedIndex;
                     set_settings_select();
@@ -2040,7 +2040,7 @@ const profile_show_user_setting = () => {
     AppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
 
     common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${AppDocument.querySelector('#common_profile_id').innerHTML}` + 
-                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null)
+                        `&id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         const profile_select_user_settings = AppDocument.querySelector('#profile_select_user_settings');
         profile_select_user_settings.innerHTML='';
@@ -2073,7 +2073,7 @@ const profile_show_user_setting = () => {
 const profile_user_setting_update_stat = () => {
     const profile_id = AppDocument.querySelector('#common_profile_id').innerHTML;
     common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${profile_id}` +
-                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null)
+                        `&id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         const profile_select_user_settings = AppDocument.querySelector('#profile_select_user_settings');
         for (const profile_setting of JSON.parse(result)) {
@@ -2100,14 +2100,14 @@ const profile_user_setting_update_stat = () => {
 const user_settings_like = user_account_app_data_post_id => {
     let method;
     const json_data = {user_account_app_data_post_id: user_account_app_data_post_id};
-    if (common.COMMON_GLOBAL.user_account_id == '')
+    if (common.COMMON_GLOBAL.user_account_id == null)
         common.show_common_dialogue('LOGIN');
     else {
         if (AppDocument.querySelector('#profile_user_settings_like').children[0].style.display == 'block')
             method = 'POST';
         else
             method = 'DELETE';
-        common.FFB('DB_API', `/user_account_app_data_post_like?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, method, 'APP_ACCESS', json_data)
+        common.FFB('DB_API', `/user_account_app_data_post_like?user_account_id=${common.COMMON_GLOBAL.user_account_id??''}`, method, 'APP_ACCESS', json_data)
         .then(()=>profile_user_setting_update_stat())
         .catch(()=>null);
     }
@@ -2128,15 +2128,15 @@ const app_event_click = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'common_toolbar_framework_js':{
-                    mount_app_app('1');
+                    mount_app_app(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                    mount_app_app('2');
+                    mount_app_app(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                    mount_app_app('3');
+                    mount_app_app(3);
                     break;
                 }
                 //info dialogue
@@ -2756,7 +2756,7 @@ const app_exception = (error) => {
 };
 /**
  * Mount app
- * @param {string|null} framework 
+ * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
 const mount_app_app = async (framework=null) => {
