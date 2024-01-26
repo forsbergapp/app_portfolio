@@ -45,47 +45,125 @@ const {getTimezone} = await import('regional');
  *              classList:          {contains:function, remove:function, add:function}
  *              className:          string
  *            }}  target
+ * 
+ * @typedef {{  originalEvent:AppEvent,
+ *              latlng:{lat:string, 
+ *                      lng:string}}} AppEventLeaflet 
+ * @typedef {{data:string}} AppEventEventSource
  */
-
+/**@type{{  common_app_id:number,
+            app_id:number|null,
+            app_logo:string|null,
+            app_sound:number|null,
+            app_email:string|null,
+            app_copyright:string|null,
+            app_link_url:string|null,
+            app_link_title:string|null,
+            app_framework:number|null,
+            info_link_policy_name:string|null,
+            info_link_disclaimer_name:string|null,
+            info_link_terms_name:string|null,
+            info_link_about_name:string|null,
+            info_link_policy_url:string|null,
+            info_link_disclaimer_url:string|null,
+            info_link_terms_url:string|null,
+            info_link_about_url:string|null,
+            exception_app_function:function|null,
+            user_app_role_id:number|null,
+            system_admin:string|null,
+            system_admin_only:number|null,
+            user_identity_provider_id:number|null,
+            user_account_id:number|null,
+            client_latitude:string,
+            client_longitude:string,
+            client_place:string,
+            client_timezone:string,
+            rest_at:string|null,
+            rest_dt:string|null,
+            rest_admin_at:string|null,
+            rest_resource_bff:string|null,
+            image_file_allowed_type1:string|null,
+            image_file_allowed_type2:string|null,
+            image_file_allowed_type3:string|null,
+            image_file_allowed_type4:string|null,
+            image_file_allowed_type5:string|null,
+            image_file_mime_type:string|null,
+            image_file_max_size:number,
+            image_avatar_width:number,
+            image_avatar_height:number,
+            user_locale:string,
+            user_timezone:string,
+            user_direction:string,
+            user_arabic_script:string,
+            user_preference_save:boolean,
+            module_leaflet_flyto:number,
+            module_leaflet_jumpto:number,
+            module_leaflet_popup_offset:number,
+            module_leaflet_style:string,
+            module_leaflet_session_map:{doubleClickZoom:function|null,
+                                        invalidateSize:function|null,
+                                        removeLayer:function|null,
+                                        setView:function|null,
+                                        flyTo:function|null,
+                                        setZoom:function|null,
+                                        getZoom:function|null},
+            module_leaflet_session_map_layer:[],
+            module_leaflet_countries:string|null,
+            module_leaflet_zoom:number, 
+            module_leaflet_zoom_city:number,
+            module_leaflet_zoom_pp:number,
+            module_leaflet_marker_div_gps:string,
+            module_leaflet_marker_div_city:string,
+            module_leaflet_marker_div_pp:string,
+            module_leaflet_map_styles:[{id:number|null, description:string|null, data:string|null, data2:string|null, data3:string|null, data4:string|null, data5:string|null, session_map_layer:string|null}],
+            'module_easy.qrcode_width':number|null,
+            'module_easy.qrcode_height':number|null,
+            'module_easy.qrcode_color_dark':string|null,
+            'module_easy.qrcode_color_light':string|null,
+            'module_easy.qrcode_background_color':string|null,
+            service_socket_client_ID:number|null,
+            service_socket_eventsource:{onmessage:function,
+                                        onerror:function,
+                                        close:function}|null}} */
 const COMMON_GLOBAL = {
     common_app_id:0,
     app_id:null,
-    app_logo:'',
+    app_logo:null,
     app_sound:0,
-    app_email:'',
-    app_copyright:'',
-    app_link_url:'',
-    app_link_title:'',
-    app_framework:'',
-    info_link_policy_name:'',
-    info_link_disclaimer_name:'',
-    info_link_terms_name:'',
-    info_link_about_name:'',
-    info_link_policy_url:'',
-    info_link_disclaimer_url:'',
-    info_link_terms_url:'',
-    info_link_about_url:'',
-    exception_app_function:'',
-    user_app_role_id:'',
-    system_admin:'',
-    system_admin_only:'',
-    user_identity_provider_id:'',
-    user_account_id:'',
+    app_email:null,
+    app_copyright:null,
+    app_link_url:null,
+    app_link_title:null,
+    app_framework:null,
+    info_link_policy_name:null,
+    info_link_disclaimer_name:null,
+    info_link_terms_name:null,
+    info_link_about_name:null,
+    info_link_policy_url:null,
+    info_link_disclaimer_url:null,
+    info_link_terms_url:null,
+    info_link_about_url:null,
+    exception_app_function:null,
+    user_app_role_id:null,
+    system_admin:null,
+    system_admin_only:null,
+    user_identity_provider_id:null,
+    user_account_id:null,
     client_latitude:'',
     client_longitude:'',
     client_place:'',
     client_timezone:'',
-    rest_at:'',
-    rest_dt:'',
-    rest_admin_at:'',
-    rest_resource_bff:'',
-    image_file_allowed_type1:'',
-    image_file_allowed_type2:'',
-    image_file_allowed_type3:'',
-    image_file_allowed_type4:'',
-    image_file_allowed_type5:'',
-    image_file_mime_type:'',
-    image_file_max_size:'',
+    rest_at:null,
+    rest_dt:null,
+    rest_admin_at:null,
+    rest_resource_bff:null,
+    image_file_allowed_type1:null,
+    image_file_allowed_type2:null,
+    image_file_allowed_type3:null,
+    image_file_allowed_type4:null,
+    image_file_allowed_type5:null,
+    image_file_mime_type:null,
+    image_file_max_size:0,
     image_avatar_width:0,
     image_avatar_height:0,
     user_locale:'',
@@ -97,23 +175,29 @@ const COMMON_GLOBAL = {
     module_leaflet_jumpto:0,
     module_leaflet_popup_offset:0,
     module_leaflet_style:'',
-    module_leaflet_session_map:'',
-    module_leaflet_session_map_layer:'',
-    module_leaflet_countries:'',
+    module_leaflet_session_map:{doubleClickZoom:null,
+                                invalidateSize:null,
+                                removeLayer:null,
+                                setView:null,
+                                flyTo:null,
+                                setZoom:null,
+                                getZoom:null},
+    module_leaflet_session_map_layer:[],
+    module_leaflet_countries:null,
     module_leaflet_zoom:0, 
     module_leaflet_zoom_city:0,
     module_leaflet_zoom_pp:0,
     module_leaflet_marker_div_gps:'',
     module_leaflet_marker_div_city:'',
     module_leaflet_marker_div_pp:'',
-    module_leaflet_map_styles:'',
-    'module_easy.qrcode_width':'',
-    'module_easy.qrcode_height':'',
-    'module_easy.qrcode_color_dark':'',
-    'module_easy.qrcode_color_light':'',
-    'module_easy.qrcode_background_color':'',
-    service_socket_client_ID:'',
-    service_socket_eventsource:''
+    module_leaflet_map_styles:[{id:null, description:null, data:null, data2:null, data3:null, data4:null, data5:null, session_map_layer:null}],
+    'module_easy.qrcode_width':null,
+    'module_easy.qrcode_height':null,
+    'module_easy.qrcode_color_dark':null,
+    'module_easy.qrcode_color_light':null,
+    'module_easy.qrcode_background_color':null,
+    service_socket_client_ID:null,
+    service_socket_eventsource:null
 };
 Object.seal(COMMON_GLOBAL);
 
@@ -424,7 +508,6 @@ const image_format = image => {
         return '';
     else
         return image;
-            
 };
 /**
  * List image format src
@@ -717,7 +800,7 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
                 break;
             }
         }    
-    } catch (error) {
+    } catch (/**@type{*}*/error) {
         exception(COMMON_GLOBAL.exception_app_function, error);
     }
 };
@@ -853,7 +936,7 @@ const show_common_dialogue = (dialogue, user_verification_type=null, title=null,
  * @param {string|null} code
  * @param {function|null} function_event 
  * @param {string|null} text_class
- * @param {string|{part: number, total:number, text:string}|null} message 
+ * @param {*} message 
  * @param {number|null} data_app_id 
  */
 const show_message = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
@@ -1008,7 +1091,7 @@ const dialogue_password_new_clear = () => {
     AppDocument.querySelector('#common_user_password_new_auth').innerHTML='';
     AppDocument.querySelector('#common_user_password_new').innerHTML='';
     AppDocument.querySelector('#common_user_password_new_confirm').innerHTML='';
-    COMMON_GLOBAL.user_account_id = '';
+    COMMON_GLOBAL.user_account_id = null;
     COMMON_GLOBAL.rest_at = '';
 };
 /**
@@ -1499,7 +1582,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
     path += `?user_account_id=${AppDocument.querySelector('#common_profile_id').innerHTML}&detailchoice=${detailchoice}`;
     //DETAIL
     //show only if user logged in
-    if (parseInt(COMMON_GLOBAL.user_account_id) || 0 !== 0) {
+    if (COMMON_GLOBAL.user_account_id || 0 !== 0) {
         if (detailchoice==0){
             //show only other app specific hide common
             AppDocument.querySelector('#common_profile_detail').style.display = 'none';
@@ -1588,7 +1671,7 @@ const search_profile = click_function => {
         let json_data;
         if (input_control(null,{check_valid_list:[[AppDocument.querySelector('#common_profile_search_input'),null]]})==false)
             return;
-        if (COMMON_GLOBAL.user_account_id!=''){
+        if (COMMON_GLOBAL.user_account_id!=null){
             //search using access token with logged in user_account_id
             path = `/user_account/profile/username/searchA?search=${encodeURI(searched_username)}`;
             token = 'APP_ACCESS';
@@ -1656,19 +1739,19 @@ const profile_show = async (user_account_id_other = null, username = null) => {
         let path;
     
         show_common_dialogue('PROFILE');
-        if (user_account_id_other == null && COMMON_GLOBAL.user_account_id == '' && username == null) {
+        if (user_account_id_other == null && COMMON_GLOBAL.user_account_id == null && username == null) {
             resolve(null);
         } else {
             if (user_account_id_other !== null) {
                 user_account_id_search = user_account_id_other;
-                path = `/user_account/profile/id?POST_ID=${user_account_id_search}&id=${COMMON_GLOBAL.user_account_id}`;
+                path = `/user_account/profile/id?POST_ID=${user_account_id_search ?? ''}&id=${COMMON_GLOBAL.user_account_id ?? ''}`;
             } else
             if (username !== null) {
                 user_account_id_search = '';
-                path = `/user_account/profile/username?search=${username}&id=${COMMON_GLOBAL.user_account_id}`;
+                path = `/user_account/profile/username?search=${username}&id=${COMMON_GLOBAL.user_account_id ?? ''}`;
             } else {
                 user_account_id_search = COMMON_GLOBAL.user_account_id;
-                path = `/user_account/profile/id?POST_ID=${user_account_id_search}&id=${COMMON_GLOBAL.user_account_id}`;
+                path = `/user_account/profile/id?POST_ID=${user_account_id_search ?? ''}&id=${COMMON_GLOBAL.user_account_id ?? ''}`;
             }
             //PROFILE MAIN
             const json_data ={  
@@ -1723,7 +1806,7 @@ const profile_show = async (user_account_id_other = null, username = null) => {
                     AppDocument.querySelector('#common_profile_info_likes_count').innerHTML = profile.count_likes;
                     AppDocument.querySelector('#common_profile_info_liked_count').innerHTML = profile.count_liked;
                 }    
-                if (COMMON_GLOBAL.user_account_id =='')
+                if (COMMON_GLOBAL.user_account_id ==null)
                     setTimeout(()=> {show_common_dialogue('LOGIN');}, 2000);
                 else
                     checkOnline('common_profile_avatar_online_status', profile.id);
@@ -1954,7 +2037,7 @@ const user_login = async (system_admin=false) => {
             }
             else{
                 const user = JSON.parse(result).items[0];
-                COMMON_GLOBAL.user_account_id = user.id;
+                COMMON_GLOBAL.user_account_id = parseInt(user.id);
                 if (user.active==0){
                     show_common_dialogue('VERIFY', 'LOGIN', user.email, null);
                     reject('ERROR');
@@ -1962,8 +2045,8 @@ const user_login = async (system_admin=false) => {
                 else{
                     profile_close();
                     
-                    COMMON_GLOBAL.user_account_id = user.id;
-                    COMMON_GLOBAL.user_identity_provider_id = '';
+                    COMMON_GLOBAL.user_account_id = parseInt(user.id);
+                    COMMON_GLOBAL.user_identity_provider_id = null;
                     COMMON_GLOBAL.user_app_role_id = user.app_role_id;
                     COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
                     
@@ -2018,7 +2101,7 @@ const user_logoff = async (system_admin) => {
     else{
         //remove access token
         COMMON_GLOBAL.rest_at ='';
-        COMMON_GLOBAL.user_account_id = '';
+        COMMON_GLOBAL.user_account_id = null;
 
         set_avatar(null, AppDocument.querySelector('#common_user_menu_avatar_img')); 
         //clear logged in info
@@ -2050,10 +2133,10 @@ const user_logoff = async (system_admin) => {
  */
 const user_edit = async () => {
     //get user from REST API
-    FFB('DB_API', `/user_account?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_ACCESS', null)
+    FFB('DB_API', `/user_account?user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
     .then(result=>{
         const user = JSON.parse(result);
-        if (COMMON_GLOBAL.user_account_id == user.id) {
+        if (COMMON_GLOBAL.user_account_id == parseInt(user.id)) {
             AppDocument.querySelector('#common_user_edit_local').style.display = 'none';
             AppDocument.querySelector('#common_user_edit_provider').style.display = 'none';
             AppDocument.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
@@ -2148,7 +2231,7 @@ const user_update = async () => {
                             avatar:             avatar,
                             ...get_uservariables()
                         };
-            path = `/user_account?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
+            path = `/user_account?PUT_ID=${COMMON_GLOBAL.user_account_id ?? ''}`;
         } else {
             if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
                             {
@@ -2160,7 +2243,7 @@ const user_update = async () => {
                             bio:            bio,
                             private:        Number(AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
                         };
-            path = `/user_account/common?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
+            path = `/user_account/common?PUT_ID=${COMMON_GLOBAL.user_account_id ?? ''}`;
         }
         AppDocument.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
         //update user using REST API
@@ -2209,7 +2292,7 @@ const user_signup = () => {
             AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
             const signup = JSON.parse(result);
             COMMON_GLOBAL.rest_at = signup.accessToken;
-            COMMON_GLOBAL.user_account_id = signup.id;
+            COMMON_GLOBAL.user_account_id = parseInt(signup.id);
             show_common_dialogue('VERIFY', 'SIGNUP', email, null);
         })
         .catch(()=>AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner'));
@@ -2254,7 +2337,7 @@ const user_verify_check_input = async (item, nextField) => {
                                 verification_type:  verification_type,
                                 ...get_uservariables()
                             };
-                FFB('DB_API', `/user_account/activate?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_DATA', json_data)
+                FFB('DB_API', `/user_account/activate?PUT_ID=${COMMON_GLOBAL.user_account_id ?? ''}`, 'PUT', 'APP_DATA', json_data)
                 .then(result=>{
                     AppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     const user_activate = JSON.parse(result).items[0];
@@ -2323,7 +2406,7 @@ const user_verify_check_input = async (item, nextField) => {
  * User delete
  * @param {number|null} choice 
  * @param {function} function_delete_event 
- * @returns {Promise.<null>}
+ * @returns {Promise.<{deleted:number}|null>}
  */
 const user_delete = async (choice=null, function_delete_event ) => {
     return new Promise((resolve, reject)=>{
@@ -2348,9 +2431,10 @@ const user_delete = async (choice=null, function_delete_event ) => {
                 AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
                 const json_data = { password: password};
     
-                FFB('DB_API', `/user_account/common?DELETE_ID=${COMMON_GLOBAL.user_account_id}`, 'DELETE', 'APP_ACCESS', json_data)
+                FFB('DB_API', `/user_account/common?DELETE_ID=${COMMON_GLOBAL.user_account_id ?? ''}`, 'DELETE', 'APP_ACCESS', json_data)
                 .then(()=>{
-                    AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');resolve({deleted: 1});
+                    AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
+                    resolve({deleted: 1});
                 })
                 .catch(err=>{
                     AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
@@ -2376,13 +2460,13 @@ const user_function = function_name => {
         const json_data = { user_account_id: user_id_profile};
         const check_div = AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`);
         if (check_div.children[0].style.display == 'block') {
-            path = `/user_account_${function_name.toLowerCase()}?POST_ID=${COMMON_GLOBAL.user_account_id}`;
+            path = `/user_account_${function_name.toLowerCase()}?POST_ID=${COMMON_GLOBAL.user_account_id ?? ''}`;
             method = 'POST';
         } else {
-            path = `/user_account_${function_name.toLowerCase()}?DELETE_ID=${COMMON_GLOBAL.user_account_id}`;
+            path = `/user_account_${function_name.toLowerCase()}?DELETE_ID=${COMMON_GLOBAL.user_account_id ?? ''}`;
             method = 'DELETE';
         }
-        if (COMMON_GLOBAL.user_account_id == '')
+        if (COMMON_GLOBAL.user_account_id == null)
             show_common_dialogue('LOGIN');
         else {
             FFB('DB_API', path, method, 'APP_ACCESS', json_data)
@@ -2408,9 +2492,9 @@ const user_function = function_name => {
  * @param {number|null} choice 
  * @param {number} user_account_id 
  * @param {number} app_id 
- * @param {function} function_delete_event 
+ * @param {function|null} function_delete_event 
  */
-const user_account_app_delete = (choice=null, user_account_id, app_id, function_delete_event) => {
+const user_account_app_delete = (choice=null, user_account_id, app_id, function_delete_event=null) => {
     switch (choice){
         case null:{
             show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
@@ -2449,7 +2533,7 @@ const user_forgot = async () => {
             AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
             const forgot = JSON.parse(result);
             if (forgot.sent == 1){
-                COMMON_GLOBAL.user_account_id = forgot.id;
+                COMMON_GLOBAL.user_account_id = parseInt(forgot.id);
                 show_common_dialogue('VERIFY', 'FORGOT', email, null);
             }
         })
@@ -2474,7 +2558,7 @@ const updatePassword = () => {
                      
                      })==true){
         AppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
-        FFB('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_ACCESS', json_data)
+        FFB('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id ?? ''}`, 'PUT', 'APP_ACCESS', json_data)
         .then(()=>{
             AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
             dialogue_password_new_clear();
@@ -2488,7 +2572,7 @@ const updatePassword = () => {
  * @returns {Promise.<void>}
  */
 const user_preference_save = async () => {
-    if (COMMON_GLOBAL.user_preference_save==true && COMMON_GLOBAL.user_account_id != ''){
+    if (COMMON_GLOBAL.user_preference_save==true && COMMON_GLOBAL.user_account_id != null){
         const json_data =
             {  
                 preference_locale: AppDocument.querySelector('#common_user_locale_select').value,
@@ -2496,7 +2580,7 @@ const user_preference_save = async () => {
                 app_setting_preference_direction_id: AppDocument.querySelector('#common_user_direction_select').options[AppDocument.querySelector('#common_user_direction_select').selectedIndex].id,
                 app_setting_preference_arabic_script_id: AppDocument.querySelector('#common_user_arabic_script_select').options[AppDocument.querySelector('#common_user_arabic_script_select').selectedIndex].id
             };
-        await FFB('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id}`, 'PATCH', 'APP_ACCESS', json_data);
+        await FFB('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id ?? ''}`, 'PATCH', 'APP_ACCESS', json_data);
     }
 };
 /**
@@ -2505,7 +2589,7 @@ const user_preference_save = async () => {
  */
 const user_preference_get = async () => {
     return new Promise((resolve,reject)=>{
-        FFB('DB_API', `/user_account_app?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_ACCESS', null)
+        FFB('DB_API', `/user_account_app?user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
         .then(result=>{
             const user_account_app = JSON.parse(result)[0];
             //locale
@@ -2616,7 +2700,7 @@ const ProviderSignIn = (provider_id) => {
             .then(result=>{
                 const user_login = JSON.parse(result).items[0];
                 COMMON_GLOBAL.rest_at = JSON.parse(result).accessToken;
-                COMMON_GLOBAL.user_account_id = user_login.id;
+                COMMON_GLOBAL.user_account_id = parseInt(user_login.id);
                 COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
                 updateOnlineStatus();
                 user_preference_get()
@@ -2675,16 +2759,22 @@ const create_qr = (div, url) => {
  * @param {string} latitude 
  * @param {boolean} doubleclick_event 
  * @param {function} search_event_function 
- * @returns 
+ * @returns {Promise.<null>}
  */
 const map_init = async (containervalue, stylevalue, longitude, latitude, doubleclick_event, search_event_function) => {
     return await new Promise((resolve)=>{
         if (checkconnected()) {
-            
-            COMMON_GLOBAL.module_leaflet_session_map = '';
+            COMMON_GLOBAL.module_leaflet_session_map = {doubleClickZoom:null,
+                                                        invalidateSize:null,
+                                                        removeLayer:null,
+                                                        setView:null,
+                                                        flyTo:null,
+                                                        setZoom:null,
+                                                        getZoom:null},
             COMMON_GLOBAL.module_leaflet_session_map = Leaflet.map(containervalue).setView([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
             map_setstyle(stylevalue).then(()=>{
                 //disable doubleclick in event dblclick since e.preventdefault() does not work
+                /**@ts-ignore */
                 COMMON_GLOBAL.module_leaflet_session_map.doubleClickZoom.disable(); 
     
                 //add scale
@@ -2739,7 +2829,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, doublec
                 AppDocument.querySelector('#common_module_leaflet_search_input')['data-function'] = search_event_function;
                 
                 if (doubleclick_event){
-                    map_setevent('dblclick', (e) => {
+                    map_setevent('dblclick', (/**@type{AppEventLeaflet}*/e) => {
                         if (e.originalEvent.target.id == 'mapid'){
                             const lng = e.latlng.lng;
                             const lat = e.latlng.lat;
@@ -2756,15 +2846,20 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, doublec
                         }
                     });
                 }
-                resolve();
+                resolve(null);
             });
         }
         else
-            resolve();
+            resolve(null);
     });
     
 };
-const map_country = (lang_code) =>{
+/**
+ * Map country
+ * @param {string} lang_code 
+ * @returns {Promise.<null>}
+ */
+const map_country = lang_code =>{
     return new Promise ((resolve, reject)=>{
         //country
         FFB('DB_API', `/country?lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
@@ -2799,15 +2894,18 @@ const map_country = (lang_code) =>{
                 select_country.innerHTML = html;
                 SearchAndSetSelectedIndex(current_country, AppDocument.querySelector('#common_module_leaflet_select_country'),0);    
             }
-            resolve();
+            resolve(null);
         })
-        .catch(err=>{
-            reject(err,null);
-        });
+        .catch(err=>reject(err));
     });
     
 };
-const map_city = (country_code) =>{
+/**
+ * Map city
+ * @param {*} country_code 
+ * @returns {void}
+ */
+const map_city = country_code =>{
     const select_cities = AppDocument.querySelector('#common_module_leaflet_select_city');
     //set default option
     select_cities.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
@@ -2819,6 +2917,10 @@ const map_city = (country_code) =>{
         });
     }
 };
+/**
+ * Map city empty
+ * @returns {void}
+ */
 const map_city_empty = () =>{
     //remove old city list:      
     const select_city = AppDocument.querySelector('#common_module_leaflet_select_city');
@@ -2828,6 +2930,10 @@ const map_city_empty = () =>{
     //display first empty city
     select_city.selectedIndex = 0;
 };
+/**
+ * Map toolbar reset
+ * @returns {void}
+ */
 const map_toolbar_reset = ()=>{
     const select_country = AppDocument.querySelector('#common_module_leaflet_select_country');
     select_country.selectedIndex = 0;
@@ -2839,7 +2945,12 @@ const map_toolbar_reset = ()=>{
     if (AppDocument.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
         map_control_toggle_expand('layer');
 };
-const map_show_search_on_map = (data)=>{
+/**
+ * Map show search on map
+ * @param {{city:string, country:string, longitude:string, latitude:string}} data 
+ * @returns {void}
+ */
+const map_show_search_on_map = data =>{
     
     const place =  data.city + ', ' + data.country;
     map_update( data.longitude,
@@ -2851,7 +2962,12 @@ const map_show_search_on_map = (data)=>{
                 COMMON_GLOBAL.module_leaflet_jumpto);
     map_toolbar_reset();
 };
-const map_control_toggle_expand = (item) =>{
+/**
+ * Map control toogle expand
+ * @param {string} item 
+ * @returns {void}
+ */
+const map_control_toggle_expand = item =>{
     let style_display;
     if (AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
         AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display =='')
@@ -2860,27 +2976,53 @@ const map_control_toggle_expand = (item) =>{
         style_display = 'none';
     AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
 };
+/**
+ * Map resize
+ * @returns {Promise.<void>}
+ */
 const map_resize = async () => {
     if (checkconnected()) {
         //fixes not rendering correct showing map div
+        /**@ts-ignore */
         COMMON_GLOBAL.module_leaflet_session_map.invalidateSize();
     }
 };
+/**
+ * Map line remove all
+ * @returns {void}
+ */
 const map_line_removeall = () => {
     if(COMMON_GLOBAL.module_leaflet_session_map_layer)
-        for (let i=0;i<COMMON_GLOBAL.module_leaflet_session_map_layer.length;i++)
+        for (let i=0;i<COMMON_GLOBAL.module_leaflet_session_map_layer.length;i++){
+            /**@ts-ignore */
             COMMON_GLOBAL.module_leaflet_session_map.removeLayer(COMMON_GLOBAL.module_leaflet_session_map_layer[i]);
-            COMMON_GLOBAL.module_leaflet_session_map_layer=[];
+        }
+    COMMON_GLOBAL.module_leaflet_session_map_layer=[];
 };
+/**
+ * Map line create 
+ * @param {string} id 
+ * @param {string} title 
+ * @param {number} text_size 
+ * @param {string} from_longitude 
+ * @param {string} from_latitude 
+ * @param {string} to_longitude 
+ * @param {string} to_latitude 
+ * @param {string} color 
+ * @param {number} width 
+ * @param {number} opacity 
+ * @returns {void}
+ */
 const map_line_create = (id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity) => {
+    /**Text size to be implemented */
     if (checkconnected()) {
         const geojsonFeature = {
-            'id': `"${id}"`,
-            'type': 'Feature',
-            'properties': { 'title': title },
-            'geometry': {
-                'type': 'LineString',
-                    'coordinates': [
+            id: `"${id}"`,
+            type: 'Feature',
+            properties: { title: title },
+            geometry: {
+                type: 'LineString',
+                    coordinates: [
                         [from_longitude, from_latitude],
                         [to_longitude, to_latitude]
                     ]
@@ -2888,31 +3030,45 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
         };
         //use GeoJSON to draw a line
         const myStyle = {
-            'color': color,
-            'weight': width,
-            'opacity': opacity
+            color: color,
+            weight: width,
+            opacity: opacity
         };
         const layer = Leaflet.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
         if(!COMMON_GLOBAL.module_leaflet_session_map_layer)
             COMMON_GLOBAL.module_leaflet_session_map_layer=[];
-            COMMON_GLOBAL.module_leaflet_session_map_layer.push(layer);
+        /**@ts-ignore */
+        COMMON_GLOBAL.module_leaflet_session_map_layer.push(layer);
     }
 };
+/**
+ * Map set event
+ * @param {string} event 
+ * @param {function} function_event 
+ * @returns {void}
+ */
 const map_setevent = (event, function_event) => {
     if (checkconnected()) {
         //also creates event:
         //Leaflet.DomEvent.addListener(COMMON_GLOBAL.module_leaflet_session_map, 'dblclick', function_event);
+        /**@ts-ignore */
         COMMON_GLOBAL.module_leaflet_session_map.on(event, function_event);
     }
 };
-const map_setstyle = async (mapstyle) => {
+/**
+ * Map set style
+ * @param {string} mapstyle 
+ * @returns {Promise.<void>}
+ */
+const map_setstyle = async mapstyle => {
     return await new Promise ((resolve) => {
         if (checkconnected()) {
-            for (const map_style of COMMON_GLOBAL.module_leaflet_map_styles){
-                if (map_style.session_map_layer)
-                    COMMON_GLOBAL.module_leaflet_session_map.removeLayer(map_style.session_map_layer);
+            for (const module_leaflet_map_style of COMMON_GLOBAL.module_leaflet_map_styles){
+                if (COMMON_GLOBAL.module_leaflet_session_map && module_leaflet_map_style.session_map_layer){
+                    /**@ts-ignore */
+                    COMMON_GLOBAL.module_leaflet_session_map.removeLayer(module_leaflet_map_style.session_map_layer);
+                }
             }
-            //mapstyle_record [{id, description, data, data2, data3, data4, data5, session_map_layer});
             const mapstyle_record = COMMON_GLOBAL.module_leaflet_map_styles.filter(map_style=>map_style.data==mapstyle)[0];
             if (mapstyle_record.data3)
                 mapstyle_record.session_map_layer = Leaflet.tileLayer(mapstyle_record.data2, {
@@ -2929,7 +3085,12 @@ const map_setstyle = async (mapstyle) => {
             resolve();
     });
 };
-const map_update_popup = (title) => {
+/**
+ * Map update popup
+ * @param {string} title 
+ * @return {void}
+ */
+const map_update_popup = title => {
     AppDocument.querySelector('#common_module_leaflet_popup_title').innerHTML = title;
 };
 /**
@@ -2941,28 +3102,45 @@ const map_update_popup = (title) => {
  * @param {string|null} timezone_text 
  * @param {string} marker_id 
  * @param {number} to_method 
- * @returns {Promise.<void>}
+ * @returns {Promise.<string|null>}
  */
 const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_text = null, marker_id, to_method) => {
     return new Promise((resolve)=> {
         if (checkconnected()) {
+            /**
+             * Map update GPS
+             * @param {number} to_method 
+             * @param {number|null} zoomvalue 
+             * @param {string} longitude 
+             * @param {string} latitude 
+             */
             const map_update_gps = (to_method, zoomvalue, longitude, latitude) => {
-                switch (Number(to_method)){
+                switch (to_method){
                     case 0:{
-                        if (zoomvalue == null)
+                        if (zoomvalue == null){
+                            /**@ts-ignore */
                             COMMON_GLOBAL.module_leaflet_session_map.setView(new Leaflet.LatLng(latitude, longitude));
-                        else
+                        }
+                        else{
+                            /**@ts-ignore */
                             COMMON_GLOBAL.module_leaflet_session_map.setView(new Leaflet.LatLng(latitude, longitude), zoomvalue);
+                        }
                         break;
                     }
                     case 1:{
+                        /**@ts-ignore */
                         COMMON_GLOBAL.module_leaflet_session_map.flyTo([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
                         break;
                     }
                     //also have COMMON_GLOBAL.module_leaflet_session_map.panTo(new Leaflet.LatLng({lng: longitude, lat: latitude}));
                 }
             };
-            const map_update_text = (timezone_text) => {
+            /**
+             * Map update text
+             * @param {string} timezone_text
+             * @return {void} 
+             */
+            const map_update_text = timezone_text => {
                 const popuptext = `<div id="common_module_leaflet_popup_title">${text_place}</div>
                                    <div id="common_module_leaflet_popup_sub_title" class='common_icon'></div>
                                    <div id="common_module_leaflet_popup_sub_title_timezone">${timezone_text}</div>
@@ -2974,7 +3152,6 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
                 const marker = Leaflet.marker([latitude, longitude]).addTo(COMMON_GLOBAL.module_leaflet_session_map);
                 //setting id so apps can customize if necessary
                 marker._icon.id = marker_id;
-                resolve(timezone_text);
             };
             map_update_gps(to_method, zoomvalue, longitude, latitude);
             if (timezone_text == null)
@@ -2982,14 +3159,14 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
             else{
                 map_update_text(timezone_text);
             }
+            resolve(timezone_text);
         }
+        else
+            resolve(null);
     });
 };
-/*----------------------- */
-/* FFB                    */
-/*----------------------- */
 /**
- * 
+ * Frontend for Backend (FFB)
  * @param {string} service 
  * @param {string} path 
  * @param {string} method 
@@ -2998,6 +3175,7 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
  * @returns {Promise.<*>} 
  */
 const FFB = async (service, path, method, authorization_type, json_data=null) => {
+    /**@type{number} */
     let status;
     let authorization;
     let bff_path;
@@ -3071,8 +3249,8 @@ const FFB = async (service, path, method, authorization_type, json_data=null) =>
             };
     path += `&lang_code=${COMMON_GLOBAL.user_locale}`;
     const encodedparameters = toBase64(path);
-    let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL.app_id}&parameters=${encodedparameters}`;
-    url += `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id}&system_admin=${COMMON_GLOBAL.system_admin}`;
+    let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL.app_id??''}&parameters=${encodedparameters}`;
+    url += `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin}`;
     if (service=='SOCKET' && authorization_type=='SOCKET'){
         return new EventSource(url);
     }
@@ -3122,25 +3300,28 @@ const FFB = async (service, path, method, authorization_type, json_data=null) =>
         })
         .catch(error=>{throw error;});
 };
-/*----------------------- 
-  SERVICE SOCKET      
-
-  local objects:
-  broadcast_init
-  maintenance_countdown
-  show_broadcast_info
-  reconnect
-  checkOnline
-  ----------------------- */
+/**
+ * Broadcast init
+ * @returns {void}
+ */
 const broadcast_init = () => {
     connectOnline();
 };
+/**
+ * Maintenance countdown
+ * @param {number} remaining 
+ */
 const maintenance_countdown = (remaining) => {
     if(remaining <= 0)
-        location.reload(true);
+        location.reload();
     AppDocument.querySelector('#common_maintenance_countdown').innerHTML = remaining;
     setTimeout(()=>{ maintenance_countdown(remaining - 1); }, 1000);
 };
+/**
+ * Show broadcast message
+ * @param {string} broadcast_message 
+ * @returns {void}
+ */
 const show_broadcast = (broadcast_message) => {
     broadcast_message = window.atob(broadcast_message);
     const broadcast_type = JSON.parse(broadcast_message).broadcast_type;
@@ -3160,7 +3341,7 @@ const show_broadcast = (broadcast_message) => {
         }
         case 'CHAT':
         case 'ALERT':{
-            show_broadcast_info(message);
+            show_broadcast_alert(message);
             break;
         }
 		case 'PROGRESS':{
@@ -3169,14 +3350,24 @@ const show_broadcast = (broadcast_message) => {
         }
     }
 };
-const show_broadcast_info = (message) => {
+/**
+ * Show broadcast ALERT
+ * @param {string} message 
+ * @returns {void}
+ */
+const show_broadcast_alert = message => {
     AppDocument.querySelector('#common_broadcast_info_message').style.animationName='common_ticker';
     AppDocument.querySelector('#common_broadcast_info_message_item').innerHTML = message;
     AppDocument.querySelector('#common_broadcast_info').style.visibility='visible';
 };
-const show_maintenance = (message, init) => {
+/**
+ * Show maintenance
+ * @param {string} message 
+ * @param {number|null} init 
+ * @returns {void}
+ */
+const show_maintenance = (message, init=null) => {
     const countdown_timer = 60;
-
     if (init==1){
         AppDocument.querySelector('#common_dialogue_maintenance').style.visibility='visible';
         maintenance_countdown(countdown_timer);
@@ -3184,6 +3375,10 @@ const show_maintenance = (message, init) => {
     else
         AppDocument.querySelector('#common_maintenance_footer').innerHTML = message;
 };
+/**
+ * Socket reconnect
+ * @returns {void}
+ */
 const reconnect = () => {
     setTimeout(()=>{
                     if (checkconnected())
@@ -3193,49 +3388,69 @@ const reconnect = () => {
                         connectOnline();
                    }, 5000);
 };
+/**
+ * Socket update online status
+ * @returns {void}
+ */
 const updateOnlineStatus = () => {
     let token_type='';
     let path='';
     if (COMMON_GLOBAL.system_admin!=''){
         path =   '/socket/connection/SystemAdmin'+ 
-                `?client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
-                `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
+                `?client_id=${COMMON_GLOBAL.service_socket_client_ID??''}`+
+                `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id ??''}` +
                 `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
         token_type='SYSTEMADMIN';
     }
     else{
         path =   '/socket/connection'+ 
-                `?client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
-                `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
+                `?client_id=${COMMON_GLOBAL.service_socket_client_ID??''}`+
+                `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
                 `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
         token_type='APP_DATA';
     }
     FFB('SOCKET', path, 'PATCH', token_type, null);
 };
+/**
+ * Socket connect online
+ * @returns {Promise.<void>}
+ */
 const connectOnline = async () => {
     FFB('SOCKET',   '/socket/connection/connect' +
-                    `?identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
+                    `?identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
                     `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
          'GET', 'SOCKET', null)
     .then((result_eventsource)=>{
         COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
-        COMMON_GLOBAL.service_socket_eventsource.onmessage = event => {
-            show_broadcast(event.data);
-        };
-        COMMON_GLOBAL.service_socket_eventsource.onerror = () => {
-            COMMON_GLOBAL.service_socket_eventsource.close();
-            reconnect();
-        };
+        if (COMMON_GLOBAL.service_socket_eventsource){
+            COMMON_GLOBAL.service_socket_eventsource.onmessage = (/**@type{AppEventEventSource}*/event) => {
+                show_broadcast(event.data);
+            };
+            COMMON_GLOBAL.service_socket_eventsource.onerror = () => {
+                if (COMMON_GLOBAL.service_socket_eventsource)
+                    COMMON_GLOBAL.service_socket_eventsource.close();
+                reconnect();
+            };
+        }
     })
     .catch(()=>reconnect());
 };
+/**
+ * Socket check online
+ * @param {string} div_icon_online 
+ * @param {number} user_account_id 
+ * @returns {void}
+ */
 const checkOnline = (div_icon_online, user_account_id) => {
     FFB('SOCKET', `/socket/connection/check?user_account_id=${user_account_id}`, 'GET', 'APP_DATA', null)
     .then(result=>AppDocument.querySelector('#' + div_icon_online).className = JSON.parse(result).online == 1?'online':'offline');
 };
-/*-----------------------
-  SERVICE GEOLOCATION   
-  ----------------------- */
+/**
+ * Get place from GPS
+ * @param {string} longitude 
+ * @param {string} latitude 
+ * @returns {Promise.<string>}
+ */
 const get_place_from_gps = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
         let tokentype;
@@ -3265,6 +3480,10 @@ const get_place_from_gps = async (longitude, latitude) => {
         .catch(()=>resolve(''));
     });
 };
+/**
+ * Get GPS from IP
+ * @returns {Promise.<null>}
+ */
 const get_gps_from_ip = async () => {
 
     return new Promise((resolve)=>{
@@ -3293,19 +3512,22 @@ const get_gps_from_ip = async () => {
                 COMMON_GLOBAL.client_place =    geodata.geoplugin_city + ', ' +
                                                 geodata.geoplugin_regionName + ', ' +
                                                 geodata.geoplugin_countryName;
-            resolve();
+            resolve(null);
         })
         .catch(()=>resolve(null));
     });
 
 };
-/*----------------------- */
-/* SERVICE WORLDCITIES    */
-/*----------------------- */
+/**
+ * Worldcities - Get cities
+ * @param {string} countrycode 
+ * @returns {Promise.<string>}
+ */
 const get_cities = async countrycode => {
     return new Promise((resolve, reject)=>{
         FFB('WORLDCITIES', `/country?country=${countrycode}`, 'GET', 'APP_DATA', null)
         .then(result=>{
+            /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
             const cities = JSON.parse(result);
             cities.sort((a, b) => {
                 const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
@@ -3352,15 +3574,25 @@ const get_cities = async countrycode => {
         .then((err)=>reject(err));
     });
 };
+/**
+ * Worldcities - Search
+ * @param {function} event_function 
+ * @returns {Promise.<void>}
+ */
 const worldcities_search = async (event_function) =>{
     const search = AppDocument.querySelector('#common_module_leaflet_search_input').innerText;
     AppDocument.querySelector('#common_module_leaflet_search_list').innerHTML = '';
     if (search !=''){
-        const get_cities = async (search) =>{
-            return new Promise ((resolve)=>{
+        /**
+         * 
+         * @param {string} search 
+         * @returns {Promise.<{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]>}
+         */
+        const get_cities = async search =>{
+            return new Promise ((resolve, reject)=>{
                 FFB('WORLDCITIES', `/city/search?search=${encodeURI(search)}`, 'GET', 'APP_DATA', null)
                 .then(result=>resolve(JSON.parse(result)))
-                .catch(()=>resolve(null));
+                .catch((error)=>reject(error));
             });
         };
         AppDocument.querySelector('#common_module_leaflet_search_list').classList.add('css_spinner');
@@ -3392,25 +3624,22 @@ const worldcities_search = async (event_function) =>{
         }
     }
 };
-/*-----------------------
-  EXCEPTION              
-  
-  local objects:
-  exception
-  ----------------------- */
+/**
+ * Exception function
+ * @param {function|null} app_exception_function 
+ * @param {Error|string} error 
+ * @returns {void}
+ */
 const exception = (app_exception_function, error) => {
-    app_exception_function(error);
+    if (app_exception_function)
+        app_exception_function(error);
 };
-/*-----------------------
-  INIT                  
-
-  local objects:
-  set_app_service_parameters
-  set_events
-  set_user_account_app_settings
-  set_app_parameters
-  ----------------------- */
-const set_app_service_parameters = async (parameters) => {
+/**
+ * Set app service parameters
+ * @param {*} parameters 
+ * @returns {Promise.<void>}
+ */
+const set_app_service_parameters = async parameters => {
     //app info
     COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
     COMMON_GLOBAL.app_id = parameters.app_id;
@@ -3435,8 +3664,8 @@ const set_app_service_parameters = async (parameters) => {
     COMMON_GLOBAL.system_admin_only = parameters.system_admin_only;
 
     //user info
-    COMMON_GLOBAL.user_identity_provider_id='';
-    COMMON_GLOBAL.user_account_id = '';
+    COMMON_GLOBAL.user_identity_provider_id=null;
+    COMMON_GLOBAL.user_account_id = null;
     
     //client info
     COMMON_GLOBAL.client_latitude  = parameters.client_latitude;
@@ -3458,7 +3687,10 @@ const set_app_service_parameters = async (parameters) => {
     COMMON_GLOBAL.user_direction             = '';
     COMMON_GLOBAL.user_arabic_script         = '';  
 };
-
+/**
+ * Disable textediting
+ * @returns {boolean}
+ */
 const disable_textediting = () =>(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && 
                                 COMMON_GLOBAL.rest_at =='' && COMMON_GLOBAL.rest_admin_at =='') ||
                                 COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id;
@@ -3466,10 +3698,10 @@ const disable_textediting = () =>(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_a
  * Common events
  * @param {string} event_type 
  * @param {AppEvent} event 
+ * @returns {Promise.<void>}
  */
 const common_event = async (event_type,event) =>{
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener(event_type, (/**@type{AppEvent}*/event) => {
             common_event(event_type, event);
         });
@@ -3503,10 +3735,10 @@ const common_event = async (event_type,event) =>{
                         case 'common_user_start_login_system_admin':
                         case 'common_user_start_signup':
                         case 'common_user_start_forgot':{
-                            AppDocument.querySelectorAll('#common_user_start_nav > div').forEach(tab=>tab.classList.remove('common_user_start_selected'));
+                            AppDocument.querySelectorAll('#common_user_start_nav > div').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('common_user_start_selected'));
                             AppDocument.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
                             
-                            AppDocument.querySelectorAll('#common_dialogue_user_start_content .common_user_start_form').forEach(form=>form.style.display='none');
+                            AppDocument.querySelectorAll('#common_dialogue_user_start_content .common_user_start_form').forEach((/**@type{HTMLElement}*/form)=>form.style.display='none');
                             AppDocument.querySelector(`#${event_target_id}_form`).style.display='inline-block';
     
                             break;
@@ -3661,7 +3893,7 @@ const common_event = async (event_type,event) =>{
                                     AppDocument.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                                 }
                                 else
-                                    await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null);
+                                    await profile_show(Number(element_row(event.target).getAttribute('data-user_account_id')),null);
                             }
                             break;
                         }
@@ -3674,24 +3906,24 @@ const common_event = async (event_type,event) =>{
                                 if (AppDocument.querySelector(`#${element_id(event.target)}`)['data-function'])
                                     AppDocument.querySelector(`#${element_id(event.target)}`)['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                                 else
-                                    await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null);
+                                    await profile_show(Number(element_row(event.target).getAttribute('data-user_account_id')),null);
                             }
                             else{
                                 //app list
                                 if (event.target.classList.contains('common_profile_detail_list_app_name')){
-                                    window.open(element_row(event.target).getAttribute('data-url'), '_blank');
+                                    window.open(element_row(event.target).getAttribute('data-url') ?? '', '_blank');
                                 }
                                 else
                                     if (AppDocument.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id &&
                                         event.target.parentNode.classList.contains('common_profile_detail_list_app_delete')){
                                             await user_account_app_delete(null, 
                                                                     AppDocument.querySelector('#common_profile_id').innerHTML,
-                                                                    element_row(event.target).getAttribute('data-app_id'),
+                                                                    Number(element_row(event.target).getAttribute('data-app_id')),
                                                                     () => { 
                                                                         AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                                                                         user_account_app_delete(1, 
                                                                                                 AppDocument.querySelector('#common_profile_id').innerHTML, 
-                                                                                                element_row(event.target).getAttribute('data-app_id'), 
+                                                                                                Number(element_row(event.target).getAttribute('data-app_id')), 
                                                                                                 null);
                                                                     });
                                     }
@@ -3748,17 +3980,17 @@ const common_event = async (event_type,event) =>{
                         case 'common_module_leaflet_search_list':{
                             //execute function from inparameter or use default when not specified
                             if (event.target.classList.contains('common_module_leaflet_click_city')){
-                                const data = {  city: element_row(event.target).getAttribute('data-city'),
-                                                country: element_row(event.target).getAttribute('data-country'),
-                                                latitude: element_row(event.target).getAttribute('data-latitude'),
-                                                longitude: element_row(event.target).getAttribute('data-longitude')
+                                const data = {  city: element_row(event.target).getAttribute('data-city') ?? '',
+                                                country: element_row(event.target).getAttribute('data-country') ??'',
+                                                latitude: element_row(event.target).getAttribute('data-latitude') ?? '',
+                                                longitude: element_row(event.target).getAttribute('data-longitude') ?? ''
                                             };
                                 if (AppDocument.querySelector('#common_module_leaflet_search_list')['data-function']){
                                     AppDocument.querySelector('#common_module_leaflet_search_list')['data-function'](data);
                                     map_toolbar_reset();
                                 }
                                 else
-                                    map_show_search_on_map(data,null,()=>{map_toolbar_reset('search');});
+                                    map_show_search_on_map(data);
                             }
                             break;
                         }
@@ -3776,15 +4008,19 @@ const common_event = async (event_type,event) =>{
                         case 'common_toolbar_framework_js':
                         case 'common_toolbar_framework_vue':
                         case 'common_toolbar_framework_react':{
-                            AppDocument.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach(btn=>btn.classList.remove('common_toolbar_selected'));
+                            AppDocument.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
                             AppDocument.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
                             break;
                         }    
                         default:{
-                            if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in'))
+                            if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in')){
+                                /**@ts-ignore */
                                 COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() + 1);
-                            if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out'))
+                            }
+                            if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out')){
+                                /**@ts-ignore */
                                 COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() - 1);
+                            }
                             break;
                         }
                     }
@@ -3829,15 +4065,15 @@ const common_event = async (event_type,event) =>{
                     //module leaflet events
                     case 'common_module_leaflet_select_country':{
                         if (event.target.options[event.target.selectedIndex].getAttribute('country_code'))
-                            map_city(event.target.options[event.target.selectedIndex].getAttribute('country_code').toUpperCase());
+                            map_city(event.target.options[event.target.selectedIndex].getAttribute('country_code')??''.toUpperCase());
                         else{
                             map_toolbar_reset();
                         }
                         break;
                     }
                     case 'common_module_leaflet_select_city':{
-                        const longitude_selected = event.target.options[event.target.selectedIndex].getAttribute('longitude');
-                        const latitude_selected = event.target.options[event.target.selectedIndex].getAttribute('latitude');
+                        const longitude_selected = event.target.options[event.target.selectedIndex].getAttribute('longitude') ??'';
+                        const latitude_selected = event.target.options[event.target.selectedIndex].getAttribute('latitude') ??'';
                         map_update( longitude_selected, 
                                     latitude_selected, 
                                     COMMON_GLOBAL.module_leaflet_zoom_city,
@@ -3969,6 +4205,10 @@ const set_events = () => {
     AppDocument.querySelector('#app').addEventListener('touchstart', disable_common_input, false);
 
 };
+/**
+ * Set user account app settings
+ * @returns {void}
+ */
 const set_user_account_app_settings = () =>{
     if (AppDocument.querySelector('#common_user_menu')){
         SearchAndSetSelectedIndex(COMMON_GLOBAL.user_locale, AppDocument.querySelector('#common_user_locale_select'), 1);
@@ -3977,6 +4217,11 @@ const set_user_account_app_settings = () =>{
         SearchAndSetSelectedIndex(COMMON_GLOBAL.user_arabic_script, AppDocument.querySelector('#common_user_arabic_script_select'), 1);
     }
 };
+/**
+ * Sett app parameters
+ * @param {{app_id:number, parameter_name:string, parameter_value:string}[]} common_parameters 
+ * @returns {void}
+ */
 const set_app_parameters = (common_parameters) => {
     //set parameters for common_app_id, each app set its own parameters in the app
     for (const parameter of common_parameters.filter(parameter=>parameter.app_id == COMMON_GLOBAL.common_app_id)){
@@ -3995,9 +4240,9 @@ const set_app_parameters = (common_parameters) => {
             case 'IMAGE_FILE_ALLOWED_TYPE4'             :{COMMON_GLOBAL.image_file_allowed_type4 = parameter.parameter_value;break;}
             case 'IMAGE_FILE_ALLOWED_TYPE5'             :{COMMON_GLOBAL.image_file_allowed_type5 = parameter.parameter_value;break;}
             case 'IMAGE_FILE_MIME_TYPE'                 :{COMMON_GLOBAL.image_file_mime_type = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_MAX_SIZE'                  :{COMMON_GLOBAL.image_file_max_size = parameter.parameter_value;break;}
-            case 'IMAGE_AVATAR_WIDTH'                   :{COMMON_GLOBAL.image_avatar_width = parameter.parameter_value;break;}
-            case 'IMAGE_AVATAR_HEIGHT'                  :{COMMON_GLOBAL.image_avatar_height = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_MAX_SIZE'                  :{COMMON_GLOBAL.image_file_max_size = parseInt(parameter.parameter_value);break;}
+            case 'IMAGE_AVATAR_WIDTH'                   :{COMMON_GLOBAL.image_avatar_width = parseInt(parameter.parameter_value);break;}
+            case 'IMAGE_AVATAR_HEIGHT'                  :{COMMON_GLOBAL.image_avatar_height = parseInt(parameter.parameter_value);break;}
             case 'MODULE_LEAFLET_FLYTO'                 :{COMMON_GLOBAL.module_leaflet_flyto = parseInt(parameter.parameter_value);break;}
             case 'MODULE_LEAFLET_JUMPTO'                :{COMMON_GLOBAL.module_leaflet_jumpto = parseInt(parameter.parameter_value);break;}
             case 'MODULE_LEAFLET_POPUP_OFFSET'          :{COMMON_GLOBAL.module_leaflet_popup_offset = parseInt(parameter.parameter_value);break;}
@@ -4013,12 +4258,14 @@ const set_app_parameters = (common_parameters) => {
 };
 /**
  * Mounts app using given framework or pure javascript and using given list of event functions
+ * @param {number} framework
  * @param {{Click:function,
  *          Change:function,
  *          KeyDown:function,
  *          KeyUp:function,
  *          Focus:function,
  *          Input:function}} events 
+ * @returns {Promise.<void>}
  */
 const mount_app = async (framework, events) => {
     const app_root_div  = 'app_root';
@@ -4028,15 +4275,15 @@ const mount_app = async (framework, events) => {
     AppDocument.querySelector(`#${app_root_div}`).removeAttribute('data-v-app');
 
     //set default function if anyone missing
-    events.Change?null:events.Change = ((event)=>common_event('change', event));
-    events.Click?null:events.Click = ((event)=>common_event('click', event));
-    events.Focus?null:events.Focus = ((event)=>common_event('focus', event));
-    events.Input?null:events.Input = ((event)=>common_event('input', event));
-    events.KeyDown?null:events.KeyDown = ((event)=>common_event('keydown', event));
-    events.KeyUp?null:events.KeyUp = ((event)=>common_event('keyup', event));
+    events.Change?null:events.Change = ((/**@type{AppEvent}*/event)=>common_event('change', event));
+    events.Click?null:events.Click = ((/**@type{AppEvent}*/event)=>common_event('click', event));
+    events.Focus?null:events.Focus = ((/**@type{AppEvent}*/event)=>common_event('focus', event));
+    events.Input?null:events.Input = ((/**@type{AppEvent}*/event)=>common_event('input', event));
+    events.KeyDown?null:events.KeyDown = ((/**@type{AppEvent}*/event)=>common_event('keydown', event));
+    events.KeyUp?null:events.KeyUp = ((/**@type{AppEvent}*/event)=>common_event('keyup', event));
     //app can override framework or use default javascript if Vue or React is not set
-    switch (framework ?? COMMON_GLOBAL.framework){
-        case '2':{
+    switch (framework ?? COMMON_GLOBAL.app_framework){
+        case 2:{
             //Vue
             Vue.createApp({
                 data() {
@@ -4052,29 +4299,29 @@ const mount_app = async (framework, events) => {
                                         ${AppDocument.querySelector('#' + app_div).innerHTML}
                                     </div>`, 
                         methods:{
-                            AppEventChange: (event) => {
+                            AppEventChange: (/**@type{AppEvent}*/event) => {
                                 events.Change(event);
                             },
-                            AppEventClick: (event) => {
+                            AppEventClick: (/**@type{AppEvent}*/event) => {
                                 events.Click(event);
                             },
-                            AppEventInput: (event) => {
+                            AppEventInput: (/**@type{AppEvent}*/event) => {
                                 events.Input(event);
                             },
-                            AppEventFocus: (event) => {
+                            AppEventFocus: (/**@type{AppEvent}*/event) => {
                                 events.Focus(event);
                             },
-                            AppEventKeyDown: (event) => {
+                            AppEventKeyDown: (/**@type{AppEvent}*/event) => {
                                 events.KeyDown(event);
                             },
-                            AppEventKeyUp: (event) => {
+                            AppEventKeyUp: (/**@type{AppEvent}*/event) => {
                                 events.KeyUp(event);
                             }
                         }
                     }).mount('#' + app_root_div);
             break;
         }
-        case '3':{
+        case 3:{
             //React
             const App = () => {
                 //onClick handles single and doubleclick in this React component since onClick and onDoubleClick does not work in React
@@ -4094,7 +4341,7 @@ const mount_app = async (framework, events) => {
             //Using pure Javascript
             application.render( App());
             //set delay so some browsers render ok.
-            await new Promise ((resolve)=>{setTimeout(()=> resolve(), 200);});
+            await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 200);});
             AppDocument.querySelector('#' + app_div).innerHTML = app_old;
             events.Change();
             events.Focus();
@@ -4104,7 +4351,7 @@ const mount_app = async (framework, events) => {
             
             break;
         }
-        case '1':
+        case 1:
         default:{
             //Javascript
             events.Click();
@@ -4117,6 +4364,14 @@ const mount_app = async (framework, events) => {
         }
     }
 };
+/**
+ * Init common
+ * @param {{app:{   app_id:number,
+ *                  parameter_name:string, 
+ *                  parameter_value:string}[],
+ *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @returns {Promise.<void>}
+ */
 const init_common = async (parameters) => {
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL.app_id ==null)
