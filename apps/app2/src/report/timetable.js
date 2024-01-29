@@ -1975,12 +1975,11 @@ const timetable = async (timetable_parameters) => {
 			return `${protocol}://${ConfigGetApp(timetable_parameters.app_id, 'SUBDOMAIN')}.${ConfigGet('SERVER', 'HOST')}${port}/reports?reportid=${timetable_parameters.reportid}`;
 	};
     const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
+	REPORT_GLOBAL.app_copyright = ConfigGetApp(timetable_parameters.app_id, 'DATA').COPYRIGHT;
 	return await new Promise((resolve) => {
 		getAppStartParameters(timetable_parameters.app_id)
 		.then((/** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/result_parameters)=> {
 			for (const parameter of result_parameters) {
-				if (parameter.parameter_name=='APP_COPYRIGHT')
-					REPORT_GLOBAL.app_copyright = parameter.parameter_value;
 				if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
 					REPORT_GLOBAL.regional_def_calendar_lang = parameter.parameter_value;
 				if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')

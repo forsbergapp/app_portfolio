@@ -741,6 +741,7 @@
 	margin-inline-start: 0px !important;
     bottom: 60px !important;
     top: unset !important;
+	position: fixed !important;
 }
 #common_profile_btn_top{
 	margin-inline-start:inherit !important;
