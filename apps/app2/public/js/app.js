@@ -2811,6 +2811,7 @@ const mount_app_app = async (framework=null) => {
  * @returns {void}
  */
 const init_app = parameters => {
+    app_report.REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright;
     for (const parameter of parameters.app) {
         if (parameter.parameter_name=='APP_DEFAULT_STARTUP_PAGE')
             APP_GLOBAL.app_default_startup_page = parseInt(parameter.parameter_value);
