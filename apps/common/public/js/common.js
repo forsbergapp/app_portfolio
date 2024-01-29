@@ -953,11 +953,11 @@ const show_message = async (message_type, code, function_event, text_class=null,
     const show = 'inline-block';
     const hide = 'none';
     AppDocument.querySelector('#common_message_title_icon').setAttribute('data-text_class',text_class);
-
+    AppDocument.querySelector('#common_message_title_container').style.display = show;
     switch (message_type){
         case 'ERROR':{
-            const text = await FFB('DB_API', `/message?code=${code}&data_app_id=${data_app_id}`, 'GET', 'APP_DATA')
-                        .then(result=>JSON.parse(result)[0].text)
+            const text = await FFB('DB_API', `/app_setting?data_app_id=${data_app_id}&setting_type=MESSAGE&value=${code}`, 'GET', 'APP_DATA')
+                        .then(result=>JSON.parse(result)[0].display_data)
                         .catch(error=>error);
             confirm_question.style.display = hide;
             message_title.style.display = show;
@@ -1026,6 +1026,7 @@ const show_message = async (message_type, code, function_event, text_class=null,
         case 'CONFIRM':{
             confirm_question.style.display = show;
             message_title.style.display = hide;
+            AppDocument.querySelector('#common_message_title_container').style.display = hide;
             message_title.style.fontSize = fontsize_normal;
             message_title.innerHTML = '';
             progressbar.style.display = hide;

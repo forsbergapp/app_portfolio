@@ -2616,7 +2616,7 @@ const demo_install = () =>{
                         })==true){
         const json_data = {demo_password: AppDocument.querySelector('#install_demo_password').innerHTML};
         const path = `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`;
-        installation_function('install_db_demo_button_install', null, path, 'POST', 'APP_ACCESS', json_data);
+        installation_function('install_demo_button_install', null, path, 'POST', 'APP_ACCESS', json_data);
     }
 };
 /**
@@ -2625,7 +2625,7 @@ const demo_install = () =>{
  */
 const demo_uninstall = () =>{
     const path = `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`;
-    installation_function('install_db_demo_button_uninstall', null, path, 'DELETE', 'APP_ACCESS', null);
+    installation_function('install_demo_button_uninstall', null, path, 'DELETE', 'APP_ACCESS', null);
 };
 /**
  * Show installation

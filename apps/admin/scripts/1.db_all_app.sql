@@ -15,6 +15,7 @@ INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUE
 INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUES ('CALENDAR_HIJRI_TYPE', 0);
 INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUES ('MAP_STYLE', 0);
 INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUES ('DEVICE_TYPE', 0);
+INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUES ('MESSAGE', 0);
 --
 -- app setting with display data only
 --
@@ -514,6 +515,35 @@ INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type
 
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MAP_STYLE','OpenStreetMap_Mapnik','OpenStreetMap_Mapnik','https://tile.openstreetmap.org/{z}/{x}/{y}.png',19,'© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',NULL);
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MAP_STYLE','Esri.WorldImagery','Esri.WorldImagery','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',NULL,'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',NULL);
+
+--  db info/errors
+--	20100-20199
+--	db constraints info/error
+--	20200-20299
+--	app info/error
+--	20300-20399
+--	node rest api info/error
+--	20400-20499
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20100','👤 5-100!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20101','ABC!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20102','ABC!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20103','ABC!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20104','ABC!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20105','📧!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20106','🔑 10-100!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20107','👤🔑📧!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20108','ABC!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20200','📧⛝!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20201','👤⛝!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20203','👤⛝!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20300','⛔!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20305','⛔!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20306','⛔!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20307','⛝!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20308','⛝!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20400','?!',1,1,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20401','⛔!',1,1,NULL,NULL);
+
 --
 -- app setting with translation
 --
@@ -597,34 +627,3 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','MODULE_EASY.QRCODE_COLOR_LIGHT','#ffffff',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','MODULE_EASY.QRCODE_HEIGHT','128',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','MODULE_EASY.QRCODE_WIDTH','128',NULL);
---
--- app_message
---
---  db info/errors
---	20100-20199
---	db constraints info/error
---	20200-20299
---	app info/error
---	20300-20399
---	node rest api info/error
---	20400-20499
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20100', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20101', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20102', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20103', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20104', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20105', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20106', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20107', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20108', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20200', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20201', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20203', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20204', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20300', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20305', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20306', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20307', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20308', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20400', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20401', 1, 1);

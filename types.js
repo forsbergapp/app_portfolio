@@ -1264,6 +1264,9 @@
  *              data4:string|null, 
  *              data5:string|null,
  *              text:string}} db_result_app_setting_getSettings
+ * 
+ * @typedef {{  display_data:string}} db_result_app_setting_getSettingDisplayData
+ * 
  * COUNTRY
  * @typedef {{  id:string, 
  *              group_name:string, 
@@ -1276,14 +1279,6 @@
  * LOCALE
  * @typedef {{  locale: string, text:string}} db_result_locale_getLocales
  * 
- * MESSAGE TRANSLATION
- * @typedef {{  code:string, 
- *              message_level_id:number, 
- *              message_type_id:number, 
- *              language_id:number, 
- *              lang_code:string, 
- *              text:string, 
- *              app_id:number}} db_result_message_getMessage
  * PARAMETER TYPE
  * @typedef {{  id:number,
  *              parameter_type_name:string,
