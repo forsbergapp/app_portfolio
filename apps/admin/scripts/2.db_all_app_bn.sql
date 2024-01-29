@@ -24,25 +24,3 @@ INSERT INTO app_portfolio.app_translation (app_setting_id, language_id, text) VA
 
 INSERT INTO app_portfolio.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = 0 AND value='GREGORIAN'),63,'গ্রেগরিয়ান');
 INSERT INTO app_portfolio.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = 0 AND value='HIJRI'),63,'হিজরি');
---
--- app_translation app_message
---
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20100',63,'ব্যবহারকারীর নাম 5 - 100 অক্ষর');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20101',63,'বৈধ ব্যবহারকারীর নাম নয়');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20102',63,'বায়ো সর্বোচ্চ 100 অক্ষর');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20103',63,'ইমেল সর্বাধিক 100 অক্ষর');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20104',63,'অনুস্মারক সর্বাধিক 100 অক্ষর');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20105',63,'বৈধ ইমেইল নয়');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20106',63,'পাসওয়ার্ড 10 - 100 অক্ষর');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20107',63,'ব্যবহারকারীর নাম, পাসওয়ার্ড এবং ইমেল প্রয়োজন');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20200',63,'ইমেল টি ইতিমধ্যেটই আছে');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20201',63,'প্রদানকারী ইতিমধ্যেই বিদ্যমান');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20203',63,'ব্যবহারকারীর নাম ইতিমধ্যে বিদ্যমান');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20204',63,'অনেক লম্বা মান');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20300',63,'ব্যবহারকারীর নাম বা পাসওয়ার্ড পাওয়া যায়নি');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20305',63,'ব্যবহারকারী খুঁজে পাওয়া যায় না');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20306',63,'কোড বৈধ নয়');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20307',63,'ফাইলের ধরন অনুমোদিত নয়');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20308',63,'ফাইলের আকার খুব বড়');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20400',63,'রেকর্ড পাওয়া যায়নি');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20401',63,'অবৈধ পাসওয়ার্ড');

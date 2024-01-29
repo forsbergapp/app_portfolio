@@ -152,14 +152,14 @@ const COMMON = {
     const db_app_category = await import(`file://${process.cwd()}/server/dbapi/object/app_category.js`);
     //server db api  object app_log
     const db_app_log = await import(`file://${process.cwd()}/server/dbapi/object/app_log.js`);
-    //server db api object app_message
-    const db_app_message = await import(`file://${process.cwd()}/server/dbapi/object/app_message.js`);
     //server db api object app_object
     const db_app_object = await import(`file://${process.cwd()}/server/dbapi/object/app_object.js`);
     //server db api object app_parameter
     const db_app_parameter = await import(`file://${process.cwd()}/server/dbapi/object/app_parameter.js`);
     //server db api object app_role
     const db_app_role = await import(`file://${process.cwd()}/server/dbapi/object/app_role.js`);
+    //server db api object app_setting
+    const db_app_setting = await import(`file://${process.cwd()}/server/dbapi/object/app_setting.js`);
     //server db api object country
     const db_country = await import(`file://${process.cwd()}/server/dbapi/object/country.js`);
     //server db api object locale
@@ -221,8 +221,8 @@ const COMMON = {
                     resolve(db_locale.getLocales(routesparameters.app_id, query));
                     break;
                 }
-                case 'APP_DATA_DB_API_/MESSAGE_GET':{
-                    resolve(db_app_message.getMessage(routesparameters.app_id, query));
+                case 'APP_DATA_DB_API_/APP_SETTING_GET':{
+                    resolve(db_app_setting.getSettingDisplayData(routesparameters.app_id, query));
                     break;
                 }
                 case 'APP_DATA_DB_API_/USER_ACCOUNT/ACTIVATE_PUT':{

@@ -12,7 +12,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
-const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_message.service.js`);
+const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
 const { createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
 
 const { insertUserAccountLogon, getUserAccountLogonAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);
@@ -150,12 +150,12 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                             res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + data_login.username;
                             res.statusCode = 400;
                             //Username or password not found
-                            getMessage( app_id,
-                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                        '20300',
-                                        query.get('lang_code'))
-                            .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-                                reject(result_message[0].text);
+                            getSettingDisplayData( app_id,
+                                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                    'MESSAGE',
+                                                    '20300')
+                            .then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+                                reject(result_message[0].display_data);
                             })
                             .catch((/**@type{Types.error}*/error)=>reject(error));
                         })
@@ -169,12 +169,12 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                     res.statusMessage = 'user not found:' + data_login.username;
                 res.statusCode = 404;
                 //User not found
-                getMessage( app_id,
-                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                            '20305',
-                            query.get('lang_code'))
-                .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-                    reject(result_message[0].text);
+                getSettingDisplayData(  app_id,
+                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                        'MESSAGE',
+                                        '20305')
+                .then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+                    reject(result_message[0].display_data);
                 })
                 .catch((/**@type{Types.error}*/error)=>reject(error));
             }
@@ -838,12 +838,12 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumb
                     res.statusCode=400;
                     res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('PUT_ID'));
                     //invalid password
-                    getMessage( app_id,
-                                getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                '20401',
-                                query.get('lang_code'))
-                    .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-                        reject(result_message[0].text);
+                    getSettingDisplayData(  app_id,
+                                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                            'MESSAGE',
+                                            '20401')
+                    .then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+                        reject(result_message[0].display_data);
                     })
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 }
@@ -852,12 +852,12 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumb
         else {
             //user not found
             res.statusCode=404;
-            getMessage( app_id,
-                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                        '20305',
-                        query.get('lang_code'))
-            .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-                reject(result_message[0].text);
+            getSettingDisplayData(  app_id,
+                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                    'MESSAGE',
+                                    '20305')
+            .then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+                reject(result_message[0].display_data);
             })
             .catch((/**@type{Types.error}*/error)=>reject(error));
         }
@@ -959,12 +959,12 @@ const getUserByUserId = (app_id, query, res) => {
                                     res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('DELETE_ID'));
                                     res.statusCode = 400;
                                     //invalid password
-                                    getMessage( app_id,
-                                                getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                '20401',
-                                                query.get('lang_code'))
-                                    .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-                                        reject(result_message[0].text);
+                                    getSettingDisplayData(  app_id,
+                                                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                            'MESSAGE',
+                                                            '20401')
+                                    .then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+                                        reject(result_message[0].display_data);
                                     })
                                     .catch((/**@type{Types.error}*/error)=>reject(error));
                                 } 
@@ -974,12 +974,12 @@ const getUserByUserId = (app_id, query, res) => {
                         else{
                             //user not found
                             res.statusCode = 404;
-                            getMessage( app_id,
-                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                        '20305',
-                                        query.get('lang_code'))
-                            .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-                                reject(result_message[0].text);
+                            getSettingDisplayData(  app_id,
+                                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                    'MESSAGE',
+                                                    '20305')
+                            .then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+                                reject(result_message[0].display_data);
                             })
                             .catch((/**@type{Types.error}*/error)=>reject(error));
                         }
@@ -990,12 +990,12 @@ const getUserByUserId = (app_id, query, res) => {
             else{
                 //user not found
                 res.statusCode = 404;
-                getMessage( app_id,
-                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                            '20305',
-                            query.get('lang_code'))
-                .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-                    reject(result_message[0].text);
+                getSettingDisplayData(  app_id,
+                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                        'MESSAGE',
+                                        '20305')
+                .then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+                    reject(result_message[0].display_data);
                 });
             }
         })

@@ -17,7 +17,7 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.servic
  * @param {Types.res} res
  */
  const checked_error = async (app_id, lang_code, err, res) =>{
-	const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_message.service.js`);
+	const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
     return new Promise((resolve)=>{
 		const app_code = get_app_code(  err.errorNum, 
 										err.message, 
@@ -25,14 +25,14 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.servic
 										err.errno, 
 										err.sqlMessage);
 		if (app_code != null){
-			getMessage( app_id,
-						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
-						app_code, 
-						lang_code)
-			.then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
+			getSettingDisplayData( 	app_id,
+									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+									'MESSAGE',
+									app_code)
+			.then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
 				res.statusCode = 400;
-				res.statusMessage = result_message[0].text;
-				resolve(result_message[0].text);
+				res.statusMessage = result_message[0].display_data;
+				resolve(result_message[0].display_data);
 			});
 		}
 		else{
@@ -105,15 +105,15 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 const record_not_found = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
 		import(`file://${process.cwd()}/server/config.service.js`).then(({ConfigGet}) => {
-			import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_message.service.js`).then(({ getMessage }) => {
-				getMessage( app_id,
-							getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-							'20400',
-							lang_code)
-				.then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
+			import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`).then(({ getSettingDisplayData }) => {
+				getSettingDisplayData( 	app_id,
+										getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+										'MESSAGE',
+										'20400')
+				.then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
 					res.statusCode = 404;
-					res.statusMessage = result_message[0].text;
-					resolve(result_message[0].text);
+					res.statusMessage = result_message[0].display_data;
+					resolve(result_message[0].display_data);
 				});
 			});
 		});	
