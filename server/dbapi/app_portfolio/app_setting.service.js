@@ -72,4 +72,25 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
                          };
      return await db_execute(app_id, sql, parameters, null);
 };
-export{getSettings};
+/**
+ * Get setting display data
+ * @param {number} app_id 
+ * @param {number} data_app_id 
+ * @param {string} app_setting_type_name 
+ * @param {*} value 
+ * @returns {Promise.<Types.db_result_app_setting_getSettingDisplayData[]>}
+ */
+const getSettingDisplayData = async (app_id, data_app_id, app_setting_type_name, value) => {
+     const sql = `SELECT s.display_data "display_data"
+                    FROM ${db_schema()}.app_setting s
+                   WHERE s.app_setting_type_app_setting_type_name = :app_setting_type_name
+                     AND s.app_setting_type_app_id = :app_id
+                     AND s.value = :value`;
+     const parameters = {
+                         app_setting_type_name: app_setting_type_name,
+                         app_id : data_app_id,
+                         value:value
+                         };
+     return await db_execute(app_id, sql, parameters, null);
+};
+export{getSettings, getSettingDisplayData};

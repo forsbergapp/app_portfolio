@@ -1363,18 +1363,6 @@ INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (1040,251);
 INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (1041,490);
 INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (1042,490);
 --
--- message_level
---
-INSERT INTO app_portfolio.message_level (id, message_level) VALUES (1,'0_INFO');
-INSERT INTO app_portfolio.message_level (id, message_level) VALUES (2,'10_USER');
-INSERT INTO app_portfolio.message_level (id, message_level) VALUES (3,'20_APP');
-INSERT INTO app_portfolio.message_level (id, message_level) VALUES (4,'30_SYSTEM');
---
--- message_type
---
-INSERT INTO app_portfolio.message_type (id, message_type) VALUES (1,'ERROR');
-INSERT INTO app_portfolio.message_type (id, message_type) VALUES (2,'INFO');
---
 -- parameter_type
 --
 INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (0,'Public');

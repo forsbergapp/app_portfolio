@@ -95,20 +95,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_log TO app_portfolio_r
 
 ALTER TABLE app_portfolio.app_log ADD CONSTRAINT app_log_pk PRIMARY KEY ( id );
 
-CREATE TABLE app_portfolio.app_message (
-    app_id           INTEGER NOT NULL,
-    code             VARCHAR2(100) NOT NULL,
-    message_level_id INTEGER NOT NULL,
-    message_type_id  INTEGER NOT NULL
-);
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_message TO app_portfolio_role_app_admin;
-
-GRANT SELECT ON app_portfolio.app_message TO app_portfolio_role_app_common;
-
-ALTER TABLE app_portfolio.app_message ADD CONSTRAINT app_message_pk PRIMARY KEY ( app_id,
-                                                                                  code );
-
 CREATE TABLE app_portfolio.app_object (
     app_id      INTEGER NOT NULL,
     object_name VARCHAR2(100) NOT NULL
@@ -214,8 +200,6 @@ CREATE TABLE app_portfolio.app_translation (
     app_object_item_app_object_object_name VARCHAR2(100),
     app_object_item_object_item_name       VARCHAR2(100),
     parameter_type_id                      VARCHAR2(100),
-    app_message_code                       VARCHAR2(100),
-    app_message_app_id                     INTEGER,
     country_id                             INTEGER,
     language_id_translation                INTEGER,
     text                                   VARCHAR2(2000) NOT NULL
@@ -232,8 +216,6 @@ ALTER TABLE app_portfolio.app_translation
                                    AND ( app_id IS NULL )
                                    AND ( app_category_id IS NULL )
                                    AND ( country_id IS NULL )
-                                   AND ( app_message_app_id IS NULL )
-                                   AND ( app_message_code IS NULL )
                                    AND ( language_id_translation IS NULL ) )
                                  OR ( ( app_object_item_object_item_name IS NOT NULL )
                                       AND ( app_object_item_app_object_object_name IS NOT NULL )
@@ -245,8 +227,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL )
-                                      AND ( app_message_app_id IS NULL )
-                                      AND ( app_message_code IS NULL )
                                       AND ( language_id_translation IS NULL ) )
                                  OR ( ( app_setting_id IS NOT NULL )
                                       AND ( app_object_object_name IS NULL )
@@ -258,8 +238,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL )
-                                      AND ( app_message_app_id IS NULL )
-                                      AND ( app_message_code IS NULL )
                                       AND ( language_id_translation IS NULL ) )
                                  OR ( ( parameter_type_id IS NOT NULL )
                                       AND ( app_object_object_name IS NULL )
@@ -271,8 +249,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL )
-                                      AND ( app_message_app_id IS NULL )
-                                      AND ( app_message_code IS NULL )
                                       AND ( language_id_translation IS NULL ) )
                                  OR ( ( app_id IS NOT NULL )
                                       AND ( app_object_object_name IS NULL )
@@ -284,8 +260,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( parameter_type_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL )
-                                      AND ( app_message_app_id IS NULL )
-                                      AND ( app_message_code IS NULL )
                                       AND ( language_id_translation IS NULL ) )
                                  OR ( ( app_category_id IS NOT NULL )
                                       AND ( app_object_object_name IS NULL )
@@ -297,8 +271,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( parameter_type_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( country_id IS NULL )
-                                      AND ( app_message_app_id IS NULL )
-                                      AND ( app_message_code IS NULL )
                                       AND ( language_id_translation IS NULL ) )
                                  OR ( ( country_id IS NOT NULL )
                                       AND ( app_object_object_name IS NULL )
@@ -310,21 +282,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( parameter_type_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
-                                      AND ( app_message_app_id IS NULL )
-                                      AND ( app_message_code IS NULL )
-                                      AND ( language_id_translation IS NULL ) )
-                                 OR ( ( app_message_app_id IS NOT NULL )
-                                      AND ( app_message_code IS NOT NULL )
-                                      AND ( app_object_object_name IS NULL )
-                                      AND ( app_object_app_id IS NULL )
-                                      AND ( app_object_item_object_item_name IS NULL )
-                                      AND ( app_object_item_app_object_object_name IS NULL )
-                                      AND ( app_object_item_app_object_app_id IS NULL )
-                                      AND ( app_setting_id IS NULL )
-                                      AND ( parameter_type_id IS NULL )
-                                      AND ( app_id IS NULL )
-                                      AND ( app_category_id IS NULL )
-                                      AND ( country_id IS NULL )
                                       AND ( language_id_translation IS NULL ) )
                                  OR ( ( language_id_translation IS NOT NULL )
                                       AND ( app_object_object_name IS NULL )
@@ -336,9 +293,7 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( parameter_type_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
-                                      AND ( country_id IS NULL )
-                                      AND ( app_message_app_id IS NULL )
-                                      AND ( app_message_code IS NULL ) ) );
+                                      AND ( country_id IS NULL ) ) );
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_translation TO app_portfolio_role_app_admin;
 
@@ -374,11 +329,6 @@ ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_country
 
 ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_language_translation_un UNIQUE ( language_id_translation,
                                                                                                           language_id );
-
-ALTER TABLE app_portfolio.app_translation
-    ADD CONSTRAINT app_translation_app_message_un UNIQUE ( app_message_code,
-                                                           app_message_app_id,
-                                                           language_id );
 
 CREATE TABLE app_portfolio.country (
     id               INTEGER
@@ -499,36 +449,6 @@ GRANT SELECT ON app_portfolio.locale TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.locale ADD CONSTRAINT locale_language_id_country_id_un UNIQUE ( language_id,
                                                                                           country_id );
-
-CREATE TABLE app_portfolio.message_level (
-    id            INTEGER
-        GENERATED BY DEFAULT ON NULL AS IDENTITY ( START WITH 1 CACHE 30 ORDER )
-    NOT NULL,
-    message_level VARCHAR2(10) NOT NULL
-);
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_level TO app_portfolio_role_app_admin;
-
-GRANT SELECT ON app_portfolio.message_level TO app_portfolio_role_app_common;
-
-ALTER TABLE app_portfolio.message_level ADD CONSTRAINT message_level_pk PRIMARY KEY ( id );
-
-ALTER TABLE app_portfolio.message_level ADD CONSTRAINT message_level_message_level_un UNIQUE ( message_level );
-
-CREATE TABLE app_portfolio.message_type (
-    id           INTEGER
-        GENERATED BY DEFAULT ON NULL AS IDENTITY ( START WITH 1 CACHE 30 ORDER )
-    NOT NULL,
-    message_type VARCHAR2(10) NOT NULL
-);
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_type TO app_portfolio_role_app_admin;
-
-GRANT SELECT ON app_portfolio.message_type TO app_portfolio_role_app_common;
-
-ALTER TABLE app_portfolio.message_type ADD CONSTRAINT message_type_pk PRIMARY KEY ( id );
-
-ALTER TABLE app_portfolio.message_type ADD CONSTRAINT message_type_message_type_un UNIQUE ( message_type );
 
 CREATE TABLE app_portfolio.parameter_type (
     id                  VARCHAR2(100) NOT NULL,
@@ -762,22 +682,6 @@ ALTER TABLE app_portfolio.app_log
             ON DELETE CASCADE
     NOT DEFERRABLE;
 
-ALTER TABLE app_portfolio.app_message
-    ADD CONSTRAINT app_message_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id )
-            ON DELETE CASCADE
-    NOT DEFERRABLE;
-
-ALTER TABLE app_portfolio.app_message
-    ADD CONSTRAINT app_message_message_level_fk FOREIGN KEY ( message_level_id )
-        REFERENCES app_portfolio.message_level ( id )
-    NOT DEFERRABLE;
-
-ALTER TABLE app_portfolio.app_message
-    ADD CONSTRAINT app_message_message_type_fk FOREIGN KEY ( message_type_id )
-        REFERENCES app_portfolio.message_type ( id )
-    NOT DEFERRABLE;
-
 ALTER TABLE app_portfolio.app_object
     ADD CONSTRAINT app_object_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
@@ -833,14 +737,6 @@ ALTER TABLE app_portfolio.app_translation
 ALTER TABLE app_portfolio.app_translation
     ADD CONSTRAINT app_translation_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
-            ON DELETE CASCADE
-    NOT DEFERRABLE;
-
-ALTER TABLE app_portfolio.app_translation
-    ADD CONSTRAINT app_translation_app_message_fk FOREIGN KEY ( app_message_app_id,
-                                                                app_message_code )
-        REFERENCES app_portfolio.app_message ( app_id,
-                                               code )
             ON DELETE CASCADE
     NOT DEFERRABLE;
 

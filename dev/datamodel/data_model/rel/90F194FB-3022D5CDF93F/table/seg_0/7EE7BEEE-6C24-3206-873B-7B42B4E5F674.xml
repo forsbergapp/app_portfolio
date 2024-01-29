@@ -171,39 +171,6 @@
 <colAssociation fkAssociation="6ADE9AEF-4EE0-CCCC-CC1F-CB947B647F31" referredColumn="F919A382-E09C-77F8-5B55-F5F5430A9197"/>
 </associations>
 </Column>
-<Column name="app_message_code" id="45A50856-A945-1CF6-E70A-24FE2AC47B58">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>5AFE5E03-4705-3FC4-D9D5-42BD3F688C70</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="48009AD2-F763-EB28-B149-319A388F8097" referredColumn="01E5D23C-0E46-4DB3-587A-9E7B9D5DF60A"/>
-</associations>
-</Column>
-<Column name="app_message_app_id" id="B30351DD-3DE1-C79E-97EC-602C6BF664AF">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>26975AA2-CDAF-6235-CC11-ACD1A690D329</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="48009AD2-F763-EB28-B149-319A388F8097" referredColumn="CF7A595C-2161-1A72-9FE1-E7237270BCC5"/>
-</associations>
-</Column>
 <Column name="country_id" id="8570199D-E163-7A1A-9A2F-A9E9C7817E90">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -349,19 +316,6 @@
 <colUsage columnID="C5AB26BC-7D0F-4C8B-7DB7-19EFE728ADA7"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="B014AB78-E620-30C9-8BD0-1630A6EA74F0" name="app_translation_app_message_UN">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>A7AF3568-256B-A864-8497-4F3AC89D6E8F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="45A50856-A945-1CF6-E70A-24FE2AC47B58"/>
-<colUsage columnID="B30351DD-3DE1-C79E-97EC-602C6BF664AF"/>
-<colUsage columnID="C5AB26BC-7D0F-4C8B-7DB7-19EFE728ADA7"/>
-</indexColumnUsage>
-</ind_PK_UK>
 <ind_PK_UK id="6BFC6A1C-124A-8EBC-A884-7B44AB392DA2" name="app_translation_app_FK">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -382,18 +336,6 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="D87D7DA9-6BFA-2F3C-A591-B73628E6C537"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="0D1478FC-1322-6D72-FECA-076E45BB01AE" name="app_translation_app_message_FK">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>1E92D2F3-824A-6852-5A41-FB2D97FB74FB</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="B30351DD-3DE1-C79E-97EC-602C6BF664AF"/>
-<colUsage columnID="45A50856-A945-1CF6-E70A-24FE2AC47B58"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="ADF3F32A-B490-EE43-47C5-B39ACD3623D3" name="app_translation_app_object_FK">
