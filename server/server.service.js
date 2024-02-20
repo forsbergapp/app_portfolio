@@ -154,8 +154,6 @@ const COMMON = {
     const db_app_log = await import(`file://${process.cwd()}/server/dbapi/object/app_log.js`);
     //server db api object app_object
     const db_app_object = await import(`file://${process.cwd()}/server/dbapi/object/app_object.js`);
-    //server db api object app_parameter
-    const db_app_parameter = await import(`file://${process.cwd()}/server/dbapi/object/app_parameter.js`);
     //server db api object app_role
     const db_app_role = await import(`file://${process.cwd()}/server/dbapi/object/app_role.js`);
     //server db api object app_setting
@@ -165,8 +163,6 @@ const COMMON = {
     //server db api object locale
     const db_locale = await import(`file://${process.cwd()}/server/dbapi/object/locale.js`);
     
-    //server db api object parameter_type
-    const db_parameter_type = await import(`file://${process.cwd()}/server/dbapi/object/parameter_type.js`);
     //server db api object user account
     const db_user_account = await import(`file://${process.cwd()}/server/dbapi/object/user_account.js`);
     //server db api object user account app
@@ -370,6 +366,14 @@ const COMMON = {
                     resolve(config.ConfigGet(query));
                     break;
                 }
+                case 'ADMIN_CONFIG_/APP_GET':{
+                    resolve(config.ConfigGetApp(routesparameters.app_id, query));
+                    break;
+                }
+                case 'ADMIN_CONFIG_/APP/PARAMETER_PUT':{
+                    resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, routesparameters.body));
+                    break;
+                }
                 case 'ADMIN_DB_API_/ADMIN/DEMO_POST':{
                     resolve(db_database.DemoInstall(routesparameters.app_id, query, routesparameters.body));
                     break;
@@ -398,20 +402,8 @@ const COMMON = {
                     resolve(db_app_log.getStatUniqueVisitorAdmin(routesparameters.app_id, query, routesparameters.res));
                     break;
                 }
-                case 'ADMIN_DB_API_/APP_PARAMETER/ADMIN/ALL_GET':{
-                    resolve(db_app_parameter.getParametersAllAdmin(routesparameters.app_id, query));
-                    break;
-                }
-                case 'ADMIN_DB_API_/APP_PARAMETER/ADMIN_PUT':{
-                    resolve(db_app_parameter.setParameter_admin(routesparameters.app_id, routesparameters.body));
-                    break;
-                }
                 case 'ADMIN_DB_API_/APP_ROLE/ADMIN_GET':{
                     resolve(db_app_role.getAppRoleAdmin(routesparameters.app_id, query));
-                    break;
-                }
-                case 'ADMIN_DB_API_/PARAMETER_TYPE/ADMIN_GET':{
-                    resolve(db_parameter_type.getParameterTypeAdmin(routesparameters.app_id, query));
                     break;
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN/COUNT_GET':{

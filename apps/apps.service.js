@@ -17,11 +17,11 @@ const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/se
  */
  const app_start = (app_id=null)=>{
     if (getNumberValue(file_get_cached('CONFIG').MAINTENANCE)==0 && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
-        ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+        ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`] )
         if (app_id == null)
             return true;
         else{
-            if (ConfigGetApp(app_id, 'STATUS')=='ONLINE')
+            if (ConfigGetApp(app_id, app_id, 'STATUS')=='ONLINE')
                 return true;
             else
                 return false;
@@ -64,7 +64,7 @@ const client_locale = (accept_language) =>{
  */ 
 const render_files = (app_id, type, component=null) => {
     /**@type{Types.config_apps_render_files[]} */
-    const files = ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]==type && (filetype[1] == component || component == null));
+    const files = ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]==type && (filetype[1] == component || component == null));
     let app ='';
     files.forEach(file => {
         if (app=='')
@@ -85,12 +85,12 @@ const render_report_html = (app_id, reportname) => {
     const report = render_files(app_id, 'REPORT', reportname);
     //list config files and return only tag and file content
     /**@type {[string,string][]} */
-    const common_files = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='REPORT_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];});
+    const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='REPORT_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];});
     const report_with_common = render_app_with_data(report, common_files);
     /** @type {[string, string][]} */
     const render_variables = [];
-    if (ConfigGetApp(app_id, 'CSS_REPORT') != '')
-        render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS_REPORT')}'/>`]);
+    if (ConfigGetApp(app_id, app_id, 'CSS_REPORT') != '')
+        render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'CSS_REPORT')}'/>`]);
     else
         render_variables.push(['APP_CSS_REPORT','']);
     return render_app_with_data(report_with_common, render_variables);
@@ -122,8 +122,8 @@ const render_app_with_data = (app, data)=>{
  * @returns {Promise<Types.render_common>}
  */
 const render_app_html = async (app_id, locale) =>{
-    /**@type{Types.config_apps_config} */
-    const app_config = ConfigGetApp(app_id, 'CONFIG');
+    /**@type{Types.config_apps_render_config} */
+    const app_config = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG');
     
     const module = render_files(app_id, 'APP');
 
@@ -224,10 +224,10 @@ const render_app_html = async (app_id, locale) =>{
     return new Promise((resolve)=>{
         //list config files and return only tag and file content
         /**@type {[string, string][]} */
-        const common_files = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];} );
+        const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];} );
 
         if (app_config.RENDER_PROFILE_SEARCH==true){
-            const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileSearch')[0][4];
+            const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileSearch')[0][4];
             if (app_config.CUSTOM_TAG_PROFILE_SEARCH){
                 common_files.push([app_config.CUSTOM_TAG_PROFILE_SEARCH, common_file]);
                 common_files.push(['CommonBodyProfileSearch', '']);
@@ -238,7 +238,7 @@ const render_app_html = async (app_id, locale) =>{
         else
             common_files.push(['CommonBodyProfileSearch', '']);
         if (app_config.RENDER_USER_ACCOUNT==true){
-            const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyUserAccount')[0][4];
+            const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyUserAccount')[0][4];
             if (app_config.CUSTOM_TAG_USER_ACCOUNT){
                 common_files.push([app_config.CUSTOM_TAG_USER_ACCOUNT, common_file]);
                 common_files.push(['CommonBodyUserAccount', '']);
@@ -249,7 +249,7 @@ const render_app_html = async (app_id, locale) =>{
         else
             common_files.push(['CommonBodyUserAccount', '']);
         if (app_config.RENDER_PROFILE_TOP==true){
-            const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileBtnTop')[0][4];
+            const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileBtnTop')[0][4];
             if (app_config.CUSTOM_TAG_PROFILE_TOP){
                 common_files.push([app_config.CUSTOM_TAG_PROFILE_TOP, common_file]);
                 common_files.push(['CommonBodyProfileBtnTop', '']);
@@ -261,7 +261,7 @@ const render_app_html = async (app_id, locale) =>{
             common_files.push(['CommonBodyProfileBtnTop', '']);
         
         if (app_config.MAP==true){
-            const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonHeadMap')[0][4];
+            const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonHeadMap')[0][4];
             common_files.push(['CommonHeadMap', common_file]);
         }
         else
@@ -269,10 +269,10 @@ const render_app_html = async (app_id, locale) =>{
 
         if (app_config.RENDER_APP_THEMES==true){
             //themes always in same place but choose what content to display
-            if (ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0])
-                common_files.push(['CommonBodyThemes', ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0][4]]);
+            if (ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0])
+                common_files.push(['CommonBodyThemes', ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0][4]]);
             else{
-                const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0][4];
+                const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0][4];
                 common_files.push(['CommonBodyThemes', common_file]);
             }
         }
@@ -280,13 +280,13 @@ const render_app_html = async (app_id, locale) =>{
             common_files.push(['CommonBodyThemes', '']);
 
                 //app optional content
-                if (ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileInfo')[0])
-                common_files.push(['AppProfileInfo', ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileInfo')[0][4]]);
+                if (ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileInfo')[0])
+                common_files.push(['AppProfileInfo', ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileInfo')[0][4]]);
             else
                 common_files.push(['AppProfileInfo', '']);
     
         if (app_config.RENDER_PROFILE_APPS==true){
-            const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileInfoApps')[0][4];
+            const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileInfoApps')[0][4];
             if (app_config.CUSTOM_TAG_PROFILE_APPS){
                 common_files.push([app_config.CUSTOM_TAG_PROFILE_APPS, common_file]);
                 common_files.push(['CommonBodyProfileInfoApps', '']);
@@ -297,44 +297,44 @@ const render_app_html = async (app_id, locale) =>{
         else
             common_files.push(['CommonBodyProfileInfoApps', '']);
     
-        if (ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileTop')[0])
-            common_files.push(['AppProfileTop', ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileTop')[0][4]]);
+        if (ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileTop')[0])
+            common_files.push(['AppProfileTop', ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileTop')[0][4]]);
         else
             common_files.push(['AppProfileTop', '']);
         
         const app = render_app_with_data(module, common_files);
         
         //render app parameters from apps.json
-        if (ConfigGetApp(app_id, 'JS') != '')
-            render_variables.push(['APP_JS',`"app" 			: "${ConfigGetApp(app_id, 'JS')}",`]);
+        if (ConfigGetApp(app_id, app_id, 'JS') != '')
+            render_variables.push(['APP_JS',`"app" 			: "${ConfigGetApp(app_id, app_id, 'JS')}",`]);
         else
             render_variables.push(['APP_JS','']);
-        if (ConfigGetApp(app_id, 'JS_SECURE') != '')
-            render_variables.push(['APP_JS_SECURE',`"app_secure" 			: "${ConfigGetApp(app_id, 'JS_SECURE')}",`]);
+        if (ConfigGetApp(app_id, app_id, 'JS_SECURE') != '')
+            render_variables.push(['APP_JS_SECURE',`"app_secure" 			: "${ConfigGetApp(app_id, app_id, 'JS_SECURE')}",`]);
         else
             render_variables.push(['APP_JS_SECURE','']);
-        if (ConfigGetApp(app_id, 'JS_REPORT') != '')
-            render_variables.push(['APP_JS_REPORT',`"app_report" 			: "${ConfigGetApp(app_id, 'JS_REPORT')}",`]);
+        if (ConfigGetApp(app_id, app_id, 'JS_REPORT') != '')
+            render_variables.push(['APP_JS_REPORT',`"app_report" 			: "${ConfigGetApp(app_id, app_id, 'JS_REPORT')}",`]);
         else
             render_variables.push(['APP_JS_REPORT','']);
-        if (ConfigGetApp(app_id, 'CSS') != '')
-            render_variables.push(['APP_CSS',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS')}'/>`]);
+        if (ConfigGetApp(app_id, app_id, 'CSS') != '')
+            render_variables.push(['APP_CSS',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'CSS')}'/>`]);
         else
             render_variables.push(['APP_CSS','']);
-        if (ConfigGetApp(app_id, 'CSS_REPORT') != '')
-            render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS_REPORT')}'/>`]);
+        if (ConfigGetApp(app_id, app_id, 'CSS_REPORT') != '')
+            render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'CSS_REPORT')}'/>`]);
         else
             render_variables.push(['APP_CSS_REPORT','']);
         if (app_config.MANIFEST == true)
             render_variables.push(['APP_MANIFEST','<link rel=\'manifest\' href=\'/manifest.json\'/>']);
         else
             render_variables.push(['APP_MANIFEST','']);
-        if (ConfigGetApp(app_id, 'FAVICON_32x32') != '')
-            render_variables.push(['APP_FAVICON_32x32',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, 'FAVICON_32x32')}' sizes='32x32'/>`]);
+        if (ConfigGetApp(app_id, app_id, 'FAVICON_32x32') != '')
+            render_variables.push(['APP_FAVICON_32x32',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, app_id, 'FAVICON_32x32')}' sizes='32x32'/>`]);
         else
             render_variables.push(['APP_FAVICON_32x32','']);
-        if (ConfigGetApp(app_id, 'FAVICON_1922x192') != '')
-            render_variables.push(['APP_FAVICON_192x192',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, 'FAVICON_192x192')}' sizes='192x192'/>`]);
+        if (ConfigGetApp(app_id, app_id, 'FAVICON_1922x192') != '')
+            render_variables.push(['APP_FAVICON_192x192',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, app_id, 'FAVICON_192x192')}' sizes='192x192'/>`]);
         else
             render_variables.push(['APP_FAVICON_192x192','']);
 
@@ -405,7 +405,7 @@ const get_module_with_initBFF = async (app_info) => {
      * 
      * @param {string} module 
      * @param {string|null} countries 
-     * @param {Types.db_result_app_parameter_getAppStartParameters[]|null} app_parameters 
+     * @param {{}[]|null} app_parameters 
      * @param {number} first_time 
      * @returns {string}
      */
@@ -413,12 +413,12 @@ const get_module_with_initBFF = async (app_info) => {
         /**@type{Types.app_service_parameters} */
         const app_service_parameters = {   
             app_id: app_info.app_id,
-            app_logo:ConfigGetApp(app_info.app_id, 'LOGO'),
+            app_logo:ConfigGetApp(app_info.app_id, app_info.app_id, 'LOGO'),
             app_sound: getNumberValue(ConfigGet('SERVER', 'APP_SOUND')),
-            app_email: ConfigGetApp(app_info.app_id, 'DATA').EMAIL,
-            app_copyright: ConfigGetApp(app_info.app_id, 'DATA').COPYRIGHT,
-            app_link_url: ConfigGetApp(app_info.app_id, 'DATA').LINK_URL,
-            app_link_title: ConfigGetApp(app_info.app_id, 'DATA').LINK_TITLE,
+            app_email: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'EMAIL' in parameter)[0].EMAIL,
+            app_copyright: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'COPYRIGHT' in parameter)[0].COPYRIGHT,
+            app_link_url: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_URL' in parameter)[0].LINK_URL,
+            app_link_title: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_TITLE' in parameter)[0].LINK_TITLE,
             app_framework : getNumberValue(ConfigGet('SERVER', 'APP_FRAMEWORK')),
             app_datatoken: app_info.datatoken,
             countries:countries,
@@ -445,22 +445,23 @@ const get_module_with_initBFF = async (app_info) => {
         return return_with_parameters(app_info.module, null, null, CheckFirstTime()==true?1:0);
     }
     else{
-        const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
-        
-        //fetch parameters for common_app_id and current app_id
-        /** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/
-        const app_parameters = await getAppStartParameters(app_info.app_id)
-        .catch((/**@type{Types.error}*/error)=>{
-            throw error;
-        });
-        render_variables.push(['APP_NAME',ConfigGetApp(app_info.app_id, 'NAME')]);
+        //get parameters for common_app_id and current app_id and add app_id key
+        const app_parameters_common = ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS');
+        for (const app of app_parameters_common){
+            app.app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
+        }
+        const app_parameters = ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS');
+        for (const app of app_parameters){
+            app.app_id = app_info.app_id;
+        }
+        render_variables.push(['APP_NAME',ConfigGetApp(app_info.app_id, app_info.app_id, 'NAME')]);
         if (app_info.map == true){
             //fetch countries and return map styles
-            return return_with_parameters(app_info.module, await countries(app_info.app_id, app_info.locale), app_parameters, 0);
+            return return_with_parameters(app_info.module, await countries(app_info.app_id, app_info.locale), app_parameters.concat(app_parameters_common), 0);
         }
         else{
             //no countries or map styles
-            return return_with_parameters(app_info.module, null, app_parameters, 0);
+            return return_with_parameters(app_info.module, null, app_parameters.concat(app_parameters_common), 0);
         }
     }        
 };
@@ -473,95 +474,49 @@ const get_module_with_initBFF = async (app_info) => {
  * @returns {Promise<Types.email_return_data>}  - Email return data
  */
 const createMail = async (app_id, data) =>{
-    const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
     return new Promise((resolve, reject) => {
-        /** @type {string} */
-        let db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
-        /** @type {string} */
-        let db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
-        /** @type {string} */
-        let db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
-        /** @type {string} */
-        let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
-        /** @type {string} */
-        let db_SERVICE_MAIL_HOST;
-        /** @type {string} */
-        let db_SERVICE_MAIL_PORT;
-        /** @type {string} */
-        let db_SERVICE_MAIL_SECURE;
-        /** @type {string} */
-        let db_SERVICE_MAIL_USERNAME;
-        /** @type {string} */
-        let db_SERVICE_MAIL_PASSWORD;
         //email type 1-4 implemented are emails with verification code
         if (parseInt(data.emailtype)==1 || 
             parseInt(data.emailtype)==2 || 
             parseInt(data.emailtype)==3 ||
             parseInt(data.emailtype)==4){
 
-            getParameters_server(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-            .then((/** @type {Types.db_result_app_parameter_getParameters_server[]}*/ result_parameters)=>{
-                for (const parameter of result_parameters){
-                    if (parameter.parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
-                        db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = parameter.parameter_value;
-                    if (parameter.parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
-                        db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = parameter.parameter_value;
-                    if (parameter.parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
-                        db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = parameter.parameter_value;
-                    if (parameter.parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
-                        db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = parameter.parameter_value;
-
-                    if (parameter.parameter_name=='SERVICE_MAIL_HOST')
-                        db_SERVICE_MAIL_HOST = parameter.parameter_value;
-                    if (parameter.parameter_name=='SERVICE_MAIL_PORT')
-                        db_SERVICE_MAIL_PORT = parameter.parameter_value;
-                    if (parameter.parameter_name=='SERVICE_MAIL_SECURE')
-                        db_SERVICE_MAIL_SECURE = parameter.parameter_value;
-                    if (parameter.parameter_name=='SERVICE_MAIL_USERNAME')
-                        db_SERVICE_MAIL_USERNAME = parameter.parameter_value;
-                    if (parameter.parameter_name=='SERVICE_MAIL_PASSWORD')
-                        db_SERVICE_MAIL_PASSWORD = parameter.parameter_value;                                        
+            /** @type {string} */
+            let email_from = '';
+            switch (parseInt(data.emailtype)){
+                case 1:{
+                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME' in parameter)[0].SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                    break;
                 }
-                /** @type {string} */
-                let email_from = '';
-                switch (parseInt(data.emailtype)){
-                    case 1:{
-                        email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
-                        break;
-                    }
-                    case 2:{
-                        email_from = db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
-                        break;
-                    }
-                    case 3:{
-                        email_from = db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
-                        break;
-                    }
-                    case 4:{
-                        email_from = db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
-                        break;
-                    }
+                case 2:{
+                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME' in parameter)[0].SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
+                    break;
                 }
-                /** @type {[string, string][]} */
-                const render_variables = [];
-                render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
-                render_variables.push(['Verification_code',data.verificationCode]);
-                render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
+                case 3:{
+                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME' in parameter)[0].SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
+                    break;
+                }
+                case 4:{
+                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME' in parameter)[0].SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
+                    break;
+                }
+            }
+            /** @type {[string, string][]} */
+            const render_variables = [];
+            render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
+            render_variables.push(['Verification_code',data.verificationCode]);
+            render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
 
-                resolve ({
-                    'email_host':         db_SERVICE_MAIL_HOST,
-                    'email_port':         db_SERVICE_MAIL_PORT,
-                    'email_secure':       db_SERVICE_MAIL_SECURE,
-                    'email_auth_user':    db_SERVICE_MAIL_USERNAME,
-                    'email_auth_pass':    db_SERVICE_MAIL_PASSWORD,
-                    'from':               email_from,
-                    'to':                 data.to,
-                    'subject':            '❂❂❂❂❂❂',
-                    'html':               render_app_with_data( render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'MAIL'), render_variables)
-                });
-            })
-            .catch((/**@type{Types.error}*/err)=>{
-                reject(err);
+            resolve ({
+                'email_host':         ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_HOST,
+                'email_port':         ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_PORT,
+                'email_secure':       ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_SECURE,
+                'email_auth_user':    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_USERNAME,
+                'email_auth_pass':    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_PASSWORD,
+                'from':               email_from,
+                'to':                 data.to,
+                'subject':            '❂❂❂❂❂❂',
+                'html':               render_app_with_data( render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'MAIL'), render_variables)
             });
         }
         else
@@ -600,7 +555,7 @@ const getInfo = async (app_id, info) => {
             //privacy_policy, disclaimer or terms
             return await fs.promises.readFile(process.cwd() + `/apps/common/src/info/${info}.html`, 'utf8')
                         .then((fileBuffer)=>{
-                            render_variables.push(['APPNAME', ConfigGetApp(app_id, 'NAME') ]);
+                            render_variables.push(['APPNAME', ConfigGetApp(app_id, app_id, 'NAME') ]);
                             return  info_html1 + render_app_with_data(fileBuffer.toString(), render_variables) + info_html2;
                         })
                         .catch(()=>'');
@@ -756,7 +711,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
     const use_message_queue = (getNumberValue(ConfigGet('SERVER', 'APP_PDF_METHOD'))==1);
     
     const host =    (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://') + 
-                    ConfigGetApp(app_id, 'SUBDOMAIN') + '.' +  
+                    ConfigGetApp(app_id, app_id, 'SUBDOMAIN') + '.' +  
                     ConfigGet('SERVER', 'HOST') + ':' + 
                     (getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT')));
 
@@ -1097,7 +1052,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                             resolve(getAssetFile(app_id, url.substring('/common'.length), '/apps/common/public', res)
                                     .catch(()=>null));
                         else
-                            resolve(getAssetFile(app_id, url, ConfigGetApp(app_id,'PATH'), res)
+                            resolve(getAssetFile(app_id, url, ConfigGetApp(app_id, app_id,'PATH'), res)
                                     .catch(()=>null));
                     else
                         if (info)
@@ -1131,7 +1086,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                     resolve(report_result.report);
                                 });
                             else
-                                if ((ConfigGetApp(app_id, 'SHOWPARAM') == 1 && url.substring(1) !== '') ||
+                                if ((ConfigGetApp(app_id, app_id, 'SHOWPARAM') == 1 && url.substring(1) !== '') ||
                                     url == '/')
                                     LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '1 ' + new Date().toISOString())
                                     .then(()=>{

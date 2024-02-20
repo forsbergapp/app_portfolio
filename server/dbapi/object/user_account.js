@@ -7,11 +7,10 @@ const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio
 
 
 const { default: {compare} } = await import('bcrypt');
-const { ConfigGet } = await import(`file://${process.cwd()}/server/config.service.js`);
+const { ConfigGet, ConfigGetApp } = await import(`file://${process.cwd()}/server/config.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
 const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
 const { createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
 
@@ -96,27 +95,24 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                                 if (result_login[0].active == 0){
                                     service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
                                     .then(()=>{
-                                        getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_UNVERIFIED')
-                                        .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                            //send email UNVERIFIED
-                                            sendUserEmail(  app_id, 
-                                                            parameter[0].parameter_value, 
-                                                            ip, 
-                                                            user_agent,
-                                                            accept_language,
-                                                            result_login[0].id, 
-                                                            new_code, 
-                                                            result_login[0].email)
+                                        //send email UNVERIFIED
+                                        sendUserEmail(  app_id, 
+                                                        ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'PARAMETERS')
+                                                            .filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_UNVERIFIED' in parameter)[0].SERVICE_MAIL_TYPE_UNVERIFIED, 
+                                                        ip, 
+                                                        user_agent,
+                                                        accept_language,
+                                                        result_login[0].id, 
+                                                        new_code, 
+                                                        result_login[0].email)
+                                        .then(()=>{
+                                            data_body.access_token = AuthorizeToken(app_id, null, 'APP_ACCESS');
+                                            insertUserAccountLogon(app_id, data_body)
                                             .then(()=>{
-                                                data_body.access_token = AuthorizeToken(app_id, null, 'APP_ACCESS');
-                                                insertUserAccountLogon(app_id, data_body)
-                                                .then(()=>{
-                                                    resolve({
-                                                        accessToken: data_body.access_token,
-                                                        items: Array(result_login[0])
-                                                    });
-                                                })
-                                                .catch((/**@type{Types.error}*/error)=>reject(error));
+                                                resolve({
+                                                    accessToken: data_body.access_token,
+                                                    items: Array(result_login[0])
+                                                });
                                             })
                                             .catch((/**@type{Types.error}*/error)=>reject(error));
                                         })
@@ -317,25 +313,22 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
         .then((/**@type{Types.db_result_user_account_create}*/result_create)=>{
             if (data.provider_id == null ) {
                 //send email for local users only
-                getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_SIGNUP')
-                .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                    //send email SIGNUP
-                    sendUserEmail(  app_id, 
-                                    parameter[0].parameter_value, 
-                                    ip, 
-                                    user_agent,
-                                    accept_language,
-                                    result_create.insertId, 
-                                    data_body.verification_code, 
-                                    data_body.email ?? '')
-                    .then(()=>{
-                        resolve({
-                            accessToken: AuthorizeToken(app_id, null, 'APP_ACCESS'),
-                            id: result_create.insertId,
-                            data: result_create
-                        });
-                    })
-                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                //send email SIGNUP
+                sendUserEmail(  app_id, 
+                                ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'PARAMETERS')
+                                    .filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_SIGNUP' in parameter)[0].SERVICE_MAIL_TYPE_SIGNUP,
+                                ip, 
+                                user_agent,
+                                accept_language,
+                                result_create.insertId, 
+                                data_body.verification_code, 
+                                data_body.email ?? '')
+                .then(()=>{
+                    resolve({
+                        accessToken: AuthorizeToken(app_id, null, 'APP_ACCESS'),
+                        id: result_create.insertId,
+                        data: result_create
+                    });
                 })
                 .catch((/**@type{Types.error}*/error)=>reject(error));
             }
@@ -468,24 +461,21 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
                                 const new_code = service.verification_code();
                                 service.updateUserVerificationCode(app_id, result_emailuser[0].id, new_code)
                                 .then(()=>{
-                                    getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_PASSWORD_RESET')
-                                    .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                        //send email PASSWORD_RESET
-                                        sendUserEmail(  app_id, 
-                                                        parameter[0].parameter_value, 
-                                                        ip, 
-                                                        user_agent,
-                                                        accept_language,
-                                                        result_emailuser[0].id, 
-                                                        new_code, 
-                                                        email)
-                                        .then(()=>{
-                                            resolve({
-                                                sent: 1,
-                                                id: result_emailuser[0].id
-                                            });  
-                                        })
-                                        .catch((/**@type{Types.error}*/error)=>reject(error));
+                                    //send email PASSWORD_RESET
+                                    sendUserEmail(  app_id, 
+                                                    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'PARAMETERS')
+                                                        .filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_PASSWORD_RESET' in parameter)[0].SERVICE_MAIL_TYPE_PASSWORD_RESET,
+                                                    ip, 
+                                                    user_agent,
+                                                    accept_language,
+                                                    result_emailuser[0].id, 
+                                                    new_code, 
+                                                    email)
+                                    .then(()=>{
+                                        resolve({
+                                            sent: 1,
+                                            id: result_emailuser[0].id
+                                        });  
                                     })
                                     .catch((/**@type{Types.error}*/error)=>reject(error));
                                 })
@@ -801,21 +791,18 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumb
                                 };
                                 insertUserEvent(app_id, eventData)
                                 .then(()=>{
-                                    getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_CHANGE_EMAIL')
-                                    .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                        //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                        sendUserEmail(  app_id, 
-                                                        parameter[0].parameter_value, 
-                                                        ip, 
-                                                        user_agent,
-                                                        accept_language,
-                                                        getNumberValue(query.get('PUT_ID')),
-                                                        data.verification_code, 
-                                                        data.new_email)
-                                        .then(()=>{
-                                            resolve({sent_change_email: 1});
-                                        })
-                                        .catch((/**@type{Types.error}*/error)=>reject(error));
+                                    //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
+                                    sendUserEmail(  app_id, 
+                                                    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'PARAMETERS')
+                                                        .filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_CHANGE_EMAIL' in parameter)[0].SERVICE_MAIL_TYPE_CHANGE_EMAIL,
+                                                    ip, 
+                                                    user_agent,
+                                                    accept_language,
+                                                    getNumberValue(query.get('PUT_ID')),
+                                                    data.verification_code, 
+                                                    data.new_email)
+                                    .then(()=>{
+                                        resolve({sent_change_email: 1});
                                     })
                                     .catch((/**@type{Types.error}*/error)=>reject(error));
                                 })

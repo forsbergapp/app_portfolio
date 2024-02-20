@@ -142,7 +142,7 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
         const token = authorization.slice(7);
         switch (token_type){
             case 'APP_ACCESS':{
-                verify(token, ConfigGetApp(app_id, 'APP_ACCESS_SECRET'), (/**@type{Types.error}*/err) => {
+                verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET, (/**@type{Types.error}*/err) => {
                     if (err)
                         res.status(401).send('⛔');
                     else {
@@ -167,7 +167,7 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
                 break;
             }
             case 'APP_DATA':{
-				verify(token, ConfigGetApp(app_id, 'APP_DATA_SECRET'), (/**@type{Types.error}*/err) => {
+				verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET, (/**@type{Types.error}*/err) => {
                     if (err)
                         res.status(401).send('⛔');
                     else{
@@ -306,7 +306,7 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  const AuthenticateDataTokenSocket = async (app_id, token) =>{
     if (token){
         token = token.slice(7);
-        verify(token, ConfigGetApp(app_id, 'APP_DATA_SECRET'), (/**@type{Types.error}*/err) => {
+        verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET, (/**@type{Types.error}*/err) => {
             if (err){
                 return false;
             } else {
@@ -498,8 +498,8 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  const AuthenticateApp = async (app_id, authorization) =>{
     const {file_get} = await import(`file://${process.cwd()}/server/db/file.service.js`);
     const file = await file_get('APPS');
-    const CLIENT_ID = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].CLIENT_ID;
-    const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].CLIENT_SECRET;
+    const CLIENT_ID = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_ID;
+    const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_SECRET;
 
     const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
     if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
@@ -516,8 +516,8 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  * @returns {Promise.<string>}
  */
  const AuthorizeTokenApp = async (app_id, ip)=>{
-    const secret = ConfigGetApp(app_id, 'APP_DATA_SECRET');
-    const expiresin = ConfigGetApp(app_id, 'APP_DATA_EXPIRE');
+    const secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET;
+    const expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_EXPIRE;
     const jsontoken_at = sign ({tokentimstamp: Date.now()}, secret, {expiresIn: expiresin});
     /**@type{Types.iam_app_token_record} */
     const file_content = {	app_id:             app_id,
@@ -543,8 +543,8 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
     let expiresin = '';
     switch (tokentype){
         case 'APP_ACCESS':{
-            secret = ConfigGetApp(app_id, 'APP_ACCESS_SECRET');
-            expiresin = ConfigGetApp(app_id, 'APP_ACCESS_EXPIRE');
+            secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET;
+            expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_EXPIRE;
             break;
         }
         case 'SYSTEMADMIN':{

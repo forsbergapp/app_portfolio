@@ -685,10 +685,10 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	display: none;
 }
 .list_app_parameter_col:nth-child(2){
-	width:50px;
+	width:240px;
 }
 .list_app_parameter_col:nth-child(3){
-	width:80px;
+	width:200px;
 }
 .list_app_parameter_col:nth-child(4){
 	width:200px;
