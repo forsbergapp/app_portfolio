@@ -9,9 +9,3 @@ INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VA
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(6, 224, '生産性');
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(7, 224, '買い物');
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(8, 224, 'ゲーム');
---
--- app_translation parameter_type
---
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('公衆','0',224);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('プライベート共有','1',224);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('プライベート','2',224);

@@ -154,23 +154,6 @@
 <colAssociation fkAssociation="E87B9CFC-B92C-7A5C-A253-99A88B5B2E13" referredColumn="EC3D65A2-19E1-442A-D2BE-D6F1DB5CE758"/>
 </associations>
 </Column>
-<Column name="parameter_type_id" id="09514221-D6CB-CFDF-E8F9-CC1494DC8857">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>1DEC4AFE-C626-143C-A82B-3CB18DD9EBA2</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="6ADE9AEF-4EE0-CCCC-CC1F-CB947B647F31" referredColumn="F919A382-E09C-77F8-5B55-F5F5430A9197"/>
-</associations>
-</Column>
 <Column name="country_id" id="8570199D-E163-7A1A-9A2F-A9E9C7817E90">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -238,18 +221,6 @@
 <indexColumnUsage>
 <colUsage columnID="D87D7DA9-6BFA-2F3C-A591-B73628E6C537"/>
 <colUsage columnID="145515DA-45DC-6089-FDC7-67E257F1F543"/>
-<colUsage columnID="C5AB26BC-7D0F-4C8B-7DB7-19EFE728ADA7"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="DCF10635-CE24-CDBA-2DE8-B65314F30674" name="app_translation_parameter_type_UN">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>76C52146-A3B2-5FE9-3476-4AF10E9C80A1</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="09514221-D6CB-CFDF-E8F9-CC1494DC8857"/>
 <colUsage columnID="C5AB26BC-7D0F-4C8B-7DB7-19EFE728ADA7"/>
 </indexColumnUsage>
 </ind_PK_UK>
@@ -405,17 +376,6 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="B6265773-7C95-5239-C73D-DAAD7BBCC650"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="1E20AC8B-960E-2BAA-C69B-FAB596D12F9A" name="app_translation_parameter_type_FK">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>02520193-D03A-F117-6E2E-99CCCD72176F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="09514221-D6CB-CFDF-E8F9-CC1494DC8857"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

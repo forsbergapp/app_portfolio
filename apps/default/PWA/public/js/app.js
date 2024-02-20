@@ -98,8 +98,7 @@ const init_app = () => {
 };
 /**
  * Init common
- * @param {{app:{   parameter_name:string, 
- *                  parameter_value:string}[],
+ * @param {{app:*[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
  * @returns {void}
  */

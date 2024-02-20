@@ -98,19 +98,6 @@ GRANT SELECT ON app_portfolio.app_object_item TO app_portfolio_role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.app_parameter (
-    app_id             INTEGER NOT NULL,
-    parameter_type_id  VARCHAR(100) NOT NULL,
-    parameter_name     VARCHAR(100) NOT NULL,
-    parameter_value    VARCHAR(100),
-    parameter_comment  VARCHAR(100),
-	CONSTRAINT app_parameter_pk PRIMARY KEY ( app_id,
-	                                                  parameter_name )
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_parameter TO app_portfolio_role_app_admin;
-
-GRANT SELECT ON app_portfolio.app_parameter TO app_portfolio_role_app_common;
-
 CREATE TABLE app_portfolio.app_role (
     id        INTEGER NOT NULL,
     role_name VARCHAR(100) NOT NULL,
@@ -166,7 +153,6 @@ CREATE TABLE app_portfolio.app_translation (
     app_object_item_app_object_app_id      INTEGER,
     app_object_item_app_object_object_name VARCHAR(100),
     app_object_item_object_item_name       VARCHAR(100),
-    parameter_type_id                      VARCHAR(100),
     country_id                             INTEGER,
     language_id_translation                INTEGER,
     text                                   VARCHAR(2000) NOT NULL
@@ -179,7 +165,6 @@ ALTER TABLE app_portfolio.app_translation
                                    AND ( app_object_item_app_object_object_name IS NULL )
                                    AND ( app_object_item_app_object_app_id IS NULL )
                                    AND ( app_setting_id IS NULL )
-                                   AND ( parameter_type_id IS NULL )
                                    AND ( app_id IS NULL )
                                    AND ( app_category_id IS NULL )
                                    AND ( country_id IS NULL )
@@ -190,7 +175,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_object_object_name IS NULL )
                                       AND ( app_object_app_id IS NULL )
                                       AND ( app_setting_id IS NULL )
-                                      AND ( parameter_type_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL )
@@ -201,18 +185,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_object_item_object_item_name IS NULL )
                                       AND ( app_object_item_app_object_object_name IS NULL )
                                       AND ( app_object_item_app_object_app_id IS NULL )
-                                      AND ( parameter_type_id IS NULL )
-                                      AND ( app_id IS NULL )
-                                      AND ( app_category_id IS NULL )
-                                      AND ( country_id IS NULL )
-                                      AND ( language_id_translation IS NULL ) )
-                                 OR ( ( parameter_type_id IS NOT NULL )
-                                      AND ( app_object_object_name IS NULL )
-                                      AND ( app_object_app_id IS NULL )
-                                      AND ( app_object_item_object_item_name IS NULL )
-                                      AND ( app_object_item_app_object_object_name IS NULL )
-                                      AND ( app_object_item_app_object_app_id IS NULL )
-                                      AND ( app_setting_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL )
@@ -224,7 +196,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_object_item_app_object_object_name IS NULL )
                                       AND ( app_object_item_app_object_app_id IS NULL )
                                       AND ( app_setting_id IS NULL )
-                                      AND ( parameter_type_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL )
                                       AND ( language_id_translation IS NULL ) )
@@ -235,7 +206,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_object_item_app_object_object_name IS NULL )
                                       AND ( app_object_item_app_object_app_id IS NULL )
                                       AND ( app_setting_id IS NULL )
-                                      AND ( parameter_type_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( country_id IS NULL )
                                       AND ( language_id_translation IS NULL ) )
@@ -246,7 +216,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_object_item_app_object_object_name IS NULL )
                                       AND ( app_object_item_app_object_app_id IS NULL )
                                       AND ( app_setting_id IS NULL )
-                                      AND ( parameter_type_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( language_id_translation IS NULL ) )
@@ -257,7 +226,6 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_object_item_app_object_object_name IS NULL )
                                       AND ( app_object_item_app_object_app_id IS NULL )
                                       AND ( app_setting_id IS NULL )
-                                      AND ( parameter_type_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL ) ) );
@@ -273,9 +241,6 @@ ALTER TABLE app_portfolio.app_translation
     ADD CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
                                                             app_id,
                                                             language_id );
-
-ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_parameter_type_un UNIQUE ( parameter_type_id,
-                                                                                                    language_id );
 
 ALTER TABLE app_portfolio.app_translation
     ADD CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
@@ -393,16 +358,6 @@ GRANT SELECT ON app_portfolio.locale TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.locale ADD CONSTRAINT locale_language_id_country_id_un UNIQUE ( language_id,
                                                      country_id );
-
-CREATE TABLE app_portfolio.parameter_type (
-    id VARCHAR(100) NOT NULL,
-    parameter_type_name VARCHAR(100) NOT NULL
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.parameter_type TO app_portfolio_role_app_admin;
-
-GRANT SELECT ON app_portfolio.parameter_type TO app_portfolio_role_app_common;
-
-ALTER TABLE app_portfolio.parameter_type ADD CONSTRAINT parameter_type_pk PRIMARY KEY ( id );
 
 CREATE TABLE app_portfolio.profile_search (
     user_account_id    INTEGER,
@@ -617,15 +572,6 @@ ALTER TABLE app_portfolio.app_object_item
                                                     app_id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_parameter
-    ADD CONSTRAINT app_parameter_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id )
-            ON DELETE CASCADE;
-
-ALTER TABLE app_portfolio.app_parameter
-    ADD CONSTRAINT app_parameter_parameter_type_fk FOREIGN KEY ( parameter_type_id )
-        REFERENCES app_portfolio.parameter_type ( id );
-
 ALTER TABLE app_portfolio.app_setting
     ADD CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
                                                                  app_setting_type_app_id )
@@ -679,10 +625,6 @@ ALTER TABLE app_portfolio.app_translation
 ALTER TABLE app_portfolio.app_translation
     ADD CONSTRAINT app_translation_language_translation_fk FOREIGN KEY ( language_id )
         REFERENCES app_portfolio.language ( id );
-
-ALTER TABLE app_portfolio.app_translation
-    ADD CONSTRAINT app_translation_parameter_type_fk FOREIGN KEY ( parameter_type_id )
-        REFERENCES app_portfolio.parameter_type ( id );
 
 ALTER TABLE app_portfolio.country
     ADD CONSTRAINT country_country_group_fk FOREIGN KEY ( country_group_id )

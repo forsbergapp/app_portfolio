@@ -102,7 +102,6 @@
  * @property {string} body.logo                                     - app portfolio parameter
  * @property {string} body.enabled                                  - app portfolio parameter
  * @property {number} body.app_category_id                          - app portfolio parameter
- * @property {number} body.parameter_type_id                        - app portfolio parameter
  * @property {string} body.parameter_value                          - app portfolio parameter
  * @property {string} body.parameter_comment                        - app portfolio parameter
  * @property {string} body.parameter_name                           - app portfolio parameter
@@ -607,16 +606,31 @@
  *              'FAVICON_32x32'|
  *              'FAVICON_192x192'|
  *              'SHOWPARAM'|
- *              'CLIENT_ID'|
- *              'CLIENT_SECRET'|
- *              'APP_DATA_SECRET'|
- *              'APP_DATA_EXPIRE'|
- *              'APP_ACCESS_SECRET'|
- *              'APP_ACCESS_EXPIRE'|
- *              'DATA'|
- *              'CONFIG'|
+ *              'SECRETS'|
+ *              'PARAMETERS'|
+ *              'RENDER_CONFIG'|
  *              'RENDER_FILES'|
  *              'STATUS'} config_apps_keys
+ * @typedef {{  SERVICE_DB_DB1_APP_USER: string,
+ *              SERVICE_DB_DB1_APP_PASSWORD: string,
+ *              SERVICE_DB_DB2_APP_USER: string,
+ *              SERVICE_DB_DB2_APP_PASSWORD: string,
+ *              SERVICE_DB_DB3_APP_USER: string,
+ *              SERVICE_DB_DB3_APP_PASSWORD: string,
+ *              SERVICE_DB_DB4_APP_USER: string,
+ *              SERVICE_DB_DB4_APP_PASSWORD: string,
+ *              SERVICE_MAIL_HOST: string,
+ *              SERVICE_MAIL_PORT: string,
+ *              SERVICE_MAIL_SECURE: string,
+ *              SERVICE_MAIL_USERNAME: string,
+ *              SERVICE_MAIL_PASSWORD: string,
+ *              CLIENT_ID: string, 
+ *              CLIENT_SECRET:string, 
+ *              APP_DATA_SECRET:string, 
+ *              APP_DATA_EXPIRE:string, 
+ *              APP_ACCESS_SECRET:string, 
+ *              APP_ACCESS_EXPIRE:string
+ *          }} config_apps_secrets
  * @typedef {{  MAP: boolean, 
  *              MANIFEST:boolean,
  *              RENDER_PROFILE_APPS:boolean,
@@ -630,11 +644,8 @@
  *              RENDER_APP_THEMES:boolean, 
  *              RENDER_LOCALES:boolean, 
  *              RENDER_SETTINGS:boolean, 
- *              RENDER_PROVIDER_BUTTONS:boolean}} config_apps_config
- * @typedef {{  COPYRIGHT: string,
- *		        EMAIL: string,
- *		        LINK_TITLE: string,
- *		        LINK_URL: string}} config_apps_data
+ *              RENDER_PROVIDER_BUTTONS:boolean}} config_apps_render_config
+ * @typedef {[{}]} config_apps_parameters
  * @typedef {'ONLINE'|'OFFLINE'} config_apps_status
  * @typedef  {[string,string|null,string|null,string, string|null]} config_apps_render_files
  * @typedef  {object} config_apps_record
@@ -654,14 +665,9 @@
  * @property {string} FAVICON_32x32
  * @property {string} FAVICON_192x192
  * @property {string} SHOWPARAM
- * @property {string} [CLIENT_ID]
- * @property {string} [CLIENT_SECRET]
- * @property {string} [APP_DATA_SECRET]
- * @property {string} [APP_DATA_EXPIRE]
- * @property {string} [APP_ACCESS_SECRET]
- * @property {string} [APP_ACCESS_EXPIRE]
- * @property {config_apps_data} [DATA]
- * @property {config_apps_config} [CONFIG]
+ * @property {config_apps_secrets} SECRETS
+ * @property {config_apps_parameters} [PARAMETERS]
+ * @property {config_apps_render_config} [RENDER_CONFIG]
  * @property {config_apps_render_files[]} [RENDER_FILES]
  * @property {config_apps_status} STATUS
  * 
@@ -1217,39 +1223,6 @@
  *              lang_code:string,
  *              id:number,
  *              text:string}} db_result_app_object_getObjects
- * APP PARAMETER
- * @typedef {{  app_id:number, 
- *              parameter_type_id:number, 
- *              parameter_type_name:string, 
- *              parameter_name:string, 
- *              parameter_value:string,
- *              parameter_comment:string}} db_result_app_parameter_getParameters_server
- * @typedef {{  app_id:number, 
- *              parameter_type_id:number, 
- *              parameter_type_name:string, 
- *              parameter_type_text:string, 
- *              parameter_name:string, 
- *              parameter_value:string, 
- *              parameter_comment:string}} db_result_app_parameter_getParametersAllAdmin
- * @typedef {{  parameter_value:string}} db_result_app_parameter_getParameter
- * @typedef {{  app_id: number, 
- *              parameter_type_id:number, 
- *              parameter_name:string, 
- *              parameter_value:string, 
- *              parameter_comment:string}} db_parameter_app_parameter_setParameter_admin
- * @typedef {   db_result_update} db_result_app_parameter_setParameter_admin
- * @typedef {{  app_id: number, 
- *              parameter_name:string, 
- *              parameter_value:string}} db_parameter_app_parameter_setParameterValue_admin
- * @typedef {   db_result_update} db_result_app_parameter_setParameterValue_admin
- * @typedef {{  id: number, 
- *              db_user:string, 
- *              db_password:string}} db_result_app_parameter_getAppDBParametersAdmin
- * @typedef {{  app_id:number, 
- *              parameter_type_id:number, 
- *              parameter_name:string, 
- *              parameter_value:string, 
- *              parameter_comment:string}} db_result_app_parameter_getAppStartParameters
  * APP ROLE
  * @typedef {{  id:number, 
  *              role_nae:string, 
@@ -1279,10 +1252,6 @@
  * LOCALE
  * @typedef {{  locale: string, text:string}} db_result_locale_getLocales
  * 
- * PARAMETER TYPE
- * @typedef {{  id:number,
- *              parameter_type_name:string,
- *              parameter_type_text:string}} db_result_parameter_type_getParameterTypeAdmin
  * PROFILE SEARCH
  * @typedef {{  user_account_id:number,
  *              search:string,

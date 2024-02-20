@@ -9,9 +9,3 @@ INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VA
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(6, 31, 'Արտադրողականություն');
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(7, 31, 'Գնումներ');
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(8, 31, 'Խաղ');
---
--- app_translation parameter_type
---
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('Հանրային','0',31);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('Մասնավոր կիսվել է','1',31);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('Մասնավոր','2',31);

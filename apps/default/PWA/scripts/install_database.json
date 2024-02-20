@@ -43,8 +43,6 @@
         {"db": 3, "sql": "GRANT app_portfolio_role_app_common TO <APP_USERNAME/>"},
         {"db": 4, "sql": "CREATE USER <APP_USERNAME/> IDENTIFIED BY <APP_PASSWORD/>"},
         {"db": 4, "sql": "GRANT app_portfolio_role_app_common TO <APP_USERNAME/>"},
-        {"db": 4, "sql": "GRANT UNLIMITED TABLESPACE TO <APP_USERNAME/>"},
-        {"db": null, "sql": "INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (<APP_ID/>,'2','SERVICE_DB_APP_USER','<APP_USERNAME/>',NULL)"},
-        {"db": null, "sql": "INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (<APP_ID/>,'2','SERVICE_DB_APP_PASSWORD',<APP_PASSWORD/>,NULL)"}
+        {"db": 4, "sql": "GRANT UNLIMITED TABLESPACE TO <APP_USERNAME/>"}
     ]
 }

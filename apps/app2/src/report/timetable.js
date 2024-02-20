@@ -1974,104 +1974,101 @@ const timetable = async (timetable_parameters) => {
 		else
 			return `${protocol}://${ConfigGetApp(timetable_parameters.app_id, 'SUBDOMAIN')}.${ConfigGet('SERVER', 'HOST')}${port}/reports?reportid=${timetable_parameters.reportid}`;
 	};
-    const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
-	REPORT_GLOBAL.app_copyright = ConfigGetApp(timetable_parameters.app_id, 'DATA').COPYRIGHT;
+	const result_parameters = ConfigGetApp(timetable_parameters.app_id, timetable_parameters.app_id, 'PARAMETERS');
 	return await new Promise((resolve) => {
-		getAppStartParameters(timetable_parameters.app_id)
-		.then((/** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/result_parameters)=> {
-			for (const parameter of result_parameters) {
-				if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
-					REPORT_GLOBAL.regional_def_calendar_lang = parameter.parameter_value;
-				if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
-					REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter.parameter_value;
-				if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
-					REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter.parameter_value;
-				if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
-					REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter.parameter_value;
-				if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
-					REPORT_GLOBAL.regional_def_calendar_type_greg = parameter.parameter_value;
-				if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
-					REPORT_GLOBAL.regional_def_calendar_number_system = parameter.parameter_value;
-				//QR
-				if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
-					REPORT_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter.parameter_value);
-				if (parameter.parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
-					REPORT_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter.parameter_value);
-				if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
-					REPORT_GLOBAL['module_easy.qrcode_color_dark'] = parameter.parameter_value;
-				if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
-					REPORT_GLOBAL['module_easy.qrcode_color_light'] = parameter.parameter_value;
-				if (parameter.parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
-					REPORT_GLOBAL['module_easy.qrcode_background_color'] = parameter.parameter_value;
-			
-			}
-            /**@type {[string, string][]} */
-            const render_variables = [];
-            const data_ViewStat = { client_ip:          			timetable_parameters.ip,
-                                    client_user_agent:  			timetable_parameters.user_agent,
-                                    client_longitude:  				timetable_parameters.longitude,
-                                    client_latitude:    			timetable_parameters.latitude,
-                                    user_account_id:    			uid_view,
-                                    user_account_app_data_post_id:  getNumberValue(user_account_app_data_post_id)};
-			insertUserPostView(timetable_parameters.app_id, data_ViewStat)
-			.then(()=>{
-				timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
-				.then((user_account_app_data_post)=>{
-					render_variables.push(['BODY_CLASSNAME',user_account_app_data_post.arabic_script]);
-					render_variables.push(['REPORT_PAPER_CLASSNAME',user_account_app_data_post.papersize]);
-					timetable_translate_settings(timetable_parameters.app_id, user_account_app_data_post.locale, user_account_app_data_post.second_locale).then(() => {
-						/**@ts-ignore */
-						import('praytimes').then(({default: prayTimes}) => {
-							//set current date for report month
-							REPORT_GLOBAL.session_currentDate = new Date();
-							REPORT_GLOBAL.session_currentHijriDate = [0,0,0];
-							//get Hijri date from initial Gregorian date
-							REPORT_GLOBAL.session_currentHijriDate[0] = 
-								parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
-													REPORT_GLOBAL.session_currentDate.getMonth(),
-													REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-							REPORT_GLOBAL.session_currentHijriDate[1] = 
-								//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
-								parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
-													REPORT_GLOBAL.session_currentDate.getMonth(),
-													REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
-							set_prayer_method(timetable_parameters.app_id, user_account_app_data_post.locale).then(() => {
-								if (reporttype==0){
-									timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
-									.then((user_account_app_data_posts_parameters)=>{
-										render_variables.push(['REPORT_TIMETABLE',displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters)]);
-										getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
-											render_variables.push(['REPORT_QRCODE',qrcode]);
-											resolve(render_app_with_data(timetable_parameters.report, render_variables));
-										});
-									})
-									.catch(()=>resolve(''));
+		for (const parameter of result_parameters) {
+			if (parameter['COPYRIGHT'])
+				REPORT_GLOBAL.app_copyright = parameter['COPYRIGHT'];
+			if (parameter['REGIONAL_DEFAULT_CALENDAR_LANG'])
+				REPORT_GLOBAL.regional_def_calendar_lang = parameter['REGIONAL_DEFAULT_CALENDAR_LANG'];
+			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'])
+				REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'];
+			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'])
+				REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'];
+			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'])
+				REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'];
+			if (parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'])
+				REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
+			if (parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'])
+				REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
+			//QR
+			if (parameter['MODULE_EASY.QRCODE_WIDTH'])
+				REPORT_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);
+			if (parameter['MODULE_EASY.QRCODE_HEIGHT'])
+				REPORT_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter['MODULE_EASY.QRCODE_HEIGHT']);
+			if (parameter['MODULE_EASY.QRCODE_COLOR_DARK'])
+				REPORT_GLOBAL['module_easy.qrcode_color_dark'] = parameter['MODULE_EASY.QRCODE_COLOR_DARK'];
+			if (parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'])
+				REPORT_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];
+			if (parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'])
+				REPORT_GLOBAL['module_easy.qrcode_background_color'] = parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'];
+		}
+		/**@type {[string, string][]} */
+		const render_variables = [];
+		const data_ViewStat = { client_ip:          			timetable_parameters.ip,
+								client_user_agent:  			timetable_parameters.user_agent,
+								client_longitude:  				timetable_parameters.longitude,
+								client_latitude:    			timetable_parameters.latitude,
+								user_account_id:    			uid_view,
+								user_account_app_data_post_id:  getNumberValue(user_account_app_data_post_id)};
+		insertUserPostView(timetable_parameters.app_id, data_ViewStat)
+		.then(()=>{
+			timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
+			.then((user_account_app_data_post)=>{
+				render_variables.push(['BODY_CLASSNAME',user_account_app_data_post.arabic_script]);
+				render_variables.push(['REPORT_PAPER_CLASSNAME',user_account_app_data_post.papersize]);
+				timetable_translate_settings(timetable_parameters.app_id, user_account_app_data_post.locale, user_account_app_data_post.second_locale).then(() => {
+					/**@ts-ignore */
+					import('praytimes').then(({default: prayTimes}) => {
+						//set current date for report month
+						REPORT_GLOBAL.session_currentDate = new Date();
+						REPORT_GLOBAL.session_currentHijriDate = [0,0,0];
+						//get Hijri date from initial Gregorian date
+						REPORT_GLOBAL.session_currentHijriDate[0] = 
+							parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+												REPORT_GLOBAL.session_currentDate.getMonth(),
+												REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+						REPORT_GLOBAL.session_currentHijriDate[1] = 
+							//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
+							parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+												REPORT_GLOBAL.session_currentDate.getMonth(),
+												REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+						set_prayer_method(timetable_parameters.app_id, user_account_app_data_post.locale).then(() => {
+							if (reporttype==0){
+								timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
+								.then((user_account_app_data_posts_parameters)=>{
+									render_variables.push(['REPORT_TIMETABLE',displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters)]);
+									getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
+										render_variables.push(['REPORT_QRCODE',qrcode]);
+										resolve(render_app_with_data(timetable_parameters.report, render_variables));
+									});
+								})
+								.catch(()=>resolve(''));
+							}
+							else
+								if (reporttype==1){
+									render_variables.push(['REPORT_TIMETABLE',displayMonth(prayTimes, user_account_app_data_post)]);
+									getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
+										render_variables.push(['REPORT_QRCODE',qrcode]);
+										resolve(render_app_with_data(timetable_parameters.report, render_variables));
+									});
 								}
-								else
-									if (reporttype==1){
-										render_variables.push(['REPORT_TIMETABLE',displayMonth(prayTimes, user_account_app_data_post)]);
+								else 
+									if (reporttype==2){
+										render_variables.push(['REPORT_TIMETABLE',displayYear(prayTimes, user_account_app_data_post)]);
 										getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
 											render_variables.push(['REPORT_QRCODE',qrcode]);
 											resolve(render_app_with_data(timetable_parameters.report, render_variables));
 										});
 									}
-									else 
-										if (reporttype==2){
-											render_variables.push(['REPORT_TIMETABLE',displayYear(prayTimes, user_account_app_data_post)]);
-											getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
-												render_variables.push(['REPORT_QRCODE',qrcode]);
-												resolve(render_app_with_data(timetable_parameters.report, render_variables));
-											});
-										}
-							});
 						});
 					});
-				}) 
-				.catch(()=>resolve(''));
-			})
-			.catch((/**@type{Types.error}*/error)=>{
-				resolve(error);
-			});
+				});
+			}) 
+			.catch(()=>resolve(''));
+		})
+		.catch((/**@type{Types.error}*/error)=>{
+			resolve(error);
 		});
 	});
 };

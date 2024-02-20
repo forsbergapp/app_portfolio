@@ -1207,14 +1207,6 @@ const lov_show = (lov, function_event) => {
     let lov_column_value='';
     let service = '';
     switch (lov){
-        case 'PARAMETER_TYPE':{
-            AppDocument.querySelector('#common_lov_title').classList.add('parameter_type');
-            lov_column_value = 'parameter_type_text';            
-            path = '/parameter_type/admin?';
-            service = 'DB_API';
-            token_type = 'APP_ACCESS';
-            break;
-        }
         case 'SERVER_LOG_FILES':{
             AppDocument.querySelector('#common_lov_title').classList.add('server_log_file');
             lov_column_value = 'filename';
@@ -4220,40 +4212,40 @@ const set_user_account_app_settings = () =>{
 };
 /**
  * Sett app parameters
- * @param {{app_id:number, parameter_name:string, parameter_value:string}[]} common_parameters 
+ * @param {*[]} common_parameters 
  * @returns {void}
  */
 const set_app_parameters = (common_parameters) => {
     //set parameters for common_app_id, each app set its own parameters in the app
     for (const parameter of common_parameters.filter(parameter=>parameter.app_id == COMMON_GLOBAL.common_app_id)){
-        switch (parameter.parameter_name){
-            case 'INFO_LINK_POLICY_NAME'                :{COMMON_GLOBAL.info_link_policy_name = parameter.parameter_value;break;}
-            case 'INFO_LINK_DISCLAIMER_NAME'            :{COMMON_GLOBAL.info_link_disclaimer_name = parameter.parameter_value;break;}
-            case 'INFO_LINK_TERMS_NAME'                 :{COMMON_GLOBAL.info_link_terms_name = parameter.parameter_value;break;}
-            case 'INFO_LINK_ABOUT_NAME'                 :{COMMON_GLOBAL.info_link_about_name = parameter.parameter_value;break;}
-            case 'INFO_LINK_POLICY_URL'                 :{COMMON_GLOBAL.info_link_policy_url = parameter.parameter_value;break;}
-            case 'INFO_LINK_DISCLAIMER_URL'             :{COMMON_GLOBAL.info_link_disclaimer_url = parameter.parameter_value;break;}
-            case 'INFO_LINK_TERMS_URL'                  :{COMMON_GLOBAL.info_link_terms_url = parameter.parameter_value;break;}
-            case 'INFO_LINK_ABOUT_URL'                  :{COMMON_GLOBAL.info_link_about_url = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE1'             :{COMMON_GLOBAL.image_file_allowed_type1 = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE2'             :{COMMON_GLOBAL.image_file_allowed_type2 = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE3'             :{COMMON_GLOBAL.image_file_allowed_type3 = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE4'             :{COMMON_GLOBAL.image_file_allowed_type4 = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE5'             :{COMMON_GLOBAL.image_file_allowed_type5 = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_MIME_TYPE'                 :{COMMON_GLOBAL.image_file_mime_type = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_MAX_SIZE'                  :{COMMON_GLOBAL.image_file_max_size = parseInt(parameter.parameter_value);break;}
-            case 'IMAGE_AVATAR_WIDTH'                   :{COMMON_GLOBAL.image_avatar_width = parseInt(parameter.parameter_value);break;}
-            case 'IMAGE_AVATAR_HEIGHT'                  :{COMMON_GLOBAL.image_avatar_height = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_FLYTO'                 :{COMMON_GLOBAL.module_leaflet_flyto = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_JUMPTO'                :{COMMON_GLOBAL.module_leaflet_jumpto = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_POPUP_OFFSET'          :{COMMON_GLOBAL.module_leaflet_popup_offset = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_STYLE'                 :{COMMON_GLOBAL.module_leaflet_style = parameter.parameter_value;break;}
-            case 'MODULE_LEAFLET_ZOOM'                  :{COMMON_GLOBAL.module_leaflet_zoom = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_ZOOM_CITY'             :{COMMON_GLOBAL.module_leaflet_zoom_city = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_ZOOM_PP'               :{COMMON_GLOBAL.module_leaflet_zoom_pp = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_MARKER_DIV_GPS'        :{COMMON_GLOBAL.module_leaflet_marker_div_gps = parameter.parameter_value;break;}
-            case 'MODULE_LEAFLET_MARKER_DIV_CITY'       :{COMMON_GLOBAL.module_leaflet_marker_div_city = parameter.parameter_value;break;}
-            case 'MODULE_LEAFLET_MARKER_DIV_PP'         :{COMMON_GLOBAL.module_leaflet_marker_div_pp = parameter.parameter_value;break;}
+        switch (true){
+            case ('INFO_LINK_POLICY_NAME' in parameter)                :{COMMON_GLOBAL.info_link_policy_name = parameter['INFO_LINK_POLICY_NAME'];break;}
+            case ('INFO_LINK_DISCLAIMER_NAME' in parameter)            :{COMMON_GLOBAL.info_link_disclaimer_name = parameter['INFO_LINK_DISCLAIMER_NAME'];break;}
+            case ('INFO_LINK_TERMS_NAME' in parameter)                 :{COMMON_GLOBAL.info_link_terms_name = parameter['INFO_LINK_TERMS_NAME'];break;}
+            case ('INFO_LINK_ABOUT_NAME' in parameter)                 :{COMMON_GLOBAL.info_link_about_name = parameter['INFO_LINK_ABOUT_NAME'];break;}
+            case ('INFO_LINK_POLICY_URL' in parameter)                 :{COMMON_GLOBAL.info_link_policy_url = parameter['INFO_LINK_POLICY_URL'];break;}
+            case ('INFO_LINK_DISCLAIMER_URL' in parameter)             :{COMMON_GLOBAL.info_link_disclaimer_url = parameter['INFO_LINK_DISCLAIMER_URL'];break;}
+            case ('INFO_LINK_TERMS_URL' in parameter)                  :{COMMON_GLOBAL.info_link_terms_url = parameter['INFO_LINK_TERMS_URL'];break;}
+            case ('INFO_LINK_ABOUT_URL' in parameter)                  :{COMMON_GLOBAL.info_link_about_url = parameter['INFO_LINK_ABOUT_URL'];break;}
+            case ('IMAGE_FILE_ALLOWED_TYPE1' in parameter)             :{COMMON_GLOBAL.image_file_allowed_type1 = parameter['IMAGE_FILE_ALLOWED_TYPE1'];break;}
+            case ('IMAGE_FILE_ALLOWED_TYPE2' in parameter)             :{COMMON_GLOBAL.image_file_allowed_type2 = parameter['IMAGE_FILE_ALLOWED_TYPE2'];break;}
+            case ('IMAGE_FILE_ALLOWED_TYPE3' in parameter)             :{COMMON_GLOBAL.image_file_allowed_type3 = parameter['IMAGE_FILE_ALLOWED_TYPE3'];break;}
+            case ('IMAGE_FILE_ALLOWED_TYPE4' in parameter)             :{COMMON_GLOBAL.image_file_allowed_type4 = parameter['IMAGE_FILE_ALLOWED_TYPE4'];break;}
+            case ('IMAGE_FILE_ALLOWED_TYPE5' in parameter)             :{COMMON_GLOBAL.image_file_allowed_type5 = parameter['IMAGE_FILE_ALLOWED_TYPE5'];break;}
+            case ('IMAGE_FILE_MIME_TYPE' in parameter)                 :{COMMON_GLOBAL.image_file_mime_type = parameter['IMAGE_FILE_MIME_TYPE'];break;}
+            case ('IMAGE_FILE_MAX_SIZE' in parameter)                  :{COMMON_GLOBAL.image_file_max_size = parseInt(parameter['IMAGE_FILE_MAX_SIZE']);break;}
+            case ('IMAGE_AVATAR_WIDTH' in parameter)                   :{COMMON_GLOBAL.image_avatar_width = parseInt(parameter['IMAGE_AVATAR_WIDTH']);break;}
+            case ('IMAGE_AVATAR_HEIGHT' in parameter)                  :{COMMON_GLOBAL.image_avatar_height = parseInt(parameter['IMAGE_AVATAR_HEIGHT']);break;}
+            case ('MODULE_LEAFLET_FLYTO' in parameter)                 :{COMMON_GLOBAL.module_leaflet_flyto = parseInt(parameter['MODULE_LEAFLET_FLYTO']);break;}
+            case ('MODULE_LEAFLET_JUMPTO' in parameter)                :{COMMON_GLOBAL.module_leaflet_jumpto = parseInt(parameter['MODULE_LEAFLET_JUMPTO']);break;}
+            case ('MODULE_LEAFLET_POPUP_OFFSET' in parameter)          :{COMMON_GLOBAL.module_leaflet_popup_offset = parseInt(parameter['MODULE_LEAFLET_POPUP_OFFSET']);break;}
+            case ('MODULE_LEAFLET_STYLE' in parameter)                 :{COMMON_GLOBAL.module_leaflet_style = parameter['MODULE_LEAFLET_STYLE'];break;}
+            case ('MODULE_LEAFLET_ZOOM' in parameter)                  :{COMMON_GLOBAL.module_leaflet_zoom = parseInt(parameter['MODULE_LEAFLET_ZOOM']);break;}
+            case ('MODULE_LEAFLET_ZOOM_CITY' in parameter)             :{COMMON_GLOBAL.module_leaflet_zoom_city = parseInt(parameter['MODULE_LEAFLET_ZOOM_CITY']);break;}
+            case ('MODULE_LEAFLET_ZOOM_PP' in parameter)               :{COMMON_GLOBAL.module_leaflet_zoom_pp = parseInt(parameter['MODULE_LEAFLET_ZOOM_PP']);break;}
+            case ('MODULE_LEAFLET_MARKER_DIV_GPS' in parameter)        :{COMMON_GLOBAL.module_leaflet_marker_div_gps = parameter['MODULE_LEAFLET_MARKER_DIV_GPS'];break;}
+            case ('MODULE_LEAFLET_MARKER_DIV_CITY' in parameter)       :{COMMON_GLOBAL.module_leaflet_marker_div_city = parameter['MODULE_LEAFLET_MARKER_DIV_CITY'];break;}
+            case ('MODULE_LEAFLET_MARKER_DIV_PP' in parameter)         :{COMMON_GLOBAL.module_leaflet_marker_div_pp = parameter['MODULE_LEAFLET_MARKER_DIV_PP'];break;}
         }
     }
 };
@@ -4367,9 +4359,7 @@ const mount_app = async (framework, events) => {
 };
 /**
  * Init common
- * @param {{app:{   app_id:number,
- *                  parameter_name:string, 
- *                  parameter_value:string}[],
+ * @param {{app:{}[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
  * @returns {Promise.<void>}
  */

@@ -9,9 +9,3 @@ INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VA
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(6, 531, 'ఉత్పాదకత');
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(7, 531, 'షాపింగ్');
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(8, 531, 'గేమ్');
---
--- app_translation parameter_type
---
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('ప్రజా','0',531);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('ప్రైవేట్ భాగస్వామ్యం చేయబడింది','1',531);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('ప్రైవేట్','2',531);

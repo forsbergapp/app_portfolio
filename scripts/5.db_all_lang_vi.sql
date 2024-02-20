@@ -9,9 +9,3 @@ INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VA
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(6, 575, 'Năng suất');
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(7, 575, 'Mua sắm');
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(8, 575, 'Trò chơi');
---
--- app_translation parameter_type
---
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('Công cộng','0',575);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('Chia sẻ riêng tư','1',575);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('Riêng tư','2',575);

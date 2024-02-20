@@ -9,9 +9,3 @@ INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VA
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(6, 267, '생산력');
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(7, 267, '쇼핑');
 INSERT INTO app_portfolio.app_translation(app_category_id, language_id, text) VALUES(8, 267, '게임');
---
--- app_translation parameter_type
---
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('공공의','0',267);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('비공개 공유','1',267);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('사적인','2',267);

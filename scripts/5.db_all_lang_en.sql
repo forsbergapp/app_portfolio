@@ -892,9 +892,3 @@ INSERT INTO app_portfolio.app_translation (language_id, language_id_translation,
 INSERT INTO app_portfolio.app_translation (language_id, language_id_translation, text) VALUES (1040,147,'Uzbek (Arabic)');
 INSERT INTO app_portfolio.app_translation (language_id, language_id_translation, text) VALUES (1041,147,'Uzbek (Cyrillic)');
 INSERT INTO app_portfolio.app_translation (language_id, language_id_translation, text) VALUES (1042,147,'Uzbek (Latin)');
---
--- app_translation parameter_type
---
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('Public','0',147);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('Private shared','1',147);
-INSERT INTO app_portfolio.app_translation (text, parameter_type_id, language_id) VALUES ('Private','2',147);

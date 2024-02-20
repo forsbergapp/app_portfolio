@@ -144,21 +144,6 @@
 <dataTypeSize>100</dataTypeSize>
 <ownDataTypeParameters>100,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="parameter_type_id" id="1DEC4AFE-C626-143C-A82B-3CB18DD9EBA2">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 04:01:04 UTC</createdTime>
-<generatorID>02520193-D03A-F117-6E2E-99CCCD72176F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>6788C8C7-56BC-BE1B-F925-91195B4D8EA5</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="country_id" id="1C88CFB6-370B-FA6F-5267-A67EAAFA1910">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 04:13:18 UTC</createdTime>
@@ -236,9 +221,8 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<newElementsIDs>1DEC4AFE-C626-143C-A82B-3CB18DD9EBA2,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<newElementsIDs>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
 <usedAttributes>
-<attributeRef>1DEC4AFE-C626-143C-A82B-3CB18DD9EBA2</attributeRef>
 <attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
 </usedAttributes>
 </identifier>

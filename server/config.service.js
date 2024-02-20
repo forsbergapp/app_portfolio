@@ -4,6 +4,7 @@
 import * as Types from './../types.js';
 
 const {SLASH, file_get, file_update, file_get_cached, file_set_cache_all, file_create, create_config_and_logs_dir} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const app_portfolio_title = 'App Portfolio';
 
@@ -79,10 +80,11 @@ const app_portfolio_title = 'App Portfolio';
 /**
  * Config get app
  * @param {number} app_id
+ * @param {number} data_app_id
  * @param {Types.config_apps_keys} parameter
  * @returns {object|null}
  */
- const ConfigGetApp = (app_id, parameter) => {
+ const ConfigGetApp = (app_id, data_app_id, parameter) => {
     switch(parameter){
         case 'NAME':
         case 'SUBDOMAIN':
@@ -96,23 +98,83 @@ const app_portfolio_title = 'App Portfolio';
         case 'FAVICON_32x32':
         case 'FAVICON_192x192':
         case 'SHOWPARAM':
-        case 'CLIENT_ID':
-        case 'CLIENT_SECRET':
-        case 'APP_DATA_SECRET':
-        case 'APP_DATA_EXPIRE':
-        case 'APP_ACCESS_SECRET':
-        case 'APP_ACCESS_EXPIRE':
-        case 'DATA':
-        case 'CONFIG':
+        case 'SECRETS':
+        case 'PARAMETERS':
+        case 'RENDER_CONFIG':
         case 'RENDER_FILES':
         case 'STATUS':{
             return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == app_id;})[0][parameter];
+                (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
         }
         default:{
             return null;
         }
     }
+ };
+/**
+ * Config app secret reset db username and passwords
+ * @param {number} app_id
+ * @returns {Promise.<void>}
+ */
+  const ConfigAppSecretDBReset = async (app_id) => {
+    const file = await file_get('APPS', true);
+    
+    for (const app of file.file_content.APPS){
+        app.SECRETS.SERVICE_DB_DB1_APP_USER = null;
+        app.SECRETS.SERVICE_DB_DB1_APP_PASSWORD = null;
+        app.SECRETS.SERVICE_DB_DB2_APP_USER = null;
+        app.SECRETS.SERVICE_DB_DB2_APP_PASSWORD = null;
+        app.SECRETS.SERVICE_DB_DB3_APP_USER = null;
+        app.SECRETS.SERVICE_DB_DB3_APP_PASSWORD = null;
+        app.SECRETS.SERVICE_DB_DB4_APP_USER = null;
+        app.SECRETS.SERVICE_DB_DB4_APP_PASSWORD = null;
+    }
+    await file_update('APPS', file.transaction_id, file.file_content);
+ };
+
+ /**
+ * Config app secret update
+ * @param {number} app_id
+ * @param {{app_id:             number,
+   *          parameter_name:     string,
+   *          parameter_value:    string}} data
+   * @returns {Promise.<void>}
+   */
+    const ConfigAppSecretUpdate = async (app_id, data) => {
+      const file = await file_get('APPS', true);
+      
+      for (const app of file.file_content.APPS){
+          if (app.APP_ID == data.app_id){
+            app.SECRETS[data.parameter_name] = data.parameter_value
+            break;
+          }
+      }
+      await file_update('APPS', file.transaction_id, file.file_content);
+   };
+ /**
+ * Config app parameter update
+ * @param {number} app_id
+ * @param {{app_id:             number,
+ *          parameter_name:     string,
+ *          parameter_value:    string,
+ *          parameter_comment:  string|null}} data
+ * @returns {Promise.<void>}
+ */
+  const ConfigAppParameterUpdate = async (app_id, data) => {
+    const file = await file_get('APPS', true);
+    
+    for (const app of file.file_content.APPS){
+        if (app.APP_ID == data.app_id)
+            for (const parameter of app.PARAMETERS){
+                if (data.parameter_name in parameter){
+                    parameter[data.parameter_name] = data.parameter_value;
+                    if (parameter.COMMENT)
+                        parameter.COMMENT = data.parameter_comment;
+                    break;
+                }           
+            }
+    }
+    await file_update('APPS', file.transaction_id, file.file_content);
  };
 /**
  * Config get
@@ -200,10 +262,10 @@ const DefaultConfig = async () => {
 
     //generate hash for apps
     config_obj[1][1].APPS.map((/**@type{Types.config_apps_record}*/row)=>{
-        row.CLIENT_ID = createHash('sha256').update(CreateRandomString()).digest('hex');
-        row.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
-        row.APP_DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
-        row.APP_ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+        row.SECRETS.CLIENT_ID = createHash('sha256').update(CreateRandomString()).digest('hex');
+        row.SECRETS.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+        row.SECRETS.APP_DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+        row.SECRETS.APP_ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
     });
     //set created for user
     config_obj[5][1].created = new Date().toISOString();
@@ -331,4 +393,4 @@ const CreateSystemAdmin = async (admin_name, admin_password) => {
 export{ CreateRandomString,
         ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
         CreateSystemAdmin, 
-        ConfigGet, ConfigGetUser, ConfigGetApps, ConfigGetAppHost, ConfigGetApp, InitConfig};
+        ConfigGet, ConfigGetUser, ConfigGetApps, ConfigGetAppHost, ConfigGetApp, ConfigAppSecretDBReset, ConfigAppSecretUpdate, ConfigAppParameterUpdate, InitConfig};

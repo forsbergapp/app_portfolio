@@ -1060,12 +1060,11 @@ const show_app_parameter = (app_id) => {
     AppDocument.querySelector('#list_app_parameter').classList.add('common_icon', 'css_spinner');
     AppDocument.querySelector('#apps_save').style.display = 'none';
     AppDocument.querySelector('#list_app_parameter').innerHTML = '';
-    common.FFB('DB_API', `/app_parameter/admin/all?data_app_id=${app_id}`, 'GET', 'APP_ACCESS', null)
+
+    common.FFB('CONFIG', `/app?data_app_id=${app_id}&key=PARAMETERS`, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div id='list_app_parameter_row_title' class='list_app_parameter_row'>
                         <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>APP ID</div>
-                        <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>TYPE ID</div>
-                        <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>TYPE NAME</div>
                         <div id='list_app_parameter_col_title2' class='list_app_parameter_col list_title'>NAME</div>
                         <div id='list_app_parameter_col_title3' class='list_app_parameter_col list_title'>VALUE</div>
                         <div id='list_app_parameter_col_title4' class='list_app_parameter_col list_title'>COMMENT</div>
@@ -1074,23 +1073,16 @@ const show_app_parameter = (app_id) => {
             html += 
             `<div data-changed-record='0' class='list_app_parameter_row common_row'>
                 <div class='list_app_parameter_col'>
-                    <div class='list_readonly'>${app_parameter.app_id}</div>
+                    <div class='list_readonly'>${app_id}</div>
                 </div>
                 <div class='list_app_parameter_col'>
-                    <div contenteditable=true class='common_input list_edit common_input_lov' defaultValue='${app_parameter.parameter_type_id}'/>${app_parameter.parameter_type_id}</div>
-                    <div class='common_lov_button common_list_lov_click common_icon'></div>
+                    <div class='list_readonly'>${Object.keys(app_parameter).filter(key=>key != 'app_id' && key != 'COMMENT')[0]}</div>
                 </div>
                 <div class='list_app_parameter_col'>
-                    <div class='list_readonly common_lov_value'>${app_parameter.parameter_type_text}</div>
+                    <div contenteditable=true class='common_input list_edit'/>${app_parameter[Object.keys(app_parameter).filter(key=>key != 'app_id' && key != 'COMMENT')[0]] ?? ''}</div>
                 </div>
                 <div class='list_app_parameter_col'>
-                    <div class='list_readonly'>${app_parameter.parameter_name}</div>
-                </div>
-                <div class='list_app_parameter_col'>
-                    <div contenteditable=true class='common_input list_edit'/>${app_parameter.parameter_value ?? ''}</div>
-                </div>
-                <div class='list_app_parameter_col'>
-                    <div contenteditable=true class='common_input list_edit'/>${app_parameter.parameter_comment ?? ''}</div>
+                    <div contenteditable=true class='common_input list_edit'/>${app_parameter.COMMENT ?? ''}</div>
                 </div>
             </div>`;
         }
@@ -1128,7 +1120,6 @@ const button_save = async (item) => {
                                         app:{           id: record.children[0].children[0].innerHTML,
                                                         app_category_id: record.children[5].children[0].innerHTML},
                                         app_parameter: {app_id:0,
-                                                        parameter_type_id:0,
                                                         parameter_name:'',
                                                         parameter_value:'',
                                                         parameter_comment:''}});
@@ -1156,10 +1147,9 @@ const button_save = async (item) => {
                                         app:{           id: 0,
                                                         app_category_id: 0},
                                         app_parameter: {app_id:record.children[0].children[0].innerHTML,
-                                                        parameter_type_id: record.children[1].children[0].innerHTML,
-                                                        parameter_name:  record.children[3].children[0].innerHTML,
-                                                        parameter_value: record.children[4].children[0].innerHTML,
-                                                        parameter_comment: record.children[5].children[0].innerHTML}});
+                                                        parameter_name:  record.children[1].children[0].innerHTML,
+                                                        parameter_value: record.children[2].children[0].innerHTML,
+                                                        parameter_comment: record.children[3].children[0].innerHTML}});
             }
         }
     }
@@ -1187,7 +1177,6 @@ const button_save = async (item) => {
                                             app:{           id: 0,
                                                             app_category_id: 0},
                                             app_parameter: {app_id:0,
-                                                            parameter_type_id: 0,
                                                             parameter_name:  '',
                                                             parameter_value: '',
                                                             parameter_comment: ''}});
@@ -1259,7 +1248,6 @@ const button_save = async (item) => {
  *          app:{           id:number,
  *                          app_category_id:number},
  *          app_parameter: {app_id:number,
- *                          parameter_type_id:number,
  *                          parameter_name:string,
  *                          parameter_value:string,
  *                          parameter_comment:string}}} parameters
@@ -1272,6 +1260,7 @@ const update_record = async (table,
         let path;
         let json_data;
         let token_type;
+        let service;
         AppDocument.querySelector('#' + button).classList.add('css_spinner');
         switch (table){
             case 'user_account':{
@@ -1288,6 +1277,7 @@ const update_record = async (table,
                                 verification_code:  parameters.user_account.verification_code};
                 path = `/user_account/admin?PUT_ID=${parameters.user_account.id}`;
                 token_type = 'SUPERADMIN';
+                service = 'DB_API'
                 break;
             }
             case 'app':{
@@ -1296,20 +1286,21 @@ const update_record = async (table,
                             };
                 path = `/apps/admin?PUT_ID=${parameters.app.id}`;
                 token_type = 'APP_ACCESS';
+                service = 'DB_API'
                 break;
             }
             case 'app_parameter':{
                 json_data = {   app_id:             parameters.app_parameter.app_id,
                                 parameter_name:     parameters.app_parameter.parameter_name,
-                                parameter_type_id:  parameters.app_parameter.parameter_type_id,
                                 parameter_value:    parameters.app_parameter.parameter_value,
                                 parameter_comment:  parameters.app_parameter.parameter_comment};
-                path = '/app_parameter/admin?';
+                path = '/app/parameter?';
                 token_type = 'APP_ACCESS';
+                service = 'CONFIG'
                 break;
             }
         }
-        await common.FFB('DB_API', path, 'PUT', token_type, json_data)
+        await common.FFB(service, path, 'PUT', token_type, json_data)
         .then(()=>{ row_element.setAttribute('data-changed-record', '0');
                     AppDocument.querySelector('#' + button).classList.remove('css_spinner');})
         .catch(()=>AppDocument.querySelector('#' + button).classList.remove('css_spinner'));
@@ -2956,10 +2947,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                                 common.lov_show('APP_CATEGORY', lov_event);
                                 break;
                             }
-                            case 'list_app_parameter':{
-                                common.lov_show('PARAMETER_TYPE', lov_event);
-                                break;
-                            }
                             case 'list_user_account':{
                                 common.lov_show('APP_ROLE', lov_event);
                                 break;
@@ -3076,15 +3063,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').innerHTML = '';
                     else{
                         common.FFB('DB_API', `/app_category/admin?id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null)
-                        .then((/**@type{string}*/result)=>lov_action(null, result, event))
-                        .catch((/**@type{Error}*/err)=>lov_action(err, null, event));
-                    }
-                //parameter type LOV
-                if (common.element_row(event.target).classList.contains('list_app_parameter_row') && event.target.classList.contains('common_input_lov'))
-                    if (event.target.innerHTML=='')
-                        event.target.innerHTML = event.target.getAttribute('defaultValue') ?? '';
-                    else{
-                        common.FFB('DB_API', `/parameter_type/admin?id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null)
                         .then((/**@type{string}*/result)=>lov_action(null, result, event))
                         .catch((/**@type{Error}*/err)=>lov_action(err, null, event));
                     }
