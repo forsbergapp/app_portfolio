@@ -1363,13 +1363,6 @@ INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (1040,251);
 INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (1041,490);
 INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (1042,490);
 --
--- parameter_type
---
-INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (0,'Public');
-INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (1,'Private shared');
-INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (2,'Private');
-
---
 -- identity_provider
 --
 INSERT INTO app_portfolio.identity_provider(id, provider_name, provider_url_logo, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 0, 'Local', null, null, null, null, null, 1, 0);

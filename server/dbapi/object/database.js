@@ -6,7 +6,7 @@ import * as Types from './../../../types.js';
 const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/database.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet, ConfigGetApp, ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
 const DBA=1;
 /**
  * 
@@ -58,7 +58,7 @@ const install_db_get_files = async (json_type) =>{
  */
  const Install = async (app_id, query)=> {
     const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-    const {CreateRandomString} = await import(`file://${process.cwd()}/server/config.service.js`);
+    const {CreateRandomString, ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
     const {SocketSendSystemAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
@@ -228,7 +228,6 @@ const install_db_get_files = async (json_type) =>{
         }
         if (install_obj.users){
             let sql_and_pw = null;
-            let app_password=null;
             for (const users_row of install_obj.users.filter((/**@type{Types.install_database_app_user_script}*/row) => row.db == getNumberValue(ConfigGet('SERVICE_DB', 'USE')) || row.db == null)){
                 switch (file[0]){
                     case 1:{
@@ -236,6 +235,14 @@ const install_db_get_files = async (json_type) =>{
                         if (users_row.sql.includes(password_tag)){
                             sql_and_pw = await sql_with_password(app_admin_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
+                            await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                            {   app_id:             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                                                                parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
+                                                                parameter_value:    app_admin_username});
+                            await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                            {   app_id:             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                                                                parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
+                                                                parameter_value:    sql_and_pw[1]});
                         }
                         users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_admin_username);
                         break;
@@ -243,17 +250,14 @@ const install_db_get_files = async (json_type) =>{
                     default:{
                         const app_username = 'app_portfolio_app' + file[2];
                         if (users_row.sql.includes(password_tag)){
-                            //save password first time and use it so save parameter with password
-                            //CREATE USER statement should be before INSERT INTO [parameter table] statement
-                            if (app_password == null){
-                                sql_and_pw = await sql_with_password(app_username, users_row.sql);
-                                users_row.sql = sql_and_pw[0];
-                                app_password = sql_and_pw[1];
-                            }
-                            else{
-                                users_row.sql = users_row.sql.replace('<APP_PASSWORD/>', `'${app_password}'`);
-                                app_password = null;
-                            }
+                            sql_and_pw = await sql_with_password(app_username, users_row.sql);
+                            users_row.sql = sql_and_pw[0];
+                            await ConfigAppSecretUpdate(file[2], {app_id:             file[2],
+                                                            parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
+                                                            parameter_value:    app_username});
+                            await ConfigAppSecretUpdate(file[2], {app_id:             file[2],
+                                                            parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
+                                                            parameter_value:    sql_and_pw[1]});
                         }
                         users_row.sql = users_row.sql.replace('<APP_ID/>', file[2]);
                         users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_username);
@@ -288,6 +292,7 @@ const install_db_get_files = async (json_type) =>{
   */
  const Uninstall = async (app_id, query)=> {
     const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+    const {ConfigAppSecretDBReset} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
     const {SocketSendSystemAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
@@ -342,6 +347,8 @@ const install_db_get_files = async (json_type) =>{
             
         }      
     }
+    //remove db users and password in apps.json
+    ConfigAppSecretDBReset(app_id);
     LogServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {'info':[  { count    : count_statements},
                         {count_fail: count_statements_fail}
@@ -838,21 +845,18 @@ const DemoUninstall = async (app_id, query)=> {
           password = `${ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}`;
           dba = 1;
           await pool_db(db_use, dba, user, password, null);
-       }
-       if (ConfigGet('SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)){
-          user = `${ConfigGet('SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)}`;
-          password = `${ConfigGet('SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`)}`;
-          dba = 0;
-          await pool_db(db_use, dba, user, password, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')));
-          const { getAppDBParametersAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
-          //app_id inparameter for log, all apps will be returned
-          /**@type{Types.db_result_app_parameter_getAppDBParametersAdmin[]} */
-          const result_apps = await getAppDBParametersAdmin(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')));
-          //get app id, db username and db password
-          for (const app  of result_apps){
-             if (app.id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-                await pool_db(db_use, dba, app.db_user, app.db_password, app.id);
-          }
+        }
+        dba = 0;
+        for (const app  of ConfigGetApps()){
+            if (ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`])
+               await pool_db(   db_use, 
+                                dba, 
+                                ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`], 
+                                ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_PASSWORD`], 
+                                app.APP_ID);
        }  
     }
  };

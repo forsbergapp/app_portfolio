@@ -19,7 +19,7 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
             let path = '';
             const call_microservice = (/**@type{string}*/path, /**@type{string}*/service) => {
                 //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                const authorization = `Basic ${Buffer.from(ConfigGetApp(bff_parameters.app_id, 'CLIENT_ID') + ':' + ConfigGetApp(bff_parameters.app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
+                const authorization = `Basic ${Buffer.from(ConfigGetApp(bff_parameters.app_id, bff_parameters.app_id, 'SECRETS').CLIENT_ID + ':' + ConfigGetApp(bff_parameters.app_id, bff_parameters.app_id, 'SECRETS').CLIENT_SECRET,'utf-8').toString('base64')}`;
                 microserviceRequest(bff_parameters.app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then send true
                                     path,service, bff_parameters.method,bff_parameters.ip, authorization, bff_parameters.user_agent, bff_parameters.accept_language, bff_parameters.body?bff_parameters.body:null)
                 .then((/**@type{string}*/result)=>resolve(result))
@@ -116,6 +116,7 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
                     case 'APP_ACCESS_DB_API':
                     case 'ADMIN_SOCKET':
                     case 'ADMIN_SERVER':
+                    case 'ADMIN_CONFIG':
                     case 'ADMIN_DB_API':
                     case 'ADMIN_APP':
                     case 'SUPERADMIN_DB_API':

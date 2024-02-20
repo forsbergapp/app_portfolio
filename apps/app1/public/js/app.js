@@ -480,23 +480,22 @@ const mount_app_app = async (framework=null) => {
 };
 /**
  * Init app
- * @param {{app:{   parameter_name:string, 
- *                  parameter_value:string}[],
+ * @param {{app:*[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
  * @returns {Promise.<void>}
  */
 const init_app = async (parameters) => {
     for (const parameter of parameters.app) {
-        if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
-            common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter.parameter_value);
-        if (parameter.parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
-            common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter.parameter_value);
-        if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
-            common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter.parameter_value;
-        if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
-            common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter.parameter_value;
-        if (parameter.parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
-            common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter.parameter_value;
+        if (parameter['MODULE_EASY.QRCODE_WIDTH'])
+            common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);
+        if (parameter['MODULE_EASY.QRCODE_HEIGHT'])
+            common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter['MODULE_EASY.QRCODE_HEIGHT']);
+        if (parameter['MODULE_EASY.QRCODE_COLOR_DARK'])
+            common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter['MODULE_EASY.QRCODE_COLOR_DARK'];
+        if (parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'])
+            common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];
+        if (parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'])
+            common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'];
     }
     
     //info
@@ -522,8 +521,7 @@ const init_app = async (parameters) => {
 };
 /**
  * Init common
- * @param {{app:{   parameter_name:string, 
- *                  parameter_value:string}[],
+ * @param {{app:*[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
  * @returns {void}
  */
