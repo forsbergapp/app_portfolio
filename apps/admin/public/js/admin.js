@@ -250,7 +250,7 @@ const app_event_keyup = event => {
                 case 'common_user_start_login_password':
                 case 'common_user_start_login_system_admin_username':
                 case 'common_user_start_login_system_admin_password':
-                case 'user_start_login_system_admin_password_confirm_input':{
+                case 'common_user_start_login_system_admin_password_confirm':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
                         admin_login().then(() => {
@@ -364,7 +364,7 @@ const init_app = (parameters) => {
     AppDocument.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
     if (parameters.app_service.first_time == 1) {
         AppDocument.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
-        AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm').style.display = 'block';
+        AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm_container').style.display = 'block';
     }
     if (parameters.app_service.system_admin_only == 1) {
         AppDocument.querySelector('#common_user_start_login').style.display = 'none';
