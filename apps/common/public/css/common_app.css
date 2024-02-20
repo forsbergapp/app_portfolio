@@ -579,7 +579,7 @@ select {
 #common_user_start_login_system_admin, 
 #common_user_start_login_system_admin_form,
 #common_user_start_login_system_admin_first_time, 
-#common_user_start_login_system_admin_password_confirm{
+#common_user_start_login_system_admin_password_confirm_container{
 	display:none;
 }
 #common_dialogue_user_start{
