@@ -462,7 +462,7 @@
 }
 #timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_header_row .timetable_month_data_header_col {
 	font-size: 4pt;
-	overflow-x: unset;
+	overflow-x: hidden;
 }
 #timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_col.timetable_data_fast_start {
 	width: inherit;
