@@ -4,7 +4,6 @@
 import * as Types from './../types.js';
 
 const {SLASH, file_get, file_update, file_get_cached, file_set_cache_all, file_create, create_config_and_logs_dir} = await import(`file://${process.cwd()}/server/db/file.service.js`);
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const app_portfolio_title = 'App Portfolio';
 
@@ -146,6 +145,7 @@ const app_portfolio_title = 'App Portfolio';
         app.SECRETS.SERVICE_DB_DB4_APP_PASSWORD = null;
     }
     await file_update('APPS', file.transaction_id, file.file_content);
+    await file_set_cache_all();
  };
 
  /**
@@ -166,6 +166,7 @@ const app_portfolio_title = 'App Portfolio';
           }
       }
       await file_update('APPS', file.transaction_id, file.file_content);
+      await file_set_cache_all();
    };
  /**
  * Config app parameter update
@@ -191,6 +192,7 @@ const app_portfolio_title = 'App Portfolio';
             }
     }
     await file_update('APPS', file.transaction_id, file.file_content);
+    await file_set_cache_all();
  };
 /**
  * Config get
