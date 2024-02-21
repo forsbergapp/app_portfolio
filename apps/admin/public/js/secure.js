@@ -2526,7 +2526,7 @@ const show_config = async file => {
                                     <div class='list_readonly'>${Object.keys(config[Object.keys(config)[i_group]][j])[0]}</div>
                                 </div>
                                 <div class='list_config_col'>
-                                    <div contenteditable=true class='common_input list_edit'/>${Object.values(config[Object.keys(config)[i_group]][j])[0]}</div>
+                                    <div contenteditable=true class='common_input'/>${Object.values(config[Object.keys(config)[i_group]][j])[0]}</div>
                                 </div>
                                 <div class='list_config_col'>
                                     <div class='list_readonly'>${Object.values(config[Object.keys(config)[i_group]][j])[1]}</div>
@@ -2540,7 +2540,7 @@ const show_config = async file => {
                 AppDocument.querySelector('#list_config').innerHTML = html;
                 
                 //set focus first column in first row
-                AppDocument.querySelectorAll('#list_config .list_edit')[0].focus();
+                AppDocument.querySelectorAll('#list_config .common_input')[0].focus();
                 break;
             }
             default:{
