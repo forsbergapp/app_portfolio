@@ -103,8 +103,24 @@ const app_portfolio_title = 'App Portfolio';
         case 'RENDER_CONFIG':
         case 'RENDER_FILES':
         case 'STATUS':{
-            return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
+            if (parameter=='PARAMETERS'){
+                const parameters = Object.entries(file_get_cached('APPS'))[0][1].filter(
+                    (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
+                return parameters.sort((/**@type{{}}*/a, /**@type{{}}*/b) => {
+                    const x = Object.keys(a)[0].toLowerCase();
+                    const y = Object.keys(b)[0].toLowerCase();
+                    if (x < y) {
+                        return -1;
+                    }
+                    if (x > y) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            }
+            else
+                return Object.entries(file_get_cached('APPS'))[0][1].filter(
+                    (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
         }
         default:{
             return null;
