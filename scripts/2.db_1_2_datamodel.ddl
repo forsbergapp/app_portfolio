@@ -155,7 +155,8 @@ CREATE TABLE app_portfolio.app_translation (
     app_object_item_object_item_name       VARCHAR(100),
     country_id                             INTEGER,
     language_id_translation                INTEGER,
-    text                                   VARCHAR(2000) NOT NULL
+    text                                   VARCHAR(2000) NOT NULL,
+    json_data                              LONGBLOB
 );
 
 ALTER TABLE app_portfolio.app_translation

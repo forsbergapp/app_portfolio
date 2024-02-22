@@ -185,7 +185,7 @@
 <colAssociation fkAssociation="F4D89FA5-9019-3C9F-A746-F6594EF4A8FC" referredColumn="56940672-7C78-C6EE-33E8-AEFCAAA604F1"/>
 </associations>
 </Column>
-<Column name="TEXT" id="7C3D92E4-9ACA-697C-9A87-86B63DD23918">
+<Column name="text" id="7C3D92E4-9ACA-697C-9A87-86B63DD23918">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <generatorID>95AF5298-EC65-CF5F-BD1A-AB1D3E0B8101</generatorID>
@@ -195,6 +195,17 @@
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>2000</dataTypeSize>
 <ownDataTypeParameters>2000,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="json_data" id="F562B0DC-1D7B-A83A-F110-64B8C7A981B5">
+<createdBy>admin</createdBy>
+<createdTime>2024-02-22 17:26:50 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT028</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
