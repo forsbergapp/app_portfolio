@@ -172,7 +172,7 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="TEXT" id="95AF5298-EC65-CF5F-BD1A-AB1D3E0B8101">
+<Attribute name="text" id="95AF5298-EC65-CF5F-BD1A-AB1D3E0B8101">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 03:44:44 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -184,6 +184,19 @@
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>2000</dataTypeSize>
 <ownDataTypeParameters>2000,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="json_data" id="CBE987FD-85CB-0165-7DAB-B5E392E5988F">
+<createdBy>admin</createdBy>
+<createdTime>2024-02-22 17:24:31 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT028</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
