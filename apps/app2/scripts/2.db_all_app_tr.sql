@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,555,'Aşamalı web uygulaması (PWA) tek sayfa uygulaması (SPA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,555,'{"name":"Tarifeler", "description":"tarifeler"}');
 --
 -- app_translation app_setting
 --

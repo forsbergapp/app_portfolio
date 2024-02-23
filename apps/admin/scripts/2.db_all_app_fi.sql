@@ -1,8 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,162,'Järjestelmänvalvojasovellus sovellusten järjestelmänvalvojille ja järjestelmänvalvojille määrityksellä, reaaliaikaisten yhteyksien ja lokien valvonnalla, tilastoilla,
-lähetystoiminnot, tietokantatiedot, käyttöjärjestelmätiedot, prosessitiedot ja käyttäjien roolien hallinta');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (0,162,'{"name":"järjestelmänvalvoja", "description":"Järjestelmänvalvojasovellus sovellusten järjestelmänvalvojille ja järjestelmänvalvojille määrityksellä, reaaliaikaisten yhteyksien ja lokien valvonnalla, tilastoilla, lähetystoiminnot, tietokantatiedot, käyttöjärjestelmätiedot, prosessitiedot ja käyttäjien roolien hallinta"}');
 --
 --  app_translation app_object_item
 --

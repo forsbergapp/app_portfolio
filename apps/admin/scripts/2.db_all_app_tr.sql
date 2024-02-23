@@ -1,8 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,555,'Yapılandırma, canlı bağlantıların ve günlüklerin izlenmesi, istatistikler ile uygulama yöneticileri ve sistem yöneticileri için yönetici uygulaması,
-yayın işlevleri, veritabanı bilgisi, işletim sistemi bilgisi, işlem bilgisi ve kullanıcı rolü yönetimi');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (0,555,'{"name":"yönetici", "description": "Yapılandırma, canlı bağlantıların ve günlüklerin izlenmesi, istatistikler ile uygulama yöneticileri ve sistem yöneticileri için yönetici uygulaması, yayın işlevleri, veritabanı bilgisi, işletim sistemi bilgisi, işlem bilgisi ve kullanıcı rolü yönetimi"}');
 --
 --  app_translation app_object_item
 --

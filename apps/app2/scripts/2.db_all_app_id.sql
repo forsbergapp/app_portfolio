@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,214,'Aplikasi web progresif (PWA) aplikasi satu halaman (SPA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,214,'{"name":"jadwal", "description":"jadwal"}');
 --
 -- app_translation app_setting
 --

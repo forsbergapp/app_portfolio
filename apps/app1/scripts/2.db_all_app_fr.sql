@@ -1,4 +1,4 @@
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,166,'Application monopage (SPA) de plate-forme d''application dans n''importe quelle langue et n''importe quel environnement régional');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,166,'{"name":"Portefeuille d''applications", "description":"Portefeuille d''applications"}');

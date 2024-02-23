@@ -1,8 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,201,'कॉन्फ़िगरेशन के साथ ऐप एडमिन और सिस्टम एडमिन के लिए एडमिन ऐप, लाइव कनेक्शन की निगरानी और लॉग, आंकड़े,
-प्रसारण कार्य, डेटाबेस जानकारी, OS जानकारी, प्रक्रिया जानकारी और उपयोगकर्ता भूमिका प्रबंधन');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (0,201,'{"name":"व्यवस्थापक", "description":"कॉन्फ़िगरेशन के साथ ऐप एडमिन और सिस्टम एडमिन के लिए एडमिन ऐप, लाइव कनेक्शन की निगरानी और लॉग, आंकड़े, प्रसारण कार्य, डेटाबेस जानकारी, OS जानकारी, प्रक्रिया जानकारी और उपयोगकर्ता भूमिका प्रबंधन"}');
 --
 --  app_translation app_object_item
 --

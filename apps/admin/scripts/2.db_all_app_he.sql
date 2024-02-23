@@ -1,8 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,198,'אפליקציית ניהול למנהלי אפליקציה ומנהלי מערכת עם תצורה, ניטור של חיבורים ויומנים חיים, סטטיסטיקות,
-פונקציות שידור, מידע על מסד נתונים, מידע על מערכת ההפעלה, מידע על תהליך וניהול תפקידי משתמש');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (0,198,'{"name":"אדמין", "description":"אפליקציית ניהול למנהלי אפליקציה ומנהלי מערכת עם תצורה, ניטור של חיבורים ויומנים חיים, סטטיסטיקות, פונקציות שידור, מידע על מסד נתונים, מידע על מערכת ההפעלה, מידע על תהליך וניהול תפקידי משתמש"}');
 --
 --  app_translation app_object_item
 --

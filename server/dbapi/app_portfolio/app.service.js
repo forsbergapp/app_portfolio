@@ -16,7 +16,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  */
 const getApp = async (app_id, id,lang_code) => {
 		const sql = `SELECT	id "id",
-							(SELECT aot.text 
+							(SELECT aot.json_data 
 								FROM ${db_schema()}.language l,
 								     ${db_schema()}.app_translation aot
 								WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
@@ -28,7 +28,7 @@ const getApp = async (app_id, id,lang_code) => {
 													)
 								  AND aot.app_id = a.id
 								  AND aot.language_id = l.id
-							) "app_description",
+							) "app_translation",
 						(SELECT act.text 
 							FROM ${db_schema()}.language l,
 							     ${db_schema()}.app_translation act

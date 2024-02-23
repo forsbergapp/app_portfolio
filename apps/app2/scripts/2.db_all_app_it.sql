@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,222,'Applicazione a pagina singola (SPA) dell''app Web progressiva (PWA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,222,'{"name":"orari", "description":"orari"}');
 --
 -- app_translation app_setting
 --

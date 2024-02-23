@@ -1,8 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,224,'アプリ管理者とシステム管理者向けの管理アプリで、構成、ライブ接続とログの監視、統計、
-ブロードキャスト機能、データベース情報、OS 情報、プロセス情報、およびユーザー ロール管理');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (0,224,'{"name":"管理者", "description":"アプリ管理者とシステム管理者向けの管理アプリで、構成、ライブ接続とログの監視、統計、ブロードキャスト機能、データベース情報、OS 情報、プロセス情報、およびユーザー ロール管理"}');
 --
 --  app_translation app_object_item
 --

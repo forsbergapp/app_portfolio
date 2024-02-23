@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,393,'Progressiv nettapp (PWA) enkeltsideapplikasjon (SPA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,393,'{"name":"Tidsplaner", "description":"tidsplaner"}');
 --
 -- app_translation app_setting
 --

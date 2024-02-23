@@ -186,7 +186,7 @@ CREATE TABLE app_portfolio.app_translation (
     app_object_item_object_item_name       VARCHAR2(100),
     country_id                             INTEGER,
     language_id_translation                INTEGER,
-    text                                   VARCHAR2(2000) NOT NULL,
+    text                                   VARCHAR2(2000),
     json_data                              CLOB
 );
 

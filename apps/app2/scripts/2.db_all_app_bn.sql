@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,63,'প্রগতিশীল ওয়েব অ্যাপ (PWA) একক পৃষ্ঠা অ্যাপ্লিকেশন (SPA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,63,'{"name":"সময়সূচী", "description":"সময়সূচী"}');
 --
 -- app_translation app_setting
 --

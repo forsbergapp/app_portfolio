@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,575,'Ứng dụng một trang ứng dụng web tiến bộ (PWA) (SPA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,575,'{"name":"Thời gian biểu", "description":"thời gian biểu"}');
 --
 -- app_translation app_setting
 --
