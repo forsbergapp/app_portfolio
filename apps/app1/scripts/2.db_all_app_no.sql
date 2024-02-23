@@ -1,4 +1,4 @@
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,393,'Appplattform enkeltsideapplikasjon (SPA) på alle språk og alle regionale innstillinger');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,393,'{"name":"App-portefølje", "description":"App-portefølje"}');

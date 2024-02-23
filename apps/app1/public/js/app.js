@@ -365,7 +365,7 @@ const get_apps = () => {
                                 <img class='app_logo' src='${app.LOGO}' />
                             </div>
                             <div class='app_link_col'>
-                                <div class='app_name'>${app.NAME}</div>
+                                <div class='app_name'>${app.APP_NAME_TRANSLATION}</div>
                             </div>
                         </div>`;
             html_menu_apps_list +=`<div class='app_link_row common_row'>
@@ -379,7 +379,7 @@ const get_apps = () => {
                                             <img class='app_logo' src='${app.LOGO}' />
                                         </div>
                                         <div class='app_link_col'>
-                                            <div class='app_name'>${app.NAME}</div>
+                                            <div class='app_name'>${app.NAME} - ${app.APP_NAME_TRANSLATION}</div>
                                             <div class='app_category'>${app.APP_CATEGORY==null?'':app.APP_CATEGORY}</div>
                                             <div class='app_description'>${app.APP_DESCRIPTION==null?'':app.APP_DESCRIPTION}</div>
                                         </div>
