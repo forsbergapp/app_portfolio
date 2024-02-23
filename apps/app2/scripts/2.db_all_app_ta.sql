@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,527,'முற்போக்கான வலை பயன்பாடு (PWA) ஒற்றை பக்க பயன்பாடு (SPA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,527,'{"name":"கால அட்டவணைகள்", "description":"கால அட்டவணைகள்"}');
 --
 -- app_translation app_setting
 --

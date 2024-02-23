@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,338,'प्रोग्रेसिव्ह वेब अॅप (PWA) सिंगल पेज अॅप्लिकेशन (SPA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,338,'{"name":"वेळापत्रक", "description":"वेळापत्रक"}');
 --
 -- app_translation app_setting
 --

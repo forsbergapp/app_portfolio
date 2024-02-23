@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,438,'ਪ੍ਰੋਗਰੈਸਿਵ ਵੈੱਬ ਐਪ (PWA) ਸਿੰਗਲ ਪੇਜ ਐਪਲੀਕੇਸ਼ਨ (SPA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,438,'{"name":"ਸਾਰਣੀ", "description":"ਸਾਰਣੀ"}');
 --
 -- app_translation app_setting
 --

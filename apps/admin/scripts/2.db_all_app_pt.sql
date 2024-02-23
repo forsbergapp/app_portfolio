@@ -1,8 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,436,'Aplicativo Admin para administradores de aplicativos e administradores de sistema com configuração, monitoramento de conexões ao vivo e logs, estatísticas,
-funções de transmissão, informações do banco de dados, informações do sistema operacional, informações do processo e gerenciamento de função do usuário');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (0,436,'{"name":"Admin", "description":"Aplicativo Admin para administradores de aplicativos e administradores de sistema com configuração, monitoramento de conexões ao vivo e logs, estatísticas, funções de transmissão, informações do banco de dados, informações do sistema operacional, informações do processo e gerenciamento de função do usuário"}');
 --
 --  app_translation app_object_item
 --

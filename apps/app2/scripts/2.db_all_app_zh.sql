@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,107,'渐进式 Web 应用 （PWA） 单页应用程序 （SPA）');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,107,'{"name":"时间表", "description":"时间表"}');
 --
 -- app_translation app_setting
 --

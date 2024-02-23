@@ -38,7 +38,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 --
 -- app_translation app
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,267,'프로그레시브 웹 앱(PWA) 단일 페이지 애플리케이션(SPA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,267,'{"name":"일정", "description":"일정"}');
 --
 -- app_translation app_setting
 --

@@ -686,6 +686,7 @@
  * @property {string} SHOWPARAM
  * @property {string} CLIENT_ID
  * @property {config_apps_status} STATUS
+ * @property {string} APP_NAME_TRANSLATION
  * @property {string} APP_DESCRIPTION
  * @property {string} APP_CATEGORY
  * @property {string} PROTOCOL
@@ -1162,7 +1163,7 @@
  * APP
  * @typedef {{  app_category_id:number|null}} db_parameter_app_updateAppAdmin
  * @typedef {{  id:number, 
- *              app_description:string, 
+ *              app_translation:string, 
  *              app_category:string}} db_result_app_getApp
  * @typedef {{  id:number, 
  *              app_category_id:number, 
