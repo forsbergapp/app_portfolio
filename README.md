@@ -125,8 +125,8 @@
 	www.mysql.com
 	PostgreSQL
 	www.postgresql.org
-	Oracle Instant Client
-	www.oracle.com/database/technologies/instant-client.html
+	Oracle Database
+	www.oracle.com/database
 	Node.js
 	www.nodejs.org
 	Express
