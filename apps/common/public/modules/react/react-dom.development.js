@@ -14,7 +14,7 @@ let ReactDOM;
   typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
   (global = global || self, factory(global.ReactDOM = {}, global.React));
 }(this, (function (exports, React) { 'use strict';
-
+  var React_listeners=[];
   var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 
   var suppressWarning = false;
@@ -6694,16 +6694,19 @@ let ReactDOM;
         return DefaultEventPriority;
     }
   }
-
+  
   function addEventBubbleListener(target, eventType, listener) {
+    React_listeners.push([target, eventType, listener]);
     target.addEventListener(eventType, listener, false);
     return listener;
   }
   function addEventCaptureListener(target, eventType, listener) {
+    React_listeners.push([target, eventType, listener]);
     target.addEventListener(eventType, listener, true);
     return listener;
   }
   function addEventCaptureListenerWithPassiveFlag(target, eventType, listener, passive) {
+    React_listeners.push([target, eventType, listener]);
     target.addEventListener(eventType, listener, {
       capture: true,
       passive: passive
@@ -6711,6 +6714,7 @@ let ReactDOM;
     return listener;
   }
   function addEventBubbleListenerWithPassiveFlag(target, eventType, listener, passive) {
+    React_listeners.push([target, eventType, listener]);
     target.addEventListener(eventType, listener, {
       passive: passive
     });
@@ -29867,6 +29871,7 @@ let ReactDOM;
   exports.unstable_batchedUpdates = batchedUpdates$1;
   exports.unstable_renderSubtreeIntoContainer = renderSubtreeIntoContainer;
   exports.version = ReactVersion;
+  exports.React_listeners = React_listeners;
   ReactDOM = exports;
 })));
 export {ReactDOM}

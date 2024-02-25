@@ -14,6 +14,7 @@ const {getTimezone} = await import('regional');
 /**@type{{body:{className:string, requestFullscreen:function, classList:{add:function, remove:function}},
  *        createElement:function,
  *        addEventListener:function,
+ *        removeEventListener:function,
  *        fullscreenElement:Element|null,
  *        exitFullscreen:function,
  *        querySelector:function,
@@ -4147,50 +4148,55 @@ const common_event = async (event_type,event) =>{
     
 };
 /**
- * Sets common events for all apps
+ * Disable copy cut paste
+ * @param {AppEvent} event 
+ */
+ const disable_copy_paste_cut = event => {
+    if (disable_textediting())
+        if(event.target.nodeName !='SELECT'){
+            event.preventDefault();
+            event.target.focus();
+        }
+};
+/**
+ * Disable common input textediting
+ * @param {AppEvent} event 
+ */
+const disable_common_input = event => {
+    if (disable_textediting())
+        if (event.target.classList.contains('common_input')){
+            event.preventDefault();
+            event.target.focus();
+        }
+};
+/**
+ * Hide user menu and search
+ * @param {AppEvent} event 
+ */
+ const hide_user_menu_and_search = event => {
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        //hide use menu dropdown
+        if (AppDocument.querySelector('#common_user_menu_dropdown').style.visibility=='visible')
+            AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+        if (AppDocument.querySelector('#common_profile_input_row')){
+            //hide search
+            const x = AppDocument.querySelector('#common_profile_input_row'); 
+            if (x.style.visibility == 'visible') {
+                x.style.visibility = 'hidden';
+                AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+            } 
+        }
+    }
+};
+/**
+ * Adds common events for all apps
  * @returns {void}
  */
-const set_events = () => {
+const common_events_add = () => {
     //only works on document level:
-    AppDocument.addEventListener('keydown', (/**@type{AppEvent}*/event) =>{ 
-        if (event.key === 'Escape') {
-            event.preventDefault();
-            //hide use menu dropdown
-            if (AppDocument.querySelector('#common_user_menu_dropdown').style.visibility=='visible')
-                AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
-            if (AppDocument.querySelector('#common_profile_input_row')){
-                //hide search
-                const x = AppDocument.querySelector('#common_profile_input_row'); 
-                if (x.style.visibility == 'visible') {
-                    x.style.visibility = 'hidden';
-                    AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-                } 
-            }
-        }
-    }, false);
+    AppDocument.addEventListener('keydown', hide_user_menu_and_search, false);
 
-    /**
-     * Disable copy cut paste
-     * @param {AppEvent} event 
-     */
-    const disable_copy_paste_cut = event => {
-        if (disable_textediting())
-            if(event.target.nodeName !='SELECT'){
-                event.preventDefault();
-                event.target.focus();
-            }
-    };
-    /**
-     * Disable common input textediting
-     * @param {AppEvent} event 
-     */
-    const disable_common_input = event => {
-        if (disable_textediting())
-            if (event.target.classList.contains('common_input')){
-                event.preventDefault();
-                event.target.focus();
-            }
-    };
     AppDocument.querySelector('#app').addEventListener('copy', disable_copy_paste_cut, false);
     AppDocument.querySelector('#app').addEventListener('paste', disable_copy_paste_cut, false);
     AppDocument.querySelector('#app').addEventListener('cut', disable_copy_paste_cut, false);
@@ -4198,6 +4204,20 @@ const set_events = () => {
     AppDocument.querySelector('#app').addEventListener('touchstart', disable_common_input, false);
 
 };
+/**
+ * Remove common events for all apps
+ * @returns {void}
+ */
+const common_events_remove = () => {
+    AppDocument.removeEventListener('keydown', hide_user_menu_and_search);
+
+    AppDocument.querySelector('#app').removeEventListener('copy', disable_copy_paste_cut);
+    AppDocument.querySelector('#app').removeEventListener('paste', disable_copy_paste_cut);
+    AppDocument.querySelector('#app').removeEventListener('cut', disable_copy_paste_cut);
+    AppDocument.querySelector('#app').removeEventListener('mousedown', disable_copy_paste_cut);
+    AppDocument.querySelector('#app').removeEventListener('touchstart', disable_common_input);
+
+}
 /**
  * Set user account app settings
  * @returns {void}
@@ -4211,7 +4231,7 @@ const set_user_account_app_settings = () =>{
     }
 };
 /**
- * Sett app parameters
+ * Set app parameters
  * @param {*[]} common_parameters 
  * @returns {void}
  */
@@ -4264,7 +4284,33 @@ const mount_app = async (framework, events) => {
     const app_root_div  = 'app_root';
     const app_div       = 'app';
     //remove listeners
+    common_events_remove();
+    AppDocument.querySelector(`#${app_div}`).replaceWith(AppDocument.querySelector(`#${app_div}`).cloneNode(true));
     AppDocument.querySelector(`#${app_root_div}`).replaceWith(AppDocument.querySelector(`#${app_root_div}`).cloneNode(true));
+    //AppDocument.querySelector('body').replaceWith(AppDocument.querySelector('body').cloneNode(true));
+    //added listener variable in ReactDOM library to be able to remove document listener easier
+    if (ReactDOM.React_listeners.length>0){
+        for (const ReactListener of ReactDOM.React_listeners){
+            if (ReactListener[0].nodeName=='#document')
+                ReactListener[0].removeEventListener(ReactListener[1], ReactListener[2]);
+        }
+    }
+    //remove react key
+    for (const key of Object.keys(AppDocument)){
+        if (key.startsWith('_react')){
+            /**@ts-ignore */
+            delete AppDocument[key];
+        }
+    }
+    //get all select and selectedIndex
+    /**@type{{id:string,index:number}[]} */
+    let select_selectedindex = [];
+    AppDocument.querySelectorAll(`#${app_root_div} select`).forEach((/**@type{HTMLSelectElement}*/select) =>{
+        if (select_selectedindex.length>0)
+            select_selectedindex.push({id:select.id, index:select.selectedIndex});
+        else
+            select_selectedindex = [{id:select.id, index:select.selectedIndex}];
+    });
     AppDocument.querySelector(`#${app_root_div}`).removeAttribute('data-v-app');
 
     //set default function if anyone missing
@@ -4356,6 +4402,10 @@ const mount_app = async (framework, events) => {
             break;
         }
     }
+    //update all select with selectedIndex since copying outerHTML does not include setting correct selectedIndex
+    select_selectedindex.forEach((/**@type{{id:string,index:number}}*/select) =>AppDocument.querySelector(`#${select.id}`).selectedIndex = select.index);
+    //add common events for all apps
+    common_events_add();
 };
 /**
  * Init common
@@ -4378,7 +4428,7 @@ const init_common = async (parameters) => {
         }
         else{
             set_app_parameters(parameters.app);
-            set_events();
+            common_events_add();
             set_user_account_app_settings();
             resolve();
         }
