@@ -2768,39 +2768,41 @@ const mount_app_app = async (framework=null) => {
             Focus: null,
             Input:null})
     .then(()=> {
-        //set timers
-        //set current date and time for current locale and timezone
-        /**@ts-ignore */
-        clearInterval(showcurrenttime);
-        setInterval(showcurrenttime, 1000);
-        //set report date and time for current locale, report timezone
-        /**@ts-ignore */
-        clearInterval(showreporttime);
-        setInterval(showreporttime, 1000);
-        //show dialogue about using mobile and scan QR code after 5 seconds
-        setTimeout(() => {show_dialogue('SCAN');}, 5000);
-        set_default_settings().then(() => {
-            settings_translate(true).then(() => {
-                settings_translate(false).then(() => {
-                    const show_start = async () => {
-                        //show default startup
-                        toolbar_button(APP_GLOBAL.app_default_startup_page);
-                        const user = window.location.pathname.substring(1);
-                        if (user !='') {
-                            //show profile for user entered in url
-                            AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-                            profile_show_app(null, user);
-                        }
-                    };
-                    show_start().then(() => {
-                        dialogue_loading(0);
-                        serviceworker();
-                        if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-                            common_translate_ui_app(common.COMMON_GLOBAL.user_locale);
+        if (framework==null){
+            //set timers
+            //set current date and time for current locale and timezone
+            /**@ts-ignore */
+            clearInterval(showcurrenttime);
+            setInterval(showcurrenttime, 1000);
+            //set report date and time for current locale, report timezone
+            /**@ts-ignore */
+            clearInterval(showreporttime);
+            setInterval(showreporttime, 1000);
+            //show dialogue about using mobile and scan QR code after 5 seconds
+            setTimeout(() => {show_dialogue('SCAN');}, 5000);
+            set_default_settings().then(() => {
+                settings_translate(true).then(() => {
+                    settings_translate(false).then(() => {
+                        const show_start = async () => {
+                            //show default startup
+                            toolbar_button(APP_GLOBAL.app_default_startup_page);
+                            const user = window.location.pathname.substring(1);
+                            if (user !='') {
+                                //show profile for user entered in url
+                                AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+                                profile_show_app(null, user);
+                            }
+                        };
+                        show_start().then(() => {
+                            dialogue_loading(0);
+                            serviceworker();
+                            if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
+                                common_translate_ui_app(common.COMMON_GLOBAL.user_locale);
+                        });
                     });
                 });
             });
-        });
+        }
     });
 };
 /**
