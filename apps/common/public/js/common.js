@@ -4283,6 +4283,15 @@ const set_app_parameters = (common_parameters) => {
 const mount_app = async (framework, events) => {
     const app_root_div  = 'app_root';
     const app_div       = 'app';
+    //get all select and selectedIndex
+    /**@type{{id:string,index:number}[]} */
+    let select_selectedindex = [];
+    AppDocument.querySelectorAll(`#${app_root_div} select`).forEach((/**@type{HTMLSelectElement}*/select) =>{
+        if (select_selectedindex.length>0)
+            select_selectedindex.push({id:select.id, index:select.selectedIndex});
+        else
+            select_selectedindex = [{id:select.id, index:select.selectedIndex}];
+    });
     //remove listeners
     common_events_remove();
     AppDocument.querySelector(`#${app_div}`).replaceWith(AppDocument.querySelector(`#${app_div}`).cloneNode(true));
@@ -4302,15 +4311,6 @@ const mount_app = async (framework, events) => {
             delete AppDocument[key];
         }
     }
-    //get all select and selectedIndex
-    /**@type{{id:string,index:number}[]} */
-    let select_selectedindex = [];
-    AppDocument.querySelectorAll(`#${app_root_div} select`).forEach((/**@type{HTMLSelectElement}*/select) =>{
-        if (select_selectedindex.length>0)
-            select_selectedindex.push({id:select.id, index:select.selectedIndex});
-        else
-            select_selectedindex = [{id:select.id, index:select.selectedIndex}];
-    });
     AppDocument.querySelector(`#${app_root_div}`).removeAttribute('data-v-app');
 
     //set default function if anyone missing
