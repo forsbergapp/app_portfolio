@@ -4,7 +4,7 @@
 <createdTime>2022-11-30 18:53:20 UTC</createdTime>
 <generatorID>FBE6B042-CBB0-2DCD-99C9-BF6CF7D5B847</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<referredTableLongName>identity_provider</referredTableLongName>
+<referredTableLongName>app_portfolio.identity_provider</referredTableLongName>
 <deleteRule>NO ACTION</deleteRule>
 <referredTableID>4D7C40F5-D1AF-6F08-4BB8-9506ED86F8DF</referredTableID>
 <keyObject>CCCA347C-4F2D-CA93-F54E-12EA80D61BDA</keyObject>

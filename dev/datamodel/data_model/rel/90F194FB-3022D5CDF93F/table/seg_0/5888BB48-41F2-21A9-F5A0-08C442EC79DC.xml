@@ -81,16 +81,17 @@
 <colAssociation fkAssociation="423FBE9E-59A0-4A3C-15FA-4041D8325D90" referredColumn="93C58542-9E64-4064-7D3B-63604934E015"/>
 </associations>
 </Column>
-<Column name="app_setting_preference_arabic_script_id" id="B2A7BBC4-CBC0-9ED8-2237-EDB6844AA367">
+<Column name="app_setting_preference_arabic_script_id" id="2F15CB87-EE14-F1BE-39A5-38048B3F84F1">
 <createdBy>admin</createdBy>
-<createdTime>2023-12-12 04:32:22 UTC</createdTime>
-<generatorID>9E1E0ABD-C3CE-7147-E26B-4810AEAF0C20</generatorID>
+<createdTime>2024-03-02 19:02:42 UTC</createdTime>
+<generatorID>BF49DA62-DFCD-182E-B5A3-FCBA966BE35F</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
 <colAssociation fkAssociation="7FEAEF0E-0FA9-5CA3-1C2A-38B47AD59362" referredColumn="93C58542-9E64-4064-7D3B-63604934E015"/>
@@ -104,6 +105,18 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="json_data" id="F1D2FD33-6922-05EC-1491-24F590E24AA8">
+<createdBy>admin</createdBy>
+<createdTime>2024-03-02 19:02:42 UTC</createdTime>
+<generatorID>89A1C916-59E0-6EDF-DE2C-19912AB657EF</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT028</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
@@ -174,7 +187,7 @@
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="B2A7BBC4-CBC0-9ED8-2237-EDB6844AA367"/>
+<colUsage columnID="2F15CB87-EE14-F1BE-39A5-38048B3F84F1"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

@@ -1,8 +1,8 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="54260F38-2F36-C0BC-CEE9-665B8E34B8F6" containerWithKeyObject="89A36620-7A81-1AF8-C3AE-20933BE44CD9" localFKIndex="4AEAA122-33DF-E94F-C88C-19DBA75837A3" name="app_device_app_setting_FK">
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="D91CC27E-67C1-D230-DDEB-95CA978E4208" containerWithKeyObject="633D4B1C-D3D6-D6CA-760B-1DC7F5505022" localFKIndex="C1649F83-3221-3C2D-ADDE-DD66EB44D4C6" name="app_data_entity_resource_app_setting_FK">
 <createdBy>admin</createdBy>
-<createdTime>2023-12-30 14:47:37 UTC</createdTime>
-<generatorID>F1324722-1415-BC4E-C065-1CAAC9916628</generatorID>
+<createdTime>2024-03-02 19:02:42 UTC</createdTime>
+<generatorID>62354BB9-1DA8-A837-489E-A33AC330999F</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <referredTableLongName>app_portfolio.app_setting</referredTableLongName>
 <deleteRule>NO ACTION</deleteRule>

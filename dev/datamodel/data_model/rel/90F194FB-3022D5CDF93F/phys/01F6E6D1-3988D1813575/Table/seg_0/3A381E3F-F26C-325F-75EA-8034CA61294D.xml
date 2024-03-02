@@ -3,6 +3,7 @@
 <createdBy>admin</createdBy>
 <createdTime>2022-11-30 18:35:52 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
 <partitionedRowMovement>DISABLE</partitionedRowMovement>
 <temporaryChanged>false</temporaryChanged>
 <user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
@@ -27,25 +28,11 @@
 </ColumnProxy>
 </columnProxies>
 <primaryKeys>
-<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_role_PK" id="6255DCA5-F6DA-ADC5-2D44-00421A3AE8A8">
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="app_role_PK" id="B51C0CFA-0F60-44E0-210D-1F7C1C891CAA">
 <createdBy>admin</createdBy>
-<createdTime>2023-12-12 20:43:39 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</PrimaryKey>
-<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="app_role_pk" id="64C777C3-FD26-371F-0D7E-8740EB754179">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 22:16:09 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
+<createdTime>2024-03-02 19:12:43 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
 <indexSort>SORTED</indexSort>
 </PrimaryKey>
 </primaryKeys>
-<uniqueKeys>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_role_PK" id="EFD2B37D-6E6B-CAE9-FDB0-7ACB068ADDE2">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 20:37:26 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</UniqueKey>
-</uniqueKeys>
 </TableProxyOraclev20c>

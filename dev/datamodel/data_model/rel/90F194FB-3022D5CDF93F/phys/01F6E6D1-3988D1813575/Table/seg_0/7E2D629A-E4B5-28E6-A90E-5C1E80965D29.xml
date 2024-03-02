@@ -3,6 +3,7 @@
 <createdBy>admin</createdBy>
 <createdTime>2022-05-03 21:13:06 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
 <partitionedRowMovement>DISABLE</partitionedRowMovement>
 <temporaryChanged>false</temporaryChanged>
 <user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
@@ -123,10 +124,10 @@
 </ColumnProxy>
 </columnProxies>
 <foreignKeys>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_app_role_FK" id="1726BF7F-12FD-69C0-FEDE-238889B7B53D">
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_app_role_FK" id="38FC3C73-5FC2-3E05-59E4-E573EE6CE27A">
 <createdBy>admin</createdBy>
-<createdTime>2023-12-12 22:16:27 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
+<createdTime>2024-03-02 19:12:43 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ForeignKey>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_identity_provider_FK" id="3C762A3F-615A-296F-B87C-B66A61B0D806">
 <createdBy>admin</createdBy>

@@ -48,6 +48,112 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category TO app_portfo
 
 ALTER TABLE app_portfolio.app_category ADD CONSTRAINT app_category_pk PRIMARY KEY ( id );
 
+CREATE TABLE app_portfolio.app_data_entity (
+    id        INTEGER NOT NULL,
+    app_id    INTEGER NOT NULL,
+    json_data CLOB
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_entity TO app_portfolio_role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_data_entity TO app_portfolio_role_app_common;
+
+ALTER TABLE app_portfolio.app_data_entity ADD CONSTRAINT app_data_entity_pk PRIMARY KEY ( app_id,
+                                                                                          id );
+
+CREATE TABLE app_portfolio.app_data_entity_resource (
+    id                     INTEGER NOT NULL,
+    json_data              CLOB,
+    app_setting_id         INTEGER NOT NULL,
+    app_data_entity_app_id INTEGER NOT NULL,
+    app_data_entity_id     INTEGER NOT NULL
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_entity_resource TO app_portfolio_role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_data_entity_resource TO app_portfolio_role_app_common;
+
+ALTER TABLE app_portfolio.app_data_entity_resource
+    ADD CONSTRAINT app_data_entity_resource_pk PRIMARY KEY ( app_data_entity_app_id,
+                                                             app_data_entity_id,
+                                                             id );
+
+CREATE TABLE app_portfolio.app_data_resource_detail (
+    id                                              INTEGER NOT NULL,
+    json_data                                       CLOB,
+    app_data_resource_master_id                     INTEGER NOT NULL,
+    app_data_entity_resource_id                     INTEGER NOT NULL,
+    app_data_entity_resource_app_data_entity_app_id INTEGER NOT NULL,
+    app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL,
+    app_data_resource_master_attribute_id           INTEGER NOT NULL
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_detail TO app_portfolio_role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_data_resource_detail TO app_portfolio_role_app_common;
+
+ALTER TABLE app_portfolio.app_data_resource_detail ADD CONSTRAINT app_data_resource_detail_pk PRIMARY KEY ( id );
+
+CREATE TABLE app_portfolio.app_data_resource_detail_data (
+    id                                    INTEGER NOT NULL,
+    json_data                             CLOB,
+    date_created                          DATE,
+    date_modified                         DATE,
+    app_data_resource_detail_id           INTEGER NOT NULL,
+    app_data_resource_master_attribute_id INTEGER
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_detail_data TO app_portfolio_role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_data_resource_detail_data TO app_portfolio_role_app_common;
+
+ALTER TABLE app_portfolio.app_data_resource_detail_data ADD CONSTRAINT app_data_resource_detail_data_pk PRIMARY KEY ( id );
+
+CREATE TABLE app_portfolio.app_data_resource_master (
+    id                                              INTEGER NOT NULL,
+    json_data                                       CLOB,
+    user_account_app_user_account_id                INTEGER,
+    user_account_app_app_id                         INTEGER,
+    app_data_entity_resource_app_data_entity_app_id INTEGER NOT NULL,
+    app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL,
+    app_data_entity_resource_id                     INTEGER NOT NULL
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_master TO app_portfolio_role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_data_resource_master TO app_portfolio_role_app_common;
+
+ALTER TABLE app_portfolio.app_data_resource_master ADD CONSTRAINT app_data_resource_master_pk PRIMARY KEY ( id );
+
+CREATE TABLE app_portfolio.app_data_stat (
+    json_data                                       CLOB,
+    date_created                                    DATE,
+    app_id                                          INTEGER NOT NULL,
+    user_account_app_user_account_id                INTEGER,
+    user_account_app_app_id                         INTEGER,
+    app_data_resource_master_id                     INTEGER,
+    app_data_entity_resource_id                     INTEGER NOT NULL,
+    app_data_entity_resource_app_data_entity_app_id INTEGER NOT NULL,
+    app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_stat TO app_portfolio_role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_data_stat TO app_portfolio_role_app_common;
+
+CREATE TABLE app_portfolio.app_data_translation (
+    json_data                   CLOB,
+    language_id                 INTEGER NOT NULL,
+    app_data_resource_master_id INTEGER NOT NULL
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_translation TO app_portfolio_role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_data_translation TO app_portfolio_role_app_common;
+
+ALTER TABLE app_portfolio.app_data_translation ADD CONSTRAINT app_data_translation_pk PRIMARY KEY ( language_id,
+                                                                                                    app_data_resource_master_id );
+
 CREATE TABLE app_portfolio.app_device (
     app_id         INTEGER NOT NULL,
     app_setting_id INTEGER NOT NULL,
@@ -266,18 +372,10 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_translation TO app_por
 
 GRANT SELECT ON app_portfolio.app_translation TO app_portfolio_role_app_common;
 
-ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
-                                                                                         language_id );
-
 ALTER TABLE app_portfolio.app_translation
     ADD CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
                                                             app_id,
                                                             language_id );
-
-ALTER TABLE app_portfolio.app_translation
-    ADD CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
-                                                          app_object_app_id,
-                                                          language_id );
 
 ALTER TABLE app_portfolio.app_translation
     ADD CONSTRAINT app_translation_app_object_item_un UNIQUE ( app_object_item_object_item_name,
@@ -285,8 +383,16 @@ ALTER TABLE app_portfolio.app_translation
                                                                app_object_item_app_object_app_id,
                                                                language_id );
 
+ALTER TABLE app_portfolio.app_translation
+    ADD CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
+                                                          app_object_app_id,
+                                                          language_id );
+
 ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
                                                                                                  language_id );
+
+ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
+                                                                                         language_id );
 
 ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_country_un UNIQUE ( country_id,
                                                                                              language_id );
@@ -461,11 +567,11 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account TO app_portfo
 
 ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_pk PRIMARY KEY ( id );
 
-ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_username_un UNIQUE ( username );
+ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_email_un UNIQUE ( email );
 
 ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_provider_id_un UNIQUE ( provider_id );
 
-ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_email_un UNIQUE ( email );
+ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_username_un UNIQUE ( username );
 
 CREATE TABLE app_portfolio.user_account_app (
     user_account_id                         INTEGER NOT NULL,
@@ -474,7 +580,8 @@ CREATE TABLE app_portfolio.user_account_app (
     app_setting_preference_timezone_id      INTEGER,
     app_setting_preference_direction_id     INTEGER,
     app_setting_preference_arabic_script_id INTEGER,
-    date_created                            DATE NOT NULL
+    date_created                            DATE NOT NULL,
+    json_data                               CLOB
 );
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO app_portfolio_role_app_common;
@@ -616,6 +723,106 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_view TO app_p
 ALTER TABLE app_portfolio.app
     ADD CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
         REFERENCES app_portfolio.app_category ( id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_entity
+    ADD CONSTRAINT app_data_entity_app_fk FOREIGN KEY ( app_id )
+        REFERENCES app_portfolio.app ( id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_entity_resource
+    ADD CONSTRAINT app_data_entity_resource_app_data_entity_fk FOREIGN KEY ( app_data_entity_app_id,
+                                                                             app_data_entity_id )
+        REFERENCES app_portfolio.app_data_entity ( app_id,
+                                                   id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_entity_resource
+    ADD CONSTRAINT app_data_entity_resource_app_setting_fk FOREIGN KEY ( app_setting_id )
+        REFERENCES app_portfolio.app_setting ( id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_resource_detail
+    ADD CONSTRAINT app_data_resource_detail_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id
+    ,
+                                                                                      app_data_entity_resource_app_data_entity_id,
+                                                                                      app_data_entity_resource_id )
+        REFERENCES app_portfolio.app_data_entity_resource ( app_data_entity_app_id,
+                                                            app_data_entity_id,
+                                                            id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_resource_detail
+    ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
+        REFERENCES app_portfolio.app_data_resource_master ( id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_resource_detail
+    ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_fkv2 FOREIGN KEY ( app_data_resource_master_attribute_id )
+        REFERENCES app_portfolio.app_data_resource_master ( id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_resource_detail_data
+    ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_detail_fk FOREIGN KEY ( app_data_resource_detail_id )
+        REFERENCES app_portfolio.app_data_resource_detail ( id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_resource_detail_data
+    ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_attribute_id )
+        REFERENCES app_portfolio.app_data_resource_master ( id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_resource_master
+    ADD CONSTRAINT app_data_resource_master_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id
+    ,
+                                                                                      app_data_entity_resource_app_data_entity_id,
+                                                                                      app_data_entity_resource_id )
+        REFERENCES app_portfolio.app_data_entity_resource ( app_data_entity_app_id,
+                                                            app_data_entity_id,
+                                                            id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_resource_master
+    ADD CONSTRAINT app_data_resource_master_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
+                                                                              user_account_app_app_id )
+        REFERENCES app_portfolio.user_account_app ( user_account_id,
+                                                    app_id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_stat
+    ADD CONSTRAINT app_data_stat_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id,
+                                                                           app_data_entity_resource_app_data_entity_id,
+                                                                           app_data_entity_resource_id )
+        REFERENCES app_portfolio.app_data_entity_resource ( app_data_entity_app_id,
+                                                            app_data_entity_id,
+                                                            id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_stat
+    ADD CONSTRAINT app_data_stat_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
+        REFERENCES app_portfolio.app_data_resource_master ( id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_stat
+    ADD CONSTRAINT app_data_stat_app_fk FOREIGN KEY ( app_id )
+        REFERENCES app_portfolio.app ( id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_stat
+    ADD CONSTRAINT app_data_stat_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
+                                                                   user_account_app_app_id )
+        REFERENCES app_portfolio.user_account_app ( user_account_id,
+                                                    app_id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_translation
+    ADD CONSTRAINT app_data_translation_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
+        REFERENCES app_portfolio.app_data_resource_master ( id )
+    NOT DEFERRABLE;
+
+ALTER TABLE app_portfolio.app_data_translation
+    ADD CONSTRAINT app_data_translation_language_fk FOREIGN KEY ( language_id )
+        REFERENCES app_portfolio.language ( id )
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_device

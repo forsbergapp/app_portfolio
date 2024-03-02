@@ -16,6 +16,11 @@
 <createdTime>2022-08-17 18:49:13 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
+<ColumnProxy name="app_setting_preference_arabic_script_id" id="2F15CB87-EE14-F1BE-39A5-38048B3F84F1">
+<createdBy>admin</createdBy>
+<createdTime>2024-03-02 19:12:43 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ColumnProxy>
 <ColumnProxy name="app_setting_preference_timezone_id" id="38704FD8-7829-817C-86D7-6A2EB427CBBC">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:55:23 UTC</createdTime>
@@ -36,14 +41,14 @@
 <createdTime>2022-01-15 13:58:05 UTC</createdTime>
 <ownerDesignName>data_model_20220115</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_setting_preference_arabic_script_id" id="B2A7BBC4-CBC0-9ED8-2237-EDB6844AA367">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 04:32:22 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="app_id" id="E1FDA2F7-F988-CCCC-AC65-D887CE690DA0">
 <createdBy>admin</createdBy>
 <createdTime>2022-08-17 18:49:13 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="json_data" id="F1D2FD33-6922-05EC-1491-24F590E24AA8">
+<createdBy>admin</createdBy>
+<createdTime>2024-03-02 19:12:43 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
 </columnProxies>
