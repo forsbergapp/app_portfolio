@@ -57,6 +57,19 @@
 <dataTypeSize>100</dataTypeSize>
 <ownDataTypeParameters>100,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="json_data" id="89A1C916-59E0-6EDF-DE2C-19912AB657EF">
+<createdBy>admin</createdBy>
+<createdTime>2024-02-25 18:36:13 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT028</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="app_setting_preference_timezone_id" id="9E1E0ABD-C3CE-7147-E26B-4810AEAF0C20">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 02:17:03 UTC</createdTime>

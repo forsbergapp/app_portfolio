@@ -198,9 +198,10 @@
 <ownDataTypeParameters>2000,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="json_data" id="F562B0DC-1D7B-A83A-F110-64B8C7A981B5">
+<Column name="json_data" id="17D6BA0E-D368-129D-293A-32DDEA0ACCD8">
 <createdBy>admin</createdBy>
-<createdTime>2024-02-22 17:26:50 UTC</createdTime>
+<createdTime>2024-03-02 19:02:42 UTC</createdTime>
+<generatorID>CBE987FD-85CB-0165-7DAB-B5E392E5988F</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>

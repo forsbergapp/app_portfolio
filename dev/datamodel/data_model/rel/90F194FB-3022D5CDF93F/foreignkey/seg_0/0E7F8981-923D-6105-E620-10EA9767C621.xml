@@ -4,7 +4,7 @@
 <createdTime>2022-05-03 21:14:26 UTC</createdTime>
 <generatorID>55B8A89D-756A-181D-86F9-3D7BCBE8599E</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<referredTableLongName>user_account</referredTableLongName>
+<referredTableLongName>app_portfolio.user_account</referredTableLongName>
 <deleteRule>CASCADE</deleteRule>
 <referredTableID>7E2D629A-E4B5-28E6-A90E-5C1E80965D29</referredTableID>
 <keyObject>230AEEF5-9A90-BF94-6042-5C8D38708798</keyObject>
