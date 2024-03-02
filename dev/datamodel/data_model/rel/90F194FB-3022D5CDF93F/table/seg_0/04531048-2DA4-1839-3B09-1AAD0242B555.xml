@@ -21,7 +21,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="CA1E0C0B-DB4D-57A6-0F68-51875B4D661C" referredColumn="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474"/>
+<colAssociation fkAssociation="1A83A08B-322B-28C2-769B-9BB0848A9577" referredColumn="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474"/>
 </associations>
 </Column>
 <Column name="user_account_id_follow" id="59C1796F-A44E-D342-C9C5-BCBF033024FF">
@@ -36,7 +36,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="D6587845-0E4A-277C-AFF7-8859FE29D050" referredColumn="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474"/>
+<colAssociation fkAssociation="3C2A8C50-C88B-F567-2B1E-3F136DDE01BD" referredColumn="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474"/>
 </associations>
 </Column>
 <Column name="date_created" id="32353EA6-455C-A091-29A6-6AF1AC792428">
@@ -66,9 +66,9 @@
 <colUsage columnID="59C1796F-A44E-D342-C9C5-BCBF033024FF"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="1739D7C4-E6F8-860D-4873-0CC7658D23E6" name="user_account_follow_user_account_FK">
+<ind_PK_UK id="07D281F2-516B-338A-5008-64C1F665DDCA" name="user_account_follow_user_account_FK">
 <createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<createdTime>2024-03-02 20:36:12 UTC</createdTime>
 <generatorID>C9C84703-39B0-B9D5-30B2-C595089A7A4A</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <indexState>Foreign Key</indexState>
@@ -77,9 +77,9 @@
 <colUsage columnID="E186C622-859A-9FAE-C448-6B846992FF8C"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="AE25BFA2-0B5D-A717-5637-048FED3AC46C" name="user_account_follow_user_account_follow_FK">
+<ind_PK_UK id="E9C9E735-17D6-5DB4-11BA-8AA03BF7E50B" name="user_account_follow_user_account_follow_FK">
 <createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<createdTime>2024-03-02 20:36:12 UTC</createdTime>
 <generatorID>DB3CE97A-6D8A-F1A8-B8BE-9CF3488EEBE6</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <indexState>Foreign Key</indexState>

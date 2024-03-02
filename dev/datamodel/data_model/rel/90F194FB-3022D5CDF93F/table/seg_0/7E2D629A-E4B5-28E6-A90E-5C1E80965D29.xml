@@ -294,7 +294,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="200104D5-88F5-2321-B4F1-085D509717A7" referredColumn="F9E04A6C-CB32-FE46-5A61-DC3A38BD0ADA"/>
+<colAssociation fkAssociation="C7BAC24C-2EBE-9B17-2E2C-B6E37AF75D2A" referredColumn="F9E04A6C-CB32-FE46-5A61-DC3A38BD0ADA"/>
 </associations>
 </Column>
 </columns>
@@ -355,9 +355,10 @@
 <colUsage columnID="D00962D0-C01E-D07A-55F7-4A5AD7DE3E86"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="1726BF7F-12FD-69C0-FEDE-238889B7B53D" name="user_account_app_role_FK">
+<ind_PK_UK id="38FC3C73-5FC2-3E05-59E4-E573EE6CE27A" name="user_account_app_role_FK">
 <createdBy>admin</createdBy>
-<createdTime>2023-12-12 22:16:27 UTC</createdTime>
+<createdTime>2024-03-02 19:02:42 UTC</createdTime>
+<generatorID>C1134DFF-AA11-B1C7-660D-20DE52748937</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>

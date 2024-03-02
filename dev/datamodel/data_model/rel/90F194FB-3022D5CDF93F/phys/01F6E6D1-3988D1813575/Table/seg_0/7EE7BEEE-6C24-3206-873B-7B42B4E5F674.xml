@@ -11,15 +11,15 @@
 <rejectLimit></rejectLimit>
 <storeAs>CLOB</storeAs>
 <columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
-<ColumnProxy name="parameter_type_id" id="09514221-D6CB-CFDF-E8F9-CC1494DC8857">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="app_id" id="145515DA-45DC-6089-FDC7-67E257F1F543">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="json_data" id="17D6BA0E-D368-129D-293A-32DDEA0ACCD8">
+<createdBy>admin</createdBy>
+<createdTime>2024-03-02 19:12:43 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
 <ColumnProxy name="app_object_app_id" id="6096566C-43D6-F94A-CA2B-817ED77780EF">
 <createdBy>admin</createdBy>
@@ -36,7 +36,7 @@
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="TEXT" id="7C3D92E4-9ACA-697C-9A87-86B63DD23918">
+<ColumnProxy name="text" id="7C3D92E4-9ACA-697C-9A87-86B63DD23918">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -78,11 +78,6 @@
 </ColumnProxy>
 </columnProxies>
 <foreignKeys>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_parameter_type_FK" id="1E20AC8B-960E-2BAA-C69B-FAB596D12F9A">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ForeignKey>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_setting_FK" id="2E4E0ACF-41EC-D3A9-99D7-C2CD0570E15E">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -98,7 +93,7 @@
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ForeignKey>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_language_translation_FK" id="66724299-CB02-1624-07FC-087F1B02C6D0">
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_language_FKv1" id="66724299-CB02-1624-07FC-087F1B02C6D0">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -162,12 +157,6 @@
 <indexSort>SORTED</indexSort>
 </UniqueKey>
 <UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_object_UN" id="C6A0FE01-2BC2-81B4-3F68-DC8AE801C67B">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</UniqueKey>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_parameter_type_UN" id="DCF10635-CE24-CDBA-2DE8-B65314F30674">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
