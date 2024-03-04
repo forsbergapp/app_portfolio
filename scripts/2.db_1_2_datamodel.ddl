@@ -29,27 +29,33 @@ GRANT SELECT ON app_portfolio.app_category TO app_portfolio_role_app_common;
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category TO app_portfolio_role_app_admin;
 
 CREATE TABLE app_portfolio.app_data_entity (
-    id        INTEGER NOT NULL,
+    id        INT NOT NULL AUTO_INCREMENT,
     app_id    INTEGER NOT NULL,
     json_data LONGBLOB,
     CONSTRAINT app_data_entity_pk PRIMARY KEY ( app_id,
-                                                id )
+                                                id ),
+    INDEX (id)
 );
+
+ALTER TABLE app_portfolio.app_data_entity AUTO_INCREMENT=1000000;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_entity TO app_portfolio_role_app_admin;
 
 GRANT SELECT ON app_portfolio.app_data_entity TO app_portfolio_role_app_common;
 
 CREATE TABLE app_portfolio.app_data_entity_resource (
-    id                     INTEGER NOT NULL,
+    id                     INT NOT NULL AUTO_INCREMENT,
     json_data              LONGBLOB,
     app_setting_id         INTEGER NOT NULL,
     app_data_entity_app_id INTEGER NOT NULL,
     app_data_entity_id     INTEGER NOT NULL,
     CONSTRAINT app_data_entity_resource_pk PRIMARY KEY (app_data_entity_app_id,
                                                         app_data_entity_id,
-                                                        id )
+                                                        id ),
+    INDEX (id)
 );
+
+ALTER TABLE app_portfolio.app_data_entity_resource AUTO_INCREMENT=1000000;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_entity_resource TO app_portfolio_role_app_admin;
 
@@ -57,7 +63,7 @@ GRANT SELECT ON app_portfolio.app_data_entity_resource TO app_portfolio_role_app
 
 
 CREATE TABLE app_portfolio.app_data_resource_detail (
-    id                                              INTEGER NOT NULL,
+    id                                              INT NOT NULL AUTO_INCREMENT,
     json_data                                       LONGBLOB,
     app_data_resource_master_id                     INTEGER NOT NULL,
     app_data_entity_resource_id                     INTEGER NOT NULL,
@@ -67,12 +73,14 @@ CREATE TABLE app_portfolio.app_data_resource_detail (
     CONSTRAINT app_data_resource_detail_pk PRIMARY KEY ( id )
 );
 
+ALTER TABLE app_portfolio.app_data_resource_detail AUTO_INCREMENT=1000000;
+
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_detail TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_data_resource_detail TO app_portfolio_role_app_common;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_detail TO app_portfolio_role_app_common;
 
 CREATE TABLE app_portfolio.app_data_resource_detail_data (
-    id                                    INTEGER NOT NULL,
+    id                                    INT NOT NULL AUTO_INCREMENT,
     json_data                             LONGBLOB,
     date_created                          DATE,
     date_modified                         DATE,
@@ -81,12 +89,14 @@ CREATE TABLE app_portfolio.app_data_resource_detail_data (
     CONSTRAINT app_data_resource_detail_data_pk PRIMARY KEY ( id )
 );
 
+ALTER TABLE app_portfolio.app_data_resource_detail_data AUTO_INCREMENT=1000000;
+
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_detail_data TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_data_resource_detail_data TO app_portfolio_role_app_common;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_detail_data TO app_portfolio_role_app_common;
 
 CREATE TABLE app_portfolio.app_data_resource_master (
-    id                                              INTEGER NOT NULL,
+    id                                              INT NOT NULL AUTO_INCREMENT,
     json_data                                       LONGBLOB,
     user_account_app_user_account_id                INTEGER,
     user_account_app_app_id                         INTEGER,
@@ -96,11 +106,14 @@ CREATE TABLE app_portfolio.app_data_resource_master (
     CONSTRAINT app_data_resource_master_pk PRIMARY KEY ( id )
 );
 
+ALTER TABLE app_portfolio.app_data_resource_master AUTO_INCREMENT=1000000;
+
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_master TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_data_resource_master TO app_portfolio_role_app_common;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_master TO app_portfolio_role_app_common;
 
 CREATE TABLE app_portfolio.app_data_stat (
+    id                                              INT NOT NULL AUTO_INCREMENT,
     json_data                                       LONGBLOB,
     date_created                                    DATE,
     app_id                                          INTEGER NOT NULL,
@@ -109,8 +122,11 @@ CREATE TABLE app_portfolio.app_data_stat (
     app_data_resource_master_id                     INTEGER,
     app_data_entity_resource_id                     INTEGER NOT NULL,
     app_data_entity_resource_app_data_entity_app_id INTEGER NOT NULL,
-    app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL
+    app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL,
+    CONSTRAINT app_data_stat_pk PRIMARY KEY (id)
 );
+
+ALTER TABLE app_portfolio.app_data_stat AUTO_INCREMENT=1000000;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_stat TO app_portfolio_role_app_admin;
 
