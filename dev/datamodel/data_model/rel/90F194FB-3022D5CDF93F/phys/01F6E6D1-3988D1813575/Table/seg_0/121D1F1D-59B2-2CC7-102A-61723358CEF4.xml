@@ -20,6 +20,12 @@
 <createdTime>2024-03-02 19:12:43 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
+<ColumnProxy name="id" id="1E5CAED5-A99B-5382-D436-BBB96915E624">
+<createdBy>admin</createdBy>
+<createdTime>2024-03-04 17:31:42 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
 <ColumnProxy name="user_account_app_user_account_id" id="4942D991-535E-3D25-94F4-D25D7B9F043A">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:12:43 UTC</createdTime>
@@ -78,4 +84,12 @@
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ForeignKey>
 </foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="app_data_stat_PK" id="CF68A6BB-8B97-A783-45E0-0DE971E82BCE">
+<createdBy>admin</createdBy>
+<createdTime>2024-03-04 17:31:42 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
 </TableProxyOraclev20c>
