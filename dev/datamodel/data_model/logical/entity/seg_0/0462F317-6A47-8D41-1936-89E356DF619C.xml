@@ -15,6 +15,18 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="EF4A1D92-CDEE-BDFC-478B-1A539746F77B">
+<createdBy>admin</createdBy>
+<createdTime>2024-03-04 17:30:43 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="json_data" id="34A0734E-B853-0ADA-91B7-01CA2D91495B">
 <createdBy>admin</createdBy>
 <createdTime>2024-02-25 20:48:07 UTC</createdTime>
@@ -143,4 +155,18 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="2A7222AC-4098-4A8E-5792-CF37B93F3ECF" name="app_data_stat PK">
+<createdBy>admin</createdBy>
+<createdTime>2024-03-04 17:30:51 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>EF4A1D92-CDEE-BDFC-478B-1A539746F77B</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

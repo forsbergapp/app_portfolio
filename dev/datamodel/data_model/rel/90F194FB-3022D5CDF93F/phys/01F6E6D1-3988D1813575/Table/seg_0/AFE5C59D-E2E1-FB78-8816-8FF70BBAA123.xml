@@ -19,6 +19,7 @@
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:12:43 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
 </ColumnProxy>
 <ColumnProxy name="json_data" id="AE03D781-E3A6-2F57-C0B6-C55CFC035038">
 <createdBy>admin</createdBy>

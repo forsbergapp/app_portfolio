@@ -8,6 +8,22 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="1E5CAED5-A99B-5382-D436-BBB96915E624">
+<createdBy>admin</createdBy>
+<createdTime>2024-03-04 17:31:42 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementStartWith>1000000</autoIncrementStartWith>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementCache>30</autoIncrementCache>
+<autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
+</Column>
 <Column name="json_data" id="F4BF3D0A-EE5D-ECA1-1F28-DAB16C941E5B">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>
@@ -142,6 +158,17 @@
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="CF68A6BB-8B97-A783-45E0-0DE971E82BCE" name="app_data_stat_PK">
+<createdBy>admin</createdBy>
+<createdTime>2024-03-04 17:31:42 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="1E5CAED5-A99B-5382-D436-BBB96915E624"/>
+</indexColumnUsage>
+</ind_PK_UK>
 <ind_PK_UK id="A8E70172-6B3C-7F54-D692-B1CFC0F538C0" name="app_data_stat_app_FK">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>

@@ -44,6 +44,7 @@
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:12:43 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
 </ColumnProxy>
 </columnProxies>
 <foreignKeys>

@@ -24,6 +24,7 @@
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:12:43 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
 </ColumnProxy>
 <ColumnProxy name="date_modified" id="A42DF86D-9263-847C-7745-4B6C8FF3E8F2">
 <createdBy>admin</createdBy>
