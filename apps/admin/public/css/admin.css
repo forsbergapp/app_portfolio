@@ -814,6 +814,10 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
+	margin-bottom: 10px;
+}
+#install_demo_button_row >div{
+	height: 36px;
 }
 #install_demo_password_icon{
 	display: inline-block;
