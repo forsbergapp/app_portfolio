@@ -218,7 +218,6 @@ select {
 .common_password{
 	position:absolute;
 	z-index: 0;
-	max-width: calc(100% - 40px);
 	color:transparent !important;
 	background-color: transparent !important;
 }
@@ -607,7 +606,6 @@ select {
 }
 #common_dialogue_user_start .common_input, .common_login_input{
 	height:30px;
-	width: calc(100% - 40px);
 	margin-top:10px;
 	padding: 4px 10px;
 	box-sizing: border-box;	
