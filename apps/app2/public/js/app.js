@@ -30,7 +30,7 @@ const common = await import('common');
 /**@ts-ignore */
 const app_report = await import('app_report');
 /**@ts-ignore */
-const {prayTimes} = await import('PrayTimes');
+const {default:prayTimes} = await import('PrayTimes');
 /**@ts-ignore */
 const {getTimezone} = await import('regional');
 
