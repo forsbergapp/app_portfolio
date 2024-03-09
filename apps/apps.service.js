@@ -957,7 +957,55 @@ const getAssetFile = (app_id, url, basepath, res) =>{
             case '.js':{
                 res.type('text/javascript');
                 res.set('Cache-Control', `max-age=${maxage}`);
-                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
+                switch (url){
+                    case '/modules/react/react-dom.development.js':
+                    case '/modules/react/react.development.js':{
+                        fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
+                            if (url == '/modules/react/react-dom.development.js'){
+                                modulefile = 'let ReactDOM;\r\n' + modulefile;
+                                //replace functions with custom names declared in apps/common/src/head.html
+                                modulefile = modulefile.replace(  'unsubscribeListener = addEventCaptureListenerWithPassiveFlag',
+                                                                'unsubscribeListener = custom_React_addEventCaptureListenerWithPassiveFlag');
+                                modulefile = modulefile.replace(  'unsubscribeListener = addEventCaptureListener',
+                                                                'unsubscribeListener = custom_React_addEventCaptureListener');
+                                modulefile = modulefile.replace(  'unsubscribeListener = addEventBubbleListenerWithPassiveFlag',
+                                                                'unsubscribeListener = custom_React_addEventBubbleListenerWithPassiveFlag');
+                                modulefile = modulefile.replace(  'unsubscribeListener = addEventBubbleListener',
+                                                                'unsubscribeListener = custom_React_addEventBubbleListener');
+                                
+                                modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                                                                'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
+                                modulefile = modulefile + ' export {ReactDOM}';
+                            }
+                            else{
+                                modulefile = 'let React;\r\n' + modulefile;
+                                modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                                                                'exports.version = ReactVersion;\r\n  React=exports;');
+                                modulefile = modulefile + ' export {React}';
+                            }
+                            resolve(modulefile);
+                        })
+                        break;
+                    }
+                    case '/modules/PrayTimes/PrayTimes.js':{
+                        fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
+                            modulefile = modulefile.replace(  'var prayTimes = new PrayTimes();','export default new PrayTimes();');
+                            resolve(modulefile);
+                        });
+                        break;
+                    }
+                    case '/modules/leaflet/leaflet-src.js':{
+                        fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
+                            modulefile = 'let L;\r\n' + modulefile;
+                            modulefile = modulefile.replace(  'window.L = exports;','L = exports;');
+                            modulefile = modulefile + ' export {L}';
+                            resolve(modulefile);
+                        });
+                        break;
+                    }   
+                    default:
+                        resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
+                }
                 break;
             }
             case '.html':{

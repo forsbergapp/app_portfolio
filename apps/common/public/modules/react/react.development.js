@@ -1,4 +1,3 @@
-let React;
 /**
  * @license React
  * react.development.js
@@ -3339,6 +3338,5 @@ let React;
   exports.useSyncExternalStore = useSyncExternalStore;
   exports.useTransition = useTransition;
   exports.version = ReactVersion;
-  React = exports;
+
 })));
-export {React}

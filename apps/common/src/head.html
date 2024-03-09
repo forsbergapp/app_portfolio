@@ -8,8 +8,8 @@
             <APP_JS_REPORT/>
             "common"	    : "/common/js/common.js",
             "easy.qrcode"   : "/common/modules/easy.qrcode/easy.qrcode.module.js",
-            "leaflet"	    : "/common/modules/leaflet/leaflet-src.module.js",
-            "PrayTimes"     : "/common/modules/PrayTimes/PrayTimes.module.js",
+            "leaflet"	    : "/common/modules/leaflet/leaflet-src.js",
+            "PrayTimes"     : "/common/modules/PrayTimes/PrayTimes.js",
             "React" 		: "/common/modules/react/react.development.js",
             "ReactDOM" 		: "/common/modules/react/react-dom.development.js",
             "regional"  	: "/common/modules/regional/regional.js",
@@ -18,7 +18,7 @@
     }
 </script>
 <script>
-    function console_custom(stack, message, message_type){
+    function custom_console(stack, message, message_type){
         let e = stack.split("@");
         for (let line of [...e].reverse()) {
             if (line.includes('react')==true){
@@ -40,9 +40,35 @@
         return null;
     }
     //Vue uses console.warn
-    console.warn = (e) => {let stack = new Error().stack; console_custom(stack, e, 'w');};
+    console.warn = (e) => {let stack = new Error().stack; custom_console(stack, e, 'w');};
     //React uses console.info
-    console.info = (i) => {let stack = new Error().stack; console_custom(stack, i, 'i');};
+    console.info = (i) => {let stack = new Error().stack; custom_console(stack, i, 'i');};
+    var custom_React_listeners=[];
+    custom_React_addEventBubbleListener = (target, eventType, listener)=>{
+        custom_React_listeners.push([target, eventType, listener]);
+        target.addEventListener(eventType, listener, false);
+        return listener;
+    }
+    custom_React_addEventCaptureListener = (target, eventType, listener)=>{
+        custom_React_listeners.push([target, eventType, listener]);
+        target.addEventListener(eventType, listener, true);
+        return listener;
+    }
+    custom_React_addEventCaptureListenerWithPassiveFlag = (target, eventType, listener, passive)=>{
+        custom_React_listeners.push([target, eventType, listener]);
+        target.addEventListener(eventType, listener, {
+        capture: true,
+        passive: passive
+        });
+        return listener;
+    }
+    custom_React_addEventBubbleListenerWithPassiveFlag = (target, eventType, listener, passive)=> {
+        custom_React_listeners.push([target, eventType, listener]);
+        target.addEventListener(eventType, listener, {
+        passive: passive
+        });
+        return listener;
+    }
 </script>
 <script type='module'>
     import('app').then((app) => {
