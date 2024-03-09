@@ -515,66 +515,74 @@ const getLogsStats = async (data) => {
     const logstat = [];
     
     const files = await file_get_log_dir();
+    /**@type{string} */
     let sample;
     let day = '';
     //declare ES6 Set to save unique status codes and days
     const log_stat_value = new Set();
     const log_days = new Set();
     for (const file of files){
-        if (file.startsWith(`REQUEST_INFO_${data.year}${data.month.toString().padStart(2,'0')}`)){
+        if (file.startsWith(`REQUEST_INFO_${data.year}${data.month.toString().padStart(2,'0')}`) ||
+            file.startsWith(`REQUEST_VERBOSE_${data.year}${data.month.toString().padStart(2,'0')}`)){
             //filename format: REQUEST_INFO_YYYMMDD.log
             if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
-                day = file.substring(19,21);
+                //return DD
+                day = file.slice(-6).substring(0,2)
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
             }
             else
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
             const {ConfigGetAppHost} = await import(`file://${process.cwd()}/server/config.service.js`);
-            const logs = await file_get_log('LOG_REQUEST_INFO', null, sample);
-            logs.forEach((/**@type{Types.server_log_request_record|''}*/record) => {
-                if (record != ''){
-                    if (data.statGroup != null){
-                        const domain_app_id = record.host?ConfigGetAppHost(record.host, 'SUBDOMAIN'):null;
-                        if (data.app_id == null || data.app_id == domain_app_id){
-                            const statGroupvalue = (data.statGroup=='url' && record[data.statGroup].indexOf('?')>0)?record[data.statGroup].substring(0,record[data.statGroup].indexOf('?')):record[data.statGroup];
-                            //add unique statGroup to a set
-                            log_stat_value.add(statGroupvalue);
-                            log_days.add(day);
-                            if (data.unique==0 ||(data.unique==1 && logfiles.filter(row=>row.statValue==statGroupvalue).length==0)){
-                                /**@ts-ignore */
-                                logfiles.push({ 
-                                    chart:null,
-                                    statValue: statGroupvalue,
-                                    year: data.year,
-                                    month: data.month,
-                                    day: Number(day),
-                                    amount: null});
-                            }
-                        }
-                    }
-                    else{
-                        //add for given status code or all status codes if all should be returned
-                        //save this as chart 2 with days
-                        if (data.statValue == null || data.statValue == record.statusCode){
+            await file_get_log(file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, sample)
+            .then((logs)=>{
+                logs.forEach((/**@type{Types.server_log_request_record|''}*/record) => {
+                    if (record != ''){
+                        if (data.statGroup != null){
                             const domain_app_id = record.host?ConfigGetAppHost(record.host, 'SUBDOMAIN'):null;
                             if (data.app_id == null || data.app_id == domain_app_id){
-                                //add unique status codes to a set
-                                log_stat_value.add(record.statusCode);
+                                const statGroupvalue = (data.statGroup=='url' && record[data.statGroup].indexOf('?')>0)?record[data.statGroup].substring(0,record[data.statGroup].indexOf('?')):record[data.statGroup];
+                                //add unique statGroup to a set
+                                log_stat_value.add(statGroupvalue);
                                 log_days.add(day);
-                                /**@ts-ignore */
-                                logfiles.push({ 
-                                    chart:null,
-                                    statValue: record.statusCode,
-                                    year: data.year,
-                                    month: data.month,
-                                    day: Number(day),
-                                    amount: null});
+                                if (data.unique==0 ||(data.unique==1 && logfiles.filter(row=>row.statValue==statGroupvalue).length==0)){
+                                    /**@ts-ignore */
+                                    logfiles.push({ 
+                                        chart:null,
+                                        statValue: statGroupvalue,
+                                        year: data.year,
+                                        month: data.month,
+                                        day: Number(day),
+                                        amount: null});
+                                }
                             }
                         }
+                        else{
+                            //add for given status code or all status codes if all should be returned
+                            //save this as chart 2 with days
+                            if (data.statValue == null || data.statValue == record.statusCode){
+                                const domain_app_id = record.host?ConfigGetAppHost(record.host, 'SUBDOMAIN'):null;
+                                if (data.app_id == null || data.app_id == domain_app_id){
+                                    //add unique status codes to a set
+                                    log_stat_value.add(record.statusCode);
+                                    log_days.add(day);
+                                    /**@ts-ignore */
+                                    logfiles.push({ 
+                                        chart:null,
+                                        statValue: record.statusCode,
+                                        year: data.year,
+                                        month: data.month,
+                                        day: Number(day),
+                                        amount: null});
+                                }
+                            }
+                        }
+                        
                     }
-                    
-                }
-            });
+                });
+            })
+            .catch((error)=>{
+                throw `${file}: ${error}`;
+            })
         }
     }
 

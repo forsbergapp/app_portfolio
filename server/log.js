@@ -59,7 +59,8 @@ const getLogStats = (query) =>{
                 resolve(result);
             else
                 reject('Record not found');
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**

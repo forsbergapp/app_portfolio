@@ -655,7 +655,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
                                                             timezone:           result_geodata.timezone,
                                                             module:             app.app});
     //if app admin then log, system does not log in database
-    if (ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`)){
+    if (ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`]){
         const {createLog} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`);
         await createLog(app_id,
             { app_id : app_id,
