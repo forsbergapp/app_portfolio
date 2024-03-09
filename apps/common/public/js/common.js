@@ -3686,7 +3686,7 @@ const set_app_service_parameters = async parameters => {
  * @returns {boolean}
  */
 const disable_textediting = () =>(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && 
-                                COMMON_GLOBAL.rest_at =='' && COMMON_GLOBAL.rest_admin_at =='') ||
+                                COMMON_GLOBAL.rest_at ==null && COMMON_GLOBAL.rest_admin_at ==null) ||
                                 COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id;
 /**
  * Common events
