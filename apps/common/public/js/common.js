@@ -4,6 +4,7 @@ const Vue = await import('Vue');
 const {React} = await import('React');
 /**@ts-ignore */
 const {ReactDOM} = await import('ReactDOM');
+
 /**@ts-ignore */
 const {QRCode} = await import('easy.qrcode');
 /**@ts-ignore */
@@ -4296,10 +4297,18 @@ const mount_app = async (framework, events) => {
     common_events_remove();
     AppDocument.querySelector(`#${app_div}`).replaceWith(AppDocument.querySelector(`#${app_div}`).cloneNode(true));
     AppDocument.querySelector(`#${app_root_div}`).replaceWith(AppDocument.querySelector(`#${app_root_div}`).cloneNode(true));
-    //AppDocument.querySelector('body').replaceWith(AppDocument.querySelector('body').cloneNode(true));
+    
+    //remove Reacts objects
+    /**@ts-ignore */
+    delete window.ReactDOM;
+    /**@ts-ignore */
+    delete window.React;
+
     //added listener variable in ReactDOM library to be able to remove document listener easier
-    if (ReactDOM.React_listeners.length>0){
-        for (const ReactListener of ReactDOM.React_listeners){
+    /**@ts-ignore */
+    if (custom_React_listeners.length>0){
+        /**@ts-ignore */
+        for (const ReactListener of custom_React_listeners){
             if (ReactListener[0].nodeName=='#document')
                 ReactListener[0].removeEventListener(ReactListener[1], ReactListener[2]);
         }
@@ -4311,6 +4320,13 @@ const mount_app = async (framework, events) => {
             delete AppDocument[key];
         }
     }
+    //remove Vue objects
+    /**@ts-ignore */
+    delete window.__VUE_DEVTOOLS_HOOK_REPLAY__;
+    /**@ts-ignore */
+    delete window.__VUE_HMR_RUNTIME__;
+    /**@ts-ignore */
+    delete window.__VUE__;
     AppDocument.querySelector(`#${app_root_div}`).removeAttribute('data-v-app');
 
     //set default function if anyone missing
