@@ -975,13 +975,13 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                                 
                                 modulefile = modulefile.replace(  'exports.version = ReactVersion;',
                                                                 'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
-                                modulefile = modulefile + ' export {ReactDOM}';
+                                modulefile = modulefile + 'export {ReactDOM}';
                             }
                             else{
                                 modulefile = 'let React;\r\n' + modulefile;
                                 modulefile = modulefile.replace(  'exports.version = ReactVersion;',
                                                                 'exports.version = ReactVersion;\r\n  React=exports;');
-                                modulefile = modulefile + ' export {React}';
+                                modulefile = modulefile + 'export {React}';
                             }
                             resolve(modulefile);
                         })
@@ -998,11 +998,41 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                         fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
                             modulefile = 'let L;\r\n' + modulefile;
                             modulefile = modulefile.replace(  'window.L = exports;','L = exports;');
-                            modulefile = modulefile + ' export {L}';
+                            modulefile = modulefile + 'export {L}';
                             resolve(modulefile);
                         });
                         break;
-                    }   
+                    }
+                    case '/modules/easy.qrcode/easy.qrcode.js':{
+                        fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
+                            modulefile = modulefile.replace(  'var QRCode;','');
+
+                            modulefile =    'let {ctx} = await import("./canvas2svg.js");\r\n' +
+                                            'let C2S = ctx;\r\n' + 
+                                            'var QRCode;\r\n' +
+                                            modulefile;
+                            modulefile = modulefile.replace(  'if (typeof define == \'function\' && (define.amd || define.cmd))','if (1==2)');
+                            modulefile = modulefile.replace(  'else if (freeModule)','else if (1==2)');
+                            modulefile = modulefile.replace(  'root.QRCode = QRCode;','null;');
+                            
+
+                            modulefile = modulefile + 'export{QRCode}';
+                            resolve(modulefile);
+                        });
+                        break;
+                    }
+                    case '/modules/easy.qrcode/canvas2svg.js':{
+                        fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
+                            modulefile =  'let ctx;\r\n' + modulefile;
+                            modulefile = modulefile.replace('var STYLES, ctx, CanvasGradient, CanvasPattern, namedEntities;',
+                                                            'var STYLES, CanvasGradient, CanvasPattern, namedEntities;');
+                            modulefile = modulefile.replace(  'if (typeof window === "object")','if (1==2)');
+                            modulefile = modulefile.replace(  'if (typeof module === "object" && typeof module.exports === "object")','if (1==2)');
+                            modulefile = modulefile + 'export{ctx}';
+                            resolve(modulefile);
+                        })
+                        break;
+                    }
                     default:
                         resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
                 }
