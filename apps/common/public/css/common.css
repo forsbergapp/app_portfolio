@@ -398,7 +398,6 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 }
 /* BROADCAST */
 #common_broadcast_info {
-	visibility:hidden;
 	width:calc(100% - 20px);
 	height: 100px;
 	bottom: 10px;
