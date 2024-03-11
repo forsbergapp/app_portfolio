@@ -807,6 +807,30 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
     }
 };
 /**
+ * Component render
+ * @param {string} div 
+ * @param {{}} props 
+ * @param {string} component_path
+ */
+const ComponentRender = async (div,props, component_path) => {
+    const APPDIV = AppDocument.querySelector(`#${div}`);
+    //component outputs default render function
+    const {default:renderfunction} = await import(component_path);
+    //add document (less type errors), framework and mountdiv to props
+    APPDIV.innerHTML = renderfunction({...props, ...{   common_document:AppDocument,
+                                                        common_framework:COMMON_GLOBAL.app_framework,
+                                                        common_mountdiv:div}});
+}
+/**
+ * Component remove
+ * @param {string} div 
+ */
+const ComponentRemove = (div) => {
+    const APPDIV = AppDocument.querySelector(`#${div}`);
+    APPDIV.innerHTML = '';
+}
+
+/**
  * Show message info list
  * @param {{}[]} list_obj 
  * @returns {string}
@@ -3336,7 +3360,10 @@ const show_broadcast = (broadcast_message) => {
         }
         case 'CHAT':
         case 'ALERT':{
-            show_broadcast_alert(message);
+            if (AppDocument.querySelector('#common_dialogue_maintenance'))
+                ComponentRender('common_broadcast', {message:message}, '/maintenance/component/broadcast.js')
+            else
+                ComponentRender('common_broadcast', {message:message}, '/common/component/broadcast.js')
             break;
         }
 		case 'PROGRESS':{
@@ -3344,16 +3371,6 @@ const show_broadcast = (broadcast_message) => {
             break;
         }
     }
-};
-/**
- * Show broadcast ALERT
- * @param {string} message 
- * @returns {void}
- */
-const show_broadcast_alert = message => {
-    AppDocument.querySelector('#common_broadcast_info_message').style.animationName='common_ticker';
-    AppDocument.querySelector('#common_broadcast_info_message_item').innerHTML = message;
-    AppDocument.querySelector('#common_broadcast_info').style.visibility='visible';
 };
 /**
  * Show maintenance
@@ -3927,9 +3944,7 @@ const common_event = async (event_type,event) =>{
                         }
                         //broadcast
                         case 'common_broadcast_close':{
-                            AppDocument.querySelector('#common_broadcast_info').style.visibility='hidden';
-                            AppDocument.querySelector('#common_broadcast_info_message_item').innerHTML='';
-                            AppDocument.querySelector('#common_broadcast_info_message').style.animationName='unset';
+                            ComponentRemove('common_broadcast');
                             break;
                         }
                         //module leaflet
@@ -4457,6 +4472,8 @@ export{/* GLOBALS*/
        mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
        inIframe, show_image, getHostname, input_control, SearchAndSetSelectedIndex,
+       /* COMPONENTS */
+       ComponentRender,ComponentRemove,
        /* MESSAGE & DIALOGUE */
        show_message_info_list, dialogue_close, show_common_dialogue, show_message,
        dialogue_user_start_clear,

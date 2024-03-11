@@ -2,7 +2,10 @@
  *        querySelector:function,
  *        title: string}} */
  const AppDocument = document;
-
+/**
+ * @typedef {object} AppEvent
+ * @property {{}}  target
+ */
 /**@ts-ignore */
 const common = await import('common');
 /**
@@ -22,7 +25,11 @@ const app_exception = () => {
 const init = (parameters) => {
     AppDocument.title = '⚒';
     AppDocument.querySelector('#common_maintenance_footer').innerHTML= '';
-    
+    AppDocument.querySelector('#common_broadcast').addEventListener('click', (/**@type{AppEvent}*/event) => {
+        const event_target_id = common.element_id(event.target);
+        if (event_target_id=='common_broadcast_close')
+            common.ComponentRemove('common_broadcast');
+    });
     common.COMMON_GLOBAL.common_app_id= parameters.common_app_id;
     common.COMMON_GLOBAL.app_id = parameters.app_id;
     common.COMMON_GLOBAL.exception_app_function = app_exception; 
