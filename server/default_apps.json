@@ -31,7 +31,7 @@
         {"INFO_LINK_POLICY_URL": "/info/privacy_policy"},
         {"INFO_LINK_DISCLAIMER_NAME": "Disclaimer"},
         {"INFO_LINK_DISCLAIMER_URL": "/info/disclaimer"},
-        {"INFO_LINK_TERMS_NAME": "/info/terms"},
+        {"INFO_LINK_TERMS_NAME": "Terms"},
         {"INFO_LINK_TERMS_URL": "/info/terms"},
         {"INFO_LINK_ABOUT_NAME": "About"},
         {"INFO_LINK_ABOUT_URL": "/info/about"},
