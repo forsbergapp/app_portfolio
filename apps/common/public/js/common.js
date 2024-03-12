@@ -817,9 +817,9 @@ const ComponentRender = async (div,props, component_path) => {
     //component outputs default render function
     const {default:renderfunction} = await import(component_path);
     //add document (less type errors), framework and mountdiv to props
-    APPDIV.innerHTML = renderfunction({...props, ...{   common_document:AppDocument,
-                                                        common_framework:COMMON_GLOBAL.app_framework,
-                                                        common_mountdiv:div}});
+    APPDIV.innerHTML = await renderfunction({...props, ...{ common_document:AppDocument,
+                                                            common_framework:COMMON_GLOBAL.app_framework,
+                                                            common_mountdiv:div}});
 }
 /**
  * Component remove
@@ -1404,7 +1404,7 @@ const zoom_info = (zoomvalue = null) => {
     if (zoomvalue == null) {
         div.style.transform = 'scale(1)';
     } else {
-        old = div.style.transform;
+        old = div.style.transform==''? 'scale(1)':div.style.transform;
         old_scale = parseFloat(old.substr(old.indexOf('(') + 1, old.indexOf(')') - 1));
         div.style.transform = 'scale(' + (old_scale + ((zoomvalue*5) / 10)) + ')';
     }
@@ -1421,84 +1421,10 @@ const move_info = (move1=null, move2=null) => {
     if (move1==null || move2==null) {
         div.style.transformOrigin = '50% 50%';
     } else {
-        old = div.style.transformOrigin;
+        old = div.style.transformOrigin==''? '50% 50%':div.style.transformOrigin;
         const old_move1 = parseFloat(old.substr(0, old.indexOf('%')));
         const old_move2 = parseFloat(old.substr(old.indexOf('%') +1, old.length -1));
         div.style.transformOrigin =  `${old_move1 + (move1*5)}% ${old_move2 + (move2*5)}%`;
-    }
-};
-/**
- * Window show info
- * @param {number} info 
- * @param {string} url 
- * @param {string} content_type 
- * @param {string} iframe_content 
- * @returns {void}
- */
-const show_window_info = (info, url, content_type, iframe_content) => {
-    //reset zoom and move
-    zoom_info();
-    move_info();
-    switch(info){
-        case 0:{
-            //show image
-            AppDocument.querySelector('#common_window_info_content').src='';
-            AppDocument.querySelector('#common_window_info_toolbar').style.display = 'flex';
-            AppDocument.querySelector('#common_window_info_content').style.display = 'none';
-            AppDocument.querySelector('#common_window_info').style.overflowY = 'auto';
-            AppDocument.querySelector('#common_window_info').style.visibility = 'visible';
-            AppDocument.querySelector('#common_window_info_info').innerHTML = `<img src='${url}'/>`;
-            AppDocument.querySelector('#common_window_info_info').style.display = 'inline-block';
-            break;
-        }
-        case 1:{
-            //show url in iframe, use overflowY=hidden
-            AppDocument.querySelector('#common_window_info_content').src=url;
-            AppDocument.querySelector('#common_window_info_toolbar').style.display = 'none';
-            AppDocument.querySelector('#common_window_info_content').style.display = 'block';
-            AppDocument.querySelector('#common_window_info').style.overflowY = 'hidden';
-            AppDocument.querySelector('#common_window_info').style.visibility = 'visible';
-            AppDocument.querySelector('#common_window_info_info').innerHTML = '';
-            AppDocument.querySelector('#common_window_info_info').style.display = 'none';
-            break;
-        }    
-        case 2:{
-            //show spinner first and then url in iframe, HTML or PDF
-            AppDocument.querySelector('#common_window_info_content').src='';
-            AppDocument.querySelector('#common_window_info_toolbar').style.display = 'none';
-            AppDocument.querySelector('#common_window_info_content').style.display = 'block';
-            AppDocument.querySelector('#common_window_info').style.overflowY = 'auto';
-            AppDocument.querySelector('#common_window_info').style.visibility = 'visible';
-            AppDocument.querySelector('#common_window_info_content').classList.add('css_spinner');
-            AppDocument.querySelector('#common_window_info_info').innerHTML = '';
-            AppDocument.querySelector('#common_window_info_info').style.display = 'none';
-            if (content_type == 'HTML'){
-                AppDocument.querySelector('#common_window_info_content').src=iframe_content;
-                AppDocument.querySelector('#common_window_info_content').classList.remove('css_spinner');
-            }
-            else
-                if (content_type=='PDF'){
-                    fetch (iframe_content,
-                            {
-                                headers: {
-                                    'Content-Type': 'application/pdf;charset=UTF-8'
-                                }
-                            }
-                    )
-                    .then((response) => {
-                        return response.blob();
-                    })
-                    .then((pdf) => {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(pdf); 
-                        reader.onloadend = () => {
-                            const base64PDF = reader.result;
-                            AppDocument.querySelector('#common_window_info_content').classList.remove('css_spinner');
-                            AppDocument.querySelector('#common_window_info_content').src = base64PDF;
-                        };
-                    });
-                }
-        }
     }
 };
 /**
@@ -3801,11 +3727,10 @@ const common_event = async (event_type,event) =>{
                         }
                         //window info
                         case 'common_window_info_btn_close':{
+                            ComponentRemove('common_window_info');
                             AppDocument.querySelector('#common_window_info').style.visibility = 'hidden'; 
-                            AppDocument.querySelector('#common_window_info_info').innerHTML='';
-                            AppDocument.querySelector('#common_window_info_content').src='';
-                            AppDocument.querySelector('#common_window_info_content').classList='';
-                            AppDocument.querySelector('#common_window_info_toolbar').classList='';
+                            if (AppDocument.fullscreenElement)
+                                AppDocument.exitFullscreen();
                             break;
                         }
                         case 'common_window_info_info':{
@@ -4478,8 +4403,6 @@ export{/* GLOBALS*/
        show_message_info_list, dialogue_close, show_common_dialogue, show_message,
        dialogue_user_start_clear,
        lov_close, lov_show,
-       /* WINDOW INFO */
-       zoom_info, move_info, show_window_info,
        /* PROFILE */
        profile_follow_like, profile_top, profile_detail, profile_show,
        profile_close, profile_update_stat, search_input,

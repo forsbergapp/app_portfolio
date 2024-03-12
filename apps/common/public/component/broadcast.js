@@ -16,7 +16,7 @@ const template =`<div id='common_broadcast_info'>
  * 
  * @param {*} props 
  */
-const method = (props) => {
+const method = async props => {
     switch (props.common_framework){
         case 2:{
             //Vue
@@ -24,7 +24,7 @@ const method = (props) => {
             //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
             //Vue.createApp(...
             //return props.common_document.querySelector('#tempmount').innerHTML;
-            return template.replace('<MESSAGE/>',props.message,)
+            return template.replace('<MESSAGE/>',props.message)
         }
         case 3:{
             //React
@@ -32,12 +32,12 @@ const method = (props) => {
             //props.document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
             //ReactDOM.createRoot(div... .render( App()
             //return props.common_document.querySelector('#tempmount').innerHTML;
-            return template.replace('<MESSAGE/>',props.message,)
+            return template.replace('<MESSAGE/>',props.message)
         }
         case 1:
         default:{
             //Default Javascript
-            return template.replace('<MESSAGE/>',props.message,)
+            return template.replace('<MESSAGE/>',props.message)
         }
     }
 }

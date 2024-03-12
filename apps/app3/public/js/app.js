@@ -61,7 +61,7 @@ const getdocs = (docid = null) => {
     for (const doc of APP_GLOBAL.docs) {
         if (docid== doc.id || docid==null)
             html += `<div class='doc_list_item common_row'>
-                        <div docid='doc_${doc.id}' full_size='${doc.doc_url}' class='doc_list_item_image' style='background-image:url("${doc.doc_url_small}")'></div>
+                        <div id='doc_${doc.id}' full_size='${doc.doc_url}' class='doc_list_item_image' style='background-image:url("${doc.doc_url_small}")'></div>
                         <div class='doc_list_item_title'>${doc.doc_title}</div>
                     </div>`;
     }
@@ -100,10 +100,15 @@ const app_event_click = event => {
                     AppDocument.querySelector('#dialogue_documents').style.visibility = 'visible';
                     break;
                 }
-                case 'doc_list':{
+                case 'doc_list':
+                case event.target.classList.contains('doc_list_item_image')?event_target_id:'':{
                     const target_row = common.element_row(event.target);
                     if (target_row.querySelector('.doc_list_item_image').getAttribute('full_size'))
-                        common.show_window_info(0, target_row.querySelector('.doc_list_item_image').getAttribute('full_size'));
+                        common.ComponentRender('common_window_info',
+                        {   info:0,
+                            url:target_row.querySelector('.doc_list_item_image').getAttribute('full_size'),
+                            content_type:null, 
+                            iframe_content:null}, '/common/component/window_info.js');
                     break;
                 }
             }
@@ -128,7 +133,11 @@ const mount_app_app = async (framework=null) => {
         const docid = window.location.pathname.substring(1);
         if (docid!=''){
             AppDocument.querySelector('#dialogue_documents').style.visibility = 'hidden';
-            common.show_window_info(0, AppDocument.querySelector(`#doc_${docid}`).getAttribute('full_size'));
+            common.ComponentRender('common_window_info',
+                        {   info:0,
+                            url:AppDocument.querySelector(`#doc_${docid}`).getAttribute('full_size'),
+                            content_type:null, 
+                            iframe_content:null}, '/common/component/window_info.js');
         }
         else
             AppDocument.querySelector('#dialogue_documents').style.visibility = 'visible';

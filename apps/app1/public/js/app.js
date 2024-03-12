@@ -105,12 +105,20 @@ const app_event_click = event => {
                     //second page
                     case 'info_diagram':
                     case 'info_diagram_img':{
-                        common.show_window_info(0, APP_GLOBAL.img_diagram_img);
+                        common.ComponentRender('common_window_info',
+                                                {   info:0,
+                                                    url:APP_GLOBAL.img_diagram_img, 
+                                                    content_type:null, 
+                                                    iframe_content:null}, '/common/component/window_info.js');
                         break;
                     }
                     case 'info_datamodel':
                     case 'info_datamodel_img':{
-                        common.show_window_info(0, APP_GLOBAL.img_datamodel_img);
+                        common.ComponentRender('common_window_info',
+                                                {   info:0,
+                                                    url:APP_GLOBAL.img_datamodel_img,
+                                                    content_type:null, 
+                                                    iframe_content:null}, '/common/component/window_info.js');
                         break;
                     }
                     case 'info_message':{
@@ -129,18 +137,34 @@ const app_event_click = event => {
                         break;
                     }
                     case 'info_link1':{
-                        common.show_window_info(1, common.COMMON_GLOBAL.info_link_policy_url);
+                        common.ComponentRender('common_window_info',
+                                                {   info:1,
+                                                    url:common.COMMON_GLOBAL.info_link_policy_url,
+                                                    content_type:null, 
+                                                    iframe_content:null}, '/common/component/window_info.js');
                         break;
                     }
                     case 'info_link2':{
-                        common.show_window_info(1, common.COMMON_GLOBAL.info_link_disclaimer_url);
+                        common.ComponentRender('common_window_info',
+                                                {   info:1,
+                                                    url:common.COMMON_GLOBAL.info_link_disclaimer_url,
+                                                    content_type:null, 
+                                                    iframe_content:null}, '/common/component/window_info.js');
                         break;
                     }
                     case 'info_link3':{
-                        common.show_window_info(1, common.COMMON_GLOBAL.info_link_terms_url);
+                        common.ComponentRender('common_window_info',
+                                                {   info:1,
+                                                    url:common.COMMON_GLOBAL.info_link_terms_url,
+                                                    content_type:null, 
+                                                    iframe_content:null}, '/common/component/window_info.js');
                         break;
                     }case 'info_link4':{
-                        common.show_window_info(1, common.COMMON_GLOBAL.info_link_about_url);
+                        common.ComponentRender('common_window_info',
+                                                {   info:1,
+                                                    url:common.COMMON_GLOBAL.info_link_about_url,
+                                                    content_type:null, 
+                                                    iframe_content:null}, '/common/component/window_info.js');
                         break;
                     }
                     //common
@@ -513,9 +537,6 @@ const init_app = async (parameters) => {
     AppDocument.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
     AppDocument.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
     AppDocument.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
-
-    common.zoom_info();
-    common.move_info();
 
     mount_app_app();
 };
