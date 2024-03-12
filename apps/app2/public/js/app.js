@@ -128,7 +128,6 @@ const printTimetable = async () => {
                                                     content_type:null, 
                                                     iframe_content:html,
                                                     frame:window.frames.document, 
-                                                    loading_function:dialogue_loading,
                                                     mobile_function:common.mobile}, '/common/component/window_info.js')
     .then(()=>common.ComponentRemove('common_window_info'));
 };
