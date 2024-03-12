@@ -9,7 +9,7 @@ const template =`   <div id='common_window_info_btn_close' class='common_toolbar
                         <div id='common_window_info_toolbar_btn_down' class='common_toolbar_button common_icon' ></div>
                         <div id='common_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
                     </div>
-                    <iframe id='common_window_info_content' scrolling='auto' class=<IFRAME_CLASS/> src=<CONTENT/> ></iframe>`;
+                    <iframe id='common_window_info_content' scrolling='auto' <IFRAME_CLASS/> src=<CONTENT/> ></iframe>`;
 /**
  * 
  * @param {*} props 
@@ -58,7 +58,7 @@ const method = async props => {
                             STYLE_CONTENT_DISPLAY:'block',
                             STYLE_INFO_OVERFLOWY:'auto',
                             STYLE_INFO_INFO_DISPLAY:'none',
-                            IFRAME_CLASS:props.iframe_class
+                            IFRAME_CLASS:'class=' + props.iframe_class
                             });
                     }
                     else
@@ -89,7 +89,7 @@ const method = async props => {
                                             STYLE_CONTENT_DISPLAY:'block',
                                             STYLE_INFO_OVERFLOWY:'auto',
                                             STYLE_INFO_INFO_DISPLAY:'none',
-                                            IFRAME_CLASS:props.iframe_class
+                                            IFRAME_CLASS:'class=' + props.iframe_class
                                             });
                                 };
                             });
