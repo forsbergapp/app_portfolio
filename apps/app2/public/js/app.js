@@ -106,10 +106,9 @@ const APP_GLOBAL = {
 Object.seal(APP_GLOBAL);
 /**
  * Print timetable
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const printTimetable = () => {
-    dialogue_loading(1);
+const printTimetable = async () => {
     const whatToPrint = AppDocument.querySelector('#paper');
 	const html = `<!DOCTYPE html>
 			<html>
@@ -124,21 +123,14 @@ const printTimetable = () => {
 			</body>
 			</html>`;
 	
-    
-    AppDocument.querySelector('#common_window_info_content').contentWindow.document.open();
-    AppDocument.querySelector('#common_window_info_content').contentWindow.document.write(html);
-    AppDocument.querySelector('#common_window_info_content').classList = AppDocument.querySelector('#paper').classList;
-    /**@type{AppDocument} */
-    const frame = window.frames.document;
-    frame.querySelector('#common_window_info_content').focus();
-    setTimeout(() => {AppDocument.querySelector('#common_window_info_content').contentWindow.print();dialogue_loading(0);}, 500);
-    if (common.mobile())
-        null;
-    else
-        AppDocument.querySelector('#common_window_info_content').contentWindow.onafterprint = () => {
-            AppDocument.querySelector('#common_window_info_content').src='';
-            AppDocument.querySelector('#common_window_info_content').classList ='';
-        };
+    await common.ComponentRender('common_window_info', {  info:3,
+                                                    url:null, 
+                                                    content_type:null, 
+                                                    iframe_content:html,
+                                                    frame:window.frames.document, 
+                                                    loading_function:dialogue_loading,
+                                                    mobile_function:common.mobile}, '/common/component/window_info.js')
+    .then(()=>common.ComponentRemove('common_window_info'));
 };
 /**
  * Get report settings
@@ -1356,7 +1348,6 @@ const user_setting_link = (item) => {
     const select_user_setting = AppDocument.querySelector('#setting_select_user_setting');
     const user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     const sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-    AppDocument.querySelector('#common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
     switch (item.id){
         case 'user_day_html':
         case 'user_month_html':
@@ -1366,7 +1357,12 @@ const user_setting_link = (item) => {
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
                                      'HTML');
-            common.show_window_info(2, null, 'HTML', url);
+            common.ComponentRender('common_window_info',
+                    {   info:2,
+                        url:null,
+                        content_type:'HTML', 
+                        iframe_content:url,
+                        iframe_class:paper_size_select.options[paper_size_select.selectedIndex].value}, '/common/component/window_info.js');
             break;
         }
         case 'user_day_pdf':
@@ -1377,7 +1373,12 @@ const user_setting_link = (item) => {
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
                                      'PDF');
-            common.show_window_info(2, null, 'PDF', url);
+            common.ComponentRender('common_window_info',
+                    {   info:2,
+                        url:null,
+                        content_type:'PDF', 
+                        iframe_content:url,
+                        iframe_class:paper_size_select.options[paper_size_select.selectedIndex].value}, '/common/component/window_info.js');
             break;
         }
     }
@@ -1997,7 +1998,6 @@ const profile_user_setting_link = item => {
     const user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     const sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
     const paper_size = select_user_setting[select_user_setting.selectedIndex].getAttribute('paper_size');
-    AppDocument.querySelector('#common_window_info_content').className = paper_size;
     switch (item.id){
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
@@ -2008,7 +2008,12 @@ const profile_user_setting_link = item => {
                                      item.id,
                                      'HTML',
                                      false);
-            common.show_window_info(2, null, 'HTML', `${url}`);
+            common.ComponentRender('common_window_info',
+                    {   info:2,
+                        url:null,
+                        content_type:'HTML', 
+                        iframe_content:url,
+                        iframe_class:paper_size}, '/common/component/window_info.js');
             break;
         }
         case 'profile_user_settings_like':{
@@ -2146,19 +2151,35 @@ const app_event_click = event => {
                     break;
                 }
                 case 'info_link1':{
-                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_policy_url);
+                    common.ComponentRender('common_window_info',
+                                            {   info:1,
+                                                url:common.COMMON_GLOBAL.info_link_policy_url,
+                                                content_type:null, 
+                                                iframe_content:null}, '/common/component/window_info.js');
                     break;
                 }
                 case 'info_link2':{
-                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_disclaimer_url);
+                    common.ComponentRender('common_window_info',
+                                            {   info:1,
+                                                url:common.COMMON_GLOBAL.info_link_disclaimer_url,
+                                                content_type:null, 
+                                                iframe_content:null}, '/common/component/window_info.js');
                     break;
                 }
                 case 'info_link3':{
-                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_terms_url);
+                    common.ComponentRender('common_window_info',
+                                            {   info:1,
+                                                url:common.COMMON_GLOBAL.info_link_terms_url,
+                                                content_type:null, 
+                                                iframe_content:null}, '/common/component/window_info.js');
                     break;
                 }
                 case 'info_link4':{
-                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_about_url);
+                    common.ComponentRender('common_window_info',
+                                            {   info:1,
+                                                url:common.COMMON_GLOBAL.info_link_about_url,
+                                                content_type:null, 
+                                                iframe_content:null}, '/common/component/window_info.js');
                     break;
                 }
                 case 'info_close':{
