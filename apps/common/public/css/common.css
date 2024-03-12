@@ -286,6 +286,11 @@
 	--global_font_arabic_nastaliq: 	'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 
 									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
 									var(--global_font_languages_1), var(--global_font_symbols), var(--global_font_languages_2);
+	/*app components*/
+	--common_app_component_window_info_toolbar_style_display: 'flex';
+	--common_app_component_window_info_overflowY: 'hidden';
+	--common_app_component_window_info_content_style_display: 'none';
+	--common_app_component_window_info_info_style_display: 'inline-block';
 }
 
 /*default font*/
