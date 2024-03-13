@@ -163,6 +163,21 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
  * @param {Types.bff_parameters} bff_parameters
  */
  const BFF = (bff_parameters) =>{
+    /**
+     * 
+     * @param {Types.error} error 
+     */
+    const log_error = (error) =>{
+        LogServiceE(bff_parameters.app_id ?? null, bff_parameters.service ?? null, bff_parameters.parameters ?? null, error).then(() => {
+            const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
+            //remove statusMessage or [ERR_INVALID_CHAR] might occur
+            bff_parameters.res.statusMessage = '';
+            if (error.startsWith('MICROSERVICE ERROR'))
+                bff_parameters.res.status(statusCode).send('MICROSERVICE ERROR');
+            else
+                bff_parameters.res.status(statusCode).send(error);
+        });
+    }
     if (bff_parameters.service == 'GEOLOCATION' || 
         bff_parameters.service == 'MAIL' || 
         bff_parameters.service == 'PDF' || 
@@ -187,10 +202,8 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
             });
         })
         .catch((/**@type{Types.error}*/error) => {
-            LogServiceE(bff_parameters.app_id ?? null, bff_parameters.service ?? null, bff_parameters.parameters ?? null, error).then(() => {
-                const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
-                bff_parameters.res.status(statusCode).send(error);
-            });
+            log_error(error);
+            
         });
     }        
     else{
@@ -230,10 +243,7 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
             });
         })
         .catch((/**@type{Types.error}*/error) => {
-            LogServiceE(bff_parameters.app_id ?? null, bff_parameters.service ?? null, bff_parameters.parameters ?? null, error).then(() => {
-                const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
-                bff_parameters.res.status(statusCode).send(error);
-            });
+            log_error(error);
         });
     }
 };
