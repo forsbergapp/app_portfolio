@@ -270,6 +270,9 @@ const httpRequest = async (service, path, method, timeout, client_ip, authorizat
         });
         if (method !='GET')
             request.write(JSON.stringify(body));
+        request.on('error', (error) => {
+            reject('MICROSERVICE ERROR: ' + error);
+        });
         request.on('timeout', () => {
             reject(timeout_message);
         });
