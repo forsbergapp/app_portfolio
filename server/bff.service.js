@@ -227,20 +227,30 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
         };
         BFF_server(parameters)
         .then((/**@type{*}*/result_service) => {
-            const log_result = getNumberValue(ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
-            LogServiceI(bff_parameters.app_id, bff_parameters.service, bff_parameters.parameters, log_result).then(()=>{
-                if (bff_parameters.endpoint=='SOCKET'){
-                    //This endpoint only allowed for EventSource so no more update of response
-                    null;
+            if (parameters.endpoint=='APP' && parameters.service=='APP' && result_service.STATIC){
+                if (result_service.SENDFILE){
+                    bff_parameters.res.sendFile(result_service.SENDFILE);
+                    bff_parameters.res.status(200);
                 }
-                else{
-                    //result from APP can request to redirect
-                    if (bff_parameters.res.statusCode==301)
-                        bff_parameters.res.redirect('/');
-                    else
-                        bff_parameters.res.status(200).send(result_service);
-                }
-            });
+                else
+                    bff_parameters.res.status(200).send(result_service.SENDCONTENT);
+            }
+            else{
+                const log_result = getNumberValue(ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
+                LogServiceI(bff_parameters.app_id, bff_parameters.service, bff_parameters.parameters, log_result).then(()=>{
+                    if (bff_parameters.endpoint=='SOCKET'){
+                        //This endpoint only allowed for EventSource so no more update of response
+                        null;
+                    }
+                    else{
+                        //result from APP can request to redirect
+                        if (bff_parameters.res.statusCode==301)
+                            bff_parameters.res.redirect('/');
+                        else
+                            bff_parameters.res.status(200).send(result_service);
+                    }  
+                })
+            }
         })
         .catch((/**@type{Types.error}*/error) => {
             log_error(error);

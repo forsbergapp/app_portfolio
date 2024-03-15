@@ -912,8 +912,8 @@ const getAssetFile = (app_id, url, basepath, res) =>{
         switch (url.toLowerCase().substring(url.lastIndexOf('.'))){
             case '.css':{
                 res.type('text/css');
-                res.set('Cache-Control', `max-age=${maxage}`); 
-                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
+                res.set('Cache-Control', `max-age=${maxage}`);
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.js':{
@@ -945,14 +945,14 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                                                                 'exports.version = ReactVersion;\r\n  React=exports;');
                                 modulefile = modulefile + 'export {React}';
                             }
-                            resolve(modulefile);
+                            resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
                         })
                         break;
                     }
                     case '/modules/PrayTimes/PrayTimes.js':{
                         fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
                             modulefile = modulefile.replace(  'var prayTimes = new PrayTimes();','export default new PrayTimes();');
-                            resolve(modulefile);
+                            resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
                         });
                         break;
                     }
@@ -960,8 +960,9 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                         fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
                             modulefile = 'let L;\r\n' + modulefile;
                             modulefile = modulefile.replace(  'window.L = exports;','L = exports;');
+                            modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
                             modulefile = modulefile + 'export {L}';
-                            resolve(modulefile);
+                            resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
                         });
                         break;
                     }
@@ -979,7 +980,7 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                             
 
                             modulefile = modulefile + 'export{QRCode}';
-                            resolve(modulefile);
+                            resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
                         });
                         break;
                     }
@@ -991,60 +992,55 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                             modulefile = modulefile.replace(  'if (typeof window === "object")','if (1==2)');
                             modulefile = modulefile.replace(  'if (typeof module === "object" && typeof module.exports === "object")','if (1==2)');
                             modulefile = modulefile + 'export{ctx}';
-                            resolve(modulefile);
+                            resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
                         })
                         break;
                     }
                     default:
-                        resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
+                        resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 }
                 break;
             }
             case '.html':{
                 res.type('text/html');
                 res.set('Cache-Control', `max-age=${maxage}`);
-                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.ogg':{
                 res.type('audio/ogg');
                 res.set('Cache-Control', `max-age=${maxage}`);
-                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
-                .then((/**@type{*}*/audio)=>Buffer.from(audio, 'binary')));
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.webp':{
                 res.type('image/webp');
                 res.set('Cache-Control', `max-age=${maxage}`);
-                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
-                .then((/**@type{*}*/image)=>Buffer.from(image, 'binary')));
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.png':{
                 res.type('image/png');
                 res.set('Cache-Control', `max-age=${maxage}`);
-                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
-                .then((/**@type{*}*/image)=>Buffer.from(image, 'binary')));
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.woff2':{
                 res.type('font/woff');
                 res.set('Cache-Control', `max-age=${maxage_font}`);
-                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
-                .then((/**@type{*}*/font)=>Buffer.from(font, 'binary')));
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.ttf':{
                 res.type('font/ttf');
                 res.set('Cache-Control', `max-age=${maxage_font}`);
-                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
-                .then((/**@type{*}*/font)=>Buffer.from(font, 'binary')));
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.json':{
                 res.type('application/json');
                 res.set('Cache-Control', `max-age=${maxage}`);
-                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             default:{
