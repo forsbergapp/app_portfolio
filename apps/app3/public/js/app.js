@@ -13,7 +13,6 @@
   *              parentNode:         {nextElementSibling:{querySelector:function}},
   *              nextElementSibling: {dispatchEvent:function},
   *              focus:              function,
-  *              blur:               function,
   *              getAttribute:       function,
   *              setAttribute:       function,
   *              dispatchEvent:      function,

@@ -13,6 +13,7 @@ const template =`   <div id='common_window_info_btn_close' class='common_toolbar
 /**
  * 
  * @param {*} props 
+ * @returns {Promise.<void>}
  */
 const method = async props => {
     /**
@@ -64,7 +65,7 @@ const method = async props => {
                     else
                         if (props.content_type=='PDF'){
                             //show empty component with spinner
-                            props.common_document.querySelector(`#${props.mountdiv}`).innerHTML = template.replace('<INFO/>','').replace('<CONTENT/>','');
+                            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template.replace('<INFO/>','').replace('<CONTENT/>','');
                             props.common_document.querySelector('#common_window_info_info').classList.add('css_spinner');
                             fetch (props.iframe_content,
                                 {
@@ -112,7 +113,6 @@ const method = async props => {
         //await delay to avoid browser render error
         await new Promise ((resolve)=>{setTimeout(()=> {props.common_document.querySelector('#common_window_info_content').contentWindow.print();
                                                         resolve(null);}, 500);});
-        return null;
     }
     else{
         props.common_document.querySelector('#common_window_info').style.visibility='visible';
@@ -129,20 +129,20 @@ const method = async props => {
                 //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
                 //Vue.createApp(...
                 //return props.common_document.querySelector('#tempmount').innerHTML;
-                return template.replace('<INFO/>',variables.INFO).replace('<IFRAME_CLASS/>',variables.IFRAME_CLASS).replace('<CONTENT/>',variables.CONTENT);
+                props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template.replace('<INFO/>',variables.INFO).replace('<IFRAME_CLASS/>',variables.IFRAME_CLASS).replace('<CONTENT/>',variables.CONTENT);
             }
             case 3:{
                 //React
                 //Use tempmount div to be able to return pure HTML
-                //props.document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
+                //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
                 //ReactDOM.createRoot(div... .render( App()
                 //return props.common_document.querySelector('#tempmount').innerHTML;
-                return template.replace('<INFO/>',variables.INFO).replace('<IFRAME_CLASS/>',variables.IFRAME_CLASS).replace('<CONTENT/>',variables.CONTENT);
+                props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template.replace('<INFO/>',variables.INFO).replace('<IFRAME_CLASS/>',variables.IFRAME_CLASS).replace('<CONTENT/>',variables.CONTENT);
             }
             case 1:
             default:{
                 //Default Javascript
-                return template.replace('<INFO/>',variables.INFO).replace('<IFRAME_CLASS/>',variables.IFRAME_CLASS).replace('<CONTENT/>',variables.CONTENT);
+                props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template.replace('<INFO/>',variables.INFO).replace('<IFRAME_CLASS/>',variables.IFRAME_CLASS).replace('<CONTENT/>',variables.CONTENT);
             }
         }
     }

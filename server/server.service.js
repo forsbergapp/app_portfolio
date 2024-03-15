@@ -259,7 +259,7 @@ const COMMON = {
                     break;
                 }
                 case 'APP_ACCESS_DB_API_/USER_ACCOUNT/PASSWORD_PUT':{
-                    resolve(db_user_account.updatePassword(routesparameters.app_id, query, routesparameters.body, routesparameters.res));
+                    resolve(db_user_account.updatePassword(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, query, routesparameters.body, routesparameters.res));
                     break;
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT_PUT':

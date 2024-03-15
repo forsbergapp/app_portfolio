@@ -73,6 +73,7 @@ const {getTimezone} = await import('regional');
             exception_app_function:function|null,
             user_app_role_id:number|null,
             system_admin:string|null,
+            system_admin_first_time:number|null,
             system_admin_only:number|null,
             user_identity_provider_id:number|null,
             user_account_id:number|null,
@@ -98,6 +99,16 @@ const {getTimezone} = await import('regional');
             user_direction:string,
             user_arabic_script:string,
             user_preference_save:boolean,
+            translate_items: {	USERNAME:string,
+											EMAIL:string,
+											NEW_EMAIL:string,
+											BIO:string,
+											PASSWORD:string,
+											PASSWORD_CONFIRM:string,
+											PASSWORD_REMINDER:string,
+											NEW_PASSWORD_CONFIRM:string,
+											NEW_PASSWORD:string,
+											CONFIRM_QUESTION:string},
             module_leaflet_flyto:number,
             module_leaflet_jumpto:number,
             module_leaflet_popup_offset:number,
@@ -148,6 +159,7 @@ const COMMON_GLOBAL = {
     exception_app_function:null,
     user_app_role_id:null,
     system_admin:null,
+    system_admin_first_time:null,
     system_admin_only:null,
     user_identity_provider_id:null,
     user_account_id:null,
@@ -173,6 +185,16 @@ const COMMON_GLOBAL = {
     user_direction:'',
     user_arabic_script:'',
     user_preference_save:false,
+    translate_items:{   USERNAME:'Username',
+                        EMAIL:'Email',
+                        NEW_EMAIL:'New email',
+                        BIO:'Bio',
+                        PASSWORD:'Password',
+                        PASSWORD_CONFIRM:'Password confirm',
+                        PASSWORD_REMINDER:'Password reminder',
+                        NEW_PASSWORD_CONFIRM:'New password confirm',
+                        NEW_PASSWORD:'New password',
+                        CONFIRM_QUESTION:''},
     module_leaflet_flyto:0,
     module_leaflet_jumpto:0,
     module_leaflet_popup_offset:0,
@@ -358,11 +380,20 @@ const common_translate_ui = async (lang_code) => {
         path = `/app_object?data_lang_code=${lang_code}&object_name=APP`;
     }
     //translate objects
+    
     const app_objects_json = await FFB('DB_API', path, 'GET', 'APP_DATA', null);
-    for (const app_object of JSON.parse(app_objects_json)){
+    /**
+     * @typedef {   'USERNAME'|'EMAIL'|'NEW_EMAIL'|'BIO'|'PASSWORD'|'PASSWORD_CONFIRM'|'PASSWORD_REMINDER'|'NEW_PASSWORD_CONFIRM'|'NEW_PASSWORD'|'CONFIRM_QUESTION'} translation_key
+     */
+    /**@type{{object_name:string,object_item_name:translation_key, id:string, text:string}[]} */
+    const app_objects = JSON.parse(app_objects_json);
+    for (const app_object of app_objects){
         switch (app_object.object_name){
             case 'APP':{
-                //translate common items
+                //save current translations to be used in components
+                if (COMMON_GLOBAL.translate_items[app_object.object_item_name])
+					COMMON_GLOBAL.translate_items[app_object.object_item_name] = app_object.text;
+                /*
                 switch  (app_object.object_item_name){
                     case 'USERNAME':{
                         AppDocument.querySelector('#common_user_start_login_username').setAttribute('placeholder', app_object.text);
@@ -414,6 +445,7 @@ const common_translate_ui = async (lang_code) => {
                         break;
                     }
                 } 
+                */
                 break;
             }
             case 'APP_LOV':{
@@ -695,10 +727,10 @@ const input_control = (dialogue, elements) =>{
     if (elements.password_reminder && valid_text(elements.password_reminder)== false){
         set_error(elements.password);
     }
-    if (elements.password_new && valid_text(elements.password_new)){
+    if (elements.password_new && valid_text(elements.password_new)== false){
         set_error(elements.password);
     }
-    if (elements.password_new_confirm && valid_text(elements.password_new_confirm)){
+    if (elements.password_new_confirm && valid_text(elements.password_new_confirm)== false){
         set_error(elements.password);
     }
     if (elements.email && valid_text(elements.email)== false){
@@ -813,21 +845,28 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
  * @param {string} component_path
  */
 const ComponentRender = async (div,props, component_path) => {
-    const APPDIV = AppDocument.querySelector(`#${div}`);
     //component outputs default render function
     const {default:renderfunction} = await import(component_path);
     //add document (less type errors), framework and mountdiv to props
-    APPDIV.innerHTML = await renderfunction({...props, ...{ common_document:AppDocument,
-                                                            common_framework:COMMON_GLOBAL.app_framework,
-                                                            common_mountdiv:div}});
+    await renderfunction({...props, ...{common_document:AppDocument,
+                                        common_framework:COMMON_GLOBAL.app_framework,
+                                        common_mountdiv:div}});
 }
 /**
  * Component remove
  * @param {string} div 
+ * @param {boolean} remove_modal
  */
-const ComponentRemove = (div) => {
+const ComponentRemove = (div, remove_modal=false) => {
     const APPDIV = AppDocument.querySelector(`#${div}`);
     APPDIV.innerHTML = '';
+    if (div.startsWith('common_dialogue')){
+        APPDIV.classList.remove('common_dialogue_show1');
+        APPDIV.classList.remove('common_dialogue_show2');
+        APPDIV.classList.remove('common_dialogue_show3');
+        if (remove_modal)
+            AppDocument.querySelector('#common_dialogues').classList.remove('common_dialogues_modal');
+    }
 }
 
 /**
@@ -873,7 +912,6 @@ const dialogue_close = async dialogue => {
         setTimeout(()=>{
             AppDocument.querySelector('#' + dialogue).classList.add('common_dialogue_close');
             setTimeout(()=>{
-                AppDocument.querySelector('#' + dialogue).style.visibility = 'hidden';
                 AppDocument.querySelector('#' + dialogue).classList.remove('common_dialogue_close');
                 resolve(null);
             }, animationDuration);
@@ -887,9 +925,9 @@ const dialogue_close = async dialogue => {
  * @param {string|null} user_verification_type 
  * @param {string|null} title 
  * @param {function|null} click_cancel_event 
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const show_common_dialogue = (dialogue, user_verification_type=null, title=null, click_cancel_event=null) => {
+const show_common_dialogue = async (dialogue, user_verification_type=null, title=null, click_cancel_event=null) => {
     switch (dialogue) {
         case 'PROFILE':
             {    
@@ -899,59 +937,90 @@ const show_common_dialogue = (dialogue, user_verification_type=null, title=null,
             }
         case 'PASSWORD_NEW':
             {    
-                AppDocument.querySelector('#common_user_password_new_auth').innerHTML=title;
-                AppDocument.querySelector('#common_user_password_new').innerHTML='';
-                AppDocument.querySelector('#common_user_password_new_confirm').innerHTML='';
-                AppDocument.querySelector('#common_dialogue_user_password_new').style.visibility = 'visible';
+                ComponentRender('common_dialogue_user_password_new', 
+                                {   auth:title,
+                                    translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
+                                    translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM}, 
+                                '/common/component/dialogue_user_password_new.js')
                 break;
             }
         case 'VERIFY':
             {    
-                dialogue_verify_clear();
-                switch (user_verification_type){
-                    case 'LOGIN':{
-                        AppDocument.querySelector('#common_user_verification_type').innerHTML = 1;
-                        break;
-                    }
-                    case 'SIGNUP':{
-                        AppDocument.querySelector('#common_user_verification_type').innerHTML = 2;
-                        break;
-                    }
-                    case 'FORGOT':{
-                        AppDocument.querySelector('#common_user_verification_type').innerHTML = 3;
-                        break;
-                    }
-                    case 'NEW_EMAIL':{
-                        AppDocument.querySelector('#common_user_verification_type').innerHTML = 4;
-                        break;
-                    }
-                }
-                AppDocument.querySelector('#common_user_verify_cancel')['data-function'] = click_cancel_event;
-
-                AppDocument.querySelector('#common_user_verify_email').innerHTML = title;
-                
-                AppDocument.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
-                AppDocument.querySelector('#common_dialogue_user_verify').style.visibility = 'visible';
+                ComponentRender('common_dialogue_user_verify', {user_verification_type:user_verification_type,
+                                                                data_function:click_cancel_event,
+                                                                username_login:AppDocument.querySelector('#common_user_start_login_username').innerHTML,
+                                                                password_login:AppDocument.querySelector('#common_user_start_login_password').innerHTML,
+                                                                username_signup:AppDocument.querySelector('#common_user_start_signup_username').innerHTML,
+                                                                password_signup:AppDocument.querySelector('#common_user_start_signup_password').innerHTML,
+                                                                title: title}, '/common/component/dialogue_user_verify.js');
+                ComponentRemove('common_dialogue_user_start');
                 break;
             }
-        case 'LOGIN':{
-            AppDocument.querySelector('#common_dialogue_user_start').style.visibility='visible';
-            AppDocument.querySelector('#common_user_start_login').click();
+        case 'LOGIN_LOADING':{
+            await ComponentRender('common_dialogue_user_start', 
+                        {   user_click:null,
+                            translation_username:'',
+                            translation_password:'',
+                            translation_password_confirm:'', 
+                            translation_email:'',
+                            translation_password_reminder:''},
+                        '/common/component/dialogue_user_start.js');
             break;
         }
-        case 'LOGIN_SYSTEM_ADMIN':{
-            AppDocument.querySelector('#common_dialogue_user_start').style.visibility='visible';
-            AppDocument.querySelector('#common_user_start_login_system_admin').click();
+        case 'LOGIN':{
+            await ComponentRender('common_dialogue_user_start', 
+                            {   user_click:'common_user_start_login',
+                                translation_username:COMMON_GLOBAL.translate_items.USERNAME,
+                                translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
+                                translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
+                                translation_email:COMMON_GLOBAL.translate_items.EMAIL,
+                                translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER},
+                            '/common/component/dialogue_user_start.js');
+            break;
+        }
+        case 'LOGIN_ADMIN':{
+            //show admin login as default
+            await ComponentRender('common_dialogue_user_start', 
+                            {   user_click:COMMON_GLOBAL.system_admin_only==1?'common_user_start_login_system_admin':'common_user_start_login',
+                                translation_username:COMMON_GLOBAL.translate_items.USERNAME,
+                                translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
+                                translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
+                                translation_email:COMMON_GLOBAL.translate_items.EMAIL,
+                                translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER},
+                            '/common/component/dialogue_user_start.js')
+            .then(()=>{
+                AppDocument.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
+                if (COMMON_GLOBAL.system_admin_first_time == 1) {
+                    AppDocument.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
+                    AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm_container').style.display = 'block';
+                }
+                if (COMMON_GLOBAL.system_admin_only == 1) {
+                    AppDocument.querySelector('#common_user_start_login').style.display = 'none';
+                    AppDocument.querySelector('#common_user_start_login_form').style.display = 'none';
+                }
+            })
             break;
         }
         case 'SIGNUP':{
-            AppDocument.querySelector('#common_dialogue_user_start').style.visibility='visible';
-            AppDocument.querySelector('#common_user_start_signup').click();
+            await ComponentRender('common_dialogue_user_start', 
+                            {   user_click:'common_user_start_signup',
+                                translation_username:COMMON_GLOBAL.translate_items.USERNAME,
+                                translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
+                                translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
+                                translation_email:COMMON_GLOBAL.translate_items.EMAIL,
+                                translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER},
+                            '/common/component/dialogue_user_start.js');
             break;
         }
         case 'FORGOT':{
-            AppDocument.querySelector('#common_dialogue_user_start').style.visibility='visible';
-            AppDocument.querySelector('#common_user_start_forgot').click();
+            await ComponentRender('common_dialogue_user_start', 
+                            {   user_click:'common_user_start_forgot',
+                                translation_username:COMMON_GLOBAL.translate_items.USERNAME,
+                                translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
+                                translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
+                                translation_email:COMMON_GLOBAL.translate_items.EMAIL,
+                                translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER},
+                            '/common/component/dialogue_user_start.js');
             break;
         }
     }
@@ -966,215 +1035,24 @@ const show_common_dialogue = (dialogue, user_verification_type=null, title=null,
  * @param {number|null} data_app_id 
  */
 const show_message = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
-    const confirm_question = AppDocument.querySelector('#common_confirm_question');
-    const progressbar = AppDocument.querySelector('#common_message_progressbar');
-    const progressbar_wrap = AppDocument.querySelector('#common_message_progressbar_wrap');
-    const message_title = AppDocument.querySelector('#common_message_title');
-    const dialogue = AppDocument.querySelector('#common_dialogue_message');
-    const button_close = AppDocument.querySelector('#common_message_close');
-    const button_cancel = AppDocument.querySelector('#common_message_cancel');
-    const function_close = () => { AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';};
-    const fontsize_normal = '1em';
-    const fontsize_log = '0.5em';
-    const show = 'inline-block';
-    const hide = 'none';
-    AppDocument.querySelector('#common_message_title_icon').setAttribute('data-text_class',text_class);
-    AppDocument.querySelector('#common_message_title_container').style.display = show;
-    switch (message_type){
-        case 'ERROR':{
-            const text = await FFB('DB_API', `/app_setting?data_app_id=${data_app_id}&setting_type=MESSAGE&value=${code}`, 'GET', 'APP_DATA')
-                        .then(result=>JSON.parse(result)[0].display_data)
-                        .catch(error=>error);
-            confirm_question.style.display = hide;
-            message_title.style.display = show;
-            message_title.style.fontSize = fontsize_normal;
-            progressbar.style.display = hide;
-            progressbar_wrap.style.display = hide;
-            button_cancel.style.display = hide;
-            button_close.style.display = show;
-            
-            message_title.innerHTML = text;
-            
-            button_close['data-function'] = function_close;
-            dialogue.style.visibility = 'visible';
-            button_close.focus();
-            break;
-        }
-        case 'INFO':{
-            confirm_question.style.display = hide;
-            message_title.style.display = show;
-            message_title.style.fontSize = fontsize_normal;
-            message_title.innerHTML = message;
-            progressbar.style.display = hide;
-            progressbar_wrap.style.display = hide;
-            button_cancel.style.display = hide;
-            button_close.style.display = show;
-            button_close['data-function'] = function_close;
-            dialogue.style.visibility = 'visible';
-            button_close.focus();
-            break;
-        }
-        case 'EXCEPTION':{
-            confirm_question.style.display = hide;
-            message_title.style.display = show;
-            message_title.style.fontSize = fontsize_normal;
-            progressbar.style.display = hide;
-            progressbar_wrap.style.display = hide;
-            button_cancel.style.display = hide;
-            button_close.style.display = show;
-            try {
-                // dont show code or errno returned from json
-                if (typeof JSON.parse(message).message !== 'undefined'){
-                    // message from Node controller.js and service.js files
-                    message_title.innerHTML= JSON.parse(message).message;
-                }
-                else{
-                    //message from Mysql, code + sqlMessage
-                    if (typeof JSON.parse(message).sqlMessage !== 'undefined')
-                        message_title.innerHTML= 'DB Error: ' + JSON.parse(message).sqlMessage;
-                    else{
-                        //message from Oracle, errorNum, offset
-                        if (typeof JSON.parse(message).errorNum !== 'undefined')
-                            message_title.innerHTML= 'DB Error: ' + message;
-                        else
-                            message_title.innerHTML= message;
-                    }    
-                }
-            } catch (e) {
-                //other error and json not returned, return the whole text
-                message_title.innerHTML = message;
-            }
-            button_close['data-function'] = function_close;
-            dialogue.style.visibility = 'visible';
-            button_close.focus();
-            break;
-        }
-        case 'CONFIRM':{
-            confirm_question.style.display = show;
-            message_title.style.display = hide;
-            AppDocument.querySelector('#common_message_title_container').style.display = hide;
-            message_title.style.fontSize = fontsize_normal;
-            message_title.innerHTML = '';
-            progressbar.style.display = hide;
-            progressbar_wrap.style.display = hide;
-            button_cancel.style.display = show;
-            button_close.style.display = show;
-            button_close['data-function'] = function_event;
-            dialogue.style.visibility = 'visible';
-            button_close.focus();
-            break;
-        }
-        case 'LOG':{
-            confirm_question.style.display = hide;
-            message_title.style.display = show;
-            message_title.style.fontSize = fontsize_log;
-            message_title.innerHTML = message;
-            progressbar.style.display = hide;
-            progressbar_wrap.style.display = hide;
-            button_cancel.style.display = hide;
-            button_close.style.display = show;
-            button_close['data-function'] = function_close;
-            dialogue.style.visibility = 'visible';
-            button_close.focus();
-            break;
-        }
-        case 'PROGRESS':{
-            confirm_question.style.display = hide;
-            message_title.style.display = show;
-            message_title.style.fontSize = fontsize_log;
-            message_title.innerHTML = message.text;
-            progressbar.style.display = show;
-            progressbar_wrap.style.display = show;
-            progressbar.style.width = `${(message.part/message.total)*100}%`;
-            button_cancel.style.display = hide;
-            button_close.style.display = hide;
-            dialogue.style.visibility = 'visible';
-            break;
-        }
-    }
-};
-/**
- * Dialogue verify clear
- * @returns {void}
- */
-const dialogue_verify_clear = () => {
-    AppDocument.querySelector('#common_dialogue_user_verify').style.visibility = 'hidden';
-    AppDocument.querySelector('#common_user_verification_type').innerHTML='';
-    AppDocument.querySelector('#common_user_verify_email').innerHTML='';
-    AppDocument.querySelector('#common_user_verify_verification_char1').innerHTML = '';
-    AppDocument.querySelector('#common_user_verify_verification_char2').innerHTML = '';
-    AppDocument.querySelector('#common_user_verify_verification_char3').innerHTML = '';
-    AppDocument.querySelector('#common_user_verify_verification_char4').innerHTML = '';
-    AppDocument.querySelector('#common_user_verify_verification_char5').innerHTML = '';
-    AppDocument.querySelector('#common_user_verify_verification_char6').innerHTML = '';
-    AppDocument.querySelector('#common_user_verify_cancel')['data-function'] = null;
+    ComponentRender('common_dialogue_message', {FFB:FFB, 
+                                                message_type:message_type,
+                                                data_app_id:data_app_id,
+                                                code:code,
+                                                text_class:text_class,
+                                                message:message,
+                                                function_componentremove:ComponentRemove,
+                                                translation_confirm_question:COMMON_GLOBAL.translate_items.CONFIRM_QUESTION,
+                                                function_event:function_event}, '/common/component/dialogue_message.js');
 };
 /**
  * Dialogue password new clear
  * @returns {void}
  */
 const dialogue_password_new_clear = () => {
-    AppDocument.querySelector('#common_dialogue_user_password_new').style.visibility = 'hidden';
-    AppDocument.querySelector('#common_user_password_new_auth').innerHTML='';
-    AppDocument.querySelector('#common_user_password_new').innerHTML='';
-    AppDocument.querySelector('#common_user_password_new_confirm').innerHTML='';
+    ComponentRemove('common_dialogue_user_password_new');
     COMMON_GLOBAL.user_account_id = null;
     COMMON_GLOBAL.rest_at = '';
-};
-/**
- * Dialogue user edit clear
- * @returns {void}
- */
-const dialogue_user_edit_clear = () => {
-    AppDocument.querySelector('#common_dialogue_user_edit').style.visibility = 'hidden';
-    AppDocument.querySelector('#common_user_edit_avatar').style.display = 'none';
-                
-    //common
-    AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
-    AppDocument.querySelector('#common_user_edit_input_username').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_bio').innerHTML = '';
-    //local
-    AppDocument.querySelector('#common_user_edit_input_email').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_new_email').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_password').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_password_mask').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_password_confirm').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_password_confirm_mask').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_password_new').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_password_new_mask').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_password_new_confirm_mask').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_input_password_reminder').innerHTML = '';
-    //provider
-    AppDocument.querySelector('#common_user_edit_provider_id').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_label_provider_id_data').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_label_provider_name_data').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_label_provider_email_data').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = '';
-    //account info
-    AppDocument.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_label_data_account_created').innerHTML = '';
-    AppDocument.querySelector('#common_user_edit_label_data_account_modified').innerHTML = '';
-};
-/**
- * Dialogue user start clear
- * @returns {void}
- */
-const dialogue_user_start_clear = () => {
-    AppDocument.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
-    AppDocument.querySelector('#common_user_start_login_username').innerHTML = '';
-    AppDocument.querySelector('#common_user_start_login_password').innerHTML = '';
-    AppDocument.querySelector('#common_user_start_login_password_mask').innerHTML = '';
-
-    AppDocument.querySelector('#common_user_start_signup_username').innerHTML = '';
-    AppDocument.querySelector('#common_user_start_signup_email').innerHTML = '';
-    AppDocument.querySelector('#common_user_start_signup_password').innerHTML = '';
-    AppDocument.querySelector('#common_user_start_signup_password_mask').innerHTML = '';
-    AppDocument.querySelector('#common_user_start_signup_password_confirm').innerHTML = '';
-    AppDocument.querySelector('#common_user_start_signup_password_confirm_mask').innerHTML = '';
-    AppDocument.querySelector('#common_user_start_signup_password_reminder').innerHTML = '';
-
-    AppDocument.querySelector('#common_user_start_forgot_email').innerHTML = '';
 };
 /**
  * Dialogue profile clear
@@ -1210,11 +1088,7 @@ const dialogue_profile_clear = () => {
  * @returns {void}
  */
 const lov_close = () => {
-    AppDocument.querySelector('#common_dialogue_lov').style.visibility = 'hidden';
-    AppDocument.querySelector('#common_lov_title').innerHTML='';
-    AppDocument.querySelector('#common_lov_search_input').innerHTML='';
-    AppDocument.querySelector('#common_lov_list').innerHTML='';
-    AppDocument.querySelector('#common_lov_list')['data-function'] = null;
+    ComponentRemove('common_dialogue_lov', true);
 };
 /**
  * Lov show
@@ -1223,61 +1097,9 @@ const lov_close = () => {
  * @returns {void} 
  */
 const lov_show = (lov, function_event) => {
-    
-    AppDocument.querySelector('#common_dialogue_lov').style.visibility = 'visible';
-    AppDocument.querySelector('#common_lov_list').classList.add('css_spinner');
-    AppDocument.querySelector('#common_lov_list').innerHTML = '';
-    AppDocument.querySelector('#common_lov_title').className = 'common_icon';
-    let path = '';
-    let token_type = '';
-    let lov_column_value='';
-    let service = '';
-    switch (lov){
-        case 'SERVER_LOG_FILES':{
-            AppDocument.querySelector('#common_lov_title').classList.add('server_log_file');
-            lov_column_value = 'filename';
-            path = '/log/files?';
-            service = 'LOG';
-            token_type = 'SYSTEMADMIN';
-            break;
-        }
-        case 'APP_CATEGORY':{
-            AppDocument.querySelector('#common_lov_title').classList.add('app_category');
-            lov_column_value = 'app_category_text';
-            path = '/app_category/admin?';
-            service = 'DB_API';
-            token_type = 'APP_ACCESS';
-            break;
-        }
-        case 'APP_ROLE':{
-            AppDocument.querySelector('#common_lov_title').classList.add('app_role');
-            lov_column_value = 'icon';
-            path = '/app_role/admin?';
-            service = 'DB_API';
-            token_type = 'APP_ACCESS';
-            break;
-        }
-    }
-    FFB(service, path, 'GET', token_type, null)
-    .then(result=>{
-            AppDocument.querySelector('#common_lov_list')['data-function'] = function_event;
-            let html = '';
-            for (const list_row of JSON.parse(result)) {
-                html += 
-                `<div data-id='${list_row.id}' data-value='${list_row[lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
-                    <div class='common_list_lov_col'>
-                        <div>${list_row.id}</div>
-                    </div>
-                    <div class='common_list_lov_col'>
-                        <div>${list_row[lov_column_value]}</div>
-                    </div>
-                </div>`;
-            }
-            AppDocument.querySelector('#common_lov_list').classList.remove('css_spinner');
-            AppDocument.querySelector('#common_lov_list').innerHTML = html;
-            AppDocument.querySelector('#common_lov_search_input').focus();
-    })
-    .catch(()=>AppDocument.querySelector('#common_lov_list').classList.remove('css_spinner'));
+    ComponentRender('common_dialogue_lov', {lov:lov,
+                                            FFB:FFB, 
+                                            function_event:function_event}, '/common/component/dialogue_lov.js');
         
 };
 /**
@@ -1915,19 +1737,21 @@ const search_input = (event, module, event_function) => {
 /**
  * User login
  * @param {boolean} system_admin 
+ * @param {string|null} username_verify
+ * @param {string|null} password_verify
  * @returns {Promise. <{    user_id: number|null,
  *                          username: string,
  *                          bio: string|null,
  *                          avatar: string|null}>}
  */
-const user_login = async (system_admin=false) => {
+const user_login = async (system_admin=false, username_verify=null, password_verify=null) => {
     return new Promise((resolve,reject)=>{
         let path = '';
         let username = '';
         let password = '';
         if (system_admin) {
             path = '/systemadmin?';
-            if (input_control(AppDocument.querySelector('#common_dialogue_user_start_content'),
+            if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
                             {
                             username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
                             password: AppDocument.querySelector('#common_user_start_login_system_admin_password'),
@@ -1940,14 +1764,14 @@ const user_login = async (system_admin=false) => {
         }
         else{
             path = '/user?';
-            if (input_control(AppDocument.querySelector('#common_dialogue_user_start_content'),
+            if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
                             {
-                            username: AppDocument.querySelector('#common_user_start_login_username'),
-                            password: AppDocument.querySelector('#common_user_start_login_password')
+                            username: username_verify?AppDocument.querySelector(`#${username_verify}`):AppDocument.querySelector('#common_user_start_login_username'),
+                            password: password_verify?AppDocument.querySelector(`#${password_verify}`):AppDocument.querySelector('#common_user_start_login_password')
                             })==false)
                 return reject('ERROR');
-            username = AppDocument.querySelector('#common_user_start_login_username').innerHTML;
-            password = AppDocument.querySelector('#common_user_start_login_password').innerHTML;
+            username = username_verify?AppDocument.querySelector(`#${username_verify}`).innerHTML:AppDocument.querySelector('#common_user_start_login_username').innerHTML;
+            password = password_verify?AppDocument.querySelector(`#${password_verify}`).innerHTML:AppDocument.querySelector('#common_user_start_login_password').innerHTML;
         }
             
         // ES6 object spread operator for user variables
@@ -1955,13 +1779,25 @@ const user_login = async (system_admin=false) => {
                             password:  encodeURI(password),
                             ...get_uservariables()
                         };
-        if (system_admin)
-            AppDocument.querySelector('#common_user_start_login_system_admin_button').classList.add('css_spinner');
-        else
-            AppDocument.querySelector('#common_user_start_login_button').classList.add('css_spinner');
+        let spinner_item = '';
+        let current_dialogue = '';
+        if (system_admin){
+            spinner_item = 'common_user_start_login_system_admin_button';
+            current_dialogue = 'common_dialogue_user_start';
+        }
+        else{
+            if (username_verify){
+                spinner_item = 'common_user_verify_email_icon';
+                current_dialogue = 'common_dialogue_user_verify';
+            }
+            else{
+                spinner_item = 'common_user_start_login_button';
+                current_dialogue = 'common_dialogue_user_start';
+            }
+            AppDocument.querySelector(`#${spinner_item}`).classList.add('css_spinner');
+        }
         FFB('IAM', path, 'POST', 'IAM', json_data)
         .then(result=>{
-            AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
             if (system_admin){
                 COMMON_GLOBAL.system_admin = JSON.parse(result).username;
                 COMMON_GLOBAL.rest_admin_at = JSON.parse(result).token_at;
@@ -1971,9 +1807,9 @@ const user_login = async (system_admin=false) => {
                 AppDocument.querySelector('#common_user_preferences').style.display = 'none';
                 AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
                 AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-                dialogue_close('common_dialogue_user_start').then(() => {
-                    dialogue_user_start_clear();
-                    AppDocument.querySelector('#common_user_start_login_system_admin_button').classList.remove('css_spinner');
+                dialogue_close(current_dialogue).then(() => {
+                    AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+                    ComponentRemove(current_dialogue, true);
                     resolve({   user_id: null,
                                 username: JSON.parse(result).username,
                                 bio: null,
@@ -2010,9 +1846,9 @@ const user_login = async (system_admin=false) => {
                     updateOnlineStatus();
                     user_preference_get()
                     .then(()=>{
-                        dialogue_close('common_dialogue_user_start').then(() => {
-                            dialogue_user_start_clear();
-                            AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+                        dialogue_close(current_dialogue).then(() => {
+                            AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+                            ComponentRemove(current_dialogue, true);
                             resolve({   user_id: user.id,
                                         username: user.username,
                                         bio: user.bio,
@@ -2023,10 +1859,7 @@ const user_login = async (system_admin=false) => {
             }
         })
         .catch(err=>{
-            if (system_admin)
-                AppDocument.querySelector('#common_user_start_login_system_admin_button').classList.remove('css_spinner');
-            else
-                AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+            AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
             reject(err);});
     });
 };
@@ -2059,10 +1892,9 @@ const user_logoff = async (system_admin) => {
 
         updateOnlineStatus();
         AppDocument.querySelector('#common_profile_avatar_online_status').className='';
-        dialogue_user_edit_clear();
-        dialogue_verify_clear();
+        ComponentRemove('common_dialogue_user_edit');
         dialogue_password_new_clear();
-        dialogue_user_start_clear();
+        ComponentRemove('common_dialogue_user_start', true);
         AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
         dialogue_profile_clear();
         user_preferences_set_default_globals('LOCALE');
@@ -2072,65 +1904,7 @@ const user_logoff = async (system_admin) => {
         user_preferences_update_select();
     }
 };
-/**
- * User edit
- * @returns {Promise.<void>}
- */
-const user_edit = async () => {
-    //get user from REST API
-    FFB('DB_API', `/user_account?user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
-    .then(result=>{
-        const user = JSON.parse(result);
-        if (COMMON_GLOBAL.user_account_id == parseInt(user.id)) {
-            AppDocument.querySelector('#common_user_edit_local').style.display = 'none';
-            AppDocument.querySelector('#common_user_edit_provider').style.display = 'none';
-            AppDocument.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
 
-            if (Number(user.private))
-                AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.add('checked');
-            else
-                AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
-
-            AppDocument.querySelector('#common_user_edit_input_username').innerHTML = user.username;
-            AppDocument.querySelector('#common_user_edit_input_bio').innerHTML = user.bio ?? '';
-
-            if (user.provider_id == null) {
-                AppDocument.querySelector('#common_user_edit_local').style.display = 'block';
-                AppDocument.querySelector('#common_user_edit_provider').style.display = 'none';
-
-                //display fetched avatar editable
-                AppDocument.querySelector('#common_user_edit_avatar').style.display = 'block';
-                set_avatar(user.avatar, AppDocument.querySelector('#common_user_edit_avatar_img')); 
-                AppDocument.querySelector('#common_user_edit_input_email').innerHTML = user.email;
-                AppDocument.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
-                AppDocument.querySelector('#common_user_edit_input_password').innerHTML = '',
-                    AppDocument.querySelector('#common_user_edit_input_password_confirm').innerHTML = '',
-                    AppDocument.querySelector('#common_user_edit_input_password_new').innerHTML = '';
-                AppDocument.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
-
-                AppDocument.querySelector('#common_user_edit_input_password_reminder').innerHTML = user.password_reminder;
-            } else{
-                    AppDocument.querySelector('#common_user_edit_local').style.display = 'none';
-                    AppDocument.querySelector('#common_user_edit_provider').style.display = 'block';
-                    AppDocument.querySelector('#common_user_edit_provider_id').innerHTML = user.identity_provider_id;
-                    AppDocument.querySelector('#common_user_edit_label_provider_id_data').innerHTML = user.provider_id;
-                    AppDocument.querySelector('#common_user_edit_label_provider_name_data').innerHTML = user.provider_first_name + ' ' + user.provider_last_name;
-                    AppDocument.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
-                    AppDocument.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
-                    AppDocument.querySelector('#common_user_edit_avatar').style.display = 'none';
-                    set_avatar(user.provider_image, AppDocument.querySelector('#common_user_edit_avatar_img')); 
-                } 
-            AppDocument.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = format_json_date(user.last_logontime, null);
-            AppDocument.querySelector('#common_user_edit_label_data_account_created').innerHTML = format_json_date(user.date_created, null);
-            AppDocument.querySelector('#common_user_edit_label_data_account_modified').innerHTML = format_json_date(user.date_modified, null);
-            set_avatar(user.avatar ?? user.provider_image, AppDocument.querySelector('#common_user_menu_avatar_img'));
-        } else {
-            //User not found
-            show_message('ERROR', '20305', null, null, null, COMMON_GLOBAL.common_app_id);
-        }
-    })
-    .catch(()=>null);
-};
 /**
  * User update
  * @returns {Promise.<null>}
@@ -2147,7 +1921,7 @@ const user_update = async () => {
             
         
         if (AppDocument.querySelector('#common_user_edit_local').style.display == 'block') {
-            if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
+            if (input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
                             {
                             username: AppDocument.querySelector('#common_user_edit_input_username'),
                             password: AppDocument.querySelector('#common_user_edit_input_password'),
@@ -2178,7 +1952,7 @@ const user_update = async () => {
                         };
             path = `/user_account?PUT_ID=${COMMON_GLOBAL.user_account_id ?? ''}`;
         } else {
-            if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
+            if (input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
                             {
                             bio: AppDocument.querySelector('#common_user_edit_input_bio')
                             })==false)
@@ -2202,7 +1976,7 @@ const user_update = async () => {
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, null);
             }
             else
-                dialogue_user_edit_clear();
+                ComponentRemove('common_dialogue_user_edit', true);
         })
         .catch(()=>AppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner'))
         .finally(()=>resolve(null));
@@ -2214,7 +1988,7 @@ const user_update = async () => {
  */
 const user_signup = () => {
     const email = AppDocument.querySelector('#common_user_start_signup_email').innerHTML;
-    if (input_control(AppDocument.querySelector('#common_dialogue_user_start_content'),
+    if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
                             {
                             username: AppDocument.querySelector('#common_user_start_signup_username'),
                             password: AppDocument.querySelector('#common_user_start_signup_password'),
@@ -2247,13 +2021,14 @@ const user_signup = () => {
  * User verify check input
  * @param {HTMLElement} item 
  * @param {string} nextField 
+ * @param {function} login_function
  * @returns {Promise.<{ actived: number, 
  *                      verification_type : number}|null>}
  */
-const user_verify_check_input = async (item, nextField) => {
+const user_verify_check_input = async (item, nextField, login_function) => {
     return new Promise((resolve, reject)=>{
         let json_data;
-        const verification_type = parseInt(AppDocument.querySelector('#common_user_verification_type').innerHTML);
+        const verification_type = parseInt(AppDocument.querySelector('#common_user_verify_data_verification_type').innerHTML);
         //only accept 0-9
         if (item.innerHTML.length==1 && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(item.innerHTML) > -1)
             if (nextField == '' || (AppDocument.querySelector('#common_user_verify_verification_char1').innerHTML != '' &&
@@ -2287,36 +2062,38 @@ const user_verify_check_input = async (item, nextField) => {
                     AppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     const user_activate = JSON.parse(result).items[0];
                     if (user_activate.affectedRows == 1) {
+                        const resolve_function = () => {
+                            ComponentRemove('common_dialogue_user_verify');
+                            ComponentRemove('common_dialogue_user_edit', true);
+                            resolve({   actived: 1, 
+                                        verification_type : verification_type});
+                        }
                         switch (verification_type){
-                            case 1:{
-                                //LOGIN
-                                break;
-                            }
+                            //LOGIN
+                            //SIGNUP
+                            case 1:
                             case 2:{
-                                //SIGNUP
-                                //login with username and password from signup fields
-                                AppDocument.querySelector('#common_user_start_login_username').innerHTML =
-                                    AppDocument.querySelector('#common_user_start_signup_username').innerHTML;
-                                AppDocument.querySelector('#common_user_start_login_password').innerHTML =
-                                    AppDocument.querySelector('#common_user_start_signup_password').innerHTML;
+                                login_function( false, 
+                                                'common_user_verify_data_username',
+                                                'common_user_verify_data_password')
+                                                .then(()=> resolve_function());
                                 break;
                             }
                             case 3:{
                                 //FORGOT
                                 COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
                                 //show dialogue new password
-                                show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth);
+                                show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth)
+                                resolve_function();
                                 break;
                             }
                             case 4:{
                                 //NEW EMAIL
+                                resolve_function();
                                 break;
                             }
                         }
-                        dialogue_verify_clear();
-                        dialogue_user_edit_clear();
-                        resolve({   actived: 1, 
-                                    verification_type : verification_type});
+                        
                     } 
                     else{
                         AppDocument.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
@@ -2359,7 +2136,7 @@ const user_delete = async (choice=null, function_delete_event ) => {
         switch (choice){
             case null:{
                 if (AppDocument.querySelector('#common_user_edit_local').style.display == 'block' &&
-                    input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
+                    input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
                                     {
                                         password: AppDocument.querySelector('#common_user_edit_input_password')
                                     })==false)
@@ -2371,8 +2148,7 @@ const user_delete = async (choice=null, function_delete_event ) => {
                 break;
             }
             case 1:{
-                AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-        
+                ComponentRemove('common_dialogue_message');
                 AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
                 const json_data = { password: password};
     
@@ -2446,7 +2222,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
             break;
         }
         case 1:{
-            AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+            ComponentRemove('common_dialogue_message');
             FFB('DB_API', `/user_account_app?DELETE_USER_ACCOUNT_ID=${user_account_id}&DELETE_APP_ID=${app_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
                 //execute event and refresh app list
@@ -2468,7 +2244,7 @@ const user_forgot = async () => {
     const json_data = { email: email,
                         ...get_uservariables()
                     };
-    if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
+    if (input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
                     {
                     email: AppDocument.querySelector('#common_user_start_forgot_email')
                     })==true){
@@ -2496,7 +2272,7 @@ const updatePassword = () => {
                         auth:           user_password_new_auth,
                         ...get_uservariables()
                      };
-    if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
+    if (input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
                      {
                      password: AppDocument.querySelector('#common_user_password_new'),
                      password_confirm: AppDocument.querySelector('#common_user_password_new_confirm'),
@@ -2509,7 +2285,7 @@ const updatePassword = () => {
             dialogue_password_new_clear();
             show_common_dialogue('LOGIN');
         })
-        .catch(()=>AppDocument.querySelector('#common_user_password_new_icon').classList.remoev('css_spinner'));
+        .catch(()=>AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner'));
     }    
 };
 /**
@@ -2661,7 +2437,7 @@ const ProviderSignIn = (provider_id) => {
                     AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
                     AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
                     dialogue_close('common_dialogue_user_start').then(() => {
-                        dialogue_user_start_clear();
+                        ComponentRemove('common_dialogue_user_start', true);
                         resolve({   user_account_id: user_login.id,
                                     username: user_login.username,
                                     bio: user_login.bio,
@@ -3600,6 +3376,7 @@ const set_app_service_parameters = async parameters => {
     //system admin
     COMMON_GLOBAL.system_admin = '';
     COMMON_GLOBAL.system_admin_only = parameters.system_admin_only;
+    COMMON_GLOBAL.system_admin_first_time = parameters.first_name;
 
     //user info
     COMMON_GLOBAL.user_identity_provider_id=null;
@@ -3617,6 +3394,8 @@ const set_app_service_parameters = async parameters => {
         user_preferences_set_default_globals('DIRECTION');
         user_preferences_set_default_globals('ARABIC_SCRIPT');
     }
+
+    COMMON_GLOBAL.translate_items = parameters.translate_items;
 
     COMMON_GLOBAL.module_leaflet_countries   = parameters.countries;
     COMMON_GLOBAL.module_leaflet_map_styles  = parameters.map_styles;
@@ -3676,13 +3455,13 @@ const common_event = async (event_type,event) =>{
                             AppDocument.querySelectorAll('#common_user_start_nav > div').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('common_user_start_selected'));
                             AppDocument.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
                             
-                            AppDocument.querySelectorAll('#common_dialogue_user_start_content .common_user_start_form').forEach((/**@type{HTMLElement}*/form)=>form.style.display='none');
+                            AppDocument.querySelectorAll('#common_dialogue_user_start .common_user_start_form').forEach((/**@type{HTMLElement}*/form)=>form.style.display='none');
                             AppDocument.querySelector(`#${event_target_id}_form`).style.display='inline-block';
     
                             break;
                         }
                         case 'common_user_start_close':{
-                            dialogue_user_start_clear();
+                            ComponentRemove('common_dialogue_user_start', true);
                             break;
                         }
                         case 'common_user_start_forgot_button':{
@@ -3693,13 +3472,11 @@ const common_event = async (event_type,event) =>{
                         case 'common_message_close':{
                             if (AppDocument.querySelector('#common_message_close')['data-function'])
                                 AppDocument.querySelector('#common_message_close')['data-function']();
-                            AppDocument.querySelector('#common_message_close')['data-function'] = null;
-                            AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                            AppDocument.querySelector('#common_message_title').innerHTML ='';
+                            ComponentRemove('common_dialogue_message');
                             break;
                         }
                         case 'common_message_cancel':{
-                            AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                            ComponentRemove('common_dialogue_message');
                             break;
                         }
                         //dialouge password
@@ -3788,7 +3565,22 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         case 'common_user_menu_dropdown_edit':{
-                            await user_edit()
+                            ComponentRender('common_dialogue_user_edit', 
+                                {   FFB:FFB,
+                                    set_avatar:set_avatar,
+                                    show_message:show_message,
+                                    format_json_date:format_json_date,
+                                    user_account_id:COMMON_GLOBAL.user_account_id,
+                                    common_app_id:COMMON_GLOBAL.common_app_id,
+                                    translation_username:COMMON_GLOBAL.translate_items.USERNAME,
+                                    translation_bio:COMMON_GLOBAL.translate_items.BIO,
+                                    translation_new_email:COMMON_GLOBAL.translate_items.NEW_EMAIL,
+                                    translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
+                                    translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM,
+                                    translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
+                                    translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM,
+                                    translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER},
+                                '/common/component/dialogue_user_edit.js')
                             .then(()=>{
                                 AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
                             });
@@ -3801,7 +3593,7 @@ const common_event = async (event_type,event) =>{
                         }
                         //dialogue user edit
                         case 'common_user_edit_close':{
-                            dialogue_user_edit_clear();
+                            ComponentRemove('common_dialogue_user_edit', true);
                             break;
                         }
                         case 'common_user_edit_btn_avatar_img':{
@@ -3818,9 +3610,7 @@ const common_event = async (event_type,event) =>{
                         }
                         //dialogue verify
                         case 'common_user_verify_cancel':{
-                            if (AppDocument.querySelector('#common_user_verify_cancel')['data-function'])
-                                AppDocument.querySelector('#common_user_verify_cancel')['data-function']();
-                            dialogue_verify_clear();
+                            ComponentRemove('common_dialogue_user_verify');
                             break;
                         }
                         //search list
@@ -3857,7 +3647,7 @@ const common_event = async (event_type,event) =>{
                                                                     AppDocument.querySelector('#common_profile_id').innerHTML,
                                                                     Number(element_row(event.target).getAttribute('data-app_id')),
                                                                     () => { 
-                                                                        AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                                                                        ComponentRemove('common_dialogue_message');
                                                                         user_account_app_delete(1, 
                                                                                                 AppDocument.querySelector('#common_profile_id').innerHTML, 
                                                                                                 Number(element_row(event.target).getAttribute('data-app_id')), 
@@ -3976,9 +3766,26 @@ const common_event = async (event_type,event) =>{
                     case 'common_user_timezone_select':{
                         COMMON_GLOBAL.user_timezone = event.target.value;
                         await user_preference_save().then(()=>{
-                            if (AppDocument.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
-                                dialogue_user_edit_clear();
-                                user_edit();
+                            if (AppDocument.querySelector('#common_dialogue_user_edit').innerHTML !='') {
+                                ComponentRender('common_dialogue_user_edit', 
+                                    {   FFB:FFB,
+                                        set_avatar:set_avatar,
+                                        show_message:show_message,
+                                        format_json_date:format_json_date,
+                                        user_account_id:COMMON_GLOBAL.user_account_id,
+                                        common_app_id:COMMON_GLOBAL.common_app_id,
+                                        translation_username:COMMON_GLOBAL.translate_items.USERNAME,
+                                        translation_bio:COMMON_GLOBAL.translate_items.BIO,
+                                        translation_new_email:COMMON_GLOBAL.translate_items.NEW_EMAIL,
+                                        translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
+                                        translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM,
+                                        translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
+                                        translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM,
+                                        translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER},
+                                    '/common/component/dialogue_user_edit.js')
+                                .then(()=>{
+                                    AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                                });
                             }
                         });
                         break;
@@ -4401,13 +4208,12 @@ export{/* GLOBALS*/
        ComponentRender,ComponentRemove,
        /* MESSAGE & DIALOGUE */
        show_message_info_list, dialogue_close, show_common_dialogue, show_message,
-       dialogue_user_start_clear,
        lov_close, lov_show,
        /* PROFILE */
        profile_follow_like, profile_top, profile_detail, profile_show,
        profile_close, profile_update_stat, search_input,
        /* USER  */
-       user_login, user_logoff, user_edit, user_update, user_signup, user_verify_check_input, user_delete, user_function,
+       user_login, user_logoff, user_update, user_signup, user_verify_check_input, user_delete, user_function,
        updatePassword,
        /* USER PROVIDER */
        ProviderSignIn,
