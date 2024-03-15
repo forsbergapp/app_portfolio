@@ -1216,7 +1216,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 }
 
 /* COMMON */
-#common_dialogue_user_start_content{
+#common_dialogue_user_start{
 	height: auto !important;
 }
 #common_user_start_close{
@@ -1227,7 +1227,9 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	display: inline-block;
 }
 #common_user_start_signup,
-#common_user_start_forgot{
+#common_user_start_signup_form,
+#common_user_start_forgot,
+#common_user_start_forgot_form{
 	display: none;	
 }
 

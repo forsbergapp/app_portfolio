@@ -143,7 +143,6 @@ const render_app_html = async (app_id, locale) =>{
             //if admin app and system admin only
             app_config.RENDER_LOCALES = false;
             app_config.RENDER_SETTINGS = false;
-            app_config.RENDER_PROVIDER_BUTTONS = false;
     }
 
     if (app_config.RENDER_LOCALES){
@@ -213,13 +212,6 @@ const render_app_html = async (app_id, locale) =>{
         render_variables.push(['COMMON_USER_DIRECTION','']);
         render_variables.push(['COMMON_USER_ARABIC_SCRIPT','']);
     }
-    if (app_config.RENDER_PROVIDER_BUTTONS){
-        await providers_buttons(app_id).then((buttons)=>{
-            render_variables.push(['COMMON_PROVIDER_BUTTONS',buttons]);
-        });
-    }
-    else
-        render_variables.push(['COMMON_PROVIDER_BUTTONS','']);
     
     return new Promise((resolve)=>{
         //list config files and return only tag and file content
@@ -424,6 +416,7 @@ const get_module_with_initBFF = async (app_info) => {
             countries:countries,
             map_styles: app_info.map_styles,
             locale: app_info.locale,
+            translate_items:app_info.translate_items,
             system_admin_only: app_info.system_admin_only,
             client_latitude: app_info.latitude,
             client_longitude: app_info.longitude,
@@ -588,10 +581,10 @@ const getAppBFF = async (app_id, app_parameters) =>{
     /** @type {Types.app_create} */
     let app;
     let config_map;
+    /**@type{*} */
+    let translate_items = {};
     /** @type {Types.map_styles} */
     let config_map_styles;
-    /**@type {[string, string][]} */
-    const render_variables = [];
 
     if (app_id == 0){
         //get app admin
@@ -606,21 +599,17 @@ const getAppBFF = async (app_id, app_parameters) =>{
         app_module_type = 'ADMIN';
         config_map = app.map;
         config_map_styles = app.map_styles;
-        const result_objects = [];
-        result_objects.push({object_item_name:'PASSWORD_NEW', text:'New password'});
-        result_objects.push({object_item_name:'PASSWORD_NEW_CONFIRM', text:'New password confirm'});
-        result_objects.push({object_item_name:'USERNAME', text:'Username'});
-        result_objects.push({object_item_name:'PASSWORD', text:'Password'});
-        result_objects.push({object_item_name:'EMAIL', text:'Email'});
-        result_objects.push({object_item_name:'NEW_EMAIL', text:'New email'});
-        result_objects.push({object_item_name:'PASSWORD_CONFIRM', text:'Password confirm'});
-        result_objects.push({object_item_name:'PASSWORD_REMINDER', text:'Password reminder'});
-        result_objects.push({object_item_name:'BIO', text:'Bio'});
-        result_objects.push({object_item_name:'CONFIRM_QUESTION', text:'Are you sure?'});
-        for (const row of result_objects){
-            render_variables.push([`COMMON_TRANSLATION_${row.object_item_name.toUpperCase()}`, row.text]);
-        }
-        app.app = render_app_with_data(app.app, render_variables);
+
+        translate_items =  {USERNAME:'Username',
+                            EMAIL:'Email',
+                            NEW_EMAIL:'New email',
+                            BIO:'Bio',
+                            PASSWORD:'Password',
+                            PASSWORD_CONFIRM:'Password confirm',
+                            PASSWORD_REMINDER:'Password reminder',
+                            NEW_PASSWORD_CONFIRM:'New password confirm',
+                            NEW_PASSWORD:'New password',
+                            CONFIRM_QUESTION:'Are you sure?'};
     }
     else{
         system_admin_only = 0;
@@ -638,9 +627,8 @@ const getAppBFF = async (app_id, app_parameters) =>{
         const result_objects = await getObjects(app_id, client_locale(app_parameters.accept_language), 'APP', null);
         await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '5 ' +new Date().toISOString());
         for (const row of result_objects){
-            render_variables.push([`COMMON_TRANSLATION_${row.object_item_name.toUpperCase()}`, row.text]);
-        }
-        app.app = render_app_with_data(app.app, render_variables);
+            translate_items[row.object_item_name.toUpperCase()] = row.text;
+        }        
     }
     await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '6 ' +new Date().toISOString());
     const app_with_init = await get_module_with_initBFF({   app_id:             app_id, 
@@ -653,6 +641,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
                                                             longitude:          result_geodata.longitude,
                                                             place:              result_geodata.place,
                                                             timezone:           result_geodata.timezone,
+                                                            translate_items:    translate_items,
                                                             module:             app.app});
     //if app admin then log, system does not log in database
     if (ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`]){
@@ -841,34 +830,7 @@ const getMaintenance = (app_id) => {
     render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify(parameters)]);
     return render_app_with_data(render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'MAINTENANCE'), render_variables);
 };
-/**
- * Renders provider buttons
- * @async
- * @param {number} app_id
- * @returns {Promise<string>}
- */
-const providers_buttons = async (app_id) =>{
-    const { getIdentityProviders } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider.service.js`);
-    return new Promise((resolve, reject)=>{
-        getIdentityProviders(app_id)
-        .then((/**@type{Types.db_result_identity_provider_getIdentityProviders[]}*/result)=>{
-            let html = '';
-            for (const provider of result){
-                html += `<div class='common_user_start_button common_link common_row' >
-                            <div class='common_login_provider_id'>${provider.id}</div>
-                            <div class='common_login_provider_name'>${provider.provider_name}</div>
-                        </div>`;
-            }
-            if (html)
-                resolve(`<div id='common_identity_provider_login'>${html}</div>`);
-            else
-                resolve('');
-        })
-        .catch ((/**@type{Types.error} */err)=>{
-            reject(err);
-        });
-    });	
-};
+
 /**
  * 
  * @param {number} app_id 

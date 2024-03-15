@@ -599,7 +599,7 @@ div.ray8 {
 	width: calc(100% - 10px) !important;
 }
 
-#common_dialogue_user_edit_content #common_user_edit_btn_user_delete_account
+#common_dialogue_user_edit #common_user_edit_btn_user_delete_account
 {
 	display: inline-block;
 }
@@ -1005,18 +1005,18 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_user_start_selected {
 	background-color: var(--app_theme_list_selected_background_color);	
 }
-#common_dialogue_user_start_content #common_user_start_nav>div{
+#common_dialogue_user_start #common_user_start_nav>div{
 	color: var(--app_theme_dialogue_button_color);
 }
-#common_dialogue_user_start_content #common_user_start_nav>div:hover,
-#common_dialogue_user_start_content #common_user_start_nav:active{
+#common_dialogue_user_start #common_user_start_nav>div:hover,
+#common_dialogue_user_start #common_user_start_nav:active{
 	color:var(--app_theme_hover_color);
 }
-#common_dialogue_user_start_content .common_login_button{
+#common_dialogue_user_start .common_login_button{
 	color: var(--app_theme_dialogue_button_color);
 }
-#common_dialogue_user_start_content .common_login_button:hover,
-#common_dialogue_user_start_content .common_login_button:active{
+#common_dialogue_user_start .common_login_button:hover,
+#common_dialogue_user_start .common_login_button:active{
 	background-color:var(--app_theme_hover_color) !important;
 }
 .common_list_scrollbar{
@@ -1026,8 +1026,8 @@ border-left: 12px solid var(--app_theme_sun_color);
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
-#common_dialogue_user_start_content:hover, 
-#common_dialogue_user_start_content:active
+#common_dialogue_user_start:hover, 
+#common_dialogue_user_start:active
 {
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2) !important;
 }

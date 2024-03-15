@@ -313,6 +313,16 @@
  * @property {boolean} render_provider_buttons   - render provider buttons, true/false
  */
 /**
+ * @typedef {{  USERNAME:string,
+ *              EMAIL:string,
+ *              NEW_EMAIL:string,
+ *              BIO:string,
+ *              PASSWORD:string,
+ *              PASSWORD_CONFIRM:string,
+ *              PASSWORD_REMINDER:string,
+ *              NEW_PASSWORD_CONFIRM:string,
+ *              NEW_PASSWORD:string,
+ *              CONFIRM_QUESTION:string}} translate_items
  * Apps - App info
  * @typedef {object} app_info               - app info
  * @property {number} app_id                - app id
@@ -325,6 +335,7 @@
  * @property {string} longitude             - geodata longitude
  * @property {string} place                 - geodata place
  * @property {string} timezone              - geodata timezone
+ * @property {translate_items} translate_items - items to be translated
  * @property {string} module                - HTML
  */
 /**
@@ -375,6 +386,7 @@
  * @property {string|null}  countries
  * @property {map_styles}   map_styles
  * @property {string}       locale
+ * @property {translate_items}  translate_items
  * @property {number}       system_admin_only
  * @property {string|null}  client_latitude
  * @property {string|null}  client_longitude

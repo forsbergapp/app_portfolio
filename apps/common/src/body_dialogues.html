@@ -1,387 +1,91 @@
 <div id='common_dialogues'>
-    <div id='common_dialogue_user_start' class='common_dialogue'>
-        <div id='common_dialogue_user_start_content' class='common_dialogue_content'>
-            <div id='common_user_start_logo'></div>
-            <div id='common_user_start_nav'>
-                <div id='common_user_start_login'  class='common_icon'></div>
-                <div id='common_user_start_login_system_admin'  class='common_icon'></div>
-                <div id='common_user_start_signup' class='common_icon' ></div>
-                <div id='common_user_start_forgot' class='common_icon' ></div>
-            </div>
-            <div id='common_user_start_login_form' class='common_user_start_form'>
-                <div id='common_user_start_login_username' contenteditable=true class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
-                <div class='common_password_container'>
-                    <div id='common_user_start_login_password' contenteditable=true class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
-                    <div id='common_user_start_login_password_mask' class='common_input common_password_mask'></div>
-                </div>
-                <div id='common_user_start_login_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
-                <COMMON_PROVIDER_BUTTONS/>
-            </div>
-            <div id='common_user_start_login_system_admin_form' class='common_user_start_form'>
-                <div id='common_user_start_login_system_admin_first_time'></div>
-                <div id='common_user_start_login_system_admin_username' contenteditable=true class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
-                <div class='common_password_container'>
-                    <div id='common_user_start_login_system_admin_password' contenteditable=true class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
-                    <div id='common_user_start_login_system_admin_password_mask' class='common_input common_password_mask'></div>
-                </div>
-                <div id='common_user_start_login_system_admin_password_confirm_container'>
-                    <div class='common_password_container'>
-                        <div id='common_user_start_login_system_admin_password_confirm' contentEditable="true" class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
-                        <div id='common_user_start_login_system_admin_password_confirm_mask' class='common_input common_password_mask'></div>
+    <div id='common_dialogue_user_start' class='common_dialogue_content'></div>
+    <div id='common_dialogue_user_verify' class='common_dialogue_content'></div>
+    <div id='common_dialogue_user_password_new' class='common_dialogue_content'></div>
+    <div id='common_dialogue_user_edit' class='common_dialogue_content'></div>  
+    <div id='common_dialogue_message' class='common_dialogue_content'></div>
+    <div id='common_dialogue_profile' class='common_dialogue_content'>
+        <div id='common_profile_home' class='common_dialogue_button common_icon' ></div>
+        <div id='common_profile_info'>
+            <div id='common_profile_main'>
+                <div id='common_profile_main_row1' class='common_profile_main_row'>
+                    <div class='common_profile_main_col'>
+                        <div id='common_profile_id'></div>
+                        <div id='common_profile_avatar_container'>
+                            <div id='common_profile_avatar_image'>
+                                <img id='common_profile_avatar' src='' alt=''/>
+                            </div>
+                            <div id='common_profile_avatar_online_status' class='common_icon'></div>
+                        </div>
+                        <div id='common_profile_username'></div>
+                        <div id='common_profile_bio'></div>
+                    </div>
+                    <div class='common_profile_main_col'>
+                        <div id='common_profile_qr'></div>
                     </div>
                 </div>
-                <div id='common_user_start_login_system_admin_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
-            </div>
-            <div id='common_user_start_signup_form' class='common_user_start_form'>
-                <div id='common_user_start_signup_username' contenteditable=true  class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
-                <div id='common_user_start_signup_email' contenteditable=true  class='common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'></div>
-                <div class='common_password_container'>
-                    <div id='common_user_start_signup_password' contenteditable=true  class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
-                    <div id='common_user_start_signup_password_mask' class='common_input common_password_mask'></div>
+                <div id='common_profile_main_row2' class='common_profile_main_row'>
+                    <div class='common_profile_main_col'>
+                        <div id='common_profile_joined'>
+                            <div id='common_profile_joined_date_icon' class='common_icon'></div>
+                            <div id='common_profile_joined_date'></div>
+                        </div>
+                    </div>    
+                    <div class='common_profile_main_col'>
+                        <div id='common_profile_follow' >
+                            <div class='common_icon common_user_follow common_link'></div>
+                            <div class='common_icon common_user_followed common_link'></div>
+                        </div>
+                        <div id='common_profile_like'>
+                            <div class='common_icon common_unlike common_link'></div>
+                            <div class='common_icon common_like common_link'></div>
+                        </div>
+                    </div>
                 </div>
-                <div class='common_password_container'>
-                    <div id='common_user_start_signup_password_confirm' contenteditable=true  class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
-                    <div id='common_user_start_signup_password_confirm_mask' class='common_input common_password_mask'></div>
+            </div>
+            <div id='common_profile_public'>
+                <div id='common_profile_main_stat_row1'>
+                    <div id='common_profile_info_view'>
+                        <div id='common_profile_info_view_count_icon' class='common_icon'></div>
+                        <div id='common_profile_info_view_count'></div>
+                    </div>
+                    <div id='common_profile_info_following'>
+                        <div id='common_profile_main_btn_following' class='common_link common_icon'></div>
+                        <div id='common_profile_info_following_count'></div>
+                    </div>
+                    <div id='common_profile_info_followers'>
+                        <div id='common_profile_main_btn_followed' class='common_link common_icon'></div>
+                        <div id='common_profile_info_followers_count'></div>
+                    </div>
+                    <div id='common_profile_info_likes'>
+                        <div id='common_profile_main_btn_likes' class='common_icon common_link common_like'></div>
+                        <div id='common_profile_info_likes_count'></div>
+                    </div>
+                    <div id='common_profile_info_liked'>
+                        <div id='common_profile_main_btn_liked' >
+                            <div id='common_profile_main_btn_liked_heart' class='common_icon common_link common_like'></div>
+                            <div id='common_profile_main_btn_liked_users' class='common_link common_icon'></div>
+                        </div>
+                        <div id='common_profile_info_liked_count'></div>
+                    </div>
                 </div>
-                <div id='common_user_start_signup_password_reminder' contenteditable=true  class='common_input' placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'></div>
-                <div id='common_user_start_signup_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
+                <AppProfileInfo/>
+                <CommonBodyProfileDetail/>
             </div>
-            <div id='common_user_start_forgot_form' class='common_user_start_form'>
-                <div id='common_user_start_forgot_email' contenteditable=true class='common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'></div>
-                <div id='common_user_start_forgot_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
-            </div>
-            <div id='common_user_start_close' class='common_dialogue_button common_icon' ></div>
+            <div id='common_profile_private'>
+                <div id='common_profile_private_title' class='common_icon'></div>
+            </div>			            
         </div>
+        <div id='common_profile_top'>
+            <div id='common_profile_top_row1'>
+                <div id='common_profile_top_row1_1' class='common_link common_icon'></div>
+                <div id='common_profile_top_row1_2' class='common_link common_icon'></div>
+                <div id='common_profile_top_row1_3' class='common_link common_icon'></div>
+            </div>
+            <AppProfileTop/>
+            <div id='common_profile_top_list'></div>
+        </div>
+        <div id='common_profile_close' class='common_dialogue_button common_icon' ></div>
     </div>
-    <div id='common_dialogue_user_verify' class='common_dialogue'>
-        <div id='common_dialogue_user_verify_content' class='common_dialogue_content'>
-            <div id='common_user_verify_email_icon' class='common_icon'></div>
-            <div id='common_user_verify_email'></div>
-            <div id='common_user_verification_type'></div>
-            <div id='common_user_verify_verification_container'>
-                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char1' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>
-                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char2' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>
-                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char3' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>
-                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char4' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>
-                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char5' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>
-                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char6' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>                
-            </div>
-            <div id='common_user_verify_cancel' class='common_dialogue_button common_icon'></div>
-        </div>
-    </div>
-    <div id='common_dialogue_user_password_new' class='common_dialogue'>
-        <div id='common_dialogue_user_password_new_content' class='common_dialogue_content'>
-            <div id='common_user_password_new_icon' class='common_icon'></div>
-            <div id='common_user_password_new_auth'></div>
-            <div class='common_password_container'>
-                <div id='common_user_password_new' contenteditable=true class='common_password_new_input common_input common_password' placeholder='<COMMON_TRANSLATION_NEW_PASSWORD/>'></div>
-                <div id='common_user_password_new_mask' class='common_input common_password_mask'/></div>
-            </div>
-            <div class='common_password_container'>
-                <div id='common_user_password_new_confirm' contenteditable=true class='common_password_new_input common_input common_password' placeholder='<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>'></div>
-                <div id='common_user_password_new_confirm_mask' class='common_input common_password_mask'></div>
-            </div>
-            <div id='common_user_password_new_cancel' class='common_dialogue_button common_icon'></div>
-            <div id='common_user_password_new_ok' class='common_dialogue_button common_icon'></div>
-        </div>
-    </div>
-    <div id='common_dialogue_user_edit' class='common_dialogue'>
-        <div id='common_dialogue_user_edit_content' class='common_dialogue_content'>
-            <div id='common_user_edit_common'>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_avatar'>
-                            <div id='common_user_edit_avatar'>
-                                <div id='common_user_edit_btn_avatar_img' class='common_icon'></div>
-                                <input id='common_user_edit_input_avatar_img' type='file'>
-                            </div>
-                            <img id='common_user_edit_avatar_img' alt='' src=''>
-                        </div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_private' class='common_icon'></div>
-                        <div id='common_user_edit_checkbox_profile_private' class='common_switch'></div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_username_icon' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_username' class='common_input' contenteditable=true placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_bio_icon' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_bio' class='common_input' contenteditable=true placeholder='<COMMON_TRANSLATION_BIO/>'></div>
-                    </div>
-                </div>
-            </div>
-            <div id='common_user_edit_local'>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_email_icon' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_email'></div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_new_email_icon' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_new_email' class='common_input' contenteditable=true placeholder='<COMMON_TRANSLATION_NEW_EMAIL/>'></div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_password_icon' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div class='common_password_container'>
-                            <div id='common_user_edit_input_password' class='common_input common_password' contenteditable=true  placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
-                            <div id='common_user_edit_input_password_mask' class='common_input common_password_mask'></div>
-                        </div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_password_confirm_icon' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div class='common_password_container'>
-                            <div id='common_user_edit_input_password_confirm' class='common_input common_password' contenteditable=true placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
-                            <div id='common_user_edit_input_password_confirm_mask' class='common_input common_password_mask'></div>
-                        </div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_password_new_icon' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div class='common_password_container'>
-                            <div id='common_user_edit_input_password_new' class='common_input common_password' contenteditable=true placeholder='<COMMON_TRANSLATION_NEW_PASSWORD/>'></div>
-                            <div id='common_user_edit_input_password_new_mask' class='common_input common_password_mask'></div>
-                        </div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_password_new_confirm_icon' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div class='common_password_container'>
-                            <div id='common_user_edit_input_password_new_confirm' class='common_input common_password' contenteditable=true placeholder='<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>'></div>
-                            <div id='common_user_edit_input_password_new_confirm_mask' class='common_input common_password_mask'></div>
-                        </div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_password_reminder_icon' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_input_password_reminder' class='common_input' contenteditable=true placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'></div>
-                    </div>
-                </div>
-            </div>
-            <div id='common_user_edit_provider'>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>    
-                        <div id='common_user_edit_label_provider' class='common_icon'></div>
-                    </div>
-                    <div id='common_user_edit_provider_id' class='common_setting_horizontal_col'>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_provider_id' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_provider_id_data'></div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_provider_name'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_provider_name_data'></div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_provider_email' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_provider_email_data'></div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_provider_image_url'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_provider_image_url_data'></div>
-                    </div>
-                </div>
-            </div>
-            <div id='common_user_edit_account_info'>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_last_logontime' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_data_last_logontime'></div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_account_created' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_data_account_created'></div>
-                    </div>
-                </div>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_account_modified' class='common_icon'></div>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_label_data_account_modified'></div>
-                    </div>
-                </div>
-            </div>
-            <div id='common_user_edit_buttons'>
-                <div class='common_setting_horizontal_row'>
-                    <div class='common_setting_horizontal_col'>
-                    </div>
-                    <div class='common_setting_horizontal_col'>
-                        <div id='common_user_edit_btn_user_update' class='common_dialogue_button common_icon' ></div>
-                        <div id='common_user_edit_btn_user_delete_account' class='common_dialogue_button common_icon' ></div>
-                    </div>
-                </div>
-            </div>
-            <div id='common_user_edit_close' class='common_dialogue_button common_icon' ></div>
-        </div>
-    </div>  
-    <div id='common_dialogue_message' class='common_dialogue'>
-        <div id='common_dialogue_message_content' class='common_dialogue_content'>
-            <div id='common_confirm_question' class='common_icon'><COMMON_TRANSLATION_CONFIRM_QUESTION/></div>
-            <div id='common_message_title_container'>
-                <div id='common_message_title_icon' class='common_icon'></div>
-                <div id='common_message_title'></div>
-            </div>
-            <div id='common_message_progressbar_wrap'>
-                <div id='common_message_progressbar'></div>
-            </div>
-            <div id='common_message_buttons'>
-                <div id='common_message_cancel' class='common_dialogue_button common_icon' ></div>
-                <div id='common_message_close' class='common_dialogue_button common_icon' ></div>
-            </div>
-        </div>
-    </div>
-    <div id='common_dialogue_profile' class='common_dialogue'>
-		<div id='common_dialogue_profile_content' class='common_dialogue_content'>
-            <div id='common_profile_home' class='common_dialogue_button common_icon' ></div>
-			<div id='common_profile_info'>
-                <div id='common_profile_main'>
-                    <div id='common_profile_main_row1' class='common_profile_main_row'>
-                        <div class='common_profile_main_col'>
-                            <div id='common_profile_id'></div>
-                            <div id='common_profile_avatar_container'>
-                                <div id='common_profile_avatar_image'>
-                                    <img id='common_profile_avatar' src='' alt=''/>
-                                </div>
-                                <div id='common_profile_avatar_online_status' class='common_icon'></div>
-                            </div>
-                            <div id='common_profile_username'></div>
-                            <div id='common_profile_bio'></div>
-                        </div>
-                        <div class='common_profile_main_col'>
-                            <div id='common_profile_qr'></div>
-                        </div>
-                    </div>
-                    <div id='common_profile_main_row2' class='common_profile_main_row'>
-                        <div class='common_profile_main_col'>
-                            <div id='common_profile_joined'>
-                                <div id='common_profile_joined_date_icon' class='common_icon'></div>
-                                <div id='common_profile_joined_date'></div>
-                            </div>
-                        </div>    
-                        <div class='common_profile_main_col'>
-                            <div id='common_profile_follow' >
-                                <div class='common_icon common_user_follow common_link'></div>
-                                <div class='common_icon common_user_followed common_link'></div>
-                            </div>
-                            <div id='common_profile_like'>
-                                <div class='common_icon common_unlike common_link'></div>
-                                <div class='common_icon common_like common_link'></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id='common_profile_public'>
-                    <div id='common_profile_main_stat_row1'>
-                        <div id='common_profile_info_view'>
-                            <div id='common_profile_info_view_count_icon' class='common_icon'></div>
-                            <div id='common_profile_info_view_count'></div>
-                        </div>
-                        <div id='common_profile_info_following'>
-                            <div id='common_profile_main_btn_following' class='common_link common_icon'></div>
-                            <div id='common_profile_info_following_count'></div>
-                        </div>
-                        <div id='common_profile_info_followers'>
-                            <div id='common_profile_main_btn_followed' class='common_link common_icon'></div>
-                            <div id='common_profile_info_followers_count'></div>
-                        </div>
-                        <div id='common_profile_info_likes'>
-                            <div id='common_profile_main_btn_likes' class='common_icon common_link common_like'></div>
-                            <div id='common_profile_info_likes_count'></div>
-                        </div>
-                        <div id='common_profile_info_liked'>
-                            <div id='common_profile_main_btn_liked' >
-                                <div id='common_profile_main_btn_liked_heart' class='common_icon common_link common_like'></div>
-                                <div id='common_profile_main_btn_liked_users' class='common_link common_icon'></div>
-                            </div>
-                            <div id='common_profile_info_liked_count'></div>
-                        </div>
-                    </div>
-                    <AppProfileInfo/>
-                    <CommonBodyProfileDetail/>
-                </div>
-                <div id='common_profile_private'>
-                    <div id='common_profile_private_title' class='common_icon'></div>
-                </div>			            
-            </div>
-			<div id='common_profile_top'>
-                <div id='common_profile_top_row1'>
-                    <div id='common_profile_top_row1_1' class='common_link common_icon'></div>
-                    <div id='common_profile_top_row1_2' class='common_link common_icon'></div>
-                    <div id='common_profile_top_row1_3' class='common_link common_icon'></div>
-                </div>
-                <AppProfileTop/>
-			    <div id='common_profile_top_list'></div>
-            </div>
-			<div id='common_profile_close' class='common_dialogue_button common_icon' ></div>
-		</div>
-	</div>
-    <div id='common_dialogue_lov' class='common_dialogue'>
-        <div id='common_dialogue_lov_content' class='common_dialogue_content'>
-            <div id='common_lov_form'>
-                <div id='common_lov_title'></div>
-                <div id='common_lov_search_row'>
-                    <div id='common_lov_search_input' contenteditable=true class='common_input'></div>
-                    <div id='common_lov_search_icon' class='common_icon'></div>
-                </div>
-                <div id='common_lov_list' class='common_list_scrollbar'></div>
-                <div id='common_lov_close' class='common_dialogue_button common_icon'></div>
-            </div>
-        </div>
-    </div>
+    <div id='common_dialogue_lov' class='common_dialogue_content'></div>
 </div>

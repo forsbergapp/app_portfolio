@@ -403,12 +403,26 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data, re
                 //return accessToken since PASSWORD_RESET is in progress
                 //email was verified and activated with data token, but now the password will be updated
                 //using accessToken and authentication code
-                resolve({
-                    count: result_activate.affectedRows,
-                    auth: auth_password_new,
-                    accessToken: AuthorizeToken(app_id, null, 'APP_ACCESS'),
-                    items: Array(result_activate)
-                });
+
+                const data_body = { 
+                    user_account_id:    getNumberValue(query.get('PUT_ID')) ?? 0,
+                    app_id:             app_id,
+                    result:             1,
+                    client_ip:          ip,
+                    client_user_agent:  user_agent,
+                    client_longitude:   data.client_longitude ?? null,
+                    client_latitude:    data.client_latitude ?? null,
+                    access_token:       AuthorizeToken(app_id, null, 'APP_ACCESS')};
+                insertUserAccountLogon(app_id, data_body)
+                .then(()=>{
+                    resolve({
+                        count: result_activate.affectedRows,
+                        auth: auth_password_new,
+                        accessToken: data_body.access_token,
+                        items: Array(result_activate)
+                    });
+                })
+                .catch((/**@type{Types.error}*/error)=>reject(error));
             }
         })
         .catch((/**@type{Types.error}*/error)=>{
