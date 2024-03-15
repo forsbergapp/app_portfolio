@@ -380,7 +380,6 @@ const common_translate_ui = async (lang_code) => {
         path = `/app_object?data_lang_code=${lang_code}&object_name=APP`;
     }
     //translate objects
-    
     const app_objects_json = await FFB('DB_API', path, 'GET', 'APP_DATA', null);
     /**
      * @typedef {   'USERNAME'|'EMAIL'|'NEW_EMAIL'|'BIO'|'PASSWORD'|'PASSWORD_CONFIRM'|'PASSWORD_REMINDER'|'NEW_PASSWORD_CONFIRM'|'NEW_PASSWORD'|'CONFIRM_QUESTION'} translation_key
@@ -393,59 +392,6 @@ const common_translate_ui = async (lang_code) => {
                 //save current translations to be used in components
                 if (COMMON_GLOBAL.translate_items[app_object.object_item_name])
 					COMMON_GLOBAL.translate_items[app_object.object_item_name] = app_object.text;
-                /*
-                switch  (app_object.object_item_name){
-                    case 'USERNAME':{
-                        AppDocument.querySelector('#common_user_start_login_username').setAttribute('placeholder', app_object.text);
-                        AppDocument.querySelector('#common_user_start_signup_username').setAttribute('placeholder', app_object.text);
-                        AppDocument.querySelector('#common_user_edit_input_username').setAttribute('placeholder',app_object.text);
-                        break;
-                    }
-                    case 'EMAIL':{
-                        AppDocument.querySelector('#common_user_start_signup_email').setAttribute('placeholder',app_object.text);
-                        AppDocument.querySelector('#common_user_start_forgot_email').setAttribute('placeholder',app_object.text);
-                        break;
-                    }
-                    case 'NEW_EMAIL':{
-                        AppDocument.querySelector('#common_user_edit_input_new_email').setAttribute('placeholder',app_object.text);
-                        break;
-                    }
-                    case 'BIO':{
-                        AppDocument.querySelector('#common_user_edit_input_bio').setAttribute('placeholder',app_object.text);
-                        break;
-                    }
-                    case 'PASSWORD':{
-                        AppDocument.querySelector('#common_user_start_login_password').setAttribute('placeholder',app_object.text);
-                        AppDocument.querySelector('#common_user_start_signup_password').setAttribute('placeholder',app_object.text);
-                        AppDocument.querySelector('#common_user_edit_input_password').setAttribute('placeholder',app_object.text);
-                        break;
-                    }
-                    case 'PASSWORD_CONFIRM':{
-                        AppDocument.querySelector('#common_user_start_signup_password_confirm').setAttribute('placeholder',app_object.text);
-                        AppDocument.querySelector('#common_user_edit_input_password_confirm').setAttribute('placeholder',app_object.text);
-                        break;
-                    }
-                    case 'PASSWORD_REMINDER':{
-                        AppDocument.querySelector('#common_user_start_signup_password_reminder').setAttribute('placeholder',app_object.text);
-                        AppDocument.querySelector('#common_user_edit_input_password_reminder').setAttribute('placeholder',app_object.text);
-                        break;
-                    }
-                    case 'NEW_PASSWORD_CONFIRM':{
-                        AppDocument.querySelector('#common_user_edit_input_password_new_confirm').setAttribute('placeholder',app_object.text);
-                        AppDocument.querySelector('#common_user_password_new_confirm').setAttribute('placeholder',app_object.text);
-                        break;
-                    }
-                    case 'NEW_PASSWORD':{
-                        AppDocument.querySelector('#common_user_edit_input_password_new').setAttribute('placeholder',app_object.text);
-                        AppDocument.querySelector('#common_user_password_new').setAttribute('placeholder',app_object.text);
-                        break;
-                    }
-                    case 'CONFIRM_QUESTION':{
-                        AppDocument.querySelector('#common_confirm_question').innerHTML = app_object.text;
-                        break;
-                    }
-                } 
-                */
                 break;
             }
             case 'APP_LOV':{
