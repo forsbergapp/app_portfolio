@@ -365,10 +365,9 @@ select {
 }
 
 /*dialogue*/
-.common_dialogue{
-	visibility:hidden;
+.common_dialogues_modal {
+	z-index:50 !important;
 	position: fixed;
-	z-index: 50;
 	padding-top: 10px;
 	left: 0;
 	top: 0;
@@ -376,13 +375,24 @@ select {
 	height: 100%;
 	overflow: auto;
 }
+.common_dialogue_show1 {
+	z-index:51;
+	padding: 20px;
+}
+.common_dialogue_show2 {
+	z-index:52;
+	padding: 20px;
+}
+.common_dialogue_show3 {
+	z-index:53;
+	padding: 20px;
+}
 .common_dialogue_content{
 	text-align:center;
 	top: 50%;
     left: 50%;
 	position: fixed;
 	transform: translate(-50%, -50%);
-	padding: 10px;
 	width: auto;
 	height: auto;
 	word-break: break-word;
@@ -444,7 +454,7 @@ select {
   
 
 /* DIALOGUE MESSAGE*/
-#common_dialogue_message_content{
+#common_dialogue_message.common_dialogue_show3{
 	min-width: 200px;
 	overflow-y: auto;
     max-height: 90%;
@@ -453,6 +463,7 @@ select {
 	cursor:default;
 	display:inline-block;
 	margin-bottom:10px;
+	font-family: inherit;
 }
 #common_message_progressbar_wrap{
 	display:inline-block;
@@ -486,23 +497,6 @@ select {
 	cursor:pointer;
 	display:inline-block;
 }
-
-
-
-#common_dialogue_user_start,
-#common_user_menu_dropdown{
-	z-index:51;
-}
-#common_dialogue_user_verify,
-#common_dialogue_user_password_new,
-#common_dialogue_user_password_new{
-	z-index:52;
-}
-/*DIALOGUE MESSAGE*/
-
-#common_dialogue_message{
-	z-index:53;
-}
 #common_message_title .common_icon{
 	vertical-align: middle;
 	margin-bottom: 1px;
@@ -526,12 +520,13 @@ select {
 	text-align: start;
 	vertical-align: top;
 }
+/*User menu dropdown*/
+#common_user_menu_dropdown{
+	z-index:51;
+}
 
 /* Dialogue Verification code*/
-#common_dialogue_user_verify{
-	visibility: hidden;
-}
-#common_dialogue_user_verify_content{
+#common_dialogue_user_verify.common_dialogue_show2{
 	height:280px;
 }
 #common_user_verify_email_icon{
@@ -542,7 +537,9 @@ select {
     margin-top: 20px;
 	height: 30px;
 }
-#common_user_verification_type{
+#common_user_verify_data_verification_type,
+#common_user_verify_data_username,
+#common_user_verify_data_password{
 	display: none;
 }
 #common_user_verify_verification_container{
@@ -564,6 +561,11 @@ select {
 	height:40px;
 	border: 1px solid;
 }
+/*Dialogue user password new*/
+#common_dialogue_user_password_new.common_dialogue_show2{
+	width: 300px;
+	height:150px;
+}
 #common_user_password_new_icon{
 	font-size: 30px;
     height: 30px;
@@ -571,26 +573,29 @@ select {
 #common_user_password_new_auth{
 	display: none;
 }
-#common_user_password_new{
-	margin-top: 40px;
+#common_user_password_new,
+#common_user_password_new_mask,
+#common_user_password_new_confirm,
+#common_user_password_new_confirm_mask{
+	margin-top: 10px;
+	height: 30px;
+	padding: 4px 10px;
+    box-sizing: border-box;
 }
 /*Dialogue user start*/
+#common_dialogue_user_start.common_dialogue_show1{
+	max-height: 90%;
+	width: 300px;
+	height: 430px;
+}
 #common_user_start_login_system_admin, 
 #common_user_start_login_system_admin_form,
 #common_user_start_login_system_admin_first_time, 
 #common_user_start_login_system_admin_password_confirm_container{
 	display:none;
 }
-#common_dialogue_user_start{
-	visibility: hidden;
-}
 .common_user_start_form{
 	width: 100%;;
-}
-#common_dialogue_user_start_content{
-	max-height: 90%;
-	width: 300px;
-	height: 430px;
 }
 #common_user_start_nav > div{
 	margin:10px;
@@ -635,15 +640,12 @@ select {
 	margin-top:10px;
 }
 /*Dialogue user edit*/
-#common_dialogue_user_edit{
-	visibility: hidden;
-}
-#common_dialogue_user_edit_content{
+#common_dialogue_user_edit.common_dialogue_show1{
 	width: 360px;
 	height: auto;
 	padding-bottom: 0px;
 }
-#common_dialogue_user_edit_content input{
+#common_dialogue_user_edit input{
 	width: 100%;
 	border: 0.5px solid;
 }
@@ -670,29 +672,29 @@ select {
 	cursor: pointer;
 	display: inline-block;
 }
-#common_dialogue_user_edit_content .common_setting_horizontal_row{
+#common_dialogue_user_edit .common_setting_horizontal_row{
 	display: block;
 }
-#common_dialogue_user_edit_content #common_user_edit_common .common_setting_horizontal_row:first-child{
+#common_dialogue_user_edit #common_user_edit_common .common_setting_horizontal_row:first-child{
 	height: 60px;
 }
-#common_dialogue_user_edit_content #common_user_edit_common .common_setting_horizontal_row:first-child .common_setting_horizontal_col:nth-child(2){
+#common_dialogue_user_edit #common_user_edit_common .common_setting_horizontal_row:first-child .common_setting_horizontal_col:nth-child(2){
 	text-align: center !important;
 	vertical-align: top;
 }
-#common_dialogue_user_edit_content .common_setting_horizontal_col:nth-child(1){
+#common_dialogue_user_edit .common_setting_horizontal_col:nth-child(1){
 	width :5%;
 	display: inline-block;
 }
-#common_dialogue_user_edit_content .common_setting_horizontal_col:nth-child(2){
+#common_dialogue_user_edit .common_setting_horizontal_col:nth-child(2){
 	width :90%;
 	text-align: start;
 	display: inline-block;
 }
-#common_dialogue_user_edit_content #common_user_edit_provider .common_setting_horizontal_row:nth-child(5){
+#common_dialogue_user_edit #common_user_edit_provider .common_setting_horizontal_row:nth-child(5){
 	height:0px;
 }
-#common_dialogue_user_edit_content #common_user_edit_provider{
+#common_dialogue_user_edit #common_user_edit_provider{
 	margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -702,11 +704,11 @@ select {
 #common_user_edit_close{
 	margin-bottom:20px;
 }
-#common_dialogue_user_edit_content #common_user_edit_buttons .common_setting_horizontal_col:nth-child(1) {
+#common_dialogue_user_edit #common_user_edit_buttons .common_setting_horizontal_col:nth-child(1) {
 	width: 0%;
 	display: none;
 }
-#common_dialogue_user_edit_content #common_user_edit_buttons .common_setting_horizontal_col:nth-child(2) {
+#common_dialogue_user_edit #common_user_edit_buttons .common_setting_horizontal_col:nth-child(2) {
 	width: 100%;
 	text-align: center !important;
 }
@@ -717,7 +719,7 @@ select {
 }
 
 /*Dialogue lov*/
-#common_dialogue_lov_content{
+#common_dialogue_lov.common_dialogue_show1{
 	height:auto;
 	width: 350px;
 }
@@ -814,24 +816,20 @@ select {
 /*Dialogue profile*/
 #common_dialogue_profile{
 	visibility:hidden;
-	top: 0px;
-    padding-top: 20px;
-	width: 100%;
-    height: 100%;
+    padding: 20px;
+	word-break: unset;
+	width:350px;
+	height:550px;
 	position:fixed;
+	z-index: 50;
 }
 #common_profile_info{
 	display:none;
 }
-#common_dialogue_profile_content{
-	word-break: unset;
-	width:350px;
-	height:550px;
-}
 #common_profile_close{
 	display: block;
-    width: 100%;
-	bottom:10px;
+    inset-inline-start: calc(50% - 30px);
+	bottom:30px;
 	position:fixed;
 }
 #common_profile_main {
@@ -1464,14 +1462,14 @@ select {
 	body{
 		font-size: 18px;
 	}
-	#common_dialogue_profile_content{
+	#common_dialogue_profile{
 		width:500px;
 		height:500px;
 	}
 	#common_profile_bio{
 		font-size: 0.7em;
 	}	
-	#common_dialogue_user_edit_content{
+	#common_dialogue_user_edit{
 		width:500px;
 	}
 	.common_profile_detail_list{

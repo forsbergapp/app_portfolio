@@ -12,7 +12,6 @@
  *              innerHTML:          string,
  *              value:              string,
  *              focus:              function,
- *              blur:               function,
  *              dispatchEvent:      function,
  *              parentNode:         HTMLElement,
  *              options:            HTMLOptionsCollection,
@@ -1046,10 +1045,13 @@ const show_profile_function = async profile_id => profile_show_app(+profile_id);
 
 /**
  * User login
+ * @param {boolean} system_admin
+ * @param {string|null} username_verify
+ * @param {string|null} password_verify
  * @returns {Promise.<void>}
  */
-const user_login_app = async () => {
-    await common.user_login()
+const user_login_app = async (system_admin=false, username_verify=null, password_verify=null) => {
+    await common.user_login(system_admin, username_verify, password_verify)
     .then((/**@type{{user_id: number,username: string,bio: string, avatar: string}}*/result)=>{
         //create intitial user setting if not exist, send initial=true
         user_settings_function('ADD_LOGIN', true)
@@ -1081,25 +1083,7 @@ const user_login_app = async () => {
     })
     .catch(()=>null);
 };
-/**
- * User verify check input
- * @param {HTMLElement} item 
- * @param {string} nextField 
- * @returns {Promise.<void>}
- */
-const user_verify_check_input_app = async (item, nextField) => {
-    await common.user_verify_check_input(item, nextField)
-    .then((/**@type{{verification_type:number}}*/result)=>{
-        if (result!=null){
-            //login if LOGIN  or SIGNUP were verified successfully
-            if (result.verification_type==1 ||
-                result.verification_type==2)
-                user_login_app();
-        }
-        
-    }) 
-    .catch(()=>null);
-};
+
 /**
  * User function
  * @param {string} function_name 
@@ -2626,10 +2610,7 @@ const app_event_keyup = event => {
                 case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
-                        user_login_app().then(() => {
-                            //unfocus
-                            event.target.blur();
-                        });
+                        user_login_app().catch(()=>null);;
                     }
                     break;
                 }
@@ -2639,12 +2620,12 @@ const app_event_keyup = event => {
                 case 'common_user_verify_verification_char3':
                 case 'common_user_verify_verification_char4':
                 case 'common_user_verify_verification_char5':{
-                    user_verify_check_input_app(AppDocument.querySelector(`#${event_target_id}`), 
-                                                'common_user_verify_verification_char' + Number(event_target_id.substring(event_target_id.length-1))+1);
+                    common.user_verify_check_input( AppDocument.querySelector(`#${event_target_id}`), 
+                                                    'common_user_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), user_login_app);
                     break;
                 }
                 case 'common_user_verify_verification_char6':{
-                    user_verify_check_input_app(AppDocument.querySelector(`#${event_target_id}`), '');
+                    common.user_verify_check_input(AppDocument.querySelector(`#${event_target_id}`), '', user_login_app);
                     break;
                 }
             }

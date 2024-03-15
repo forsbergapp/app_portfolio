@@ -30,7 +30,7 @@ const admin_logoff_app = () => {
         AppDocument.querySelectorAll('.main_content').forEach((/**@type{Element}*/content) => {
             content.innerHTML = '';
         });
-        common.show_common_dialogue('LOGIN');
+        common.show_common_dialogue('LOGIN_ADMIN');
         AppDocument.querySelector('#menu').style.visibility = 'hidden';
         AppDocument.querySelector('#menu_open').style.visibility = 'hidden';
         AppDocument.querySelector('#admin_secure').style.visibility = 'hidden';
@@ -253,10 +253,7 @@ const app_event_keyup = event => {
                 case 'common_user_start_login_system_admin_password_confirm':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
-                        admin_login().then(() => {
-                            //unfocus
-                            AppDocument.querySelector('#' + event_target_id).blur();
-                        });
+                        admin_login().catch(()=>null);
                     }
                     break;
                 }
@@ -339,20 +336,17 @@ const admin_exception = (error) => {
  * @returns {Promise.<void>}
  */
 const mount_app_app = async (framework=null) => {
-    await common.mount_app(framework,
-        {   Click: app_event_click,
-            Change: app_event_change,
-            KeyDown: app_event_keydown,
-            KeyUp: app_event_keyup,
-            Focus: app_event_focus,
-            Input:app_event_input})
+    common.mount_app(framework,
+                    {   Click: app_event_click,
+                        Change: app_event_change,
+                        KeyDown: app_event_keydown,
+                        KeyUp: app_event_keyup,
+                        Focus: app_event_focus,
+                        Input:app_event_input})
     .then(()=>{
         if (common.COMMON_GLOBAL.user_account_id ==null && common.COMMON_GLOBAL.system_admin=='')
-            if (common.COMMON_GLOBAL.system_admin_only == 1)
-                common.show_common_dialogue('LOGIN_SYSTEM_ADMIN');
-            else
-                common.show_common_dialogue('LOGIN'); 
-    });
+            common.show_common_dialogue('LOGIN_ADMIN');
+    });                        
 };
 /**
  * App init
@@ -361,16 +355,7 @@ const mount_app_app = async (framework=null) => {
  * @returns {void}
  */
 const init_app = (parameters) => {
-    AppDocument.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
-    if (parameters.app_service.first_time == 1) {
-        AppDocument.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
-        AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm_container').style.display = 'block';
-    }
-    if (parameters.app_service.system_admin_only == 1) {
-        AppDocument.querySelector('#common_user_start_login').style.display = 'none';
-        AppDocument.querySelector('#common_user_start_login_form').style.display = 'none';
-    }
-    else {
+    if (parameters.app_service.system_admin_only == 0)
         for (const parameter of parameters.app) {
             if (parameter['MODULE_EASY.QRCODE_WIDTH'])
                 common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);
@@ -383,8 +368,6 @@ const init_app = (parameters) => {
             if (parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'])
                 common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'];
         }
-    }
-    if (parameters.app_service.system_admin_only == 0)
         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
             common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
     mount_app_app()
@@ -395,15 +378,16 @@ const init_app = (parameters) => {
  * Init common
  * @param {{app:*[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const init = (parameters) => {
-    //show admin login as default
-    AppDocument.querySelector('#common_user_start_login_button').classList.add('css_spinner');
-    common.COMMON_GLOBAL.exception_app_function = admin_exception;
-    common.init_common(parameters).then(()=>{
-        init_app(parameters);  
+const init = async parameters => {        
+    common.show_common_dialogue('LOGIN_LOADING')
+    .then(()=>{
+        AppDocument.querySelector('#common_user_start_login_button').classList.add('css_spinner');
+        common.COMMON_GLOBAL.exception_app_function = admin_exception;
+        common.init_common(parameters).then(()=>{
+            init_app(parameters);
+        });
     })
-    .catch(()=>AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner'));
 };
 export { init };

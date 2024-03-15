@@ -15,6 +15,7 @@ const template =`<div id='common_broadcast_info'>
 /**
  * 
  * @param {*} props 
+ * @returns {Promise.<void>}
  */
 const method = async props => {
     switch (props.common_framework){
@@ -24,20 +25,20 @@ const method = async props => {
             //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
             //Vue.createApp(...
             //return props.common_document.querySelector('#tempmount').innerHTML;
-            return template.replace('<MESSAGE/>',props.message)
+            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template.replace('<MESSAGE/>',props.message);
         }
         case 3:{
             //React
             //Use tempmount div to be able to return pure HTML
-            //props.document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
+            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
             //ReactDOM.createRoot(div... .render( App()
             //return props.common_document.querySelector('#tempmount').innerHTML;
-            return template.replace('<MESSAGE/>',props.message)
+            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template.replace('<MESSAGE/>',props.message);
         }
         case 1:
         default:{
             //Default Javascript
-            return template.replace('<MESSAGE/>',props.message)
+            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template.replace('<MESSAGE/>',props.message);
         }
     }
 }

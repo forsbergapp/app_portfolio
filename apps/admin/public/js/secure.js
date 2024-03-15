@@ -2583,7 +2583,7 @@ const installation_function = (id, db_icon, path, method, tokentype, data) => {
  * @returns {void}
  */
 const db_install = () =>{
-    AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+    common.ComponentRemove('common_dialogue_message');    
     const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}&optional=${Number(AppDocument.querySelector('#install_db_country_language_translations').classList.contains('checked'))}`;
     installation_function('install_db_button_install', true, path, 'POST', 'SYSTEMADMIN', null);
 };
@@ -2592,7 +2592,7 @@ const db_install = () =>{
  * @returns {void}
  */
 const db_uninstall = () =>{
-    AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+    common.ComponentRemove('common_dialogue_message');
     const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`;
     installation_function('install_db_button_uninstall', false, path, 'DELETE', 'SYSTEMADMIN', null);
 };
@@ -3148,7 +3148,6 @@ const init = () => {
         common.COMMON_GLOBAL.module_leaflet_style			            ='OpenStreetMap_Mapnik';
         common.COMMON_GLOBAL.module_leaflet_jumpto		                ='0';
         common.COMMON_GLOBAL.module_leaflet_popup_offset		        ='-25';
-        AppDocument.querySelector('#common_confirm_question').innerHTML    = '';
     }
 
     //hide all first (display none in css using eval not working)

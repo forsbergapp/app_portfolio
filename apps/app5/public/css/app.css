@@ -41,7 +41,6 @@ body {
 	display: none;
 }
 #common_window_info{
-	visibility:hidden;
 	z-index: 0 !important;
 	display:grid;
 }

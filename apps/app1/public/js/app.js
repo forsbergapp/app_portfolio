@@ -14,7 +14,6 @@
   *              parentNode:         {nextElementSibling:{querySelector:function}},
   *              nextElementSibling: {dispatchEvent:function},
   *              focus:              function,
-  *              blur:               function,
   *              getAttribute:       function,
   *              setAttribute:       function,
   *              dispatchEvent:      function,
@@ -313,12 +312,7 @@ const app_event_keyup = event => {
                 case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
-                        common.user_login()
-                        .then(() => {
-                            //unfocus
-                            event.target.blur();
-                        })
-                        .catch(()=>null);
+                        common.user_login().catch(()=>null);
                     }        
                     break;
                 }
@@ -328,12 +322,12 @@ const app_event_keyup = event => {
                 case 'common_user_verify_verification_char3':
                 case 'common_user_verify_verification_char4':
                 case 'common_user_verify_verification_char5':{
-                    user_verify_check_input_app(AppDocument.querySelector(`#${event_target_id}`), 
-                                                'common_user_verify_verification_char' + Number(event_target_id.substring(event_target_id.length-1))+1);
+                    common.user_verify_check_input( AppDocument.querySelector(`#${event_target_id}`), 
+                                                    'common_user_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), common.user_login);
                     break;
                 }
                 case 'common_user_verify_verification_char6':{
-                    user_verify_check_input_app(AppDocument.querySelector(`#${event_target_id}`), '');
+                    common.user_verify_check_input(AppDocument.querySelector(`#${event_target_id}`), '', common.user_login);
                     break;
                 }
             }
@@ -433,25 +427,6 @@ const get_apps = () => {
  */
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
-};
-/**
- * 
- * @param {AppEvent['target']} item 
- * @param {string} nextField 
- * @returns {Promise.<void>}
- */
-const user_verify_check_input_app = async (item, nextField) => {
-    await common.user_verify_check_input(item, nextField)
-    .then((/**@type{{verification_type:number}}}*/result)=>{
-        if (result!=null){
-            //login if LOGIN  or SIGNUP were verified successfully
-            if (result.verification_type==1 ||
-                result.verification_type==2)
-                common.user_login().catch(()=>null);
-        }
-        
-    }) 
-    .catch(()=>null);
 };
 /**
  * User delete

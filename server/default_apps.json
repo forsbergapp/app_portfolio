@@ -80,8 +80,7 @@
                 "CUSTOM_TAG_PROFILE_TOP":null,
                 "RENDER_APP_THEMES":true, 
                 "RENDER_LOCALES":true, 
-                "RENDER_SETTINGS":true, 
-                "RENDER_PROVIDER_BUTTONS":false},
+                "RENDER_SETTINGS":true},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/admin/src/index.html"],
                     ["APP",                 null,           "AppMenu",                      "/apps/admin/src/menu.html"],
@@ -152,8 +151,7 @@
                 "CUSTOM_TAG_PROFILE_TOP":"AppProfileBtnTop",
                 "RENDER_APP_THEMES":true, 
                 "RENDER_LOCALES":true, 
-                "RENDER_SETTINGS":true, 
-                "RENDER_PROVIDER_BUTTONS":true},
+                "RENDER_SETTINGS":true},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app1/src/index.html"],
                     ["APP",                 null,           "AppBackground",                "/apps/app1/src/background.html"],
@@ -265,8 +263,7 @@
                 "CUSTOM_TAG_PROFILE_TOP":"AppProfileBtnTop",
                 "RENDER_APP_THEMES":true, 
                 "RENDER_LOCALES":true, 
-                "RENDER_SETTINGS":true, 
-                "RENDER_PROVIDER_BUTTONS":true},
+                "RENDER_SETTINGS":true},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app2/src/index.html"],
                     ["APP",                 null,           "AppReportsFonts",              "/apps/app2/src/fonts.html"],
@@ -321,8 +318,7 @@
                 "CUSTOM_TAG_PROFILE_TOP":null,
                 "RENDER_APP_THEMES":false, 
                 "RENDER_LOCALES":false, 
-                "RENDER_SETTINGS":false, 
-                "RENDER_PROVIDER_BUTTONS":false},
+                "RENDER_SETTINGS":false},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app3/src/index.html"],
                     ["APP",                 null,           "AppDialogues",                 "/apps/app3/src/dialogues.html"]
@@ -361,8 +357,7 @@
                 "CUSTOM_TAG_PROFILE_TOP":null,
                 "RENDER_APP_THEMES":false, 
                 "RENDER_LOCALES":false, 
-                "RENDER_SETTINGS":true, 
-                "RENDER_PROVIDER_BUTTONS":false},
+                "RENDER_SETTINGS":true},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app4/src/index.html"],
                     ["APP",                 null,           "AppBody",                      "/apps/app4/src/body.html"]
@@ -401,8 +396,7 @@
                 "CUSTOM_TAG_PROFILE_TOP":null,
                 "RENDER_APP_THEMES":false, 
                 "RENDER_LOCALES":false, 
-                "RENDER_SETTINGS":true, 
-                "RENDER_PROVIDER_BUTTONS":false},
+                "RENDER_SETTINGS":true},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app5/src/index.html"]
     ],
@@ -440,8 +434,7 @@
                 "CUSTOM_TAG_PROFILE_TOP":null,
                 "RENDER_APP_THEMES":false, 
                 "RENDER_LOCALES":false, 
-                "RENDER_SETTINGS":true, 
-                "RENDER_PROVIDER_BUTTONS":false},
+                "RENDER_SETTINGS":true},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app5/src/index.html"]
     ],
