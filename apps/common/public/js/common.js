@@ -789,14 +789,15 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
  * @param {string} div 
  * @param {{}} props 
  * @param {string} component_path
+ * @returns {Promise.<*>}
  */
 const ComponentRender = async (div,props, component_path) => {
     //component outputs default render function
     const {default:renderfunction} = await import(component_path);
     //add document (less type errors), framework and mountdiv to props
-    await renderfunction({...props, ...{common_document:AppDocument,
-                                        common_framework:COMMON_GLOBAL.app_framework,
-                                        common_mountdiv:div}});
+    return await renderfunction({...props, ...{ common_document:AppDocument,
+                                                common_framework:COMMON_GLOBAL.app_framework,
+                                                common_mountdiv:div}});
 }
 /**
  * Component remove
@@ -807,6 +808,7 @@ const ComponentRemove = (div, remove_modal=false) => {
     const APPDIV = AppDocument.querySelector(`#${div}`);
     APPDIV.innerHTML = '';
     if (div.startsWith('common_dialogue')){
+        APPDIV.classList.remove('common_dialogue_show0');
         APPDIV.classList.remove('common_dialogue_show1');
         APPDIV.classList.remove('common_dialogue_show2');
         APPDIV.classList.remove('common_dialogue_show3');
@@ -875,12 +877,6 @@ const dialogue_close = async dialogue => {
  */
 const show_common_dialogue = async (dialogue, user_verification_type=null, title=null, click_cancel_event=null) => {
     switch (dialogue) {
-        case 'PROFILE':
-            {    
-                dialogue_profile_clear();
-                AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-                break;
-            }
         case 'PASSWORD_NEW':
             {    
                 ComponentRender('common_dialogue_user_password_new', 
@@ -999,35 +995,6 @@ const dialogue_password_new_clear = () => {
     ComponentRemove('common_dialogue_user_password_new');
     COMMON_GLOBAL.user_account_id = null;
     COMMON_GLOBAL.rest_at = '';
-};
-/**
- * Dialogue profile clear
- * @returns {void}
- */
-const dialogue_profile_clear = () => {
-    AppDocument.querySelector('#common_profile_info').style.display = 'none';
-    AppDocument.querySelector('#common_profile_top').style.display = 'none';
-    AppDocument.querySelector('#common_profile_detail').style.display = 'none';
-    
-    AppDocument.querySelector('#common_profile_follow').children[0].style.display = 'block';
-    AppDocument.querySelector('#common_profile_follow').children[1].style.display = 'none';
-    AppDocument.querySelector('#common_profile_like').children[0].style.display = 'block';
-    AppDocument.querySelector('#common_profile_like').children[1].style.display = 'none';
-
-    AppDocument.querySelector('#common_profile_avatar').src = '';
-    AppDocument.querySelector('#common_profile_username').innerHTML = '';
-    AppDocument.querySelector('#common_profile_bio').innerHTML = '';
-    AppDocument.querySelector('#common_profile_joined_date').innerHTML = '';
-
-    AppDocument.querySelector('#common_profile_info_view_count').innerHTML = '';
-    AppDocument.querySelector('#common_profile_info_following_count').innerHTML = '';
-    AppDocument.querySelector('#common_profile_info_followers_count').innerHTML = '';
-    AppDocument.querySelector('#common_profile_info_likes_count').innerHTML = '';
-    AppDocument.querySelector('#common_profile_info_liked_count').innerHTML = '';
-    
-    AppDocument.querySelector('#common_profile_qr').innerHTML = '';
-    AppDocument.querySelector('#common_profile_detail_list').innerHTML = '';
-    AppDocument.querySelector('#common_profile_top_list').innerHTML = '';
 };
 /**
  * Lov close
@@ -1216,60 +1183,23 @@ const profile_follow_like = async (function_name) => {
     .catch(()=>null);
 };
 /**
- * Profil etop
+ * Profile top
  * @param {number} statchoice 
- * @param {string|null} app_rest_url 
- * @param {function|null} click_function 
- * @returns {void}
+ * @param {string|null} app_rest_url
+ * @param {function|null} function_user_click
+ * @returns {Promise.<void>}
  */
-const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
-    let path;
-    const profile_top_list = AppDocument.querySelector('#common_profile_top_list');
-    profile_top_list.innerHTML = '';
-    profile_top_list.classList.add('css_spinner');
-    AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-    AppDocument.querySelector('#common_profile_info').style.display = 'none';
-    AppDocument.querySelector('#common_profile_top').style.display = 'block';
-                
-    if (statchoice ==1 || statchoice ==2 || statchoice ==3){
-        /*statschoice 1,2,3: user_account*/
-        path = `/user_account/profile/top?statchoice=${statchoice}`;
-    }
-    else{
-        /*other statschoice, apps can use >3 and return same columns*/
-        path = `${app_rest_url}?statchoice=${statchoice}`;
-    }
-    //TOP
-    FFB('DB_API', path, 'GET', 'APP_DATA', null)
-    .then(result=> {
-        let html ='';
-        let image='';
-        for (const profile_top of JSON.parse(result)) {
-            image = list_image_format_src(profile_top.avatar ?? profile_top.provider_image);
-            html +=
-            `<div data-user_account_id='${profile_top.id}' class='common_profile_top_list_row common_row'>
-                <div class='common_profile_top_list_col'>
-                    <div class='common_profile_top_list_user_account_id'>${profile_top.id}</div>
-                </div>
-                <div class='common_profile_top_list_col'>
-                    <img class='common_profile_top_list_avatar' ${image}>
-                </div>
-                <div class='common_profile_top_list_col'>
-                    <div class='common_profile_top_list_username common_wide_list_column common_link'>
-                        ${profile_top.username}
-                    </div>
-                </div>
-                <div class='common_profile_top_list_col'>
-                    <div class='common_profile_top_list_count'>${profile_top.count}</div>
-                </div>
-            </div>`;
-        }
-        profile_top_list.classList.remove('css_spinner');
-        profile_top_list.innerHTML = html;
-        AppDocument.querySelector('#common_profile_top_list')['data-function'] = click_function;
-    })
-    .catch(()=> profile_top_list.classList.remove('css_spinner'));
-        
+const profile_top = async (statchoice, app_rest_url = null, function_user_click=null) => {
+    await ComponentRender('common_dialogue_profile', 
+                    {   
+                        tab:'TOP',
+                        top_app_rest_url:app_rest_url,
+                        top_statchoice:statchoice,
+                        function_FFB:FFB,
+                        top_function_list_image_format_src:list_image_format_src,
+                        top_function_user_click:function_user_click
+                    },
+                    '/common/component/dialogue_profile.js');
 };
 /**
  * Profile detail
@@ -1447,88 +1377,23 @@ const search_profile = click_function => {
  *                      private:number}|null>}
  */
 const profile_show = async (user_account_id_other = null, username = null) => {
-    return new Promise((resolve, reject)=>{
-        let user_account_id_search;
-        let path;
-    
-        show_common_dialogue('PROFILE');
-        if (user_account_id_other == null && COMMON_GLOBAL.user_account_id == null && username == null) {
-            resolve(null);
-        } else {
-            if (user_account_id_other !== null) {
-                user_account_id_search = user_account_id_other;
-                path = `/user_account/profile/id?POST_ID=${user_account_id_search ?? ''}&id=${COMMON_GLOBAL.user_account_id ?? ''}`;
-            } else
-            if (username !== null) {
-                user_account_id_search = '';
-                path = `/user_account/profile/username?search=${username}&id=${COMMON_GLOBAL.user_account_id ?? ''}`;
-            } else {
-                user_account_id_search = COMMON_GLOBAL.user_account_id;
-                path = `/user_account/profile/id?POST_ID=${user_account_id_search ?? ''}&id=${COMMON_GLOBAL.user_account_id ?? ''}`;
-            }
-            //PROFILE MAIN
-            const json_data ={  
-                                client_latitude:    COMMON_GLOBAL.client_latitude,
-                                client_longitude:   COMMON_GLOBAL.client_longitude
-                            };
-            FFB('DB_API', path, 'POST', 'APP_DATA', json_data)
-            .then(result=>{
-                const profile = JSON.parse(result);
-                AppDocument.querySelector('#common_profile_info').style.display = 'block';
-                AppDocument.querySelector('#common_profile_main').style.display = 'block';
-                AppDocument.querySelector('#common_profile_id').innerHTML = profile.id;
-                set_avatar(profile.avatar ?? profile.provider_image, AppDocument.querySelector('#common_profile_avatar')); 
-                //show local username
-                AppDocument.querySelector('#common_profile_username').innerHTML = profile.username;
-    
-                AppDocument.querySelector('#common_profile_bio').innerHTML = profile.bio ?? '';
-                AppDocument.querySelector('#common_profile_joined_date').innerHTML = format_json_date(profile.date_created, true);
-                AppDocument.querySelector('#common_profile_qr').innerHTML = '';
-                create_qr('common_profile_qr', getHostname() + '/' + profile.username);
-                //User account followed and liked
-                if (profile.followed == 1) {
-                    //followed
-                    AppDocument.querySelector('#common_profile_follow').children[0].style.display = 'none';
-                    AppDocument.querySelector('#common_profile_follow').children[1].style.display = 'block';
-                } else {
-                    //not followed
-                    AppDocument.querySelector('#common_profile_follow').children[0].style.display = 'block';
-                    AppDocument.querySelector('#common_profile_follow').children[1].style.display = 'none';
-                }
-                if (profile.liked == 1) {
-                    //liked
-                    AppDocument.querySelector('#common_profile_like').children[0].style.display = 'none';
-                    AppDocument.querySelector('#common_profile_like').children[1].style.display = 'block';
-                } else {
-                    //not liked
-                    AppDocument.querySelector('#common_profile_like').children[0].style.display = 'block';
-                    AppDocument.querySelector('#common_profile_like').children[1].style.display = 'none';
-                } 
-                //if private then hide info, sql decides if private, no need to check here if same user
-                if (profile.private==1) {
-                    //private
-                    AppDocument.querySelector('#common_profile_public').style.display = 'none';
-                    AppDocument.querySelector('#common_profile_private').style.display = 'block';
-                } else {
-                    //public
-                    AppDocument.querySelector('#common_profile_public').style.display = 'block';
-                    AppDocument.querySelector('#common_profile_private').style.display = 'none';
-                    AppDocument.querySelector('#common_profile_info_view_count').innerHTML = profile.count_views;
-                    AppDocument.querySelector('#common_profile_info_following_count').innerHTML = profile.count_following;
-                    AppDocument.querySelector('#common_profile_info_followers_count').innerHTML = profile.count_followed;
-                    AppDocument.querySelector('#common_profile_info_likes_count').innerHTML = profile.count_likes;
-                    AppDocument.querySelector('#common_profile_info_liked_count').innerHTML = profile.count_liked;
-                }    
-                if (COMMON_GLOBAL.user_account_id ==null)
-                    setTimeout(()=> {show_common_dialogue('LOGIN');}, 2000);
-                else
-                    checkOnline('common_profile_avatar_online_status', profile.id);
-                resolve({   profile_id: profile.id,
-                            private: profile.private});
-            })  
-            .catch(err=>{reject(err);});
-        }
-    });
+    return ComponentRender('common_dialogue_profile', 
+                    {   
+                        tab:'INFO',
+                        info_user_account_id:COMMON_GLOBAL.user_account_id,
+                        info_client_latitude:COMMON_GLOBAL.client_latitude,
+                        info_client_longitude:COMMON_GLOBAL.client_longitude,
+                        info_user_account_id_other:user_account_id_other,
+                        info_username:username,
+                        function_FFB:FFB,
+                        info_function_set_avatar:set_avatar,
+                        info_function_create_qr:create_qr,
+                        info_function_getHostname:getHostname,
+                        info_function_format_json_date:format_json_date,
+                        info_function_show_common_dialogue:show_common_dialogue,
+                        info_function_checkOnline:checkOnline
+                    },
+                    '/common/component/dialogue_profile.js');
     
 };
 /**
@@ -1536,8 +1401,7 @@ const profile_show = async (user_account_id_other = null, username = null) => {
  * @returns {void}
  */
 const profile_close = () => {
-    AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
-    dialogue_profile_clear();
+    ComponentRemove('common_dialogue_profile', true);
 };
 /**
  * Profile update stat
@@ -1840,9 +1704,8 @@ const user_logoff = async (system_admin) => {
         AppDocument.querySelector('#common_profile_avatar_online_status').className='';
         ComponentRemove('common_dialogue_user_edit');
         dialogue_password_new_clear();
-        ComponentRemove('common_dialogue_user_start', true);
-        AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
-        dialogue_profile_clear();
+        ComponentRemove('common_dialogue_user_start');
+        ComponentRemove('common_dialogue_profile', true);
         user_preferences_set_default_globals('LOCALE');
         user_preferences_set_default_globals('TIMEZONE');
         user_preferences_set_default_globals('DIRECTION');

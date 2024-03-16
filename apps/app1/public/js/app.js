@@ -174,7 +174,7 @@ const app_event_click = event => {
                     //user menu
                     case 'common_user_menu_username':{
                         AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-                        common.profile_show(null,null);
+                        profile_show_app(null,null);
                         AppDocument.querySelector('#common_user_menu_dropdown').style='none';
                         break;
                     }
@@ -359,6 +359,25 @@ const app_theme_update = (toggle_theme=false) => {
     AppDocument.body.classList.add(theme);
 };
 /**
+ * @param {number|null} user_account_id_other 
+ * @param {string|null} username 
+ * @return {void}
+ */
+const profile_show_app = (user_account_id_other, username) =>{
+    common.profile_show(user_account_id_other, username)
+    .then(()=>{
+        common.ComponentRender('common_profile_main_stat_row2', 
+                                {},
+                                '/component/profile_info.js');
+    })
+    .then(()=>{
+        common.ComponentRender(`profile_info_apps`, 
+                                {},
+                                '/common/component/profile_info_apps.js')
+                                ;
+    });
+}
+/**
  * Get apps
  * @returns {void}
  */
@@ -467,7 +486,7 @@ const mount_app_app = async (framework=null) => {
         if (user !='') {
             //show profile for user entered in url
             AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-            common.profile_show(null, user);
+            profile_show_app(null, user);
         }
         //use transition from now and not when starting app
         AppDocument.querySelectorAll('.dialogue_flip').forEach((/**@type{HTMLElement}*/dialogue) =>{
