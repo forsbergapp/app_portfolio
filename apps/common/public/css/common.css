@@ -371,8 +371,7 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 
 /*DIALOGUE MAINTENANCE */
 #common_dialogue_maintenance{
-	visibility: hidden;
-	z-index:100;
+	display: block;
 }
 #common_dialogue_maintenance_content{
 	height:250px;

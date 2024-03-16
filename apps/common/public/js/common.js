@@ -2975,16 +2975,6 @@ const broadcast_init = () => {
     connectOnline();
 };
 /**
- * Maintenance countdown
- * @param {number} remaining 
- */
-const maintenance_countdown = (remaining) => {
-    if(remaining <= 0)
-        location.reload();
-    AppDocument.querySelector('#common_maintenance_countdown').innerHTML = remaining;
-    setTimeout(()=>{ maintenance_countdown(remaining - 1); }, 1000);
-};
-/**
  * Show broadcast message
  * @param {string} broadcast_message 
  * @returns {void}
@@ -3027,10 +3017,11 @@ const show_broadcast = (broadcast_message) => {
  * @returns {void}
  */
 const show_maintenance = (message, init=null) => {
-    const countdown_timer = 60;
+    
     if (init==1){
-        AppDocument.querySelector('#common_dialogue_maintenance').style.visibility='visible';
-        maintenance_countdown(countdown_timer);
+        ComponentRender('common_dialogue_maintenance', 
+                        {},
+                        '/maintenance/component/dialogue_maintenance.js')
     }
     else
         AppDocument.querySelector('#common_maintenance_footer').innerHTML = message;
