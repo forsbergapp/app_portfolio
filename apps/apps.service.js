@@ -270,30 +270,7 @@ const render_app_html = async (app_id, locale) =>{
         }
         else
             common_files.push(['CommonBodyThemes', '']);
-
-                //app optional content
-                if (ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileInfo')[0])
-                common_files.push(['AppProfileInfo', ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileInfo')[0][4]]);
-            else
-                common_files.push(['AppProfileInfo', '']);
-    
-        if (app_config.RENDER_PROFILE_APPS==true){
-            const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileInfoApps')[0][4];
-            if (app_config.CUSTOM_TAG_PROFILE_APPS){
-                common_files.push([app_config.CUSTOM_TAG_PROFILE_APPS, common_file]);
-                common_files.push(['CommonBodyProfileInfoApps', '']);
-            }
-            else
-                common_files.push(['CommonBodyProfileInfoApps', common_file]);
-        }
-        else
-            common_files.push(['CommonBodyProfileInfoApps', '']);
-    
-        if (ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileTop')[0])
-            common_files.push(['AppProfileTop', ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileTop')[0][4]]);
-        else
-            common_files.push(['AppProfileTop', '']);
-        
+            
         const app = render_app_with_data(module, common_files);
         
         //render app parameters from apps.json
@@ -1080,6 +1057,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
             if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || app_start(app_id) ==true)
                 return new Promise((resolve, reject)=>{
                     if (url.toLowerCase().startsWith('/css')||
+                        url.toLowerCase().startsWith('/component')||
                         url.toLowerCase().startsWith('/images')||
                         url.toLowerCase().startsWith('/js')||
                         url.toLowerCase().startsWith('/common')||

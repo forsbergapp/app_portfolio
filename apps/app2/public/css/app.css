@@ -157,6 +157,7 @@
 }
 #profile_select_user_settings{
 	width:100%;
+	display:block;
 }
 #profile_user_settings_detail{
 	width: 100% !important;
@@ -701,14 +702,6 @@
 #settings #setting_data_user_url_year{
 	display:flex;
 }
-
-#profile_main_stat_row2{
-	text-align: center;
-	white-space: nowrap;
-}
-#profile_main_stat_row2 div{
-	display:inline-block;	
-}
 #profile_info_user_setting_likes_count,
 #profile_info_user_setting_liked_count{
     vertical-align: sub;
@@ -761,6 +754,13 @@
 }
 #common_profile_search_list{
 	margin-right: 10px !important;
+}
+#common_profile_main_stat_row2{
+	text-align: center;
+	white-space: nowrap;
+}
+#common_profile_main_stat_row2 div{
+	display:inline-block;	
 }
 
 #common_window_info #about_table{
