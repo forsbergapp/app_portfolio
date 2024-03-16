@@ -638,7 +638,7 @@ const toolbar_button = async (choice) => {
             {
                 settings.style.visibility = 'hidden';
                 AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
-                common.profile_top(1, null, show_profile_function);
+                profile_top_app(1, null, profile_show_app);
                 break;
             }
     }
@@ -1034,14 +1034,6 @@ const update_ui = async (option, item_id=null) => {
             }
     }
 };
-/**
- * Show profile function
- * function sent as parameter, set the argument passed and convert result to integer with unary plus syntax
- * and ES6 arrow function and without function keyword 
- * @param {string} profile_id 
- * @returns {Promise.<void>}
- */
-const show_profile_function = async profile_id => profile_show_app(+profile_id);
 
 /**
  * User login
@@ -1094,30 +1086,7 @@ const user_function_app = async (function_name) => {
     .then(()=>profile_update_stat_app())
     .catch(()=>null);
 };
-/**
- * Profile close
- * @returns {void}
- */
-const profile_close_app = () => {
-    common.profile_close();
-    profile_clear_app;
-};
-/**
- * Profile clear
- * @returns {void}
- */
-const profile_clear_app = () => {
 
-    AppDocument.querySelector('#common_profile_public').style.display = 'none';
-    AppDocument.querySelector('#common_profile_private').style.display = 'none';
-    
-    AppDocument.querySelector('#profile_info_user_setting_likes_count').innerHTML='';
-    AppDocument.querySelector('#profile_info_user_setting_liked_count').innerHTML='';
-    AppDocument.querySelector('#profile_select_user_settings').innerHTML='';
-
-    AppDocument.querySelector('#profile_user_settings_info_likes_count').innerHTML='';
-    AppDocument.querySelector('#profile_user_settings_info_views_count').innerHTML='';
-};
 /**
  * User logoff
  * @returns {void}
@@ -1128,7 +1097,7 @@ const user_logoff_app = () => {
         AppDocument.querySelector('#tab_nav_7').innerHTML = '';
         AppDocument.querySelector('#user_settings').style.display = 'none';
         
-        profile_clear_app();
+        common.ComponentRemove('common_dialogue_profile', true);
         //empty user settings
         select.innerHTML = '<option></option>';
         //set default settings
@@ -1189,37 +1158,47 @@ const profile_update_stat_app = async () => {
     profile_user_setting_stat(result.id);
 };
 /**
+ * Profile top
+ * @param {number} statchoice 
+ * @param {string|null} app_rest_url
+ * @param {function|null} function_user_click
+ * @returns {Promise.<void>}
+ */
+ const profile_top_app = async (statchoice, app_rest_url, function_user_click) => {
+    await common.profile_top(statchoice, app_rest_url, function_user_click)
+    .then(()=>{
+        common.ComponentRender('common_profile_top_row2', 
+                                {},
+                                '/component/profile_top.js');
+    })
+ }
+/**
  * Profile show
  * @param {number|null} user_account_id_other 
  * @param {string|null} username 
  * @returns {Promise.<void>}
  */
 const profile_show_app = async (user_account_id_other = null, username = null) => {
-    AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-    AppDocument.querySelector('#common_profile_top').style.display = 'none';
-    AppDocument.querySelector('#profile_main_stat_row2').style.display = 'none';
-    AppDocument.querySelector('#profile_user_settings_row').style.display = 'none';
-    
-    profile_clear_app();
-
-    if (user_account_id_other == null && common.COMMON_GLOBAL.user_account_id == null && username == null) {
-        AppDocument.querySelector('#common_profile_info').style.display = 'none';
-    }
-    else
-        await common.profile_show(user_account_id_other, username)
-        .then((/**@type{{profile_id:number, private:number}}*/result)=>{
-            if (result.profile_id != null){
-                if (result.private==1 && common.COMMON_GLOBAL.user_account_id !== result.profile_id) {
-                    //private
-                    null;
-                } else {
+    //using unary plus syntax if user account id has a value
+    await common.profile_show(user_account_id_other?+user_account_id_other:null, username)
+    .then((/**@type{{profile_id:number, private:number}}*/result)=>{
+        if (result.profile_id != null){
+            if (result.private==1 && (common.COMMON_GLOBAL.user_account_id == result.profile_id)==false) {
+                //private
+                null;
+            } else {
+                common.ComponentRender('common_profile_main_stat_row2', 
+                                        {},
+                                        '/component/profile_info.js')
+                .then(()=>{
                     //public
                     profile_show_user_setting();
-                    AppDocument.querySelector('#profile_main_stat_row2').style.display = 'block';
+                    AppDocument.querySelector('#common_profile_main_stat_row2').style.display = 'block';
                     profile_user_setting_stat(result.profile_id);
-                }    
-            }
-        });
+                })
+            }    
+        }
+    });
 };
 /**
  * 
@@ -2344,7 +2323,7 @@ const app_event_click = event => {
                 case 'profile_main_btn_user_setting_likes_user_setting':{
                     AppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, show_profile_function);
+                    profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, profile_show_app);
                     break;
                 }
                 case 'profile_main_btn_user_setting_liked':
@@ -2352,15 +2331,15 @@ const app_event_click = event => {
                 case 'profile_main_btn_user_setting_liked_user_setting':{
                     AppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, show_profile_function);
+                    profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, profile_show_app);
                     break;
                 }
                 case 'profile_top_row2_1':{
-                    common.profile_top(4, '/user_account_app_data_post/profile/top', show_profile_function);
+                    profile_top_app(4, '/user_account_app_data_post/profile/top', profile_show_app);
                     break;
                 }
                 case 'profile_top_row2_2':{
-                    common.profile_top(5, '/user_account_app_data_post/profile/top', show_profile_function);
+                    profile_top_app(5, '/user_account_app_data_post/profile/top', profile_show_app);
                     break;
                 }
                 case 'profile_user_settings_day':
@@ -2398,21 +2377,21 @@ const app_event_click = event => {
                 }
                 //dialogue profile
                 case 'common_profile_main_btn_following':{
-                    profile_detail_app(1, null, true, show_profile_function);
+                    profile_detail_app(1, null, true, profile_show_app);
                     break;
                 }
                 case 'common_profile_main_btn_followed':{
-                    profile_detail_app(2, null, true, show_profile_function);
+                    profile_detail_app(2, null, true, profile_show_app);
                     break;
                 }
                 case 'common_profile_main_btn_likes':{
-                    profile_detail_app(3, null, true, show_profile_function);
+                    profile_detail_app(3, null, true, profile_show_app);
                     break;
                 }
                 case 'common_profile_main_btn_liked':
                 case 'common_profile_main_btn_liked_heart':
                 case 'common_profile_main_btn_liked_users':{
-                    profile_detail_app(4, null, true, show_profile_function);
+                    profile_detail_app(4, null, true, profile_show_app);
                     break;
                 }
                 case 'common_profile_follow':{
@@ -2424,15 +2403,15 @@ const app_event_click = event => {
                     break;
                 }
                 case 'common_profile_top_row1_1':{
-                    common.profile_top(1, null, show_profile_function);
+                    profile_top_app(1, null, profile_show_app);
                     break;
                 }
                 case 'common_profile_top_row1_2':{
-                    common.profile_top(2, null, show_profile_function);
+                    profile_top_app(2, null, profile_show_app);
                     break;
                 }
                 case 'common_profile_top_row1_3':{
-                    common.profile_top(3, null, show_profile_function);
+                    profile_top_app(3, null, profile_show_app);
                     break;
                 }
                 case 'common_profile_home':{
@@ -2440,7 +2419,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'common_profile_close':{
-                    profile_close_app();
+                    common.ComponentRemove('common_dialogue_profile', true);
                     break;
                 }    
                 //module leaflet
@@ -2603,7 +2582,7 @@ const app_event_keyup = event => {
                 }
                 //common
                 case 'common_profile_search_input':{
-                    common.search_input(event, 'profile', show_profile_function);
+                    common.search_input(event, 'profile', profile_show_app);
                     break;
                 }
                 case 'common_user_start_login_username':
