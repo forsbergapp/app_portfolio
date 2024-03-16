@@ -24,7 +24,6 @@ const app_exception = () => {
  */
 const init = (parameters) => {
     AppDocument.title = '⚒';
-    AppDocument.querySelector('#common_maintenance_footer').innerHTML= '';
     AppDocument.querySelector('#common_broadcast').addEventListener('click', (/**@type{AppEvent}*/event) => {
         const event_target_id = common.element_id(event.target);
         if (event_target_id=='common_broadcast_close')
