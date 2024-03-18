@@ -525,27 +525,33 @@ const getProfile = (app_id, ip, user_agent, query, data, res) =>{
         service.getProfileUser(app_id, getNumberValue(query.get('POST_ID')), getNumberValue(query.get('POST_ID'))==null?query.get('search'):null, getNumberValue(query.get('id')))
         .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
             if (result_getProfileUser[0]){
-                if (result_getProfileUser[0].id == getNumberValue(query.get('id'))) {
-                    //send without {} so the variablename is not sent
-                    resolve(result_getProfileUser[0]);
-                }
-                else{
-                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`).then(({ insertUserAccountView }) => {
-                        const data_body = { user_account_id:        getNumberValue(query.get('POST_ID')),
-                                                                    //set user id when username is searched
-                                            user_account_id_view:   getNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id,
-                                            client_ip:              ip,
-                                            client_user_agent:      user_agent,
-                                            client_longitude:       data.client_longitude,
-                                            client_latitude:        data.client_latitude};
-                        insertUserAccountView(app_id, data_body)
-                        .then(()=>{
-                            //send without {} so the variablename is not sent
-                            resolve(result_getProfileUser[0]);
-                        })
-                        .catch((/**@type{Types.error}*/error)=>reject(error));
-                    });
-                }
+                //always save stat who is viewing, same user, none or someone else
+                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`).then(({ insertUserAccountView }) => {
+                    const data_body = { user_account_id:        getNumberValue(query.get('id')),    //who views
+                                        user_account_id_view:   getNumberValue(query.get('POST_ID')), //viewed account
+                                        client_ip:              ip,
+                                        client_user_agent:      user_agent,
+                                        client_longitude:       data.client_longitude,
+                                        client_latitude:        data.client_latitude};
+                    insertUserAccountView(app_id, data_body)
+                    .then(()=>{
+                        if (result_getProfileUser[0].private==1 && result_getProfileUser[0].friends==null){
+                            //private and not friends or anonymous visit, remove stats
+                            result_getProfileUser[0].count_following = null;
+                            result_getProfileUser[0].count_followed = null;
+                            result_getProfileUser[0].count_likes = null;
+                            result_getProfileUser[0].count_liked = null;
+                        }
+                        else
+                            if (result_getProfileUser[0].private==1 && result_getProfileUser[0].friends==1){
+                                //private and friends, remove private
+                                result_getProfileUser[0].private = null;
+                            }
+                        //send without {} so the variablename is not sent
+                        resolve(result_getProfileUser[0]);
+                    })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                });
             }
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
