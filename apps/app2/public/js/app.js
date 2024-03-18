@@ -844,15 +844,16 @@ const update_ui = async (option, item_id=null) => {
                                     AppDocument.querySelector('#setting_input_place').innerHTML,
                                     null,
                                     common.COMMON_GLOBAL.module_leaflet_marker_div_city,
-                                    common.COMMON_GLOBAL.module_leaflet_flyto).then((timezone_selected) => {
-                                        settings.timezone_report.value = timezone_selected;
-                                    });
+                                    common.COMMON_GLOBAL.module_leaflet_flyto)
+                    .then((timezone_selected) => {
+                        settings.timezone_report.value = timezone_selected;
+                        //update country, city and timezone in settings
+                        const option = AppDocument.querySelector('#setting_select_user_setting').options[AppDocument.querySelector('#setting_select_user_setting').selectedIndex];
+                        option.setAttribute('gps_country_id', AppDocument.querySelector('#common_module_leaflet_select_country')[AppDocument.querySelector('#common_module_leaflet_select_country').selectedIndex].getAttribute('id'));
+                        option.setAttribute('gps_city_id', AppDocument.querySelector('#common_module_leaflet_select_city')[AppDocument.querySelector('#common_module_leaflet_select_city').selectedIndex].getAttribute('id'));
+                        option.setAttribute('regional_timezone', settings.timezone_report.value);
+                    })
                 }
-                //update country and city in settings
-                const option = AppDocument.querySelector('#setting_select_user_setting').options[AppDocument.querySelector('#setting_select_user_setting').selectedIndex];
-                option.setAttribute('gps_country_id', AppDocument.querySelector('#common_module_leaflet_select_country')[AppDocument.querySelector('#common_module_leaflet_select_country').selectedIndex].getAttribute('id'));
-                option.setAttribute('gps_city_id', AppDocument.querySelector('#common_module_leaflet_select_city')[AppDocument.querySelector('#common_module_leaflet_select_city').selectedIndex].getAttribute('id'));
-                
                 break;
             }
         //GPS, popular places
