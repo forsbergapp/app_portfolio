@@ -528,7 +528,7 @@ const getProfile = (app_id, ip, user_agent, query, data, res) =>{
                 //always save stat who is viewing, same user, none or someone else
                 import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`).then(({ insertUserAccountView }) => {
                     const data_body = { user_account_id:        getNumberValue(query.get('id')),    //who views
-                                        user_account_id_view:   getNumberValue(query.get('POST_ID')), //viewed account
+                                        user_account_id_view:   getNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
                                         client_ip:              ip,
                                         client_user_agent:      user_agent,
                                         client_longitude:       data.client_longitude,
