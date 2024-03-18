@@ -1,3 +1,5 @@
+import { ComponentRender } from '../../../common/public/js/common';
+
 /**@type{{body:{className:string},
  *        querySelector:function,
  *        querySelectorAll:function}} */
@@ -2769,7 +2771,6 @@ const mount_app_app = async (framework=null) => {
                             const user = window.location.pathname.substring(1);
                             if (user !='') {
                                 //show profile for user entered in url
-                                AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
                                 profile_show_app(null, user);
                             }
                         };

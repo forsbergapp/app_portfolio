@@ -173,7 +173,6 @@ const app_event_click = event => {
                     }
                     //user menu
                     case 'common_user_menu_username':{
-                        AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
                         profile_show_app(null,null);
                         AppDocument.querySelector('#common_user_menu_dropdown').style='none';
                         break;
@@ -361,10 +360,10 @@ const app_theme_update = (toggle_theme=false) => {
 /**
  * @param {number|null} user_account_id_other 
  * @param {string|null} username 
- * @return {void}
+ * @returns {Promise.<void>}
  */
-const profile_show_app = (user_account_id_other, username) =>{
-    common.profile_show(user_account_id_other, username)
+const profile_show_app = async (user_account_id_other, username) =>{
+    await common.profile_show(user_account_id_other, username)
     .then(()=>{
         common.ComponentRender('common_profile_main_stat_row2', 
                                 {},
@@ -485,7 +484,6 @@ const mount_app_app = async (framework=null) => {
         const user = window.location.pathname.substring(1);
         if (user !='') {
             //show profile for user entered in url
-            AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
             profile_show_app(null, user);
         }
         //use transition from now and not when starting app
