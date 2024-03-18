@@ -1,5 +1,3 @@
-import { ComponentRender } from '../../../common/public/js/common';
-
 /**@type{{body:{className:string},
  *        querySelector:function,
  *        querySelectorAll:function}} */
