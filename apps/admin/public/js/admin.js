@@ -177,7 +177,6 @@ const app_event_click = event => {
                 }
                 case 'common_user_menu_username':{
                     if (common.COMMON_GLOBAL.system_admin == ''){
-                        AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
                         common.profile_show(null,null);
                         AppDocument.querySelector('#common_user_menu_dropdown').style = 'none';
                     }

@@ -265,7 +265,7 @@ const method = async props => {
             //return props.common_document.querySelector('#tempmount').innerHTML;
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
             if (props.tab=='INFO')
-                return profile_show(props.info_user_account_id_other, props.username);
+                return profile_show(props.info_user_account_id_other, props.info_username);
             else 
                 if (props.tab=='TOP')
                     profile_top(props.top_statchoice, props.top_app_rest_url, props.top_function_user_click);
@@ -279,7 +279,7 @@ const method = async props => {
             //return props.common_document.querySelector('#tempmount').innerHTML;
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
             if (props.tab=='INFO')
-                return profile_show(props.info_user_account_id_other, props.username);
+                return profile_show(props.info_user_account_id_other, props.info_username);
             else
                 if (props.tab=='TOP')
                     profile_top(props.top_statchoice, props.top_app_rest_url, props.top_function_user_click);
@@ -290,7 +290,7 @@ const method = async props => {
             //Default Javascript
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
             if (props.tab=='INFO')
-                return profile_show(props.info_user_account_id_other, props.username);
+                return profile_show(props.info_user_account_id_other, props.info_username);
             else
                 if (props.tab=='TOP')
                     profile_top(props.top_statchoice, props.top_app_rest_url, props.top_function_user_click);
