@@ -2957,7 +2957,7 @@ const connectOnline = async () => {
  */
 const checkOnline = (div_icon_online, user_account_id) => {
     FFB('SOCKET', `/socket/connection/check?user_account_id=${user_account_id}`, 'GET', 'APP_DATA', null)
-    .then(result=>AppDocument.querySelector('#' + div_icon_online).className = JSON.parse(result).online == 1?'online':'offline');
+    .then(result=>AppDocument.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online == 1?'online':'offline'));
 };
 /**
  * Get place from GPS
