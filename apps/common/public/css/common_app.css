@@ -649,7 +649,8 @@ select {
 	height: auto;
 	padding-bottom: 0px;
 }
-#common_dialogue_user_edit input{
+#common_dialogue_user_edit .common_input{
+	height: 1.5em;
 	width: 100%;
 	border: 0.5px solid;
 }
