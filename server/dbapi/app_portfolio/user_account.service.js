@@ -490,21 +490,21 @@ const getUserByUserId = async (app_id, id) => {
 const getProfileUser = async (app_id, id, username, id_current_user) => {
 	const sql = `SELECT	u.id "id",
 						u.bio "bio",
-						(SELECT 1
-						   FROM ${db_schema()}.user_account ua_current
-						  WHERE u.private = 1
-						    AND ua_current.id = :user_accound_id_current_user
-							and u.id <> :user_accound_id_current_user
-							AND (NOT EXISTS (SELECT NULL
-											   FROM ${db_schema()}.user_account_follow  uaf 
-											  WHERE uaf.user_account_id = u.id
-												AND uaf.user_account_id_follow = ua_current.id)
-								 OR 
-								 NOT EXISTS (SELECT NULL
-											   FROM ${db_schema()}.user_account_follow  uaf 
-											  WHERE uaf.user_account_id_follow = u.id
-												AND uaf.user_account_id = ua_current.id)
-								)) "private",
+						u.private "private",
+						(SELECT 1 
+							FROM app_portfolio.user_account ua_current
+						   WHERE ua_current.id = :user_accound_id_current_user
+								AND EXISTS 
+							(SELECT NULL
+							   FROM app_portfolio.user_account_follow  uaf 
+							  WHERE (uaf.user_account_id = u.id
+									 AND uaf.user_account_id_follow = ua_current.id)
+								or  (
+									 uaf.user_account_id_follow = u.id
+									 AND uaf.user_account_id = ua_current.id)
+							)
+				
+						) "friends",
 						u.user_level "user_level",
 						u.date_created "date_created",
 						u.username "username",
