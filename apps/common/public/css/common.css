@@ -316,7 +316,7 @@ body.font_arabic_nastaliq{
 	font-family: var(--global_font_arabic_nastaliq);
 }
 body.font_arabic_nastaliq select,
-body.font_arabic_nastaliq input{
+body.font_arabic_nastaliq .common_input{
 	font-size:0.7em;
 }
 body.font_arabic_nastaliq #common_user_menu_default_avatar{
