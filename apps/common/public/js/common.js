@@ -56,7 +56,6 @@ const {getTimezone} = await import('regional');
 /**@type{{  common_app_id:number,
             app_id:number|null,
             app_logo:string|null,
-            app_sound:number|null,
             app_email:string|null,
             app_copyright:string|null,
             app_link_url:string|null,
@@ -142,7 +141,6 @@ const COMMON_GLOBAL = {
     common_app_id:0,
     app_id:null,
     app_logo:null,
-    app_sound:0,
     app_email:null,
     app_copyright:null,
     app_link_url:null,
@@ -3101,8 +3099,6 @@ const set_app_service_parameters = async parameters => {
     COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
     COMMON_GLOBAL.app_id = parameters.app_id;
     COMMON_GLOBAL.app_logo = parameters.app_logo;
-    // app sound
-    COMMON_GLOBAL.app_sound= parseInt(parameters.app_sound);
 
     COMMON_GLOBAL.app_email= parameters.app_email;
     COMMON_GLOBAL.app_copyright= parameters.app_copyright;

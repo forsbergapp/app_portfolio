@@ -383,7 +383,6 @@ const get_module_with_initBFF = async (app_info) => {
         const app_service_parameters = {   
             app_id: app_info.app_id,
             app_logo:ConfigGetApp(app_info.app_id, app_info.app_id, 'LOGO'),
-            app_sound: getNumberValue(ConfigGet('SERVER', 'APP_SOUND')),
             app_email: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'EMAIL' in parameter)[0].EMAIL,
             app_copyright: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'COPYRIGHT' in parameter)[0].COPYRIGHT,
             app_link_url: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_URL' in parameter)[0].LINK_URL,
