@@ -984,12 +984,6 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                 resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
-            case '.ogg':{
-                res.type('audio/ogg');
-                res.set('Cache-Control', `max-age=${maxage}`);
-                resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
-                break;
-            }
             case '.webp':{
                 res.type('image/webp');
                 res.set('Cache-Control', `max-age=${maxage}`);

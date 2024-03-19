@@ -839,35 +839,6 @@ const show_message_info_list = list_obj =>{
     return html;
 };
 /**
- * Dialogue close
- * @param {string} dialogue 
- * @returns {Promise.<null>}
- */
-const dialogue_close = async dialogue => {
-    return new Promise(resolve=>{
-        const animationDuration = 400;
-        let soundDuration;
-        if (COMMON_GLOBAL.app_sound==1){
-            //add sound effect if needed
-            const meepmeep = AppDocument.createElement('audio');
-            meepmeep.src = '/common/audio/meepmeep.ogg';
-            meepmeep.play();
-            soundDuration = 400;
-        }
-        else
-            soundDuration = 0;
-
-        setTimeout(()=>{
-            AppDocument.querySelector('#' + dialogue).classList.add('common_dialogue_close');
-            setTimeout(()=>{
-                AppDocument.querySelector('#' + dialogue).classList.remove('common_dialogue_close');
-                resolve(null);
-            }, animationDuration);
-        }, soundDuration);
-    });
-    
-};
-/**
  * Show common dialogue
  * @param {string} dialogue 
  * @param {string|null} user_verification_type 
@@ -1617,14 +1588,12 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                 AppDocument.querySelector('#common_user_preferences').style.display = 'none';
                 AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
                 AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-                dialogue_close(current_dialogue).then(() => {
-                    AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
-                    ComponentRemove(current_dialogue, true);
-                    resolve({   user_id: null,
+                AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+                ComponentRemove(current_dialogue, true);
+                resolve({   user_id: null,
                                 username: JSON.parse(result).username,
                                 bio: null,
                                 avatar: null});
-                })
             }
             else{
                 const user = JSON.parse(result).items[0];
@@ -1656,14 +1625,12 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                     updateOnlineStatus();
                     user_preference_get()
                     .then(()=>{
-                        dialogue_close(current_dialogue).then(() => {
-                            AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
-                            ComponentRemove(current_dialogue, true);
-                            resolve({   user_id: user.id,
-                                        username: user.username,
-                                        bio: user.bio,
-                                        avatar: user.avatar});
-                        })
+                        AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+                        ComponentRemove(current_dialogue, true);
+                        resolve({   user_id: user.id,
+                                    username: user.username,
+                                    bio: user.bio,
+                                    avatar: user.avatar});
                     });
                 }
             }
@@ -1701,7 +1668,6 @@ const user_logoff = async (system_admin) => {
         AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'inline-block';
 
         updateOnlineStatus();
-        AppDocument.querySelector('#common_profile_avatar_online_status').className='';
         ComponentRemove('common_dialogue_user_edit');
         dialogue_password_new_clear();
         ComponentRemove('common_dialogue_user_start');
@@ -2245,17 +2211,14 @@ const ProviderSignIn = (provider_id) => {
                     AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block'; //block app2?
                     AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
                     AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
-                    dialogue_close('common_dialogue_user_start').then(() => {
-                        ComponentRemove('common_dialogue_user_start', true);
-                        resolve({   user_account_id: user_login.id,
-                                    username: user_login.username,
-                                    bio: user_login.bio,
-                                    avatar: profile_image,
-                                    first_name: provider_data.profile_first_name,
-                                    last_name: provider_data.profile_last_name,
-                                    userCreated: JSON.parse(result).userCreated});
-                    })
-                    
+                    ComponentRemove('common_dialogue_user_start', true);
+                    resolve({   user_account_id: user_login.id,
+                                username: user_login.username,
+                                bio: user_login.bio,
+                                avatar: profile_image,
+                                first_name: provider_data.profile_first_name,
+                                last_name: provider_data.profile_last_name,
+                                userCreated: JSON.parse(result).userCreated});
                 });
             })
             .catch(err=>{
@@ -3987,7 +3950,7 @@ export{/* GLOBALS*/
        /* COMPONENTS */
        ComponentRender,ComponentRemove,
        /* MESSAGE & DIALOGUE */
-       show_message_info_list, dialogue_close, show_common_dialogue, show_message,
+       show_message_info_list, show_common_dialogue, show_message,
        lov_close, lov_show,
        /* PROFILE */
        profile_follow_like, profile_top, profile_detail, profile_show,

@@ -170,8 +170,6 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	text-align: center;
 	position:fixed;
 	z-index: 10;
-	animation-name: common_roadRunnerIn;
-	animation-duration: 0.4s;
 	overflow: auto;
 	padding-top: 10px;
 }
@@ -1218,6 +1216,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 /* COMMON */
 #common_dialogue_user_start{
 	height: auto !important;
+	text-align: center;
 }
 #common_user_start_close{
 	display: none;

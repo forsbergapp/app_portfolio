@@ -126,9 +126,14 @@ const mount_app_app = async (framework=null) => {
             KeyDown: null,
             KeyUp: null,
             Focus: null,
-            Input:null})
-    .then(()=> {
-        getdocs();
+            Input:null});
+};
+/**
+ * Init app
+ * @returns {Promise.<void>}
+ */
+const init_app = async () => {
+    getdocs();
         const docid = window.location.pathname.substring(1);
         if (docid!=''){
             AppDocument.querySelector('#dialogue_documents').style.visibility = 'hidden';
@@ -136,18 +141,13 @@ const mount_app_app = async (framework=null) => {
                         {   info:0,
                             url:AppDocument.querySelector(`#doc_${docid}`).getAttribute('full_size'),
                             content_type:null, 
-                            iframe_content:null}, '/common/component/window_info.js');
+                            iframe_content:null}, '/common/component/window_info.js')
+                            .then(()=>mount_app_app());
         }
-        else
+        else{
             AppDocument.querySelector('#dialogue_documents').style.visibility = 'visible';
-    });
-};
-/**
- * Init app
- * @returns {Promise.<void>}
- */
-const init_app = async () => {
-    mount_app_app();
+            mount_app_app();
+        }
 };
 /**
  * Init common

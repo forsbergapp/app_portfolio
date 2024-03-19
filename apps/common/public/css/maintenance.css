@@ -46,11 +46,8 @@ body{
 	height: auto;
 	word-break: break-word;
 	border-radius: 4px;
-	animation-name: common_animatetop;
-	animation-duration: 0.4s;
 }
 
-/* add animation effects */
 @keyframes common_pulsate {
     0% { 
         opacity: 0.5;
@@ -63,16 +60,6 @@ body{
     }
 }
 
-@keyframes common_animatetop {
-	from {
-		top: -60%;
-		opacity: 0
-	}
-	to {
-		top: 15%;
-		opacity: 1
-	}
-}
 .common_dialogue_content{
     background-color: var(--app_light);
     box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
