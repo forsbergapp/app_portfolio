@@ -22,8 +22,6 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	text-align: center;
 	top:14%;
 	position:fixed;
-	animation-name: common_animatetop;
-	animation-duration: 0.4s;
 
 }
 .dialogue_content{
@@ -115,18 +113,6 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	display:none;
 }
 /*DIALOGUE INFO*/
-.dialogue_flip {
-    backface-visibility:             hidden;
-    transition: all 0s;
-}
-.dialogue_flip-side-1 {    
-    transform:             rotateY( 0deg ) !important;
-}
-
-.dialogue_flip-side-2 {
-    transform:             rotateY( 180deg ) !important;
-}
-
 #dialogue_info_content{
 	visibility:hidden;
 	width: 350px;
@@ -363,7 +349,6 @@ div.ray8 {
 	transform-origin: 50% 10px;
 	height: 60px;
 	margin-top: 10px;
-	display: none;
 }
 .toggle {
 	position: relative;

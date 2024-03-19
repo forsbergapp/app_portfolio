@@ -5,8 +5,6 @@
 	text-align: center;
 	top:15%;
 	position:fixed;
-	animation-name: common_animatetop;
-	animation-duration: 0.4s;
 }
 .dialogue_content{
 	padding: 10px;

@@ -18,16 +18,11 @@ body {
 	top:15%;
 	text-align: center;
 	position:fixed;
-	animation-name: common_animatetop;
-	animation-duration: 0.4s;
 }
 .dialogue_content{
 	padding: 3em;
 	display:inline-block;
 	border-radius: 4px;
-}
-#dialogue_documents{
-	visibility: hidden;
 }
 /*COMMON*/
 #common_profile_input_row,

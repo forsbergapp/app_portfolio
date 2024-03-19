@@ -473,26 +473,7 @@ const mount_app_app = async (framework=null) => {
             KeyDown: null,
             KeyUp: app_event_keyup,
             Focus: null,
-            Input:null})
-    .then(()=> {
-        AppDocument.querySelector('#dialogue_start_content').style.visibility = 'visible';
-        if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-            common.common_translate_ui(common.COMMON_GLOBAL.user_locale).then(()=>get_apps());
-        else
-            get_apps();
-        
-        const user = window.location.pathname.substring(1);
-        if (user !='') {
-            //show profile for user entered in url
-            profile_show_app(null, user);
-        }
-        //use transition from now and not when starting app
-        AppDocument.querySelectorAll('.dialogue_flip').forEach((/**@type{HTMLElement}*/dialogue) =>{
-            dialogue.style.transition = 'all 1s';
-        });
-        //show app themes from now to avoid startup css render issues
-        AppDocument.querySelector('#app_themes').style.display = 'block';
-    });
+            Input:null});
 };
 /**
  * Init app
@@ -529,7 +510,17 @@ const init_app = async (parameters) => {
     AppDocument.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
     AppDocument.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
     AppDocument.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
-
+    AppDocument.querySelector('#dialogue_start_content').style.visibility = 'visible';
+    if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
+        common.common_translate_ui(common.COMMON_GLOBAL.user_locale).then(()=>get_apps());
+    else
+        get_apps();
+    
+    const user = window.location.pathname.substring(1);
+    if (user !='') {
+        //show profile for user entered in url
+        profile_show_app(null, user);
+    }
     mount_app_app();
 };
 /**

@@ -84,10 +84,7 @@ const app_event_click = event => {
             KeyUp: null,
             Focus: null,
             Input:null})
-    .then(()=> {
-        AppDocument.querySelector('#dialogue_documents').style.visibility ='visible';
-        serviceworker();
-    });
+    .then(()=>serviceworker());
 };
 /**
  * Init app
