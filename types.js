@@ -376,7 +376,6 @@
  * @typedef {object}        app_service_parameters
  * @property {number}       app_id
  * @property {string}       app_logo
- * @property {number|null}  app_sound
  * @property {string|null}  app_email
  * @property {string|null}  app_copyright
  * @property {string|null}  app_link_url
@@ -514,7 +513,6 @@
  *               TEST_SUBDOMAIN:string,
  *               APP_LOG:string,
  *               APP_START:string,
- *               APP_SOUND:string,
  *               APP_COMMON_APP_ID:string,
  *               REST_RESOURCE_BFF:string}} config_server_server
  * @typedef {{ AUTHENTICATE_REQUEST_ENABLE:string,
