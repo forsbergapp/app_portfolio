@@ -89,7 +89,6 @@
                     ["APP_COMMON",          null,           "CommonBodyToolbarFramework",   "/apps/common/src/toolbar_framework.html"],
                     ["APP_COMMON",          null,           "CommonBodyDialogues",          "/apps/common/src/body_dialogues.html"],
                     ["APP_COMMON",          null,           "CommonBodyWindowInfo",         "/apps/common/src/body_window_info.html"],
-                    ["APP_COMMON",          null,           "CommonBodyMaintenance",        "/apps/common/src/body_maintenance.html"],
                     ["APP_COMMON",          null,           "CommonBodyBroadcast",          "/apps/common/src/body_broadcast.html"],
                     ["APP_COMMON",          null,           "CommonBodyProfileSearch",      "/apps/common/src/profile_search.html"],
                     ["APP_COMMON_OPTIONAL", null,           "CommonBodyUserAccount",        "/apps/common/src/user_account.html"],
