@@ -485,6 +485,9 @@ const init_app = async (parameters) => {
     common.ComponentRender('common_profile_search',
                             {}, 
                             '/common/component/profile_search.js');
+    common.ComponentRender('app_profile_toolbar',
+                            {}, 
+                            '/common/component/profile_toolbar.js');
     for (const parameter of parameters.app) {
         if (parameter['MODULE_EASY.QRCODE_WIDTH'])
             common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);

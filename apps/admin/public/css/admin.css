@@ -1237,9 +1237,6 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	visibility: hidden;
 	display:	none !important;
 }
-#common_profile_btn_top{
-	visibility: hidden;
-}
 #common_user_account{
 	margin:10px;
 }
