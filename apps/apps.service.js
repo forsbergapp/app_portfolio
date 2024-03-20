@@ -229,17 +229,6 @@ const render_app_html = async (app_id, locale) =>{
         }
         else
             common_files.push(['CommonBodyUserAccount', '']);
-        if (app_config.RENDER_PROFILE_TOP==true){
-            const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileBtnTop')[0][4];
-            if (app_config.CUSTOM_TAG_PROFILE_TOP){
-                common_files.push([app_config.CUSTOM_TAG_PROFILE_TOP, common_file]);
-                common_files.push(['CommonBodyProfileBtnTop', '']);
-            }
-            else
-                common_files.push(['CommonBodyProfileBtnTop', common_file]);
-        }
-        else
-            common_files.push(['CommonBodyProfileBtnTop', '']);
         
         if (app_config.MAP==true){
             const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonHeadMap')[0][4];
