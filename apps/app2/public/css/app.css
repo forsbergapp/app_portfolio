@@ -136,6 +136,9 @@
 	font-size: 48px;
 }
 /* TOOLBAR BOTTOM*/
+#app_profile_toolbar{
+	position: fixed;
+}
 #toolbar_bottom {
 	width: 100%;
 	text-align: center;

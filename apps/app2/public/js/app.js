@@ -206,9 +206,9 @@ const getReportSettings = () => {
  * @param {number} timetable_type 
  * @param {string|null} item_id 
  * @param {object} settings 
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const update_timetable_report = (timetable_type = 0, item_id = null, settings) => {
+const update_timetable_report = async (timetable_type = 0, item_id = null, settings) => {
     APP_GLOBAL.timetable_type = timetable_type;
     switch (timetable_type){
         //create timetable month or day or year if they are visible instead
@@ -235,19 +235,19 @@ const update_timetable_report = (timetable_type = 0, item_id = null, settings) =
                 });
             }
             AppDocument.querySelector('#paper').innerHTML = app_report.displayDay(prayTimes, settings, item_id, current_user_settings);
-            common.create_qr('timetable_qr_code', common.getHostname());
+            await common.create_qr('timetable_qr_code', common.getHostname());
             break;
         }
         //1=create timetable month
         case 1:{
             AppDocument.querySelector('#paper').innerHTML = app_report.displayMonth(prayTimes, settings, item_id);
-            common.create_qr('timetable_qr_code', common.getHostname());
+            await common.create_qr('timetable_qr_code', common.getHostname());
             break;
         }
         //2=create timetable year
         case 2:{
             AppDocument.querySelector('#paper').innerHTML = app_report.displayYear(prayTimes, settings, item_id);
-            common.create_qr('timetable_qr_code', common.getHostname());
+            await common.create_qr('timetable_qr_code', common.getHostname());
             break;
         }
         default:{
@@ -294,11 +294,11 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
  * @returns {Promise.<void>}
  */
 const update_all_theme_thumbnails = async () => {
-    update_timetable_report(0, null, getReportSettings());
+    await update_timetable_report(0, null, getReportSettings());
     update_theme_thumbnail('day');
-    update_timetable_report(1, null, getReportSettings());
+    await update_timetable_report(1, null, getReportSettings());
     update_theme_thumbnail('month');
-    update_timetable_report(2, null, getReportSettings());
+    await update_timetable_report(2, null, getReportSettings());
     update_theme_thumbnail('year');
 };
 /**
@@ -590,7 +590,7 @@ const toolbar_button = async (choice) => {
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
-                update_timetable_report(0, null, getReportSettings());
+                await update_timetable_report(0, null, getReportSettings());
                 break;
             }
         //month
@@ -600,7 +600,7 @@ const toolbar_button = async (choice) => {
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
-                update_timetable_report(1, null, getReportSettings());
+                await update_timetable_report(1, null, getReportSettings());
                 break;
             }
         //year
@@ -610,7 +610,7 @@ const toolbar_button = async (choice) => {
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
-                update_timetable_report(2, null, getReportSettings());
+                await update_timetable_report(2, null, getReportSettings());
                 break;
             }
         //settings
@@ -2905,6 +2905,9 @@ const init_app = parameters => {
     common.ComponentRender('app_profile_search',
                             {}, 
                             '/common/component/profile_search.js');
+    common.ComponentRender('app_profile_toolbar',
+                            {}, 
+                            '/common/component/profile_toolbar.js');
     //set app globals
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone
@@ -2966,7 +2969,7 @@ const init_app = parameters => {
                 settings_translate(false).then(() => {
                     const show_start = async () => {
                         //show default startup
-                        toolbar_button(APP_GLOBAL.app_default_startup_page);
+                        await toolbar_button(APP_GLOBAL.app_default_startup_page);
                         const user = window.location.pathname.substring(1);
                         if (user !='') {
                             //show profile for user entered in url

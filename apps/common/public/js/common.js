@@ -2230,9 +2230,10 @@ const ProviderSignIn = (provider_id) => {
  * Create QR code
  * @param {string} div 
  * @param {string} url 
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const create_qr = (div, url) => {
+const create_qr = async (div, url) => {
+    AppDocument.querySelector('#' + div).innerHTML='';
     new QRCode(AppDocument.querySelector('#' + div), {
         text: url,
         width: COMMON_GLOBAL['module_easy.qrcode_width'],
@@ -2241,6 +2242,8 @@ const create_qr = (div, url) => {
         colorLight: COMMON_GLOBAL['module_easy.qrcode_color_light'],
         drawer: 'svg'
     });
+    //executing await promise 1 ms results in QRCode rendered
+    await new Promise ((resolve)=>{setTimeout(()=> resolve(null),1)});
 };
 /**
  * Map init
