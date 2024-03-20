@@ -2902,6 +2902,9 @@ const init_app = parameters => {
             common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'];
     }
     dialogue_loading(1);
+    common.ComponentRender('app_profile_search',
+                            {}, 
+                            '/common/component/profile_search.js');
     //set app globals
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone

@@ -218,17 +218,6 @@ const render_app_html = async (app_id, locale) =>{
         /**@type {[string, string][]} */
         const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];} );
 
-        if (app_config.RENDER_PROFILE_SEARCH==true){
-            const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileSearch')[0][4];
-            if (app_config.CUSTOM_TAG_PROFILE_SEARCH){
-                common_files.push([app_config.CUSTOM_TAG_PROFILE_SEARCH, common_file]);
-                common_files.push(['CommonBodyProfileSearch', '']);
-            }
-            else
-                common_files.push(['CommonBodyProfileSearch', common_file]);
-        }
-        else
-            common_files.push(['CommonBodyProfileSearch', '']);
         if (app_config.RENDER_USER_ACCOUNT==true){
             const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyUserAccount')[0][4];
             if (app_config.CUSTOM_TAG_USER_ACCOUNT){
