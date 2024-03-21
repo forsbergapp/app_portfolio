@@ -15,14 +15,9 @@ const createAdmin = async (app_id, locale) => {
     return render_app_html(app_id, locale)
             .then((/**@type{Types.render_common}*/app)=>{
                 if (app.settings)
-                    return {app:app.app,
-                            map:app.map,
-                            map_styles: app.settings.map_styles
-                            };
+                    return {app:app.app};
                 else
-                    return{ app:app.app,
-                            map:app.map,
-                            map_styles: null};
+                    return{ app:app.app};
             })
             .catch((/**@type{Types.error}*/err)=>{throw err;});
 };

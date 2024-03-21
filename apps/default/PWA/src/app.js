@@ -16,16 +16,14 @@ const createApp = async (app_id, params) => {
         if (params==null){
             render_app_html(app_id, null)
             .then((/**@type{Types.render_common}*/app)=>{
-                resolve({   app:app.app,
-                            map:app.map,
-                            map_styles: app.settings.map_styles});
+                resolve({   app:app.app});
                 
             })
             .catch((/**@type{Types.error}*/err)=>reject(err));
         }
         else{
             //redirect to /
-            resolve ({app: null, map: null, map_styles:null});
+            resolve ({app: null});
         }
     });
 };

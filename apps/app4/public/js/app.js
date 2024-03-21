@@ -85,10 +85,9 @@ const init_map = async (framework=null)=>{
                         Focus: null,
                         Input:null})
     .then(()=>  common.map_init(APP_GLOBAL.module_leaflet_map_container,
-                                common.COMMON_GLOBAL.module_leaflet_style, 
                                 common.COMMON_GLOBAL.client_longitude,
                                 common.COMMON_GLOBAL.client_latitude,
-                                true,
+                                null,
                                 null))
     .then(()=>  common.map_update(  common.COMMON_GLOBAL.client_longitude,
                                     common.COMMON_GLOBAL.client_latitude,
