@@ -328,8 +328,6 @@
  * @property {number} app_id                - app id
  * @property {string} locale                - locale
  * @property {number} system_admin_only     - 0/1
- * @property {boolean|null} map             - map
- * @property {map_styles} map_styles        - map styles
  * @property {string} datatoken             - JW token
  * @property {string} latitude              - geodata latitude
  * @property {string} longitude             - geodata longitude
@@ -361,15 +359,13 @@
  * @property {string} user_timezones        - HTML option format
  * @property {string} user_directions       - HTML option format
  * @property {string} user_arabic_scripts   - HTML option format
- * @property {map_styles} map_styles        - HTML option format                   - HTML option format
  */
 /**
  * Apps - App render common items for apps with locales and settings
  * @typedef {object} render_common
  * @property {string} app                         - HTML
  * @property {string} locales                     - HTML option format
- * @property {render_common_settings} settings    
- * @property {boolean} map
+ * @property {render_common_settings} settings 
  */
 /**
  * Apps - App common parameters
@@ -382,8 +378,6 @@
  * @property {string|null}  app_link_title
  * @property {number}       app_framework
  * @property {string}       app_datatoken
- * @property {string|null}  countries
- * @property {map_styles}   map_styles
  * @property {string}       locale
  * @property {translate_items}  translate_items
  * @property {number}       system_admin_only
@@ -399,31 +393,17 @@
  * Apps - App create
  * @typedef {object} app_create
  * @property {string} app                         - HTML
- * @property {boolean} map     
- * @property {map_styles} map_styles
+
  */
 /**
  * Apps - App create empty
  * @typedef {object} app_create_empty
  * @property {null} app                         - HTML
- * @property {null} map     
- * @property {null} map_styles
  */
 
 /**
  * Apps - App request parameter
  * @typedef {string} app_parameter
- */
-/**
- * Apps - App map styles
- * @typedef {object|null} map_styles
- * @property {string} id
- * @property {string} description
- * @property {string} data
- * @property {string} data2
- * @property {string} data3
- * @property {string} data4
- * @property {string|null} session_map_layer
  */
 /**
  * Apps - Report query parameters
@@ -1243,7 +1223,14 @@
  *              data5:string|null,
  *              text:string}} db_result_app_setting_getSettings
  * 
- * @typedef {{  display_data:string}} db_result_app_setting_getSettingDisplayData
+ * @typedef {{  id:string,
+ *              value:string, 
+ *              name:null, 
+ *              display_data: string, 
+ *              data2:string|null, 
+ *              data3:string|null, 
+ *              data4:string|null, 
+ *              data5:string|null}} db_result_app_setting_getSettingDisplayData
  * 
  * COUNTRY
  * @typedef {{  id:string, 

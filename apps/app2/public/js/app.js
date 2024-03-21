@@ -2630,11 +2630,23 @@ const serviceworker = () => {
  */
 const init_map = async () => {
     return await new Promise((resolve) => {
+        /**
+         * @param{AppEventLeaflet} event
+         */
+        const dbl_click_event = event => {
+            if (event.originalEvent.target.id == APP_GLOBAL.gps_module_leaflet_container){
+                AppDocument.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
+                AppDocument.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
+                //Update GPS position
+                update_ui(9);
+                const timezone = getTimezone(   event.latlng.lat, event.latlng.lng);
+                app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
+            }   
+        };
         common.map_init(APP_GLOBAL.gps_module_leaflet_container,
-                        common.COMMON_GLOBAL.module_leaflet_style, 
                         AppDocument.querySelector('#setting_input_long').innerHTML, 
                         AppDocument.querySelector('#setting_input_lat').innerHTML,
-                        false,
+                        dbl_click_event,
                         map_show_search_on_map_app).then(() => {
             //GPS
             const select_user_setting = AppDocument.querySelector('#setting_select_user_setting');
@@ -2651,16 +2663,6 @@ const init_map = async () => {
                     }
                 });
             }
-            common.map_setevent('dblclick', (/**@type{AppEventLeaflet}*/event) => {
-                if (event.originalEvent.target.id == APP_GLOBAL.gps_module_leaflet_container){
-                    AppDocument.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
-                    AppDocument.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
-                    //Update GPS position
-                    update_ui(9);
-                    const timezone = getTimezone(   event.latlng.lat, event.latlng.lng);
-                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
-                }   
-            });
             resolve();
         });
     });

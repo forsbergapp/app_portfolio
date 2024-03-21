@@ -254,9 +254,7 @@ const createApp = async (app_id, username, locale) => {
                 render_variables.push(['AppIqamat',APP_IQAMAT]);
                 render_variables.push(['AppFaststartend',APP_FAST_START_END]);
                 
-                resolve({   app:render_app_with_data(app.app, render_variables),
-                            map:app.map,
-                            map_styles: app.settings.map_styles});
+                resolve({   app:render_app_with_data(app.app, render_variables)});
                 
             })
             .catch((/**@type{Types.error}*/err)=>reject(err));
@@ -269,7 +267,7 @@ const createApp = async (app_id, username, locale) => {
                         main(app_id);
                     else{
                         //redirect to /
-                        resolve ({app: null, map: null, map_styles:null});
+                        resolve ({app: null});
                     }
                 })
                 .catch((/**@type{Types.error}*/error)=>{

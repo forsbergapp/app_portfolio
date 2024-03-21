@@ -134,8 +134,6 @@ const render_app_html = async (app_id, locale) =>{
     let user_timezones = '';
     let user_directions = '';
     let user_arabic_scripts = '';
-    /** @type {Types.map_styles[]} */
-    const map_styles = [];
     /** @type {[string, string][]} */
     const render_variables = [];
 
@@ -184,24 +182,12 @@ const render_app_html = async (app_id, locale) =>{
                     user_arabic_scripts += option;
                     break;
                 }
-                //map styles
-                case 'MAP_STYLE':{
-                    map_styles.push({  id:app_setting.id, 
-                                        description:app_setting.text, 
-                                        data:app_setting.value, 
-                                        data2:app_setting.data2, 
-                                        data3:app_setting.data3, 
-                                        data4:app_setting.data4, 
-                                        session_map_layer:null});
-                    break;
-                }
             }
         }
         settings = {settings: app_settings_db, 
                     user_timezones: user_timezones, 
                     user_directions: user_directions, 
-                    user_arabic_scripts: user_arabic_scripts,
-                    map_styles: app_config.MAP==true?map_styles:null};
+                    user_arabic_scripts: user_arabic_scripts};
 
         render_variables.push(['COMMON_USER_TIMEZONE',user_timezones]);
         render_variables.push(['COMMON_USER_DIRECTION',`<option id='' value=''></option>${user_directions}`]);
@@ -287,59 +273,11 @@ const render_app_html = async (app_id, locale) =>{
 
         resolve({   app:        render_app_with_data(app, render_variables),
                     locales:    user_locales, 
-                    settings:   settings,
-                    map:        app_config.MAP});
+                    settings:   settings});
     });
 };
 /**
- * Returns countries in HTML option format for select item in client html
- * 
- * @param {number} app_id       - application id
- * @param {string} locale       - locale
- * @returns {Promise<string>}   - HTML in option format
- */
-const countries = (app_id, locale) => {
-    return new Promise((resolve, reject) => {
-        import(`file://${process.cwd()}/server/dbapi/app_portfolio/country.service.js`).then(({getCountries})=>{
-            getCountries(app_id, locale)
-            .then((/** @type {Types.db_result_country_getCountries[]}*/ result)=>{
-                /** @type {string}*/
-                let select_countries;
-                /** @type {string}*/
-                let current_group_name;
-                select_countries  =`<option value='' id='' label='…' selected='selected'>…
-                                    </option>`;
-        
-                result.map( (/** @type Types.db_result_country_getCountries}*/ countries_map, /** @type {number}*/ i) => {
-                    if (i === 0){
-                    select_countries += `<optgroup label=${countries_map.group_name} />`;
-                    current_group_name = countries_map.group_name;
-                    }
-                    else{
-                    if (countries_map.group_name !== current_group_name){
-                        select_countries += `<optgroup label=${countries_map.group_name} />`;
-                        current_group_name = countries_map.group_name;
-                    }
-                    select_countries +=
-                    `<option value=${i}
-                            id=${countries_map.id} 
-                            country_code=${countries_map.country_code} 
-                            flag_emoji=${countries_map.flag_emoji} 
-                            group_name=${countries_map.group_name}>${countries_map.flag_emoji} ${countries_map.text}
-                    </option>`;
-                    }
-                });
-                resolve (select_countries);
-            })
-            .catch((/**@type{Types.error}*/error)=> {
-                //ignore error here
-                reject (error);
-            });
-        });
-    });
-};
-/**
- * Gets module with application name, app service parameters with optional countries
+ * Gets module with application name, app service parameters
  * 
  * @async
  * @param {Types.app_info} app_info - app info configuration
@@ -351,12 +289,11 @@ const get_module_with_initBFF = async (app_info) => {
     /**
      * 
      * @param {string} module 
-     * @param {string|null} countries 
      * @param {{}[]|null} app_parameters 
      * @param {number} first_time 
      * @returns {string}
      */
-    const return_with_parameters = (module, countries, app_parameters, first_time)=>{
+    const return_with_parameters = (module, app_parameters, first_time)=>{
         /**@type{Types.app_service_parameters} */
         const app_service_parameters = {   
             app_id: app_info.app_id,
@@ -367,8 +304,6 @@ const get_module_with_initBFF = async (app_info) => {
             app_link_title: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_TITLE' in parameter)[0].LINK_TITLE,
             app_framework : getNumberValue(ConfigGet('SERVER', 'APP_FRAMEWORK')),
             app_datatoken: app_info.datatoken,
-            countries:countries,
-            map_styles: app_info.map_styles,
             locale: app_info.locale,
             translate_items:app_info.translate_items,
             system_admin_only: app_info.system_admin_only,
@@ -389,7 +324,7 @@ const get_module_with_initBFF = async (app_info) => {
     
     if (app_info.system_admin_only==1){
         render_variables.push(['APP_NAME','SYSTEM ADMIN']);
-        return return_with_parameters(app_info.module, null, null, CheckFirstTime()==true?1:0);
+        return return_with_parameters(app_info.module, null, CheckFirstTime()==true?1:0);
     }
     else{
         //get parameters for common_app_id and current app_id and add app_id key
@@ -402,14 +337,7 @@ const get_module_with_initBFF = async (app_info) => {
             app.app_id = app_info.app_id;
         }
         render_variables.push(['APP_NAME',ConfigGetApp(app_info.app_id, app_info.app_id, 'NAME')]);
-        if (app_info.map == true){
-            //fetch countries and return map styles
-            return return_with_parameters(app_info.module, await countries(app_info.app_id, app_info.locale), app_parameters.concat(app_parameters_common), 0);
-        }
-        else{
-            //no countries or map styles
-            return return_with_parameters(app_info.module, null, app_parameters.concat(app_parameters_common), 0);
-        }
+        return return_with_parameters(app_info.module, app_parameters.concat(app_parameters_common), 0);
     }        
 };
 
@@ -534,11 +462,8 @@ const getAppBFF = async (app_id, app_parameters) =>{
     let app_module_type;
     /** @type {Types.app_create} */
     let app;
-    let config_map;
     /**@type{*} */
     let translate_items = {};
-    /** @type {Types.map_styles} */
-    let config_map_styles;
 
     if (app_id == 0){
         //get app admin
@@ -551,8 +476,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
             system_admin_only = 1;
         }
         app_module_type = 'ADMIN';
-        config_map = app.map;
-        config_map_styles = app.map_styles;
 
         translate_items =  {USERNAME:'Username',
                             EMAIL:'Email',
@@ -574,8 +497,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
         if (app.app == null)
             return null;
         app_module_type = 'APP';
-        config_map = app.map;
-        config_map_styles = app.map_styles;
         //get translation data
         const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
         const result_objects = await getObjects(app_id, client_locale(app_parameters.accept_language), 'APP', null);
@@ -588,8 +509,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
     const app_with_init = await get_module_with_initBFF({   app_id:             app_id, 
                                                             locale:             client_locale(app_parameters.accept_language),
                                                             system_admin_only:  system_admin_only,
-                                                            map:                config_map, 
-                                                            map_styles:         config_map_styles,
                                                             datatoken:          datatoken,
                                                             latitude:           result_geodata.latitude,
                                                             longitude:          result_geodata.longitude,

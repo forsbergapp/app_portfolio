@@ -1452,10 +1452,9 @@ const show_monitor = async (yearvalues) =>{
     //show map only for this condition
     if (common.COMMON_GLOBAL.system_admin_only != 1)
         common.map_init(APP_GLOBAL.module_leaflet_map_container,
-                        common.COMMON_GLOBAL.module_leaflet_style,
                         common.COMMON_GLOBAL.client_longitude,
                         common.COMMON_GLOBAL.client_latitude,
-                        true,
+                        null,
                         null).then(() => {
             common.map_update(  common.COMMON_GLOBAL.client_longitude,
                                 common.COMMON_GLOBAL.client_latitude,

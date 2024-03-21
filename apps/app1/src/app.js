@@ -17,9 +17,7 @@ const createApp = async (app_id, username, locale) => {
         const main = async (/**@type{number}*/app_id) => {
             render_app_html(app_id, locale)
             .then((/**@type{Types.render_common}*/app)=>{
-                resolve({   app:app.app,
-                            map:app.map,
-                            map_styles: null});
+                resolve({   app:app.app});
                 
             })
             .catch((/**@type{Types.error}*/err)=>reject(err));
@@ -32,7 +30,7 @@ const createApp = async (app_id, username, locale) => {
                         main(app_id);
                     else{
                         //redirect to /
-                        resolve ({app: null, map: null, map_styles:null});
+                        resolve ({app: null});
                     }
                 })
                 .catch((/**@type{Types.error}*/error)=>{

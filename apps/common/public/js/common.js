@@ -4,11 +4,8 @@ const Vue = await import('Vue');
 const {React} = await import('React');
 /**@ts-ignore */
 const {ReactDOM} = await import('ReactDOM');
-
 /**@ts-ignore */
 const {QRCode} = await import('easy.qrcode');
-/**@ts-ignore */
-const {L:Leaflet} = await import('leaflet');
 /**@ts-ignore */
 const {getTimezone} = await import('regional');
 
@@ -108,6 +105,7 @@ const {getTimezone} = await import('regional');
 											NEW_PASSWORD_CONFIRM:string,
 											NEW_PASSWORD:string,
 											CONFIRM_QUESTION:string},
+            module_leaflet:*,
             module_leaflet_flyto:number,
             module_leaflet_jumpto:number,
             module_leaflet_popup_offset:number,
@@ -120,7 +118,6 @@ const {getTimezone} = await import('regional');
                                         setZoom:function|null,
                                         getZoom:function|null},
             module_leaflet_session_map_layer:[],
-            module_leaflet_countries:string|null,
             module_leaflet_zoom:number, 
             module_leaflet_zoom_city:number,
             module_leaflet_zoom_pp:number,
@@ -193,6 +190,7 @@ const COMMON_GLOBAL = {
                         NEW_PASSWORD_CONFIRM:'New password confirm',
                         NEW_PASSWORD:'New password',
                         CONFIRM_QUESTION:''},
+    module_leaflet:null,
     module_leaflet_flyto:0,
     module_leaflet_jumpto:0,
     module_leaflet_popup_offset:0,
@@ -205,7 +203,6 @@ const COMMON_GLOBAL = {
                                 setZoom:null,
                                 getZoom:null},
     module_leaflet_session_map_layer:[],
-    module_leaflet_countries:null,
     module_leaflet_zoom:0, 
     module_leaflet_zoom_city:0,
     module_leaflet_zoom_pp:0,
@@ -2247,107 +2244,57 @@ const create_qr = async (div, url) => {
 };
 /**
  * Map init
- * @param {string} containervalue 
- * @param {string} stylevalue 
+ * @param {string} container
  * @param {string} longitude 
  * @param {string} latitude 
- * @param {boolean} doubleclick_event 
+ * @param {function|null} doubleclick_event 
  * @param {function} search_event_function 
  * @returns {Promise.<null>}
  */
-const map_init = async (containervalue, stylevalue, longitude, latitude, doubleclick_event, search_event_function) => {
-    return await new Promise((resolve)=>{
-        COMMON_GLOBAL.module_leaflet_session_map = {doubleClickZoom:null,
-                                                    invalidateSize:null,
-                                                    removeLayer:null,
-                                                    setView:null,
-                                                    flyTo:null,
-                                                    setZoom:null,
-                                                    getZoom:null},
-        COMMON_GLOBAL.module_leaflet_session_map = Leaflet.map(containervalue).setView([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
-        map_setstyle(stylevalue).then(()=>{
-            //disable doubleclick in event dblclick since e.preventdefault() does not work
-            /**@ts-ignore */
-            COMMON_GLOBAL.module_leaflet_session_map.doubleClickZoom.disable(); 
-
-            //add scale
-            //position values: 'topleft', 'topright', 'bottomleft' or 'bottomright'
-            Leaflet.control.scale({position: 'topright'}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
-
-            //add custom HTML inside div with class .leaflet-control
-            const mapcontrol = AppDocument.querySelectorAll(`#${containervalue} .leaflet-control`);
-            //add search button with expand content country select, city select and search input
-            mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='Search' role='button'>
-                                            <div id='common_module_leaflet_control_search_button' class='common_icon'></div>
-                                            <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
-                                                <select id='common_module_leaflet_select_country'>
-                                                    ${COMMON_GLOBAL.module_leaflet_countries}
-                                                </select>
-                                                <select id='common_module_leaflet_select_city'  >
-                                                    <option value='' id='' label='…' selected='selected'>…</option>
-                                                </select>
-                                                <div id='common_module_leaflet_search_input_row'>
-                                                    <div id='common_module_leaflet_search_input' contenteditable=true class='common_input'/></div>
-                                                    <div id='common_module_leaflet_search_icon' class='common_icon'></div>
-                                                </div>
-                                                <div id='common_module_leaflet_search_list_wrap'>
-                                                    <div id='common_module_leaflet_search_list'></div>
-                                                </div>
-                                            </div>
-                                            </div>`;
-            //add fullscreen button
-            mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button common_icon' title='Fullscreen' role='button'>
-                                            </div>`;
-            if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
-                //add my location button
-                mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_my_location_id' class='common_module_leaflet_control_button common_icon' title='My location' role='button'>
-                                            </div>`;
-            }
-            //add layers button with pop out div
-            let map_styles_options ='';
-            for (const map_style_option of COMMON_GLOBAL.module_leaflet_map_styles){
-                map_styles_options +=`<option id=${map_style_option.id} value='${map_style_option.data}'>${map_style_option.description}</option>`;
-            }
-            mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' title='Layer' role='button'>
-                                            <div id='common_module_leaflet_control_layer_button' class='common_icon'></div>
-                                            <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
-                                                <select id='common_module_leaflet_select_mapstyle' >
-                                                    ${map_styles_options}
-                                                </select>
-                                            </div>
-                                        </div>`;
-            SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, AppDocument.querySelector('#common_module_leaflet_select_mapstyle'),1);                
-            
-            //add search function in data-function that event delegation will use
-            AppDocument.querySelector('#common_module_leaflet_search_input')['data-function'] = search_event_function;
-            
-            if (doubleclick_event){
-                map_setevent('dblclick', (/**@type{AppEventLeaflet}*/e) => {
-                    if (e.originalEvent.target.id == 'mapid'){
-                        const lng = e.latlng.lng;
-                        const lat = e.latlng.lat;
-                        //Update GPS position
-                        get_place_from_gps(lng, lat).then((gps_place) => {
-                            map_update(lng,
-                                        lat,
-                                        null, //do not change zoom 
-                                        gps_place,
-                                        null,
-                                        COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                        COMMON_GLOBAL.module_leaflet_jumpto);
-                        });
-                    }
-                });
-            }
-            resolve(null);
-        });
+const map_init = async (container, longitude, latitude, doubleclick_event, search_event_function) => {
+    return await new Promise((resolve, reject)=>{
+        /**@ts-ignore */
+        COMMON_GLOBAL.module_leaflet_session_map = null;
+        ComponentRender('mapid', 
+                            {   data_app_id:COMMON_GLOBAL.common_app_id,
+                                locale:COMMON_GLOBAL.user_locale,
+                                container:container,
+                                longitude:longitude,
+                                latitude:latitude,
+                                event_doubleclick: doubleclick_event,
+                                function_search_event:search_event_function,
+                                //module parameters
+                                module_leaflet_zoom:COMMON_GLOBAL.module_leaflet_zoom,
+                                module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                module_leaflet_jumpto:COMMON_GLOBAL.module_leaflet_jumpto,
+                                //functions
+                                function_FFB:FFB,
+                                function_map_country:map_country,
+                                function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
+                                function_get_place_from_gps:get_place_from_gps,
+                                function_map_update:map_update,
+                                function_map_setstyle:map_setstyle,
+                                function_map_setevent:map_setevent
+                                },
+                            '/common/component/module_leaflet.js')
+            .then((leaflet_data)=>{
+                COMMON_GLOBAL.module_leaflet =              leaflet_data.library_Leaflet;
+                COMMON_GLOBAL.module_leaflet_session_map =  leaflet_data.module_map;
+                COMMON_GLOBAL.module_leaflet_map_styles =   leaflet_data.map_layer_array;
+                //set additonal settings on rendered Leaflet module
+                map_setstyle(COMMON_GLOBAL.module_leaflet_style).then(()=>{
+                    //set map layer 
+                    SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, AppDocument.querySelector('#common_module_leaflet_select_mapstyle'),1);
+                    resolve(null);
+                })
+            })
+            .catch(error=>reject(error));
     });
-    
 };
 /**
  * Map country
  * @param {string} lang_code 
- * @returns {Promise.<null>}
+ * @returns {Promise.<string>}
  */
 const map_country = lang_code =>{
     return new Promise ((resolve, reject)=>{
@@ -2377,14 +2324,7 @@ const map_country = lang_code =>{
                 }
                 i++;
             }
-            COMMON_GLOBAL.module_leaflet_countries = html;
-            if (AppDocument.querySelector('#common_module_leaflet_select_country')){
-                const select_country = AppDocument.querySelector('#common_module_leaflet_select_country');
-                const current_country = AppDocument.querySelector('#common_module_leaflet_select_country')[AppDocument.querySelector('#common_module_leaflet_select_country').selectedIndex].id;
-                select_country.innerHTML = html;
-                SearchAndSetSelectedIndex(current_country, AppDocument.querySelector('#common_module_leaflet_select_country'),0);    
-            }
-            resolve(null);
+            resolve(html);
         })
         .catch(err=>reject(err));
     });
@@ -2521,7 +2461,7 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
         weight: width,
         opacity: opacity
     };
-    const layer = Leaflet.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
+    const layer = COMMON_GLOBAL.module_leaflet.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
     if(!COMMON_GLOBAL.module_leaflet_session_map_layer)
         COMMON_GLOBAL.module_leaflet_session_map_layer=[];
     /**@ts-ignore */
@@ -2535,7 +2475,7 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
  */
 const map_setevent = (event, function_event) => {
     //also creates event:
-    //Leaflet.DomEvent.addListener(COMMON_GLOBAL.module_leaflet_session_map, 'dblclick', function_event);
+    //COMMON_GLOBAL.module_leaflet.DomEvent.addListener(COMMON_GLOBAL.module_leaflet_session_map, 'dblclick', function_event);
     /**@ts-ignore */
     COMMON_GLOBAL.module_leaflet_session_map.on(event, function_event);
 };
@@ -2554,12 +2494,12 @@ const map_setstyle = async mapstyle => {
         }
         const mapstyle_record = COMMON_GLOBAL.module_leaflet_map_styles.filter(map_style=>map_style.data==mapstyle)[0];
         if (mapstyle_record.data3)
-            mapstyle_record.session_map_layer = Leaflet.tileLayer(mapstyle_record.data2, {
+            mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet.tileLayer(mapstyle_record.data2, {
                 maxZoom: mapstyle_record.data3,
                 attribution: mapstyle_record.data4
             }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
         else
-            mapstyle_record.session_map_layer = Leaflet.tileLayer(mapstyle_record.data2, {
+            mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet.tileLayer(mapstyle_record.data2, {
                 attribution: mapstyle_record.data4
             }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
         resolve();
@@ -2598,11 +2538,11 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
                 case 0:{
                     if (zoomvalue == null){
                         /**@ts-ignore */
-                        COMMON_GLOBAL.module_leaflet_session_map.setView(new Leaflet.LatLng(latitude, longitude));
+                        COMMON_GLOBAL.module_leaflet_session_map.setView(new COMMON_GLOBAL.module_leaflet.LatLng(latitude, longitude));
                     }
                     else{
                         /**@ts-ignore */
-                        COMMON_GLOBAL.module_leaflet_session_map.setView(new Leaflet.LatLng(latitude, longitude), zoomvalue);
+                        COMMON_GLOBAL.module_leaflet_session_map.setView(new COMMON_GLOBAL.module_leaflet.LatLng(latitude, longitude), zoomvalue);
                     }
                     break;
                 }
@@ -2611,7 +2551,7 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
                     COMMON_GLOBAL.module_leaflet_session_map.flyTo([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
                     break;
                 }
-                //also have COMMON_GLOBAL.module_leaflet_session_map.panTo(new Leaflet.LatLng({lng: longitude, lat: latitude}));
+                //also have COMMON_GLOBAL.module_leaflet_session_map.panTo(new COMMON_GLOBAL.module_leaflet.LatLng({lng: longitude, lat: latitude}));
             }
         };
         /**
@@ -2624,11 +2564,11 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
                                 <div id="common_module_leaflet_popup_sub_title" class='common_icon'></div>
                                 <div id="common_module_leaflet_popup_sub_title_timezone">${timezone_text}</div>
                                 <div id="common_module_leaflet_popup_sub_title_gps">${latitude + ', ' + longitude}</div>`;
-            Leaflet.popup({ offset: [0, COMMON_GLOBAL.module_leaflet_popup_offset], closeOnClick: false })
+            COMMON_GLOBAL.module_leaflet.popup({ offset: [0, COMMON_GLOBAL.module_leaflet_popup_offset], closeOnClick: false })
                         .setLatLng([latitude, longitude])
                         .setContent(popuptext)
                         .openOn(COMMON_GLOBAL.module_leaflet_session_map);
-            const marker = Leaflet.marker([latitude, longitude]).addTo(COMMON_GLOBAL.module_leaflet_session_map);
+            const marker = COMMON_GLOBAL.module_leaflet.marker([latitude, longitude]).addTo(COMMON_GLOBAL.module_leaflet_session_map);
             //setting id so apps can customize if necessary
             marker._icon.id = marker_id;
         };
@@ -3139,8 +3079,6 @@ const set_app_service_parameters = async parameters => {
 
     COMMON_GLOBAL.translate_items = parameters.translate_items;
 
-    COMMON_GLOBAL.module_leaflet_countries   = parameters.countries;
-    COMMON_GLOBAL.module_leaflet_map_styles  = parameters.map_styles;
     COMMON_GLOBAL.user_locale                = parameters.locale;
     COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
     COMMON_GLOBAL.user_direction             = '';
