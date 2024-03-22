@@ -73,6 +73,7 @@ const {getTimezone} = await import('regional');
             system_admin_only:number|null,
             user_identity_provider_id:number|null,
             user_account_id:number|null,
+            user_account_username:string|null,
             client_latitude:string,
             client_longitude:string,
             client_place:string,
@@ -94,7 +95,6 @@ const {getTimezone} = await import('regional');
             user_timezone:string,
             user_direction:string,
             user_arabic_script:string,
-            user_preference_save:boolean,
             translate_items: {	USERNAME:string,
 											EMAIL:string,
 											NEW_EMAIL:string,
@@ -158,6 +158,7 @@ const COMMON_GLOBAL = {
     system_admin_only:null,
     user_identity_provider_id:null,
     user_account_id:null,
+    user_account_username:null,
     client_latitude:'',
     client_longitude:'',
     client_place:'',
@@ -179,7 +180,6 @@ const COMMON_GLOBAL = {
     user_timezone:'',
     user_direction:'',
     user_arabic_script:'',
-    user_preference_save:false,
     translate_items:{   USERNAME:'Username',
                         EMAIL:'Email',
                         NEW_EMAIL:'New email',
@@ -366,7 +366,7 @@ const fromBase64 = (str) => {
  * @param {string} lang_code 
  * @returns {Promise.<void>}
  */
-const common_translate_ui = async (lang_code) => {
+const common_translate_ui = async lang_code => {
     let path='';
     if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
         path = `/app_object/admin?data_lang_code=${lang_code}&object_name=APP`;
@@ -400,24 +400,28 @@ const common_translate_ui = async (lang_code) => {
             }   
         }
     }
-    //translate locales
+};
+/**
+ * Renders locales options
+ * @returns {Promise<string>}
+ */
+const get_locales_options = async () =>{
+    let path;
     if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
-        path = `/locale/admin?lang_code=${lang_code}`;
+        path = `/locale/admin?lang_code=${COMMON_GLOBAL.user_locale}`;
     }
     else{
-        path = `/locale?lang_code=${lang_code}`;
+        path = `/locale?lang_code=${COMMON_GLOBAL.user_locale}`;
     }
     const locales_json = await FFB('DB_API', path, 'GET', 'APP_DATA', null);
     let html='';
-    const select_locale = AppDocument.querySelector('#common_user_locale_select');
+    
     let i=0;
     for (const locale of JSON.parse(locales_json)){
         html += `<option id="${i}" value="${locale.locale}">${locale.text}</option>`;
         i++;
     }
-    select_locale.innerHTML = html;
-    select_locale.value = lang_code;
-    await map_country(lang_code);
+    return html;
 };
 /**
  * Format JSON date with user timezone
@@ -1575,15 +1579,14 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         FFB('IAM', path, 'POST', 'IAM', json_data)
         .then(result=>{
             if (system_admin){
-                COMMON_GLOBAL.system_admin = JSON.parse(result).username;
+                COMMON_GLOBAL.system_admin = JSON.parse(result).username==''?null:JSON.parse(result).username;
                 COMMON_GLOBAL.rest_admin_at = JSON.parse(result).token_at;
                 updateOnlineStatus();
                 AppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
-                AppDocument.querySelector('#common_user_menu_username').innerHTML = JSON.parse(result).username;
-                AppDocument.querySelector('#common_user_preferences').style.display = 'none';
-                AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
-                AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
                 AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+                AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
+                AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+    
                 ComponentRemove(current_dialogue, true);
                 resolve({   user_id: null,
                                 username: JSON.parse(result).username,
@@ -1601,22 +1604,15 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                     profile_close();
                     
                     COMMON_GLOBAL.user_account_id = parseInt(user.id);
+                    COMMON_GLOBAL.user_account_username = user.username;
                     COMMON_GLOBAL.user_identity_provider_id = null;
                     COMMON_GLOBAL.user_app_role_id = user.app_role_id;
                     COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
                     
                     //set avatar or empty
                     set_avatar(user.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
-                    AppDocument.querySelector('#common_user_menu_username').innerHTML = user.username;
-                    AppDocument.querySelector('#common_user_menu_username').style.display = 'block';
-        
                     AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
                     AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
-        
-                    
-                    AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
-                    AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-        
                     updateOnlineStatus();
                     user_preference_get()
                     .then(()=>{
@@ -1641,26 +1637,23 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
  * @returns {Promise.<void>}
  */
 const user_logoff = async (system_admin) => {
+    ComponentRemove('common_dialogue_user_menu');
     if (system_admin){
         COMMON_GLOBAL.rest_admin_at = '';
-        COMMON_GLOBAL.system_admin = '';
+        COMMON_GLOBAL.system_admin = null;
         AppDocument.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
-        AppDocument.querySelector('#common_user_menu_username').innerHTML = '';
-        AppDocument.querySelector('#common_user_menu_username').style.display = 'none';
+        AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
+        AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
     }
     else{
         //remove access token
         COMMON_GLOBAL.rest_at ='';
         COMMON_GLOBAL.user_account_id = null;
+        COMMON_GLOBAL.user_account_username = null;
 
         set_avatar(null, AppDocument.querySelector('#common_user_menu_avatar_img')); 
-        //clear logged in info
-        AppDocument.querySelector('#common_user_menu_username').innerHTML = '';
-        AppDocument.querySelector('#common_user_menu_username').style.display = 'none';
         AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
         AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-        AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
-        AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'inline-block';
 
         updateOnlineStatus();
         ComponentRemove('common_dialogue_user_edit');
@@ -1671,7 +1664,6 @@ const user_logoff = async (system_admin) => {
         user_preferences_set_default_globals('TIMEZONE');
         user_preferences_set_default_globals('DIRECTION');
         user_preferences_set_default_globals('ARABIC_SCRIPT');
-        user_preferences_update_select();
     }
 };
 
@@ -1741,7 +1733,6 @@ const user_update = async () => {
             AppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             const user_update = JSON.parse(result);
             set_avatar(avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
-            AppDocument.querySelector('#common_user_menu_username').innerHTML = username;
             if (user_update.sent_change_email == 1){
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, null);
             }
@@ -2063,13 +2054,13 @@ const updatePassword = () => {
  * @returns {Promise.<void>}
  */
 const user_preference_save = async () => {
-    if (COMMON_GLOBAL.user_preference_save==true && COMMON_GLOBAL.user_account_id != null){
+    if (COMMON_GLOBAL.user_account_id != null){
         const json_data =
             {  
-                preference_locale: AppDocument.querySelector('#common_user_locale_select').value,
-                app_setting_preference_timezone_id: AppDocument.querySelector('#common_user_timezone_select').options[AppDocument.querySelector('#common_user_timezone_select').selectedIndex].id,
-                app_setting_preference_direction_id: AppDocument.querySelector('#common_user_direction_select').options[AppDocument.querySelector('#common_user_direction_select').selectedIndex].id,
-                app_setting_preference_arabic_script_id: AppDocument.querySelector('#common_user_arabic_script_select').options[AppDocument.querySelector('#common_user_arabic_script_select').selectedIndex].id
+                preference_locale: AppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').value,
+                app_setting_preference_timezone_id: AppDocument.querySelector('#common_dialogue_user_menu_user_timezone_select').options[AppDocument.querySelector('#common_dialogue_user_menu_user_timezone_select').selectedIndex].id,
+                app_setting_preference_direction_id: AppDocument.querySelector('#common_dialogue_user_menu_user_direction_select').options[AppDocument.querySelector('#common_dialogue_user_menu_user_direction_select').selectedIndex].id,
+                app_setting_preference_arabic_script_id: AppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select').options[AppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select').selectedIndex].id
             };
         await FFB('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id ?? ''}`, 'PATCH', 'APP_ACCESS', json_data);
     }
@@ -2095,16 +2086,12 @@ const user_preference_get = async () => {
                 user_preferences_set_default_globals('TIMEZONE');
             }
             else{
-                SearchAndSetSelectedIndex(user_account_app.app_setting_preference_timezone_id, AppDocument.querySelector('#common_user_timezone_select'), 0);
-                COMMON_GLOBAL.user_timezone = AppDocument.querySelector('#common_user_timezone_select').value;
+                COMMON_GLOBAL.user_timezone = user_account_app.app_setting_preference_timezone_value;
             }
             //direction
-            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_direction_id, AppDocument.querySelector('#common_user_direction_select'), 0);
-            COMMON_GLOBAL.user_direction = AppDocument.querySelector('#common_user_direction_select').value;
+            COMMON_GLOBAL.user_direction = user_account_app.app_setting_preference_direction_value;
             //arabic script
-            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_arabic_script_id, AppDocument.querySelector('#common_user_arabic_script_select'), 0);
-            COMMON_GLOBAL.user_arabic_script = AppDocument.querySelector('#common_user_arabic_script_select').value;
-            user_preferences_update_select();
+            COMMON_GLOBAL.user_arabic_script = user_account_app.app_setting_preference_arabic_script_value;
             resolve(null);
         })
         .catch(err=>reject(err));
@@ -2135,21 +2122,7 @@ const user_preferences_set_default_globals = (preference) => {
         }
     }
 };
-/**
- * User preferences update select
- * @returns {void}
- */
-const user_preferences_update_select = () => {
-    set_user_account_app_settings();
-    //don't save changes now, just execute other code
-    //or it would save preferences 4 times
-    COMMON_GLOBAL.user_preference_save = false;
-    AppDocument.querySelector('#common_user_locale_select').dispatchEvent(new Event('change'));
-	AppDocument.querySelector('#common_user_timezone_select').dispatchEvent(new Event('change'));
-	AppDocument.querySelector('#common_user_direction_select').dispatchEvent(new Event('change'));
-	AppDocument.querySelector('#common_user_arabic_script_select').dispatchEvent(new Event('change'));
-    COMMON_GLOBAL.user_preference_save = true;
-};
+
 /**
  * Proivder signin
  * @param {number} provider_id 
@@ -2198,13 +2171,10 @@ const ProviderSignIn = (provider_id) => {
                 .then(()=>{
                     //set avatar or empty
                     set_avatar(result.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
-                    AppDocument.querySelector('#common_user_menu_username').innerHTML = user_login.username;
 
                     AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
                     AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
 
-                    AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block'; //block app2?
-                    AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
                     AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
                     ComponentRemove('common_dialogue_user_start', true);
                     resolve({   user_account_id: user_login.id,
@@ -2664,7 +2634,7 @@ const FFB = async (service, path, method, authorization_type, json_data=null) =>
     path += `&lang_code=${COMMON_GLOBAL.user_locale}`;
     const encodedparameters = toBase64(path);
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL.app_id??''}&parameters=${encodedparameters}`;
-    url += `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin}`;
+    url += `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}`;
     if (service=='SOCKET' && authorization_type=='SOCKET'){
         return new EventSource(url);
     }
@@ -2793,7 +2763,7 @@ const reconnect = () => {
 const updateOnlineStatus = () => {
     let token_type='';
     let path='';
-    if (COMMON_GLOBAL.system_admin!=''){
+    if (COMMON_GLOBAL.system_admin!=null){
         path =   '/socket/connection/SystemAdmin'+ 
                 `?client_id=${COMMON_GLOBAL.service_socket_client_ID??''}`+
                 `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id ??''}` +
@@ -2804,7 +2774,7 @@ const updateOnlineStatus = () => {
         path =   '/socket/connection'+ 
                 `?client_id=${COMMON_GLOBAL.service_socket_client_ID??''}`+
                 `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
-                `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
+                `&system_admin=&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
         token_type='APP_DATA';
     }
     FFB('SOCKET', path, 'PATCH', token_type, null);
@@ -2816,7 +2786,7 @@ const updateOnlineStatus = () => {
 const connectOnline = async () => {
     FFB('SOCKET',   '/socket/connection/connect' +
                     `?identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
-                    `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
+                    `&system_admin=${COMMON_GLOBAL.system_admin ?? ''}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
          'GET', 'SOCKET', null)
     .then((result_eventsource)=>{
         COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
@@ -2854,7 +2824,7 @@ const get_place_from_gps = async (longitude, latitude) => {
         let tokentype;
         const path = `/place?longitude=${longitude}&latitude=${latitude}`;
 
-        if (COMMON_GLOBAL.system_admin!='')
+        if (COMMON_GLOBAL.system_admin!=null)
             tokentype = 'SYSTEMADMIN';
         else 
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id){
@@ -2888,7 +2858,7 @@ const get_gps_from_ip = async () => {
         let tokentype;
         const path = '/ip?';
         
-        if (COMMON_GLOBAL.system_admin!='' && COMMON_GLOBAL.rest_admin_at)
+        if (COMMON_GLOBAL.system_admin!=null && COMMON_GLOBAL.rest_admin_at)
             tokentype = 'SYSTEMADMIN';
         else
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.rest_at){
@@ -3056,7 +3026,7 @@ const set_app_service_parameters = async parameters => {
     COMMON_GLOBAL.rest_dt = parameters.app_datatoken;
 
     //system admin
-    COMMON_GLOBAL.system_admin = '';
+    COMMON_GLOBAL.system_admin = null;
     COMMON_GLOBAL.system_admin_only = parameters.system_admin_only;
     COMMON_GLOBAL.system_admin_first_time = parameters.first_name;
 
@@ -3159,7 +3129,7 @@ const common_event = async (event_type,event) =>{
                             ComponentRemove('common_dialogue_message');
                             break;
                         }
-                        //dialouge password
+                        //dialogue password
                         case 'common_user_password_new_cancel':{
                             dialogue_password_new_clear();
                             break;
@@ -3225,26 +3195,12 @@ const common_event = async (event_type,event) =>{
                                 AppDocument.body.requestFullscreen();
                             break;
                         }
-                        //user menu
-                        case 'common_user_menu':
-                        case 'common_user_menu_logged_in':
-                        case 'common_user_menu_avatar':
-                        case 'common_user_menu_avatar_img':
-                        case 'common_user_menu_logged_out':
-                        case 'common_user_menu_default_avatar':{
-                            const menu = AppDocument.querySelector('#common_user_menu_dropdown');
-                            if (menu.style.visibility == 'visible') 
-                                menu.style.visibility = 'hidden'; 
-                            else 
-                                menu.style.visibility = 'visible'; 
-                            break;
-                        }
-                        case 'common_user_menu_dropdown_log_in':{
-                            AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                        case 'common_dialogue_user_menu_log_in':{
+                            ComponentRemove('common_dialogue_user_menu');
                             show_common_dialogue('LOGIN');
                             break;
                         }
-                        case 'common_user_menu_dropdown_edit':{
+                        case 'common_dialogue_user_menu_edit':{
                             ComponentRender('common_dialogue_user_edit', 
                                 {   FFB:FFB,
                                     set_avatar:set_avatar,
@@ -3262,12 +3218,12 @@ const common_event = async (event_type,event) =>{
                                     translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER},
                                 '/common/component/dialogue_user_edit.js')
                             .then(()=>{
-                                AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                                ComponentRemove('common_dialogue_user_menu');
                             });
                             break;
                         }
-                        case 'common_user_menu_dropdown_signup':{
-                            AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                        case 'common_dialogue_user_menu_signup':{
+                            ComponentRemove('common_dialogue_user_menu');
                             show_common_dialogue('SIGNUP');
                             break;
                         }
@@ -3435,7 +3391,7 @@ const common_event = async (event_type,event) =>{
             case 'change':{
                 switch (event.target.id){
                     //define globals and save settings here, in apps define what should happen when changing
-                    case 'common_user_locale_select':{
+                    case 'common_dialogue_user_menu_user_locale_select':{
                         COMMON_GLOBAL.user_locale = event.target.value;
                         //change navigator.language, however when logging out default navigator.language will be set
                         //commented at the moment
@@ -3443,7 +3399,7 @@ const common_event = async (event_type,event) =>{
                         await user_preference_save();
                         break;
                     }
-                    case 'common_user_timezone_select':{
+                    case 'common_dialogue_user_menu_user_timezone_select':{
                         COMMON_GLOBAL.user_timezone = event.target.value;
                         await user_preference_save().then(()=>{
                             if (AppDocument.querySelector('#common_dialogue_user_edit').innerHTML !='') {
@@ -3464,13 +3420,13 @@ const common_event = async (event_type,event) =>{
                                         translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER},
                                     '/common/component/dialogue_user_edit.js')
                                 .then(()=>{
-                                    AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                                    ComponentRemove('common_dialogue_user_menu');
                                 });
                             }
                         });
                         break;
                     }
-                    case 'common_user_direction_select':{
+                    case 'common_dialogue_user_menu_user_direction_select':{
                         if(event.target.value=='rtl')
                             AppDocument.body.classList.add('rtl');
                         else
@@ -3479,7 +3435,7 @@ const common_event = async (event_type,event) =>{
                         await user_preference_save();
                         break;
                     }
-                    case 'common_user_arabic_script_select':{
+                    case 'common_dialogue_user_menu_user_arabic_script_select':{
                         COMMON_GLOBAL.user_arabic_script = event.target.value;
                         await user_preference_save();
                         break;
@@ -3605,8 +3561,8 @@ const disable_common_input = event => {
     if (event.key === 'Escape') {
         event.preventDefault();
         //hide use menu dropdown
-        if (AppDocument.querySelector('#common_user_menu_dropdown').style.visibility=='visible')
-            AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+        if (AppDocument.querySelector('#common_dialogue_user_menu').innerHTML !='')
+            ComponentRemove('common_dialogue_user_menu', true);
         if (AppDocument.querySelector('#common_profile_input_row')){
             //hide search
             const x = AppDocument.querySelector('#common_profile_input_row'); 
@@ -3646,18 +3602,7 @@ const common_events_remove = () => {
     AppDocument.querySelector('#app').removeEventListener('touchstart', disable_common_input);
 
 }
-/**
- * Set user account app settings
- * @returns {void}
- */
-const set_user_account_app_settings = () =>{
-    if (AppDocument.querySelector('#common_user_menu')){
-        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_locale, AppDocument.querySelector('#common_user_locale_select'), 1);
-        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_timezone, AppDocument.querySelector('#common_user_timezone_select'), 1);
-        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_direction, AppDocument.querySelector('#common_user_direction_select'), 1);
-        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_arabic_script, AppDocument.querySelector('#common_user_arabic_script_select'), 1);
-    }
-};
+
 /**
  * Set app parameters
  * @param {*[]} common_parameters 
@@ -3872,7 +3817,6 @@ const init_common = async (parameters) => {
         else{
             set_app_parameters(parameters.app);
             common_events_add();
-            set_user_account_app_settings();
             resolve();
         }
     });
@@ -3880,7 +3824,8 @@ const init_common = async (parameters) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS,
        /* MISC */
-       element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
+       element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, 
+       common_translate_ui, get_locales_options, 
        mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
        inIframe, show_image, getHostname, input_control, SearchAndSetSelectedIndex,

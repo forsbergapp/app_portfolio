@@ -135,6 +135,11 @@
 #toolbar_btn_zoomin,#toolbar_btn_zoomout,#toolbar_btn_left, #toolbar_btn_right, #toolbar_btn_search {
 	font-size: 48px;
 }
+#app_user_account{
+	display: grid;
+	margin-top: 10px;
+	width: 60px;
+}
 /* TOOLBAR BOTTOM*/
 #app_profile_toolbar{
 	position: fixed;
@@ -731,6 +736,7 @@
 	transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
 }
 /*COMMON*/
+
 #common_toolbar_framework{
 	margin-inline-start: 0px !important;
     bottom: 60px !important;
@@ -1107,27 +1113,27 @@ body,
 #common_window_info_content,
 #common_window_info_toolbar,
 #common_user_menu,
-#common_user_menu_dropdown
+#common_dialouge_user_menu
 {
 	background-color:var(--app_theme_main_color1);
 }
 #common_dialogues .common_input,
 #common_window_info,
 #common_window_info_toolbar,
-#common_user_menu_dropdown,
+#common_dialouge_user_menu,
 .common_dialogue_content,
 #common_profile_search_icon
 {
 	color: var(--app_theme_main_color3);
 }
-#common_user_menu_username:hover,
-#common_user_menu_username:active,
+#common_dialogue_user_menu_username:hover,
+#common_dialogue_user_menu_username:active,
 #common_profile_btn_top:hover,
 #common_profile_btn_top:active,
-#common_user_menu_dropdown_logged_in div:hover,
-#common_user_menu_dropdown_logged_in div:active,
-#common_user_menu_dropdown_logged_out div:hover,
-#common_user_menu_dropdown_logged_out div:active{
+#common_dialouge_user_menu_logged_in div:hover,
+#common_dialouge_user_menu_logged_in div:active,
+#common_dialouge_user_menu_logged_out div:hover,
+#common_dialouge_user_menu_logged_out div:active{
 	color: var(--app_theme_user_menu_hover_color) !important;
 	background-color:var(--app_theme_user_menu_hover_background_color);	
 }
@@ -1209,7 +1215,7 @@ body,
 #common_profile_avatar_online_status.offline{
 	color:var(--app_theme_online_status_offline_color);
 }
-#common_user_menu_dropdown{
+#common_dialouge_user_menu{
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_shadow_color1), 0 6px 20px 0 var(--app_theme_dialogue_shadow_color2);
 }
 .common_like{

@@ -153,11 +153,11 @@ const show_charts = async () => {
         const app_id = AppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
         const year = AppDocument.querySelector('#select_year_menu1').value;
         const month = AppDocument.querySelector('#select_month_menu1').value;
-        const select_system_admin_stat = common.COMMON_GLOBAL.system_admin!=''?
+        const select_system_admin_stat = common.COMMON_GLOBAL.system_admin!=null?
                                             AppDocument.querySelector('#select_system_admin_stat'):null;
-        const system_admin_statGroup = common.COMMON_GLOBAL.system_admin!=''?
+        const system_admin_statGroup = common.COMMON_GLOBAL.system_admin!=null?
                                             select_system_admin_stat.options[select_system_admin_stat.selectedIndex].parentNode.label:null;
-        const system_admin_statValues = common.COMMON_GLOBAL.system_admin!=''?
+        const system_admin_statValues = common.COMMON_GLOBAL.system_admin!=null?
                                             { value: AppDocument.querySelector('#select_system_admin_stat').value,
                                                 unique:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('unique'),
                                                 statGroup:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('statGroup')
@@ -168,7 +168,7 @@ const show_charts = async () => {
         let service;
         let url;
         let authorization_type;
-        if (common.COMMON_GLOBAL.system_admin!=''){
+        if (common.COMMON_GLOBAL.system_admin!=null){
             service = 'LOG';
             if (system_admin_statGroup=='REQUEST'){
                 url = `/log/logs_stat?select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`;
@@ -227,7 +227,7 @@ const show_charts = async () => {
                     chart_colors += chart_color;
                 //add to legend below chart
                 let legend_text_chart1;
-                if (common.COMMON_GLOBAL.system_admin!='')
+                if (common.COMMON_GLOBAL.system_admin!=null)
                     if (system_admin_statGroup=='REQUEST')
                         legend_text_chart1 = stat.statValue;
                     else
@@ -278,7 +278,7 @@ const show_charts = async () => {
             //legend below chart
             let legend_text_chart2;
             let box2_legend = '';
-            if (common.COMMON_GLOBAL.system_admin!=''){
+            if (common.COMMON_GLOBAL.system_admin!=null){
                 //as system admin you can filter http codes and application
                 legend_text_chart2 = AppDocument.querySelector('#select_system_admin_stat').options[AppDocument.querySelector('#select_system_admin_stat').selectedIndex].text;
                 const legend_text_chart2_apps = AppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').innerHTML;
@@ -299,7 +299,7 @@ const show_charts = async () => {
                                 </div>` ;
             }
             let box_title_class;
-            if (common.COMMON_GLOBAL.system_admin!='')
+            if (common.COMMON_GLOBAL.system_admin!=null)
                 box_title_class = 'system_admin';
             else
                 box_title_class = 'admin';
@@ -364,7 +364,7 @@ const show_start = async (yearvalues) =>{
     AppDocument.querySelector('#menu_1_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
                 <div id='menu_1_row_sample'>
-                    <select id='select_system_admin_stat'>${common.COMMON_GLOBAL.system_admin!=''?await get_system_admin_stat():null}</select>
+                    <select id='select_system_admin_stat'>${common.COMMON_GLOBAL.system_admin!=null?await get_system_admin_stat():''}</select>
                     <div id='select_app_menu1' class='common_select'>${await get_apps_div()}</div>
                     <select id='select_year_menu1'>${yearvalues}</select>
                     <select id='select_month_menu1'>${list_generate(12)}</select>
@@ -383,7 +383,7 @@ const show_start = async (yearvalues) =>{
                     <div id='menu_1_broadcast_button' class='chat_click common_icon'></div>
                 </div>
             </div>`;
-    if (common.COMMON_GLOBAL.system_admin!=''){
+    if (common.COMMON_GLOBAL.system_admin!=null){
         AppDocument.querySelector('#menu_1_maintenance').style.display = 'inline-block';
         AppDocument.querySelector('#select_system_admin_stat').style.display = 'inline-block';
     }
@@ -394,7 +394,7 @@ const show_start = async (yearvalues) =>{
     AppDocument.querySelector('#select_year_menu1').selectedIndex = 0;
     AppDocument.querySelector('#select_month_menu1').selectedIndex = new Date().getMonth();
 
-    if (common.COMMON_GLOBAL.system_admin!='')
+    if (common.COMMON_GLOBAL.system_admin!=null)
         check_maintenance();
     show_charts();
 };
@@ -416,7 +416,7 @@ const get_apps_div = async () =>{
         let url;
         let authorization_type;
         let service;
-        if (common.COMMON_GLOBAL.system_admin!=''){
+        if (common.COMMON_GLOBAL.system_admin!=null){
             service = 'SERVER';
             url = '/config/systemadmin/apps?';
             authorization_type = 'SYSTEMADMIN';
@@ -429,7 +429,7 @@ const get_apps_div = async () =>{
         common.FFB(service, url, 'GET', authorization_type, null)
         .then((/**@type{string}*/result)=>{
             const apps = JSON.parse(result);
-            if (common.COMMON_GLOBAL.system_admin!='')
+            if (common.COMMON_GLOBAL.system_admin!=null)
                 for (const app of apps) {
                     options += `<div class='common_select_option' data-value='${app.APP_ID}'>${app.APP_ID} - ${' '}</div>`;
                 }
@@ -459,7 +459,7 @@ const get_apps = async () => {
         let url;
         let authorization_type;
         let service;
-        if (common.COMMON_GLOBAL.system_admin!=''){
+        if (common.COMMON_GLOBAL.system_admin!=null){
             service = 'SERVER';
             url = '/config/systemadmin/apps?';
             authorization_type = 'SYSTEMADMIN';
@@ -472,7 +472,7 @@ const get_apps = async () => {
         common.FFB(service, url, 'GET', authorization_type, null)
         .then((/**@type{string}*/result)=>{
             const apps = JSON.parse(result);
-            if (common.COMMON_GLOBAL.system_admin!='')
+            if (common.COMMON_GLOBAL.system_admin!=null)
                 for (const app of apps) {
                     html += `<option value='${app.APP_ID}'>${app.APP_ID} - ${' '}</option>`;
                 }
@@ -518,7 +518,7 @@ const sendBroadcast = () => {
                             broadcast_message:  broadcast_message};
         let path='';
         let token_type;
-        if (common.COMMON_GLOBAL.system_admin!=''){
+        if (common.COMMON_GLOBAL.system_admin!=null){
             path = '/socket/message/SystemAdmin?';
             token_type = 'SYSTEMADMIN';
         }
@@ -1361,7 +1361,7 @@ const show_monitor = async (yearvalues) =>{
         <div id='menu_5_content_widget2' class='widget'>
             <div id='mapid'></div>
         </div>`;
-    if (common.COMMON_GLOBAL.system_admin!='')
+    if (common.COMMON_GLOBAL.system_admin!=null)
         AppDocument.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_list_hide');
     else
         AppDocument.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_list_hide');
@@ -1370,7 +1370,7 @@ const show_monitor = async (yearvalues) =>{
     const monitor_apps =  await get_apps();
     const monitor_years = yearvalues;
     const monitor_month = list_generate(12);
-    const monitor_day = common.COMMON_GLOBAL.system_admin!=''?list_generate(31):'';
+    const monitor_day = common.COMMON_GLOBAL.system_admin!=null?list_generate(31):'';
     
     const monitor_log_data = common.COMMON_GLOBAL.system_admin !=''?await get_log_parameters():{parameters:{SERVICE_LOG_SCOPE_REQUEST:'',
                                                                                                             SERVICE_LOG_SCOPE_SERVER:'', 
@@ -1391,7 +1391,7 @@ const show_monitor = async (yearvalues) =>{
         await common.get_gps_from_ip();
     let path;
     let token_type = '';
-    if (common.COMMON_GLOBAL.system_admin!=''){
+    if (common.COMMON_GLOBAL.system_admin!=null){
         path  = '/config/systemadmin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
         token_type = 'SYSTEMADMIN';
     }
@@ -1410,7 +1410,7 @@ const show_monitor = async (yearvalues) =>{
                          <select id='select_month_menu5'>${monitor_month}</select>
                          <select id='select_day_menu5'>${monitor_day}</select>
                          <div id='filesearch_menu5' class='common_dialogue_button common_icon'></div>`;
-    if (common.COMMON_GLOBAL.system_admin!=''){
+    if (common.COMMON_GLOBAL.system_admin!=null){
         //server log
         AppDocument.querySelector('#select_day_menu5').selectedIndex = new Date().getDate() -1;
         
@@ -1447,7 +1447,7 @@ const show_monitor = async (yearvalues) =>{
     AppDocument.querySelector('#select_month_menu5').selectedIndex = new Date().getMonth();
 
     
-    if (common.COMMON_GLOBAL.system_admin=='')
+    if (common.COMMON_GLOBAL.system_admin==null)
         APP_GLOBAL.page = 0;
     //show map only for this condition
     if (common.COMMON_GLOBAL.system_admin_only != 1)
@@ -1560,7 +1560,7 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
         let service;
         switch (list_div){
             case 'list_connected':{
-                if (common.COMMON_GLOBAL.system_admin!=''){
+                if (common.COMMON_GLOBAL.system_admin!=null){
                     path = `/socket/connection/SystemAdmin?${url_parameters}`;
                     service = 'SOCKET';
                     token_type = 'SYSTEMADMIN';
@@ -2262,7 +2262,7 @@ const list_item_click = (item_type, data) => {
             if (data['ip'] != '::1')
                 ip_filter = `ip=${data['ip']}`;
             path = `/ip?${ip_filter}`;
-            if (common.COMMON_GLOBAL.system_admin!='')
+            if (common.COMMON_GLOBAL.system_admin!=null)
                 tokentype = 'SYSTEMADMIN';
             else
                 tokentype = 'APP_ACCESS';
@@ -2284,7 +2284,7 @@ const list_item_click = (item_type, data) => {
         else{
             //clicking on GPS, show on map
             path = `/place?latitude=${data['latitude']}&longitude=${data['longitude']}`;
-            if (common.COMMON_GLOBAL.system_admin!='')
+            if (common.COMMON_GLOBAL.system_admin!=null)
                 tokentype = 'SYSTEMADMIN';
             else
                 tokentype = 'APP_ACCESS';
@@ -2622,7 +2622,7 @@ const demo_uninstall = () =>{
  * @returns {void}
  */
 const show_installation = () =>{
-    if (common.COMMON_GLOBAL.system_admin!=''){
+    if (common.COMMON_GLOBAL.system_admin!=null){
         AppDocument.querySelector('#menu_7_content').innerHTML =
             `<div id='menu_7_content_widget1' class='widget'>
                 <div id='install_db'>
@@ -2962,7 +2962,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     closeBroadcast();
                     break;
                 }
-                //common
                 case 'common_lov_list':{
                     AppDocument.querySelector('#common_lov_list')['data-function'](event);
                     break;
@@ -3135,7 +3134,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
  * @returns {void}
  */
 const init = () => {
-
     //SET GLOBALS
     APP_GLOBAL.page = 0;
     APP_GLOBAL.page_last =0;
@@ -3143,17 +3141,15 @@ const init = () => {
     APP_GLOBAL.module_leaflet_map_container      ='mapid';
     APP_GLOBAL.service_log_file_interval= '';
 
-    if (common.COMMON_GLOBAL.system_admin!=''){
+    if (common.COMMON_GLOBAL.system_admin!=null){
         common.COMMON_GLOBAL.module_leaflet_style			            ='OpenStreetMap_Mapnik';
         common.COMMON_GLOBAL.module_leaflet_jumpto		                ='0';
         common.COMMON_GLOBAL.module_leaflet_popup_offset		        ='-25';
     }
-
-    //hide all first (display none in css using eval not working)
     for (let i=1;i<=10;i++){
         AppDocument.querySelector(`#menu_${i}`).style.display='none';
     }
-    if (common.COMMON_GLOBAL.system_admin!=''){
+    if (common.COMMON_GLOBAL.system_admin!=null){
         AppDocument.querySelector('#select_broadcast_type').classList.add('system_admin');
         AppDocument.querySelector('#menu_secure').classList.add('system_admin');
         show_menu(1);
