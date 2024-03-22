@@ -58,7 +58,6 @@ const admin_login = async () => {
         else{
             AppDocument.querySelector('#menu').style.visibility = 'visible';
             AppDocument.querySelector('#menu_open').style.visibility = 'visible';
-            AppDocument.querySelector('#common_user_preferences').style.display = 'block';
             AppDocument.querySelector('#admin_secure').style.visibility = 'visible';
             app_secure.init();
         }
@@ -82,23 +81,6 @@ const app_event_click = event => {
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
-                case 'common_toolbar_framework_js':{
-                    mount_app_app(1);
-                    break;
-                }
-                case 'common_toolbar_framework_vue':{
-                    mount_app_app(2);
-                    break;
-                }
-                case 'common_toolbar_framework_react':{
-                    mount_app_app(3);
-                    break;
-                }
-                case 'common_user_start_login_button':
-                case 'common_user_start_login_system_admin_button':{
-                    admin_login();
-                    break;
-                }
                 case 'menu_open':{
                     AppDocument.querySelector('#menu').style.display = 'block';
                     break;
@@ -125,6 +107,49 @@ const app_event_click = event => {
                     break;
                 }
                 //common
+                case 'common_toolbar_framework_js':{
+                    mount_app_app(1);
+                    break;
+                }
+                case 'common_toolbar_framework_vue':{
+                    mount_app_app(2);
+                    break;
+                }
+                case 'common_toolbar_framework_react':{
+                    mount_app_app(3);
+                    break;
+                }
+                case 'common_user_start_login_button':
+                case 'common_user_start_login_system_admin_button':{
+                    admin_login();
+                    break;
+                }
+                case 'common_user_menu':
+                case 'common_user_menu_logged_in':
+                case 'common_user_menu_avatar':
+                case 'common_user_menu_avatar_img':
+                case 'common_user_menu_logged_out':
+                case 'common_user_menu_default_avatar':{
+                    common.ComponentRender('common_dialogue_user_menu', 
+                        {   app_id:common.COMMON_GLOBAL.app_id,
+                            common_app_id:common.COMMON_GLOBAL.common_app_id,
+                            data_app_id:common.COMMON_GLOBAL.common_app_id,
+                            username:common.COMMON_GLOBAL.user_account_username,
+                            system_admin:common.COMMON_GLOBAL.system_admin,
+                            system_admin_only:common.COMMON_GLOBAL.system_admin_only,
+                            current_locale:common.COMMON_GLOBAL.user_locale,
+                            current_timezone:common.COMMON_GLOBAL.user_timezone,
+                            current_direction:common.COMMON_GLOBAL.user_direction,
+                            current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
+                            //functions
+                            function_FFB:common.FFB,
+                            function_get_locales_options:common.get_locales_options},
+                                                '/common/component/dialogue_user_menu.js')
+                        .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
+                                                            {},
+                                                            '/common/component/app_theme.js'));
+                    break;
+                }
                 case 'common_message_cancel':{
                     AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                     break;
@@ -175,10 +200,10 @@ const app_event_click = event => {
                     common.profile_detail(4, null, true, null);
                     break;
                 }
-                case 'common_user_menu_username':{
-                    if (common.COMMON_GLOBAL.system_admin == ''){
+                case 'common_dialogue_user_menu_username':{
+                    if (common.COMMON_GLOBAL.system_admin == null){
                         common.profile_show(null,null);
-                        AppDocument.querySelector('#common_user_menu_dropdown').style = 'none';
+                        common.ComponentRemove('common_dialogue_user_menu');
                     }
                     break;
                 }
@@ -206,19 +231,19 @@ const app_event_change = event => {
         common.common_event('change',event)
         .then(()=>{
             switch (event_target_id){
-                case 'common_user_locale_select':{
+                case 'common_dialogue_user_menu_user_locale_select':{
                     common.common_translate_ui((/**@type{AppEvent}*/event.target.value), ()=>{});
                     break;
                 }
-                case 'common_user_arabic_script_select':{
-                    AppDocument.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
+                case 'common_dialogue_user_menu_user_arabic_script_select':{
+                    AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').dispatchEvent(new Event('change'));
                     break;
                 }
-                case 'common_app_select_theme':{
+                case 'common_dialogue_user_menu_app_select_theme':{
                     /**@ts-ignore */
                     AppDocument.body.className = 'app_theme' + 
-                                                AppDocument.querySelector('#common_app_select_theme').value + ' ' + 
-                                                AppDocument.querySelector('#common_user_arabic_script_select').value;
+                                                AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value + ' ' + 
+                                                AppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select').value;
                     break;
                 }
                 default:{
@@ -343,7 +368,7 @@ const mount_app_app = async (framework=null) => {
                         Focus: app_event_focus,
                         Input:app_event_input})
     .then(()=>{
-        if (common.COMMON_GLOBAL.user_account_id ==null && common.COMMON_GLOBAL.system_admin=='')
+        if (common.COMMON_GLOBAL.user_account_id ==null && common.COMMON_GLOBAL.system_admin==null)
             common.show_common_dialogue('LOGIN_ADMIN');
     });                        
 };
@@ -354,6 +379,9 @@ const mount_app_app = async (framework=null) => {
  * @returns {void}
  */
 const init_app = (parameters) => {
+    common.ComponentRender('app_user_account', 
+                            {},
+                            '/common/component/user_account.js');
     if (parameters.app_service.system_admin_only == 0)
         for (const parameter of parameters.app) {
             if (parameter['MODULE_EASY.QRCODE_WIDTH'])

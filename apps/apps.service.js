@@ -119,102 +119,19 @@ const render_app_with_data = (app, data)=>{
  * @async
  * @param {number} app_id
  * @param {string|null} locale
- * @returns {Promise<Types.render_common>}
+ * @returns {Promise<string>}
  */
 const render_app_html = async (app_id, locale) =>{
     /**@type{Types.config_apps_render_config} */
     const app_config = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG');
-    
     const module = render_files(app_id, 'APP');
-
-    /** @type {string}*/
-    let user_locales='';
-    /** @type {Types.render_common_settings}*/
-    let settings;
-    let user_timezones = '';
-    let user_directions = '';
-    let user_arabic_scripts = '';
     /** @type {[string, string][]} */
     const render_variables = [];
-
-    if ((app_id== getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && app_start()==false)){
-            //if admin app and system admin only
-            app_config.RENDER_LOCALES = false;
-            app_config.RENDER_SETTINGS = false;
-    }
-
-    if (app_config.RENDER_LOCALES){
-        const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/locale.service.js`);            
-        await getLocales(app_id, locale)
-        .then((/**@type{Types.db_result_locale_getLocales[]} */result_user_locales)=> {
-            result_user_locales.forEach((locale, i) => {
-                user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
-            });
-            render_variables.push(['COMMON_USER_LOCALE',user_locales]);
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            throw error;
-        });
-    }
-    else
-        render_variables.push(['COMMON_USER_LOCALE','']);
-
-    if (app_config.RENDER_SETTINGS){
-        const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
-        /** @type {Types.db_result_app_setting_getSettings[]}*/
-        const app_settings_db = await getSettings(app_id, locale, null);
-        let option;
-        for (const app_setting of app_settings_db) {
-            option = `<option id=${app_setting.id} value='${app_setting.value}'>${app_setting.text}</option>`;
-            switch (app_setting.app_setting_type_name){
-                //static content
-                case 'TIMEZONE':{
-                    user_timezones += option;
-                    break;
-                }
-                //will be translated in app
-                case 'DIRECTION':{
-                    user_directions += option;
-                    break;
-                }
-                //static content
-                case 'ARABIC_SCRIPT':{
-                    user_arabic_scripts += option;
-                    break;
-                }
-            }
-        }
-        settings = {settings: app_settings_db, 
-                    user_timezones: user_timezones, 
-                    user_directions: user_directions, 
-                    user_arabic_scripts: user_arabic_scripts};
-
-        render_variables.push(['COMMON_USER_TIMEZONE',user_timezones]);
-        render_variables.push(['COMMON_USER_DIRECTION',`<option id='' value=''></option>${user_directions}`]);
-        render_variables.push(['COMMON_USER_ARABIC_SCRIPT',`<option id='' value=''></option>${user_arabic_scripts}`]);
-    }
-    else{
-        render_variables.push(['COMMON_USER_TIMEZONE','']);
-        render_variables.push(['COMMON_USER_DIRECTION','']);
-        render_variables.push(['COMMON_USER_ARABIC_SCRIPT','']);
-    }
     
     return new Promise((resolve)=>{
         //list config files and return only tag and file content
         /**@type {[string, string][]} */
         const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];} );
-
-        if (app_config.RENDER_USER_ACCOUNT==true){
-            const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyUserAccount')[0][4];
-            if (app_config.CUSTOM_TAG_USER_ACCOUNT){
-                common_files.push([app_config.CUSTOM_TAG_USER_ACCOUNT, common_file]);
-                common_files.push(['CommonBodyUserAccount', '']);
-            }
-            else
-                common_files.push(['CommonBodyUserAccount', common_file]);
-        }
-        else
-            common_files.push(['CommonBodyUserAccount', '']);
         
         if (app_config.MAP==true){
             const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonHeadMap')[0][4];
@@ -223,18 +140,6 @@ const render_app_html = async (app_id, locale) =>{
         else
             common_files.push(['CommonHeadMap', '']);
 
-        if (app_config.RENDER_APP_THEMES==true){
-            //themes always in same place but choose what content to display
-            if (ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0])
-                common_files.push(['CommonBodyThemes', ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0][4]]);
-            else{
-                const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0][4];
-                common_files.push(['CommonBodyThemes', common_file]);
-            }
-        }
-        else
-            common_files.push(['CommonBodyThemes', '']);
-            
         const app = render_app_with_data(module, common_files);
         
         //render app parameters from apps.json
@@ -271,9 +176,7 @@ const render_app_html = async (app_id, locale) =>{
         else
             render_variables.push(['APP_FAVICON_192x192','']);
 
-        resolve({   app:        render_app_with_data(app, render_variables),
-                    locales:    user_locales, 
-                    settings:   settings});
+        resolve(render_app_with_data(app, render_variables));
     });
 };
 /**
@@ -460,7 +363,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
     let system_admin_only;
     /** @type {string} */
     let app_module_type;
-    /** @type {Types.app_create} */
+    /** @type {string} */
     let app;
     /**@type{*} */
     let translate_items = {};
@@ -494,7 +397,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
         const {createApp} = await import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`);
         app = await createApp(app_id, app_parameters.param, client_locale(app_parameters.accept_language));
         await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '4 ' +new Date().toISOString());
-        if (app.app == null)
+        if (app == null)
             return null;
         app_module_type = 'APP';
         //get translation data
@@ -515,7 +418,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
                                                             place:              result_geodata.place,
                                                             timezone:           result_geodata.timezone,
                                                             translate_items:    translate_items,
-                                                            module:             app.app});
+                                                            module:             app});
     //if app admin then log, system does not log in database
     if (ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`]){
         const {createLog} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`);

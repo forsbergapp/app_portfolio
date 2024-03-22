@@ -10,14 +10,14 @@ const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.serv
  * @param {number} app_id
  * @param {Types.app_parameter} username
  * @param {string} locale
- * @returns {Promise.<Types.app_create|Types.app_create_empty>}
+ * @returns {Promise.<string|null>}
  */
 const createApp = async (app_id, username, locale) => {
     return new Promise((resolve, reject) => {
         const main = async (/**@type{number}*/app_id) => {
             render_app_html(app_id, locale)
-            .then((/**@type{Types.render_common}*/app)=>{
-                resolve({   app:app.app});
+            .then((/**@type{string}*/app)=>{
+                resolve(app);
                 
             })
             .catch((/**@type{Types.error}*/err)=>reject(err));
@@ -30,7 +30,7 @@ const createApp = async (app_id, username, locale) => {
                         main(app_id);
                     else{
                         //redirect to /
-                        resolve ({app: null});
+                        resolve (null);
                     }
                 })
                 .catch((/**@type{Types.error}*/error)=>{

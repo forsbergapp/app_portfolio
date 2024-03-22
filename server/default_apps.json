@@ -68,13 +68,8 @@
         {"MODULE_EASY.QRCODE_HEIGHT": "128"},
         {"MODULE_EASY.QRCODE_WIDTH": "128"}
     ],
-    "RENDER_CONFIG":{  "MAP": true,
-                "MANIFEST":false,
-                "RENDER_USER_ACCOUNT":true,
-                "CUSTOM_TAG_USER_ACCOUNT":"AppUserAccount",
-                "RENDER_APP_THEMES":true, 
-                "RENDER_LOCALES":true, 
-                "RENDER_SETTINGS":true},
+    "RENDER_CONFIG":{   "MAP": true,
+                        "MANIFEST":false},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/admin/src/index.html"],
                     ["APP",                 null,           "AppMenu",                      "/apps/admin/src/menu.html"],
@@ -90,9 +85,8 @@
                     ["APP_COMMON",          null,           "CommonBodyBroadcast",          "/apps/common/src/body_broadcast.html"],
                     ["APP_COMMON",          null,           "CommonBodyProfileSearch",      "/apps/common/src/profile_search.html"],
                     ["APP_COMMON",          null,           "CommonBodyProfileToolbar",     "/apps/common/src/profile_toolbar.html"],
-                    ["APP_COMMON_OPTIONAL", null,           "CommonBodyUserAccount",        "/apps/common/src/user_account.html"],
+                    ["APP_COMMON",          null,           "CommonBodyUserAccount",        "/apps/common/src/user_account.html"],
                     ["APP_COMMON_OPTIONAL", null,           "CommonHeadMap",                "/apps/common/src/head_map.html"],
-                    ["APP_COMMON_OPTIONAL", null,           "CommonBodyThemes",             "/apps/common/src/app_themes.html"],
                     ["REPORT_COMMON",       null,           "CommonReportHead",             "/apps/common/src/report/head.html"],
                     ["REPORT_COMMON",       null,           "CommonReportHeadFonts",        "/apps/common/src/fonts.html"],
                     ["MAINTENANCE",         null,           null,                           "/apps/common/src/index_maintenance.html"],
@@ -130,21 +124,13 @@
         {"MODULE_EASY.QRCODE_HEIGHT": "128"},
         {"MODULE_EASY.QRCODE_WIDTH": "128"}
     ],
-    "RENDER_CONFIG":{  "MAP": true,
-                "MANIFEST":false,
-                "RENDER_USER_ACCOUNT":true,
-                "CUSTOM_TAG_USER_ACCOUNT":null,
-                "RENDER_PROFILE_TOP":true,
-                "CUSTOM_TAG_PROFILE_TOP":"AppProfileBtnTop",
-                "RENDER_APP_THEMES":true, 
-                "RENDER_LOCALES":true, 
-                "RENDER_SETTINGS":true},
+    "RENDER_CONFIG":{   "MAP": true,
+                        "MANIFEST":false},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app1/src/index.html"],
                     ["APP",                 null,           "AppBackground",                "/apps/app1/src/background.html"],
                     ["APP",                 null,           "AppToolbarBottom",             "/apps/app1/src/toolbar_bottom.html"],
-                    ["APP",                 null,           "AppDialogues",                 "/apps/app1/src/dialogues.html"],
-                    ["APP_OPTIONAL",        null,           "CommonBodyThemes",             "/apps/app1/src/app_themes.html"]
+                    ["APP",                 null,           "AppDialogues",                 "/apps/app1/src/dialogues.html"]
     ],
     "STATUS":"ONLINE"},
     {"APP_ID": 2, "NAME": "Timetables",     "SUBDOMAIN": "app2",    "PATH": "/apps/app2/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"/js/app_report.js",   "CSS": "/css/app.css",   "CSS_REPORT": "/css/app_report.css", "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",              "SHOWPARAM":1, 
@@ -237,17 +223,8 @@
         {"MODULE_EASY.QRCODE_HEIGHT": "128"},
         {"MODULE_EASY.QRCODE_WIDTH": "128"}
     ],
-    "RENDER_CONFIG":{  "MAP": true,
-                "MANIFEST":true,
-                "RENDER_PROFILE_APPS":false,
-                "CUSTOM_TAG_PROFILE_SEARCH":"AppProfileSearch",
-                "RENDER_USER_ACCOUNT":true,
-                "CUSTOM_TAG_USER_ACCOUNT":"AppUserAccount",
-                "RENDER_PROFILE_TOP":true,
-                "CUSTOM_TAG_PROFILE_TOP":"AppProfileBtnTop",
-                "RENDER_APP_THEMES":true, 
-                "RENDER_LOCALES":true, 
-                "RENDER_SETTINGS":true},
+    "RENDER_CONFIG":{   "MAP": true,
+                        "MANIFEST":true},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app2/src/index.html"],
                     ["APP",                 null,           "AppReportsFonts",              "/apps/app2/src/fonts.html"],
@@ -288,15 +265,8 @@
         {"LINK_TITLE": ""},
         {"LINK_URL": ""}
     ],
-    "RENDER_CONFIG":{  "MAP": false,
-                "MANIFEST":false,
-                "RENDER_USER_ACCOUNT":false,
-                "CUSTOM_TAG_USER_ACCOUNT":null,
-                "RENDER_PROFILE_TOP":false,
-                "CUSTOM_TAG_PROFILE_TOP":null,
-                "RENDER_APP_THEMES":false, 
-                "RENDER_LOCALES":false, 
-                "RENDER_SETTINGS":false},
+    "RENDER_CONFIG":{   "MAP": false,
+                        "MANIFEST":false},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app3/src/index.html"],
                     ["APP",                 null,           "AppDialogues",                 "/apps/app3/src/dialogues.html"]
@@ -323,15 +293,8 @@
         {"LINK_TITLE": ""},
         {"LINK_URL": ""}
     ],
-    "RENDER_CONFIG":{  "MAP": true,
-                "MANIFEST":false,
-                "RENDER_USER_ACCOUNT":false,
-                "CUSTOM_TAG_USER_ACCOUNT":null,
-                "RENDER_PROFILE_TOP":false,
-                "CUSTOM_TAG_PROFILE_TOP":null,
-                "RENDER_APP_THEMES":false, 
-                "RENDER_LOCALES":false, 
-                "RENDER_SETTINGS":true},
+    "RENDER_CONFIG":{   "MAP": true,
+                        "MANIFEST":false},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app4/src/index.html"],
                     ["APP",                 null,           "AppBody",                      "/apps/app4/src/body.html"]
@@ -358,15 +321,8 @@
         {"LINK_TITLE": ""},
         {"LINK_URL": ""}
     ],
-    "RENDER_CONFIG":{  "MAP": false,
-                "MANIFEST":false,
-                "RENDER_USER_ACCOUNT":false,
-                "CUSTOM_TAG_USER_ACCOUNT":null,
-                "RENDER_PROFILE_TOP":false,
-                "CUSTOM_TAG_PROFILE_TOP":null,
-                "RENDER_APP_THEMES":false, 
-                "RENDER_LOCALES":false, 
-                "RENDER_SETTINGS":true},
+    "RENDER_CONFIG":{   "MAP": false,
+                        "MANIFEST":false},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app5/src/index.html"]
     ],
@@ -392,15 +348,8 @@
         {"LINK_TITLE": ""},
         {"LINK_URL": ""}
     ],
-    "RENDER_CONFIG":{  "MAP": false,
-                "MANIFEST":false,
-                "RENDER_USER_ACCOUNT":false,
-                "CUSTOM_TAG_USER_ACCOUNT":null,
-                "RENDER_PROFILE_TOP":false,
-                "CUSTOM_TAG_PROFILE_TOP":null,
-                "RENDER_APP_THEMES":false, 
-                "RENDER_LOCALES":false, 
-                "RENDER_SETTINGS":true},
+    "RENDER_CONFIG":{   "MAP": false,
+                        "MANIFEST":false},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app5/src/index.html"]
     ],

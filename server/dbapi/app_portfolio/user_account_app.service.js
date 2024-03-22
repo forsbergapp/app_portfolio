@@ -52,14 +52,23 @@ const getUserAccountApps = async (app_id, user_account_id) => {
  * @returns {Promise.<Types.db_result_user_account_app_getUserAccountApp[]>}
  */
 const getUserAccountApp = async (app_id, user_account_id) => {
-		const sql = `SELECT preference_locale "preference_locale",
-							app_setting_preference_timezone_id "app_setting_preference_timezone_id",
-							app_setting_preference_direction_id "app_setting_preference_direction_id",
-							app_setting_preference_arabic_script_id "app_setting_preference_arabic_script_id",
-							date_created "date_created"
-					   FROM ${db_schema()}.user_account_app
-					  WHERE user_account_id = :user_account_id
-						AND app_id = :app_id`;
+		const sql = `SELECT uaa.preference_locale "preference_locale",
+							uaa.app_setting_preference_timezone_id "app_setting_preference_timezone_id",
+							(SELECT s.value
+							   FROM ${db_schema()}.app_setting s
+							  WHERE s.id = uaa.app_setting_preference_timezone_id) "app_setting_preference_timezone_value",
+							uaa.app_setting_preference_direction_id "app_setting_preference_direction_id",
+							(SELECT s.value
+							   FROM ${db_schema()}.app_setting s
+							  WHERE s.id = uaa.app_setting_preference_direction_id) "app_setting_preference_direction_value",
+							uaa.app_setting_preference_arabic_script_id "app_setting_preference_arabic_script_id",
+							(SELECT s.value
+							   FROM ${db_schema()}.app_setting s
+							  WHERE s.id = uaa.app_setting_preference_arabic_script_id) "app_setting_preference_arabic_script_value",
+							uaa.date_created "date_created"
+					   FROM ${db_schema()}.user_account_app uaa
+					  WHERE uaa.user_account_id = :user_account_id
+						AND uaa.app_id = :app_id`;
 		const parameters = {
 						user_account_id: user_account_id,
 						app_id: app_id

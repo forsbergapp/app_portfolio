@@ -9,21 +9,21 @@ const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.serv
  * Creates app
  * @param {number} app_id
  * @param {Types.app_parameter} params
- * @returns {Promise.<Types.app_create|Types.app_create_empty>}
+ * @returns {Promise.<string|null>}
  */
 const createApp = async (app_id, params) => {
     return new Promise((resolve, reject) => {
         if (params==null || params =='1' || params =='2' || params =='3' ){
             render_app_html(app_id, null)
-            .then((/**@type{Types.render_common}*/app)=>{
-                resolve({   app:app.app});
+            .then((/**@type{string}*/app)=>{
+                resolve(app);
                 
             })
             .catch((/**@type{Types.error}*/err)=>reject(err));
         }
         else{
             //redirect to /
-            resolve ({app: null});
+            resolve (null);
         }
     });
 };
