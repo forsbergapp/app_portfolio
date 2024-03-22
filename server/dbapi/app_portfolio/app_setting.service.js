@@ -81,18 +81,20 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
  * @returns {Promise.<Types.db_result_app_setting_getSettingDisplayData[]>}
  */
 const getSettingDisplayData = async (app_id, data_app_id, app_setting_type_name, value) => {
-     const sql = `SELECT s.id           "id", 
-                         s.value        "value", 
-                         null           "name", 
-                         s.display_data "display_data", 
-                         data2          "data2", 
-                         data3          "data3", 
-                         data4          "data4",
-                         data5          "data5"
+     const sql = `SELECT s.id                                         "id", 
+                         s.app_setting_type_app_setting_type_name     "app_setting_type_name",
+                         s.value                                      "value", 
+                         null                                         "name", 
+                         s.display_data                               "display_data", 
+                         data2                                        "data2", 
+                         data3                                        "data3", 
+                         data4                                        "data4",
+                         data5                                        "data5"
                     FROM ${db_schema()}.app_setting s
-                   WHERE s.app_setting_type_app_setting_type_name = :app_setting_type_name
+                   WHERE (s.app_setting_type_app_setting_type_name = :app_setting_type_name OR :app_setting_type_name IS NULL)
                      AND s.app_setting_type_app_id = :app_id
                      AND (s.value = :value OR :value IS NULL)
+                     AND s.display_data IS NOT NULL
                      ORDER BY 1`;
      const parameters = {
                          app_setting_type_name: app_setting_type_name,

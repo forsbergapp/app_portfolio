@@ -90,7 +90,7 @@ body {
 	background-color: var(--app_white1);
 	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);	
 }
-#common_user_menu_dropdown{
+#common_dialouge_user_menu{
 	background-color: var(--app_white);
 }
 #common_window_info_toolbar{

@@ -408,25 +408,6 @@ const theme_nav = async (nav, type) => {
 };
 
 /**
- * Common translation ui
- * @param {string} lang_code 
- */
-const common_translate_ui_app = async lang_code => {
-    await common.common_translate_ui(lang_code)
-    .then(()=>{
-        //translate locale in this app
-        const select_locale = AppDocument.querySelector('#setting_select_locale');
-        const select_second_locale = AppDocument.querySelector('#setting_select_report_locale_second'); 
-        const current_locale = select_locale.value;
-        const current_second_locale = select_second_locale.value;
-        select_locale.innerHTML = AppDocument.querySelector('#common_user_locale_select').innerHTML;
-        select_locale.value = current_locale;
-        select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + AppDocument.querySelector('#common_user_locale_select').innerHTML;
-        select_second_locale.value = current_second_locale;   
-    })
-    .catch((/**@type{Error}*/error)=>{throw error;});
-};
-/**
  * Setting translate
  * @param {boolean} first 
  * @returns {Promise.<void>}
@@ -621,6 +602,9 @@ const toolbar_button = async (choice) => {
                     paper.style.display = 'none';
                 AppDocument.querySelector('#common_profile_btn_top').style.visibility='hidden';
                 settings.style.visibility = 'visible';
+
+                if (AppDocument.querySelector('#tab_nav_1').classList.contains('tab_nav_selected'))
+                    await update_settings_locale();
                 if (AppDocument.querySelector('#tab_nav_3').classList.contains('tab_nav_selected'))
                     update_all_theme_thumbnails();
                 break;
@@ -629,7 +613,7 @@ const toolbar_button = async (choice) => {
         case 6:
             {
                 settings.style.visibility = 'hidden';
-                AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                common.ComponentRemove('common_dialogue_user_menu');
                 profile_show_app(null,null);
                 break;
             }
@@ -637,13 +621,23 @@ const toolbar_button = async (choice) => {
         case 7:
             {
                 settings.style.visibility = 'hidden';
-                AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                common.ComponentRemove('common_dialogue_user_menu');
                 profile_top_app(1, null, profile_show_app);
                 break;
             }
     }
 };
-
+const update_settings_locale = async () =>{
+    //get locales
+    const select_locale = AppDocument.querySelector('#setting_select_locale');
+    const select_second_locale = AppDocument.querySelector('#setting_select_report_locale_second'); 
+    const current_locale = select_locale.value;
+    const current_second_locale = select_second_locale.value;
+    select_locale.innerHTML = await common.get_locales_options();
+    select_locale.value = current_locale;
+    select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + select_locale.innerHTML;
+    select_second_locale.value = current_second_locale;   
+}
 /**
  * Open navigation tab
  * @param {number} tab_selected 
@@ -658,20 +652,28 @@ const openTab = async (tab_selected) => {
     //mark active tab
     AppDocument.querySelector('#tab_nav_' + tab_selected).classList.add('tab_nav_selected');
     
-    if (tab_selected==2){
-        AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).outerHTML = `<div id='${APP_GLOBAL.gps_module_leaflet_container}'></div>`;
-        //init map thirdparty module
-        init_map().then(()=>{
-            update_ui(4);
-            common.map_resize();
-        });
-    }
-    
-    if (tab_selected==3){
-        update_all_theme_thumbnails();
-    }
-    if (tab_selected==5){
-        AppDocument.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
+    switch (Number(tab_selected)){
+        case 1:{
+            await update_settings_locale();
+            break;
+        }
+        case 2:{
+            AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).outerHTML = `<div id='${APP_GLOBAL.gps_module_leaflet_container}'></div>`;
+            //init map thirdparty module
+            init_map().then(()=>{
+                update_ui(4);
+                common.map_resize();
+            });
+            break;
+        }
+        case 3:{
+            update_all_theme_thumbnails();
+            break;
+        }
+        case 5:{
+            AppDocument.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
+            break;
+        }
     }
 };
 /**
@@ -1056,8 +1058,7 @@ const user_login_app = async (system_admin=false, username_verify=null, password
             AppDocument.querySelector('#tab_nav_7').style.display = 'inline-block';
             //Hide settings
             AppDocument.querySelector('#settings').style.visibility = 'hidden';
-            //Hide profile
-            AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
+            common.ComponentRemove('common_user_profile');
             
             AppDocument.querySelector('#paper').innerHTML='';
             dialogue_loading(1);
@@ -2095,18 +2096,6 @@ const app_event_click = event => {
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
-                case 'common_toolbar_framework_js':{
-                    mount_app_app(1);
-                    break;
-                }
-                case 'common_toolbar_framework_vue':{
-                    mount_app_app(2);
-                    break;
-                }
-                case 'common_toolbar_framework_react':{
-                    mount_app_app(3);
-                    break;
-                }
                 //info dialogue
                 case 'app_link':{
                     if (common.COMMON_GLOBAL.app_link_url)
@@ -2351,18 +2340,58 @@ const app_event_click = event => {
                     break;
                 }
                 //common
-                case 'common_user_menu_dropdown_log_out':{
+                case 'common_toolbar_framework_js':{
+                    mount_app_app(1);
+                    break;
+                }
+                case 'common_toolbar_framework_vue':{
+                    mount_app_app(2);
+                    break;
+                }
+                case 'common_toolbar_framework_react':{
+                    mount_app_app(3);
+                    break;
+                }
+                //dialogue user menu
+                case 'common_user_menu':
+                    case 'common_user_menu_logged_in':
+                    case 'common_user_menu_avatar':
+                    case 'common_user_menu_avatar_img':
+                    case 'common_user_menu_logged_out':
+                    case 'common_user_menu_default_avatar':{
+                        common.ComponentRender('common_dialogue_user_menu', 
+                        {   app_id:common.COMMON_GLOBAL.app_id,
+                            common_app_id:common.COMMON_GLOBAL.common_app_id,
+                            data_app_id:common.COMMON_GLOBAL.common_app_id,
+                            username:common.COMMON_GLOBAL.user_account_username,
+                            system_admin:common.COMMON_GLOBAL.system_admin,
+                            current_locale:common.COMMON_GLOBAL.user_locale,
+                            current_timezone:common.COMMON_GLOBAL.user_timezone,
+                            current_direction:common.COMMON_GLOBAL.user_direction,
+                            current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
+                            //functions
+                            function_FFB:common.FFB,
+                            function_get_locales_options:common.get_locales_options},
+                                                '/common/component/dialogue_user_menu.js')
+                        .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
+                                                            {},
+                                                            '/common/component/app_theme.js'));
+                        break;
+                    }
+                case 'common_dialogue_user_menu_log_out':{
                     user_logoff_app();
                     break;
                 }
-                case 'common_user_menu_username':{
+                case 'common_dialogue_user_menu_username':{
                     toolbar_button(6);
                     break;
                 }
+                //profile button
                 case 'common_profile_btn_top':{
                     toolbar_button(7);
                     break;
                 }
+                //dialogue user start
                 case 'common_user_start_login_button':{
                     user_login_app();
                     break;
@@ -2510,22 +2539,22 @@ const app_event_change = event => {
                     break;
                 }
                 //common
-                case 'common_app_select_theme':{
+                case 'common_dialogue_user_menu_app_select_theme':{
                     AppDocument.body.className = 'app_theme' + 
-                                                AppDocument.querySelector('#common_app_select_theme').value + ' ' + 
-                                                AppDocument.querySelector('#common_user_arabic_script_select').value;
+                                                AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value + ' ' + 
+                                                AppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select').value;
                     break;
                 }
-                case 'common_user_locale_select':{
-                    common_translate_ui_app(event.target.value);
+                case 'common_dialogue_user_menu_user_locale_select':{
+                    common.common_translate_ui(event.target.value);
                     break;
                 }
-                case 'common_user_timezone_select':{
+                case 'common_dialogue_user_menu_user_timezone_select':{
                     AppDocument.querySelector('#setting_timezone_current').innerHTML = event.target.value;
                     break;
                 }
-                case 'common_user_arabic_script_select':{
-                    AppDocument.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
+                case 'common_dialogue_user_menu_user_arabic_script_select':{
+                    AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').dispatchEvent(new Event('change'));
                     break;
                 }
                 //module leaflet
@@ -2910,6 +2939,9 @@ const init_app = parameters => {
     common.ComponentRender('app_profile_toolbar',
                             {}, 
                             '/common/component/profile_toolbar.js');
+    common.ComponentRender('app_user_account', 
+                            {},
+                            '/common/component/user_account.js');
     //set app globals
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone
@@ -2926,8 +2958,8 @@ const init_app = parameters => {
         app_report.REPORT_GLOBAL.session_currentDate.getMonth(),
         app_report.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
 
-    //set initial default language from clients settings
-    common.SearchAndSetSelectedIndex(navigator.language.toLowerCase(), AppDocument.querySelector('#setting_select_locale'),1);
+    //set initial default language from clients locale
+    common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_local, AppDocument.querySelector('#setting_select_locale'),1);
     AppDocument.querySelector('#about_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
     
     
@@ -2950,9 +2982,6 @@ const init_app = parameters => {
     load_themes();
     //set papersize
     zoom_paper();
-    //user interface font depending selected arabic script in user preference, not in settings
-    //dispatch event in common after events har defined above
-    AppDocument.querySelector('#common_user_arabic_script_select').dispatchEvent(new Event('change'));
     
     app_report.set_prayer_method().then(() => {
         //set timers
@@ -2982,7 +3011,7 @@ const init_app = parameters => {
                         dialogue_loading(0);
                         serviceworker();
                         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-                            common_translate_ui_app(common.COMMON_GLOBAL.user_locale)
+                            common.common_translate_ui(common.COMMON_GLOBAL.user_locale)
                             .then(()=> mount_app_app());
                         else
                             mount_app_app();

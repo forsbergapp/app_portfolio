@@ -943,23 +943,23 @@ border-left: 12px solid var(--app_theme_sun_color);
 }
 #common_user_menu:hover,
 #common_user_menu:active,
-#common_user_menu_dropdown:hover,
-#common_user_menu_dropdown:active{
+#common_dialouge_user_menu:hover,
+#common_dialouge_user_menu:active{
 	box-shadow: 0 0 35px 4px var(--app_theme_dialogue_boxshadow_active_color);
 }  
 #common_user_menu,
-#common_user_menu_dropdown{
+#common_dialouge_user_menu{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
-#common_user_menu_username:hover,
-#common_user_menu_username:active,
+#common_dialogue_user_menu_username:hover,
+#common_dialogue_user_menu_username:active,
 #common_profile_btn_top:hover,
 #common_profile_btn_top:active,
-#common_user_menu_dropdown_logged_in div:hover,
-#common_user_menu_dropdown_logged_in div:active,
-#common_user_menu_dropdown_logged_out div:hover,
-#common_user_menu_dropdown_logged_out div:active{
+#common_dialouge_user_menu_logged_in div:hover,
+#common_dialouge_user_menu_logged_in div:active,
+#common_dialouge_user_menu_logged_out div:hover,
+#common_dialouge_user_menu_logged_out div:active{
 	background-color:var(--app_theme_menu_selected_hover_background_color);
 	color: var(--app_theme_menu_selected_hover_color);
 }

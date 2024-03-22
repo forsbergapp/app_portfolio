@@ -360,13 +360,7 @@
  * @property {string} user_directions       - HTML option format
  * @property {string} user_arabic_scripts   - HTML option format
  */
-/**
- * Apps - App render common items for apps with locales and settings
- * @typedef {object} render_common
- * @property {string} app                         - HTML
- * @property {string} locales                     - HTML option format
- * @property {render_common_settings} settings 
- */
+
 /**
  * Apps - App common parameters
  * @typedef {object}        app_service_parameters
@@ -388,17 +382,6 @@
  * @property {number|null}  common_app_id
  * @property {string}       rest_resource_bff
  * @property {number}       first_time
- */
-/**
- * Apps - App create
- * @typedef {object} app_create
- * @property {string} app                         - HTML
-
- */
-/**
- * Apps - App create empty
- * @typedef {object} app_create_empty
- * @property {null} app                         - HTML
  */
 
 /**

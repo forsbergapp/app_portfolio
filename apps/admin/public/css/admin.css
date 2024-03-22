@@ -241,6 +241,13 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	height:100%;
 }
 
+#app_user_account{
+	margin:10px;
+	display: grid;
+	margin-top: 10px;
+	width: 60px;
+}
+
 #menu{
 	width:150px;
 	height:100%;
@@ -1237,10 +1244,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	visibility: hidden;
 	display:	none !important;
 }
-#common_user_account{
-	margin:10px;
-}
-#common_user_menu_dropdown_log_out{
+#common_dialouge_user_menu_log_out{
 	display:none;
 }
 /*RESPONSIVE SECURE*/
@@ -1705,7 +1709,7 @@ body{
 .common_load-spinner div:after {
 	background-color: var(--app_theme_spinner_background_color);
 }
-#common_user_menu_dropdown{
+#common_dialouge_user_menu{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }

@@ -33,7 +33,7 @@ const APP_GLOBAL = {
 };
 Object.seal(APP_GLOBAL);
 /**
- * Show or hide dialouge
+ * Show or hide dialogue
  * @returns {void}
  */
 const show_hide_apps_dialogue = () => {
@@ -68,18 +68,6 @@ const app_event_click = event => {
                 window.open(common.element_row(event.target).querySelector('.app_url').innerHTML);
             else{
                 switch (event_target_id){
-                    case 'common_toolbar_framework_js':{
-                        mount_app_app(1);
-                        break;
-                    }
-                    case 'common_toolbar_framework_vue':{
-                        mount_app_app(2);
-                        break;
-                    }
-                    case 'common_toolbar_framework_react':{
-                        mount_app_app(3);
-                        break;
-                    }
                     case 'app_menu_apps':{
                         AppDocument.querySelector('#app_menu_content_apps' ).style.display ='block';
                         AppDocument.querySelector('#app_menu_content_info' ).style.display ='none';
@@ -166,25 +154,62 @@ const app_event_click = event => {
                                                     iframe_content:null}, '/common/component/window_info.js');
                         break;
                     }
-                    //common
-                    case 'common_profile_btn_top':{
-                        common.profile_top(1);
-                        break;
-                    }
-                    //user menu
-                    case 'common_user_menu_username':{
-                        profile_show_app(null,null);
-                        AppDocument.querySelector('#common_user_menu_dropdown').style='none';
-                        break;
-                    }
-                    case 'common_user_menu_dropdown_log_out':{
-                        common.user_logoff();
-                        AppDocument.querySelector('#common_user_menu_dropdown').style='none';
-                        break;
-                    }
                     //user preferences
                     case 'app_theme_checkbox':{
                         app_theme_update(true);
+                        break;
+                    }
+                    //common
+                    case 'common_toolbar_framework_js':{
+                        mount_app_app(1);
+                        break;
+                    }
+                    case 'common_toolbar_framework_vue':{
+                        mount_app_app(2);
+                        break;
+                    }
+                    case 'common_toolbar_framework_react':{
+                        mount_app_app(3);
+                        break;
+                    }
+                    //dialogue user menu
+                    case 'common_user_menu':
+                        case 'common_user_menu_logged_in':
+                        case 'common_user_menu_avatar':
+                        case 'common_user_menu_avatar_img':
+                        case 'common_user_menu_logged_out':
+                        case 'common_user_menu_default_avatar':{
+                            common.ComponentRender('common_dialogue_user_menu', 
+                            {   app_id:common.COMMON_GLOBAL.app_id,
+                                common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                data_app_id:common.COMMON_GLOBAL.common_app_id,
+                                username:common.COMMON_GLOBAL.user_account_username,
+                                system_admin:common.COMMON_GLOBAL.system_admin,
+                                current_locale:common.COMMON_GLOBAL.user_locale,
+                                current_timezone:common.COMMON_GLOBAL.user_timezone,
+                                current_direction:common.COMMON_GLOBAL.user_direction,
+                                current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
+                                //functions
+                                function_FFB:common.FFB,
+                                function_get_locales_options:common.get_locales_options},
+                                                    '/common/component/dialogue_user_menu.js')
+                            .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
+                                                                {},
+                                                                '/component/app_theme.js'));
+                            break;
+                        }
+                    case 'common_dialogue_user_menu_username':{
+                        profile_show_app(null,null);
+                        common.ComponentRemove('common_dialogue_user_menu');
+                        break;
+                    }
+                    case 'common_dialogue_user_menu_log_out':{
+                        common.user_logoff();
+                        break;
+                    }
+                    //profil button
+                    case 'common_profile_btn_top':{
+                        common.profile_top(1);
                         break;
                     }
                     //common with app specific settings
@@ -275,11 +300,11 @@ const app_event_change = event => {
         common.common_event('change',event)
         .then(()=>{
             switch (event_target_id){
-                case 'common_user_locale_select':{
+                case 'common_dialogue_user_menu_user_locale_select':{
                     common.common_translate_ui(event.target.value).then(()=>get_apps());
                     break;
                 }
-                case 'common_user_arabic_script_select':{
+                case 'common_dialogue_user_menu_user_arabic_script_select':{
                     app_theme_update();
                     break;
                 }
@@ -315,7 +340,7 @@ const app_event_keyup = event => {
                     }        
                     break;
                 }
-                //dialouge verify
+                //dialogue verify
                 case 'common_user_verify_verification_char1':
                 case 'common_user_verify_verification_char2':
                 case 'common_user_verify_verification_char3':
@@ -354,7 +379,7 @@ const app_theme_update = (toggle_theme=false) => {
             theme = 'app_theme_sun';
         }
     }
-    AppDocument.body.className = AppDocument.querySelector('#common_user_arabic_script_select').value;
+    AppDocument.body.className = AppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select').value;
     AppDocument.body.classList.add(theme);
 };
 /**
@@ -488,6 +513,9 @@ const init_app = async (parameters) => {
     common.ComponentRender('app_profile_toolbar',
                             {}, 
                             '/common/component/profile_toolbar.js');
+    common.ComponentRender('common_user_account', 
+                            {},
+                            '/common/component/user_account.js');
     for (const parameter of parameters.app) {
         if (parameter['MODULE_EASY.QRCODE_WIDTH'])
             common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);

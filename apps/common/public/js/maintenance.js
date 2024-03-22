@@ -35,7 +35,7 @@ const init = (parameters) => {
     common.COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
     common.COMMON_GLOBAL.user_account_id = null;
     common.COMMON_GLOBAL.user_identity_provider_id = null;
-    common.COMMON_GLOBAL.system_admin = '';
+    common.COMMON_GLOBAL.system_admin = null;
     common.connectOnline();    
     common.show_maintenance(null,1);
 };

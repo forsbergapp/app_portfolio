@@ -127,11 +127,27 @@ const nvl = value => value==null?'':value;
  * @param {number} app_id
  * @param {Types.app_parameter} username
  * @param {string} locale
- * @returns {Promise.<Types.app_create|Types.app_create_empty>}
+ * @returns {Promise.<string|null>}
  */
 const createApp = async (app_id, username, locale) => {
+    //render settings
+    const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
+    /** @type {Types.db_result_app_setting_getSettings[]}*/
+    const app_settings_db = await getSettings(app_id, locale, null);
+    const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/locale.service.js`);            
+    let LOCALES = '';
+    await getLocales(app_id, locale)
+    .then((/**@type{Types.db_result_locale_getLocales[]} */result_user_locales)=> {
+        result_user_locales.forEach((locale, i) => {
+            LOCALES += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
+        });
+    })
+    .catch((/**@type{Types.error}*/error)=>{
+        throw error;
+    });
     return new Promise((resolve, reject) => {
         const main = async (/**@type{number}*/app_id) => {
+            
             let USER_TIMEZONE ='';
             let USER_DIRECTION='';
             let USER_ARABIC_SCRIPT='';
@@ -149,12 +165,11 @@ const createApp = async (app_id, username, locale) => {
             let APP_IQAMAT='';
             let APP_FAST_START_END='';
             render_app_html(app_id, locale)
-            .then((/**@type{Types.render_common}*/app)=>{
-                //render settings
+            .then((/**@type{string}*/app)=>{
                 let option;
-                for (const setting of app.settings.settings) {
-                    option = `<option id=${setting.id} value='${setting.value}'>${setting.text}</option>`;
-                    switch (setting.app_setting_type_name){
+                for (const app_setting of app_settings_db) {
+                    option = `<option id=${app_setting.id} value='${app_setting.value}'>${app_setting.text}</option>`;
+                    switch (app_setting.app_setting_type_name){
                         case 'TIMEZONE':{
                             USER_TIMEZONE += option;
                             break;
@@ -192,8 +207,8 @@ const createApp = async (app_id, username, locale) => {
                             break;
                         }
                         case 'METHOD':{
-                            option = `<option id=${setting.id} value='${setting.value}' ` +
-                                        `data2='${nvl(setting.data2)}' data3='${nvl(setting.data3)}' data4='${nvl(setting.data4)}' data5='${nvl(setting.data5)}'>${setting.text}</option>`;
+                            option = `<option id=${app_setting.id} value='${app_setting.value}' ` +
+                                        `data2='${nvl(app_setting.data2)}' data3='${nvl(app_setting.data3)}' data4='${nvl(app_setting.data4)}' data5='${nvl(app_setting.data5)}'>${app_setting.text}</option>`;
                             APP_METHOD += option;
                             break;
                         }
@@ -223,24 +238,25 @@ const createApp = async (app_id, username, locale) => {
                         }
                     }
                 }
+
                 //render profile_info after COMMON:
                 const render_variables = [];
-                render_variables.push(['AppLocales',app.locales]);
+                render_variables.push(['AppLocales',LOCALES]);
                 //add extra option for second locale
-                render_variables.push(['AppLocalessecond',`<option id='' value='0' selected='selected'>None</option>${app.locales}`]);
+                render_variables.push(['AppLocalessecond',`<option id='' value='0' selected='selected'>None</option>${LOCALES}`]);
 
-                render_variables.push(['AppPlaces',places(app_id, locale, app.settings.settings)]);
-                const appthemes = themes(app_id, locale, app.settings.settings);
+                render_variables.push(['AppPlaces',places(app_id, locale, app_settings_db)]);
+                const appthemes = themes(app_id, locale, app_settings_db);
                 render_variables.push(['AppSettingsThemesDay',appthemes[0]]);
                 render_variables.push(['AppSettingsThemesMonth',appthemes[1]]);
                 render_variables.push(['AppSettingsThemesYear',appthemes[2]]);
 
                 //app SETTING
                 render_variables.push(['AppTimezones',USER_TIMEZONE]);
-                render_variables.push(['AppDirection',USER_DIRECTION]);
+                render_variables.push(['AppDirection',`<option id='' value=''></option>${USER_DIRECTION}`]);  
                 render_variables.push(['AppNumbersystem',APP_NUMBER_SYSTEM]);
                 render_variables.push(['AppColumntitle',APP_COLUMN_TITLE]);
-                render_variables.push(['AppArabicscript',USER_ARABIC_SCRIPT]);
+                render_variables.push(['AppArabicscript',`<option id='' value=''></option>${USER_ARABIC_SCRIPT}`]);
                 render_variables.push(['AppCalendartype',APP_CALENDAR_TYPE]);
                 render_variables.push(['AppCalendarhijritype',APP_CALENDAR_HIJRI_TYPE]);
                 render_variables.push(['AppPapersize',APP_PAPER_SIZE]);
@@ -254,7 +270,7 @@ const createApp = async (app_id, username, locale) => {
                 render_variables.push(['AppIqamat',APP_IQAMAT]);
                 render_variables.push(['AppFaststartend',APP_FAST_START_END]);
                 
-                resolve({   app:render_app_with_data(app.app, render_variables)});
+                resolve(render_app_with_data(app, render_variables));
                 
             })
             .catch((/**@type{Types.error}*/err)=>reject(err));
@@ -267,7 +283,7 @@ const createApp = async (app_id, username, locale) => {
                         main(app_id);
                     else{
                         //redirect to /
-                        resolve ({app: null});
+                        resolve (null);
                     }
                 })
                 .catch((/**@type{Types.error}*/error)=>{

@@ -28,14 +28,14 @@
 #common_user_menu_default_avatar::before{					content:var(--user_avatar)}
 .app_role_system_admin::before{								content:var(--user_system_admin) !important}
 
-#common_user_menu_dropdown_edit::before{					content:var(--app_edit)}
-#common_user_menu_dropdown_log_out::before{					content:var(--app_logoff)}
-#common_user_menu_dropdown_signup::before{					content:var(--app_signup)}
-#common_user_menu_dropdown_log_in::before{					content:var(--app_login)}
-#common_user_preference_locale::before{						content:var(--regional_locale)}
-#common_user_preference_timezone::before{					content:var(--regional_timezone)}
-#common_user_preference_direction::before{					content:var(--regional_direction)}
-#common_user_preference_arabic_script::before{				content:var(--regional_script)}
+#common_dialogue_user_menu_edit::before{					content:var(--app_edit)}
+#common_dialogue_user_menu_log_out::before{					content:var(--app_logoff)}
+#common_dialogue_user_menu_signup::before{					content:var(--app_signup)}
+#common_dialogue_user_menu_log_in::before{					content:var(--app_login)}
+#common_dialogue_user_menu_preference_locale::before{		content:var(--regional_locale)}
+#common_dialogue_user_menu_preference_timezone::before{		content:var(--regional_timezone)}
+#common_dialogue_user_menu_preference_direction::before{	content:var(--regional_direction)}
+#common_dialogue_user_menu_preference_arabic_script::before{content:var(--regional_script)}
 
 #common_user_verify_email_icon::before{						content:var(--app_email)}
 #common_user_verify_cancel::before{							content:var(--app_cancel)}
@@ -394,7 +394,7 @@ select {
 .common_dialogue_content{
 	text-align:center;
 	top: 50%;
-    margin-inline-start: 50%;
+    left: 50%;
 	position: fixed;
 	transform: translate(-50%, -50%);
 	width: auto;
@@ -481,11 +481,6 @@ select {
 	text-align: start;
 	vertical-align: top;
 }
-/*User menu dropdown*/
-#common_user_menu_dropdown{
-	z-index:51;
-}
-
 /* Dialogue Verification code*/
 #common_dialogue_user_verify.common_dialogue_show2{
 	height:280px;
@@ -1069,10 +1064,8 @@ select {
 	font-size:30px;
 	height: 30px;
 }
-/*User account / user preferences*/
-#common_app_select_theme{
-	margin: 10px;
-}
+
+/*User account*/
 #common_user_account{
 	display: grid;
 	margin-top: 10px;
@@ -1092,61 +1085,56 @@ select {
 	border-radius:50%;
 	vertical-align: middle;
 }
-#common_user_menu_dropdown_signup,
-#common_user_menu_dropdown_edit
-{
-	display: block;
-}
-#common_user_menu_logged_in, #common_user_menu_dropdown_logged_in{
+#common_user_menu_logged_in, #common_dialogue_user_menu_logged_in{
 	display: none;
 }
 #common_user_menu_logged_out{
 	display: inline-block;
 }
-#common_user_menu_username{
-	cursor:pointer;
-	padding: 10px;
-}
 #common_user_menu_default_avatar{
 	font-size: 48px;
 	margin-top:-14px;
 }
-#common_user_menu_dropdown{
-	visibility: hidden;
-	top:58px;
-	right:10px;
-	left:10px;
-	position:fixed;
-	width:auto;
+/* Dialogue user menu */
+#common_dialogue_user_menu.common_dialogue_show1{
 	text-align: center;
-	height:auto;
-	border-radius: 4px;
-	padding-bottom: 10px;
 }
-#common_user_menu_dropdown_logged_in{
+#common_dialogue_user_menu_app_select_theme{
+	margin: 10px;
+}
+#common_dialogue_user_menu_username{
+	cursor:pointer;
+	padding: 10px;
+}
+#common_dialogue_user_menu_signup,
+#common_dialogue_user_menu_edit
+{
+	display: block;
+}
+#common_dialogue_user_menu_logged_in{
 	display:none;
 	width:100%;
 	font-size: 30px !important;
 }
-#common_user_menu_dropdown_logged_out{
+#common_dialogue_user_menu_logged_out{
 	display: inline-block;
 	width:100%;
 	font-size: 30px !important;
 }
-#common_user_menu_dropdown_logged_in div,
-#common_user_menu_dropdown_logged_out div{
+#common_dialogue_user_menu_logged_in div,
+#common_dialogue_user_menu_logged_out div{
 	cursor:pointer;
 }
-#common_user_preferences div{
+#common_dialogue_user_menu_preferences div{
 	display: inline-block;
 }
-#common_user_preferences .common_user_preference_col1{
+#common_dialogue_user_menu_preferences .common_dialogue_user_menu_preference_col1{
 	width: 10%;
 }
-#common_user_preferences .common_user_preference_col2{
+#common_dialogue_user_menu_preferences .common_dialogue_user_menu_preference_col2{
 	width: 85%;
 }
-#common_user_preferences .common_user_preference_col2 select {
+#common_dialogue_user_menu_preferences .common_dialogue_user_menu_preference_col2 select {
 	width: 100%;
 }
 /* SPINNER */
