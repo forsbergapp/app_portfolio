@@ -10,9 +10,11 @@ const template =`   <div id='common_lov_form'>
 /**
  * 
  * @param {*} props 
- * @returns {Promise.<void>}
+ * @returns {Promise.<{ props:{function_post:function|null}, 
+ *                      data:   null,
+ *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
@@ -54,7 +56,7 @@ const method = async props => {
                 break;
             }
         }
-        props.FFB(service, path, 'GET', token_type, null)
+        props.function_FFB(service, path, 'GET', token_type, null)
         .then((/**@type{string}*/result)=>{
                 props.common_document.querySelector('#common_lov_list')['data-function'] = props.function_event;
                 let html = '';
@@ -76,35 +78,14 @@ const method = async props => {
         .catch(()=>props.common_document.querySelector('#common_lov_list').classList.remove('css_spinner'));
     }
 
-    const render_template = async () =>{
+    const render_template = () =>{
         return template;
     }
 
-    switch (props.common_framework){
-        case 2:{
-            //Vue
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //Vue.createApp(...
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            lov_show();
-        }
-        case 3:{
-            //React
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //ReactDOM.createRoot(div... .render( App()
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            lov_show();
-        }
-        case 1:
-        default:{
-            //Default Javascript
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            lov_show();
-        }
-    }
+    return {
+        props:  {function_post:lov_show},
+        data:   null,
+        template: render_template()
+    };
 }
-export default method;
+export default component;

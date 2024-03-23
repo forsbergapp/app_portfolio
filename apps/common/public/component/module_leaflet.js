@@ -21,9 +21,12 @@
  *              setZoom:function|null,
  *              getZoom:function|null}} type_module_leaflet_session_map
  * 
- * @typedef{{   map_layer_options:          string,
+ * @typedef {{   map_layer_options:          string,
  *              map_layer_array:            type_map_layer_array[]|[],
  *              module_leaflet_session_map: type_module_leaflet_session_map|null}} type_map_data
+ * @typedef {{  library_Leaflet:*,
+ *              module_map: *,
+ *              map_layer_array:type_map_layer_array[]|[]}} leaflet_data
  */
 
 const template =`   <div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='<TITLE_SEARCH/>' role='button'>
@@ -59,11 +62,11 @@ const template_location = `<div id='common_module_leaflet_control_my_location_id
 /**
  * 
  * @param {*} props 
- * @returns {Promise.<{ library_Leaflet:*,
- *                      module_map: *,
- *                      map_layer_array:type_map_layer_array[]|[]}>}
- */
-const method = async props => {
+* @returns {Promise.<{ props:{function_post:function|null}, 
+*                      data:   leaflet_data,
+*                      template:null}>}
+*/
+const component = async props => {
     /**@ts-ignore */
     const {L:Leaflet} = await import('leaflet');
     /*
@@ -189,34 +192,18 @@ const method = async props => {
                       module_leaflet_session_map:null};
     Object.seal(map_data);
     await map_init(props.container, props.longitude, props.latitude, props.event_doubleclick);
-    switch (props.common_framework){
-        case 2:{
-            //Vue
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //Vue.createApp(...
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelectorAll(`#${props.container} .leaflet-control`)[0].innerHTML += await render_template();
-        }
-        case 3:{
-            //React
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //ReactDOM.createRoot(div... .render( App()
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelectorAll(`#${props.container} .leaflet-control`)[0].innerHTML += await render_template();
-        }
-        case 1:
-        default:{
-            //Default Javascript
-            props.common_document.querySelectorAll(`#${props.container} .leaflet-control`)[0].innerHTML += await render_template();
-        }
+    props.common_document.querySelectorAll(`#${props.container} .leaflet-control`)[0].innerHTML += await render_template();
+
+    const post_component = () =>{
         //add search function in data-function that event delegation will use
         props.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.function_search_event;
-
-        return {library_Leaflet:Leaflet,
-                module_map:     map_data.module_leaflet_session_map,
-                map_layer_array:map_data.map_layer_array}
     }
+    return {
+        props:  {function_post:post_component},
+        data:   {   library_Leaflet:Leaflet,
+                    module_map:     map_data.module_leaflet_session_map,
+                    map_layer_array:map_data.map_layer_array},
+        template: null
+    };
 }
-export default method;
+export default component;
