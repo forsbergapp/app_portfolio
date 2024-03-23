@@ -18,9 +18,7 @@ const template =`   <div id='common_user_password_new_icon' class='common_icon'>
  * @returns {Promise.<void>}
  */
 const method = async props => {
-    //set z-index
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show2');
-    //set modal
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
     const render_template = async () =>{

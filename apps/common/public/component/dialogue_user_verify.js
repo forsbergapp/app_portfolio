@@ -19,9 +19,7 @@ const template =`
  * @returns {Promise.<void>}
  */
 const method = async props => {
-    //set z-index
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show2');
-    //set modal
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     let verification_type ='';
     let username = '';
