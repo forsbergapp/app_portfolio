@@ -181,6 +181,7 @@ const app_event_click = event => {
                         case 'common_user_menu_default_avatar':{
                             common.ComponentRender('common_dialogue_user_menu', 
                             {   app_id:common.COMMON_GLOBAL.app_id,
+                                user_account_id:common.COMMON_GLOBAL.user_account_id,
                                 common_app_id:common.COMMON_GLOBAL.common_app_id,
                                 data_app_id:common.COMMON_GLOBAL.common_app_id,
                                 username:common.COMMON_GLOBAL.user_account_username,
@@ -191,7 +192,8 @@ const app_event_click = event => {
                                 current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
                                 //functions
                                 function_FFB:common.FFB,
-                                function_get_locales_options:common.get_locales_options},
+                                function_get_locales_options:common.get_locales_options,
+                                function_show_message:common.show_message},
                                                     '/common/component/dialogue_user_menu.js')
                             .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
                                                                 {},
@@ -270,7 +272,7 @@ const app_event_click = event => {
                         common.user_signup();
                         break;
                     }
-                    case 'common_identity_provider_login':{
+                    case 'common_user_start_identity_provider_login':{
                         const target_row = common.element_row(event.target);
                         common.ProviderSignIn(target_row.querySelector('.common_login_provider_id').innerHTML);
                         break;

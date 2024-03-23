@@ -106,9 +106,7 @@ const template_profile_top_list_record = `  <div data-user_account_id='<CommonLi
  *                      private:number}|null>}
  */
 const method = async props => {
-    //set z-index
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
-    //set modal
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     /**

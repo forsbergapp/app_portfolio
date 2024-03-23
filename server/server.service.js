@@ -160,6 +160,8 @@ const COMMON = {
     const db_app_setting = await import(`file://${process.cwd()}/server/dbapi/object/app_setting.js`);
     //server db api object country
     const db_country = await import(`file://${process.cwd()}/server/dbapi/object/country.js`);
+    //server db api object identity provider
+    const db_identity_provider = await import(`file://${process.cwd()}/server/dbapi/object/identity_provider.js`);
     //server db api object locale
     const db_locale = await import(`file://${process.cwd()}/server/dbapi/object/locale.js`);
     
@@ -210,6 +212,10 @@ const COMMON = {
                 }
                 case 'APP_DATA_DB_API_/COUNTRY_GET':{
                     resolve(db_country.getCountries(routesparameters.app_id, query));
+                    break;
+                }
+                case 'APP_DATA_DB_API_/IDENTITY_PROVIDER_GET':{
+                    resolve(db_identity_provider.getIdentityProviders(routesparameters.app_id));
                     break;
                 }
                 case 'APP_DATA_DB_API_/LOCALE_GET':

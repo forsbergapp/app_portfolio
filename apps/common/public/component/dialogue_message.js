@@ -16,9 +16,7 @@ const template =`   <div id='common_confirm_question' class='common_icon'><COMMO
  * @returns {Promise.<void>}
  */
 const method = async props => {
-    //set z-index
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show3');
-    //set modal
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
     const show_message = async () => {

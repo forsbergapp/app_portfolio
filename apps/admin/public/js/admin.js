@@ -119,11 +119,7 @@ const app_event_click = event => {
                     mount_app_app(3);
                     break;
                 }
-                case 'common_user_start_login_button':
-                case 'common_user_start_login_system_admin_button':{
-                    admin_login();
-                    break;
-                }
+                /**user account */
                 case 'common_user_menu':
                 case 'common_user_menu_logged_in':
                 case 'common_user_menu_avatar':
@@ -132,6 +128,7 @@ const app_event_click = event => {
                 case 'common_user_menu_default_avatar':{
                     common.ComponentRender('common_dialogue_user_menu', 
                         {   app_id:common.COMMON_GLOBAL.app_id,
+                            user_account_id:common.COMMON_GLOBAL.user_account_id,
                             common_app_id:common.COMMON_GLOBAL.common_app_id,
                             data_app_id:common.COMMON_GLOBAL.common_app_id,
                             username:common.COMMON_GLOBAL.user_account_username,
@@ -143,17 +140,39 @@ const app_event_click = event => {
                             current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
                             //functions
                             function_FFB:common.FFB,
-                            function_get_locales_options:common.get_locales_options},
+                            function_get_locales_options:common.get_locales_options,
+                            function_show_message:common.show_message},
                                                 '/common/component/dialogue_user_menu.js')
                         .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
                                                             {},
                                                             '/common/component/app_theme.js'));
                     break;
                 }
+                /**Dialogue user start */
+                case 'common_user_start_identity_provider_login':{
+                    const target_row = common.element_row(event.target);
+                    common.ProviderSignIn(target_row.querySelector('.common_login_provider_id').innerHTML);
+                    break;
+                }
+                case 'common_user_start_login_button':
+                case 'common_user_start_login_system_admin_button':{
+                    admin_login();
+                    break;
+                }
+                /* Dialogue user menu */
+                case 'common_dialogue_user_menu_username':{
+                    if (common.COMMON_GLOBAL.system_admin == null){
+                        common.profile_show(null,null);
+                        common.ComponentRemove('common_dialogue_user_menu');
+                    }
+                    break;
+                }
+                /**Dialogue message */
                 case 'common_message_cancel':{
                     AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                     break;
                 }
+                /**Dialogue profile */
                 case 'common_profile_home':{
                     common.profile_top(1);
                     break;
@@ -198,13 +217,6 @@ const app_event_click = event => {
                 case 'common_profile_main_btn_liked_heart':
                 case 'common_profile_main_btn_liked_users':{
                     common.profile_detail(4, null, true, null);
-                    break;
-                }
-                case 'common_dialogue_user_menu_username':{
-                    if (common.COMMON_GLOBAL.system_admin == null){
-                        common.profile_show(null,null);
-                        common.ComponentRemove('common_dialogue_user_menu');
-                    }
                     break;
                 }
                 default:{

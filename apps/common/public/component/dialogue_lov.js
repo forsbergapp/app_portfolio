@@ -13,9 +13,7 @@ const template =`   <div id='common_lov_form'>
  * @returns {Promise.<void>}
  */
 const method = async props => {
-    //set z-index
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
-    //set modal
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
     /**

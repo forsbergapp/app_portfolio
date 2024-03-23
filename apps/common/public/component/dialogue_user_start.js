@@ -12,7 +12,9 @@ const template =`   <div id='common_user_start_logo'></div>
                             <div id='common_user_start_login_password_mask' class='common_input common_password_mask'></div>
                         </div>
                         <div id='common_user_start_login_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
-                        <COMMON_PROVIDER_BUTTONS/>
+                        <div id='common_user_start_identity_provider_login'>
+                            <COMMON_PROVIDER_BUTTONS/>
+                        </div>
                     </div>
                     <div id='common_user_start_login_system_admin_form' class='common_user_start_form'>
                         <div id='common_user_start_login_system_admin_first_time'></div>
@@ -54,9 +56,7 @@ const template =`   <div id='common_user_start_logo'></div>
  * @returns {Promise.<void>}
  */
 const method = async props => {
-    //set z-index
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
-    //set modal
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     /**
      * Renders provider buttons
@@ -64,7 +64,7 @@ const method = async props => {
      */
     const provider_buttons = async () =>{
         return new Promise((resolve, reject)=>{
-            props.FFB('DB_API', `/identity_provider`, 'GET', 'APP_DATA', null)                              
+            props.function_FFB('DB_API', `/identity_provider?`, 'GET', 'APP_DATA', null)                              
             .then((/**@type{string}*/providers_json)=>{
                 let html = '';
                 for (const provider of JSON.parse(providers_json)){
@@ -74,7 +74,7 @@ const method = async props => {
                             </div>`;
                 }
                 if (html)
-                    resolve(`<div id='common_identity_provider_login'>${html}</div>`);
+                    resolve(html);
                 else
                     resolve('');
             })
@@ -85,8 +85,8 @@ const method = async props => {
     };
     const render_template = async () =>{
         return template
-                //.replace('<COMMON_PROVIDER_BUTTONS/>', props.user_click?await provider_buttons():'')
-                .replace('<COMMON_PROVIDER_BUTTONS/>', props.user_click?'':'')
+                //if user_click empty means component is called for loading purpose
+                .replace('<COMMON_PROVIDER_BUTTONS/>', props.user_click?await provider_buttons():'')
                 .replaceAll('<COMMON_TRANSLATION_USERNAME/>',props.translation_username)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD/>',props.translation_password)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD_CONFIRM/>',props.translation_password_confirm)
