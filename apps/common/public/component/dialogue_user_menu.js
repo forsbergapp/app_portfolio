@@ -43,6 +43,7 @@ const method = async props => {
     /* how to call
     ComponentRender('common_dialogue_user_menu', 
                     {   app_id:COMMON_GLOBAL.app_id,
+                        user_account_id:common.COMMON_GLOBAL.user_account_id,
                         common_app_id:COMMON_GLOBAL.common_app_id,
                         data_app_id:COMMON_GLOBAL.common_app_id,
                         username:common.COMMON_GLOBAL.user_account_username,
@@ -53,9 +54,22 @@ const method = async props => {
                         current_arabic_script:COMMON_GLOBAL.user_arabic_script,
                         //functions
                         function_FFB:FFB,
-                        function_get_locales_options:COMMON_GLOBAL.get_locales_options},
+                        function_get_locales_options:COMMON_GLOBAL.get_locales_options,
+                        function_show_message:show_message},
                     '/common/component/dialogue_user_menu.js')
     */
+    const is_provider_user = async () =>{
+        const user = await props.function_FFB('DB_API', `/user_account?user_account_id=${props.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
+                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .catch((/**@type{Error}*/error)=>{throw error});
+        if (props.user_account_id == parseInt(user.id)) {
+            return user.identity_provider_id!=null;
+        } else {
+            //User not found
+            props.function_show_message('ERROR', '20305', null, null, null, props.common_app_id);
+            return null;
+        }
+    }
     /**
      * Renders user preferences options timezone, direction and arabic script
      * @returns {Promise<{  timezone:   string,
@@ -65,7 +79,7 @@ const method = async props => {
      const get_preferences_options = async () =>{
         const app_settings = await props.function_FFB('DB_API', `/app_setting?data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
                             .then((/**@type{string}*/result)=>JSON.parse(result))
-                            .catch((/**@type{Error}*/error)=>error);
+                            .catch((/**@type{Error}*/error)=>{throw error});
         let options_timezone = '';
         let options_direction = '';
         let options_arabic_script = '';
@@ -89,7 +103,7 @@ const method = async props => {
                 direction:  `<option id='' value=''></option>${options_direction}`,  
                 arab_script:`<option id='' value=''></option>${options_arabic_script}`};
     };
-    const update_rendered = () =>{
+    const update_rendered = async () =>{
         //set current value on all the selects
         const common_dialogue_user_menu_user_locale_select =           props.common_document.querySelector('#common_dialogue_user_menu_user_locale_select');
         common_dialogue_user_menu_user_locale_select.value =           props.current_locale;
@@ -100,7 +114,7 @@ const method = async props => {
         const common_dialogue_user_menu_user_arabic_script_select =    props.common_document.querySelector('#common_dialogue_user_menu_user_arabic_script_select');
         common_dialogue_user_menu_user_arabic_script_select.value =    props.current_arabic_script;
         //set logged out or logged in
-        if (props.username){
+        if (props.username || (props.user_account_id!=null && await is_provider_user())){
             props.common_document.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'inline-block';
             props.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'none';
             //admin does not show log out icon here
@@ -117,9 +131,7 @@ const method = async props => {
                 props.common_document.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'none';
                 props.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'inline-block';
             }
-        //set z-index
         props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
-        //set modal
         props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     }
     const render_template = async () =>{
@@ -152,7 +164,7 @@ const method = async props => {
             //Vue.createApp(...
             //return props.common_document.querySelector('#tempmount').innerHTML;
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            update_rendered();
+            await update_rendered();
         }
         case 3:{
             //React
@@ -161,13 +173,13 @@ const method = async props => {
             //ReactDOM.createRoot(div... .render( App()
             //return props.common_document.querySelector('#tempmount').innerHTML;
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            update_rendered();
+            await update_rendered();
         }
         case 1:
         default:{
             //Default Javascript
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            update_rendered();
+            await update_rendered();
         }
     }
 }
