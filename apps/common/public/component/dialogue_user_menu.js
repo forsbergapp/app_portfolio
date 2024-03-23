@@ -37,9 +37,14 @@ const template =`   <div id='common_dialogue_user_menu_username'><USERNAME/></di
 /**
  * div common_dialogue_user_menu_app_theme used to show optional component app_theme.js
  * @param {*} props 
- * @returns {Promise.<void>}
+ * @returns {Promise.<{ props:{function_post:function|null}, 
+ *                      data:   null,
+ *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
+    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
+    props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+
     /* how to call
     ComponentRender('common_dialogue_user_menu', 
                     {   app_id:COMMON_GLOBAL.app_id,
@@ -131,17 +136,15 @@ const method = async props => {
                 props.common_document.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'none';
                 props.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'inline-block';
             }
-        props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
-        props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     }
     const render_template = async () =>{
         if (props.system_admin_only && props.system_admin_only==1){
             return template
-            .replace('<USERNAME/>',                 props.username ?? props.system_admin ?? '')
-            .replace('<COMMON_USER_LOCALE/>',       '')
-            .replace('<COMMON_USER_TIMEZONE/>',     '')
-            .replace('<COMMON_USER_DIRECTION/>',    '')
-            .replace('<COMMON_USER_ARABIC_SCRIPT/>','');
+                    .replace('<USERNAME/>',                 props.username ?? props.system_admin ?? '')
+                    .replace('<COMMON_USER_LOCALE/>',       '')
+                    .replace('<COMMON_USER_TIMEZONE/>',     '')
+                    .replace('<COMMON_USER_DIRECTION/>',    '')
+                    .replace('<COMMON_USER_ARABIC_SCRIPT/>','');
         }
         else{
             const options_locales = await props.function_get_locales_options();
@@ -155,32 +158,10 @@ const method = async props => {
                     .replace('<COMMON_USER_ARABIC_SCRIPT/>',options_settings.arab_script);
         }
     }
-
-    switch (props.common_framework){
-        case 2:{
-            //Vue
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //Vue.createApp(...
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            await update_rendered();
-        }
-        case 3:{
-            //React
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //ReactDOM.createRoot(div... .render( App()
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            await update_rendered();
-        }
-        case 1:
-        default:{
-            //Default Javascript
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            await update_rendered();
-        }
-    }
+    return {
+        props:  {function_post:update_rendered},
+        data:   null,
+        template: await render_template()
+    };
 }
-export default method;
+export default component;

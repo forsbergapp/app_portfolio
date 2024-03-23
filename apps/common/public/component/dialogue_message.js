@@ -13,9 +13,11 @@ const template =`   <div id='common_confirm_question' class='common_icon'><COMMO
 /**
  * 
  * @param {*} props 
- * @returns {Promise.<void>}
+ * @returns {Promise.<{ props:{function_post:function}, 
+ *                      data:null, 
+ *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show3');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
@@ -43,7 +45,7 @@ const method = async props => {
                 progressbar_wrap.style.display = hide;
                 button_cancel.style.display = hide;
                 button_close.style.display = show;
-                const text = await props.FFB('DB_API', `/app_setting?data_app_id=${props.data_app_id}&setting_type=MESSAGE&value=${props.code}`, 'GET', 'APP_DATA')
+                const text = await props.function_FFB('DB_API', `/app_setting?data_app_id=${props.data_app_id}&setting_type=MESSAGE&value=${props.code}`, 'GET', 'APP_DATA')
                             .then((/**@type{string}*/result)=>JSON.parse(result)[0].display_data)
                             .catch((/**@type{Error}*/error)=>error);
                 message_title.innerHTML = text;
@@ -146,36 +148,14 @@ const method = async props => {
         }
     }
 
-    const render_template = async () =>{
+    const render_template = () =>{
         return template
                 .replaceAll('<COMMON_TRANSLATION_CONFIRM_QUESTION/>',props.translation_confirm_question);
     }
-
-    switch (props.common_framework){
-        case 2:{
-            //Vue
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //Vue.createApp(...
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            await show_message();
-        }
-        case 3:{
-            //React
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //ReactDOM.createRoot(div... .render( App()
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            await show_message();
-        }
-        case 1:
-        default:{
-            //Default Javascript
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            await show_message();
-        }
-    }
+    return {
+        props:  {function_post:show_message},
+        data:   null,
+        template: render_template()
+    };
 }
-export default method;
+export default component;

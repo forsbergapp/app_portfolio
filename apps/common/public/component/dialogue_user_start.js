@@ -53,9 +53,11 @@ const template =`   <div id='common_user_start_logo'></div>
 /**
  * 
  * @param {*} props 
- * @returns {Promise.<void>}
+ * @returns {Promise.<{ props:{function_post:function|null}, 
+ *                      data:   null,
+ *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     /**
@@ -93,36 +95,14 @@ const method = async props => {
                 .replaceAll('<COMMON_TRANSLATION_EMAIL/>',props.translation_email)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD_REMINDER/>',props.translation_password_reminder);
     }
-
-    switch (props.common_framework){
-        case 2:{
-            //Vue
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //Vue.createApp(...
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            if (props.user_click)
-                props.common_document.querySelector(`#${props.user_click}`).click();
-        }
-        case 3:{
-            //React
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //ReactDOM.createRoot(div... .render( App()
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            if (props.user_click)
-                props.common_document.querySelector(`#${props.user_click}`).click();
-        }
-        case 1:
-        default:{
-            //Default Javascript
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            if (props.user_click){
-                props.common_document.querySelector(`#${props.user_click}`).click();
-            }   
-        }
+    const post_component = () =>{
+        if (props.user_click)
+            props.common_document.querySelector(`#${props.user_click}`).click();
     }
+    return {
+        props:  {function_post:post_component},
+        data:   null,
+        template: await render_template()
+    };
 }
-export default method;
+export default component;

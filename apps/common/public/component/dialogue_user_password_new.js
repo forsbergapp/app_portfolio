@@ -15,41 +15,25 @@ const template =`   <div id='common_user_password_new_icon' class='common_icon'>
 /**
  * 
  * @param {*} props 
- * @returns {Promise.<void>}
+ * @returns {Promise.<{ props:{function_post:function|null}, 
+ *                      data:   null,
+ *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show2');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
-    const render_template = async () =>{
+    const render_template = () =>{
         return template
                 .replaceAll('<AUTH/>',props.auth)
                 .replaceAll('<COMMON_TRANSLATION_NEW_PASSWORD/>',props.translation_new_password)
                 .replaceAll('<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>',props.translation_new_password_confirm);
     }
 
-    switch (props.common_framework){
-        case 2:{
-            //Vue
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //Vue.createApp(...
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-        }
-        case 3:{
-            //React
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //ReactDOM.createRoot(div... .render( App()
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-        }
-        case 1:
-        default:{
-            //Default Javascript
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-        }
-    }
+    return {
+        props:  {function_post:null},
+        data:   null,
+        template: render_template()
+    };
 }
-export default method;
+export default component;
