@@ -1046,33 +1046,12 @@ const update_ui = async (option, item_id=null) => {
  */
 const user_login_app = async (system_admin=false, username_verify=null, password_verify=null) => {
     await common.user_login(system_admin, username_verify, password_verify)
-    .then((/**@type{{user_id: number,username: string,bio: string, avatar: string}}*/result)=>{
+    .then((/**@type{{   user_id: number,
+                        username: string,
+                        bio: string, 
+                        avatar: string}}*/result)=>{
         //create intitial user setting if not exist, send initial=true
-        user_settings_function('ADD_LOGIN', true)
-        .then(()=>{
-            AppDocument.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
-            common.set_avatar(result.avatar, AppDocument.querySelector('#user_setting_avatar_img')); 
-
-            //Show user tab
-            AppDocument.querySelector('#tab_nav_7').style.display = 'inline-block';
-            //Hide settings
-            AppDocument.querySelector('#settings').style.visibility = 'hidden';
-            common.ComponentRemove('common_user_profile');
-            
-            AppDocument.querySelector('#paper').innerHTML='';
-            dialogue_loading(1);
-            user_settings_get().then(() => {
-                user_settings_load().then(() => {
-                    settings_translate(true).then(() => {
-                        settings_translate(false).then(() => {
-                            //show default startup
-                            toolbar_button(APP_GLOBAL.app_default_startup_page);
-                            dialogue_loading(0);
-                        });
-                    });
-                });
-            }); 
-        });
+        login_common(result.avatar);
     })
     .catch(()=>null);
 };
@@ -1113,6 +1092,38 @@ const user_logoff_app = () => {
     });    
 };
 /**
+ * Login common
+ * @param {string} avatar 
+ */
+const login_common = (avatar) => {
+    //create intitial user setting if not exist, send initial=true
+    user_settings_function('ADD_LOGIN', true)
+    .then(()=>{
+        AppDocument.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
+        common.set_avatar(avatar, AppDocument.querySelector('#user_setting_avatar_img')); 
+
+        //Show user tab
+        AppDocument.querySelector('#tab_nav_7').style.display = 'inline-block';
+        //Hide settings
+        AppDocument.querySelector('#settings').style.visibility = 'hidden';
+        common.ComponentRemove('common_dialogue_profile');
+        
+        AppDocument.querySelector('#paper').innerHTML='';
+        dialogue_loading(1);
+        user_settings_get().then(() => {
+            user_settings_load().then(() => {
+                settings_translate(true).then(() => {
+                    settings_translate(false).then(() => {
+                        //show default startup
+                        toolbar_button(APP_GLOBAL.app_default_startup_page);
+                        dialogue_loading(0);
+                    });
+                });
+            });
+        });
+    })
+}
+/**
  * Provider signin
  * @param {*} provider_id 
  * @returns {Promise.<void>}
@@ -1126,29 +1137,9 @@ const ProviderSignIn_app = async (provider_id) => {
                         first_name: string,
                         last_name: string,
                         userCreated:string}}*/result)=>{
-        //create intitial user setting if not exist, send initial=true
-        user_settings_function('ADD_LOGIN', true)
-        .then(()=>{
-            AppDocument.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
-            common.set_avatar(result.avatar, AppDocument.querySelector('#user_setting_avatar_img')); 
-
-            //Show user tab
-            AppDocument.querySelector('#tab_nav_7').style.display = 'inline-block';
-            AppDocument.querySelector('#paper').innerHTML='';
-            dialogue_loading(1);
-            user_settings_get().then(() => {
-                user_settings_load().then(() => {
-                    settings_translate(true).then(() => {
-                        settings_translate(false).then(() => {
-                            //show default startup
-                            toolbar_button(APP_GLOBAL.app_default_startup_page);
-                            dialogue_loading(0);
-                        });
-                    });
-                });
-            });
-        });   
-    });
+        login_common(result.avatar);
+    })
+    .catch(()=>null);
 };
 /**
  * Profile update stat
