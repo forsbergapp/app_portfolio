@@ -791,12 +791,46 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
  * @returns {Promise.<*>}
  */
 const ComponentRender = async (div,props, component_path) => {
+    
     //component outputs default render function
     const {default:renderfunction} = await import(component_path);
     //add document (less type errors), framework and mountdiv to props
-    return await renderfunction({...props, ...{ common_document:AppDocument,
-                                                common_framework:COMMON_GLOBAL.app_framework,
-                                                common_mountdiv:div}});
+    const component = await renderfunction({...props, ...{ common_document:AppDocument,
+                        common_framework:COMMON_GLOBAL.app_framework,
+                        common_mountdiv:div}});
+    switch (COMMON_GLOBAL.app_framework){
+        case 2:{
+            //Vue
+            //Use tempmount div to be able to return pure HTML
+            AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
+            Vue.createApp({
+                data(){return {}},
+                template: component.template,
+                methods:{}
+            }).mount('#tempmount');
+            AppDocument.querySelector(`#${div}`).innerHTML = AppDocument.querySelector('#tempmount').innerHTML;
+            break;
+        }
+        case 3:{
+            //React
+            //Use tempmount div to be able to return pure HTML
+            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
+            //create HTML to react statements function
+            //ReactDOM.createRoot(div... .render( App()
+            //return props.common_document.querySelector('#tempmount').innerHTML;
+            AppDocument.querySelector(`#${div}`).innerHTML = component.template;
+            break;
+        }
+        case 1:
+        default:{
+            //Default Javascript
+            AppDocument.querySelector(`#${div}`).innerHTML = component.template;
+        }
+    }
+    //post function
+    if (component.props.function_post)
+        component.props.function_post();
+    return component.data;    
 }
 /**
  * Component remove
@@ -952,14 +986,14 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
  * @param {number|null} data_app_id 
  */
 const show_message = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
-    ComponentRender('common_dialogue_message', {FFB:FFB, 
-                                                message_type:message_type,
+    ComponentRender('common_dialogue_message', {message_type:message_type,
                                                 data_app_id:data_app_id,
                                                 code:code,
                                                 text_class:text_class,
                                                 message:message,
-                                                function_componentremove:ComponentRemove,
                                                 translation_confirm_question:COMMON_GLOBAL.translate_items.CONFIRM_QUESTION,
+                                                function_componentremove:ComponentRemove,
+                                                function_FFB:FFB, 
                                                 function_event:function_event}, '/common/component/dialogue_message.js');
 };
 /**
@@ -986,7 +1020,7 @@ const lov_close = () => {
  */
 const lov_show = (lov, function_event) => {
     ComponentRender('common_dialogue_lov', {lov:lov,
-                                            FFB:FFB, 
+                                            function_FFB:FFB, 
                                             function_event:function_event}, '/common/component/dialogue_lov.js');
         
 };
@@ -3228,11 +3262,7 @@ const common_event = async (event_type,event) =>{
                         }
                         case 'common_dialogue_user_menu_edit':{
                             ComponentRender('common_dialogue_user_edit', 
-                                {   FFB:FFB,
-                                    set_avatar:set_avatar,
-                                    show_message:show_message,
-                                    format_json_date:format_json_date,
-                                    user_account_id:COMMON_GLOBAL.user_account_id,
+                                {   user_account_id:COMMON_GLOBAL.user_account_id,
                                     common_app_id:COMMON_GLOBAL.common_app_id,
                                     translation_username:COMMON_GLOBAL.translate_items.USERNAME,
                                     translation_bio:COMMON_GLOBAL.translate_items.BIO,
@@ -3241,7 +3271,12 @@ const common_event = async (event_type,event) =>{
                                     translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM,
                                     translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
                                     translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM,
-                                    translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER},
+                                    translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
+                                    function_FFB:FFB,
+                                    function_set_avatar:set_avatar,
+                                    function_show_message:show_message,
+                                    function_format_json_date:format_json_date,
+                                    },
                                 '/common/component/dialogue_user_edit.js')
                             .then(()=>{
                                 ComponentRemove('common_dialogue_user_menu');
@@ -3430,11 +3465,7 @@ const common_event = async (event_type,event) =>{
                         await user_preference_save().then(()=>{
                             if (AppDocument.querySelector('#common_dialogue_user_edit').innerHTML !='') {
                                 ComponentRender('common_dialogue_user_edit', 
-                                    {   FFB:FFB,
-                                        set_avatar:set_avatar,
-                                        show_message:show_message,
-                                        format_json_date:format_json_date,
-                                        user_account_id:COMMON_GLOBAL.user_account_id,
+                                    {   user_account_id:COMMON_GLOBAL.user_account_id,
                                         common_app_id:COMMON_GLOBAL.common_app_id,
                                         translation_username:COMMON_GLOBAL.translate_items.USERNAME,
                                         translation_bio:COMMON_GLOBAL.translate_items.BIO,
@@ -3443,7 +3474,12 @@ const common_event = async (event_type,event) =>{
                                         translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM,
                                         translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
                                         translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM,
-                                        translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER},
+                                        translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
+                                        function_FFB:FFB,
+                                        function_set_avatar:set_avatar,
+                                        function_show_message:show_message,
+                                        function_format_json_date:format_json_date,
+                                        },
                                     '/common/component/dialogue_user_edit.js')
                                 .then(()=>{
                                     ComponentRemove('common_dialogue_user_menu');
@@ -3735,6 +3771,8 @@ const mount_app = async (framework, events) => {
     events.KeyDown?null:events.KeyDown = ((/**@type{AppEvent}*/event)=>common_event('keydown', event));
     events.KeyUp?null:events.KeyUp = ((/**@type{AppEvent}*/event)=>common_event('keyup', event));
     //app can override framework or use default javascript if Vue or React is not set
+    if (framework ?? COMMON_GLOBAL.app_framework !=COMMON_GLOBAL.app_framework)
+        COMMON_GLOBAL.app_framework = framework;
     switch (framework ?? COMMON_GLOBAL.app_framework){
         case 2:{
             //Vue

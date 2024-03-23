@@ -16,9 +16,11 @@ const template =`
 /**
  * 
  * @param {*} props 
- * @returns {Promise.<void>}
+ * @returns {Promise.<{ props:{function_post:function|null}, 
+ *                      data:   null,
+ *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show2');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     let verification_type ='';
@@ -53,31 +55,13 @@ const method = async props => {
                 .replace('<USERNAME/>',username)
                 .replace('<PASSWORD/>',password);
     }
-    switch (props.common_framework){
-        case 2:{
-            //Vue
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //Vue.createApp(...
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
-            props.common_document.querySelector(`#${props.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.click_cancel_event;
-        }
-        case 3:{
-            //React
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //ReactDOM.createRoot(div... .render( App()
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
-            props.common_document.querySelector(`#${props.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.click_cancel_event;
-        }
-        case 1:
-        default:{
-            //Default Javascript
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
-            props.common_document.querySelector(`#${props.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.click_cancel_event;
-        }
+    const post_component = () =>{
+        props.common_document.querySelector(`#${props.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.click_cancel_event;
     }
+    return {
+        props:  {function_post:post_component},
+        data:   null,
+        template: render_template()
+    };
 }
-export default method;
+export default component;

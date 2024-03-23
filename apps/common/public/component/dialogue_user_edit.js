@@ -182,9 +182,11 @@ const template =`   <div id='common_user_edit_common'>
 /**
  * 
  * @param {*} props 
- * @returns {Promise.<void>}
+ * @returns {Promise.<{ props:{function_post:function|null}, 
+ *                      data:   null,
+ *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
@@ -194,7 +196,7 @@ const method = async props => {
      */
     const user_get = async () => {
         //get user from REST API
-        props.FFB('DB_API', `/user_account?user_account_id=${props.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
+        props.function_FFB('DB_API', `/user_account?user_account_id=${props.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
         .then((/**@type{string}*/result)=>{
             const user = JSON.parse(result);
             if (props.user_account_id == parseInt(user.id)) {
@@ -234,20 +236,20 @@ const method = async props => {
                         props.common_document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
                         props.common_document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
                         props.common_document.querySelector('#common_user_edit_avatar').style.display = 'none';
-                        props.set_avatar(user.provider_image, props.common_document.querySelector('#common_user_edit_avatar_img')); 
+                        props.function_set_avatar(user.provider_image, props.common_document.querySelector('#common_user_edit_avatar_img')); 
                     } 
-                props.common_document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = props.format_json_date(user.last_logontime, null);
-                props.common_document.querySelector('#common_user_edit_label_data_account_created').innerHTML = props.format_json_date(user.date_created, null);
-                props.common_document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = props.format_json_date(user.date_modified, null);
-                props.set_avatar(user.avatar ?? user.provider_image, props.common_document.querySelector('#common_user_menu_avatar_img'));
+                props.common_document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = props.function_format_json_date(user.last_logontime, null);
+                props.common_document.querySelector('#common_user_edit_label_data_account_created').innerHTML = props.function_format_json_date(user.date_created, null);
+                props.common_document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = props.function_format_json_date(user.date_modified, null);
+                props.function_set_avatar(user.avatar ?? user.provider_image, props.common_document.querySelector('#common_user_menu_avatar_img'));
             } else {
                 //User not found
-                props.show_message('ERROR', '20305', null, null, null, props.common_app_id);
+                props.function_show_message('ERROR', '20305', null, null, null, props.common_app_id);
             }
         })
         .catch(()=>null);
     };
-    const render_template = async () =>{
+    const render_template = () =>{
         return template
                 .replaceAll('<COMMON_TRANSLATION_USERNAME/>',props.translation_username)
                 .replaceAll('<COMMON_TRANSLATION_BIO/>',props.translation_bio)
@@ -258,32 +260,10 @@ const method = async props => {
                 .replaceAll('<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>',props.translation_new_password_confirm)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD_REMINDER/>',props.translation_password_reminder);
     }
-
-    switch (props.common_framework){
-        case 2:{
-            //Vue
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //Vue.createApp(...
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            user_get();
-        }
-        case 3:{
-            //React
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //ReactDOM.createRoot(div... .render( App()
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            user_get();
-        }
-        case 1:
-        default:{
-            //Default Javascript
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = await render_template();
-            user_get();
-        }
+    return {
+        props:  {function_post:user_get},
+        data:   null,
+        template: render_template()
     }
 }
-export default method;
+export default component;
