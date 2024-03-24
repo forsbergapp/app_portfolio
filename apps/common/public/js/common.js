@@ -792,6 +792,44 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
  */
 const ComponentRender = async (div,props, component_path) => {
     
+    /**
+     * Convert HTML to React component
+     * @param {*} element 
+     * @returns {*}
+     */
+     const html2reactcomponent = element =>{
+        let result_component_current = [];
+        if(element.length>0 ){
+            for (const subelement of element){
+                let props;
+                /**@type{*} */
+                const element_object = {}
+                Object.entries(subelement.attributes).forEach((/**@type{*}*/attribute)=>element_object[attribute[1].name] = attribute[1].value);
+                if (subelement.nodeName=='OPTION'){
+                    /**@ts-ignore */
+                    props = {   ...element_object,
+                                label: subelement.text};
+                }
+                else
+                    props = {   ...element_object}
+                let test;
+                if (element_object.class){
+                    element_object.className = element_object.class;
+                    delete element_object.class;
+                }
+                
+                const reactobj = subelement.childElementCount>0?React.createElement(subelement.nodeName.toLowerCase(), 
+                                                    props,
+                                                    html2reactcomponent(subelement.children)):
+                                                    React.createElement(subelement.nodeName.toLowerCase(), 
+                                                    props);
+                result_component_current.push(reactobj);
+            }
+            return result_component_current;
+        }
+        else
+            return null;
+    }
     //component outputs default render function
     const {default:renderfunction} = await import(component_path);
     //add document (less type errors), framework and mountdiv to props
@@ -813,12 +851,22 @@ const ComponentRender = async (div,props, component_path) => {
         }
         case 3:{
             //React
-            //Use tempmount div to be able to return pure HTML
-            //props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = `<div id='tempmount'></div>`;
-            //create HTML to react statements function
-            //ReactDOM.createRoot(div... .render( App()
-            //return props.common_document.querySelector('#tempmount').innerHTML;
-            AppDocument.querySelector(`#${div}`).innerHTML = component.template;
+            //convert HTML template to React component
+            const div_template = AppDocument.createElement('div');
+            div_template.innerHTML = component.template;
+            const result_component = React.createElement(div_template.nodeName.toLowerCase(), 
+                                                    { id: div_template.id, className: div_template.className}, 
+                                                    html2reactcomponent(div_template.children));
+
+            AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
+            //use inner tempmount div to remove React events
+            const application = ReactDOM.createRoot(AppDocument.querySelector(`#${div} #tempmount`));
+            application.render( result_component);
+            await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 200);});
+            //React shows warning Invalid DOM property `class`. Did you mean `className`?
+            //because a div with empty class is created inside tempmount, ignore
+            //Return the inner first div.innerHTML created by React to return pure HTML
+            AppDocument.querySelector(`#${div}`).innerHTML = AppDocument.querySelector(`#${div} #tempmount >div`).innerHTML;
             break;
         }
         case 1:
@@ -3743,8 +3791,7 @@ const mount_app = async (framework, events) => {
     if (custom_React_listeners.length>0){
         /**@ts-ignore */
         for (const ReactListener of custom_React_listeners){
-            if (ReactListener[0].nodeName=='#document')
-                ReactListener[0].removeEventListener(ReactListener[1], ReactListener[2]);
+            ReactListener[0].removeEventListener(ReactListener[1], ReactListener[2]);
         }
     }
     //remove react key
@@ -3821,9 +3868,7 @@ const mount_app = async (framework, events) => {
                 //JSX syntax
                 //return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
                 //Using pure Javascript
-                return React.createElement('div', { id: app_div,
-                                                    onClick:   ()=> {events.Click(event);}
-                                                    });
+                return React.createElement('div', { id: app_div});
             };
             const app_old = AppDocument.querySelector('#' + app_div).innerHTML;
             const application = ReactDOM.createRoot(AppDocument.querySelector('#' + app_root_div));
@@ -3834,6 +3879,7 @@ const mount_app = async (framework, events) => {
             //set delay so some browsers render ok.
             await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 200);});
             AppDocument.querySelector('#' + app_div).innerHTML = app_old;
+            events.Click();
             events.Change();
             events.Focus();
             events.Input();
