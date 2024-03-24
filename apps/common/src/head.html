@@ -18,6 +18,9 @@
     }
 </script>
 <script>
+    function custom_printWarning(level, format, args){
+        console.log('React warning...');
+    }
     function custom_console(stack, message, message_type){
         let e = stack.split("@");
         for (let line of [...e].reverse()) {
