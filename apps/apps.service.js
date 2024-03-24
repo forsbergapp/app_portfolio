@@ -721,6 +721,9 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                                                                 'exports.version = ReactVersion;\r\n  React=exports;');
                                 modulefile = modulefile + 'export {React}';
                             }
+                            modulefile = modulefile.replaceAll('printWarning','custom_printWarning');
+                            modulefile = modulefile.replaceAll('function custom_printWarning','function printWarning');
+                            
                             resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
                         })
                         break;
