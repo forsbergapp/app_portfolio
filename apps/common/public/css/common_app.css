@@ -551,7 +551,8 @@ select {
 	display:none;
 }
 .common_user_start_form{
-	width: 100%;;
+	width: 100%;
+	display:none;
 }
 #common_user_start_nav > div{
 	margin:10px;
