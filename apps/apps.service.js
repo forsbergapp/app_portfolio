@@ -354,11 +354,8 @@ const getInfo = async (app_id, info) => {
 const getAppBFF = async (app_id, app_parameters) =>{
     //Data token
     const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
-    const { COMMON } = await import(`file://${process.cwd()}/server/server.service.js`);
-    await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '1 ' + new Date().toISOString());
     const datatoken = await AuthorizeTokenApp(app_id, app_parameters.ip);
     const result_geodata = await getAppGeodata(app_id, app_parameters.ip, app_parameters.user_agent, app_parameters.accept_language);
-    await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '2 ' +new Date().toISOString());
     /** @type {number} */
     let system_admin_only;
     /** @type {string} */
@@ -393,22 +390,18 @@ const getAppBFF = async (app_id, app_parameters) =>{
     }
     else{
         system_admin_only = 0;
-        await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '3 ' +new Date().toISOString());
         const {createApp} = await import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`);
         app = await createApp(app_id, app_parameters.param, client_locale(app_parameters.accept_language));
-        await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '4 ' +new Date().toISOString());
         if (app == null)
             return null;
         app_module_type = 'APP';
         //get translation data
         const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
         const result_objects = await getObjects(app_id, client_locale(app_parameters.accept_language), 'APP', null);
-        await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '5 ' +new Date().toISOString());
         for (const row of result_objects){
             translate_items[row.object_item_name.toUpperCase()] = row.text;
         }        
     }
-    await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '6 ' +new Date().toISOString());
     const app_with_init = await get_module_with_initBFF({   app_id:             app_id, 
                                                             locale:             client_locale(app_parameters.accept_language),
                                                             system_admin_only:  system_admin_only,
