@@ -1066,94 +1066,6 @@ const lov_show = (lov, function_event) => {
         
 };
 /**
- * Lov keys
- * @param {AppEvent} event 
- * @returns {void}
- */
-const lov_keys = event => {
-    switch (event.code){
-        case 'ArrowLeft':
-        case 'ArrowRight':{
-            break;
-        }
-        case 'ArrowUp':
-        case 'ArrowDown':{
-            //loop rows not hidden
-            const rows = AppDocument.querySelectorAll('.common_list_lov_row:not(.list_lov_row_hide)');
-            /**
-             * Focus item
-             * @param {HTMLElement} element 
-             */
-            const focus_item = (element) =>{
-                element.focus();
-                AppDocument.querySelector('#common_lov_search_input').focus();
-            };
-            let i = 0;
-            for (const row of rows) {
-                if (row.classList.contains('common_list_lov_row_selected')){
-                    //if up and first or
-                    //if down and last
-                    if ((event.code=='ArrowUp' && i == 0)||
-                        (event.code=='ArrowDown' && i == rows.length -1)){
-                        if(event.code=='ArrowUp'){
-                            //if the first, set the last
-                            row.classList.remove ('common_list_lov_row_selected');
-                            rows[rows.length -1].classList.add ('common_list_lov_row_selected');
-                            focus_item(rows[rows.length -1]);
-                        }
-                        else{
-                            //if the last, set the first
-                            row.classList.remove ('common_list_lov_row_selected');
-                            rows[0].classList.add ('common_list_lov_row_selected');
-                            focus_item(rows[0]);
-                        }
-                        break;
-                    }
-                    else{
-                        if(event.code=='ArrowUp'){
-                            //remove highlight, highlight previous
-                            row.classList.remove ('common_list_lov_row_selected');
-                            rows[i-1].classList.add ('common_list_lov_row_selected');
-                            focus_item(rows[i-1]);
-                        }
-                        else{
-                            //down
-                            //remove highlight, highlight next
-                            row.classList.remove ('common_list_lov_row_selected');
-                            rows[i+1].classList.add ('common_list_lov_row_selected');
-                            focus_item(rows[i+1]);
-                        }
-                        break;
-                    }
-                }
-                i++;
-            }
-            //no highlight found, highlight first
-            rows[0].classList.add ('common_list_lov_row_selected');
-            focus_item(rows[0]);
-            break;
-        }
-        case 'Enter':{
-            //enter
-            const rows = AppDocument.querySelectorAll('.common_list_lov_row');
-            for (const row of rows) {
-                if (row.classList.contains('common_list_lov_row_selected')){
-                    //event on row is set in app when calling lov, dispatch it!
-                    row.dispatchEvent(new Event('click'));
-                    row.classList.remove ('common_list_lov_row_selected');
-                }
-            }
-            break;
-        }
-        default:{
-            //if db call will be implemented, add delay
-            //typewatch(lov_filter, AppDocument.querySelector('#common_lov_search_input').innerHTML); 
-            lov_filter(AppDocument.querySelector('#common_lov_search_input').innerHTML); 
-            break;
-        }    
-    }
-};
-/**
  * Lov filter
  * @param {string} text_filter 
  */
@@ -1161,7 +1073,7 @@ const lov_filter = text_filter => {
     const rows = AppDocument.querySelectorAll('.common_list_lov_row');
     for (const row of rows) {
         row.classList.remove ('common_list_lov_row_hide');
-        row.classList.remove ('common_list_lov_row_selected');
+        row.classList.remove ('common_list_row_selected');
     }
     for (const row of rows) {
         if (row.children[0].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1 ||
@@ -1480,13 +1392,15 @@ const profile_update_stat = async () => {
     });
 };
 /**
- * Search input
+ * List key event
  * @param {AppEvent} event 
  * @param {string} module 
- * @param {function} event_function 
+ * @param {function|null} event_function 
  * @returns {void}
  */
-const search_input = (event, module, event_function) => {
+const list_key_event = (event, module, event_function=null) => {
+    const list_name = module=='lov'?'list_' + 'lov':module + '_search';
+    const search_input = module + '_search';
     switch (event.code){
         case 'ArrowLeft':
         case 'ArrowRight':{
@@ -1494,34 +1408,35 @@ const search_input = (event, module, event_function) => {
         }
         case 'ArrowUp':
         case 'ArrowDown':{
-            if (AppDocument.querySelector(`#common_${module}_search_list`)){
-                const rows = AppDocument.querySelectorAll(`.common_${module}_search_list_row`);
-                /**
-                 * 
-                 * @param {HTMLElement} element 
-                 */
-                const focus_item = (element) =>{
-                    element.focus();
-                    AppDocument.querySelector(`#common_${module}_search_input`).focus();
-                };
+            const rows = module=='lov'? AppDocument.querySelectorAll(`.common_${list_name}_row:not(.common_${list_name}_row_hide)`):
+                                        AppDocument.querySelectorAll(`.common_${list_name}_list_row`);
+            /**
+             * Focus item
+             * @param {HTMLElement} element 
+             */
+            const focus_item = (element) =>{
+                element.focus();
+                AppDocument.querySelector(`#common_${search_input}_input`).focus();
+            };
+            if (Object.entries(rows).filter(row=>row[1].classList.contains(`common_list_row_selected`)).length>0){
                 let i=0;
                 for (const row of rows) {
-                    if (row.classList.contains(`common_${module}_search_list_selected`))
+                    if (row.classList.contains(`common_list_row_selected`))
                         //if up and first or
                         //if down and last
                         if ((event.code=='ArrowUp' && i == 0)||
                             (event.code=='ArrowDown' && i == rows.length -1)){
                             if(event.code=='ArrowUp'){
                                 //if the first, set the last
-                                row.classList.remove (`common_${module}_search_list_selected`);
-                                rows[rows.length -1].classList.add (`common_${module}_search_list_selected`);
+                                row.classList.remove (`common_list_row_selected`);
+                                rows[rows.length -1].classList.add (`common_list_row_selected`);
                                 focus_item(rows[rows.length -1]);
                             }
                             else{
                                 //down
                                 //if the last, set the first
-                                row.classList.remove (`common_${module}_search_list_selected`);
-                                rows[0].classList.add (`common_${module}_search_list_selected`);
+                                row.classList.remove (`common_list_row_selected`);
+                                rows[0].classList.add (`common_list_row_selected`);
                                 focus_item(rows[0]);
                             }
                             break;
@@ -1529,67 +1444,86 @@ const search_input = (event, module, event_function) => {
                         else{
                             if(event.code=='ArrowUp'){
                                 //remove highlight, highlight previous
-                                row.classList.remove (`common_${module}_search_list_selected`);
-                                rows[i-1].classList.add (`common_${module}_search_list_selected`);
+                                row.classList.remove (`common_list_row_selected`);
+                                rows[i-1].classList.add (`common_list_row_selected`);
                                 focus_item(rows[i-1]);
                             }
                             else{
                                 //down
                                 //remove highlight, highlight next
-                                row.classList.remove (`common_${module}_search_list_selected`);
-                                rows[i+1].classList.add (`common_${module}_search_list_selected`);
+                                row.classList.remove (`common_list_row_selected`);
+                                rows[i+1].classList.add (`common_list_row_selected`);
                                 focus_item(rows[i+1]);
                             }
                             break;
                         }
                     i++;
                 }
+            }
+            else{
                 //no highlight found, highlight first
-                rows[0].classList.add (`common_${module}_search_list_selected`);
+                rows[0].classList.add (`common_list_row_selected`);
                 focus_item(rows[0]);
-                break;
             }
             break;
         }
         case 'Enter':{
             //enter
-            const x = AppDocument.querySelectorAll(`.common_${module}_search_list_row`);
-            for (let i = 0; i <= x.length -1; i++) {
-                if (x[i].classList.contains(`common_${module}_search_list_selected`)){
-                    /*Show profile and leave searchresult so user can go back to searchresult again*/
-                    if (event_function ==null){
-                        if (module=='profile')
-                            profile_show(x[i].children[0].children[0].innerHTML,null);
-                        else{
-                            map_show_search_on_map({city:x[i].getAttribute('data-city'),
-                                                    country:x[i].getAttribute('data-country'),
-                                                    latitude:x[i].getAttribute('data-latitude'),
-                                                    longitude:x[i].getAttribute('data-longitude')
-                                                });
+            if (module == 'lov'){
+                const rows = AppDocument.querySelectorAll(`.common_${list_name}_row`);
+                for (const row of rows) {
+                    if (row.classList.contains(`common_list_row_selected`)){
+                        //event on row is set in app when calling lov, dispatch it!
+                        row.dispatchEvent(new Event('click'));
+                        row.classList.remove (`common_list_row_selected`);
+                    }
+                }   
+            }
+            else{
+                const rows = AppDocument.querySelectorAll(`.common_${list_name}_list_row`);
+                for (let i = 0; i <= rows.length -1; i++) {
+                    if (rows[i].classList.contains(`common_list_row_selected`)){
+                        /*Show profile and leave searchresult so user can go back to searchresult again*/
+                        if (event_function ==null){
+                            if (module=='profile')
+                                profile_show(rows[i].children[0].children[0].innerHTML,null);
+                            else{
+                                map_show_search_on_map({city:rows[i].getAttribute('data-city'),
+                                                        country:rows[i].getAttribute('data-country'),
+                                                        latitude:rows[i].getAttribute('data-latitude'),
+                                                        longitude:rows[i].getAttribute('data-longitude')
+                                                    });
+                            }
                         }
+                        else{
+                            if (module=='profile')
+                                event_function(rows[i].children[0].children[0].innerHTML);
+                            else
+                                event_function({city:rows[i].getAttribute('data-city'),
+                                                country:rows[i].getAttribute('data-country'),
+                                                latitude:rows[i].getAttribute('data-latitude'),
+                                                longitude:rows[i].getAttribute('data-longitude')
+                                            });
+                        }
+                            
+                        rows[i].classList.remove (`common_list_row_selected`);
                     }
-                    else{
-                        if (module=='profile')
-                            event_function(x[i].children[0].children[0].innerHTML);
-                        else
-                            event_function({city:x[i].getAttribute('data-city'),
-                                            country:x[i].getAttribute('data-country'),
-                                            latitude:x[i].getAttribute('data-latitude'),
-                                            longitude:x[i].getAttribute('data-longitude')
-                                        });
-                    }
-                        
-                    x[i].classList.remove (`common_${module}_search_list_selected`);
                 }
             }
             break;
         }
         default:{
-            if (module=='profile')
-                typewatch(search_profile, event_function==null?null:event_function); 
-            else{
-                typewatch(worldcities_search, event_function==null?null:event_function); 
+            if (module=='lov'){
+                //if db call will be implemented, add delay
+                //typewatch(lov_filter, AppDocument.querySelector(`#common_${search_input}_input`).innerHTML); 
+                lov_filter(AppDocument.querySelector(`#common_${search_input}_input`).innerHTML); 
             }
+            else
+                if (module=='profile')
+                    typewatch(search_profile, event_function==null?null:event_function); 
+                else{
+                    typewatch(worldcities_search, event_function==null?null:event_function); 
+                }
             break;
         }            
     }
@@ -3600,12 +3534,12 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         case 'common_lov_search_input':{
-                            lov_keys(event);
+                            list_key_event(event, 'lov');
                             break;
                         }
                         //module leaflet
                         case 'common_module_leaflet_search_input':{
-                            typewatch(search_input, event, 'module_leaflet', event.target['data-function']); 
+                            typewatch(list_key_event, event, 'module_leaflet', event.target['data-function']); 
                             break;
                         }
                         default:{
@@ -3958,7 +3892,7 @@ export{/* GLOBALS*/
        lov_close, lov_show,
        /* PROFILE */
        profile_follow_like, profile_top, profile_detail, profile_show,
-       profile_close, profile_update_stat, search_input,
+       profile_close, profile_update_stat, list_key_event,
        /* USER  */
        user_login, user_logoff, user_update, user_signup, user_verify_check_input, user_delete, user_function,
        updatePassword,

@@ -2604,7 +2604,7 @@ const app_event_keyup = event => {
                 }
                 //common
                 case 'common_profile_search_input':{
-                    common.search_input(event, 'profile', profile_show_app);
+                    common.list_key_event(event, 'profile', profile_show_app);
                     break;
                 }
                 case 'common_user_start_login_username':
