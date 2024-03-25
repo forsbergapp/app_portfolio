@@ -1720,6 +1720,9 @@ body{
 	color: var(--app_red) !important;
 }
 /*SECURE*/
+.common_list_row_selected{
+	background-color: var(--app_theme_list_selected_background_color) !important;
+}
 .common_switch {
 	color: transparent;
 }
@@ -1736,9 +1739,6 @@ body{
 #common_lov_search_input{
 	border: 1px solid var(--app_theme_input_border_color);
 }
-.common_list_lov_row_selected {
-	background-color: var(--app_theme_list_selected_background_color) !important;
-}
 .common_list_scrollbar{
 	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);
 }
@@ -1753,7 +1753,4 @@ body{
 }
 #common_module_leaflet_search_list_wrap{
 	background-color: var(--app_theme_dialogue_background_color);
-}
-.common_module_leaflet_search_list_selected{
-	background-color: var(--app_theme_list_selected_background_color);
 }
