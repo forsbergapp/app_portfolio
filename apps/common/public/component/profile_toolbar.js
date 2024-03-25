@@ -1,7 +1,10 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`   <div id='common_profile_btn_top' class='common_toolbar_button common_icon' ></div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string}} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}

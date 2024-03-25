@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`   <div id='common_dialogue_user_menu_username'><USERNAME/></div>
                     <div id='common_dialogue_user_menu_app_theme'></div>
                     <div id='common_dialogue_user_menu_preferences'>
@@ -36,7 +38,22 @@ const template =`   <div id='common_dialogue_user_menu_username'><USERNAME/></di
                     </div>`;
 /**
  * div common_dialogue_user_menu_app_theme used to show optional component app_theme.js
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string,
+ *          app_id:number,
+ *          user_account_id:number,
+ *          common_app_id:number,
+ *          data_app_id:number,
+ *          username:string,
+ *          system_admin:string,
+ *          system_admin_only:number,
+ *          current_locale:string,
+ *          current_timezone:string,
+ *          current_direction:string,
+ *          current_arabic_script:string,
+ *          function_get_locales_options:function,
+ *          function_show_message:function,
+ *          function_FFB:function}} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}

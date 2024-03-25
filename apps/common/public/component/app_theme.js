@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`   <select id='common_dialogue_user_menu_app_select_theme'>
                         <option value='1' selected='selected'>Light</option>
                         <option value='2'>Dark</option>
@@ -5,7 +7,8 @@ const template =`   <select id='common_dialogue_user_menu_app_select_theme'>
                     </select>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string}} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}
