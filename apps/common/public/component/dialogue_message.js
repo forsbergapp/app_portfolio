@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`   <div id='common_confirm_question' class='common_icon'><COMMON_TRANSLATION_CONFIRM_QUESTION/></div>
                     <div id='common_message_title_container'>
                         <div id='common_message_title_icon' class='common_icon'></div>
@@ -12,7 +14,18 @@ const template =`   <div id='common_confirm_question' class='common_icon'><COMMO
                     </div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string,
+ *          text_class:string,
+ *          message_type:string,
+ *          data_app_id:number,
+ *          code:string,
+ *          message:{message:string, sqlMessage:string,errorNum:string, text:string}|*,
+ *          translation_confirm_question:string,
+ *          function_FFB:function,
+ *          function_event:function,
+ *          function_componentremove:function,
+ *          }} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}

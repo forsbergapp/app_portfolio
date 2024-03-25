@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`<div id='common_broadcast_info'>
                     <div id='common_broadcast_banner'>
                         <div id='common_broadcast_header'>
@@ -14,7 +16,9 @@ const template =`<div id='common_broadcast_info'>
                 </div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string,
+ *          message:string}} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}

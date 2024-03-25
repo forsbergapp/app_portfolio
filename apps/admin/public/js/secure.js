@@ -1372,7 +1372,7 @@ const show_monitor = async (yearvalues) =>{
     const monitor_month = list_generate(12);
     const monitor_day = common.COMMON_GLOBAL.system_admin!=null?list_generate(31):'';
     
-    const monitor_log_data = common.COMMON_GLOBAL.system_admin !=''?await get_log_parameters():{parameters:{SERVICE_LOG_SCOPE_REQUEST:'',
+    const monitor_log_data = common.COMMON_GLOBAL.system_admin !=null?await get_log_parameters():{parameters:{SERVICE_LOG_SCOPE_REQUEST:'',
                                                                                                             SERVICE_LOG_SCOPE_SERVER:'', 
                                                                                                             SERVICE_LOG_SCOPE_SERVICE:'',
                                                                                                             SERVICE_LOG_SCOPE_APP:'',

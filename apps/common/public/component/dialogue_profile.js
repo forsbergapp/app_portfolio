@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 /**
  * @typedef { {profile_id:number|null,
  *             private:number|null}} result_profile
@@ -126,7 +128,26 @@ const template_profile_top_list_record = `  <div data-user_account_id='<CommonLi
                                             </div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string,
+ *          tab:string,
+ *          info_user_account_id:number,
+ *          info_client_latitude:string,
+ *          info_client_longitude:string,
+ *          info_user_account_id_other:number,
+ *          info_username:string,
+ *          info_function_set_avatar:function,
+ *          info_function_format_json_date:function,
+ *          info_function_create_qr:function,
+ *          info_function_getHostname:function,
+ *          info_function_show_common_dialogue:function,
+ *          info_function_checkOnline:function,
+ *          top_statchoice:number,
+ *          top_app_rest_url:string,
+ *          top_function_list_image_format_src:function,
+ *          top_function_user_click:function,
+ *          function_FFB:function,
+ *          }} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   result_profile|null,
  *                      template:string}>}

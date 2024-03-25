@@ -780,13 +780,24 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
  * @returns {Promise.<*>}
  */
 const ComponentRender = async (div,props, component_path) => {
-    const {default:renderfunction} = await import(component_path);
+    /**
+     * @typedef  {{ props:{function_post:function|null, function_error:function|null}, 
+     *              data:*,
+     *              template:string|null}} component_type
+     */
+    const {default:component_function} = await import(component_path);
     //add document (less type errors), framework and mountdiv to props
-    const component = await renderfunction({...props, ...{ common_document:AppDocument,
-                        common_framework:COMMON_GLOBAL.app_framework,
-                        common_mountdiv:div}});
-    // a third party component can already be rendered and can output an empty template
-    if (component.template)
+    /**@type{component_type}*/
+    const component = await component_function({...props, ...{ common_document:AppDocument,
+                                                common_mountdiv:div}})
+                                                .catch((/**@type{Error}*/error)=>{
+                                                    ComponentRemove(div, true);
+                                                    exception(COMMON_GLOBAL.exception_app_function, error);
+                                                    return null;
+                                                });
+    if (component){
+        // a third party component can already be rendered and can output an empty template
+        if (component.template)
         switch (COMMON_GLOBAL.app_framework){
             case 2:{
                 //Vue
@@ -868,10 +879,17 @@ const ComponentRender = async (div,props, component_path) => {
                 AppDocument.querySelector(`#${div}`).innerHTML = component.template;
             }
         }
-    //post function
-    if (component.props.function_post)
+        //post function
+        if (component.props.function_post){
+        if (div == 'mapid'){
+            COMMON_GLOBAL.module_leaflet =              component.data.library_Leaflet;
+            COMMON_GLOBAL.module_leaflet_session_map =  component.data.module_map;
+            COMMON_GLOBAL.module_leaflet_map_styles =   component.data.map_layer_array;
+        }
         component.props.function_post();
-    return component.data;    
+        }
+        return component.data;
+    }
 }
 /**
  * Component remove
@@ -934,12 +952,12 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
         case 'VERIFY':
             {    
                 ComponentRender('common_dialogue_user_verify', {user_verification_type:user_verification_type,
-                                                                data_function:click_cancel_event,
                                                                 username_login:AppDocument.querySelector('#common_user_start_login_username').innerHTML,
                                                                 password_login:AppDocument.querySelector('#common_user_start_login_password').innerHTML,
                                                                 username_signup:AppDocument.querySelector('#common_user_start_signup_username').innerHTML,
                                                                 password_signup:AppDocument.querySelector('#common_user_start_signup_password').innerHTML,
-                                                                title: title}, '/common/component/dialogue_user_verify.js');
+                                                                title: title,
+                                                                function_data_function:click_cancel_event}, '/common/component/dialogue_user_verify.js');
                 ComponentRemove('common_dialogue_user_start');
                 break;
             }
@@ -2255,7 +2273,7 @@ const create_qr = async (div, url) => {
  * @returns {Promise.<null>}
  */
 const map_init = async (container, longitude, latitude, doubleclick_event, search_event_function) => {
-    return await new Promise((resolve, reject)=>{
+    return await new Promise((resolve)=>{
         /**@ts-ignore */
         COMMON_GLOBAL.module_leaflet_session_map = null;
         ComponentRender('mapid', 
@@ -2264,34 +2282,23 @@ const map_init = async (container, longitude, latitude, doubleclick_event, searc
                                 container:container,
                                 longitude:longitude,
                                 latitude:latitude,
-                                event_doubleclick: doubleclick_event,
-                                function_search_event:search_event_function,
                                 //module parameters
                                 module_leaflet_zoom:COMMON_GLOBAL.module_leaflet_zoom,
-                                module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                 module_leaflet_jumpto:COMMON_GLOBAL.module_leaflet_jumpto,
+                                module_leaflet_map_style:COMMON_GLOBAL.module_leaflet_style,
+                                module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                 //functions
                                 function_FFB:FFB,
-                                function_map_country:map_country,
-                                function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
+                                function_event_doubleclick: doubleclick_event,
+                                function_search_event:search_event_function,
                                 function_get_place_from_gps:get_place_from_gps,
+                                function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
+                                function_map_country:map_country,
                                 function_map_update:map_update,
-                                function_map_setstyle:map_setstyle,
-                                function_map_setevent:map_setevent
+                                function_map_setstyle:map_setstyle
                                 },
                             '/common/component/module_leaflet.js')
-            .then((leaflet_data)=>{
-                COMMON_GLOBAL.module_leaflet =              leaflet_data.library_Leaflet;
-                COMMON_GLOBAL.module_leaflet_session_map =  leaflet_data.module_map;
-                COMMON_GLOBAL.module_leaflet_map_styles =   leaflet_data.map_layer_array;
-                //set additonal settings on rendered Leaflet module
-                map_setstyle(COMMON_GLOBAL.module_leaflet_style).then(()=>{
-                    //set map layer 
-                    SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, AppDocument.querySelector('#common_module_leaflet_select_mapstyle'),1);
-                    resolve(null);
-                })
-            })
-            .catch(error=>reject(error));
+        .then(()=>resolve(null));
     });
 };
 /**
@@ -2471,42 +2478,27 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
     COMMON_GLOBAL.module_leaflet_session_map_layer.push(layer);
 };
 /**
- * Map set event
- * @param {string} event 
- * @param {function} function_event 
- * @returns {void}
- */
-const map_setevent = (event, function_event) => {
-    //also creates event:
-    //COMMON_GLOBAL.module_leaflet.DomEvent.addListener(COMMON_GLOBAL.module_leaflet_session_map, 'dblclick', function_event);
-    /**@ts-ignore */
-    COMMON_GLOBAL.module_leaflet_session_map.on(event, function_event);
-};
-/**
  * Map set style
  * @param {string} mapstyle 
- * @returns {Promise.<void>}
+ * @returns {void}
  */
-const map_setstyle = async mapstyle => {
-    return await new Promise ((resolve) => {
-        for (const module_leaflet_map_style of COMMON_GLOBAL.module_leaflet_map_styles){
-            if (COMMON_GLOBAL.module_leaflet_session_map && module_leaflet_map_style.session_map_layer){
-                /**@ts-ignore */
-                COMMON_GLOBAL.module_leaflet_session_map.removeLayer(module_leaflet_map_style.session_map_layer);
-            }
+const map_setstyle = mapstyle => {
+    for (const module_leaflet_map_style of COMMON_GLOBAL.module_leaflet_map_styles){
+        if (COMMON_GLOBAL.module_leaflet_session_map && module_leaflet_map_style.session_map_layer){
+            /**@ts-ignore */
+            COMMON_GLOBAL.module_leaflet_session_map.removeLayer(module_leaflet_map_style.session_map_layer);
         }
-        const mapstyle_record = COMMON_GLOBAL.module_leaflet_map_styles.filter(map_style=>map_style.data==mapstyle)[0];
-        if (mapstyle_record.data3)
-            mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet.tileLayer(mapstyle_record.data2, {
-                maxZoom: mapstyle_record.data3,
-                attribution: mapstyle_record.data4
-            }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
-        else
-            mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet.tileLayer(mapstyle_record.data2, {
-                attribution: mapstyle_record.data4
-            }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
-        resolve();
-    });
+    }
+    const mapstyle_record = COMMON_GLOBAL.module_leaflet_map_styles.filter(map_style=>map_style.data==mapstyle)[0];
+    if (mapstyle_record.data3)
+        mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet.tileLayer(mapstyle_record.data2, {
+            maxZoom: mapstyle_record.data3,
+            attribution: mapstyle_record.data4
+        }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
+    else
+        mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet.tileLayer(mapstyle_record.data2, {
+            attribution: mapstyle_record.data4
+        }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
 };
 /**
  * Map update popup
@@ -2751,9 +2743,9 @@ const show_broadcast = (broadcast_message) => {
         case 'CHAT':
         case 'ALERT':{
             if (AppDocument.querySelector('#common_dialogue_maintenance'))
-                ComponentRender('common_broadcast', {message:message}, '/maintenance/component/broadcast.js')
+                ComponentRender('common_broadcast', {message:message}, '/maintenance/component/broadcast.js');
             else
-                ComponentRender('common_broadcast', {message:message}, '/common/component/broadcast.js')
+                ComponentRender('common_broadcast', {message:message}, '/common/component/broadcast.js');
             break;
         }
 		case 'PROGRESS':{
@@ -2773,7 +2765,7 @@ const show_maintenance = (message, init=null) => {
     if (init==1){
         ComponentRender('common_dialogue_maintenance', 
                         {},
-                        '/maintenance/component/dialogue_maintenance.js')
+                        '/maintenance/component/dialogue_maintenance.js');
     }
     else
         AppDocument.querySelector('#common_maintenance_footer').innerHTML = message;
@@ -3505,7 +3497,7 @@ const common_event = async (event_type,event) =>{
                         break;
                     }
                     case 'common_module_leaflet_select_mapstyle':{
-                        map_setstyle(event.target.value).then(()=>{null;});
+                        map_setstyle(event.target.value);
                         break;
                     }
                     default:{
@@ -3835,16 +3827,16 @@ const mount_app = async (framework, events) => {
             break;
         }
         case 1:
-        default:{
-            //Javascript
-            events.Click();
-            events.Change();
-            events.Focus();
-            events.Input();
-            events.KeyDown();
-            events.KeyUp();
-            break;
-        }
+            default:{
+                //Javascript
+                events.Click();
+                events.Change();
+                events.Focus();
+                events.Input();
+                events.KeyDown();
+                events.KeyUp();
+                break;
+            }
     }
     //update all select with selectedIndex since copying outerHTML does not include setting correct selectedIndex
     select_selectedindex.forEach((/**@type{{id:string,index:number}}*/select) =>AppDocument.querySelector(`#${select.id}`).selectedIndex = select.index);
@@ -3900,7 +3892,7 @@ export{/* GLOBALS*/
        ProviderSignIn,
        /* MODULE LEAFLET  */
        map_init, map_country, map_show_search_on_map, map_resize, map_line_removeall, map_line_create,
-       map_setevent, map_setstyle, map_update_popup, map_update,
+       map_setstyle, map_update_popup, map_update,
        /* MODULE EASY.QRCODE */
        create_qr,
        /*FFB */

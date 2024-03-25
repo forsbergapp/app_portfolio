@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`   <div id="app_themes">
                         <div id="app_theme_checkbox" class="toggle checked">
                             <div class="toggle-button">
@@ -21,7 +23,8 @@ const template =`   <div id="app_themes">
                     </div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:null, 
  *                      template:string}>}

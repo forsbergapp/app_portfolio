@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`   <div id='common_window_info_btn_close' class='common_toolbar_button common_icon'></div>
                     <div id='common_window_info_info'><INFO/></div>
                     <div id=common_window_info_toolbar>
@@ -12,7 +14,14 @@ const template =`   <div id='common_window_info_btn_close' class='common_toolbar
                     <iframe id='common_window_info_content' scrolling='auto' <IFRAME_CLASS/> src=<CONTENT/> ></iframe>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string,
+ *          url:string,
+ *          content_type:string,
+ *          frame:AppDocument|null,
+ *          iframe_content:string,
+ *          iframe_class:string,
+ *          info:number}} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}
@@ -21,7 +30,13 @@ const component = async props => {
     /**
      * 
      * @param {{}} info 
-     * @returns
+     * @returns {{  INFO:string,
+     *              CONTENT:string,
+     *              STYLE_TOOLBAR_DISPLAY:string,
+     *              STYLE_CONTENT_DISPLAY:string,
+     *              STYLE_INFO_OVERFLOWY:string,
+     *              STYLE_INFO_INFO_DISPLAY:string,
+     *              IFRAME_CLASS:string}}
      */
     const get_variables = info => {
         switch(info){
@@ -67,7 +82,7 @@ const component = async props => {
                     if (props.content_type=='PDF'){
                         return {
                             INFO:'',
-                            CONTENT:null,
+                            CONTENT:'',
                             STYLE_TOOLBAR_DISPLAY:'none',
                             STYLE_CONTENT_DISPLAY:'block',
                             STYLE_INFO_OVERFLOWY:'auto',
@@ -78,11 +93,11 @@ const component = async props => {
                     else
                         return {
                             INFO:'',
-                            CONTENT:null,
-                            STYLE_TOOLBAR_DISPLAY:null,
-                            STYLE_CONTENT_DISPLAY:null,
-                            STYLE_INFO_OVERFLOWY:null,
-                            STYLE_INFO_INFO_DISPLAY:null,
+                            CONTENT:'',
+                            STYLE_TOOLBAR_DISPLAY:'',
+                            STYLE_CONTENT_DISPLAY:'',
+                            STYLE_INFO_OVERFLOWY:'',
+                            STYLE_INFO_INFO_DISPLAY:'',
                             IFRAME_CLASS:''
                             };
                 break;
@@ -90,11 +105,11 @@ const component = async props => {
             default:
                 return {
                     INFO:'',
-                    CONTENT:null,
-                    STYLE_TOOLBAR_DISPLAY:null,
-                    STYLE_CONTENT_DISPLAY:null,
-                    STYLE_INFO_OVERFLOWY:null,
-                    STYLE_INFO_INFO_DISPLAY:null,
+                    CONTENT:'',
+                    STYLE_TOOLBAR_DISPLAY:'',
+                    STYLE_CONTENT_DISPLAY:'',
+                    STYLE_INFO_OVERFLOWY:'',
+                    STYLE_INFO_INFO_DISPLAY:'',
                     IFRAME_CLASS:''
                     };
         }
@@ -118,7 +133,7 @@ const component = async props => {
             //print content only
             props.common_document.querySelector('#common_window_info_content').contentWindow.document.open();
             props.common_document.querySelector('#common_window_info_content').contentWindow.document.write(props.iframe_content);
-            props.frame.querySelector('#common_window_info_content').focus();
+            props.frame?props.frame.querySelector('#common_window_info_content').focus():null;
             //await delay to avoid browser render error
             await new Promise ((resolve)=>{setTimeout(()=> {props.common_document.querySelector('#common_window_info_content').contentWindow.print();
                                                             resolve(null);}, 100);})

@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`   <div id='common_profile_input_row'>
                         <div id='common_profile_search_input' contenteditable=true class='common_input '/></div>
                         <div id='common_profile_search_icon' class='common_icon'></div>
@@ -7,7 +9,8 @@ const template =`   <div id='common_profile_input_row'>
                     </div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string}} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}

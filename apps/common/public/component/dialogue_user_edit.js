@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`   <div id='common_user_edit_common'>
                     <div class='common_setting_horizontal_row'>
                         <div class='common_setting_horizontal_col'>
@@ -181,7 +183,23 @@ const template =`   <div id='common_user_edit_common'>
                     <div id='common_user_edit_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string,
+ *          user_account_id:number,
+ *          common_app_id:number,
+ *          translation_username:string,
+ *          translation_bio:string,
+ *          translation_password:string,
+ *          translation_password_confirm:string,
+ *          translation_password_reminder:string,
+ *          translation_email:string,
+ *          translation_new_email:string,
+ *          translation_new_password:string,
+ *          translation_new_password_confirm:string,
+ *          function_set_avatar:function,
+ *          function_format_json_date:function,
+ *          function_show_message:function,
+ *          function_FFB:function}} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}
@@ -218,7 +236,7 @@ const component = async props => {
 
                     //display fetched avatar editable
                     props.common_document.querySelector('#common_user_edit_avatar').style.display = 'block';
-                    props.set_avatar(user.avatar, props.common_document.querySelector('#common_user_edit_avatar_img')); 
+                    props.function_set_avatar(user.avatar, props.common_document.querySelector('#common_user_edit_avatar_img')); 
                     props.common_document.querySelector('#common_user_edit_input_email').innerHTML = user.email;
                     props.common_document.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
                     props.common_document.querySelector('#common_user_edit_input_password').innerHTML = '',

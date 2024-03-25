@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`
                 <div id='common_user_verify_email_icon' class='common_icon'></div>
                 <div id='common_user_verify_email'><TITLE/></div>
@@ -15,7 +17,15 @@ const template =`
                 <div id='common_user_verify_cancel' class='common_dialogue_button common_icon'></div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string,
+ *          user_verification_type:string,
+ *          username_login:string,
+ *          password_login:string,
+ *          username_signup:string,
+ *          password_signup:string,
+ *          title:string,
+ *          function_data_function:function}} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}
@@ -56,7 +66,7 @@ const component = async props => {
                 .replace('<PASSWORD/>',password);
     }
     const post_component = () =>{
-        props.common_document.querySelector(`#${props.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.click_cancel_event;
+        props.common_document.querySelector(`#${props.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.function_data_function;
     }
     return {
         props:  {function_post:post_component},
