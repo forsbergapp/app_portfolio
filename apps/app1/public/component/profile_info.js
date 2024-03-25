@@ -1,7 +1,10 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`   <div id='profile_info_apps'></div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:null, 
  *                      template:string}>}

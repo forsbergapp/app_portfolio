@@ -1,3 +1,5 @@
+/**@type{{querySelector:function, querySelectorAll:function}} */
+const AppDocument = document;
 /**
  * @typedef {object} AppEvent
  * @property {{ id:                 string
@@ -61,7 +63,27 @@ const template_location = `<div id='common_module_leaflet_control_my_location_id
 
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string,
+ *          data_app_id:number,
+ *          locale:string,
+ *          container:string,
+ *          longitude:string,
+ *          latitude:string,
+ *          module_leaflet_zoom:number,
+ *          module_leaflet_jumpto:number,
+ *          module_leaflet_map_style:string,
+ *          module_leaflet_map_styles:string,
+ *          module_leaflet_marker_div_city:string,
+ *          module_leaflet_marker_div_gps:string,
+ *          function_FFB:function
+ *          function_event_doubleclick:function,
+ *          function_search_event:function,
+ *          function_get_place_from_gps:function,
+ *          function_SearchAndSetSelectedIndex:function,
+ *          function_map_country:function,
+ *          function_map_update:function,
+ *          function_map_setstyle:function}} props 
 * @returns {Promise.<{ props:{function_post:function|null}, 
 *                      data:   leaflet_data,
 *                      template:null}>}
@@ -77,20 +99,20 @@ const component = async props => {
                             container:APP_GLOBAL.module_leaflet_map_container
                             longitude:common.COMMON_GLOBAL.client_longitude,
                             latitude:common.COMMON_GLOBAL.client_latitude,
-                            event_doubleclick: [true/false],
-                            funcion_search_event:[map_show_search_on_map_app / null],
                             //module parameters
                             module_leaflet_zoom:COMMON_GLOBAL.module_leaflet_zoom,
-                            module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps,
                             module_leaflet_jumpto:COMMON_GLOBAL.module_leaflet_jumpto,
+                            module_leaflet_map_style:COMMON_GLOBAL.module_leaflet_style,
+                            module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps,
                             //functions
                             function_FFB:FFB,
-                            function_map_country:map_country,
-                            function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
+                            function_event_doubleclick: doubleclick_event / null,
+                            funcion_search_event:[map_show_search_on_map_app / null],
                             function_get_place_from_gps:get_place_from_gps,
+                            function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
+                            function_map_country:map_country,
                             function_map_update:map_update,
                             function_map_setstyle:map_setstyle,
-                            function_map_setevent:map_setevent
                             },
                         '/common/component/module_leaflet.js')
         .then((leaflet_data)=>{
@@ -191,14 +213,18 @@ const component = async props => {
     const map_data = {... await get_map_layers(props.data_app_id),
                       module_leaflet_session_map:null};
     Object.seal(map_data);
-    await map_init(props.container, props.longitude, props.latitude, props.event_doubleclick);
+    await map_init(props.container, props.longitude, props.latitude, props.function_event_doubleclick);
     props.common_document.querySelectorAll(`#${props.container} .leaflet-control`)[0].innerHTML += await render_template();
 
     const post_component = () =>{
         if (props.function_search_event){
             //add search function in data-function that event delegation will use
             props.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.function_search_event;
-        }        
+        }
+        //set additonal settings on rendered Leaflet module
+        props.function_map_setstyle(props.module_leaflet_map_style);
+        //set map layer 
+        props.function_SearchAndSetSelectedIndex(props.module_leaflet_map_style, AppDocument.querySelector('#common_module_leaflet_select_mapstyle'),1);
     }
     return {
         props:  {function_post:post_component},

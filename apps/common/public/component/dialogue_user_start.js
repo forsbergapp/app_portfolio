@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+const AppDocument = document;
 const template =`   <div id='common_user_start_logo'></div>
                     <div id='common_user_start_nav'>
                         <div id='common_user_start_login'  class='common_icon'></div>
@@ -52,7 +54,15 @@ const template =`   <div id='common_user_start_logo'></div>
                     <div id='common_user_start_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string,
+ *          user_click:string|null,
+ *          translation_username:string,
+ *          translation_password:string,
+ *          translation_password_confirm:string,
+ *          translation_password_reminder:string,
+ *          translation_email:string,
+ *          function_FFB:function}} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}

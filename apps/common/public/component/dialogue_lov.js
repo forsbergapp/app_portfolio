@@ -1,3 +1,5 @@
+/**@type{{querySelector:function}} */
+ const AppDocument = document;
 const template =`   <div id='common_lov_form'>
                     <div id='common_lov_title'></div>
                     <div id='common_lov_search_row'>
@@ -9,7 +11,11 @@ const template =`   <div id='common_lov_form'>
                     </div>`;
 /**
  * 
- * @param {*} props 
+ * @param {{common_document:AppDocument,
+ *          common_mountdiv:string,
+ *          lov:string,
+ *          function_event:function,
+ *          function_FFB:function}} props 
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}
@@ -81,7 +87,6 @@ const component = async props => {
     const render_template = () =>{
         return template;
     }
-
     return {
         props:  {function_post:lov_show},
         data:   null,
