@@ -1,10 +1,3 @@
-/**@ts-ignore */
-const Vue = await import('Vue');
-/**@ts-ignore */
-const {React} = await import('React');
-/**@ts-ignore */
-const {ReactDOM} = await import('ReactDOM');
-
 /**@type{{body:{className:string, requestFullscreen:function, classList:{add:function, remove:function}},
  *        createElement:function,
  *        addEventListener:function,
@@ -787,46 +780,6 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
  * @returns {Promise.<*>}
  */
 const ComponentRender = async (div,props, component_path) => {
-    
-    /**
-     * Convert HTML to React component
-     * @param {*} element 
-     * @returns {*}
-     */
-     const html2reactcomponent = element =>{
-        let result_component_current = [];
-        if(element.length>0 ){
-            for (const subelement of element){
-                let props;
-                /**@type{*} */
-                const element_object = {}
-                Object.entries(subelement.attributes).forEach((/**@type{*}*/attribute)=>element_object[attribute[1].name] = attribute[1].value);
-                if (subelement.nodeName=='OPTION'){
-                    /**@ts-ignore */
-                    props = {   ...element_object,
-                                label: subelement.text};
-                }
-                else
-                    props = {   ...element_object}
-                let test;
-                if (element_object.class){
-                    element_object.className = element_object.class;
-                    delete element_object.class;
-                }
-                
-                const reactobj = subelement.childElementCount>0?React.createElement(subelement.nodeName.toLowerCase(), 
-                                                    props,
-                                                    html2reactcomponent(subelement.children)):
-                                                    React.createElement(subelement.nodeName.toLowerCase(), 
-                                                    props);
-                result_component_current.push(reactobj);
-            }
-            return result_component_current;
-        }
-        else
-            return null;
-    }
-    //component outputs default render function
     const {default:renderfunction} = await import(component_path);
     //add document (less type errors), framework and mountdiv to props
     const component = await renderfunction({...props, ...{ common_document:AppDocument,
@@ -837,6 +790,8 @@ const ComponentRender = async (div,props, component_path) => {
         switch (COMMON_GLOBAL.app_framework){
             case 2:{
                 //Vue
+                /**@ts-ignore */
+                const Vue = await import('Vue');
                 //Use tempmount div to be able to return pure HTML
                 AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
                 Vue.createApp({
@@ -849,6 +804,46 @@ const ComponentRender = async (div,props, component_path) => {
             }
             case 3:{
                 //React
+                /**@ts-ignore */
+                const {React} = await import('React');
+                /**@ts-ignore */
+                const {ReactDOM} = await import('ReactDOM');
+                /**
+                 * Convert HTML to React component
+                 * @param {*} element 
+                 * @returns {*}
+                 */
+                const html2reactcomponent = element =>{
+                    let result_component_current = [];
+                    if(element.length>0 ){
+                        for (const subelement of element){
+                            let props;
+                            /**@type{*} */
+                            const element_object = {}
+                            Object.entries(subelement.attributes).forEach((/**@type{*}*/attribute)=>element_object[attribute[1].name] = attribute[1].value);
+                            if (subelement.nodeName=='OPTION'){
+                                /**@ts-ignore */
+                                props = {   ...element_object,
+                                            label: subelement.text};
+                            }
+                            else
+                                props = {   ...element_object}
+                            if (element_object.class){
+                                element_object.className = element_object.class;
+                                delete element_object.class;
+                            }
+                            const reactobj = subelement.childElementCount>0?React.createElement(subelement.nodeName.toLowerCase(), 
+                                                                props,
+                                                                html2reactcomponent(subelement.children)):
+                                                                React.createElement(subelement.nodeName.toLowerCase(), 
+                                                                props);
+                            result_component_current.push(reactobj);
+                        }
+                        return result_component_current;
+                    }
+                    else
+                        return null;
+                }
                 //convert HTML template to React component
                 const div_template = AppDocument.createElement('div');
                 div_template.innerHTML = component.template;
@@ -3754,48 +3749,13 @@ const set_app_parameters = (common_parameters) => {
         }
     }
 };
-/**
- * Mounts app using given framework or pure javascript and using given list of event functions
- * @param {number} framework
- * @param {{Click:function,
- *          Change:function,
- *          KeyDown:function,
- *          KeyUp:function,
- *          Focus:function,
- *          Input:function}} events 
- * @returns {Promise.<void>}
- */
-const mount_app = async (framework, events) => {
-    const app_root_div  = 'app_root';
-    const app_div       = 'app';
-    //get all select and selectedIndex
-    /**@type{{id:string,index:number}[]} */
-    let select_selectedindex = [];
-    AppDocument.querySelectorAll(`#${app_root_div} select`).forEach((/**@type{HTMLSelectElement}*/select) =>{
-        if (select_selectedindex.length>0)
-            select_selectedindex.push({id:select.id, index:select.selectedIndex});
-        else
-            select_selectedindex = [{id:select.id, index:select.selectedIndex}];
-    });
-    //remove listeners
-    common_events_remove();
-    AppDocument.querySelector(`#${app_div}`).replaceWith(AppDocument.querySelector(`#${app_div}`).cloneNode(true));
-    AppDocument.querySelector(`#${app_root_div}`).replaceWith(AppDocument.querySelector(`#${app_root_div}`).cloneNode(true));
-    
+const framework_clean = () =>{
     //remove Reacts objects
     /**@ts-ignore */
     delete window.ReactDOM;
     /**@ts-ignore */
     delete window.React;
 
-    //added listener variable in ReactDOM library to be able to remove document listener easier
-    /**@ts-ignore */
-    if (custom_React_listeners.length>0){
-        /**@ts-ignore */
-        for (const ReactListener of custom_React_listeners){
-            ReactListener[0].removeEventListener(ReactListener[1], ReactListener[2]);
-        }
-    }
     //remove react key
     for (const key of Object.keys(AppDocument)){
         if (key.startsWith('_react')){
@@ -3810,7 +3770,53 @@ const mount_app = async (framework, events) => {
     delete window.__VUE_HMR_RUNTIME__;
     /**@ts-ignore */
     delete window.__VUE__;
-    AppDocument.querySelector(`#${app_root_div}`).removeAttribute('data-v-app');
+}
+/**
+ * Mounts app using given framework or pure javascript and using given list of event functions
+ * @param {number} framework
+ * @param {{Click:function,
+ *          Change:function,
+ *          KeyDown:function,
+ *          KeyUp:function,
+ *          Focus:function,
+ *          Input:function}} events 
+ * @returns {Promise.<void>}
+ */
+const mount_app = async (framework, events) => {
+    const app_root_div  = 'app_root';
+    const app_div       = 'app';
+    const app_root_element = AppDocument.querySelector(`#${app_root_div}`);
+    const app_element = AppDocument.querySelector(`#${app_div}`);
+
+    //get all select and selectedIndex
+    /**@type{{id:string,index:number}[]} */
+    let select_selectedindex = [];
+    AppDocument.querySelectorAll(`#${app_root_div} select`).forEach((/**@type{HTMLSelectElement}*/select) =>{
+        if (select_selectedindex.length>0)
+            select_selectedindex.push({id:select.id, index:select.selectedIndex});
+        else
+            select_selectedindex = [{id:select.id, index:select.selectedIndex}];
+    });
+    //remove listeners
+    common_events_remove();
+    app_element.replaceWith(app_element.cloneNode(true));
+    app_root_element.replaceWith(app_root_element.cloneNode(true));
+    
+    //remove all attributes except id
+    Object.entries(app_root_element.attributes).forEach((/**@type{*}*/attribute)=>attribute[1].name=='id'?null:app_root_element.removeAttribute(attribute[1].name));
+
+    //added listener variable in ReactDOM library to be able to remove document listener easier
+    //custom_React_listeners and custom functions are declared in head.html
+    /**@ts-ignore */
+    if (custom_React_listeners.length>0){
+        /**@ts-ignore */
+        for (const ReactListener of custom_React_listeners){
+            ReactListener[0].removeEventListener(ReactListener[1], ReactListener[2]);
+        }
+        /**@ts-ignore */
+        custom_React_listeners = [];
+    }
+    framework_clean();
 
     //set default function if anyone missing
     events.Change?null:events.Change = ((/**@type{AppEvent}*/event)=>common_event('change', event));
@@ -3825,6 +3831,8 @@ const mount_app = async (framework, events) => {
     switch (framework ?? COMMON_GLOBAL.app_framework){
         case 2:{
             //Vue
+            /**@ts-ignore */
+            const Vue = await import('Vue');
             Vue.createApp({
                 data() {
                         return {};
@@ -3863,10 +3871,12 @@ const mount_app = async (framework, events) => {
         }
         case 3:{
             //React
+            /**@ts-ignore */
+            const {React} = await import('React');
+            /**@ts-ignore */
+            const {ReactDOM} = await import('ReactDOM');
+
             const App = () => {
-                //onClick handles single and doubleclick in this React component since onClick and onDoubleClick does not work in React
-                //without tricks
-                //using dblClick on leaflet on() function to get coordinates
                 //JSX syntax
                 //return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
                 //Using pure Javascript
