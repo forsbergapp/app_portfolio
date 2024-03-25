@@ -83,6 +83,9 @@ body{
 }
 
 /*APP THEME COMMON*/
+.common_list_row_selected{
+	background-color: var(--app_theme_selected_background_color);
+}
 #common_toolbar_framework{
 	color: var(--app_theme_main_branding_color1);
 	background-color: var(--app_theme_main_branding_color3);
@@ -114,7 +117,4 @@ body{
 }
 #common_module_leaflet_search_list_wrap{
 	background-color: var(--app_theme_dialogue_background_color);
-}
-.common_module_leaflet_search_list_selected{
-	background-color: var(--app_theme_selected_background_color);
 }

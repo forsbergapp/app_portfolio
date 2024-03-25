@@ -1203,7 +1203,7 @@ body,
 .common_load-spinner div:after {
 	background-color: var(--app_theme_spinner_background_color);
 }
-.common_profile_search_list_selected{
+.common_list_row_selected{
 	background-color: var(--app_theme_selected_background_color);
 }
 .common_list_scrollbar{
@@ -1232,7 +1232,4 @@ body,
 }
 #common_module_leaflet_search_list_wrap{
 	background-color: var(--app_theme_main_color1);
-}
-.common_module_leaflet_search_list_selected{
-	background-color: var(--app_theme_selected_background_color);
 }

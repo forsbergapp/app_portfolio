@@ -888,6 +888,9 @@ border-left: 12px solid var(--app_theme_sun_color);
 }
 
 /*THEME COMMON*/
+.common_list_row_selected{
+	background-color: var(--app_theme_list_selected_background_color);
+}
 .common_toolbar_selected{
 	background-color: var(--app_theme_list_selected_background_color);
 }
@@ -973,9 +976,6 @@ border-left: 12px solid var(--app_theme_sun_color);
 #common_profile_search_list_wrap{
 	border: 1px solid var(--app_theme_input_border_color);
 	background-color: var(--app_theme_dialogue_background_color);	
-}
-.common_profile_search_list_selected{
-	background-color: var(--app_theme_list_selected_background_color);
 }
 #common_profile_avatar_online_status.online{
 	color:var(--app_theme_online_status_online_color);
