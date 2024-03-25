@@ -195,8 +195,10 @@ const component = async props => {
     props.common_document.querySelectorAll(`#${props.container} .leaflet-control`)[0].innerHTML += await render_template();
 
     const post_component = () =>{
-        //add search function in data-function that event delegation will use
-        props.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.function_search_event;
+        if (props.function_search_event){
+            //add search function in data-function that event delegation will use
+            props.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.function_search_event;
+        }        
     }
     return {
         props:  {function_post:post_component},

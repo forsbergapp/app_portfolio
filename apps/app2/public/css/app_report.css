@@ -215,7 +215,6 @@
 }
 #timetable_day #timetable_day_time{
 	text-align: center;
-	z-index:-1;
 }
 
 /*MONTH*/

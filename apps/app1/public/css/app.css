@@ -591,7 +591,6 @@ div.ray8 {
 #common_window_info_info{
 	position:relative;
 	margin:20px;
-	z-index:-1;
 }
 
 /*RESPONSIVE SETTINGS*/
