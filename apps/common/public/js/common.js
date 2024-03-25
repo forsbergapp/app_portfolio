@@ -4,10 +4,6 @@ const Vue = await import('Vue');
 const {React} = await import('React');
 /**@ts-ignore */
 const {ReactDOM} = await import('ReactDOM');
-/**@ts-ignore */
-const {QRCode} = await import('easy.qrcode');
-/**@ts-ignore */
-const {getTimezone} = await import('regional');
 
 /**@type{{body:{className:string, requestFullscreen:function, classList:{add:function, remove:function}},
  *        createElement:function,
@@ -2306,6 +2302,8 @@ const ProviderSignIn = (provider_id) => {
  * @returns {Promise.<void>}
  */
 const create_qr = async (div, url) => {
+    /**@ts-ignore */
+    const {QRCode} = await import('easy.qrcode');
     AppDocument.querySelector('#' + div).innerHTML='';
     new QRCode(AppDocument.querySelector('#' + div), {
         text: url,
@@ -2601,6 +2599,8 @@ const map_update_popup = title => {
  * @returns {Promise.<string|null>}
  */
 const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_text = null, marker_id, to_method) => {
+    /**@ts-ignore */
+    const {getTimezone} = await import('regional');
     return new Promise((resolve)=> {
         /**
          * Map update GPS
