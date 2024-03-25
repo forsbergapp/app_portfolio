@@ -18,34 +18,10 @@
     }
 </script>
 <script>
+    /* React custom functions*/
     function custom_printWarning(level, format, args){
         console.log('React warning...');
     }
-    function custom_console(stack, message, message_type){
-        let e = stack.split("@");
-        for (let line of [...e].reverse()) {
-            if (line.includes('react')==true){
-                //console.log('React log:' +  message);
-                console.log('React...');
-                return null;
-            }                        
-            if (line.includes('vue')==true){
-                //console.log('Vue log:'  +  message);   
-                console.log('Vue...');
-                return null;
-            }
-        }
-        //No React or vue found use normal console function
-        if (message_type =='i')
-            console.info(message);
-        if (message_type =='w')
-            console.warn(message);
-        return null;
-    }
-    //Vue uses console.warn
-    console.warn = (e) => {let stack = new Error().stack; custom_console(stack, e, 'w');};
-    //React uses console.info
-    console.info = (i) => {let stack = new Error().stack; custom_console(stack, i, 'i');};
     var custom_React_listeners=[];
     custom_React_addEventBubbleListener = (target, eventType, listener)=>{
         custom_React_listeners.push([target, eventType, listener]);
@@ -72,6 +48,33 @@
         });
         return listener;
     }
+    /*Vue and React custom function*/
+    function custom_console(stack, message, message_type){
+        let e = stack.split("@");
+        for (let line of [...e].reverse()) {
+            if (line.includes('react')==true){
+                //console.log('React log:' +  message);
+                console.log('React...');
+                return null;
+            }                        
+            if (line.includes('vue')==true){
+                //console.log('Vue log:'  +  message);   
+                console.log('Vue...');
+                return null;
+            }
+        }
+        //No React or vue found use normal console function
+        if (message_type =='i')
+            console.info(message);
+        if (message_type =='w')
+            console.warn(message);
+        return null;
+    }
+    //Vue uses console.warn
+    console.warn = (e) => {let stack = new Error().stack; custom_console(stack, e, 'w');};
+    //React uses console.info
+    console.info = (i) => {let stack = new Error().stack; custom_console(stack, i, 'i');};
+    
 </script>
 <script type='module'>
     import('app').then((app) => {
