@@ -38,6 +38,7 @@ const component = async props => {
         props.common_document.querySelector('#common_message_title_container').style.display = show;
         switch (props.message_type){
             case 'ERROR':{
+                message_title.innerHTML = '';
                 confirm_question.style.display = hide;
                 message_title.style.display = show;
                 message_title.style.fontSize = fontsize_normal;
