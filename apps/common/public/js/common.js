@@ -836,45 +836,47 @@ const ComponentRender = async (div,props, component_path) => {
     const component = await renderfunction({...props, ...{ common_document:AppDocument,
                         common_framework:COMMON_GLOBAL.app_framework,
                         common_mountdiv:div}});
-    switch (COMMON_GLOBAL.app_framework){
-        case 2:{
-            //Vue
-            //Use tempmount div to be able to return pure HTML
-            AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
-            Vue.createApp({
-                data(){return {}},
-                template: component.template,
-                methods:{}
-            }).mount('#tempmount');
-            AppDocument.querySelector(`#${div}`).innerHTML = AppDocument.querySelector('#tempmount').innerHTML;
-            break;
-        }
-        case 3:{
-            //React
-            //convert HTML template to React component
-            const div_template = AppDocument.createElement('div');
-            div_template.innerHTML = component.template;
-            const result_component = React.createElement(div_template.nodeName.toLowerCase(), 
-                                                    { id: div_template.id, className: div_template.className}, 
-                                                    html2reactcomponent(div_template.children));
+    // a third party component can already be rendered and can output an empty template
+    if (component.template)
+        switch (COMMON_GLOBAL.app_framework){
+            case 2:{
+                //Vue
+                //Use tempmount div to be able to return pure HTML
+                AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
+                Vue.createApp({
+                    data(){return {}},
+                    template: component.template,
+                    methods:{}
+                }).mount('#tempmount');
+                AppDocument.querySelector(`#${div}`).innerHTML = AppDocument.querySelector('#tempmount').innerHTML;
+                break;
+            }
+            case 3:{
+                //React
+                //convert HTML template to React component
+                const div_template = AppDocument.createElement('div');
+                div_template.innerHTML = component.template;
+                const result_component = React.createElement(div_template.nodeName.toLowerCase(), 
+                                                        { id: div_template.id, className: div_template.className}, 
+                                                        html2reactcomponent(div_template.children));
 
-            AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
-            //use inner tempmount div to remove React events
-            const application = ReactDOM.createRoot(AppDocument.querySelector(`#${div} #tempmount`));
-            application.render( result_component);
-            await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 200);});
-            //React shows warning Invalid DOM property `class`. Did you mean `className`?
-            //because a div with empty class is created inside tempmount, ignore
-            //Return the inner first div.innerHTML created by React to return pure HTML
-            AppDocument.querySelector(`#${div}`).innerHTML = AppDocument.querySelector(`#${div} #tempmount >div`).innerHTML;
-            break;
+                AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
+                //use inner tempmount div to remove React events
+                const application = ReactDOM.createRoot(AppDocument.querySelector(`#${div} #tempmount`));
+                application.render( result_component);
+                await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 200);});
+                //React shows warning Invalid DOM property `class`. Did you mean `className`?
+                //because a div with empty class is created inside tempmount, ignore
+                //Return the inner first div.innerHTML created by React to return pure HTML
+                AppDocument.querySelector(`#${div}`).innerHTML = AppDocument.querySelector(`#${div} #tempmount >div`).innerHTML;
+                break;
+            }
+            case 1:
+            default:{
+                //Default Javascript
+                AppDocument.querySelector(`#${div}`).innerHTML = component.template;
+            }
         }
-        case 1:
-        default:{
-            //Default Javascript
-            AppDocument.querySelector(`#${div}`).innerHTML = component.template;
-        }
-    }
     //post function
     if (component.props.function_post)
         component.props.function_post();

@@ -48,7 +48,6 @@ doc_list_item_title{
 #common_window_info_info{
 	position:relative;
 	margin:20px;
-	z-index:-1;
 	margin-top:-70px;
 }
 /*APP THEME*/
@@ -92,7 +91,6 @@ body {
 	box-shadow: 0 0 35px 4px var(--app_white_transparent);
 }  
 .common_dialogue_content{
-	z-index: 12;
 	background-color: var(--app_white1);
 	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);	
 }
