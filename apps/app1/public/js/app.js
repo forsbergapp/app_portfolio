@@ -196,7 +196,7 @@ const app_event_click = event => {
                                 function_show_message:common.show_message},
                                                     '/common/component/dialogue_user_menu.js')
                             .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
-                                                                {},
+                                                                {function_app_theme_update:app_theme_update_from_body},
                                                                 '/component/app_theme.js'));
                             break;
                         }
@@ -383,6 +383,16 @@ const app_theme_update = (toggle_theme=false) => {
     }
     AppDocument.body.className = AppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select').value;
     AppDocument.body.classList.add(theme);
+};
+/**
+ * App theme get
+ * @returns {void}
+ */
+ const app_theme_update_from_body = () => {
+    if (AppDocument.body.className.indexOf('app_theme_sun')>-1)
+        AppDocument.querySelector('#app_theme_checkbox').classList.add('checked');
+    else
+        AppDocument.querySelector('#app_theme_checkbox').classList.remove('checked');
 };
 /**
  * @param {number|null} user_account_id_other 

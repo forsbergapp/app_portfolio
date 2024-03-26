@@ -24,8 +24,9 @@ const template =`   <div id="app_themes">
 /**
  * 
  * @param {{common_document:AppDocument,
- *          common_mountdiv:string}} props 
- * @returns {Promise.<{ props:{function_post:null}, 
+ *          common_mountdiv:string,
+ *          function_app_theme_update:function}} props 
+ * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
  */
@@ -34,9 +35,13 @@ const component = async props => {
     const render_template = () =>{
         return template;
     }
-    
+   
+    const post_component = () =>{
+        //set app theme
+        props.function_app_theme_update();
+    }
     return {
-        props:  {function_post:null},
+        props:  {function_post:post_component},
         data:   null,
         template: render_template()
     };

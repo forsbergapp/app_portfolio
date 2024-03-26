@@ -2366,7 +2366,7 @@ const app_event_click = event => {
                             function_show_message:common.show_message},
                                                 '/common/component/dialogue_user_menu.js')
                         .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
-                                                            {},
+                                                            {function_app_theme_update:common.common_theme_update_from_body},
                                                             '/common/component/app_theme.js'));
                         break;
                     }
