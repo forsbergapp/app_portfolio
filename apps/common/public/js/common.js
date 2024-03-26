@@ -780,6 +780,30 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
     AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value = AppDocument.body.className[9];
 };
 /**
+ * Common theme update body class from preferences
+ * @returns {void}
+ */
+ const common_preferences_update_body_class_from_preferences = () => {
+    const class_app_theme = AppDocument.body.className.split(' ')[0] ?? '';
+    const class_direction = COMMON_GLOBAL.user_direction;
+    const class_arabic_script = COMMON_GLOBAL.user_arabic_script;
+    AppDocument.body.className = '';
+    AppDocument.body.classList.add(class_app_theme);
+    if (class_direction)
+        AppDocument.body.classList.add(class_direction);
+    if (class_arabic_script)
+        AppDocument.body.classList.add(class_arabic_script);
+};
+
+/**
+ * Common preference post mount
+ * @returns {void}
+ */
+ const common_preferences_post_mount = () => {
+    common_preferences_update_body_class_from_preferences();
+    common_theme_update_from_body();
+};
+/**
  * Component render
  * @param {string} div 
  * @param {{}} props 
@@ -1689,6 +1713,12 @@ const user_logoff = async (system_admin) => {
         AppDocument.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
         AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
         AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+        user_preferences_set_default_globals('LOCALE');
+        user_preferences_set_default_globals('TIMEZONE');
+        user_preferences_set_default_globals('DIRECTION');
+        user_preferences_set_default_globals('ARABIC_SCRIPT');
+        //update body class with app theme, direction and arabic script usage classes
+        common_preferences_update_body_class_from_preferences();
     }
     else{
         //remove access token
@@ -1710,6 +1740,8 @@ const user_logoff = async (system_admin) => {
             user_preferences_set_default_globals('TIMEZONE');
             user_preferences_set_default_globals('DIRECTION');
             user_preferences_set_default_globals('ARABIC_SCRIPT');
+            //update body class with app theme, direction and arabic script usage classes
+            common_preferences_update_body_class_from_preferences();
         })
         .catch((error)=>{throw error;});
     }
@@ -2144,6 +2176,8 @@ const user_preference_get = async () => {
             COMMON_GLOBAL.user_direction = user_account_app.app_setting_preference_direction_value;
             //arabic script
             COMMON_GLOBAL.user_arabic_script = user_account_app.app_setting_preference_arabic_script_value;
+            //update body class with app theme, direction and arabic script usage classes
+            common_preferences_update_body_class_from_preferences();
             resolve(null);
         })
         .catch(err=>reject(err));
@@ -3886,7 +3920,8 @@ export{/* GLOBALS*/
        mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
        inIframe, show_image, getHostname, input_control, SearchAndSetSelectedIndex,
-       common_theme_update_from_body,
+       common_theme_update_from_body,common_preferences_post_mount,
+       common_preferences_update_body_class_from_preferences,
        /* COMPONENTS */
        ComponentRender,ComponentRemove,
        /* MESSAGE & DIALOGUE */
