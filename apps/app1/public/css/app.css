@@ -1,15 +1,15 @@
 /*APP */
 
-#start_message::before{	content:var(--app_info)}
+#start_message::before{	content:var(--common_app_icon_info)}
 
-#title1::before{		content:var(--sky_cloud) ' ' var(--misc_model)}
-#title2::before{		content:var(--app_database) ' ' var(--misc_model)}
+#title1::before{		content:var(--common_app_icon_sky_cloud) ' ' var(--common_app_icon_misc_model)}
+#title2::before{		content:var(--common_app_icon_database) ' ' var(--common_app_icon_misc_model)}
 
-#info_message::before{	content:var(--app_home)}
-#contact_text::before{	content:var(--app_email)}
+#info_message::before{	content:var(--common_app_icon_home)}
+#contact_text::before{	content:var(--common_app_icon_email)}
 
-#app_menu_apps::before{	content:var(--app_apps)}
-#app_menu_info::before{	content:var(--app_info)}
+#app_menu_apps::before{	content:var(--common_app_icon_apps)}
+#app_menu_info::before{	content:var(--common_app_icon_info)}
 
 body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	top: -5px;
@@ -613,32 +613,32 @@ div.ray8 {
 .app_theme_sun{
 
 	/*concept*/
-	--app_theme_main_branding_color1: var(--app_blue1);
-	--app_theme_main_branding_color2: var(--app_blue2);
-	--app_theme_main_branding_color3: var(--app_white1);
-	--app_theme_main_branding_color4: var(--app_black);
-	--app_theme_main_branding_color5: var(--app_white2);
-	--app_theme_main_branding_color6: var(--app_gold);
-	--app_theme_main_branding_color7: var(--app_yellow);
-	--app_theme_main_branding_color8: var(--app_dark);
-	--app_theme_main_branding_color9: var(--app_lightred);
-	--app_theme_main_branding_color10: var(--app_white);
-	--app_theme_main_branding_color11: var(--app_lightgreen);
-	--app_theme_main_branding_color12: var(--app_lightyellow);
+	--app_theme_main_branding_color1: var(--common_app_color_blue1);
+	--app_theme_main_branding_color2: var(--common_app_color_blue2);
+	--app_theme_main_branding_color3: var(--common_app_color_white1);
+	--app_theme_main_branding_color4: var(--common_app_color_black);
+	--app_theme_main_branding_color5: var(--common_app_color_white2);
+	--app_theme_main_branding_color6: var(--common_app_color_gold);
+	--app_theme_main_branding_color7: var(--common_app_color_yellow);
+	--app_theme_main_branding_color8: var(--common_app_color_dark);
+	--app_theme_main_branding_color9: var(--common_app_color_lightred);
+	--app_theme_main_branding_color10: var(--common_app_color_white);
+	--app_theme_main_branding_color11: var(--common_app_color_lightgreen);
+	--app_theme_main_branding_color12: var(--common_app_color_lightyellow);
 	
 
-	--app_theme_main_shadow_color1: var(--app_black_transparent1);
-	--app_theme_main_shadow_color2: var(--app_black_transparent2);
-	--app_theme_main_shadow_color3: var(--app_white_transparent);
-	--app_theme_main_shadow_color4: var(--app_white);
-	--app_theme_main_select_color: var(--app_white2);
-	--app_theme_main_select_color2: var(--app_green);
-	--app_theme_main_select_color3: var(--app_blue1);
-	--app_theme_main_select_color4: var(--app_black);
-	--app_theme_main_border_color: var(--app_white2);
-	--app_theme_main_border_color2: var(--app_blue2);
-	--app_theme_main_border_color3: var(--app_white1);
-	--app_theme_main_gradient_color1: var(--app_white);
+	--app_theme_main_shadow_color1: var(--common_app_color_black_transparent1);
+	--app_theme_main_shadow_color2: var(--common_app_color_black_transparent2);
+	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
+	--app_theme_main_shadow_color4: var(--common_app_color_white);
+	--app_theme_main_select_color: var(--common_app_color_white2);
+	--app_theme_main_select_color2: var(--common_app_color_green);
+	--app_theme_main_select_color3: var(--common_app_color_blue1);
+	--app_theme_main_select_color4: var(--common_app_color_black);
+	--app_theme_main_border_color: var(--common_app_color_white2);
+	--app_theme_main_border_color2: var(--common_app_color_blue2);
+	--app_theme_main_border_color3: var(--common_app_color_white1);
+	--app_theme_main_gradient_color1: var(--common_app_color_white);
 
 	/*entities*/
 	--app_theme_animation_box_shadow_color: var(--app_theme_main_shadow_color4);
@@ -648,8 +648,8 @@ div.ray8 {
 	--app_theme_star_shadow_color:var(--app_theme_main_branding_color10);
 	--app_theme_button_color: var(--app_theme_main_branding_color11);
 	--app_theme_shadow_color: var(--app_theme_main_branding_color10);
-	--app_toogle_crater_background_color:var(--app_theme_main_branding_color9);
-	--app_toogle_crater1_background_color:var(--app_theme_main_branding_color12);
+	--common_app_icon_toogle_crater_background_color:var(--app_theme_main_branding_color9);
+	--common_app_icon_toogle_crater1_background_color:var(--app_theme_main_branding_color12);
 
 	--app_theme_text_color: var(--app_theme_main_branding_color4);
 	--app_theme_background_color: var(--app_theme_main_branding_color1);
@@ -692,32 +692,32 @@ div.ray8 {
 }
 .app_theme_moon{
 
-	--app_theme_main_branding_color1: var(--app_dark);
-	--app_theme_main_branding_color2: var(--app_blue2);
-	--app_theme_main_branding_color3: var(--app_dark2);
-	--app_theme_main_branding_color4: var(--app_white4);
-	--app_theme_main_branding_color5: var(--app_white2);
-	--app_theme_main_branding_color6: var(--app_gold);
-	--app_theme_main_branding_color7: var(--app_yellow);
-	--app_theme_main_branding_color8: var(--app_dark);
-	--app_theme_main_branding_color9: var(--app_lightred);
-	--app_theme_main_branding_color10: var(--app_white);
-	--app_theme_main_branding_color11: var(--app_lightgreen);
-	--app_theme_main_branding_color12: var(--app_lightyellow);
+	--app_theme_main_branding_color1: var(--common_app_color_dark);
+	--app_theme_main_branding_color2: var(--common_app_color_blue2);
+	--app_theme_main_branding_color3: var(--common_app_color_dark2);
+	--app_theme_main_branding_color4: var(--common_app_color_white4);
+	--app_theme_main_branding_color5: var(--common_app_color_white2);
+	--app_theme_main_branding_color6: var(--common_app_color_gold);
+	--app_theme_main_branding_color7: var(--common_app_color_yellow);
+	--app_theme_main_branding_color8: var(--common_app_color_dark);
+	--app_theme_main_branding_color9: var(--common_app_color_lightred);
+	--app_theme_main_branding_color10: var(--common_app_color_white);
+	--app_theme_main_branding_color11: var(--common_app_color_lightgreen);
+	--app_theme_main_branding_color12: var(--common_app_color_lightyellow);
 	
 
-	--app_theme_main_shadow_color1: var(--app_black_transparent1);
-	--app_theme_main_shadow_color2: var(--app_black_transparent2);
-	--app_theme_main_shadow_color3: var(--app_white_transparent);
-	--app_theme_main_shadow_color4: var(--app_white);
-	--app_theme_main_select_color: var(--app_white2);
-	--app_theme_main_select_color2: var(--app_green);
-	--app_theme_main_select_color3: var(--app_dark);
-	--app_theme_main_select_color4: var(--app_dark2);
-	--app_theme_main_border_color: var(--app_white2);
-	--app_theme_main_border_color2: var(--app_blue2);
-	--app_theme_main_border_color3: var(--app_white1);
-	--app_theme_main_gradient_color1: var(--app_white);
+	--app_theme_main_shadow_color1: var(--common_app_color_black_transparent1);
+	--app_theme_main_shadow_color2: var(--common_app_color_black_transparent2);
+	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
+	--app_theme_main_shadow_color4: var(--common_app_color_white);
+	--app_theme_main_select_color: var(--common_app_color_white2);
+	--app_theme_main_select_color2: var(--common_app_color_green);
+	--app_theme_main_select_color3: var(--common_app_color_dark);
+	--app_theme_main_select_color4: var(--common_app_color_dark2);
+	--app_theme_main_border_color: var(--common_app_color_white2);
+	--app_theme_main_border_color2: var(--common_app_color_blue2);
+	--app_theme_main_border_color3: var(--common_app_color_white1);
+	--app_theme_main_gradient_color1: var(--common_app_color_white);
 
 	/*entities*/
 	--app_theme_animation_box_shadow_color: var(--app_theme_main_shadow_color4);
@@ -787,10 +787,10 @@ div.ray8 {
 	}
 }
 .crater {
-	background: var(--app_toogle_crater_background_color);
+	background: var(--common_app_icon_toogle_crater_background_color);
 }
 .crater-1 {
-	background: var(--app_toogle_crater1_background_color);
+	background: var(--common_app_icon_toogle_crater1_background_color);
 }
 /*theme sun toggle fixes*/
 .app_theme_sun #app_theme_checkbox.toggle {
@@ -832,8 +832,8 @@ div.ray8 {
 }
 /*app colors*/
 body{
-	--app_spinner_color:var(--app_theme_dialogue_button_color);
-	--app_spinner_background:var(--app_theme_dialogue_background_color);
+	--common_app_color_spinner:var(--app_theme_dialogue_button_color);
+	--common_app_color_background_spinner:var(--app_theme_dialogue_background_color);
 	color: var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
 	caret-color: var(--app_theme_text_color);
@@ -1016,10 +1016,10 @@ border-left: 12px solid var(--app_theme_sun_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2) !important;
 }
 .common_like {
-    color: var(--app_red) !important;
+    color: var(--common_app_color_red) !important;
 }
 .common_unlike{
-	color: var(--app_red) !important;
+	color: var(--common_app_color_red) !important;
 }
 #common_window_info_toolbar{
 	background: var(--app_theme_dialogue_background_color);
