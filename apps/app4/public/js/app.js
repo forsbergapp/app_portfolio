@@ -64,10 +64,89 @@ const app_event_click = event =>{
                     init_map(3);
                     break;
                 }
+                //dialogue user menu
+                case 'common_user_menu':
+                    case 'common_user_menu_logged_in':
+                    case 'common_user_menu_avatar':
+                    case 'common_user_menu_avatar_img':
+                    case 'common_user_menu_logged_out':
+                    case 'common_user_menu_default_avatar':{
+                        common.ComponentRender('common_dialogue_user_menu', 
+                        {   app_id:common.COMMON_GLOBAL.app_id,
+                            user_account_id:common.COMMON_GLOBAL.user_account_id,
+                            common_app_id:common.COMMON_GLOBAL.common_app_id,
+                            data_app_id:common.COMMON_GLOBAL.common_app_id,
+                            username:common.COMMON_GLOBAL.user_account_username,
+                            system_admin:common.COMMON_GLOBAL.system_admin,
+                            current_locale:common.COMMON_GLOBAL.user_locale,
+                            current_timezone:common.COMMON_GLOBAL.user_timezone,
+                            current_direction:common.COMMON_GLOBAL.user_direction,
+                            current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
+                            //functions
+                            function_FFB:common.FFB,
+                            function_get_locales_options:common.get_locales_options,
+                            function_show_message:common.show_message},
+                                                '/common/component/dialogue_user_menu.js')
+                        .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
+                                                            {function_app_theme_update:common.common_theme_update_from_body},
+                                                            '/common/component/app_theme.js'));
+                        break;
+                    }
+                case 'common_dialogue_user_menu_log_out':{
+                    common.user_logoff();
+                    break;
+                }
+                /*Dialogue user start */
+                case 'common_user_start_login_button':{
+                    common.user_login().catch(()=>null);
+                    break;
+                }
+                case 'common_user_start_signup_button':{
+                    common.user_signup();
+                    break;
+                }
+                case 'common_user_start_identity_provider_login':{
+                    const target_row = common.element_row(event.target);
+                    common.ProviderSignIn(target_row.querySelector('.common_login_provider_id').innerHTML);
+                    break;
+                }
+                
             }
         });
     }
-        
+};
+/**
+ * App event change
+ * @param {AppEvent} event 
+ * @returns {void}
+ */
+ const app_event_change = event =>{
+    if (event==null){
+        AppDocument.querySelector('#app').addEventListener('change',(/**@type{AppEvent}*/event) => {
+            app_event_change(event);
+        });
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
+        common.common_event('change',event)
+        .then(()=>{
+            switch (event_target_id){
+                case 'common_dialogue_user_menu_app_select_theme':{
+                    AppDocument.body.className = 'app_theme' + 
+                                                AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value
+                    break;
+                }
+                case 'common_dialogue_user_menu_user_locale_select':{
+                    common.common_translate_ui(event.target.value);
+                    break;
+                }
+                case 'common_dialogue_user_menu_user_arabic_script_select':{
+                    AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').dispatchEvent(new Event('change'));
+                    break;
+                }
+            }
+        });
+    }
 };
 /**
  * Mount app
@@ -79,7 +158,7 @@ const init_map = async (framework=null)=>{
     
     await common.mount_app(framework,
                     {   Click: app_event_click,
-                        Change: null,
+                        Change: app_event_change,
                         KeyDown: null,
                         KeyUp: null,
                         Focus: null,
@@ -103,6 +182,9 @@ const init_map = async (framework=null)=>{
  * @returns {void}
  */
 const init_app = () =>{
+    common.ComponentRender('common_user_account', 
+                            {},
+                            '/common/component/user_account.js');
     APP_GLOBAL.module_leaflet_map_container      ='mapid';
     init_map();
 };
