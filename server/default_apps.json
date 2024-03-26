@@ -20,6 +20,7 @@
                 "APP_ACCESS_SECRET":"", 
                 "APP_ACCESS_EXPIRE":"1h"},
     "PARAMETERS":[
+        {"TEXT_EDIT": "0"},
         {"COPYRIGHT": "©"},
         {"EMAIL": ""},
         {"LINK_TITLE": ""},
@@ -114,6 +115,7 @@
                 "APP_ACCESS_SECRET":"", 
                 "APP_ACCESS_EXPIRE":"1h"},
     "PARAMETERS":[
+        {"TEXT_EDIT": "1"},
         {"COPYRIGHT": "©"},
         {"EMAIL": ""},
         {"LINK_TITLE": ""},
@@ -149,6 +151,7 @@
                 "APP_ACCESS_SECRET":"", 
                 "APP_ACCESS_EXPIRE":"1h"},
     "PARAMETERS":[
+        {"TEXT_EDIT": "1"},
         {"COPYRIGHT": "©"},
         {"EMAIL": ""},
         {"LINK_TITLE": ""},
@@ -260,6 +263,7 @@
                 "APP_ACCESS_SECRET":"", 
                 "APP_ACCESS_EXPIRE":"1h"},
     "PARAMETERS":[
+        {"TEXT_EDIT": "1"},
         {"COPYRIGHT": "©"},
         {"EMAIL": ""},
         {"LINK_TITLE": ""},
@@ -288,6 +292,7 @@
                 "APP_ACCESS_SECRET":"", 
                 "APP_ACCESS_EXPIRE":"1h"},
     "PARAMETERS":[
+        {"TEXT_EDIT": "1"},
         {"COPYRIGHT": "©"},
         {"EMAIL": ""},
         {"LINK_TITLE": ""},
@@ -316,6 +321,7 @@
                 "APP_ACCESS_SECRET":"", 
                 "APP_ACCESS_EXPIRE":"1h"},
     "PARAMETERS":[
+        {"TEXT_EDIT": "0"},
         {"COPYRIGHT": "©"},
         {"EMAIL": ""},
         {"LINK_TITLE": ""},
@@ -343,6 +349,7 @@
                 "APP_ACCESS_SECRET":"", 
                 "APP_ACCESS_EXPIRE":"1h"},
     "PARAMETERS":[
+        {"TEXT_EDIT": "1"},
         {"COPYRIGHT": "©"},
         {"EMAIL": ""},
         {"LINK_TITLE": ""},

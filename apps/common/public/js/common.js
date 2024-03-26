@@ -46,6 +46,7 @@
             app_copyright:string|null,
             app_link_url:string|null,
             app_link_title:string|null,
+            app_text_edit:string|null,
             app_framework:number|null,
             info_link_policy_name:string|null,
             info_link_disclaimer_name:string|null,
@@ -131,6 +132,7 @@ const COMMON_GLOBAL = {
     app_copyright:null,
     app_link_url:null,
     app_link_title:null,
+    app_text_edit:null,
     app_framework:null,
     info_link_policy_name:null,
     info_link_disclaimer_name:null,
@@ -3092,6 +3094,8 @@ const set_app_service_parameters = async parameters => {
     COMMON_GLOBAL.app_copyright= parameters.app_copyright;
     COMMON_GLOBAL.app_link_url= parameters.app_link_url;
     COMMON_GLOBAL.app_link_title= parameters.app_link_title;
+    COMMON_GLOBAL.app_text_edit= parameters.app_text_edit;
+    
     COMMON_GLOBAL.app_framework = parseInt(parameters.app_framework);
 
     //rest 
@@ -3133,9 +3137,7 @@ const set_app_service_parameters = async parameters => {
  * Disable textediting
  * @returns {boolean}
  */
-const disable_textediting = () =>(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && 
-                                COMMON_GLOBAL.rest_at ==null && COMMON_GLOBAL.rest_admin_at ==null) ||
-                                COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id;
+const disable_textediting = () =>COMMON_GLOBAL.app_text_edit=='0';
 /**
  * Common events
  * @param {string} event_type 
@@ -3587,6 +3589,8 @@ const common_event = async (event_type,event) =>{
                 break;
             }
             case 'keydown':{
+                if (event.code=='Enter')
+                    event.preventDefault();
                 if (disable_textediting() &&
                     event.target.classList.contains('common_input') && 
                         (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
