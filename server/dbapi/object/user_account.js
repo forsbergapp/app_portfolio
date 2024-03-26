@@ -97,8 +97,7 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                                     .then(()=>{
                                         //send email UNVERIFIED
                                         sendUserEmail(  app_id, 
-                                                        ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'PARAMETERS')
-                                                            .filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_UNVERIFIED' in parameter)[0].SERVICE_MAIL_TYPE_UNVERIFIED, 
+                                                        ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_UNVERIFIED, 
                                                         ip, 
                                                         user_agent,
                                                         accept_language,
@@ -315,8 +314,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                 //send email for local users only
                 //send email SIGNUP
                 sendUserEmail(  app_id, 
-                                ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'PARAMETERS')
-                                    .filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_SIGNUP' in parameter)[0].SERVICE_MAIL_TYPE_SIGNUP,
+                                ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_SIGNUP,
                                 ip, 
                                 user_agent,
                                 accept_language,
@@ -477,8 +475,7 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
                                 .then(()=>{
                                     //send email PASSWORD_RESET
                                     sendUserEmail(  app_id, 
-                                                    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'PARAMETERS')
-                                                        .filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_PASSWORD_RESET' in parameter)[0].SERVICE_MAIL_TYPE_PASSWORD_RESET,
+                                                    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_PASSWORD_RESET,
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
@@ -813,8 +810,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumb
                                 .then(()=>{
                                     //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                     sendUserEmail(  app_id, 
-                                                    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'PARAMETERS')
-                                                        .filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_CHANGE_EMAIL' in parameter)[0].SERVICE_MAIL_TYPE_CHANGE_EMAIL,
+                                                    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_CHANGE_EMAIL,
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
