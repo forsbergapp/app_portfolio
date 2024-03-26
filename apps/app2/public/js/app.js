@@ -114,8 +114,8 @@ const printTimetable = async () => {
 			<head>
 				<meta charset='UTF-8'>
 				<title></title>
-                <link rel='stylesheet' type='text/css' href='/css/app_report.css' />
-                <link rel='stylesheet' type='text/css' href='/common/css/common.css' />
+                <link rel='stylesheet' type='text/css' href=${AppDocument.querySelector('#app_link_app_report_css').attributes['href'].nodeValue} />
+                <link rel='stylesheet' type='text/css' href=${AppDocument.querySelector('#common_link_common_css').attributes['href'].nodeValue} />
 			</head>
 			<body id="printbody">
 				${whatToPrint.outerHTML}

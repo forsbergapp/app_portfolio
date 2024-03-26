@@ -156,11 +156,11 @@ const render_app_html = async (app_id, locale) =>{
         else
             render_variables.push(['APP_JS_REPORT','']);
         if (ConfigGetApp(app_id, app_id, 'CSS') != '')
-            render_variables.push(['APP_CSS',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'CSS')}'/>`]);
+            render_variables.push(['APP_CSS',`<link id='app_link_app_css' rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'CSS')}'/>`]);
         else
             render_variables.push(['APP_CSS','']);
         if (ConfigGetApp(app_id, app_id, 'CSS_REPORT') != '')
-            render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'CSS_REPORT')}'/>`]);
+            render_variables.push(['APP_CSS_REPORT',`<link id='app_link_app_report_css' rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'CSS_REPORT')}'/>`]);
         else
             render_variables.push(['APP_CSS_REPORT','']);
         if (app_config.MANIFEST == true)
