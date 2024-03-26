@@ -3436,6 +3436,8 @@ const common_event = async (event_type,event) =>{
                         //commented at the moment
                         //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
                         await user_preference_save();
+                        AppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').innerHTML = await get_locales_options();
+                        AppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').value = COMMON_GLOBAL.user_locale;
                         break;
                     }
                     case 'common_dialogue_user_menu_user_timezone_select':{
