@@ -20,8 +20,12 @@ const component = async props => {
      * @param {number|null} remaining 
      */
     const maintenance_countdown = (remaining = null) => {
-        props.common_document.querySelector('#common_maintenance_countdown').innerHTML = remaining;
-        setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
+        if(remaining && remaining <= 0)
+            location.reload();
+        else{
+            props.common_document.querySelector('#common_maintenance_countdown').innerHTML = remaining;
+            setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
+        }
     };    
     const render_template = () =>{
         return template;
