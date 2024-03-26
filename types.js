@@ -370,6 +370,7 @@
  * @property {string|null}  app_copyright
  * @property {string|null}  app_link_url
  * @property {string|null}  app_link_title
+ * @property {string|null}  app_text_edit
  * @property {number}       app_framework
  * @property {string}       app_datatoken
  * @property {string}       locale
