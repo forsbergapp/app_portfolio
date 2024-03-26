@@ -2446,13 +2446,16 @@ const map_show_search_on_map = data =>{
 /**
  * Map control toogle expand
  * @param {string} item 
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const map_control_toggle_expand = item =>{
+const map_control_toggle_expand = async item =>{
     let style_display;
     if (AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
-        AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display =='')
-        style_display = 'block';
+        AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display ==''){
+            style_display = 'block';
+            if (item == 'search')
+                AppDocument.querySelector('#common_module_leaflet_select_country').innerHTML = await map_country(COMMON_GLOBAL.user_locale);
+        }
     else
         style_display = 'none';
     AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
