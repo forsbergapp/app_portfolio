@@ -881,12 +881,12 @@ const ComponentRender = async (div,props, component_path) => {
         }
         //post function
         if (component.props.function_post){
-        if (div == 'mapid'){
-            COMMON_GLOBAL.module_leaflet =              component.data.library_Leaflet;
-            COMMON_GLOBAL.module_leaflet_session_map =  component.data.module_map;
-            COMMON_GLOBAL.module_leaflet_map_styles =   component.data.map_layer_array;
-        }
-        component.props.function_post();
+            if (component_path == '/common/component/module_leaflet.js'){
+                COMMON_GLOBAL.module_leaflet =              component.data.library_Leaflet;
+                COMMON_GLOBAL.module_leaflet_session_map =  component.data.module_map;
+                COMMON_GLOBAL.module_leaflet_map_styles =   component.data.map_layer_array;
+            }
+            component.props.function_post();
         }
         return component.data;
     }
