@@ -1,240 +1,240 @@
 :root {
 	/*app colors*/	
-	--app_king: #32398D;
-	--app_prince: #755FBE;
-	--app_princess:#E195CB;
-	--app_blue1: rgb(81, 171, 255);
-	--app_blue2: rgb(197 227 255);
-	--app_black: #404040;
-	--app_black_transparent1: rgba(0,0,0,0.2);
-	--app_black_transparent2: rgba(0,0,0,0.3);
-	--app_cafe_latte: #584f46;
-	--app_cafe_latte2: #3A3632;
-	--app_cafe_latte3: #d2b88f;
-	--app_dark: rgb(0 2 70);
-	--app_dark2: rgb(68, 68, 68);
-	--app_dark3: #2b2b32;
-	--app_dark4: #1c1c1f;
-	--app_darkgrey: #333;
-	--app_green: #6ab344;
-	--app_green2: #6ddc5f;
-	--app_grey:#a3a3a3;
-	--app_gold: #a49775;
-	--app_light :#f5f5f5;
-	--app_lightgrey: #ddd;
-	--app_lightgrey2: #dedede;
-	--app_lightred: #FAEAF1;
-	--app_lightgreen: #F7FFFF;
-	--app_lightyellow: #FFFFF9;
-	--app_red: #d82139;
-	--app_shadow1: rgba(0,0,0,.2);
-	--app_shadow2: rgba(0,0,0,0.19);
-	--app_shadow3: rgba(0,0,0,0.4);
-	--app_yellow: yellow;
-	--app_white: white;
-	--app_white1: #fefefe;
-	--app_white2: #dedede;
-	--app_white3: #f2f2f2;
-	--app_white4: #e2e2e2;
-	--app_white_transparent: rgb(255,255,255,0.25);
-	--app_spinner_color:var(--app_blue1);
-	--app_spinner_background:var(--app_light);
+	--common_app_color_king: #32398D;
+	--common_app_color_prince: #755FBE;
+	--common_app_color_princess:#E195CB;
+	--common_app_color_blue1: rgb(81, 171, 255);
+	--common_app_color_blue2: rgb(197 227 255);
+	--common_app_color_black: #404040;
+	--common_app_color_black_transparent1: rgba(0,0,0,0.2);
+	--common_app_color_black_transparent2: rgba(0,0,0,0.3);
+	--common_app_color_cafe_latte: #584f46;
+	--common_app_color_cafe_latte2: #3A3632;
+	--common_app_color_cafe_latte3: #d2b88f;
+	--common_app_color_dark: rgb(0 2 70);
+	--common_app_color_dark2: rgb(68, 68, 68);
+	--common_app_color_dark3: #2b2b32;
+	--common_app_color_dark4: #1c1c1f;
+	--common_app_color_darkgrey: #333;
+	--common_app_color_green: #6ab344;
+	--common_app_color_green2: #6ddc5f;
+	--common_app_color_grey:#a3a3a3;
+	--common_app_color_gold: #a49775;
+	--common_app_color_light :#f5f5f5;
+	--common_app_color_lightgrey: #ddd;
+	--common_app_color_lightgrey2: #dedede;
+	--common_app_color_lightred: #FAEAF1;
+	--common_app_color_lightgreen: #F7FFFF;
+	--common_app_color_lightyellow: #FFFFF9;
+	--common_app_color_red: #d82139;
+	--common_app_color_shadow1: rgba(0,0,0,.2);
+	--common_app_color_shadow2: rgba(0,0,0,0.19);
+	--common_app_color_shadow3: rgba(0,0,0,0.4);
+	--common_app_color_yellow: yellow;
+	--common_app_color_white: white;
+	--common_app_color_white1: #fefefe;
+	--common_app_color_white2: #dedede;
+	--common_app_color_white3: #f2f2f2;
+	--common_app_color_white4: #e2e2e2;
+	--common_app_color_white_transparent: rgb(255,255,255,0.25);
+	--common_app_color_spinner:var(--common_app_color_blue1);
+	--common_app_color_background_spinner:var(--common_app_color_light);
 	/*report colors*/
-	--report_black: #404040;
-	--report_blue: #1da1f2;
-	--report_blue2: #006dbf;
-	--report_darkblue: #012d74;
-	--report_gold: #cea87a;
-	--report_lightblue: #5cacf6;
-	--report_lightblue2: #afd2fa;
-	--report_lightblue3: #daebff;
-	--report_lightgold: #d2c196;
-	--report_pink: #ffd2e3;
-	--report_pink2: #f2c2d3;
-	--report_shadow1: rgb(0 0 0 / 20%);
-	--report_shadow2: rgb(0 0 0 / 19%);
-	--report_white: white;
+	--common_report_color_black: #404040;
+	--common_report_color_blue: #1da1f2;
+	--common_report_color_blue2: #006dbf;
+	--common_report_color_darkblue: #012d74;
+	--common_report_color_gold: #cea87a;
+	--common_report_color_lightblue: #5cacf6;
+	--common_report_color_lightblue2: #afd2fa;
+	--common_report_color_lightblue3: #daebff;
+	--common_report_color_lightgold: #d2c196;
+	--common_report_color_pink: #ffd2e3;
+	--common_report_color_pink2: #f2c2d3;
+	--common_report_color_shadow1: rgb(0 0 0 / 20%);
+	--common_report_color_shadow2: rgb(0 0 0 / 19%);
+	--common_report_color_white: white;
 	/*icons ui*/
-	--app_apps:                 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='11px' height='11px' viewBox='0 0 24 24' enable-background='new 0 0 24 24'><path d='M10,2H3C2.4,2,2,2.4,2,3v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C11,2.4,10.6,2,10,2z M10,13H3c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C11,13.4,10.6,13,10,13z M21,2h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z M21,13h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C22,13.4,21.6,13,21,13z'/></svg>");
-    --app_maintenance:          '⚒';
-    --app_alert:                '🚨';
-    --app_mobile:               '\f3cf';
-    --app_save:                 '\f0c7';
-    --app_add:                  '\2b';
-    --app_delete:               '\f2ed';
-    --app_update:               '\f0c7';
-    --app_edit:                 '\f044';
-    --app_lov:                  '\f139';
-	--app_select_circle:        '\f13a';
-	--app_select:        		'\f078';
-    --app_send:                 '\f1d8';
-    --app_sendmail:             '\f0e0';
-    --app_email:                '\f0e0';
-    --app_settings:             '\f013';
-    --app_chat:                 '\f075';
-    --app_log:                  '\f03a';
-    --app_chart:                '\f200';
-    --app_server:               '\f233';
-    --app_route:                '\f0e8';
-    --app_database:             '\f1c0';
-    --app_database_schema:      '\f0e8';
-    --app_users:                '\f0c0';
-    --app_user_connections:     '\e595';
-    --app_database_started:     '\f205';
-    --app_database_notstarted:  '\f204';
-    --app_database_calc:        '\f1ec';
-    --app_backup:               '\f0ed';
-    --app_install:              '\f019';
-    --app_file_path:            '\f802';
-    --app_broadcast:            '\f519';
-    --app_restore:              '\f0ee';
-    --app_checkbox_checked:     '\f14a';
-    --app_checkbox_empty:       '\f0c8';
-    --app_info:                 '\f05a';
-    --app_close:                '\f058';
-    --app_online:               '\f111';
-    --app_search:               '\f002';
-    --app_menu_open:            '☰';
-    --app_menu_close:           '\f410';
-    --app_broadcast_close:      '\f410';
-    --app_first:                '\f048';
-    --app_previous:             '\f0d9';
-    --app_next:                 '\f0da';
-    --app_last:                 '\f051';
-    --app_slider_left:          '\f137';
-    --app_slider_right:         '\f138';
-    --app_align_left:           '\f036';
-    --app_align_center:         '\f037';
-    --app_align_right:          '\f038';
-    --app_cancel:               '\f057';
-    --app_zoomout:              '\f010';
-    --app_zoomin:               '\f00e';
-    --app_left:                 '\f359';
-    --app_right:                '\f35a';
-    --app_up:                   '\f35b';
-    --app_down:                 '\f358';
-    --app_remove:               '\f00d';
-    --app_html:                 '\f1c9';
-    --app_copy:                 '\f0c5';
-    --app_pdf:                  '\f1c1';
-    --app_link:                 '\f0c1';
-    --app_print:                '\f02f';
-    --app_private:              '\f023';
-    --app_papersize:            '\f15b';
-    --app_highlight:            '🔦';
-    --app_show:                 '\f06e';
-    --app_notes:                '\f249';
-    --app_login:                '\f2f6';
-    --app_logoff:               '\f2f5';
-    --app_signup:               '\f4ff';
-    --app_forgot:               '\f059';
-    --app_question:             '\f059';
-    --app_timetable:            '\f073';
-    --app_role:                 '\f630';
-    --app_active:               '\f205';
-    --app_inactive:             '\f204';
+	--common_app_icon_apps:                 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='11px' height='11px' viewBox='0 0 24 24' enable-background='new 0 0 24 24'><path d='M10,2H3C2.4,2,2,2.4,2,3v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C11,2.4,10.6,2,10,2z M10,13H3c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C11,13.4,10.6,13,10,13z M21,2h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z M21,13h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C22,13.4,21.6,13,21,13z'/></svg>");
+    --common_app_icon_maintenance:          '⚒';
+    --common_app_icon_alert:                '🚨';
+    --common_app_icon_mobile:               '\f3cf';
+    --common_app_icon_save:                 '\f0c7';
+    --common_app_icon_add:                  '\2b';
+    --common_app_icon_delete:               '\f2ed';
+    --common_app_icon_update:               '\f0c7';
+    --common_app_icon_edit:                 '\f044';
+    --common_app_icon_lov:                  '\f139';
+	--common_app_icon_select_circle:        '\f13a';
+	--common_app_icon_select:        		'\f078';
+    --common_app_icon_send:                 '\f1d8';
+    --common_app_icon_sendmail:             '\f0e0';
+    --common_app_icon_email:                '\f0e0';
+    --common_app_icon_settings:             '\f013';
+    --common_app_icon_chat:                 '\f075';
+    --common_app_icon_log:                  '\f03a';
+    --common_app_icon_chart:                '\f200';
+    --common_app_icon_server:               '\f233';
+    --common_app_icon_route:                '\f0e8';
+    --common_app_icon_database:             '\f1c0';
+    --common_app_icon_database_schema:      '\f0e8';
+    --common_app_icon_users:                '\f0c0';
+    --common_app_icon_user_connections:     '\e595';
+    --common_app_icon_database_started:     '\f205';
+    --common_app_icon_database_notstarted:  '\f204';
+    --common_app_icon_database_calc:        '\f1ec';
+    --common_app_icon_backup:               '\f0ed';
+    --common_app_icon_install:              '\f019';
+    --common_app_icon_file_path:            '\f802';
+    --common_app_icon_broadcast:            '\f519';
+    --common_app_icon_restore:              '\f0ee';
+    --common_app_icon_checkbox_checked:     '\f14a';
+    --common_app_icon_checkbox_empty:       '\f0c8';
+    --common_app_icon_info:                 '\f05a';
+    --common_app_icon_close:                '\f058';
+    --common_app_icon_online:               '\f111';
+    --common_app_icon_search:               '\f002';
+    --common_app_icon_menu_open:            '☰';
+    --common_app_icon_menu_close:           '\f410';
+    --common_app_icon_broadcast_close:      '\f410';
+    --common_app_icon_first:                '\f048';
+    --common_app_icon_previous:             '\f0d9';
+    --common_app_icon_next:                 '\f0da';
+    --common_app_icon_last:                 '\f051';
+    --common_app_icon_slider_left:          '\f137';
+    --common_app_icon_slider_right:         '\f138';
+    --common_app_icon_align_left:           '\f036';
+    --common_app_icon_align_center:         '\f037';
+    --common_app_icon_align_right:          '\f038';
+    --common_app_icon_cancel:               '\f057';
+    --common_app_icon_zoomout:              '\f010';
+    --common_app_icon_zoomin:               '\f00e';
+    --common_app_icon_left:                 '\f359';
+    --common_app_icon_right:                '\f35a';
+    --common_app_icon_up:                   '\f35b';
+    --common_app_icon_down:                 '\f358';
+    --common_app_icon_remove:               '\f00d';
+    --common_app_icon_html:                 '\f1c9';
+    --common_app_icon_copy:                 '\f0c5';
+    --common_app_icon_pdf:                  '\f1c1';
+    --common_app_icon_link:                 '\f0c1';
+    --common_app_icon_print:                '\f02f';
+    --common_app_icon_private:              '\f023';
+    --common_app_icon_papersize:            '\f15b';
+    --common_app_icon_highlight:            '🔦';
+    --common_app_icon_show:                 '\f06e';
+    --common_app_icon_notes:                '\f249';
+    --common_app_icon_login:                '\f2f6';
+    --common_app_icon_logoff:               '\f2f5';
+    --common_app_icon_signup:               '\f4ff';
+    --common_app_icon_forgot:               '\f059';
+    --common_app_icon_question:             '\f059';
+    --common_app_icon_timetable:            '\f073';
+    --common_app_icon_role:                 '\f630';
+    --common_app_icon_active:               '\f205';
+    --common_app_icon_inactive:             '\f204';
     
-    --app_sum:                  '∑';
-    --app_home:                 '\f015';
-    --app_type:                 '\f059';
-    --app_internet:             '\f0ac';
-    --app_shield:               '\f132';
-    --app_browser:              '\f2d2';
-    --app_fullscreen:           '⛶';
-    --app_init:                 '⭐';
-    --app_vue:                  '\f41f';
-    --app_react:                '\f41b';
-    --app_javascript:           '\f3b9';
+    --common_app_icon_sum:                  '∑';
+    --common_app_icon_home:                 '\f015';
+    --common_app_icon_type:                 '\f059';
+    --common_app_icon_internet:             '\f0ac';
+    --common_app_icon_shield:               '\f132';
+    --common_app_icon_browser:              '\f2d2';
+    --common_app_icon_fullscreen:           '⛶';
+    --common_app_icon_init:                 '⭐';
+    --common_app_icon_vue:                  '\f41f';
+    --common_app_icon_react:                '\f41b';
+    --common_app_icon_javascript:           '\f3b9';
 
-	--user:                     '\f007';
-    --username:                 '\41\42\43';
-    --user_last_logontime:      '\f2f6';
-    --user_account_created:     '\f4c6';
-    --user_account_modified:    '\f044';
-    --user_password:            '\f084';
-    --user_account_reminder:    '\f059';
-    --user_avatar_edit:         '\f030';
-    --user_avatar:              '\f2bd';
-    --user_follow_user:         '\f234';
-    --user_followed_user:       '\f4fc';
-    --user_like:                '\f004';
-    --user_unlike:              '\f7a9';
-    --user_views:               '\f06e';
-    --user_follows:             '\f500';
-    --user_followed:            '\f0c0';
-    --user_bio:                 '\f2c2\41\42\43';
-    --user_profile:             '\f2c2';
-    --user_profile_top:         '\f5a2';
-	--user_system_admin: 		'\f4fe';
+	--common_app_icon_user:                     '\f007';
+    --common_app_icon_username:                 '\41\42\43';
+    --common_app_icon_user_last_logontime:      '\f2f6';
+    --common_app_icon_user_account_created:     '\f4c6';
+    --common_app_icon_user_account_modified:    '\f044';
+    --common_app_icon_user_password:            '\f084';
+    --common_app_icon_user_account_reminder:    '\f059';
+    --common_app_icon_user_avatar_edit:         '\f030';
+    --common_app_icon_user_avatar:              '\f2bd';
+    --common_app_icon_user_follow_user:         '\f234';
+    --common_app_icon_user_followed_user:       '\f4fc';
+    --common_app_icon_user_like:                '\f004';
+    --common_app_icon_user_unlike:              '\f7a9';
+    --common_app_icon_user_views:               '\f06e';
+    --common_app_icon_user_follows:             '\f500';
+    --common_app_icon_user_followed:            '\f0c0';
+    --common_app_icon_user_bio:                 '\f2c2\41\42\43';
+    --common_app_icon_user_profile:             '\f2c2';
+    --common_app_icon_user_profile_top:         '\f5a2';
+	--common_app_icon_user_system_admin: 		'\f4fe';
 
-    --provider:                 '\f5ab';
-    --provider_id:              '\f2c1';
+    --common_app_icon_provider:                 '\f5ab';
+    --common_app_icon_provider_id:              '\f2c1';
 
-    --gps:                      '\f3c5';
-    --gps_country:              '\f57c';
-    --gps_city:                 '\f64f';
-    --gps_popular_place:        '\f005';
-    --gps_position:             '\f276';
-    --gps_high_latitude:        '\f0ac\f2dc';
-    --map_my_location:          '\f601';
-    --map_layer:                '\f5fd';
+    --common_app_icon_gps:                      '\f3c5';
+    --common_app_icon_gps_country:              '\f57c';
+    --common_app_icon_gps_city:                 '\f64f';
+    --common_app_icon_gps_popular_place:        '\f005';
+    --common_app_icon_gps_position:             '\f276';
+    --common_app_icon_gps_high_latitude:        '\f0ac\f2dc';
+    --common_app_icon_map_my_location:          '\f601';
+    --common_app_icon_map_layer:                '\f5fd';
 
-    --regional:                 '\f0ac';
-    --regional_day:             '\f185';
-    --regional_month:           '\f186';
-    --regional_year:            '\f073';
-    --regional_weekday:         '\f784';
-    --regional_locale:          '\f1ab';
-    --regional_timezone:        '\f0ac';
-    --regional_calendar:        '\f073';
-    --regional_numbersystem:    '\31\32\33';
-    --regional_direction:       '\f362';
-    --regional_script:          '\f70e';
-    --regional_calendartype:    '\f073';
-    --regional_calendar_hijri_type:'\f073';
-    --regional_timeformat:      '\31\32/\32\34';
+    --common_app_icon_regional:                 '\f0ac';
+    --common_app_icon_regional_day:             '\f185';
+    --common_app_icon_regional_month:           '\f186';
+    --common_app_icon_regional_year:            '\f073';
+    --common_app_icon_regional_weekday:         '\f784';
+    --common_app_icon_regional_locale:          '\f1ab';
+    --common_app_icon_regional_timezone:        '\f0ac';
+    --common_app_icon_regional_calendar:        '\f073';
+    --common_app_icon_regional_numbersystem:    '\31\32\33';
+    --common_app_icon_regional_direction:       '\f362';
+    --common_app_icon_regional_script:          '\f70e';
+    --common_app_icon_regional_calendartype:    '\f073';
+    --common_app_icon_regional_calendar_hijri_type:'\f073';
+    --common_app_icon_regional_timeformat:      '\31\32/\32\34';
 
-    --sky_cloud:                '\f0c2';
-    --sky_sunrise:              '\f185\f30c';
-	--sky_midday:               '\f185';
-    --sky_afternoon:            '\f6c4';
-    --sky_sunset:               '\f185\f309';
-    --sky_night:                '\f6c3';
-    --sky_midnight:             '\f6c3';
+    --common_app_icon_sky_cloud:                '\f0c2';
+    --common_app_icon_sky_sunrise:              '\f185\f30c';
+	--common_app_icon_sky_midday:               '\f185';
+    --common_app_icon_sky_afternoon:            '\f6c4';
+    --common_app_icon_sky_sunset:               '\f185\f309';
+    --common_app_icon_sky_night:                '\f6c3';
+    --common_app_icon_sky_midnight:             '\f6c3';
 
-    --misc_model:               url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-2.5 -2.5 65 65'><path d='M53,41V29H31V19h7V3H22v16h7v10H7v12H0v16h16V41H9V31h20v10h-7v16h16V41h-7V31h20v10h-7v16h16V41H53z M24,5h12v12H24V5z M14,55H2V43h12V55z M36,55H24V43h12V55z M58,55H46V43h12V55z'/></svg>");
-    --misc_design:              '\f53f';
-    --misc_image:               '\f03e';
-    --misc_text:                '\f034';
-    --misc_text_prayer:         '\f683';
-    --misc_second:              '\32';
-    --misc_title:               '\f1ea';
-    --misc_book:                '\f02d';
-    --misc_food:                '\f2e7';
-    --misc_prayer:              '\f683';
-    --misc_calling:             '🗣';
-	--misc_ban:                 '\f05e';
+    --common_app_icon_misc_model:               url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-2.5 -2.5 65 65'><path d='M53,41V29H31V19h7V3H22v16h7v10H7v12H0v16h16V41H9V31h20v10h-7v16h16V41h-7V31h20v10h-7v16h16V41H53z M24,5h12v12H24V5z M14,55H2V43h12V55z M36,55H24V43h12V55z M58,55H46V43h12V55z'/></svg>");
+    --common_app_icon_misc_design:              '\f53f';
+    --common_app_icon_misc_image:               '\f03e';
+    --common_app_icon_misc_text:                '\f034';
+    --common_app_icon_misc_text_prayer:         '\f683';
+    --common_app_icon_misc_second:              '\32';
+    --common_app_icon_misc_title:               '\f1ea';
+    --common_app_icon_misc_book:                '\f02d';
+    --common_app_icon_misc_food:                '\f2e7';
+    --common_app_icon_misc_prayer:              '\f683';
+    --common_app_icon_misc_calling:             '🗣';
+	--common_app_icon_misc_ban:                 '\f05e';
 
-	--infinite:                 '∞';
+	--common_app_icon_infinite:                 '∞';
 
-    --message_fail:             '\f057';
-    --message_success:          '\f058';
-    --message_error:            '\f00d';
-    --message_text:             '\41\42\43';
+    --common_app_icon_message_fail:             '\f057';
+    --common_app_icon_message_success:          '\f058';
+    --common_app_icon_message_error:            '\f00d';
+    --common_app_icon_message_text:             '\41\42\43';
 	/*icons app*/
-	--app_verification_code:    '❂❂❂❂❂❂';
+	--common_app_icon_verification_code:    	'❂❂❂❂❂❂';
 	
 	/*fonts*/
-	--global_font_languages_1:  "Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 
-								"Noto Sans Bengali", "Noto Sans Telugu","Noto Sans Tamil",
-								"Noto Sans Javanese", "Noto Sans Gujarati", "Noto Sans Kannada", 
-								"Noto Sans Malayalam", "Noto Sans Sundanese", "Noto Sans Tagalog",
-								"Noto Sans Sinhala";
+	--common_global_font_languages_1:  	"Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 
+										"Noto Sans Bengali", "Noto Sans Telugu","Noto Sans Tamil",
+										"Noto Sans Javanese", "Noto Sans Gujarati", "Noto Sans Kannada", 
+										"Noto Sans Malayalam", "Noto Sans Sundanese", "Noto Sans Tagalog",
+										"Noto Sans Sinhala";
 
-	--global_font_symbols:  "Noto Music", "Noto Sans Math", "Noto Emoji", "Noto Sans Indic Siyaq Numbers", 
-							"Noto Sans Symbols", "Noto Sans Symbols 2", 
-							"Noto Sans Anatolian Hieroglyphs","Noto Sans Egyptian Hieroglyphs";
-	--global_font_languages_2:  "Noto Sans Samaritan", "Noto Sans N'Ko", "Noto Sans Indic Devanagari", 
+	--common_global_font_symbols:  	"Noto Music", "Noto Sans Math", "Noto Emoji", "Noto Sans Indic Siyaq Numbers", 
+									"Noto Sans Symbols", "Noto Sans Symbols 2", 
+									"Noto Sans Anatolian Hieroglyphs","Noto Sans Egyptian Hieroglyphs";
+	--common_global_font_languages_2:  "Noto Sans Samaritan", "Noto Sans N'Ko", "Noto Sans Indic Devanagari", 
 								"Noto Sans Gurmukhi", "Noto Sans Tamil Supplement", "Noto Sans Oriya", 
 								"Noto Sans Myanmar", "Noto Sans Georgian", "Noto Sans Armenian", 
 								"Noto Sans Gothic", "Noto Sans Tai Viet", 
@@ -274,41 +274,41 @@
 								"Noto Sans Tai Le", "Noto Sans Nabataean", "Noto Sans Rejang", 
 								"Noto Sans Manichaean", "Noto Sans Meroitic", "Noto Sans Lydian", 
 								"Noto Sans Modi";
-	--global_font_arabic_sans: 		'Noto Sans', 'Noto Sans Arabic', 'Noto Sans JP', 
+	--common_global_font_arabic_sans: 		'Noto Sans', 'Noto Sans Arabic', 'Noto Sans JP', 
 								    'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK', 
-								    var(--global_font_languages_1), var(--global_font_symbols), var(--global_font_languages_2);
-	--global_font_arabic_kufi: 		'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 
+								    var(--common_global_font_languages_1), var(--common_global_font_symbols), var(--common_global_font_languages_2);
+	--common_global_font_arabic_kufi: 		'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 
 									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
-									var(--global_font_languages_1), var(--global_font_symbols), var(--global_font_languages_2);
-	--global_font_arabic_nashk: 	'Noto Sans', 'Noto Nashk Arabic', 'Noto Sans JP', 
+									var(--common_global_font_languages_1), var(--common_global_font_symbols), var(--common_global_font_languages_2);
+	--common_global_font_arabic_nashk: 	'Noto Sans', 'Noto Nashk Arabic', 'Noto Sans JP', 
 									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
-									var(--global_font_languages_1), var(--global_font_symbols), var(--global_font_languages_2);
-	--global_font_arabic_nastaliq: 	'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 
+									var(--common_global_font_languages_1), var(--common_global_font_symbols), var(--common_global_font_languages_2);
+	--common_global_font_arabic_nastaliq: 	'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 
 									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
-									var(--global_font_languages_1), var(--global_font_symbols), var(--global_font_languages_2);
+									var(--common_global_font_languages_1), var(--common_global_font_symbols), var(--common_global_font_languages_2);
 }
 
 /*default font*/
 body
 {
-	font-family: var(--global_font_arabic_sans);
+	font-family: var(--common_global_font_arabic_sans);
 }
 /*Arabic NotoSans, Arabic*/
 body.font_arabic_sans_kufi
 {
-	font-family: var(--global_font_arabic_sans);
+	font-family: var(--common_global_font_arabic_sans);
 }
 /*Arabic NotoKufi*/
 body.font_arabic_kufi{
-	font-family: var(--global_font_arabic_kufi);
+	font-family: var(--common_global_font_arabic_kufi);
 }
 /*Arabic NotoNashk*/
 body.font_arabic_nashk{
-	font-family: var(--global_font_arabic_nashk);
+	font-family: var(--common_global_font_arabic_nashk);
 }
 /*Arabic NotoNastaliq*/
 body.font_arabic_nastaliq{
-	font-family: var(--global_font_arabic_nastaliq);
+	font-family: var(--common_global_font_arabic_nastaliq);
 }
 body.font_arabic_nastaliq select,
 body.font_arabic_nastaliq .common_input{
@@ -384,7 +384,7 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	padding-top:20px;
 	padding-bottom:20px;
 	font-weight: bold;
-	color: var(--app_blue1);
+	color: var(--common_app_color_blue1);
 	font-size: 2em;
 }
 
@@ -410,7 +410,7 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	height: 100px;
 	border-radius:4px;
 	overflow: hidden;
-	background-color:var(--app_white);
+	background-color:var(--common_app_color_white);
 	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
 
@@ -445,7 +445,7 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 #common_broadcast_footer{
 	display: flex;
 	justify-content: space-between;
-	background-color:var(--app_blue1);
+	background-color:var(--common_app_color_blue1);
 }
 #common_broadcast_info_logo {
 	background-image: url('/common/images/logo_broadcast.png');
@@ -454,8 +454,8 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	background-repeat: no-repeat;
 	width:34px;
 	height:34px;
-	background-color: var(--app_white);
-	border: 2px solid var(--app_white);
+	background-color: var(--common_app_color_white);
+	border: 2px solid var(--common_app_color_white);
 }
 #common_broadcast_info_title {
 	height: 35px;

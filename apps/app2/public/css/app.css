@@ -1,121 +1,121 @@
 /*APP */
 
-#info_close::before{										content:var(--app_close)}
-#scan_open_mobile_close::before{							content:var(--app_close)}
-#scan_open_mobile_title1::before{							content:var(--app_mobile)}
-#profile_main_btn_user_settings::before{					content:var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year)}
-#profile_main_btn_user_setting_likes_user_setting::before{	content:var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year) ' ' var(--user_follows)}
-#profile_main_btn_user_setting_liked_user_setting::before{	content:var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year) ' ' var(--user_followed)}
+#info_close::before{										content:var(--common_app_icon_close)}
+#scan_open_mobile_close::before{							content:var(--common_app_icon_close)}
+#scan_open_mobile_title1::before{							content:var(--common_app_icon_mobile)}
+#profile_main_btn_user_settings::before{					content:var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
+#profile_main_btn_user_setting_likes_user_setting::before{	content:var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year) ' ' var(--common_app_icon_user_follows)}
+#profile_main_btn_user_setting_liked_user_setting::before{	content:var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year) ' ' var(--common_app_icon_user_followed)}
     
-#profile_user_settings_day::before{							content:var(--regional_day)}
-#profile_user_settings_month::before{						content:var(--regional_month)}
-#profile_user_settings_year::before{						content:var(--regional_year)}
+#profile_user_settings_day::before{							content:var(--common_app_icon_regional_day)}
+#profile_user_settings_month::before{						content:var(--common_app_icon_regional_month)}
+#profile_user_settings_year::before{						content:var(--common_app_icon_regional_year)}
 
-#profile_top_row2_1::before{								content:var(--user_like) ' ' var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year)}
-#profile_top_row2_2::before{								content:var(--user_views) ' ' var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year)}
+#profile_top_row2_1::before{								content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
+#profile_top_row2_2::before{								content:var(--common_app_icon_user_views) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
 
-#profile_user_settings_info_likes::before{					content:var(--user_like)}
-#profile_user_settings_info_views::before{					content:var(--user_views)}
+#profile_user_settings_info_likes::before{					content:var(--common_app_icon_user_like)}
+#profile_user_settings_info_views::before{					content:var(--common_app_icon_user_views)}
 
-#tab_nav_1::before{											content:var(--regional)}
-#tab_nav_2::before{											content:var(--gps)}
-#tab_nav_3::before{											content:var(--misc_design)}
-#tab_nav_4::before{											content:var(--misc_image)}
-#tab_nav_5::before{											content:var(--misc_text)}
-#tab_nav_6::before{											content:var(--misc_prayer)}
+#tab_nav_1::before{											content:var(--common_app_icon_regional)}
+#tab_nav_2::before{											content:var(--common_app_icon_gps)}
+#tab_nav_3::before{											content:var(--common_app_icon_misc_design)}
+#tab_nav_4::before{											content:var(--common_app_icon_misc_image)}
+#tab_nav_5::before{											content:var(--common_app_icon_misc_text)}
+#tab_nav_6::before{											content:var(--common_app_icon_misc_prayer)}
 
-#setting_icon_regional_locale::before{						content:var(--regional_locale)}
-#setting_icon_regional_timezone_current::before{			content:var(--regional_timezone) ' ' var(--gps_position)}
-#setting_icon_regional_timezone::before{					content:var(--regional_timezone) ' ' var(--regional_calendar)}
-#setting_icon_regional_numbersystem::before{				content:var(--regional_numbersystem)}
-#setting_icon_regional_direction::before{					content:var(--regional_direction)}
-#setting_icon_regional_locale_second::before{				content:var(--regional_locale) ' ' var(--misc_second)}
-#setting_icon_regional_coltitle::before{					content:var(--misc_title)}
-#setting_icon_regional_arabic_script::before{				content:var(--regional_script)}
-#setting_icon_regional_calendartype::before{				content:var(--regional_calendar)}
-#setting_icon_regional_calendar_hijri_type::before{			content:var(--regional_calendar_hijri_type)}
+#setting_icon_regional_locale::before{						content:var(--common_app_icon_regional_locale)}
+#setting_icon_regional_timezone_current::before{			content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_gps_position)}
+#setting_icon_regional_timezone::before{					content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_regional_calendar)}
+#setting_icon_regional_numbersystem::before{				content:var(--common_app_icon_regional_numbersystem)}
+#setting_icon_regional_direction::before{					content:var(--common_app_icon_regional_direction)}
+#setting_icon_regional_locale_second::before{				content:var(--common_app_icon_regional_locale) ' ' var(--common_app_icon_misc_second)}
+#setting_icon_regional_coltitle::before{					content:var(--common_app_icon_misc_title)}
+#setting_icon_regional_arabic_script::before{				content:var(--common_app_icon_regional_script)}
+#setting_icon_regional_calendartype::before{				content:var(--common_app_icon_regional_calendar)}
+#setting_icon_regional_calendar_hijri_type::before{			content:var(--common_app_icon_regional_calendar_hijri_type)}
 
-#setting_icon_gps_popular_place::before{					content:var(--gps_popular_place)}
-#setting_icon_gps_place::before{							content:var(--gps_position)}
+#setting_icon_gps_popular_place::before{					content:var(--common_app_icon_gps_popular_place)}
+#setting_icon_gps_place::before{							content:var(--common_app_icon_gps_position)}
 
-#setting_icon_design_theme_day::before{						content:var(--regional_day)}
-#setting_icon_design_theme_month::before{					content:var(--regional_month)}
-#setting_icon_design_theme_year::before{					content:var(--regional_year)}
-#setting_icon_design_papersize::before{						content:var(--app_papersize)}
-#setting_icon_design_highlight_row::before{					content:var(--app_highlight)}
-#setting_icon_design_show_weekday::before{					content:var(--app_show) ' ' var(--regional_weekday)}
-#setting_icon_design_show_calendartype::before{				content:var(--app_show) ' ' var(--regional_calendartype)}
-#setting_icon_design_show_notes::before{					content:var(--app_show) ' ' var(--app_notes)} 
-#setting_icon_design_show_gps::before{						content:var(--app_show) ' ' var(--gps_position)}
-#setting_icon_design_show_timezone::before{					content:var(--app_show) ' ' var(--regional_timezone)}
+#setting_icon_design_theme_day::before{						content:var(--common_app_icon_regional_day)}
+#setting_icon_design_theme_month::before{					content:var(--common_app_icon_regional_month)}
+#setting_icon_design_theme_year::before{					content:var(--common_app_icon_regional_year)}
+#setting_icon_design_papersize::before{						content:var(--common_app_icon_papersize)}
+#setting_icon_design_highlight_row::before{					content:var(--common_app_icon_highlight)}
+#setting_icon_design_show_weekday::before{					content:var(--common_app_icon_show) ' ' var(--common_app_icon_regional_weekday)}
+#setting_icon_design_show_calendartype::before{				content:var(--common_app_icon_show) ' ' var(--common_app_icon_regional_calendartype)}
+#setting_icon_design_show_notes::before{					content:var(--common_app_icon_show) ' ' var(--common_app_icon_notes)} 
+#setting_icon_design_show_gps::before{						content:var(--common_app_icon_show) ' ' var(--common_app_icon_gps_position)}
+#setting_icon_design_show_timezone::before{					content:var(--common_app_icon_show) ' ' var(--common_app_icon_regional_timezone)}
 
-#slider_prev_day::before{									content:var(--app_slider_left)}
-#slider_next_day::before{									content:var(--app_slider_right)}
-#slider_prev_month::before{									content:var(--app_slider_left)}
-#slider_next_month::before{									content:var(--app_slider_right)}
-#slider_prev_year::before{									content:var(--app_slider_left)}
-#slider_next_year::before{									content:var(--app_slider_right)}
+#slider_prev_day::before{									content:var(--common_app_icon_slider_left)}
+#slider_next_day::before{									content:var(--common_app_icon_slider_right)}
+#slider_prev_month::before{									content:var(--common_app_icon_slider_left)}
+#slider_next_month::before{									content:var(--common_app_icon_slider_right)}
+#slider_prev_year::before{									content:var(--common_app_icon_slider_left)}
+#slider_next_year::before{									content:var(--common_app_icon_slider_right)}
 
 
-#setting_icon_image_header_clear::before{					content:var(--app_remove)}
-#setting_icon_image_footer_clear::before{					content:var(--app_remove)}
-#setting_icon_image_header_img::before{						content:var(--app_search)}
-#setting_icon_image_footer_img::before{						content:var(--app_search)}    
+#setting_icon_image_header_clear::before{					content:var(--common_app_icon_remove)}
+#setting_icon_image_footer_clear::before{					content:var(--common_app_icon_remove)}
+#setting_icon_image_header_img::before{						content:var(--common_app_icon_search)}
+#setting_icon_image_footer_img::before{						content:var(--common_app_icon_search)}    
 
-#setting_icon_text_theme_day::before{						content:var(--regional_day)}
-#setting_icon_text_theme_month::before{						content:var(--regional_month)}
-#setting_icon_text_theme_year::before{						content:var(--regional_year)}
-#setting_icon_text_header_aleft::before{					content:var(--app_align_left)}
-#setting_icon_text_header_acenter::before{					content:var(--app_align_center)}
-#setting_icon_text_header_aright::before{					content:var(--app_align_right)}
-#setting_icon_text_footer_aleft::before{					content:var(--app_align_left)}
-#setting_icon_text_footer_acenter::before{					content:var(--app_align_center)}
-#setting_icon_text_footer_aright::before{					content:var(--app_align_right)}
+#setting_icon_text_theme_day::before{						content:var(--common_app_icon_regional_day)}
+#setting_icon_text_theme_month::before{						content:var(--common_app_icon_regional_month)}
+#setting_icon_text_theme_year::before{						content:var(--common_app_icon_regional_year)}
+#setting_icon_text_header_aleft::before{					content:var(--common_app_icon_align_left)}
+#setting_icon_text_header_acenter::before{					content:var(--common_app_icon_align_center)}
+#setting_icon_text_header_aright::before{					content:var(--common_app_icon_align_right)}
+#setting_icon_text_footer_aleft::before{					content:var(--common_app_icon_align_left)}
+#setting_icon_text_footer_acenter::before{					content:var(--common_app_icon_align_center)}
+#setting_icon_text_footer_aright::before{					content:var(--common_app_icon_align_right)}
 
-#setting_icon_prayer_method::before{						content:var(--misc_book)}
-#setting_icon_prayer_asr::before{							content:var(--misc_book) ' ' var(--sky_afternoon)}
-#setting_icon_prayer_highlatitude::before{					content:var(--gps_high_latitude)}
-#setting_icon_prayer_timeformat::before{					content:var(--regional_timeformat)}
-#setting_icon_prayer_hijri_adjustment::before{				content:var(--app_settings) ' ' var(--regional_calendar)}
-#setting_icon_prayer_report_iqamat_title_fajr::before{		content:var(--app_show) ' ' var(--misc_calling) ' ' var(--misc_prayer) ' ' var(--sky_sunrise)}                                           
-#setting_icon_prayer_report_iqamat_title_dhuhr::before{		content:var(--app_show) ' ' var(--misc_calling) ' ' var(--misc_prayer) ' ' var(--sky_midday)}
-#setting_icon_prayer_report_iqamat_title_asr::before{		content:var(--app_show) ' ' var(--misc_calling) ' ' var(--misc_prayer) ' ' var(--sky_afternoon)}
-#setting_icon_prayer_report_iqamat_title_maghrib::before{	content:var(--app_show) ' ' var(--misc_calling) ' ' var(--misc_prayer) ' ' var(--sky_sunset)}
-#setting_icon_prayer_report_iqamat_title_isha::before{		content:var(--app_show) ' ' var(--misc_calling) ' ' var(--misc_prayer) ' ' var(--sky_night)}
-#setting_icon_prayer_report_show_imsak::before{				content:var(--app_show) ' ' var(--sky_sunrise) ' ' var(--misc_food)}
-#setting_icon_prayer_report_show_sunset::before{			content:var(--app_show) ' ' var(--sky_sunet)}
-#setting_icon_prayer_report_show_midnight::before{			content:var(--app_show) ' ' var(--sky_midnight) ' ' var(--misc_prayer)}
-#setting_icon_prayer_report_show_fast_start_end::before{	content:var(--app_show) ' ' var(--misc_food) ' ' var(--misc_ban)}
+#setting_icon_prayer_method::before{						content:var(--common_app_icon_misc_book)}
+#setting_icon_prayer_asr::before{							content:var(--common_app_icon_misc_book) ' ' var(--common_app_icon_sky_afternoon)}
+#setting_icon_prayer_highlatitude::before{					content:var(--common_app_icon_gps_high_latitude)}
+#setting_icon_prayer_timeformat::before{					content:var(--common_app_icon_regional_timeformat)}
+#setting_icon_prayer_hijri_adjustment::before{				content:var(--common_app_icon_settings) ' ' var(--common_app_icon_regional_calendar)}
+#setting_icon_prayer_report_iqamat_title_fajr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_sunrise)}                                           
+#setting_icon_prayer_report_iqamat_title_dhuhr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_midday)}
+#setting_icon_prayer_report_iqamat_title_asr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_afternoon)}
+#setting_icon_prayer_report_iqamat_title_maghrib::before{	content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_sunset)}
+#setting_icon_prayer_report_iqamat_title_isha::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_night)}
+#setting_icon_prayer_report_show_imsak::before{				content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_sunrise) ' ' var(--common_app_icon_misc_food)}
+#setting_icon_prayer_report_show_sunset::before{			content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_sunet)}
+#setting_icon_prayer_report_show_midnight::before{			content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_midnight) ' ' var(--common_app_icon_misc_prayer)}
+#setting_icon_prayer_report_show_fast_start_end::before{	content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_food) ' ' var(--common_app_icon_misc_ban)}
 
-#setting_icon_user_settings::before{						content:var(--app_settings) ' ' var(--gps_position)}
-#setting_icon_user_url_day::before{							content:var(--regional_day)}
-#setting_icon_user_url_month::before{						content:var(--regional_month)}
-#setting_icon_user_url_year::before{						content:var(--regional_year)}
+#setting_icon_user_settings::before{						content:var(--common_app_icon_settings) ' ' var(--common_app_icon_gps_position)}
+#setting_icon_user_url_day::before{							content:var(--common_app_icon_regional_day)}
+#setting_icon_user_url_month::before{						content:var(--common_app_icon_regional_month)}
+#setting_icon_user_url_year::before{						content:var(--common_app_icon_regional_year)}
     
-#user_day_html::before{										content:var(--app_html)}
-#user_day_pdf::before{										content:var(--app_pdf)}
-#user_month_html::before{									content:var(--app_html)}
-#user_month_pdf::before{									content:var(--app_pdf)}
-#user_year_html::before{									content:var(--app_html)}
-#user_year_pdf::before{										content:var(--app_pdf)}
+#user_day_html::before{										content:var(--common_app_icon_html)}
+#user_day_pdf::before{										content:var(--common_app_icon_pdf)}
+#user_month_html::before{									content:var(--common_app_icon_html)}
+#user_month_pdf::before{									content:var(--common_app_icon_pdf)}
+#user_year_html::before{									content:var(--common_app_icon_html)}
+#user_year_pdf::before{										content:var(--common_app_icon_pdf)}
     
-#setting_btn_user_save::before{								content:var(--app_save)}
-#setting_btn_user_add::before{								content:var(--app_add)}
-#setting_btn_user_delete::before{							content:var(--app_delete)}
+#setting_btn_user_save::before{								content:var(--common_app_icon_save)}
+#setting_btn_user_add::before{								content:var(--common_app_icon_add)}
+#setting_btn_user_delete::before{							content:var(--common_app_icon_delete)}
 
 
-#toolbar_btn_about::before{									content:var(--app_info)}
-#toolbar_btn_print::before{									content:var(--app_print)}
-#toolbar_btn_day::before{									content:var(--regional_day)}
-#toolbar_btn_month::before{									content:var(--regional_month)}
-#toolbar_btn_year::before{									content:var(--regional_year)}
-#toolbar_btn_settings::before{								content:var(--app_settings)}
+#toolbar_btn_about::before{									content:var(--common_app_icon_info)}
+#toolbar_btn_print::before{									content:var(--common_app_icon_print)}
+#toolbar_btn_day::before{									content:var(--common_app_icon_regional_day)}
+#toolbar_btn_month::before{									content:var(--common_app_icon_regional_month)}
+#toolbar_btn_year::before{									content:var(--common_app_icon_regional_year)}
+#toolbar_btn_settings::before{								content:var(--common_app_icon_settings)}
 
-#toolbar_btn_zoomout::before{								content:var(--app_zoomout)}
-#toolbar_btn_zoomin::before{								content:var(--app_zoomin)}
-#toolbar_btn_left::before{									content:var(--app_left)}
-#toolbar_btn_right::before{									content:var(--app_right)}
-#toolbar_btn_search::before{								content:var(--app_search)}
+#toolbar_btn_zoomout::before{								content:var(--common_app_icon_zoomout)}
+#toolbar_btn_zoomin::before{								content:var(--common_app_icon_zoomin)}
+#toolbar_btn_left::before{									content:var(--common_app_icon_left)}
+#toolbar_btn_right::before{									content:var(--common_app_icon_right)}
+#toolbar_btn_search::before{								content:var(--common_app_icon_search)}
 
 
 #paper #common_app_spinner{
@@ -471,7 +471,7 @@
 }
 /*theme live thumbnail fixes*/
 .slides .paper{
-	background-color:var(--report_white);
+	background-color:var(--common_report_color_white);
 	transform: unset !important;
 	transform-origin: unset !important;
 	margin-top: unset !important;
@@ -617,19 +617,19 @@
 	display: inline-block;
 }
 #settings #tab5 #setting_paper_preview_text.font_arabic_sans .display_font{
-	font-family: var(--report_theme_display_font_family), var(--global_font_arabic_sans) !important;
+	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_sans) !important;
 	line-height: initial;
 }
 #settings #tab5 #setting_paper_preview_text.font_arabic_kufi .display_font{
-	font-family: var(--report_theme_display_font_family), var(--global_font_arabic_kufi) !important;
+	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_kufi) !important;
 	line-height: initial;
 }
 #settings #tab5 #setting_paper_preview_text.font_arabic_nashk .display_font{
-	font-family: var(--report_theme_display_font_family), var(--global_font_arabic_nashk) !important;
+	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_nashk) !important;
 	line-height: initial;
 }
 #settings #tab5 #setting_paper_preview_text.font_arabic_nastaliq .display_font{
-	font-family: var(--report_theme_display_font_family), var(--global_font_arabic_nastaliq) !important;
+	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_nastaliq) !important;
 	line-height: initial;
 }
 #settings #tab5 #setting_paper_preview_header_text .common_input,
@@ -834,142 +834,142 @@
 
 /* APP THEME */
 .app_theme1{
-	--app_theme_main_color1:var(--app_light);
-	--app_theme_main_color2:var(--app_white);
-	--app_theme_main_color3:var(--app_blue1);
-	--app_theme_shadow_color1:var(--app_shadow1);
-	--app_theme_shadow_color1:var(--app_shadow2);
-	--app_theme_shadow_color1:var(--app_shadow3);
-	--app_theme_qr_code_background:var(--app_white);
-	--app_theme_slider_shadow:var(--app_shadow1);
-	--app_theme_paper_preview_background_color:var(--app_white);
-	--app_theme_paper_preview_title_background_color:var(--app_white);
-	--app_theme_paper_preview_title_border_color:var(--app_gold);
-	--app_theme_links:var(--app_gold);
-	--app_theme_hover:var(--app_green);
-	--app_theme_dialogue_background_color:var(--app_shadow3);
-	--app_theme_dialogue_shadow_color1:var(--app_shadow1);
-	--app_theme_dialogue_shadow_color2:var(--app_shadow2);
-	--app_theme_button_active_color:var(--app_gold);
-	--app_theme_button_active_background_color:var(--app_white);
-	--app_theme_user_menu_hover_color:var(--app_green);
-	--app_theme_user_menu_hover_background_color:var(--app_lightgrey);
-	--app_theme_setting_button_color:var(--app_white);
-	--app_theme_setting_button_background_color:var(--app_gold);
-	--app_theme_input_error_border_color:var(--app_blue1);
-	--app_theme_input_border_color:var(--app_lightgrey);
-	--app_theme_input_background_color:var(--app_white);
-	--app_theme_button_color:var(--app_gold);
-	--app_theme_login_button_color:var(--app_white);
-	--app_theme_login_button_background_color:var(--app_gold);
-	--app_theme_switch_before_background_color:var(--app_lightgrey2);
-	--app_theme_switch_after_background_color:var(--app_white);
-	--app_theme_switch_after_shadow_color:var(--app_shadow3);
-	--app_theme_switch_checked_before_background_color:var(--app_green2);
-	--app_theme_spinner_background_color:var(--app_black);
-	--app_theme_selected_background_color:var(--app_lightgrey);
-	--app_theme_scrollbar_color1:var(--app_gold);
-	--app_theme_scrollbar_color2:var(--app_lightgrey);
-	--app_theme_online_status_online_color:var(--app_green);
-	--app_theme_online_status_offline_color:var(--app_red);
-	--app_theme_paper_shadow_color1:var(--app_shadow1);
-	--app_theme_paper_shadow_color2:var(--app_shadow2);
+	--app_theme_main_color1:var(--common_app_color_light);
+	--app_theme_main_color2:var(--common_app_color_white);
+	--app_theme_main_color3:var(--common_app_color_blue1);
+	--app_theme_shadow_color1:var(--common_app_color_shadow1);
+	--app_theme_shadow_color1:var(--common_app_color_shadow2);
+	--app_theme_shadow_color1:var(--common_app_color_shadow3);
+	--app_theme_qr_code_background:var(--common_app_color_white);
+	--app_theme_slider_shadow:var(--common_app_color_shadow1);
+	--app_theme_paper_preview_background_color:var(--common_app_color_white);
+	--app_theme_paper_preview_title_background_color:var(--common_app_color_white);
+	--app_theme_paper_preview_title_border_color:var(--common_app_color_gold);
+	--app_theme_links:var(--common_app_color_gold);
+	--app_theme_hover:var(--common_app_color_green);
+	--app_theme_dialogue_background_color:var(--common_app_color_shadow3);
+	--app_theme_dialogue_shadow_color1:var(--common_app_color_shadow1);
+	--app_theme_dialogue_shadow_color2:var(--common_app_color_shadow2);
+	--app_theme_button_active_color:var(--common_app_color_gold);
+	--app_theme_button_active_background_color:var(--common_app_color_white);
+	--app_theme_user_menu_hover_color:var(--common_app_color_green);
+	--app_theme_user_menu_hover_background_color:var(--common_app_color_lightgrey);
+	--app_theme_setting_button_color:var(--common_app_color_white);
+	--app_theme_setting_button_background_color:var(--common_app_color_gold);
+	--app_theme_input_error_border_color:var(--common_app_color_blue1);
+	--app_theme_input_border_color:var(--common_app_color_lightgrey);
+	--app_theme_input_background_color:var(--common_app_color_white);
+	--app_theme_button_color:var(--common_app_color_gold);
+	--app_theme_login_button_color:var(--common_app_color_white);
+	--app_theme_login_button_background_color:var(--common_app_color_gold);
+	--app_theme_switch_before_background_color:var(--common_app_color_lightgrey2);
+	--app_theme_switch_after_background_color:var(--common_app_color_white);
+	--app_theme_switch_after_shadow_color:var(--common_app_color_shadow3);
+	--app_theme_switch_checked_before_background_color:var(--common_app_color_green2);
+	--app_theme_spinner_background_color:var(--common_app_color_black);
+	--app_theme_selected_background_color:var(--common_app_color_lightgrey);
+	--app_theme_scrollbar_color1:var(--common_app_color_gold);
+	--app_theme_scrollbar_color2:var(--common_app_color_lightgrey);
+	--app_theme_online_status_online_color:var(--common_app_color_green);
+	--app_theme_online_status_offline_color:var(--common_app_color_red);
+	--app_theme_paper_shadow_color1:var(--common_app_color_shadow1);
+	--app_theme_paper_shadow_color2:var(--common_app_color_shadow2);
 }
 .app_theme2{
-	--app_theme_main_color1:var(--app_dark3);
-	--app_theme_main_color2:var(--app_dark4);
-	--app_theme_main_color3:var(--app_gold);
-	--app_theme_shadow_color1:var(--app_shadow1);
-	--app_theme_shadow_color1:var(--app_shadow2);
-	--app_theme_shadow_color1:var(--app_shadow3);
-	--app_theme_qr_code_background:var(--app_white);
+	--app_theme_main_color1:var(--common_app_color_dark3);
+	--app_theme_main_color2:var(--common_app_color_dark4);
+	--app_theme_main_color3:var(--common_app_color_gold);
+	--app_theme_shadow_color1:var(--common_app_color_shadow1);
+	--app_theme_shadow_color1:var(--common_app_color_shadow2);
+	--app_theme_shadow_color1:var(--common_app_color_shadow3);
+	--app_theme_qr_code_background:var(--common_app_color_white);
 
-	--app_theme_slider_shadow:var(--app_shadow1);
-	--app_theme_paper_preview_background_color:var(--app_white);
-	--app_theme_paper_preview_title_background_color:var(--app_white);
-	--app_theme_paper_preview_title_border_color:var(--app_gold);
-	--app_theme_links:var(--app_gold);
-	--app_theme_hover:var(--app_green);
-	--app_theme_dialogue_background_color:var(--app_shadow3);
-	--app_theme_dialogue_shadow_color1:var(--app_shadow1);
-	--app_theme_dialogue_shadow_color2:var(--app_shadow2);
-	--app_theme_button_active_color:var(--app_gold);
-	--app_theme_button_active_background_color:var(--app_white);
-	--app_theme_user_menu_hover_color:var(--app_green);
-	--app_theme_user_menu_hover_background_color:var(--app_lightgrey);
-	--app_theme_setting_button_color:var(--app_white);
-	--app_theme_setting_button_background_color:var(--app_gold);
-	--app_theme_input_error_border_color:var(--app_gold);
-	--app_theme_input_border_color:var(--app_lightgrey);
-	--app_theme_input_background_color:var(--app_white);
-	--app_theme_button_color:var(--app_gold);
-	--app_theme_login_button_color:var(--app_white);
-	--app_theme_login_button_background_color:var(--app_gold);
-	--app_theme_switch_before_background_color:var(--app_lightgrey2);
-	--app_theme_switch_after_background_color:var(--app_gold);
-	--app_theme_switch_after_shadow_color:var(--app_shadow3);
-	--app_theme_switch_checked_before_background_color:var(--app_dark4);
-	--app_theme_spinner_background_color:var(--app_gold);
-	--app_theme_selected_background_color:var(--app_lightgrey);
-	--app_theme_scrollbar_color1:var(--app_gold);
-	--app_theme_scrollbar_color2:var(--app_lightgrey);
-	--app_theme_online_status_online_color:var(--app_green);
-	--app_theme_online_status_offline_color:var(--app_red);
-	--app_theme_paper_shadow_color1:var(--app_shadow1);
-	--app_theme_paper_shadow_color2:var(--app_shadow2);
+	--app_theme_slider_shadow:var(--common_app_color_shadow1);
+	--app_theme_paper_preview_background_color:var(--common_app_color_white);
+	--app_theme_paper_preview_title_background_color:var(--common_app_color_white);
+	--app_theme_paper_preview_title_border_color:var(--common_app_color_gold);
+	--app_theme_links:var(--common_app_color_gold);
+	--app_theme_hover:var(--common_app_color_green);
+	--app_theme_dialogue_background_color:var(--common_app_color_shadow3);
+	--app_theme_dialogue_shadow_color1:var(--common_app_color_shadow1);
+	--app_theme_dialogue_shadow_color2:var(--common_app_color_shadow2);
+	--app_theme_button_active_color:var(--common_app_color_gold);
+	--app_theme_button_active_background_color:var(--common_app_color_white);
+	--app_theme_user_menu_hover_color:var(--common_app_color_green);
+	--app_theme_user_menu_hover_background_color:var(--common_app_color_lightgrey);
+	--app_theme_setting_button_color:var(--common_app_color_white);
+	--app_theme_setting_button_background_color:var(--common_app_color_gold);
+	--app_theme_input_error_border_color:var(--common_app_color_gold);
+	--app_theme_input_border_color:var(--common_app_color_lightgrey);
+	--app_theme_input_background_color:var(--common_app_color_white);
+	--app_theme_button_color:var(--common_app_color_gold);
+	--app_theme_login_button_color:var(--common_app_color_white);
+	--app_theme_login_button_background_color:var(--common_app_color_gold);
+	--app_theme_switch_before_background_color:var(--common_app_color_lightgrey2);
+	--app_theme_switch_after_background_color:var(--common_app_color_gold);
+	--app_theme_switch_after_shadow_color:var(--common_app_color_shadow3);
+	--app_theme_switch_checked_before_background_color:var(--common_app_color_dark4);
+	--app_theme_spinner_background_color:var(--common_app_color_gold);
+	--app_theme_selected_background_color:var(--common_app_color_lightgrey);
+	--app_theme_scrollbar_color1:var(--common_app_color_gold);
+	--app_theme_scrollbar_color2:var(--common_app_color_lightgrey);
+	--app_theme_online_status_online_color:var(--common_app_color_green);
+	--app_theme_online_status_offline_color:var(--common_app_color_red);
+	--app_theme_paper_shadow_color1:var(--common_app_color_shadow1);
+	--app_theme_paper_shadow_color2:var(--common_app_color_shadow2);
 }
 .app_theme3{
-	--app_theme_main_color1:var(--app_cafe_latte);
-	--app_theme_main_color2:var(--app_cafe_latte2);
-	--app_theme_main_color3:var(--app_cafe_latte3);
-	--app_theme_shadow_color1:var(--app_shadow1);
-	--app_theme_shadow_color1:var(--app_shadow2);
-	--app_theme_shadow_color1:var(--app_shadow3);
-	--app_theme_qr_code_background:var(--app_white);
+	--app_theme_main_color1:var(--common_app_color_cafe_latte);
+	--app_theme_main_color2:var(--common_app_color_cafe_latte2);
+	--app_theme_main_color3:var(--common_app_color_cafe_latte3);
+	--app_theme_shadow_color1:var(--common_app_color_shadow1);
+	--app_theme_shadow_color1:var(--common_app_color_shadow2);
+	--app_theme_shadow_color1:var(--common_app_color_shadow3);
+	--app_theme_qr_code_background:var(--common_app_color_white);
 
-	--app_theme_slider_shadow:var(--app_shadow1);
-	--app_theme_paper_preview_background_color:var(--app_white);
-	--app_theme_paper_preview_title_background_color:var(--app_white);
-	--app_theme_paper_preview_title_border_color:var(--app_gold);
-	--app_theme_links:var(--app_gold);
-	--app_theme_hover:var(--app_green);
-	--app_theme_dialogue_background_color:var(--app_shadow3);
-	--app_theme_dialogue_shadow_color1:var(--app_shadow1);
-	--app_theme_dialogue_shadow_color2:var(--app_shadow2);
-	--app_theme_button_active_color:var(--app_gold);
-	--app_theme_button_active_background_color:var(--app_white);
-	--app_theme_user_menu_hover_color:var(--app_cafe_latte2);
-	--app_theme_user_menu_hover_background_color:var(--app_cafe_latte3);
-	--app_theme_setting_button_color:var(--app_white);
-	--app_theme_setting_button_background_color:var(--app_gold);
-	--app_theme_input_error_border_color:var(--app_cafe_latte3);
-	--app_theme_input_border_color:var(--app_lightgrey);
-	--app_theme_input_background_color:var(--app_white);
-	--app_theme_button_color:var(--app_gold);
-	--app_theme_login_button_color:var(--app_white);
-	--app_theme_login_button_background_color:var(--app_gold);
-	--app_theme_switch_before_background_color:var(--app_lightgrey2);
-	--app_theme_switch_after_background_color:var(--app_white);
-	--app_theme_switch_after_shadow_color:var(--app_shadow3);
-	--app_theme_switch_checked_before_background_color:var(--app_cafe_latte2);
-	--app_theme_spinner_background_color:var(--app_cafe_latte3);
-	--app_theme_selected_background_color:var(--app_lightgrey);
-	--app_theme_scrollbar_color1:var(--app_gold);
-	--app_theme_scrollbar_color2:var(--app_lightgrey);
-	--app_theme_online_status_online_color:var(--app_green);
-	--app_theme_online_status_offline_color:var(--app_red);
-	--app_theme_paper_shadow_color1:var(--app_shadow1);
-	--app_theme_paper_shadow_color2:var(--app_shadow2);
+	--app_theme_slider_shadow:var(--common_app_color_shadow1);
+	--app_theme_paper_preview_background_color:var(--common_app_color_white);
+	--app_theme_paper_preview_title_background_color:var(--common_app_color_white);
+	--app_theme_paper_preview_title_border_color:var(--common_app_color_gold);
+	--app_theme_links:var(--common_app_color_gold);
+	--app_theme_hover:var(--common_app_color_green);
+	--app_theme_dialogue_background_color:var(--common_app_color_shadow3);
+	--app_theme_dialogue_shadow_color1:var(--common_app_color_shadow1);
+	--app_theme_dialogue_shadow_color2:var(--common_app_color_shadow2);
+	--app_theme_button_active_color:var(--common_app_color_gold);
+	--app_theme_button_active_background_color:var(--common_app_color_white);
+	--app_theme_user_menu_hover_color:var(--common_app_color_cafe_latte2);
+	--app_theme_user_menu_hover_background_color:var(--common_app_color_cafe_latte3);
+	--app_theme_setting_button_color:var(--common_app_color_white);
+	--app_theme_setting_button_background_color:var(--common_app_color_gold);
+	--app_theme_input_error_border_color:var(--common_app_color_cafe_latte3);
+	--app_theme_input_border_color:var(--common_app_color_lightgrey);
+	--app_theme_input_background_color:var(--common_app_color_white);
+	--app_theme_button_color:var(--common_app_color_gold);
+	--app_theme_login_button_color:var(--common_app_color_white);
+	--app_theme_login_button_background_color:var(--common_app_color_gold);
+	--app_theme_switch_before_background_color:var(--common_app_color_lightgrey2);
+	--app_theme_switch_after_background_color:var(--common_app_color_white);
+	--app_theme_switch_after_shadow_color:var(--common_app_color_shadow3);
+	--app_theme_switch_checked_before_background_color:var(--common_app_color_cafe_latte2);
+	--app_theme_spinner_background_color:var(--common_app_color_cafe_latte3);
+	--app_theme_selected_background_color:var(--common_app_color_lightgrey);
+	--app_theme_scrollbar_color1:var(--common_app_color_gold);
+	--app_theme_scrollbar_color2:var(--common_app_color_lightgrey);
+	--app_theme_online_status_online_color:var(--common_app_color_green);
+	--app_theme_online_status_offline_color:var(--common_app_color_red);
+	--app_theme_paper_shadow_color1:var(--common_app_color_shadow1);
+	--app_theme_paper_shadow_color2:var(--common_app_color_shadow2);
 }
 
 /*theme app colors*/
 body{
-	--app_spinner_color:var(--app_theme_main_color3);
-	--app_spinner_background:var(--app_theme_main_color1);
+	--common_app_color_spinner:var(--app_theme_main_color3);
+	--common_app_color_background_spinner:var(--app_theme_main_color1);
 	caret-color: var(--app_theme_main_color3);
 }
 #dialogue_loading{
-	background-color: var(--app_spinner_background);
+	background-color: var(--common_app_color_background_spinner);
 }
 body,
 .dialogue_content,
@@ -1013,7 +1013,7 @@ body,
 	background-color: var(--app_theme_paper_preview_background_color);
 }
 #settings #tab5 .setting_report_title{
-    border: 0.5px solid var(--app_gold);
+    border: 0.5px solid var(--common_app_color_gold);
 }
 .common_dialogue_button:hover,
 .common_dialogue_button:active,
@@ -1035,7 +1035,7 @@ body,
 }
 #settings .setting_button {
 	color: var(--app_theme_setting_button_color);
-	background-color: var(--app_gold);
+	background-color: var(--common_app_color_gold);
 }
 #settings .setting_button_active {
 	color: var(--app_theme_button_active_color) !important;
@@ -1085,12 +1085,12 @@ body,
 	background-color: var(--app_theme_main_color2);
 }
 .common_dialogue{
-	background-color: var(--app_shadow3);
+	background-color: var(--common_app_color_shadow3);
 }
 .common_dialogue_content{
 	background-color:var(--app_theme_main_color1) !important;
 	color: var(--app_theme_main_color3) !important;
-	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
+	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
 
 .common_link{
@@ -1219,10 +1219,10 @@ body,
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_shadow_color1), 0 6px 20px 0 var(--app_theme_dialogue_shadow_color2);
 }
 .common_like{
-	color: var(--app_red) !important;
+	color: var(--common_app_color_red) !important;
 }
 .common_unlike{
-	color: var(--app_red) !important;
+	color: var(--common_app_color_red) !important;
 }
 .common_module_leaflet_control_button{
 	background-color: var(--app_theme_main_color2);

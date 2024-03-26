@@ -1,139 +1,139 @@
 /*APP*/
-#menu_open::before{	content: var(--app_menu_open)}
-#menu_close::before{content: var(--app_menu_close)}
-#menu_1::before{	content: var(--app_chart)}
-#menu_2::before{	content: var(--app_users) ' ' var(--app_log)}
-#menu_3::before{	content: var(--app_users)}
-#menu_4::before{	content: var(--app_apps) ' ' var(--app_settings)}
-#menu_5::before{	content: var(--app_log)}
-#menu_6::before{	content: var(--app_server) ' ' var(--app_settings)}
-#menu_7::before{	content: var(--app_server) ' ' var(--app_install)}
-#menu_8::before{	content: var(--app_server) ' ' var(--app_database)}
-#menu_9::before{	content: var(--app_server) ' ' var(--app_backup) ' ' var(--app_restore)}
-#menu_10::before{	content: var(--app_server)}
-#menu_11::before{	content: var(--app_logoff)}
+#menu_open::before{	content: var(--common_app_icon_menu_open)}
+#menu_close::before{content: var(--common_app_icon_menu_close)}
+#menu_1::before{	content: var(--common_app_icon_chart)}
+#menu_2::before{	content: var(--common_app_icon_users) ' ' var(--common_app_icon_log)}
+#menu_3::before{	content: var(--common_app_icon_users)}
+#menu_4::before{	content: var(--common_app_icon_apps) ' ' var(--common_app_icon_settings)}
+#menu_5::before{	content: var(--common_app_icon_log)}
+#menu_6::before{	content: var(--common_app_icon_server) ' ' var(--common_app_icon_settings)}
+#menu_7::before{	content: var(--common_app_icon_server) ' ' var(--common_app_icon_install)}
+#menu_8::before{	content: var(--common_app_icon_server) ' ' var(--common_app_icon_database)}
+#menu_9::before{	content: var(--common_app_icon_server) ' ' var(--common_app_icon_backup) ' ' var(--common_app_icon_restore)}
+#menu_10::before{	content: var(--common_app_icon_server)}
+#menu_11::before{	content: var(--common_app_icon_logoff)}
 
-#select_broadcast_type .common_select_dropdown_value[data-value='ALERT']::before{			content:var(--app_alert)}
-#select_broadcast_type .common_select_dropdown_value[data-value='MAINTENANCE']::before{		content:var(--app_maintenance)}
+#select_broadcast_type .common_select_dropdown_value[data-value='ALERT']::before{			content:var(--common_app_icon_alert)}
+#select_broadcast_type .common_select_dropdown_value[data-value='MAINTENANCE']::before{		content:var(--common_app_icon_maintenance)}
 
-#select_broadcast_type .common_select_option[data-value='ALERT']::before{					content:var(--app_alert)}
-#select_broadcast_type .common_select_option[data-value='MAINTENANCE']::before{				content:var(--app_maintenance)}
+#select_broadcast_type .common_select_option[data-value='ALERT']::before{					content:var(--common_app_icon_alert)}
+#select_broadcast_type .common_select_option[data-value='MAINTENANCE']::before{				content:var(--common_app_icon_maintenance)}
  
-#send_broadcast_send::before{														content:var(--app_send)}
-#send_broadcast_close::before{														content:var(--app_close)}
-#common_lov_close::before{															content:var(--app_close)}
-#send_broadcast_title::before{														content:var(--app_broadcast)}
-#client_id_label::before{															content:var(--user)}
-.icon_infinite::before{																content:var(--infinite)}
+#send_broadcast_send::before{														content:var(--common_app_icon_send)}
+#send_broadcast_close::before{														content:var(--common_app_icon_close)}
+#common_lov_close::before{															content:var(--common_app_icon_close)}
+#send_broadcast_title::before{														content:var(--common_app_icon_broadcast)}
+#client_id_label::before{															content:var(--common_app_icon_user)}
+.icon_infinite::before{																content:var(--common_app_icon_infinite)}
 
-#box1_title.system_admin::before{													content:var(--app_internet) ' ' var(--app_server) ' ' var(--app_chart)}
-#box2_title.system_admin::before{													content:var(--app_internet) ' ' var(--app_server) ' ' var(--regional_numbersystem)}
-#box1_title.admin::before{															content:var(--app_users) ' ' var(--app_apps) ' ' var(--app_chart)}
-#box2_title.admin::before{															content:var(--app_users) ' ' var(--app_apps) ' ' var(--regional_numbersystem)}
-#menu_1_maintenance_title::before{													content:var(--app_maintenance)}
-#menu_1_broadcast_title::before{													content:var(--app_broadcast)}
-#menu_1_broadcast_button::before{													content:var(--app_chat)}
+#box1_title.system_admin::before{													content:var(--common_app_icon_internet) ' ' var(--common_app_icon_server) ' ' var(--common_app_icon_chart)}
+#box2_title.system_admin::before{													content:var(--common_app_icon_internet) ' ' var(--common_app_icon_server) ' ' var(--common_app_icon_regional_numbersystem)}
+#box1_title.admin::before{															content:var(--common_app_icon_users) ' ' var(--common_app_icon_apps) ' ' var(--common_app_icon_chart)}
+#box2_title.admin::before{															content:var(--common_app_icon_users) ' ' var(--common_app_icon_apps) ' ' var(--common_app_icon_regional_numbersystem)}
+#menu_1_maintenance_title::before{													content:var(--common_app_icon_maintenance)}
+#menu_1_broadcast_title::before{													content:var(--common_app_icon_broadcast)}
+#menu_1_broadcast_button::before{													content:var(--common_app_icon_chat)}
 
-#list_user_stat_not_connected_icon::before{											content:var(--app_loggoff)}
-#list_user_stat_col_title1::before{													content:var(--provider_id)}
-#list_user_stat_col_title2::before{													content:var(--provider)}
-#list_user_stat_col_title3::before{													content:var(--app_sum)}
-#list_user_stat_col_title4::before{													content:var(--app_user_connections)}
+#list_user_stat_not_connected_icon::before{											content:var(--common_app_icon_loggoff)}
+#list_user_stat_col_title1::before{													content:var(--common_app_icon_provider_id)}
+#list_user_stat_col_title2::before{													content:var(--common_app_icon_provider)}
+#list_user_stat_col_title3::before{													content:var(--common_app_icon_sum)}
+#list_user_stat_col_title4::before{													content:var(--common_app_icon_user_connections)}
 
-#list_user_account_title::before{													content:var(--app_users)}
-#list_user_search_icon::before{														content:var(--app_search)}
-#list_user_account_logon_title::before{												content:var(--app_login)}
-#users_save::before{																content:var(--app_save)}
-#list_user_account .list_title[data-column='avatar']::before{						content:var(--user_avatar)}
-#list_user_account .list_title[data-column='id']::before{							content:var(--provider_id)}
-#list_user_account .list_title[data-column='app_role_id']::before{					content:var(--app_role)}
-#list_user_account .list_title[data-column='app_role_icon']::before{				content:var(--app_role) ' ' var(--misc_image)}
-#list_user_account .list_title[data-column='active']::before{						content:var(--app_inactive) ' ' var(--app_active)}
+#list_user_account_title::before{													content:var(--common_app_icon_users)}
+#list_user_search_icon::before{														content:var(--common_app_icon_search)}
+#list_user_account_logon_title::before{												content:var(--common_app_icon_login)}
+#users_save::before{																content:var(--common_app_icon_save)}
+#list_user_account .list_title[data-column='avatar']::before{						content:var(--common_app_icon_user_avatar)}
+#list_user_account .list_title[data-column='id']::before{							content:var(--common_app_icon_provider_id)}
+#list_user_account .list_title[data-column='app_role_id']::before{					content:var(--common_app_icon_role)}
+#list_user_account .list_title[data-column='app_role_icon']::before{				content:var(--common_app_icon_role) ' ' var(--common_app_icon_misc_image)}
+#list_user_account .list_title[data-column='active']::before{						content:var(--common_app_icon_inactive) ' ' var(--common_app_icon_active)}
 #list_user_account .list_title[data-column='user_level']::before{					content:'LEVEL'}
-#list_user_account .list_title[data-column='private']::before{						content:var(--app_private)}
-#list_user_account .list_title[data-column='username']::before{						content:var(--user) ' ' var(--username)}
-#list_user_account .list_title[data-column='bio']::before{							content:var(--user_bio)}
-#list_user_account .list_title[data-column='email']::before{						content:var(--app_email)}
-#list_user_account .list_title[data-column='emal_unverified']::before{				content:var(--app_email ' ' var(--app_forgot))}
-#list_user_account .list_title[data-column='password']::before{						content:var(--user_password)}
-#list_user_account .list_title[data-column='password_reminder']::before{			content:var(--user_password) ' ' var(--app_info)}
-#list_user_account .list_title[data-column='verification_code']::before{			content:var(--app_verification_code)}
-#list_user_account .list_title[data-column='identity_provider_id']::before{			content:var(--provider_id)}
-#list_user_account .list_title[data-column='provider_name']::before{				content:var(--provider)}
-#list_user_account .list_title[data-column='provider_id']::before{					content:var(--provider_id) ' ' var(--user) ' ID'}
-#list_user_account .list_title[data-column='provider_first_name']::before{			content:var(--provider_id) ' ' var(--user) ' ' var(--username) ' 1'}
-#list_user_account .list_title[data-column='provider_last_name']::before{			content:var(--provider_id) ' ' var(--user) ' ' var(--username) ' 2'}
-#list_user_account .list_title[data-column='provider_image']::before{				content:var(--provider_id) ' ' var(--user) ' ' var(--user_avatar)}
-#list_user_account .list_title[data-column='provider_image_url']::before{			content:var(--provider_id) ' ' var(--user) ' ' var(--user_avatar) ' URL'}
-#list_user_account .list_title[data-column='provider_email']::before{				content:var(--provider_id) ' ' var(--user) ' ' var(--app_email)}
-#list_user_account .list_title[data-column='date_created']::before{					content:var(--user_account_created)}
-#list_user_account .list_title[data-column='date_modified']::before{				content:var(--user_account_modified)}
+#list_user_account .list_title[data-column='private']::before{						content:var(--common_app_icon_private)}
+#list_user_account .list_title[data-column='username']::before{						content:var(--common_app_icon_user) ' ' var(--common_app_icon_username)}
+#list_user_account .list_title[data-column='bio']::before{							content:var(--common_app_icon_user_bio)}
+#list_user_account .list_title[data-column='email']::before{						content:var(--common_app_icon_email)}
+#list_user_account .list_title[data-column='emal_unverified']::before{				content:var(--common_app_icon_email ' ' var(--common_app_icon_forgot))}
+#list_user_account .list_title[data-column='password']::before{						content:var(--common_app_icon_user_password)}
+#list_user_account .list_title[data-column='password_reminder']::before{			content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_info)}
+#list_user_account .list_title[data-column='verification_code']::before{			content:var(--common_app_icon_verification_code)}
+#list_user_account .list_title[data-column='identity_provider_id']::before{			content:var(--common_app_icon_provider_id)}
+#list_user_account .list_title[data-column='provider_name']::before{				content:var(--common_app_icon_provider)}
+#list_user_account .list_title[data-column='provider_id']::before{					content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ID'}
+#list_user_account .list_title[data-column='provider_first_name']::before{			content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_username) ' 1'}
+#list_user_account .list_title[data-column='provider_last_name']::before{			content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_username) ' 2'}
+#list_user_account .list_title[data-column='provider_image']::before{				content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_user_avatar)}
+#list_user_account .list_title[data-column='provider_image_url']::before{			content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_user_avatar) ' URL'}
+#list_user_account .list_title[data-column='provider_email']::before{				content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_email)}
+#list_user_account .list_title[data-column='date_created']::before{					content:var(--common_app_icon_user_account_created)}
+#list_user_account .list_title[data-column='date_modified']::before{				content:var(--common_app_icon_user_account_modified)}
 
-#list_apps_title::before{								content:var(--app_apps)}
-#list_app_parameter_title::before{						content:var(--app_apps) ' ' var(--app_settings)}
-#apps_save::before{										content:var(--app_save)}
+#list_apps_title::before{								content:var(--common_app_icon_apps)}
+#list_app_parameter_title::before{						content:var(--common_app_icon_apps) ' ' var(--common_app_icon_settings)}
+#apps_save::before{										content:var(--common_app_icon_save)}
 
-#config_save::before{									content:var(--app_save)}
+#config_save::before{									content:var(--common_app_icon_save)}
 
-#list_monitor_nav_connected::before{					content:var(--app_user_connections)  ' '  var(--app_log)}
-#list_monitor_nav_app_log::before{						content:var(--app_apps) ' ' var(--app_log)}
-#list_monitor_nav_server_log::before{					content:var(--app_server) ' ' var(--app_log)}
-#filesearch_menu5::before{								content:var(--app_search)}
+#list_monitor_nav_connected::before{					content:var(--common_app_icon_user_connections)  ' '  var(--common_app_icon_log)}
+#list_monitor_nav_app_log::before{						content:var(--common_app_icon_apps) ' ' var(--common_app_icon_log)}
+#list_monitor_nav_server_log::before{					content:var(--common_app_icon_server) ' ' var(--common_app_icon_log)}
+#filesearch_menu5::before{								content:var(--common_app_icon_search)}
 
-.chat_click::before{									content:var(--app_chat)}
+.chat_click::before{									content:var(--common_app_icon_chat)}
 
-#list_app_log_first::before{							content:var(--app_first)}
-#list_app_log_previous::before{							content:var(--app_previous)}
-#list_app_log_next::before{								content:var(--app_next)}
-#list_app_log_last::before{								content:var(--app_last)}
+#list_app_log_first::before{							content:var(--common_app_icon_first)}
+#list_app_log_previous::before{							content:var(--common_app_icon_previous)}
+#list_app_log_next::before{								content:var(--common_app_icon_next)}
+#list_app_log_last::before{								content:var(--common_app_icon_last)}
 
-body.rtl #list_app_log_first::before{					content:var(--app_last)}
-body.rtl #list_app_log_previous::before{				content:var(--app_next)}
-body.rtl #list_app_log_next::before{					content:var(--app_previous)}
-body.rtl #list_app_log_last::before{					content:var(--app_first)}
+body.rtl #list_app_log_first::before{					content:var(--common_app_icon_last)}
+body.rtl #list_app_log_previous::before{				content:var(--common_app_icon_next)}
+body.rtl #list_app_log_next::before{					content:var(--common_app_icon_previous)}
+body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 
 
-#menu5_row_parameters_col1::before{						content:var(--app_server) ' REQUEST'}
-#menu5_row_parameters_col1_1::before{					content:var(--app_checkbox_checked)}
-#menu5_row_parameters_col1_0::before{					content:var(--app_checkbox_empty)}
+#menu5_row_parameters_col1::before{						content:var(--common_app_icon_server) ' REQUEST'}
+#menu5_row_parameters_col1_1::before{					content:var(--common_app_icon_checkbox_checked)}
+#menu5_row_parameters_col1_0::before{					content:var(--common_app_icon_checkbox_empty)}
 
-#menu5_row_parameters_col2::before{						content:var(--app_server) ' SERVICE'}
-#menu5_row_parameters_col2_1::before{					content:var(--app_checkbox_checked)}
-#menu5_row_parameters_col2_0::before{					content:var(--app_checkbox_empty)}
+#menu5_row_parameters_col2::before{						content:var(--common_app_icon_server) ' SERVICE'}
+#menu5_row_parameters_col2_1::before{					content:var(--common_app_icon_checkbox_checked)}
+#menu5_row_parameters_col2_0::before{					content:var(--common_app_icon_checkbox_empty)}
 
-#menu5_row_parameters_col3::before{						content:var(--app_database)}
-#menu5_row_parameters_col3_1::before{					content:var(--app_checkbox_checked)}
-#menu5_row_parameters_col3_0::before{					content:var(--app_checkbox_empty)}
+#menu5_row_parameters_col3::before{						content:var(--common_app_icon_database)}
+#menu5_row_parameters_col3_1::before{					content:var(--common_app_icon_checkbox_checked)}
+#menu5_row_parameters_col3_0::before{					content:var(--common_app_icon_checkbox_empty)}
 
-#list_server_log_search_icon::before{					content:var(--app_search)}
+#list_server_log_search_icon::before{					content:var(--common_app_icon_search)}
 
-#list_config_nav_config::before{						content:var(--app_server)}
-#list_config_nav_iam_blockip::before{					content:var(--app_internet) ' ' var(--app_shield) ' ' var(--regional_numbersystem)}
-#list_config_nav_iam_useragent::before{					content:var(--app_internet) ' ' var(--app_shield) ' ' var(--app_browser)}
-#list_config_nav_iam_policy::before{					content:var(--app_internet) ' ' var(--app_shield) ' ' var(--misc_book)}
+#list_config_nav_config::before{						content:var(--common_app_icon_server)}
+#list_config_nav_iam_blockip::before{					content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_regional_numbersystem)}
+#list_config_nav_iam_useragent::before{					content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_browser)}
+#list_config_nav_iam_policy::before{					content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_misc_book)}
 
-#install_db_icon::before{								content:var(--app_database)}
-#install_db_button_install::before{						content:var(--app_add)}
-#install_db_button_uninstall::before{					content:var(--app_delete)}
-#install_db_country_language_translations_icon::before{	content:var(--gps_country) ' ' var(--regional_locale)}
+#install_db_icon::before{								content:var(--common_app_icon_database)}
+#install_db_button_install::before{						content:var(--common_app_icon_add)}
+#install_db_button_uninstall::before{					content:var(--common_app_icon_delete)}
+#install_db_country_language_translations_icon::before{	content:var(--common_app_icon_gps_country) ' ' var(--common_app_icon_regional_locale)}
 
-#install_demo_demo_users_icon::before{					content:var(--app_users)}
-#install_demo_button_install::before{					content:var(--app_add)}
-#install_demo_button_uninstall::before{					content:var(--app_delete)}
-#install_demo_password_icon::before{					content:var(--user_password)}
+#install_demo_demo_users_icon::before{					content:var(--common_app_icon_users)}
+#install_demo_button_install::before{					content:var(--common_app_icon_add)}
+#install_demo_button_uninstall::before{					content:var(--common_app_icon_delete)}
+#install_demo_password_icon::before{					content:var(--common_app_icon_user_password)}
 
-#menu_8_db_info_database_title::before{					content:var(--app_database) ' ' var(--regional_numbersystem)}
-#menu_8_db_info_name_title::before{						content:var(--app_database)}
-#menu_8_db_info_version_title::before{					content:var(--app_database) ' ' var(--regional_numbersystem) ' ' var(--app_info)}
-#menu_8_db_info_database_schema_title::before{			content:var(--app_database) ' ' var(--app_database_schema)}
-#menu_8_db_info_host_title::before{						content:var(--app_server)}
-#menu_8_db_info_connections_title::before{				content:var(--app_user_connections)}
-#menu_8_db_info_started_title::before{					content:var(--app_database_started)}
-#menu_8_db_info_space_title::before{					content:var(--app_database) ' ' var(--app_database_calc)}
-#menu_8_info_space_db_sum::before{						content:var(--app_sum)}
+#menu_8_db_info_database_title::before{					content:var(--common_app_icon_database) ' ' var(--common_app_icon_regional_numbersystem)}
+#menu_8_db_info_name_title::before{						content:var(--common_app_icon_database)}
+#menu_8_db_info_version_title::before{					content:var(--common_app_icon_database) ' ' var(--common_app_icon_regional_numbersystem) ' ' var(--common_app_icon_info)}
+#menu_8_db_info_database_schema_title::before{			content:var(--common_app_icon_database) ' ' var(--common_app_icon_database_schema)}
+#menu_8_db_info_host_title::before{						content:var(--common_app_icon_server)}
+#menu_8_db_info_connections_title::before{				content:var(--common_app_icon_user_connections)}
+#menu_8_db_info_started_title::before{					content:var(--common_app_icon_database_started)}
+#menu_8_db_info_space_title::before{					content:var(--common_app_icon_database) ' ' var(--common_app_icon_database_calc)}
+#menu_8_info_space_db_sum::before{						content:var(--common_app_icon_sum)}
 
-#menu_10_os_title::before{								content:var(--app_server)}
-#menu_10_process_title::before{							content:var(--app_server) ' ' var(--app_apps)}
+#menu_10_os_title::before{								content:var(--common_app_icon_server)}
+#menu_10_process_title::before{							content:var(--common_app_icon_server) ' ' var(--common_app_icon_apps)}
 
 
 #menu_secure .menuitem{
@@ -1277,25 +1277,25 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 
 /*APP THEME*/
 .app_theme1 {
-	--app_theme_main_branding_color1: var(--app_blue1);
-	--app_theme_main_branding_color2: var(--app_blue2);
-	--app_theme_main_branding_color3: var(--app_white1);
-	--app_theme_main_branding_color4: var(--app_black);
-	--app_theme_main_branding_color5: var(--app_white2);
+	--app_theme_main_branding_color1: var(--common_app_color_blue1);
+	--app_theme_main_branding_color2: var(--common_app_color_blue2);
+	--app_theme_main_branding_color3: var(--common_app_color_white1);
+	--app_theme_main_branding_color4: var(--common_app_color_black);
+	--app_theme_main_branding_color5: var(--common_app_color_white2);
 
-	--app_theme_main_shadow_color1: var(--app_black_transparent1);
-	--app_theme_main_shadow_color2: var(--app_black_transparent2);
-	--app_theme_main_shadow_color3: var(--app_white_transparent);
-	--app_theme_main_select_color: var(--app_white2);
-	--app_theme_main_select_color2: var(--app_green);
-	--app_theme_main_select_color3: var(--app_red);
-	--app_theme_main_select_color4: var(--app_blue1);
-	--app_theme_main_border_color: var(--app_white2);
-	--app_theme_main_border_color2: var(--app_blue2);
-	--app_theme_main_border_color3: var(--app_white1);
-	--app_theme_main_gradient_color1: var(--app_white3);
-	--app_theme_main_gradient_color2: var(--app_white2);
-	--app_theme_main_gradient_color3: var(--app_white1);
+	--app_theme_main_shadow_color1: var(--common_app_color_black_transparent1);
+	--app_theme_main_shadow_color2: var(--common_app_color_black_transparent2);
+	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
+	--app_theme_main_select_color: var(--common_app_color_white2);
+	--app_theme_main_select_color2: var(--common_app_color_green);
+	--app_theme_main_select_color3: var(--common_app_color_red);
+	--app_theme_main_select_color4: var(--common_app_color_blue1);
+	--app_theme_main_border_color: var(--common_app_color_white2);
+	--app_theme_main_border_color2: var(--common_app_color_blue2);
+	--app_theme_main_border_color3: var(--common_app_color_white1);
+	--app_theme_main_gradient_color1: var(--common_app_color_white3);
+	--app_theme_main_gradient_color2: var(--common_app_color_white2);
+	--app_theme_main_gradient_color3: var(--common_app_color_white1);
 
 	--app_theme_online_status_online_color: var(--app_theme_main_select_color2);
     --app_theme_online_status_offline_color: var(--app_theme_main_select_color3);
@@ -1350,25 +1350,25 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	--app_theme_menuitem_selected_background_color: var(--app_theme_main_branding_color2);
 }
 .app_theme2 {
-	--app_theme_main_branding_color1: var(--app_dark);
-	--app_theme_main_branding_color2: var(--app_black);
-	--app_theme_main_branding_color3: var(--app_dark4);
-	--app_theme_main_branding_color4: var(--app_gold);
-	--app_theme_main_branding_color5: var(--app_white2);
+	--app_theme_main_branding_color1: var(--common_app_color_dark);
+	--app_theme_main_branding_color2: var(--common_app_color_black);
+	--app_theme_main_branding_color3: var(--common_app_color_dark4);
+	--app_theme_main_branding_color4: var(--common_app_color_gold);
+	--app_theme_main_branding_color5: var(--common_app_color_white2);
 
-	--app_theme_main_shadow_color1: var(--app_black_transparent1);
-	--app_theme_main_shadow_color2: var(--app_black_transparent2);
-	--app_theme_main_shadow_color3: var(--app_white_transparent);
-	--app_theme_main_select_color: var(--app_white2);
-	--app_theme_main_select_color2: var(--app_green);
-	--app_theme_main_select_color3: var(--app_red);
-	--app_theme_main_select_color4: var(--app_dark);
-	--app_theme_main_border_color: var(--app_white2);
-	--app_theme_main_border_color2: var(--app_blue2);
-	--app_theme_main_border_color3: var(--app_white1);
-	--app_theme_main_gradient_color1: var(--app_white3);
-	--app_theme_main_gradient_color2: var(--app_white2);
-	--app_theme_main_gradient_color3: var(--app_white1);
+	--app_theme_main_shadow_color1: var(--common_app_color_black_transparent1);
+	--app_theme_main_shadow_color2: var(--common_app_color_black_transparent2);
+	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
+	--app_theme_main_select_color: var(--common_app_color_white2);
+	--app_theme_main_select_color2: var(--common_app_color_green);
+	--app_theme_main_select_color3: var(--common_app_color_red);
+	--app_theme_main_select_color4: var(--common_app_color_dark);
+	--app_theme_main_border_color: var(--common_app_color_white2);
+	--app_theme_main_border_color2: var(--common_app_color_blue2);
+	--app_theme_main_border_color3: var(--common_app_color_white1);
+	--app_theme_main_gradient_color1: var(--common_app_color_white3);
+	--app_theme_main_gradient_color2: var(--common_app_color_white2);
+	--app_theme_main_gradient_color3: var(--common_app_color_white1);
 
 	--app_theme_online_status_online_color: var(--app_theme_main_select_color2);
 	--app_theme_online_status_offline_color: var(--app_theme_main_select_color3);
@@ -1423,25 +1423,25 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	--app_theme_menuitem_selected_background_color: var(--app_theme_main_branding_color2);
 }
 .app_theme3 {
-	--app_theme_main_branding_color1: var(--app_cafe_latte);
-	--app_theme_main_branding_color2: var(--app_cafe_latte2);
-	--app_theme_main_branding_color3: var(--app_cafe_latte3);
-	--app_theme_main_branding_color4: var(--app_black);
-	--app_theme_main_branding_color5: var(--app_white2);
+	--app_theme_main_branding_color1: var(--common_app_color_cafe_latte);
+	--app_theme_main_branding_color2: var(--common_app_color_cafe_latte2);
+	--app_theme_main_branding_color3: var(--common_app_color_cafe_latte3);
+	--app_theme_main_branding_color4: var(--common_app_color_black);
+	--app_theme_main_branding_color5: var(--common_app_color_white2);
 
-	--app_theme_main_shadow_color1: var(--app_black_transparent1);
-	--app_theme_main_shadow_color2: var(--app_black_transparent2);
-	--app_theme_main_shadow_color3: var(--app_white_transparent);
-	--app_theme_main_select_color: var(--app_white2);
-	--app_theme_main_select_color2: var(--app_green);
-	--app_theme_main_select_color3: var(--app_red);
-	--app_theme_main_select_color4: var(--app_cafe_latte);
-	--app_theme_main_border_color: var(--app_white2);
-	--app_theme_main_border_color2: var(--app_blue2);
-	--app_theme_main_border_color3: var(--app_white1);
-	--app_theme_main_gradient_color1: var(--app_white3);
-	--app_theme_main_gradient_color2: var(--app_white2);
-	--app_theme_main_gradient_color3: var(--app_white1);
+	--app_theme_main_shadow_color1: var(--common_app_color_black_transparent1);
+	--app_theme_main_shadow_color2: var(--common_app_color_black_transparent2);
+	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
+	--app_theme_main_select_color: var(--common_app_color_white2);
+	--app_theme_main_select_color2: var(--common_app_color_green);
+	--app_theme_main_select_color3: var(--common_app_color_red);
+	--app_theme_main_select_color4: var(--common_app_color_cafe_latte);
+	--app_theme_main_border_color: var(--common_app_color_white2);
+	--app_theme_main_border_color2: var(--common_app_color_blue2);
+	--app_theme_main_border_color3: var(--common_app_color_white1);
+	--app_theme_main_gradient_color1: var(--common_app_color_white3);
+	--app_theme_main_gradient_color2: var(--common_app_color_white2);
+	--app_theme_main_gradient_color3: var(--common_app_color_white1);
 
 	--app_theme_online_status_online_color: var(--app_theme_main_select_color2);
 	--app_theme_online_status_offline_color: var(--app_theme_main_select_color3);
@@ -1496,8 +1496,8 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	--app_theme_menuitem_selected_background_color: var(--app_theme_main_branding_color1);
 }
 body{
-	--app_spinner_color:var(--app_theme_text_color);
-	--app_spinner_background:var(--app_theme_dialogue_background_color);
+	--common_app_color_spinner:var(--app_theme_text_color);
+	--common_app_color_background_spinner:var(--app_theme_dialogue_background_color);
 	color: var(--app_theme_text_color);
 	fill:var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
@@ -1714,10 +1714,10 @@ body{
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
 .common_like {
-    color: var(--app_red) !important;
+    color: var(--common_app_color_red) !important;
 }
 .common_unlike{
-	color: var(--app_red) !important;
+	color: var(--common_app_color_red) !important;
 }
 /*SECURE*/
 .common_list_row_selected{

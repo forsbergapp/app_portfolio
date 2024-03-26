@@ -1,5 +1,5 @@
-#common_broadcast_close::before{		content:var(--app_broadcast_close)}
-#common_maintenance_message::before{	content:var(--app_maintenance)}
+#common_broadcast_close::before{		content:var(--common_app_icon_broadcast_close)}
+#common_maintenance_message::before{	content:var(--common_app_icon_maintenance)}
 
 
 #common_maintenance_logo {
@@ -13,8 +13,8 @@ body{
     margin: 0;
     height: 100%;
     padding: 0px;
-    color: var(--app_black);
-    background: var(--app_blue1);
+    color: var(--common_app_color_black);
+    background: var(--common_app_color_blue1);
 }
 
 .common_icon {
@@ -61,8 +61,8 @@ body{
 }
 
 .common_dialogue_content{
-    background-color: var(--app_light);
-    box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
+    background-color: var(--common_app_color_light);
+    box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
 @media only screen and (min-width: 768px) {
     body{

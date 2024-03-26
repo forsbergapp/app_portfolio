@@ -1,128 +1,128 @@
-#common_construction::before{								content:var(--app_maintenance)}	
+#common_construction::before{								content:var(--common_app_icon_maintenance)}	
 
-#common_message_close::before{								content:var(--app_close)}
-#common_message_cancel::before{								content:var(--app_cancel)}
+#common_message_close::before{								content:var(--common_app_icon_close)}
+#common_message_cancel::before{								content:var(--common_app_icon_cancel)}
 #common_message_title_icon::before{							content:''}
-#common_message_title_icon[data-text_class='message_text']::before{		content:var(--message_text)}
-#common_message_title_icon[data-text_class='message_success']::before{	content:var(--message_success)}
-#common_message_title_icon[data-text_class='message_fail']::before{		content:var(--message_fail)}
+#common_message_title_icon[data-text_class='message_text']::before{		content:var(--common_app_icon_message_text)}
+#common_message_title_icon[data-text_class='message_success']::before{	content:var(--common_app_icon_message_success)}
+#common_message_title_icon[data-text_class='message_fail']::before{		content:var(--common_app_icon_message_fail)}
 
-#common_confirm_question:empty::before{						content:var(--app_question)}
+#common_confirm_question:empty::before{						content:var(--common_app_icon_question)}
 
-.common_lov_button::before{									content:var(--app_lov)}
-#common_lov_search_icon::before{							content:var(--app_search)}
-#common_lov_title.parameter_type::before{					content:var(--app_apps) ' ' var(--app_settings) ' ' var(--app_type)}
-#common_lov_title.server_log_files::before{					content:var(--app_server) ' ' var(--app_file_path)}
-#common_lov_title.app_category::before{						content:var(--app_apps) ' ' var(--app_type)}
-#common_lov_title.app_role::before{							content:var(--app_role)}
+.common_lov_button::before{									content:var(--common_app_icon_lov)}
+#common_lov_search_icon::before{							content:var(--common_app_icon_search)}
+#common_lov_title.parameter_type::before{					content:var(--common_app_icon_apps) ' ' var(--common_app_icon_settings) ' ' var(--common_app_icon_type)}
+#common_lov_title.server_log_files::before{					content:var(--common_app_icon_server) ' ' var(--common_app_icon_file_path)}
+#common_lov_title.app_category::before{						content:var(--common_app_icon_apps) ' ' var(--common_app_icon_type)}
+#common_lov_title.app_role::before{							content:var(--common_app_icon_role)}
 
-.common_unlike::before{										content:var(--user_unlike)}	
-.common_like::before{										content:var(--user_like)}	
-.common_user_follow::before{								content:var(--user_follow_user)}
-.common_user_followed::before{								content:var(--user_followed_user)}
-#common_user_edit_btn_user_delete_account::before{			content:var(--app_delete)}	
+.common_unlike::before{										content:var(--common_app_icon_user_unlike)}	
+.common_like::before{										content:var(--common_app_icon_user_like)}	
+.common_user_follow::before{								content:var(--common_app_icon_user_follow_user)}
+.common_user_followed::before{								content:var(--common_app_icon_user_followed_user)}
+#common_user_edit_btn_user_delete_account::before{			content:var(--common_app_icon_delete)}	
 #common_user_edit_btn_user_update.spinner::before{			content: ''}
-#common_user_edit_btn_user_update::before{					content:var(--app_update)}	
-#common_profile_main_btn_cloud::before{						content:var(--sky_cloud)}
+#common_user_edit_btn_user_update::before{					content:var(--common_app_icon_update)}	
+#common_profile_main_btn_cloud::before{						content:var(--common_app_icon_sky_cloud)}
 
-#common_user_menu_default_avatar::before{					content:var(--user_avatar)}
-.app_role_system_admin::before{								content:var(--user_system_admin) !important}
+#common_user_menu_default_avatar::before{					content:var(--common_app_icon_user_avatar)}
+.app_role_system_admin::before{								content:var(--common_app_icon_user_system_admin) !important}
 
-#common_dialogue_user_menu_edit::before{					content:var(--app_edit)}
-#common_dialogue_user_menu_log_out::before{					content:var(--app_logoff)}
-#common_dialogue_user_menu_signup::before{					content:var(--app_signup)}
-#common_dialogue_user_menu_log_in::before{					content:var(--app_login)}
-#common_dialogue_user_menu_preference_locale::before{		content:var(--regional_locale)}
-#common_dialogue_user_menu_preference_timezone::before{		content:var(--regional_timezone)}
-#common_dialogue_user_menu_preference_direction::before{	content:var(--regional_direction)}
-#common_dialogue_user_menu_preference_arabic_script::before{content:var(--regional_script)}
+#common_dialogue_user_menu_edit::before{					content:var(--common_app_icon_edit)}
+#common_dialogue_user_menu_log_out::before{					content:var(--common_app_icon_logoff)}
+#common_dialogue_user_menu_signup::before{					content:var(--common_app_icon_signup)}
+#common_dialogue_user_menu_log_in::before{					content:var(--common_app_icon_login)}
+#common_dialogue_user_menu_preference_locale::before{		content:var(--common_app_icon_regional_locale)}
+#common_dialogue_user_menu_preference_timezone::before{		content:var(--common_app_icon_regional_timezone)}
+#common_dialogue_user_menu_preference_direction::before{	content:var(--common_app_icon_regional_direction)}
+#common_dialogue_user_menu_preference_arabic_script::before{content:var(--common_app_icon_regional_script)}
 
-#common_user_verify_email_icon::before{						content:var(--app_email)}
-#common_user_verify_cancel::before{							content:var(--app_cancel)}
+#common_user_verify_email_icon::before{						content:var(--common_app_icon_email)}
+#common_user_verify_cancel::before{							content:var(--common_app_icon_cancel)}
 
-#common_user_start_login::before{							content:var(--user)}
-#common_user_start_login_button::before{					content:var(--app_login)}
+#common_user_start_login::before{							content:var(--common_app_icon_user)}
+#common_user_start_login_button::before{					content:var(--common_app_icon_login)}
 
-#common_user_start_login_system_admin::before{				content:var(--user_system_admin)}
-#common_user_start_login_system_admin_button::before{		content:var(--app_login)}
+#common_user_start_login_system_admin::before{				content:var(--common_app_icon_user_system_admin)}
+#common_user_start_login_system_admin_button::before{		content:var(--common_app_icon_login)}
 
-#common_user_start_signup::before{							content:var(--app_signup)}
-#common_user_start_signup_button::before{					content:var(--app_signup)}
+#common_user_start_signup::before{							content:var(--common_app_icon_signup)}
+#common_user_start_signup_button::before{					content:var(--common_app_icon_signup)}
 
-#common_user_start_forgot::before{							content:var(--app_forgot)}
-#common_user_start_forgot_button::before{					content:var(--app_email)}
+#common_user_start_forgot::before{							content:var(--common_app_icon_forgot)}
+#common_user_start_forgot_button::before{					content:var(--common_app_icon_email)}
 
-#common_user_start_close::before{							content:var(--app_close)}
-
-
-#common_user_start_login_system_admin_first_time::before{	content:var(--app_init)}
-
-#common_user_password_new_icon::before{						content:var(--user_password)}
-#common_user_password_new_cancel::before{					content:var(--app_cancel)}
-#common_user_password_new_ok::before{						content:var(--app_close)}
+#common_user_start_close::before{							content:var(--common_app_icon_close)}
 
 
-#common_profile_search_icon::before{						content:var(--app_search)}
+#common_user_start_login_system_admin_first_time::before{	content:var(--common_app_icon_init)}
 
-#common_profile_joined_date_icon::before{					content:var(--user_account_created)}
-#common_profile_private_title::before{						content:var(--app_private)}
-#common_profile_avatar_online_status::before{				content:var(--app_online)}
-#common_profile_top_row1_1::before{							content:var(--user_views)}
-#common_profile_top_row1_2::before{							content:var(--user_follows)}
-#common_profile_top_row1_3::before{							content:var(--user_like) ' ' var(--user_follows)}
-#common_profile_home::before{								content:var(--user_profile_top)}
-#common_profile_close::before{								content:var(--app_close)}
-#common_profile_info_view_count_icon::before{				content:var(--user_views)}
-#common_profile_main_btn_following::before{					content:var(--user_follows)}
-#common_profile_main_btn_followed::before{					content:var(--user_followed)}
-#common_profile_main_btn_liked_users::before{				content:var(--user_followed)}
-#common_profile_detail_list_app_delete::before{				content:var(--app_delete)}
-
-#common_profile_btn_top::before{							content:var(--user_profile_top)}
-
-#common_user_edit_btn_avatar_img::before{					content:var(--user_avatar_edit)}
-#common_user_edit_private::before{							content:var(--app_private)}
-#common_user_edit_close::before{							content:var(--app_close)}
-#common_user_edit_label_provider::before{					content:var(--provider)}
-#common_user_edit_label_provider_id::before{				content:var(--provider_id)}
-#common_user_edit_label_provider_email::before{				content:var(--app_email)}
-#common_user_edit_input_username_icon::before{				content:var(--user)}
-#common_user_edit_input_bio_icon::before{					content:var(--user_profile)}
-#common_user_edit_input_email_icon::before{					content:var(--app_email)}
-#common_user_edit_input_new_email_icon::before{				content:var(--app_email)}
-#common_user_edit_input_password_icon::before{				content:var(--user_password)}
-#common_user_edit_input_password_confirm_icon::before{		content:var(--user_password)}
-#common_user_edit_input_password_new_icon::before{			content:var(--user_password)}
-#common_user_edit_input_password_new_confirm_icon::before{	content:var(--user_password)}
-#common_user_edit_input_password_reminder_icon::before{		content:var(--user_account_reminder)}
-#common_user_edit_label_last_logontime::before{				content:var(--user_last_logontime)}
-#common_user_edit_label_account_created::before{			content:var(--user_account_created)}
-#common_user_edit_label_account_modified::before{			content:var(--user_account_modified)}
+#common_user_password_new_icon::before{						content:var(--common_app_icon_user_password)}
+#common_user_password_new_cancel::before{					content:var(--common_app_icon_cancel)}
+#common_user_password_new_ok::before{						content:var(--common_app_icon_close)}
 
 
+#common_profile_search_icon::before{						content:var(--common_app_icon_search)}
 
-#common_window_info_btn_close::before{						content:var(--app_close)}
-#common_window_info_toolbar_btn_zoomout::before{			content:var(--app_zoomout)}
-#common_window_info_toolbar_btn_zoomin::before{				content:var(--app_zoomin)}
-#common_window_info_toolbar_btn_left::before{				content:var(--app_left)}
-#common_window_info_toolbar_btn_right::before{				content:var(--app_right)}
-#common_window_info_toolbar_btn_up::before{					content:var(--app_up)}
-#common_window_info_toolbar_btn_down::before{				content:var(--app_down)}
-#common_window_info_toolbar_btn_fullscreen::before{			content:var(--app_fullscreen)}
+#common_profile_joined_date_icon::before{					content:var(--common_app_icon_user_account_created)}
+#common_profile_private_title::before{						content:var(--common_app_icon_private)}
+#common_profile_avatar_online_status::before{				content:var(--common_app_icon_online)}
+#common_profile_top_row1_1::before{							content:var(--common_app_icon_user_views)}
+#common_profile_top_row1_2::before{							content:var(--common_app_icon_user_follows)}
+#common_profile_top_row1_3::before{							content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_user_follows)}
+#common_profile_home::before{								content:var(--common_app_icon_user_profile_top)}
+#common_profile_close::before{								content:var(--common_app_icon_close)}
+#common_profile_info_view_count_icon::before{				content:var(--common_app_icon_user_views)}
+#common_profile_main_btn_following::before{					content:var(--common_app_icon_user_follows)}
+#common_profile_main_btn_followed::before{					content:var(--common_app_icon_user_followed)}
+#common_profile_main_btn_liked_users::before{				content:var(--common_app_icon_user_followed)}
+#common_profile_detail_list_app_delete::before{				content:var(--common_app_icon_delete)}
 
-#common_module_leaflet_control_search_button::before{		content:var(--app_search)}
-#common_module_leaflet_search_icon::before{					content:var(--app_search)}
-#common_module_leaflet_control_fullscreen_id::before{		content:var(--app_fullscreen)}
-#common_module_leaflet_control_my_location_id::before{		content:var(--map_my_location)}
-#common_module_leaflet_control_layer_button::before{		content:var(--map_layer)}
-#common_module_leaflet_popup_sub_title::before{				content:var(--regional_timezone) ' ' var(--gps_position)}
+#common_profile_btn_top::before{							content:var(--common_app_icon_user_profile_top)}
 
-#common_broadcast_close::before{							content:var(--app_broadcast_close)}
-#common_broadcast_info_title::before{						content:var(--app_alert)}
+#common_user_edit_btn_avatar_img::before{					content:var(--common_app_icon_user_avatar_edit)}
+#common_user_edit_private::before{							content:var(--common_app_icon_private)}
+#common_user_edit_close::before{							content:var(--common_app_icon_close)}
+#common_user_edit_label_provider::before{					content:var(--common_app_icon_provider)}
+#common_user_edit_label_provider_id::before{				content:var(--common_app_icon_provider_id)}
+#common_user_edit_label_provider_email::before{				content:var(--common_app_icon_email)}
+#common_user_edit_input_username_icon::before{				content:var(--common_app_icon_user)}
+#common_user_edit_input_bio_icon::before{					content:var(--common_app_icon_user_profile)}
+#common_user_edit_input_email_icon::before{					content:var(--common_app_icon_email)}
+#common_user_edit_input_new_email_icon::before{				content:var(--common_app_icon_email)}
+#common_user_edit_input_password_icon::before{				content:var(--common_app_icon_user_password)}
+#common_user_edit_input_password_confirm_icon::before{		content:var(--common_app_icon_user_password)}
+#common_user_edit_input_password_new_icon::before{			content:var(--common_app_icon_user_password)}
+#common_user_edit_input_password_new_confirm_icon::before{	content:var(--common_app_icon_user_password)}
+#common_user_edit_input_password_reminder_icon::before{		content:var(--common_app_icon_user_account_reminder)}
+#common_user_edit_label_last_logontime::before{				content:var(--common_app_icon_user_last_logontime)}
+#common_user_edit_label_account_created::before{			content:var(--common_app_icon_user_account_created)}
+#common_user_edit_label_account_modified::before{			content:var(--common_app_icon_user_account_modified)}
 
-#common_toolbar_framework_js::before{						content:var(--app_javascript)}
-#common_toolbar_framework_vue::before{						content:var(--app_vue)}
-#common_toolbar_framework_react::before{					content:var(--app_react)}
+
+
+#common_window_info_btn_close::before{						content:var(--common_app_icon_close)}
+#common_window_info_toolbar_btn_zoomout::before{			content:var(--common_app_icon_zoomout)}
+#common_window_info_toolbar_btn_zoomin::before{				content:var(--common_app_icon_zoomin)}
+#common_window_info_toolbar_btn_left::before{				content:var(--common_app_icon_left)}
+#common_window_info_toolbar_btn_right::before{				content:var(--common_app_icon_right)}
+#common_window_info_toolbar_btn_up::before{					content:var(--common_app_icon_up)}
+#common_window_info_toolbar_btn_down::before{				content:var(--common_app_icon_down)}
+#common_window_info_toolbar_btn_fullscreen::before{			content:var(--common_app_icon_fullscreen)}
+
+#common_module_leaflet_control_search_button::before{		content:var(--common_app_icon_search)}
+#common_module_leaflet_search_icon::before{					content:var(--common_app_icon_search)}
+#common_module_leaflet_control_fullscreen_id::before{		content:var(--common_app_icon_fullscreen)}
+#common_module_leaflet_control_my_location_id::before{		content:var(--common_app_icon_map_my_location)}
+#common_module_leaflet_control_layer_button::before{		content:var(--common_app_icon_map_layer)}
+#common_module_leaflet_popup_sub_title::before{				content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_gps_position)}
+
+#common_broadcast_close::before{							content:var(--common_app_icon_broadcast_close)}
+#common_broadcast_info_title::before{						content:var(--common_app_icon_alert)}
+
+#common_toolbar_framework_js::before{						content:var(--common_app_icon_javascript)}
+#common_toolbar_framework_vue::before{						content:var(--common_app_icon_vue)}
+#common_toolbar_framework_react::before{					content:var(--common_app_icon_react)}
 
 body{
 	font-size: 16px;
@@ -149,7 +149,7 @@ select {
 	border: 1px solid;
 	min-width: 20px;
     min-height: 1.5em;
-	background-color: var(--app_white);
+	background-color: var(--common_app_color_white);
 }
 .common_select_dropdown{
 	width: 100%;
@@ -164,7 +164,7 @@ select {
 	width: calc(100% - 25px);
 }
 .common_select_dropdown_icon::after{
-	content: var(--app_select);
+	content: var(--common_app_icon_select);
 }
 .common_select_dropdown_icon{
 	display: inline-block;
@@ -185,7 +185,7 @@ select {
 	cursor:pointer;
 	overflow-y:auto;
 	overflow-x:hidden;
-	background-color: var(--app_white);
+	background-color: var(--common_app_color_white);
 }
 .common_select_option{
 	display: block;
@@ -1149,7 +1149,7 @@ select {
 	height:30px !important;
 	border-radius:50% !important;
 	box-sizing:border-box;
-	background-image: conic-gradient(from 90deg at 50% 50%, rgba(39,174,96,0) 0deg, rgba(31, 144, 255, 0) 0.04deg, var(--app_spinner_color) 360deg);
+	background-image: conic-gradient(from 90deg at 50% 50%, rgba(39,174,96,0) 0deg, rgba(31, 144, 255, 0) 0.04deg, var(--common_app_color_spinner) 360deg);
 	animation:spin 1s linear infinite;
 	margin-left: 15px !important;
     margin-right: 15px !important;
@@ -1163,7 +1163,7 @@ select {
 	transform:translate(-50%, -50%);
 	height: 25px;
 	width: 25px;
-	background:var(--app_spinner_background);
+	background:var(--common_app_color_background_spinner);
 	border-radius:50%;
 }
 

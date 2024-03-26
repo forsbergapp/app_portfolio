@@ -46,54 +46,54 @@ body {
 }
 /*APP THEME*/
 body {
-	--app_spinner_color:var(--app_black);
-	--app_spinner_background:var(--app_blue1);
-	color: var(--app_black);
-	background: var(--app_blue1);
-	caret-color: var(--app_black);
+	--common_app_color_spinner:var(--common_app_color_black);
+	--common_app_color_background_spinner:var(--common_app_color_blue1);
+	color: var(--common_app_color_black);
+	background: var(--common_app_color_blue1);
+	caret-color: var(--common_app_color_black);
 }
 .dialogue_content{
-	box-shadow: 0 4px 8px 0 var(--app_shadow1), 0 6px 20px 0 var(--app_shadow2);
-	background-color: var(--app_white1);
+	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1), 0 6px 20px 0 var(--common_app_color_shadow2);
+	background-color: var(--common_app_color_white1);
 }
 .dialogue_content:hover, 
 .dialogue_content:active{
-	box-shadow: 0 0 35px 4px var(--app_white_transparent);
+	box-shadow: 0 0 35px 4px var(--common_app_color_white_transparent);
 }
 /* APP THEME COMMON*/
 .common_toolbar_selected{
-	background-color: var(--app_blue1);
+	background-color: var(--common_app_color_blue1);
 }
 #common_toolbar_framework {
-    color: var(--app_black);
-    background-color: var(--app_white1);
-    box-shadow: 0 4px 8px 0 var(--app_shadow1), 0 6px 20px 0 var(--app_shadow2);
+    color: var(--common_app_color_black);
+    background-color: var(--common_app_color_white1);
+    box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1), 0 6px 20px 0 var(--common_app_color_shadow2);
 }
 .common_dialogue_button,
 .common_toolbar_button{
-	color: var(--app_black) !important;
+	color: var(--common_app_color_black) !important;
 }
 .common_dialogue_button:hover,
 .common_dialogue_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active{
-	color:var(--app_green) !important;
+	color:var(--common_app_color_green) !important;
 }
 .common_dialogue_content:hover, 
 .common_dialogue_content:active{
-	box-shadow: 0 0 35px 4px var(--app_white_transparent);
+	box-shadow: 0 0 35px 4px var(--common_app_color_white_transparent);
 }  
 .common_dialogue_content{
-	background-color: var(--app_white1);
-	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);	
+	background-color: var(--common_app_color_white1);
+	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);	
 }
 #common_dialouge_user_menu{
-	background-color: var(--app_white);
+	background-color: var(--common_app_color_white);
 }
 #common_window_info_toolbar{
-	background: var(--app_white);
-	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
+	background: var(--common_app_color_white);
+	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
 #common_window_info{
-	background: var(--app_white);
+	background: var(--common_app_color_white);
 }
