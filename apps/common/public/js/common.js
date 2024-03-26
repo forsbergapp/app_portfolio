@@ -773,6 +773,13 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
     }
 };
 /**
+ * Common theme get
+ * @returns {void}
+ */
+ const common_theme_update_from_body = () => {
+    AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value = AppDocument.body.className[9];
+};
+/**
  * Component render
  * @param {string} div 
  * @param {{}} props 
@@ -3877,6 +3884,7 @@ export{/* GLOBALS*/
        mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
        inIframe, show_image, getHostname, input_control, SearchAndSetSelectedIndex,
+       common_theme_update_from_body,
        /* COMPONENTS */
        ComponentRender,ComponentRemove,
        /* MESSAGE & DIALOGUE */
