@@ -415,7 +415,6 @@ const settings_translate = async (first=true) => {
     let locale;
     if (first ==true){
         locale = AppDocument.querySelector('#setting_select_locale').value;
-        common.COMMON_GLOBAL.user_locale = locale;
     }
     else
         locale = AppDocument.querySelector('#setting_select_report_locale_second').value;
@@ -2366,7 +2365,7 @@ const app_event_click = event => {
                             function_show_message:common.show_message},
                                                 '/common/component/dialogue_user_menu.js')
                         .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
-                                                            {function_app_theme_update:common.common_theme_update_from_body},
+                                                            {function_app_theme_update:common.common_preferences_post_mount},
                                                             '/common/component/app_theme.js'));
                         break;
                     }
@@ -2532,9 +2531,8 @@ const app_event_change = event => {
                 }
                 //common
                 case 'common_dialogue_user_menu_app_select_theme':{
-                    AppDocument.body.className = 'app_theme' + 
-                                                AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value + ' ' + 
-                                                AppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select').value;
+                    AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
+                    common.common_preferences_update_body_class_from_preferences();
                     break;
                 }
                 case 'common_dialogue_user_menu_user_locale_select':{
@@ -2546,7 +2544,8 @@ const app_event_change = event => {
                     break;
                 }
                 case 'common_dialogue_user_menu_user_arabic_script_select':{
-                    AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').dispatchEvent(new Event('change'));
+                    AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
+                    common.common_preferences_update_body_class_from_preferences();
                     break;
                 }
                 //module leaflet
