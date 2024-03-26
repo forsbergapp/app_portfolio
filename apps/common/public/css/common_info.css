@@ -1,6 +1,6 @@
 :root {
-	--info_black: #404040;
-	--info_white: #fefefe;
+	--common_info_color_black: #404040;
+	--common_info_color_white: #fefefe;
 }
 html, body{
     height: 100%;
@@ -8,7 +8,7 @@ html, body{
 body {
     font-family: 'Noto Sans';
     font-size: 14px;
-    background-color: var(--info_white);
+    background-color: var(--common_info_color_white);
     padding:10px;
 }
 .info_content{
@@ -18,8 +18,8 @@ body {
     margin-bottom:30px;
     border-radius: 4px;
     padding: 10px;
-    color:var(--info_black);
-    background-color: var(--info_white);
+    color:var(--common_info_color_black);
+    background-color: var(--common_info_color_white);
     min-height: 90%;
     display: inline-block;
 }
