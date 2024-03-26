@@ -264,19 +264,19 @@ const createMail = async (app_id, data) =>{
             let email_from = '';
             switch (parseInt(data.emailtype)){
                 case 1:{
-                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME' in parameter)[0].SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
                     break;
                 }
                 case 2:{
-                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME' in parameter)[0].SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
+                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
                     break;
                 }
                 case 3:{
-                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME' in parameter)[0].SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
+                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
                     break;
                 }
                 case 4:{
-                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME' in parameter)[0].SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
+                    email_from = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
                     break;
                 }
             }
