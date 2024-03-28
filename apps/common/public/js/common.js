@@ -810,6 +810,43 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
     common_theme_update_from_body();
 };
 /**
+ * Convert HTML to React component
+ * @param {*} React_create_element
+ * @param {*} element 
+ * @returns {*}
+ */
+ const html2reactcomponent = (React_create_element, element) =>{
+    let result_component_current = [];
+    if(element.length>0 ){
+        for (const subelement of element){
+            let props;
+            /**@type{*} */
+            const element_object = {}
+            Object.entries(subelement.attributes).forEach((/**@type{*}*/attribute)=>element_object[attribute[1].name] = attribute[1].value);
+            if (subelement.nodeName=='OPTION'){
+                /**@ts-ignore */
+                props = {   ...element_object,
+                            label: subelement.text};
+            }
+            else
+                props = {   ...element_object}
+            if (element_object.class){
+                element_object.className = element_object.class;
+                delete element_object.class;
+            }
+            const reactobj = subelement.childElementCount>0?React_create_element(subelement.nodeName.toLowerCase(), 
+                                                props,
+                                                html2reactcomponent(React_create_element, subelement.children)):
+                                                React_create_element(subelement.nodeName.toLowerCase(), 
+                                                props);
+            result_component_current.push(reactobj);
+        }
+        return result_component_current;
+    }
+    else
+        return null;
+}
+/**
  * Component render
  * @param {string} div 
  * @param {{}} props 
@@ -856,48 +893,13 @@ const ComponentRender = async (div,props, component_path) => {
                 const {React} = await import('React');
                 /**@ts-ignore */
                 const {ReactDOM} = await import('ReactDOM');
-                /**
-                 * Convert HTML to React component
-                 * @param {*} element 
-                 * @returns {*}
-                 */
-                const html2reactcomponent = element =>{
-                    let result_component_current = [];
-                    if(element.length>0 ){
-                        for (const subelement of element){
-                            let props;
-                            /**@type{*} */
-                            const element_object = {}
-                            Object.entries(subelement.attributes).forEach((/**@type{*}*/attribute)=>element_object[attribute[1].name] = attribute[1].value);
-                            if (subelement.nodeName=='OPTION'){
-                                /**@ts-ignore */
-                                props = {   ...element_object,
-                                            label: subelement.text};
-                            }
-                            else
-                                props = {   ...element_object}
-                            if (element_object.class){
-                                element_object.className = element_object.class;
-                                delete element_object.class;
-                            }
-                            const reactobj = subelement.childElementCount>0?React.createElement(subelement.nodeName.toLowerCase(), 
-                                                                props,
-                                                                html2reactcomponent(subelement.children)):
-                                                                React.createElement(subelement.nodeName.toLowerCase(), 
-                                                                props);
-                            result_component_current.push(reactobj);
-                        }
-                        return result_component_current;
-                    }
-                    else
-                        return null;
-                }
+                
                 //convert HTML template to React component
                 const div_template = AppDocument.createElement('div');
                 div_template.innerHTML = component.template;
                 const result_component = React.createElement(div_template.nodeName.toLowerCase(), 
                                                         { id: div_template.id, className: div_template.className}, 
-                                                        html2reactcomponent(div_template.children));
+                                                        html2reactcomponent(React.createElement, div_template.children));
 
                 AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
                 //use inner tempmount div to remove React events
@@ -3746,6 +3748,18 @@ const framework_clean = () =>{
             delete AppDocument[key];
         }
     }
+    //added listener variable in ReactDOM library to be able to remove document listener easier
+    //custom_React_listeners and custom functions are declared in head.html
+    /**@ts-ignore */
+    if (custom_React_listeners.length>0){
+        /**@ts-ignore */
+        for (const ReactListener of custom_React_listeners){
+            ReactListener[0].removeEventListener(ReactListener[1], ReactListener[2]);
+        }
+        /**@ts-ignore */
+        custom_React_listeners = [];
+    }
+    
     //remove Vue objects
     /**@ts-ignore */
     delete window.__VUE_DEVTOOLS_HOOK_REPLAY__;
@@ -3753,6 +3767,15 @@ const framework_clean = () =>{
     delete window.__VUE_HMR_RUNTIME__;
     /**@ts-ignore */
     delete window.__VUE__;
+    const app_root_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
+    if (AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`))
+        app_root_element.innerHTML = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`).innerHTML;
+    app_root_element.removeAttribute('data-v-app');
+    delete app_root_element.__vue_app_;
+    delete app_root_element.__vue_node;
+
+    //remove all attributes except id
+    Object.entries(app_root_element.attributes).forEach((/**@type{*}*/attribute)=>attribute[1].name=='id'?null:app_root_element.removeAttribute(attribute[1].name));
 }
 /**
  * Mounts app using given framework or pure javascript and using given list of event functions
@@ -3768,6 +3791,7 @@ const framework_clean = () =>{
 const mount_app = async (framework, events) => {
     const app_root_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
     const app_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_div}`);
+    const common_app_element = AppDocument.querySelector(`#common_app`);
 
     //get all select and selectedIndex
     /**@type{{id:string,index:number}[]} */
@@ -3783,22 +3807,7 @@ const mount_app = async (framework, events) => {
     app_element.replaceWith(app_element.cloneNode(true));
     app_root_element.replaceWith(app_root_element.cloneNode(true));
     
-    //remove all attributes except id
-    Object.entries(app_root_element.attributes).forEach((/**@type{*}*/attribute)=>attribute[1].name=='id'?null:app_root_element.removeAttribute(attribute[1].name));
-
-    //added listener variable in ReactDOM library to be able to remove document listener easier
-    //custom_React_listeners and custom functions are declared in head.html
-    /**@ts-ignore */
-    if (custom_React_listeners.length>0){
-        /**@ts-ignore */
-        for (const ReactListener of custom_React_listeners){
-            ReactListener[0].removeEventListener(ReactListener[1], ReactListener[2]);
-        }
-        /**@ts-ignore */
-        custom_React_listeners = [];
-    }
     framework_clean();
-
     //set default function if anyone missing
     events.Change?null:events.Change = ((/**@type{AppEvent}*/event)=>common_event('change', event));
     events.Click?null:events.Click = ((/**@type{AppEvent}*/event)=>common_event('click', event));
@@ -3818,15 +3827,16 @@ const mount_app = async (framework, events) => {
                 data() {
                         return {};
                         },
-                        template: `<div id=${COMMON_GLOBAL.app_div}
+                        template: `<div id='${COMMON_GLOBAL.app_root}_vue'
                                         @change ='AppEventChange($event)'
                                         @click  ='AppEventClick($event)'
                                         @input  ='AppEventInput($event)' 
                                         @focus  ='AppEventFocus($event)' 
                                         @keydown='AppEventKeyDown($event)' 
                                         @keyup  ='AppEventKeyUp($event)'>
-                                        ${AppDocument.querySelector('#' + COMMON_GLOBAL.app_div).innerHTML}
-                                    </div>`, 
+                                        ${app_element.outerHTML}
+                                        ${common_app_element.outerHTML}
+                                    </div>`,
                         methods:{
                             AppEventChange: (/**@type{AppEvent}*/event) => {
                                 events.Change(event);
@@ -3861,17 +3871,17 @@ const mount_app = async (framework, events) => {
                 //JSX syntax
                 //return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
                 //Using pure Javascript
-                return React.createElement('div', { id: COMMON_GLOBAL.app_div});
+                return React.createElement('div', { id: COMMON_GLOBAL.app_root});
             };
-            const app_old = AppDocument.querySelector('#' + COMMON_GLOBAL.app_div).innerHTML;
-            const application = ReactDOM.createRoot(AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`));
+            const app_old = app_root_element.innerHTML;
+            const application = ReactDOM.createRoot(app_root_element);
             //JSX syntax
             //application.render( <App/>);
             //Using pure Javascript
             application.render( App());
             //set delay so some browsers render ok.
             await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 200);});
-            AppDocument.querySelector('#' + COMMON_GLOBAL.app_div).innerHTML = app_old;
+            app_root_element.innerHTML = app_old;
             events.Click();
             events.Change();
             events.Focus();
