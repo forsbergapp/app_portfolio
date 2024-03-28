@@ -2,9 +2,6 @@
 #mapid{
 	z-index: 0;
 }
-#loading{
-	inset-inline-start: calc(50% - 40px);
-}
 #mapid {
 	position: absolute;
   	top: 0;
