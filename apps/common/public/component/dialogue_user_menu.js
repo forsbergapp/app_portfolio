@@ -99,7 +99,7 @@ const component = async props => {
      *                      arab_script:string}>}
      */
      const get_preferences_options = async () =>{
-        const app_settings = await props.function_FFB('DB_API', `/app_setting?data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
+        const app_settings = await props.function_FFB('DB_API', `/app_settings_display?data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error});
         let options_timezone = '';

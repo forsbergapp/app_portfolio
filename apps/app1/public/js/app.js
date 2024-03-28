@@ -56,7 +56,7 @@ const show_hide_apps_dialogue = () => {
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('click', (/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{AppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
@@ -293,7 +293,7 @@ const app_event_click = event => {
  */
 const app_event_change = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('change', (/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change', (/**@type{AppEvent}*/event) => {
             app_event_change(event);
         }, true);
     }
@@ -321,7 +321,7 @@ const app_event_change = event => {
  */
 const app_event_keyup = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('keyup', (/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup', (/**@type{AppEvent}*/event) => {
             app_event_keyup(event);
         });
     }
@@ -532,15 +532,15 @@ const mount_app_app = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const init_app = async (parameters) => {
-    common.ComponentRender('common_profile_search',
-                            {}, 
-                            '/common/component/profile_search.js');
-    common.ComponentRender('app_profile_toolbar',
-                            {}, 
-                            '/common/component/profile_toolbar.js');
-    common.ComponentRender('common_user_account', 
-                            {},
-                            '/common/component/user_account.js');
+    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')    
+    .then(()=>common.ComponentRender('dialogue_start', {}, '/component/dialogue_start.js'))
+    .then(()=>common.ComponentRender('dialogue_info', {}, '/component/dialogue_info.js'))
+    .then(()=>common.ComponentRender('common_profile_search',{}, '/common/component/profile_search.js'))
+    .then(()=>common.ComponentRender('app_profile_toolbar',{}, '/common/component/profile_toolbar.js'))
+    .then(()=>common.ComponentRender('common_user_account', {},'/common/component/user_account.js'));
+    AppDocument.querySelector('#apps').classList.add('common_icon', 'css_spinner');
+    AppDocument.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
+
     for (const parameter of parameters.app) {
         if (parameter['MODULE_EASY.QRCODE_WIDTH'])
             common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);
@@ -589,8 +589,7 @@ const init_app = async (parameters) => {
  * @returns {void}
  */
 const init = parameters => {
-    AppDocument.querySelector('#apps').classList.add('common_icon', 'css_spinner');
-    AppDocument.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
+    AppDocument.body.className = 'app_theme_sun';
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         init_app(parameters);

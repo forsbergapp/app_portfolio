@@ -48,6 +48,8 @@
             app_link_title:string|null,
             app_text_edit:string|null,
             app_framework:number|null,
+            app_root:string,
+            app_div:string,
             info_link_policy_name:string|null,
             info_link_disclaimer_name:string|null,
             info_link_terms_name:string|null,
@@ -134,6 +136,8 @@ const COMMON_GLOBAL = {
     app_link_title:null,
     app_text_edit:null,
     app_framework:null,
+    app_root:'app_root',
+    app_div:'app',
     info_link_policy_name:null,
     info_link_disclaimer_name:null,
     info_link_terms_name:null,
@@ -2775,7 +2779,7 @@ const show_broadcast = (broadcast_message) => {
     const message = JSON.parse(broadcast_message).broadcast_message;
     switch (broadcast_type){
         case 'MAINTENANCE':{
-            if (AppDocument.querySelector('#app'))
+            if (AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`))
                 location.href = '/';
             else
                 if (message)
@@ -3146,7 +3150,7 @@ const disable_textediting = () =>COMMON_GLOBAL.app_text_edit=='0';
  */
 const common_event = async (event_type,event) =>{
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener(event_type, (/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{AppEvent}*/event) => {
             common_event(event_type, event);
         });
     }
@@ -3664,11 +3668,11 @@ const common_events_add = () => {
     //only works on document level:
     AppDocument.addEventListener('keydown', hide_user_menu_and_search, false);
 
-    AppDocument.querySelector('#app').addEventListener('copy', disable_copy_paste_cut, false);
-    AppDocument.querySelector('#app').addEventListener('paste', disable_copy_paste_cut, false);
-    AppDocument.querySelector('#app').addEventListener('cut', disable_copy_paste_cut, false);
-    AppDocument.querySelector('#app').addEventListener('mousedown', disable_copy_paste_cut, false);
-    AppDocument.querySelector('#app').addEventListener('touchstart', disable_common_input, false);
+    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('copy', disable_copy_paste_cut, false);
+    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('paste', disable_copy_paste_cut, false);
+    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('cut', disable_copy_paste_cut, false);
+    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('mousedown', disable_copy_paste_cut, false);
+    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('touchstart', disable_common_input, false);
 
 };
 /**
@@ -3678,11 +3682,11 @@ const common_events_add = () => {
 const common_events_remove = () => {
     AppDocument.removeEventListener('keydown', hide_user_menu_and_search);
 
-    AppDocument.querySelector('#app').removeEventListener('copy', disable_copy_paste_cut);
-    AppDocument.querySelector('#app').removeEventListener('paste', disable_copy_paste_cut);
-    AppDocument.querySelector('#app').removeEventListener('cut', disable_copy_paste_cut);
-    AppDocument.querySelector('#app').removeEventListener('mousedown', disable_copy_paste_cut);
-    AppDocument.querySelector('#app').removeEventListener('touchstart', disable_common_input);
+    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('copy', disable_copy_paste_cut);
+    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('paste', disable_copy_paste_cut);
+    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('cut', disable_copy_paste_cut);
+    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('mousedown', disable_copy_paste_cut);
+    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('touchstart', disable_common_input);
 
 }
 
@@ -3759,15 +3763,13 @@ const framework_clean = () =>{
  * @returns {Promise.<void>}
  */
 const mount_app = async (framework, events) => {
-    const app_root_div  = 'app_root';
-    const app_div       = 'app';
-    const app_root_element = AppDocument.querySelector(`#${app_root_div}`);
-    const app_element = AppDocument.querySelector(`#${app_div}`);
+    const app_root_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
+    const app_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_div}`);
 
     //get all select and selectedIndex
     /**@type{{id:string,index:number}[]} */
     let select_selectedindex = [];
-    AppDocument.querySelectorAll(`#${app_root_div} select`).forEach((/**@type{HTMLSelectElement}*/select) =>{
+    AppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} select`).forEach((/**@type{HTMLSelectElement}*/select) =>{
         if (select_selectedindex.length>0)
             select_selectedindex.push({id:select.id, index:select.selectedIndex});
         else
@@ -3813,14 +3815,14 @@ const mount_app = async (framework, events) => {
                 data() {
                         return {};
                         },
-                        template: `<div id=${app_div}
+                        template: `<div id=${COMMON_GLOBAL.app_div}
                                         @change ='AppEventChange($event)'
                                         @click  ='AppEventClick($event)'
                                         @input  ='AppEventInput($event)' 
                                         @focus  ='AppEventFocus($event)' 
                                         @keydown='AppEventKeyDown($event)' 
                                         @keyup  ='AppEventKeyUp($event)'>
-                                        ${AppDocument.querySelector('#' + app_div).innerHTML}
+                                        ${AppDocument.querySelector('#' + COMMON_GLOBAL.app_div).innerHTML}
                                     </div>`, 
                         methods:{
                             AppEventChange: (/**@type{AppEvent}*/event) => {
@@ -3842,7 +3844,7 @@ const mount_app = async (framework, events) => {
                                 events.KeyUp(event);
                             }
                         }
-                    }).mount('#' + app_root_div);
+                    }).mount(`#${COMMON_GLOBAL.app_root}`);
             break;
         }
         case 3:{
@@ -3856,17 +3858,17 @@ const mount_app = async (framework, events) => {
                 //JSX syntax
                 //return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
                 //Using pure Javascript
-                return React.createElement('div', { id: app_div});
+                return React.createElement('div', { id: COMMON_GLOBAL.app_div});
             };
-            const app_old = AppDocument.querySelector('#' + app_div).innerHTML;
-            const application = ReactDOM.createRoot(AppDocument.querySelector('#' + app_root_div));
+            const app_old = AppDocument.querySelector('#' + COMMON_GLOBAL.app_div).innerHTML;
+            const application = ReactDOM.createRoot(AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`));
             //JSX syntax
             //application.render( <App/>);
             //Using pure Javascript
             application.render( App());
             //set delay so some browsers render ok.
             await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 200);});
-            AppDocument.querySelector('#' + app_div).innerHTML = app_old;
+            AppDocument.querySelector('#' + COMMON_GLOBAL.app_div).innerHTML = app_old;
             events.Click();
             events.Change();
             events.Focus();
@@ -3900,6 +3902,9 @@ const mount_app = async (framework, events) => {
  * @returns {Promise.<void>}
  */
 const init_common = async (parameters) => {
+    await ComponentRender('common_app', 
+                            {},
+                            '/common/component/app.js');
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL.app_id ==null)
             set_app_service_parameters(parameters.app_service);

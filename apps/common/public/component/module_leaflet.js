@@ -128,7 +128,7 @@ const component = async props => {
      *                      map_layer_array:type_map_layer_array[]|[]}>}
      */
     const get_map_layers = async (app_id)  =>{
-        const map_layers = await props.function_FFB('DB_API', `/app_setting?data_app_id=${app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
+        const map_layers = await props.function_FFB('DB_API', `/app_settings_display?data_app_id=${app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>error);
                             

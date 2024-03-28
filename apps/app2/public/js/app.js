@@ -1692,6 +1692,7 @@ const user_settings_delete = (choice=null) => {
             AppDocument.querySelector('#setting_btn_user_delete').classList.add('css_spinner');
             common.FFB('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
+                common.ComponentRemove('common_dialogue_message', true);
                 const select = AppDocument.querySelector('#setting_select_user_setting');
                 //delete current option
                 select.remove(select.selectedIndex);
@@ -1708,7 +1709,8 @@ const user_settings_delete = (choice=null) => {
                 }
                 
             })
-            .catch(()=>AppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
+            .catch(()=>{common.ComponentRemove('common_dialogue_message', true);
+                        AppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner')});
         }
     }
 };
@@ -2076,7 +2078,7 @@ const user_settings_like = user_account_app_data_post_id => {
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('click',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{AppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
@@ -2471,7 +2473,7 @@ const app_event_click = event => {
  */
 const app_event_change = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('change',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{AppEvent}*/event) => {
             app_event_change(event);
         }, true);
     }
@@ -2582,7 +2584,7 @@ const app_event_change = event => {
  */
 const app_event_keyup = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('keyup',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{AppEvent}*/event) => {
             app_event_keyup(event);
         }, true);
     }
@@ -2772,12 +2774,288 @@ const mount_app_app = async (framework=null) => {
             Input:null});
 };
 /**
+ * Nvl returns '' if null else the value
+ * @param {string|null} value
+ * @returns {string|null}
+ * 
+ */
+ const nvl = value => value==null?'':value;
+/**
+ * 
+ * @returns {Promise.<void>}
+ */
+const settings_load = async () => {
+    /**
+     * Get themes
+     * @param {number} app_id
+     * @param {string} locale
+     * @param {*} app_settings
+     * @returns {[string|null,string|null,string|null]}
+     */
+    const themes = (app_id, locale, app_settings) =>{
+        let theme_found = false;
+        let span_themes_day ='', span_themes_month='', span_themes_year='';
+        //get themes and save result in three theme variables
+        for (const app_setting of app_settings.filter((/**@type{*}*/setting)=>setting.app_id == app_id && setting.app_setting_type_name.startsWith('REPORT_THEME'))){        
+            if (theme_found==false){
+                theme_found = true;
+            }
+            let theme_type;
+            switch (app_setting.app_setting_type_name){
+                case 'REPORT_THEME_BASIC_DAY':
+                case 'REPORT_THEME_PREMIUM_DAY':{
+                    theme_type = 'day';
+                    break;
+                }
+                case 'REPORT_THEME_BASIC_MONTH':
+                case 'REPORT_THEME_PREMIUM_MONTH':{
+                    theme_type = 'month';
+                    break;
+                }
+                case 'REPORT_THEME_BASIC_YEAR':
+                case 'REPORT_THEME_PREMIUM_YEAR':{
+                    theme_type = 'year';
+                    break;
+                }
+            }
+            const new_span = `<span class="slide slide_${theme_type}">
+                                <div id='theme_${theme_type}_${app_setting.value}'
+                                    data-theme_id='${app_setting.value}'> 
+                                </div>
+                            </span>`;
+            switch (app_setting.app_setting_type_name){
+                case 'REPORT_THEME_BASIC_DAY':{
+                    span_themes_day += new_span;
+                    break;
+                }
+                case 'REPORT_THEME_PREMIUM_DAY':{
+                    span_themes_day += new_span;
+                    break;
+                }
+                case 'REPORT_THEME_BASIC_MONTH':{
+                    span_themes_month += new_span;
+                    break;
+                }
+                case 'REPORT_THEME_PREMIUM_MONTH':{
+                    span_themes_month += new_span;
+                    break;
+                }
+                case 'REPORT_THEME_BASIC_YEAR':{
+                    span_themes_year += new_span;
+                    break;
+                }
+                case 'REPORT_THEME_PREMIUM_YEAR':{
+                    span_themes_year += new_span;
+                    break;
+                }
+            }
+        }
+        if (theme_found)
+            return [span_themes_day, span_themes_month, span_themes_year];
+        else
+            return [null, null, null];
+    };
+    /**
+     * Get places
+     * @param {number} app_id
+     * @param {*} app_settings
+     * @returns {string}
+     */
+    const places = (app_id, app_settings) => {
+        let select_places = '';
+        let place_found = false;
+        let i = 0;
+        for (const app_setting of app_settings.filter((/**@type{*}*/setting)=>setting.app_id==app_id && setting.app_setting_type_name=='PLACE')){
+            if (place_found==false){
+                place_found = true;
+                select_places  =`<option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`;
+            }
+            i++;
+            //data 2 = latitude
+            //data 3 = longitude
+            //data 4 = timezone
+            //data 5 = icon
+            select_places +=
+            `<option  value='${i}' 
+                        id='${app_setting.value}' 
+                        latitude='${app_setting.data2}' 
+                        longitude='${app_setting.data3}' 
+                        timezone='${app_setting.data4}'>${app_setting.data5} ${app_setting.text}
+                </option>`;
+        }
+        if (place_found)
+            return select_places;
+        else{
+            return `<option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`;
+        }
+    };
+    let USER_TIMEZONE ='';
+    let USER_DIRECTION='';
+    let USER_ARABIC_SCRIPT='';
+    let APP_NUMBER_SYSTEM='';
+    let APP_COLUMN_TITLE='';
+    let APP_CALENDAR_TYPE='';
+    let APP_CALENDAR_HIJRI_TYPE='';
+    let APP_PAPER_SIZE='';
+    let APP_HIGHLIGHT_ROW='';
+    let APP_METHOD='';
+    let APP_METHOD_ASR='';
+    let APP_HIGH_LATITUDE_ADJUSTMENT='';
+    let APP_TIMEFORMAT='';
+    let APP_HIJRI_DATE_ADJUSTMENT='';
+    let APP_IQAMAT='';
+    let APP_FAST_START_END='';
+    /**@type{{  id:number,
+     *          value:string,
+     *          text:string,
+     *          app_setting_type_name:string,
+     *          data2:string,
+     *          data3:string,
+     *          data4:string,
+     *          data5:string}[]} */
+    const app_settings_db = await common.FFB('DB_API', `/app_settings?`, 'GET', 'APP_DATA')
+    .then((/**@type{string}*/result)=>JSON.parse(result))
+    .catch((/**@type{Error}*/error)=>{throw error});
+
+    let LOCALES = await common.get_locales_options().catch((/**@type{Error}*/error)=>{throw error;});
+    let option;
+    for (const app_setting of app_settings_db) {
+        option = `<option id=${app_setting.id} value='${app_setting.value}'>${app_setting.text}</option>`;
+        switch (app_setting.app_setting_type_name){
+            case 'TIMEZONE':{
+                USER_TIMEZONE += option;
+                break;
+            }
+            case 'DIRECTION':{
+                USER_DIRECTION += option;
+                break;
+            }
+            case 'ARABIC_SCRIPT':{
+                USER_ARABIC_SCRIPT += option;
+                break;
+            }
+            case 'NUMBER_SYSTEM':{
+                APP_NUMBER_SYSTEM += option;
+                break;
+            }
+            case 'COLUMN_TITLE':{
+                APP_COLUMN_TITLE += option;
+                break;
+            }
+            case 'CALENDAR_TYPE':{
+                APP_CALENDAR_TYPE += option;
+                break;
+            }
+            case 'CALENDAR_HIJRI_TYPE':{
+                APP_CALENDAR_HIJRI_TYPE += option;
+                break;
+            }
+            case 'PAPER_SIZE':{
+                APP_PAPER_SIZE += option;
+                break;
+            }
+            case 'HIGHLIGHT_ROW':{
+                APP_HIGHLIGHT_ROW += option;
+                break;
+            }
+            case 'METHOD':{
+                option = `<option id=${app_setting.id} value='${app_setting.value}' ` +
+                            `data2='${nvl(app_setting.data2)}' data3='${nvl(app_setting.data3)}' data4='${nvl(app_setting.data4)}' data5='${nvl(app_setting.data5)}'>${app_setting.text}</option>`;
+                APP_METHOD += option;
+                break;
+            }
+            case 'METHOD_ASR':{
+                APP_METHOD_ASR += option;
+                break;
+            }
+            case 'HIGH_LATITUDE_ADJUSTMENT':{
+                APP_HIGH_LATITUDE_ADJUSTMENT += option;
+                break;
+            }
+            case 'TIMEFORMAT':{
+                APP_TIMEFORMAT += option;
+                break;
+            }
+            case 'HIJRI_DATE_ADJUSTMENT':{
+                APP_HIJRI_DATE_ADJUSTMENT += option;
+                break;
+            }
+            case 'IQAMAT':{
+                APP_IQAMAT += option;
+                break;
+            }
+            case 'FAST_START_END':{
+                APP_FAST_START_END += option;
+                break;
+            }
+        }
+    }
+    
+    /**
+     * @param {string} text
+     */
+    const tag = text => `<${text}/>`;
+    const appthemes = themes(common.COMMON_GLOBAL.app_id, common.COMMON_GLOBAL.user_locale, app_settings_db);
+
+    //settings regional
+    AppDocument.querySelector('#setting_select_locale').innerHTML = LOCALES;
+    AppDocument.querySelector('#setting_select_report_locale_second').innerHTML = `<option id='' value='0' selected='selected'>None</option>${LOCALES}`;
+    AppDocument.querySelector('#setting_select_report_timezone').innerHTML = USER_TIMEZONE;
+    AppDocument.querySelector('#setting_select_report_direction').innerHTML = `<option id='' value=''></option>${USER_DIRECTION}`;
+    AppDocument.querySelector('#setting_select_report_numbersystem').innerHTML = APP_NUMBER_SYSTEM;
+    AppDocument.querySelector('#setting_select_report_coltitle').innerHTML = APP_COLUMN_TITLE;
+    AppDocument.querySelector('#setting_select_report_arabic_script').innerHTML = `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`;
+    AppDocument.querySelector('#setting_select_calendartype').innerHTML = APP_CALENDAR_TYPE;
+    AppDocument.querySelector('#setting_select_calendar_hijri_type').innerHTML = APP_CALENDAR_HIJRI_TYPE;
+    //settings gps
+    AppDocument.querySelector('#setting_select_popular_place').innerHTML = places(common.COMMON_GLOBAL.app_id, app_settings_db);
+    //settings design
+    AppDocument.querySelector('#slides_day').innerHTML = appthemes[0];
+    AppDocument.querySelector('#slides_month').innerHTML = appthemes[1];
+    AppDocument.querySelector('#slides_year').innerHTML = appthemes[2];
+    AppDocument.querySelector('#setting_select_report_papersize').innerHTML = APP_PAPER_SIZE;
+    AppDocument.querySelector('#setting_select_report_highlight_row').innerHTML = APP_HIGHLIGHT_ROW;
+    //settings prayer
+    AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
+    AppDocument.querySelector('#setting_select_asr').innerHTML = APP_METHOD_ASR;
+    AppDocument.querySelector('#setting_select_highlatitude').innerHTML = APP_HIGH_LATITUDE_ADJUSTMENT;
+    AppDocument.querySelector('#setting_select_timeformat').innerHTML = APP_TIMEFORMAT;
+    AppDocument.querySelector('#setting_select_hijri_adjustment').innerHTML = APP_HIJRI_DATE_ADJUSTMENT;
+
+    AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
+    AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
+
+    AppDocument.querySelector('#setting_select_report_iqamat_title_fajr').innerHTML = APP_IQAMAT;
+    AppDocument.querySelector('#setting_select_report_iqamat_title_dhuhr').innerHTML = APP_IQAMAT;
+    AppDocument.querySelector('#setting_select_report_iqamat_title_asr').innerHTML = APP_IQAMAT;
+    AppDocument.querySelector('#setting_select_report_iqamat_title_maghrib').innerHTML = APP_IQAMAT;
+    AppDocument.querySelector('#setting_select_report_iqamat_title_isha').innerHTML = APP_IQAMAT;
+    AppDocument.querySelector('#setting_select_report_show_fast_start_end').innerHTML = APP_FAST_START_END;
+}
+
+/**
  * 
  * @param {{app:*[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const init_app = parameters => {
+const init_app = async parameters => {
+    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
+    .then(()=>common.ComponentRender('tab1', {}, '/component/settings_tab1.js'))
+    .then(()=>common.ComponentRender('tab2', {}, '/component/settings_tab2.js'))
+    .then(()=>common.ComponentRender('tab3', {}, '/component/settings_tab3.js'))
+    .then(()=>common.ComponentRender('tab4', {}, '/component/settings_tab4.js'))
+    .then(()=>common.ComponentRender('tab5', {}, '/component/settings_tab5.js'))
+    .then(()=>common.ComponentRender('tab6', {}, '/component/settings_tab6.js'))
+    .then(()=>common.ComponentRender('tab7', {}, '/component/settings_tab7.js'))
+    .then(()=>common.ComponentRender('app_profile_search', {}, '/common/component/profile_search.js'))
+    .then(()=>common.ComponentRender('app_profile_toolbar', {}, '/common/component/profile_toolbar.js'))
+    .then(()=>common.ComponentRender('app_user_account', {}, '/common/component/user_account.js'))
+    .then(()=>common.ComponentRender('dialogue_info', {}, '/component/dialogue_info.js'))
+    .then(()=>common.ComponentRender('dialogue_loading', {}, '/component/dialogue_loading.js'))
+    .then(()=>common.ComponentRender('dialogue_scan_open_mobile', {}, '/component/dialogue_scan_open_mobile.js'));
+    dialogue_loading(1);
+    await settings_load()
     app_report.REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright;
     for (const parameter of parameters.app) {
         if (parameter['APP_DEFAULT_STARTUP_PAGE'])
@@ -2923,16 +3201,7 @@ const init_app = parameters => {
         if (parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'])
             common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'];
     }
-    dialogue_loading(1);
-    common.ComponentRender('app_profile_search',
-                            {}, 
-                            '/common/component/profile_search.js');
-    common.ComponentRender('app_profile_toolbar',
-                            {}, 
-                            '/common/component/profile_toolbar.js');
-    common.ComponentRender('app_user_account', 
-                            {},
-                            '/common/component/user_account.js');
+
     //set app globals
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone
@@ -3019,6 +3288,7 @@ const init_app = parameters => {
  * @returns {void}
  */
 const init = parameters => {
+    AppDocument.body.className = 'app_theme1';
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         init_app(parameters);   

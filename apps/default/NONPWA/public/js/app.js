@@ -38,7 +38,7 @@ const app_exception = (error) => {
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('click',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{AppEvent}*/event) => {
             app_event_click(event);
         });
     }
@@ -79,9 +79,11 @@ const app_event_click = event => {
 };
 /**
  * Init app
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const init_app = () => {
+const init_app = async () => {
+    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
+    .then(()=>common.ComponentRender('app_construction', {}, '/common/component/construction.js'));
     mount_app_app();
 };
 /**
@@ -91,6 +93,7 @@ const init_app = () => {
  * @returns {void}
  */
 const init = (parameters) => {
+    AppDocument.body.className = 'app_theme1';
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         init_app();

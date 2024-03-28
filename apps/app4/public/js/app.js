@@ -43,7 +43,7 @@ const app_exception = (error) => {
  */
 const app_event_click = event =>{
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('click',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{AppEvent}*/event) => {
             app_event_click(event);
         });
     }
@@ -122,7 +122,7 @@ const app_event_click = event =>{
  */
  const app_event_change = event =>{
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('change',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{AppEvent}*/event) => {
             app_event_change(event);
         });
     }
@@ -155,8 +155,8 @@ const app_event_click = event =>{
  * @returns {Promise.<void>}
  */
 const init_map = async (framework=null)=>{
+    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
     AppDocument.querySelector('#mapid').outerHTML = '<div id="mapid"></div>';
-    
     await common.mount_app(framework,
                     {   Click: app_event_click,
                         Change: app_event_change,
@@ -180,10 +180,10 @@ const init_map = async (framework=null)=>{
 };
 /**
  * Init app
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const init_app = () =>{
-    common.ComponentRender('common_user_account', 
+const init_app = async () =>{
+    await common.ComponentRender('common_user_account', 
                             {},
                             '/common/component/user_account.js');
     APP_GLOBAL.module_leaflet_map_container      ='mapid';
@@ -196,12 +196,10 @@ const init_app = () =>{
  * @returns {void}
  */
 const init = parameters => {
-    AppDocument.querySelector('#loading').classList.add('css_spinner');
+    AppDocument.body.className = 'app_theme1';
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         init_app();
-        AppDocument.querySelector('#loading').classList.remove('css_spinner');
-    })
-    .catch(()=>AppDocument.querySelector('#loading').classList.remove('css_spinner'));
+    });
 };
 export{init};

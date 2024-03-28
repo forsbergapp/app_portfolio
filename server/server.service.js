@@ -223,9 +223,13 @@ const COMMON = {
                     resolve(db_locale.getLocales(routesparameters.app_id, query));
                     break;
                 }
-                case 'APP_DATA_DB_API_/APP_SETTING_GET':{
-                    resolve(db_app_setting.getSettingDisplayData(routesparameters.app_id, query));
+                case 'APP_DATA_DB_API_/APP_SETTINGS_GET':{
+                    resolve(db_app_setting.getSettings(routesparameters.app_id, query));
                     break;
+                }
+                case 'APP_DATA_DB_API_/APP_SETTINGS_DISPLAY_GET':{
+                            resolve(db_app_setting.getSettingDisplayData(routesparameters.app_id, query));
+                            break;
                 }
                 case 'APP_DATA_DB_API_/USER_ACCOUNT/ACTIVATE_PUT':{
                     resolve(db_user_account.activate(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, query, routesparameters.body, routesparameters.res));

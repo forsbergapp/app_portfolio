@@ -124,7 +124,6 @@ const render_app_with_data = (app, data)=>{
 const render_app_html = async (app_id, locale) =>{
     /**@type{Types.config_apps_render_config} */
     const app_config = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG');
-    const module = render_files(app_id, 'APP');
     /** @type {[string, string][]} */
     const render_variables = [];
     
@@ -140,7 +139,14 @@ const render_app_html = async (app_id, locale) =>{
         else
             common_files.push(['CommonHeadMap', '']);
 
-        const app = render_app_with_data(module, common_files);
+        if (app_config.HEAD==true){
+            const app_file = ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppHead')[0][4];
+            common_files.push(['AppHead', app_file]);
+        }
+        else
+            common_files.push(['AppHead', '']);
+
+        const app = render_app_with_data(render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'APP_COMMON'), common_files);
         
         //render app parameters from apps.json
         if (ConfigGetApp(app_id, app_id, 'JS') != '')
@@ -184,46 +190,50 @@ const render_app_html = async (app_id, locale) =>{
  * 
  * @async
  * @param {Types.app_info} app_info - app info configuration
- * @returns {Promise.<string>}
+ * @returns {Promise.<string|null>}
  */
 const get_module_with_initBFF = async (app_info) => {
     /**@type {[string, string][]} */
     const render_variables = [];
     /**
      * 
-     * @param {string} module 
+     * @param {string|null} module 
      * @param {{}[]|null} app_parameters 
      * @param {number} first_time 
-     * @returns {string}
+     * @returns {string|null}
      */
     const return_with_parameters = (module, app_parameters, first_time)=>{
-        /**@type{Types.app_service_parameters} */
-        const app_service_parameters = {   
-            app_id: app_info.app_id,
-            app_logo:ConfigGetApp(app_info.app_id, app_info.app_id, 'LOGO'),
-            app_email: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'EMAIL' in parameter)[0].EMAIL,
-            app_copyright: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'COPYRIGHT' in parameter)[0].COPYRIGHT,
-            app_link_url: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_URL' in parameter)[0].LINK_URL,
-            app_link_title: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_TITLE' in parameter)[0].LINK_TITLE,
-            app_text_edit: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'TEXT_EDIT' in parameter)[0].TEXT_EDIT,
-            app_framework : getNumberValue(ConfigGet('SERVER', 'APP_FRAMEWORK')),
-            app_datatoken: app_info.datatoken,
-            locale: app_info.locale,
-            translate_items:app_info.translate_items,
-            system_admin_only: app_info.system_admin_only,
-            client_latitude: app_info.latitude,
-            client_longitude: app_info.longitude,
-            client_place: app_info.place,
-            client_timezone: app_info.timezone,
-            common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
-            rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF'),
-            first_time: first_time
-        };
-        render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify({
-                                                            app_service: app_service_parameters,
-                                                            app: app_parameters
-                                                        })]);
-        return render_app_with_data(module, render_variables);
+        if (module){
+            /**@type{Types.app_service_parameters} */
+            const app_service_parameters = {   
+                app_id: app_info.app_id,
+                app_logo:ConfigGetApp(app_info.app_id, app_info.app_id, 'LOGO'),
+                app_email: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'EMAIL' in parameter)[0].EMAIL,
+                app_copyright: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'COPYRIGHT' in parameter)[0].COPYRIGHT,
+                app_link_url: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_URL' in parameter)[0].LINK_URL,
+                app_link_title: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_TITLE' in parameter)[0].LINK_TITLE,
+                app_text_edit: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'TEXT_EDIT' in parameter)[0].TEXT_EDIT,
+                app_framework : getNumberValue(ConfigGet('SERVER', 'APP_FRAMEWORK')),
+                app_datatoken: app_info.datatoken,
+                locale: app_info.locale,
+                translate_items:app_info.translate_items,
+                system_admin_only: app_info.system_admin_only,
+                client_latitude: app_info.latitude,
+                client_longitude: app_info.longitude,
+                client_place: app_info.place,
+                client_timezone: app_info.timezone,
+                common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF'),
+                first_time: first_time
+            };
+            render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify({
+                                                                app_service: app_service_parameters,
+                                                                app: app_parameters
+                                                            })]);
+            return render_app_with_data(module, render_variables);
+        }
+        else
+            return null;
     };
     
     if (app_info.system_admin_only==1){
@@ -343,6 +353,43 @@ const getInfo = async (app_id, info) => {
         return null;
 };
 /**
+ * Creates app
+ * @param {number} app_id
+ * @param {string|null} param
+ * @param {string} locale
+ * @returns {Promise.<string|null>}
+ */
+ const createApp = async (app_id, param, locale) => {
+    return new Promise((resolve, reject) => {
+        const main = async (/**@type{number}*/app_id) => {
+            render_app_html(app_id, locale)
+            .then((/**@type{string}*/app)=>{
+                resolve(app);
+                
+            })
+            .catch((/**@type{Types.error}*/err)=>reject(err));
+        };
+        if (param!=null && ConfigGetApp(app_id, app_id, 'SHOWPARAM') == 1){
+            import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getProfileUser}) => {
+                getProfileUser(app_id, null, param, null)
+                .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result)=>{
+                    if (result[0])
+                        main(app_id);
+                    else{
+                        //redirect to /
+                        resolve (null);
+                    }
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    reject(error);
+                });
+            });
+        }
+        else
+            main(app_id);          
+    });
+};
+/**
  * Get app
  * @param {number} app_id 
  * @param {{param:string|null,
@@ -361,15 +408,14 @@ const getAppBFF = async (app_id, app_parameters) =>{
     let system_admin_only;
     /** @type {string} */
     let app_module_type;
-    /** @type {string} */
+    /** @type {string|null} */
     let app;
     /**@type{*} */
     let translate_items = {};
 
     if (app_id == 0){
         //get app admin
-        const{createAdmin } = await import(`file://${process.cwd()}/apps/admin/src/app.js`);
-        app = await createAdmin(app_id, client_locale(app_parameters.accept_language));
+        app = await createApp(app_id, null, client_locale(app_parameters.accept_language));
         if (app_start()==true){
             system_admin_only = 0;
         }
@@ -391,7 +437,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
     }
     else{
         system_admin_only = 0;
-        const {createApp} = await import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`);
         app = await createApp(app_id, app_parameters.param, client_locale(app_parameters.accept_language));
         if (app == null)
             return null;

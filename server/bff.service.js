@@ -227,7 +227,7 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
         };
         BFF_server(parameters)
         .then((/**@type{*}*/result_service) => {
-            if (parameters.endpoint=='APP' && parameters.service=='APP' && result_service.STATIC){
+            if (parameters.endpoint=='APP' && parameters.service=='APP' && result_service!=null && result_service.STATIC){
                 if (result_service.SENDFILE){
                     bff_parameters.res.sendFile(result_service.SENDFILE);
                     bff_parameters.res.status(200);

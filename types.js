@@ -334,7 +334,7 @@
  * @property {string} place                 - geodata place
  * @property {string} timezone              - geodata timezone
  * @property {translate_items} translate_items - items to be translated
- * @property {string} module                - HTML
+ * @property {string|null} module                - HTML
  */
 /**
  * Apps - App module config info
@@ -385,10 +385,7 @@
  * @property {number}       first_time
  */
 
-/**
- * Apps - App request parameter
- * @typedef {string} app_parameter
- */
+
 /**
  * Apps - Report query parameters
  * @typedef {object} report_query_parameters
@@ -615,12 +612,7 @@
  *          }} config_apps_secrets
  * @typedef {{  MAP: boolean, 
  *              MANIFEST:boolean,
- *              RENDER_USER_ACCOUNT:boolean,
- *              CUSTOM_TAG_USER_ACCOUNT:string|null,
- *              RENDER_APP_THEMES:boolean, 
- *              RENDER_LOCALES:boolean, 
- *              RENDER_SETTINGS:boolean, 
- *              RENDER_PROVIDER_BUTTONS:boolean}} config_apps_render_config
+ *              HEAD:boolean}} config_apps_render_config
  * @typedef {[{}]} config_apps_parameters
  * @typedef {'ONLINE'|'OFFLINE'} config_apps_status
  * @typedef  {[string,string|null,string|null,string, string|null]} config_apps_render_files
