@@ -3415,6 +3415,8 @@ const common_event = async (event_type,event) =>{
                                             COMMON_GLOBAL.module_leaflet_jumpto);
                                 const select_country = AppDocument.querySelector('#common_module_leaflet_select_country');
                                 select_country.selectedIndex = 0;
+                                const select_city = AppDocument.querySelector('#common_module_leaflet_select_city');
+                                select_city.selectedIndex = 0;
                                 map_toolbar_reset();
                             }
                             break;
