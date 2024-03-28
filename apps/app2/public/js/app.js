@@ -696,12 +696,10 @@ const align_button_value = (report_align_where) => {
  */
 const dialogue_loading = (visible) => {
     if (visible==1){
-        AppDocument.querySelector('#dialogue_loading_content').classList.add('css_spinner');
-        AppDocument.querySelector('#dialogue_loading').style.visibility='visible';
+        common.ComponentRender('dialogue_loading', {}, '/component/dialogue_loading.js')
     }
     else{
-        AppDocument.querySelector('#dialogue_loading_content').classList.remove('css_spinner');
-        AppDocument.querySelector('#dialogue_loading').style.visibility='hidden';
+        common.ComponentRemove('dialogue_loading', true);
     }
 };
 /**
@@ -751,8 +749,10 @@ const select_get_selectindex = (select, id) => {
  */
 const show_dialogue = (dialogue) => {
     if (dialogue == 'SCAN' && common.mobile()==false){
-        AppDocument.querySelector('#dialogue_scan_open_mobile').style.visibility = 'visible';
-                    common.create_qr('scan_open_mobile_qrcode', common.getHostname());
+        common.ComponentRender('dialogue_scan_open_mobile', {
+                                                                function_create_qr:common.create_qr,
+                                                                function_getHostname:common.getHostname 
+                                                            }, '/component/dialogue_scan_open_mobile.js');
     }
 };
 /**
@@ -2126,7 +2126,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'info_close':{
-                    AppDocument.querySelector('#dialogue_info').style.visibility = 'hidden';
+                    common.ComponentRemove('dialogue_info', true);
                     break;
                 }
                 //toolbar top
@@ -2159,7 +2159,17 @@ const app_event_click = event => {
                 }
                 //toolbar bottom
                 case 'toolbar_btn_about':{
-                    AppDocument.querySelector('#dialogue_info').style.visibility = 'visible';
+                    
+                    common.ComponentRender('dialogue_info', {   
+                                                                about_logo:common.COMMON_GLOBAL.app_logo,
+                                                                app_copyright:common.COMMON_GLOBAL.app_copyright,
+                                                                app_link_url:common.COMMON_GLOBAL.app_link_url,
+                                                                app_link_title: common.COMMON_GLOBAL.app_link_title,
+                                                                info_link_policy_name:common.COMMON_GLOBAL.info_link_policy_name,
+                                                                info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
+                                                                info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name,
+                                                                info_link_about_name:common.COMMON_GLOBAL.info_link_about_name
+                                                            }, '/component/dialogue_info.js');
                     break;
                 }
                 case 'toolbar_btn_print':{
@@ -2198,7 +2208,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'scan_open_mobile_close':{
-                    AppDocument.querySelector('#dialogue_scan_open_mobile').style.visibility = 'hidden';
+                    common.ComponentRemove('dialogue_scan_open_mobile', true);
                     break;
                 }
                 //setting design
@@ -2991,10 +3001,6 @@ const settings_load = async () => {
         }
     }
     
-    /**
-     * @param {string} text
-     */
-    const tag = text => `<${text}/>`;
     const appthemes = themes(common.COMMON_GLOBAL.app_id, common.COMMON_GLOBAL.user_locale, app_settings_db);
 
     //settings regional
@@ -3021,10 +3027,8 @@ const settings_load = async () => {
     AppDocument.querySelector('#setting_select_highlatitude').innerHTML = APP_HIGH_LATITUDE_ADJUSTMENT;
     AppDocument.querySelector('#setting_select_timeformat').innerHTML = APP_TIMEFORMAT;
     AppDocument.querySelector('#setting_select_hijri_adjustment').innerHTML = APP_HIJRI_DATE_ADJUSTMENT;
-
     AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
     AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
-
     AppDocument.querySelector('#setting_select_report_iqamat_title_fajr').innerHTML = APP_IQAMAT;
     AppDocument.querySelector('#setting_select_report_iqamat_title_dhuhr').innerHTML = APP_IQAMAT;
     AppDocument.querySelector('#setting_select_report_iqamat_title_asr').innerHTML = APP_IQAMAT;
@@ -3050,10 +3054,7 @@ const init_app = async parameters => {
     .then(()=>common.ComponentRender('tab7', {}, '/component/settings_tab7.js'))
     .then(()=>common.ComponentRender('app_profile_search', {}, '/common/component/profile_search.js'))
     .then(()=>common.ComponentRender('app_profile_toolbar', {}, '/common/component/profile_toolbar.js'))
-    .then(()=>common.ComponentRender('app_user_account', {}, '/common/component/user_account.js'))
-    .then(()=>common.ComponentRender('dialogue_info', {}, '/component/dialogue_info.js'))
-    .then(()=>common.ComponentRender('dialogue_loading', {}, '/component/dialogue_loading.js'))
-    .then(()=>common.ComponentRender('dialogue_scan_open_mobile', {}, '/component/dialogue_scan_open_mobile.js'));
+    .then(()=>common.ComponentRender('app_user_account', {}, '/common/component/user_account.js'));
     dialogue_loading(1);
     await settings_load()
     app_report.REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright;
@@ -3220,19 +3221,7 @@ const init_app = async parameters => {
 
     //set initial default language from clients locale
     common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_local, AppDocument.querySelector('#setting_select_locale'),1);
-    AppDocument.querySelector('#about_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
     
-    
-    //set about info
-    AppDocument.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
-    if (common.COMMON_GLOBAL.app_link_url==null)
-        AppDocument.querySelector('#app_link').style.display = 'none';
-    else
-        AppDocument.querySelector('#app_link').innerHTML = common.COMMON_GLOBAL.app_link_title;
-    AppDocument.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
-    AppDocument.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
-    AppDocument.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
-    AppDocument.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
 
     //set default geolocation
     AppDocument.querySelector('#setting_select_popular_place').selectedIndex = 0;

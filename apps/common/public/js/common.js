@@ -936,13 +936,16 @@ const ComponentRender = async (div,props, component_path) => {
 const ComponentRemove = (div, remove_modal=false) => {
     const APPDIV = AppDocument.querySelector(`#${div}`);
     APPDIV.innerHTML = '';
-    if (div.startsWith('common_dialogue')){
+    if (div.indexOf('dialogue')>-1){
         APPDIV.classList.remove('common_dialogue_show0');
         APPDIV.classList.remove('common_dialogue_show1');
         APPDIV.classList.remove('common_dialogue_show2');
         APPDIV.classList.remove('common_dialogue_show3');
-        if (remove_modal)
-            AppDocument.querySelector('#common_dialogues').classList.remove('common_dialogues_modal');
+        if (remove_modal){
+            if (AppDocument.querySelector('#app .common_dialogues_modal'))
+                AppDocument.querySelector('#app .common_dialogues_modal').classList.remove('common_dialogues_modal');
+            AppDocument.querySelector('#common_app #common_dialogues').classList.remove('common_dialogues_modal');
+        }
     }
 }
 

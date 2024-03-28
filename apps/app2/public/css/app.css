@@ -203,49 +203,18 @@
 	margin-right:10px;
 	display: inline-block;
 }
-/*DIALOUGE SETTINGS*/
-.dialogue{
-	visibility:hidden;
-	position: fixed;
-	z-index: 10;
-	padding-top: 10px;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-}
-.dialogue_content{
-	text-align:center;
-	top: 50%;
-    left: 50%;
-	position: fixed;
-	transform: translate(-50%, -50%);
-	padding: 10px;
-	width: 300px;
-	height: 540px;
-	border-radius: 4px;
-}
-
 /*Dialogue loading */
-#dialogue_loading{
+#dialogue_loading.common_dialogue_show0{
 	text-align:center;
-	background-color: inherit;
-	visibility: hidden;
-	position: absolute;
 	width: 100%;
-	height: 100%;
-}
-#dialogue_loading_content{
-	text-align:center;
-	vertical-align: middle;
 	background-color: inherit;
-	display: inline-block;
+	display: block;
+	position: absolute;
 	top: calc(50% - 100px);
 }
-
 /*Dialogue Info */
-#dialogue_info_content{
+#dialogue_info.common_dialogue_show0{
+	width: 300px;
 	height:auto;
 }
 #about_logo {
@@ -254,12 +223,9 @@
 	height: 40px;
 	margin: 0 auto;
 }
-
 /* Dialogue scan_open_mobile*/
-#dialogue_scan_open_mobile{
-	z-index: 11; /*place above default dialogue z-index=10*/
-}
-#dialogue_scan_open_mobile_content{
+#dialogue_scan_open_mobile.common_dialogue_show0{
+	width: 300px;
 	height:340px;
 }
 #scan_open_mobile_qrcode{
@@ -274,7 +240,8 @@
 	font-size: 48px;
 	display: block;
 }
-#dialogue_loading #common_app_spinner{
+#dialogue_loading_content.css_spinner{
+	display: inline-block;
 	top: 50%;
 	transform: scale(1);
 }
@@ -972,7 +939,6 @@ body{
 	background-color: var(--common_app_color_background_spinner);
 }
 body,
-.dialogue_content,
 #settings select,
 #tab_navigation .tab_nav_selected
 {
@@ -998,8 +964,7 @@ body,
 #settings select,
 #tab_navigation,
 .common_dialogue_button,
-.common_toolbar_button,
-.dialogue_content
+.common_toolbar_button
 {
 	color: var(--app_theme_main_color3) !important;
 }
@@ -1025,9 +990,6 @@ body,
 }
 .dialogue{
 	background-color: var(--app_theme_dialogue_background_color);
-}
-.dialogue_content{
-	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_shadow_color1),0 6px 20px 0 var(--app_theme_dialogue_shadow_color2);
 }
 /*only shadow style on paper, style inside paper is in report*/
 #paper {
