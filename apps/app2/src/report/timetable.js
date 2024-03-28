@@ -560,11 +560,10 @@ const isToday = checkdate => {
 /**
  * Sets prayer method
  * @param {number} app_id 
- * @param {string} locale 
  * @returns {Promise.<null>}
  */
-const set_prayer_method = async(app_id, locale) => {
-    const { getSettings } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
+const set_prayer_method = async(app_id) => {
+    const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
 	return new Promise( (resolve, reject) => {
 		/* see more in PrayTimes module
 		original
@@ -674,13 +673,13 @@ const set_prayer_method = async(app_id, locale) => {
 					maghrib: (maghrib_data==null || maghrib_data=='')?{}:{maghrib: getNumberValue(maghrib_data)},
 					midnight: (midnight_data==null || midnight_data=='')?{}:{midnight: midnight_data}};
 		};
-        getSettings(app_id, locale, 'METHOD')
-		.then((/**@type{Types.db_result_app_setting_getSettings[]}*/result_settings)=>{
+        getSettingDisplayData(app_id, app_id, 'METHOD')
+		.then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_settings)=>{
 			for (const setting of result_settings){
 				const prayer_value = set_prayer_value(setting.data2, setting.data3,setting.data4,setting.data5);
 				//ES6 object spread 
 				Object.assign(REPORT_GLOBAL.module_praytimes_methods, {[setting.value.toUpperCase()]:{
-																				name:  setting.text,
+																				name:  setting.display_data,
 																				params: { 	...prayer_value.fajr,
 																							...prayer_value.isha,
 																							...prayer_value.maghrib,
@@ -2033,7 +2032,7 @@ const timetable = async (timetable_parameters) => {
 							parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
 												REPORT_GLOBAL.session_currentDate.getMonth(),
 												REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
-						set_prayer_method(timetable_parameters.app_id, user_account_app_data_post.locale).then(() => {
+						set_prayer_method(timetable_parameters.app_id).then(() => {
 							if (reporttype==0){
 								timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
 								.then((user_account_app_data_posts_parameters)=>{
