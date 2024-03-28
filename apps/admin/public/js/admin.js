@@ -71,7 +71,7 @@ const admin_login = async () => {
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('click', (/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{AppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
@@ -234,7 +234,7 @@ const app_event_click = event => {
  */
 const app_event_change = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('change',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{AppEvent}*/event) => {
             app_event_change(event);
         });
     }
@@ -272,7 +272,7 @@ const app_event_change = event => {
  */
 const app_event_keyup = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('keyup',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{AppEvent}*/event) => {
             app_event_keyup(event);
         });
     }
@@ -306,7 +306,7 @@ const app_event_keyup = event => {
  */
 const app_event_keydown = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('keydown',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keydown',(/**@type{AppEvent}*/event) => {
             app_event_keydown(event);
         });
     }
@@ -325,7 +325,7 @@ const app_event_keydown = event => {
  */
 const app_event_input = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('input',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('input',(/**@type{AppEvent}*/event) => {
             app_event_input(event);
         }, true);
     }
@@ -344,7 +344,7 @@ const app_event_input = event => {
  */
 const app_event_focus = event => {
     if (event==null){
-        AppDocument.querySelector('#app').addEventListener('focus',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('focus',(/**@type{AppEvent}*/event) => {
             app_event_focus(event);
         }, true);
     }
@@ -387,12 +387,12 @@ const mount_app_app = async (framework=null) => {
  * App init
  * @param {{app:*[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const init_app = (parameters) => {
-    common.ComponentRender('app_user_account', 
-                            {},
-                            '/common/component/user_account.js');
+const init_app = async (parameters) => {
+    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
+    .then(()=>common.ComponentRender('dialogue_send_broadcast', {}, '/component/dialogue_send_broadcast.js'))
+    .then(()=>common.ComponentRender('app_user_account', {},'/common/component/user_account.js'));
     if (parameters.app_service.system_admin_only == 0)
         for (const parameter of parameters.app) {
             if (parameter['MODULE_EASY.QRCODE_WIDTH'])
@@ -419,13 +419,14 @@ const init_app = (parameters) => {
  * @returns {Promise.<void>}
  */
 const init = async parameters => {        
-    common.show_common_dialogue('LOGIN_LOADING')
-    .then(()=>{
-        AppDocument.querySelector('#common_user_start_login_button').classList.add('css_spinner');
-        common.COMMON_GLOBAL.exception_app_function = admin_exception;
-        common.init_common(parameters).then(()=>{
-            init_app(parameters);
+    AppDocument.body.className = 'app_theme1';
+    common.COMMON_GLOBAL.exception_app_function = admin_exception;
+    common.init_common(parameters).then(()=>{
+        common.show_common_dialogue('LOGIN_LOADING')
+        .then(()=>{
+                AppDocument.querySelector('#common_user_start_login_button').classList.add('css_spinner');
+                init_app(parameters);
         });
-    })
+    });
 };
 export { init };
