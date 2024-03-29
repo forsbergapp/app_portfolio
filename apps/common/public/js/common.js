@@ -615,24 +615,43 @@ const getHostname = () =>{
 /**
  * Input control
  * @param {HTMLElement|null} dialogue 
- * @param {*} elements 
+ * @param {{
+ *			check_valid_list_elements?:[HTMLElement,number|null][],
+ *			check_valid_list_values?:[string,number|null][],
+ *			username?:HTMLElement,
+ *			password?:*,
+ *          password_confirm?:HTMLElement,
+ *          password_confirm_reminder?:HTMLElement,
+ *			password_reminder?:HTMLElement,
+ *			password_new?:HTMLElement,
+ *			password_new_confirm?:*,
+ *			email?:HTMLElement,
+ *			bio?:HTMLElement
+ *		}} validate_items 
  * @returns {boolean}
  */
-const input_control = (dialogue, elements) =>{
+const input_control = (dialogue, validate_items) =>{
     let result = true;
     /**
-     * Valid text
-     * @param {HTMLElement} element 
+     * Valid text element or value
+     * @param {HTMLElement|string} validate
      * @returns {boolean}
      */
-    const valid_text = element =>{
+    const valid_text = validate =>{
+        let div;
+        if (typeof validate=='object')
+            div = validate;
+        else{
+            div = AppDocument.createElement('div');
+            div.innerHTML = validate;
+        }
         //remove any html
-        element.innerHTML = element.innerText;
-        if (element.innerText.indexOf(':') > -1 || element.innerText.includes('"') || element.innerText.includes('\\') )
+        div.innerHTML = div.innerText;
+        if (div.innerText.indexOf(':') > -1 || div.innerText.includes('"') || div.innerText.includes('\\') )
             return false;
         else
             try {
-                JSON.parse(JSON.stringify(element.innerText));
+                JSON.parse(JSON.stringify(div.innerText));
                 return true;
                 
             } catch (error) {
@@ -651,81 +670,97 @@ const input_control = (dialogue, elements) =>{
     };
     if (dialogue)
         dialogue.querySelectorAll('.common_input_error').forEach(element=>element.classList.remove('common_input_error'));
-    
-    if (elements.check_valid_list)
-        for (const element of elements.check_valid_list){
+
+    if (validate_items.check_valid_list_elements)
+        for (const element of validate_items.check_valid_list_elements){
             element[0].classList.remove('common_input_error');
         }
-
+        
     //validate text content
-    if (elements.username && valid_text(elements.username) == false){
-        set_error(elements.username);
+    if (validate_items.username && valid_text(validate_items.username) == false){
+        set_error(validate_items.username);
     }
-    if (elements.password && valid_text(elements.password)== false){
-        set_error(elements.password);
+    if (validate_items.password && valid_text(validate_items.password)== false){
+        set_error(validate_items.password);
     }
-    if (elements.password_reminder && valid_text(elements.password_reminder)== false){
-        set_error(elements.password);
+    if (validate_items.password_reminder && valid_text(validate_items.password_reminder)== false){
+        set_error(validate_items.password);
     }
-    if (elements.password_new && valid_text(elements.password_new)== false){
-        set_error(elements.password);
+    if (validate_items.password_new && valid_text(validate_items.password_new)== false){
+        set_error(validate_items.password);
     }
-    if (elements.password_new_confirm && valid_text(elements.password_new_confirm)== false){
-        set_error(elements.password);
+    if (validate_items.password_new_confirm && valid_text(validate_items.password_new_confirm)== false){
+        set_error(validate_items.password);
     }
-    if (elements.email && valid_text(elements.email)== false){
-        set_error(elements.email);
+    if (validate_items.email && valid_text(validate_items.email)== false){
+        set_error(validate_items.email);
     }
-    if (elements.bio && valid_text(elements.bio)== false){
-        set_error(elements.bio);
+    if (validate_items.bio && valid_text(validate_items.bio)== false){
+        set_error(validate_items.bio);
     }
-    if (elements.check_valid_list){
-        for (const element of elements.check_valid_list){
+    if (validate_items.check_valid_list_elements){
+        for (const element of validate_items.check_valid_list_elements){
             if (valid_text(element[0])==false)
                 set_error(element[0]);
         }
     }
+    if (validate_items.check_valid_list_values){
+        for (const element of validate_items.check_valid_list_values){
+            if (valid_text(element[0])==false){
+                result = false;
+                break;
+            }
+        }
+    }
     //validate text length
-    if (elements.username && elements.username.innerText.length > 100){
-        set_error(elements.username);
+    if (validate_items.username && validate_items.username.innerText.length > 100){
+        set_error(validate_items.username);
     }
-    if (elements.password && elements.password.innerText.length > 100){
-        set_error(elements.password);
+    if (validate_items.password && validate_items.password.innerText.length > 100){
+        set_error(validate_items.password);
     }
-    if (elements.password_reminder && elements.password_reminder.innerText.length > 100){
-        set_error(elements.password_reminder);
+    if (validate_items.password_reminder && validate_items.password_reminder.innerText.length > 100){
+        set_error(validate_items.password_reminder);
     }
-    if (elements.password_new && elements.password_new.innerText.length > 100){
-        set_error(elements.password_new);
+    if (validate_items.password_new && validate_items.password_new.innerText.length > 100){
+        set_error(validate_items.password_new);
     }
-    if (elements.bio && elements.bio.innerText.length > 150){
-        set_error(elements.bio);
+    if (validate_items.bio && validate_items.bio.innerText.length > 150){
+        set_error(validate_items.bio);
     }
-    if (elements.check_valid_list){
-        for (const element of elements.check_valid_list){
-            if (element[0] && element[0].innerText > element[1])
-                set_error(element);
+    if (validate_items.check_valid_list_elements){
+        for (const element of validate_items.check_valid_list_elements){
+            if (element[0] && element[1] && element[0].innerText.length > element[1])
+                set_error(element[0]);
+        }
+    }
+    if (validate_items.check_valid_list_values){
+        for (const element of validate_items.check_valid_list_values){
+            if (element[0] && element[1] && element[0].length > element[1]){
+                result = false;
+                break;
+            }
         }
     }
     //validate not empty
-    if (elements.username && elements.username.innerText == '') {
-        set_error(elements.username);
+    if (validate_items.username && validate_items.username.innerText == '') {
+        set_error(validate_items.username);
     }
-    if (elements.password && elements.password.innerText == '') {
-        set_error(elements.password);
+    if (validate_items.password && validate_items.password.innerText == '') {
+        set_error(validate_items.password);
     }
-    if (elements.email && elements.email.innerText == '') {
-        set_error(elements.email);
+    if (validate_items.email && validate_items.email.innerText == '') {
+        set_error(validate_items.email);
     }
-    if (elements.password && elements.password_confirm && elements.password_confirm.innerText ==''){
-        set_error(elements.password_confirm);
+    if (validate_items.password && validate_items.password_confirm && validate_items.password_confirm.innerText ==''){
+        set_error(validate_items.password_confirm);
     }
     //validate same password
-    if (elements.password && elements.password_confirm && (elements.password.innerText != elements.password_confirm.innerText)){
-        set_error(elements.password, elements.password_confirm);
+    if (validate_items.password && validate_items.password_confirm && (validate_items.password.innerText != validate_items.password_confirm.innerText)){
+        set_error(validate_items.password, validate_items.password_confirm);
     }
-    if (elements.password_new && elements.password_new.innerText.length > 0 && (elements.password_new.innerText != elements.password_new_confirm.innerText)){
-        set_error(elements.password_new, elements.password_new_confirm);
+    if (validate_items.password_new && validate_items.password_new.innerText.length > 0 && (validate_items.password_new.innerText != validate_items.password_new_confirm.innerText)){
+        set_error(validate_items.password_new, validate_items.password_new_confirm);
     }
     /**@ts-ignore */
     if (result==false){
@@ -1334,7 +1369,7 @@ const search_profile = click_function => {
         let path;
         let token;
         let json_data;
-        if (input_control(null,{check_valid_list:[[AppDocument.querySelector('#common_profile_search_input'),null]]})==false)
+        if (input_control(null,{check_valid_list_elements:[[AppDocument.querySelector('#common_profile_search_input'),null]]})==false)
             return;
         if (COMMON_GLOBAL.user_account_id!=null){
             //search using access token with logged in user_account_id
