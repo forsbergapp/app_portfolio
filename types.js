@@ -906,8 +906,6 @@
  *              regional_calendar_type:             string,
  *              regional_calendar_hijri_type:       string,
  *              gps_map_type:                       string,
- *              gps_country_id:                     number|null,
- *              gps_city_id:                        number|null,
  *              gps_popular_place_id:               number|null,
  *              gps_lat_text:                       string,
  *              gps_long_text:                      string,

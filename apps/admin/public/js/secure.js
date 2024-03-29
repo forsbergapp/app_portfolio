@@ -769,7 +769,7 @@ const show_users = () =>{
  */
 const search_users = (sort='username', order_by='asc', focus=true) => {
 
-    if (common.input_control(null,{check_valid_list:[[AppDocument.querySelector('#list_user_account_search_input'),100]]})==false)
+    if (common.input_control(null,{check_valid_list_elements:[[AppDocument.querySelector('#list_user_account_search_input'),100]]})==false)
         return;
 
     AppDocument.querySelector('#list_user_account').classList.add('common_icon', 'css_spinner');
@@ -2371,7 +2371,7 @@ const get_log_parameters = async () => {
  */
 const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
     if (search != null){
-        if (common.input_control(null,{check_valid_list:[[AppDocument.querySelector('#list_server_log_search_input'),100]]})==false)
+        if (common.input_control(null,{check_valid_list_elements:[[AppDocument.querySelector('#list_server_log_search_input'),100]]})==false)
             return;
     }
     const logscope = AppDocument.querySelector('#select_logscope5')[AppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
@@ -2602,7 +2602,7 @@ const db_uninstall = () =>{
 const demo_install = () =>{
     if (common.input_control(null,
                         {
-                        check_valid_list:[[AppDocument.querySelector('#install_demo_password'),null]]
+                            check_valid_list_elements:[[AppDocument.querySelector('#install_demo_password'),null]]
                         })==true){
         const json_data = {demo_password: AppDocument.querySelector('#install_demo_password').innerHTML};
         const path = `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`;
