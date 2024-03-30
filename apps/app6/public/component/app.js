@@ -3,7 +3,7 @@ const AppDocument = document;
 const template =`   <div id='dialogue_documents' class='dialogue'>
                         <div id='dialogue_documents_content' class='dialogue_content'>
                             <div id='app_logo'></div>
-                            <div id='app_costruction'></div>
+                            <div id='app_construction'></div>
                         </div>
                     </div>`;
 /**
