@@ -11,8 +11,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
@@ -22,8 +22,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </div>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_asr' class='common_icon'></div>
@@ -34,8 +34,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_highlatitude' class='common_icon'></div>
@@ -46,8 +46,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_timeformat' class='common_icon'></div>
@@ -58,8 +58,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_hijri_adjustment' class='common_icon'></div>
@@ -70,8 +70,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_report_iqamat_title_fajr' class='common_icon'></div>
@@ -82,8 +82,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_report_iqamat_title_dhuhr' class='common_icon'></div>
@@ -94,8 +94,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_report_iqamat_title_asr' class='common_icon'></div>
@@ -106,8 +106,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_report_iqamat_title_maghrib' class='common_icon'></div>
@@ -118,8 +118,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_report_iqamat_title_isha' class='common_icon'></div>
@@ -130,8 +130,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_report_show_imsak' class='common_icon'></div>
@@ -140,8 +140,8 @@ const template =`   <div class='setting_horizontal_row'>
                             <div id='setting_checkbox_report_show_imsak' class='common_switch'></div>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_report_show_sunset' class='common_icon'></div>
@@ -150,8 +150,8 @@ const template =`   <div class='setting_horizontal_row'>
                             <div id='setting_checkbox_report_show_sunset' class='common_switch'></div>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_report_show_midnight' class='common_icon'></div>
@@ -160,8 +160,8 @@ const template =`   <div class='setting_horizontal_row'>
                             <div id='setting_checkbox_report_show_midnight' class='common_switch'></div>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_report_show_fast_start_end' class='common_icon'></div>

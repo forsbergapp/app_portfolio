@@ -10,24 +10,7 @@ const template =`   <div id='toolbar_top'>
                     </div>
                     <div id='app_profile_search'></div>
                     <div id='paper'></div>
-                    <div id='settings'>
-                        <div id='tab_navigation'>
-                            <div id='tab_nav_1' class='tab_nav tab_nav_selected common_icon'></div>
-                            <div id='tab_nav_2' class='tab_nav common_icon'></div>
-                            <div id='tab_nav_3' class='tab_nav common_icon'></div>
-                            <div id='tab_nav_4' class='tab_nav common_icon'></div>
-                            <div id='tab_nav_5' class='tab_nav common_icon'></div>
-                            <div id='tab_nav_6' class='tab_nav common_icon'></div>
-                            <div id='tab_nav_7' class='tab_nav common_icon'></div>
-                        </div>
-                        <div id='tab1' class="tab_content"></div>
-                        <div id='tab2' class="tab_content"></div>
-                        <div id='tab3' class="tab_content"></div>
-                        <div id='tab4' class="tab_content"></div>
-                        <div id='tab5' class="tab_content"></div>
-                        <div id='tab6' class="tab_content"></div>
-                        <div id='tab7' class="tab_content"></div>
-                    </div>
+                    <div id='settings'></div>
                     <div id='dialogues'>
                         <div id='dialogue_loading'></div>
                         <div id='dialogue_info' class='common_dialogue_content'></div>
