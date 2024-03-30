@@ -11,8 +11,8 @@ const template =`       <div class='setting_horizontal_row'>
                                 </select>	
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_icon_regional_timezone_current' class='common_icon'></div>
@@ -21,16 +21,16 @@ const template =`       <div class='setting_horizontal_row'>
                                 <div id='setting_timezone_current'></div>
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_current_date_time_display'>...</div>
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_icon_regional_timezone' class='common_icon'></div>
@@ -41,16 +41,16 @@ const template =`       <div class='setting_horizontal_row'>
                                 </select>
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_report_date_time_display'>...</div>
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_icon_regional_numbersystem' class='common_icon'></div>
@@ -61,8 +61,8 @@ const template =`       <div class='setting_horizontal_row'>
                                 </select>
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_icon_regional_direction' class='common_icon'></div>
@@ -73,8 +73,8 @@ const template =`       <div class='setting_horizontal_row'>
                                 </select>
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_icon_regional_locale_second' class='common_icon'></div>
@@ -85,8 +85,8 @@ const template =`       <div class='setting_horizontal_row'>
                                 </select>
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>      
                                 <div id='setting_icon_regional_coltitle' class='common_icon'></div>
@@ -97,8 +97,8 @@ const template =`       <div class='setting_horizontal_row'>
                                 </select>
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_icon_regional_arabic_script' class='common_icon'></div>
@@ -109,8 +109,8 @@ const template =`       <div class='setting_horizontal_row'>
                                 </select>
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_icon_regional_calendartype' class='common_icon'></div>
@@ -121,8 +121,8 @@ const template =`       <div class='setting_horizontal_row'>
                                 </select>
                             </div>
                             <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
+                        </div>
+                        <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_icon_regional_calendar_hijri_type' class='common_icon'></div>

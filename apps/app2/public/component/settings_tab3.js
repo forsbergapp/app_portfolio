@@ -40,8 +40,8 @@ const template =`   <div class='setting_horizontal_row'>
                             <div id='slider_next_year' class='common_dialogue_button slider_next common_icon'></div>
                             <div id='slider_theme_year_id'></div>
                         </div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_design_papersize' class='common_icon'></div>
@@ -52,8 +52,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_design_highlight_row' class='common_icon'></div>
@@ -64,8 +64,8 @@ const template =`   <div class='setting_horizontal_row'>
                             </select>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_design_show_weekday' class='common_icon'></div>
@@ -74,8 +74,8 @@ const template =`   <div class='setting_horizontal_row'>
                             <div id='setting_checkbox_report_show_weekday' class='common_switch'></div>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_design_show_calendartype' class='common_icon'></div>
@@ -84,8 +84,8 @@ const template =`   <div class='setting_horizontal_row'>
                             <div id='setting_checkbox_report_show_calendartype' class='common_switch'></div>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_design_show_notes' class='common_icon'></div>
@@ -94,8 +94,8 @@ const template =`   <div class='setting_horizontal_row'>
                             <div id='setting_checkbox_report_show_notes' class='common_switch'></div>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_design_show_gps' class='common_icon'></div>
@@ -104,8 +104,8 @@ const template =`   <div class='setting_horizontal_row'>
                             <div id='setting_checkbox_report_show_gps' class='common_switch'></div>
                         </div>
                         <div class='setting_horizontal_col'></div>
-                        </div>
-                        <div class='setting_horizontal_row'>
+                    </div>
+                    <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_design_show_timezone' class='common_icon'></div>

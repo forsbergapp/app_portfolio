@@ -569,41 +569,47 @@ const inIframe = () => {
  * @param {string} item_input 
  * @param {number} image_width 
  * @param {number} image_height 
- * @returns {void}
+ * @returns {Promise.<null>}
  */
-const show_image = (item_img, item_input, image_width, image_height) => {
-    const file = AppDocument.querySelector('#' + item_input).files[0];
-    const reader = new FileReader();
-
-    const allowedExtensions = [COMMON_GLOBAL.image_file_allowed_type1,
-                               COMMON_GLOBAL.image_file_allowed_type2,
-                               COMMON_GLOBAL.image_file_allowed_type3,
-                               COMMON_GLOBAL.image_file_allowed_type4,
-                               COMMON_GLOBAL.image_file_allowed_type5
-                              ];
-    const { name: fileName, size: fileSize } = file;
-    const fileExtension = fileName.split('.').pop();
-    if (!allowedExtensions.includes(fileExtension)){
-        //File type not allowed
-        show_message('ERROR', '20307', null,null, null, COMMON_GLOBAL.common_app_id);
-    }
-    else
-        if (fileSize > COMMON_GLOBAL.image_file_max_size){
-            //File size too large
-            show_message('ERROR', '20308', null, null, null, COMMON_GLOBAL.common_app_id);
+const show_image = async (item_img, item_input, image_width, image_height) => {
+    return new Promise((resolve)=>{
+        const file = AppDocument.querySelector('#' + item_input).files[0];
+        const reader = new FileReader();
+    
+        const allowedExtensions = [COMMON_GLOBAL.image_file_allowed_type1,
+                                   COMMON_GLOBAL.image_file_allowed_type2,
+                                   COMMON_GLOBAL.image_file_allowed_type3,
+                                   COMMON_GLOBAL.image_file_allowed_type4,
+                                   COMMON_GLOBAL.image_file_allowed_type5
+                                  ];
+        const { name: fileName, size: fileSize } = file;
+        const fileExtension = fileName.split('.').pop();
+        if (!allowedExtensions.includes(fileExtension)){
+            //File type not allowed
+            show_message('ERROR', '20307', null,null, null, COMMON_GLOBAL.common_app_id);
+            resolve(null);
         }
-        else {
-            reader.onloadend = /**@type{AppEvent}*/event => {
-                if (event.target)
-                    convert_image(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
-                        item_img.src = srcEncoded;
-                    });
-            };
-        }
-    if (file)
-        reader.readAsDataURL(file); //reads the data as a URL
-    else
-        item_img.src = '';
+        else
+            if (fileSize > COMMON_GLOBAL.image_file_max_size){
+                //File size too large
+                show_message('ERROR', '20308', null, null, null, COMMON_GLOBAL.common_app_id);
+                resolve(null);
+            }
+            else {
+                reader.onloadend = /**@type{AppEvent}*/event => {
+                    if (event.target)
+                        convert_image(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
+                            item_img.src = srcEncoded;
+                            resolve(null);
+                        });
+                };
+            }
+        if (file)
+            reader.readAsDataURL(file); //reads the data as a URL
+        else
+            item_img.src = '';
+    })
+    
 };
 /**
  * Get hostname with protocol and port

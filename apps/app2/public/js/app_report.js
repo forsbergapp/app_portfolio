@@ -499,9 +499,10 @@ const isToday = (checkdate) => {
 };
 /**
  * Sets prayer method
+ * @param {*} methods
  * @returns {Promise.<null>}
  */
-const set_prayer_method = async() => {
+const set_prayer_method = async(methods) => {
 	return new Promise( (resolve) => {
 		/**
 		 * Set prayer value for fajr, isha, maghrib and midnight
@@ -526,18 +527,12 @@ const set_prayer_method = async() => {
 					maghrib: (maghrib_data==null || maghrib_data=='')?{}:{maghrib: maghrib_data},
 					midnight: (midnight_data==null || midnight_data=='')?{}:{midnight: midnight_data}};
 		};
-		//called from app where there is a DOM select
-		const methods = AppDocument.querySelector('#setting_select_method');
 		for (const method of methods){
-			const prayer_value = set_prayer_value(	method.getAttribute('data2'),
-													method.getAttribute('data3'),
-													method.getAttribute('data4'),
-													method.getAttribute('data5'));
-			
+			const prayer_value = set_prayer_value(method.data2, method.data3,method.data4,method.data5);			
 			//ES6 object spread 
 			Object.assign(REPORT_GLOBAL.module_praytimes_methods, 
 				{[method.value.toUpperCase()]:{
-					name:  method.text,
+					name:  method.display_data,
 					params: { 	...prayer_value.fajr,
 								...prayer_value.isha,
 								...prayer_value.maghrib,

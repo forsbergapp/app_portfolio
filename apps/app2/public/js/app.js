@@ -205,7 +205,7 @@ const APP_GLOBAL = {
 
     //session variables
     timetable_type:0,
-    places:[{id:null, app_id:null, app_setting_type_name:'', value:'', data2:'', data3:'', data4:'', text:''}],
+    places:[{id:null, app_id:null, app_setting_type_name:'', value:'', data2:'', data3:'', data4:'', data5:'', text:''}],
     user_settings:[user_settings_empty]
 };
 Object.seal(APP_GLOBAL);
@@ -315,8 +315,6 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
     switch (timetable_type){
         //create timetable month or day or year if they are visible instead
         case 0:{
-            //update user settings to current select option 
-            settings_update();
             const current_user_settings =[];
             for (const setting of APP_GLOBAL.user_settings){
                 current_user_settings.push(
@@ -517,13 +515,14 @@ const theme_nav = async (nav, type) => {
  * @returns {Promise.<void>}
  */
 const settings_translate = async (first=true) => {
+    
     let locale;
     if (first ==true){
-        locale = AppDocument.querySelector('#setting_select_locale').value;
+        locale = APP_GLOBAL.user_settings[AppDocument.querySelector('#setting_select_user_setting').selectedIndex].regional_language_locale;
     }
     else
-        locale = AppDocument.querySelector('#setting_select_report_locale_second').value;
-    if (locale != 0){
+        locale = APP_GLOBAL.user_settings[AppDocument.querySelector('#setting_select_user_setting').selectedIndex].regional_second_language_locale;
+    if (locale != '0'){
         //fetch any message with first language always
         //show translation using first or second language
         await common.FFB('DB_API', `/app_object?data_lang_code=${locale}&object_name=REPORT`, 'GET', 'APP_DATA', null)
@@ -536,7 +535,7 @@ const settings_translate = async (first=true) => {
             }
             //if translating first language and second language is not used
             if (first == true &&
-                AppDocument.querySelector('#setting_select_report_locale_second').value ==0){
+                APP_GLOBAL.user_settings[AppDocument.querySelector('#setting_select_user_setting').selectedIndex].regional_second_language_locale =='0'){
                 app_report.REPORT_GLOBAL.second_language.timetable_title= '';
                 app_report.REPORT_GLOBAL.second_language.coltitle_day= '';
                 app_report.REPORT_GLOBAL.second_language.coltitle_weekday= '';
@@ -605,9 +604,10 @@ const showcurrenttime = () => {
  * @returns {void}
  */
 const showreporttime = () => {
-    if (AppDocument.querySelector('#setting_select_report_timezone')){
+    const select = AppDocument.querySelector('#setting_select_report_timezone');
+    if (select.selectedIndex>0){
         const options = {
-            timeZone: AppDocument.querySelector('#setting_select_report_timezone')[AppDocument.querySelector('#setting_select_report_timezone').selectedIndex].value,
+            timeZone: select[select.selectedIndex].value,
             weekday: 'long',
             year: 'numeric',
             month: 'long',
@@ -708,11 +708,7 @@ const toolbar_button = async (choice) => {
                     paper.style.display = 'none';
                 AppDocument.querySelector('#common_profile_btn_top').style.visibility='hidden';
                 settings.style.visibility = 'visible';
-
-                if (AppDocument.querySelector('#tab_nav_1').classList.contains('tab_nav_selected'))
-                    await update_settings_locale();
-                if (AppDocument.querySelector('#tab_nav_3').classList.contains('tab_nav_selected'))
-                    update_all_theme_thumbnails();
+                openTab(1);
                 break;
             }
         //profile
@@ -733,54 +729,41 @@ const toolbar_button = async (choice) => {
             }
     }
 };
-const update_settings_locale = async () =>{
-    //get locales
-    const select_locale = AppDocument.querySelector('#setting_select_locale');
-    const select_second_locale = AppDocument.querySelector('#setting_select_report_locale_second'); 
-    const current_locale = select_locale.value;
-    const current_second_locale = select_second_locale.value;
-    select_locale.innerHTML = await common.get_locales_options();
-    select_locale.value = current_locale;
-    select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + select_locale.innerHTML;
-    select_second_locale.value = current_second_locale;   
-}
+
 /**
  * Open navigation tab
  * @param {number} tab_selected 
  */
 const openTab = async (tab_selected) => {
-    //hide all tab content
-    AppDocument.querySelectorAll('.tab_content').forEach((/**@type{HTMLElement}*/tab_content)=>tab_content.style.display = 'none');
+    //remove interval in tab 1 regional
+    /**@ts-ignore */
+    clearInterval(showcurrenttime);
+    /**@ts-ignore */
+    clearInterval(showreporttime);
+
+    //empty all tab content
+    common.ComponentRemove('settings_tab1');
+    common.ComponentRemove('settings_tab2');
+    common.ComponentRemove('settings_tab3');
+    common.ComponentRemove('settings_tab4');
+    common.ComponentRemove('settings_tab5');
+    common.ComponentRemove('settings_tab6');
+    if (common.COMMON_GLOBAL.user_account_id == null)
+        AppDocument.querySelector(`#settings_tab7`).style.display = 'none';
+    else
+        AppDocument.querySelector(`#settings_tab7`).style.display = 'block';
+    if (tab_selected==7)
+        AppDocument.querySelector('#user_settings').style.display = 'block';
+    else
+        AppDocument.querySelector('#user_settings').style.display = 'none';
+            
     //remove mark for all tabs
-    AppDocument.querySelectorAll('.tab_nav').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('tab_nav_selected'));
-    //show active tab content
-    AppDocument.querySelector('#tab' + tab_selected).style.display = 'block';
+    AppDocument.querySelectorAll('.settings_tab_nav').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('settings_tab_nav_selected'));
     //mark active tab
-    AppDocument.querySelector('#tab_nav_' + tab_selected).classList.add('tab_nav_selected');
+    AppDocument.querySelector('#settings_tab_nav_' + tab_selected).classList.add('settings_tab_nav_selected');    
+    common.ComponentRender(`settings_tab${tab_selected}`, {}, `/component/settings_tab${tab_selected}.js`)
+    .then(()=>settings_load(tab_selected));
     
-    switch (Number(tab_selected)){
-        case 1:{
-            await update_settings_locale();
-            break;
-        }
-        case 2:{
-            AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).outerHTML = `<div id='${APP_GLOBAL.gps_module_leaflet_container}'></div>`;
-            //init map thirdparty module
-            init_map().then(()=>{
-                update_ui(4);
-                common.map_resize();
-            });
-            break;
-        }
-        case 3:{
-            update_all_theme_thumbnails();
-            break;
-        }
-        case 5:{
-            AppDocument.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
-            break;
-        }
-    }
 };
 /**
  * Get alignment for button
@@ -865,36 +848,16 @@ const show_dialogue = (dialogue) => {
 };
 /**
  * Update ui
- * @param {number} option 
+ * @param {string} setting_tab
+ * @param {string} setting_type
  * @param {string|null} item_id 
  * @returns {Promise.<void>}
  */
-const update_ui = async (option, item_id=null) => {
-    const settings = {
-        paper                   : AppDocument.querySelector('#paper'),
-        timezone_report         : AppDocument.querySelector('#setting_select_report_timezone'),
-        country                 : AppDocument.querySelector('#common_module_leaflet_select_country'),
-        city                    : AppDocument.querySelector('#common_module_leaflet_select_city'),
-        select_place            : AppDocument.querySelector('#setting_select_popular_place'),
-        gps_lat_input           : AppDocument.querySelector('#setting_input_lat'),
-        gps_long_input          : AppDocument.querySelector('#setting_input_long'),
-        paper_size              : AppDocument.querySelector('#setting_select_report_papersize').value,
-        reportheader_input      : AppDocument.querySelector('#setting_input_reportheader_img'),
-        reportfooter_input      : AppDocument.querySelector('#setting_input_reportfooter_img'),
-        header_preview_img_item : AppDocument.querySelector('#setting_reportheader_img'),
-        footer_preview_img_item : AppDocument.querySelector('#setting_reportfooter_img'),
-        button_active_class     : 'setting_button_active',
-        reportheader_aleft      : AppDocument.querySelector('#setting_icon_text_header_aleft'),
-        reportheader_acenter    : AppDocument.querySelector('#setting_icon_text_header_acenter'),
-        reportheader_aright     : AppDocument.querySelector('#setting_icon_text_header_aright'),
-        reportfooter_aleft      : AppDocument.querySelector('#setting_icon_text_footer_aleft'),
-        reportfooter_acenter    : AppDocument.querySelector('#setting_icon_text_footer_acenter'),
-        reportfooter_aright     : AppDocument.querySelector('#setting_icon_text_footer_aright')
-    };
+const component_setting_update = async (setting_tab, setting_type, item_id=null) => {
+    const select_user_setting = AppDocument.querySelector('#setting_select_user_setting');
 
-    switch (option) {
-        //Regional, timezone report
-        case 2:
+    switch (setting_tab + '_' + setting_type) {
+        case 'REGIONAL_TIMEZONE':
             {
                 //Update report date and time for current locale, report timezone format
                 /**@ts-ignore */
@@ -902,11 +865,12 @@ const update_ui = async (option, item_id=null) => {
                 setInterval(showreporttime, 1000);
                 break;
             }
-        //GPS, update map
-        case 4:
+        case 'GPS_MAP':
             {
-                map_update_app( settings.gps_long_input.innerHTML,
-                                settings.gps_lat_input.innerHTML,
+                const gps_lat_input = AppDocument.querySelector('#setting_input_lat');
+                const gps_long_input = AppDocument.querySelector('#setting_input_long');
+                map_update_app( gps_long_input.innerHTML,
+                                gps_lat_input.innerHTML,
                                 common.COMMON_GLOBAL.module_leaflet_zoom,
                                 AppDocument.querySelector('#setting_input_place').innerHTML,
                                 null,
@@ -914,127 +878,139 @@ const update_ui = async (option, item_id=null) => {
                                 common.COMMON_GLOBAL.module_leaflet_jumpto);
                 break;
             }
-        //GPS, update cities from country
-        case 5:
+        case 'GPS_CITIES':
             {
+                const country = AppDocument.querySelector('#common_module_leaflet_select_country');
+                const city = AppDocument.querySelector('#common_module_leaflet_select_city');
                 //set default option
-                settings.city.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
+                city.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
                 //common.SearchAndSetSelectedIndex('', settings.select_place,0);
-                if (settings.country[settings.country.selectedIndex].getAttribute('country_code')!=null){
+                if (country[country.selectedIndex].getAttribute('country_code')!=null){
                     //fetch list including default option
-                    settings.city.innerHTML = await common.get_cities(settings.country[settings.country.selectedIndex]
-                                                    .getAttribute('country_code').toUpperCase());
+                    city.innerHTML = await common.get_cities(country[country.selectedIndex].getAttribute('country_code').toUpperCase());
                 }
                 break;
             }
-        //GPS, city
-        case 6:
+        case 'GPS_CITY':
             {                    
+                const country = AppDocument.querySelector('#common_module_leaflet_select_country');
+                const city = AppDocument.querySelector('#common_module_leaflet_select_city');
+                const select_place = AppDocument.querySelector('#setting_select_popular_place');
+                const gps_lat_input = AppDocument.querySelector('#setting_input_lat');
+                const gps_long_input = AppDocument.querySelector('#setting_input_long');
                 //set GPS and timezone
-                const longitude_selected = settings.city[settings.city.selectedIndex].getAttribute('longitude');
-                const latitude_selected = settings.city[settings.city.selectedIndex].getAttribute('latitude');
+                const longitude_selected = city[city.selectedIndex].getAttribute('longitude');
+                const latitude_selected = city[city.selectedIndex].getAttribute('latitude');
                 
-                settings.gps_long_input.innerHTML = longitude_selected;
-                settings.gps_lat_input.innerHTML = latitude_selected;
+                gps_long_input.innerHTML = longitude_selected;
+                gps_lat_input.innerHTML = latitude_selected;
 
                 //Use city + country from list
                 AppDocument.querySelector('#setting_input_place').innerHTML =
-                    settings.city.options[settings.city.selectedIndex].text + ', ' +
-                    settings.country.options[settings.country.selectedIndex].text;
+                    city.options[city.selectedIndex].text + ', ' +
+                    country.options[country.selectedIndex].text;
                 //display empty popular place select
-                common.SearchAndSetSelectedIndex('', settings.select_place,0);
+                common.SearchAndSetSelectedIndex('', select_place,0);
                 if (AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
                     //Update map
-                    map_update_app(settings.gps_long_input.innerHTML,
-                                    settings.gps_lat_input.innerHTML,
+                    map_update_app( gps_long_input.innerHTML,
+                                    gps_lat_input.innerHTML,
                                     common.COMMON_GLOBAL.module_leaflet_zoom_city,
                                     AppDocument.querySelector('#setting_input_place').innerHTML,
                                     null,
                                     common.COMMON_GLOBAL.module_leaflet_marker_div_city,
                                     common.COMMON_GLOBAL.module_leaflet_flyto)
                     .then((timezone_selected) => {
-                        settings.timezone_report.value = timezone_selected;
+                        APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_selected;
                         settings_update();
                     })
                 }
                 break;
             }
-        //GPS, popular places
-        case 7:
+        case 'GPS_POPULAR_PLACES':
             {
+                const country = AppDocument.querySelector('#common_module_leaflet_select_country');
+                const city = AppDocument.querySelector('#common_module_leaflet_select_city');
+                const select_place = AppDocument.querySelector('#setting_select_popular_place');
+                const gps_lat_input = AppDocument.querySelector('#setting_input_lat');
+                const gps_long_input = AppDocument.querySelector('#setting_input_long');
                 //set GPS and timezone
-                const longitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('longitude');
-                const latitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('latitude');
-                const timezone_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('timezone');
-                settings.gps_long_input.innerHTML = longitude_selected;
-                settings.gps_lat_input.innerHTML = latitude_selected;
+                const longitude_selected = select_place[select_place.selectedIndex].getAttribute('longitude');
+                const latitude_selected = select_place[select_place.selectedIndex].getAttribute('latitude');
+                const timezone_selected = select_place[select_place.selectedIndex].getAttribute('timezone');
+                gps_long_input.innerHTML = longitude_selected;
+                gps_lat_input.innerHTML = latitude_selected;
                 if (AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
                     //Update map
-                    map_update_app( settings.gps_long_input.innerHTML,
-                                    settings.gps_lat_input.innerHTML,
+                    map_update_app( gps_long_input.innerHTML,
+                                    gps_lat_input.innerHTML,
                                     common.COMMON_GLOBAL.module_leaflet_zoom_pp, //zoom for popular places
-                                    settings.select_place.options[settings.select_place.selectedIndex].text,
+                                    select_place.options[select_place.selectedIndex].text,
                                     timezone_selected,
                                     common.COMMON_GLOBAL.module_leaflet_marker_div_pp, //marker for popular places
                                     common.COMMON_GLOBAL.module_leaflet_flyto);
                     //display empty country
-                    common.SearchAndSetSelectedIndex('', settings.country,0);
+                    common.SearchAndSetSelectedIndex('', country,0);
                     //remove old city list:            
-                    const old_groups = settings.city.querySelectorAll('optgroup');
+                    const old_groups = city.querySelectorAll('optgroup');
                     for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
-                        settings.city.removeChild(old_groups[old_index]);
+                        city.removeChild(old_groups[old_index]);
                     //display first empty city
-                    common.SearchAndSetSelectedIndex('', settings.city,0);
+                    common.SearchAndSetSelectedIndex('', city,0);
                 }
-                settings.timezone_report.value = timezone_selected;
-                const title = settings.select_place.options[settings.select_place.selectedIndex].text;
+                APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_selected;
+                const title = select_place.options[select_place.selectedIndex].text;
                 AppDocument.querySelector('#setting_input_place').innerHTML = title;
                 settings_update();
                 break;
             }
-        //GPS, updating place
-        case 8:
+        case 'GPS_PLACE':
             {
                 common.map_update_popup(AppDocument.querySelector('#setting_input_place').innerHTML);
                 break;
             }
-        //GPS, position
-        case 9:
+        case 'GPS_POSITION':
             {
-                common.SearchAndSetSelectedIndex('', settings.select_place,0);
-                common.get_place_from_gps(settings.gps_long_input.innerHTML, settings.gps_lat_input.innerHTML).then((/**@type{string}*/gps_place) => {
+                const country = AppDocument.querySelector('#common_module_leaflet_select_country');
+                const city = AppDocument.querySelector('#common_module_leaflet_select_city');
+                const select_place = AppDocument.querySelector('#setting_select_popular_place');
+                const gps_lat_input = AppDocument.querySelector('#setting_input_lat');
+                const gps_long_input = AppDocument.querySelector('#setting_input_long');
+                common.SearchAndSetSelectedIndex('', select_place,0);
+                common.get_place_from_gps(gps_long_input.innerHTML, gps_lat_input.innerHTML).then((/**@type{string}*/gps_place) => {
                     //Update map
                     AppDocument.querySelector('#setting_input_place').innerHTML = gps_place;
                     if (AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
-                        map_update_app( settings.gps_long_input.innerHTML,
-                                        settings.gps_lat_input.innerHTML,
+                        map_update_app( gps_long_input.innerHTML,
+                                        gps_lat_input.innerHTML,
                                         null, //do not change zoom 
                                         gps_place,
                                         null,
                                         common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                         common.COMMON_GLOBAL.module_leaflet_jumpto).then((timezone_text) => {
-                                                settings.timezone_report.value = timezone_text;
+                                                APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_text;
                                         });
                         //display empty country and city
-                        common.SearchAndSetSelectedIndex('', settings.country,0);
-                        common.SearchAndSetSelectedIndex('', settings.city,0);
+                        common.SearchAndSetSelectedIndex('', country,0);
+                        common.SearchAndSetSelectedIndex('', city,0);
                         settings_update();
                     }
                 });
                 break;
             }
-        //Design, paper size
-        case 10:
+        case 'DESIGN_PAPER':
             {
-                switch (settings.paper_size) {
+                const paper = AppDocument.querySelector('#paper');
+                const paper_size = AppDocument.querySelector('#setting_select_report_papersize').value;
+                switch (paper_size) {
                     case 'A4':
                         {
-                            settings.paper.className='A4';
+                            paper.className='A4';
                             break;
                         }
                     case 'Letter':
                         {
-                            settings.paper.className='Letter';
+                            paper.className='Letter';
                             break;
                         }
                     default:
@@ -1042,80 +1018,49 @@ const update_ui = async (option, item_id=null) => {
                 }
                 break;
             }
-        //11=Image, Report header image load
-        case 11:
+        case 'IMAGE_HEADER_LOAD':
+        case 'IMAGE_FOOTER_LOAD':
             {
-                common.show_image(settings.header_preview_img_item, item_id, APP_GLOBAL.image_header_footer_width, APP_GLOBAL.image_header_footer_height);
+                await common.show_image( AppDocument.querySelector(`#setting_report${setting_type=='HEADER_LOAD'?'header':'footer'}_img`), 
+                                        item_id, 
+                                        APP_GLOBAL.image_header_footer_width, 
+                                        APP_GLOBAL.image_header_footer_height);
                 break;
             }
-        //12=Image, Report header image clear
-        case 12:
+        case 'IMAGE_HEADER_CLEAR':
+        case 'IMAGE_FOOTER_CLEAR':
             {
-                common.recreate_img(settings.header_preview_img_item);
-                //doesnt work:
-                //settings.header_preview_img_item.src = '';
-                settings.reportheader_input.value = '';
+                const preview_item  = AppDocument.querySelector(`#setting_report${setting_type=='HEADER_CLEAR'?'header':'footer'}_img`);
+                const preview_input = AppDocument.querySelector(`#setting_input_report${setting_type=='HEADER_CLEAR'?'header':'footer'}_img`);
+                common.recreate_img(preview_item);
+                preview_input.value = '';
                 break;
             }
-        //13=Image, Report footer image load
-        case 13:
+        case 'TEXT_HEADER_ALIGN':
+        case 'TEXT_FOOTER_ALIGN':
             {
-                common.show_image(settings.footer_preview_img_item, item_id, APP_GLOBAL.image_header_footer_width, APP_GLOBAL.image_header_footer_height);
-                break;
-            }
-        //14=Image, Report footer image clear
-        case 14:
-            {
-                common.recreate_img(settings.footer_preview_img_item);
-                //doesnt work:
-                //settings.footer_preview_img_item.src = '';
-                settings.reportfooter_input.value = '';
-                break;
-            }
-        //15=Texts, Report header align
-        case 15:
-            {
+                const button_active_class  = 'setting_button_active';
+                const header_footer = setting_type=='HEADER_ALIGN'?'header':'footer';
                 //check if clicking on button that is already active then deactivate so no alignment
-                if (AppDocument.querySelector('#' + item_id).classList.contains(settings.button_active_class)){
-                    AppDocument.querySelector('#' + item_id).classList.remove(settings.button_active_class);
-                }
-                else{	
-                    settings.reportheader_aleft.classList.remove(settings.button_active_class);
-                    settings.reportheader_acenter.classList.remove(settings.button_active_class);
-                    settings.reportheader_aright.classList.remove(settings.button_active_class);
-                    AppDocument.querySelector('#' + item_id).classList.add(settings.button_active_class);
-                }
-                const header_align = get_align(AppDocument.querySelector('#setting_icon_text_header_aleft').classList.contains('setting_button_active'),
-                                             AppDocument.querySelector('#setting_icon_text_header_acenter').classList.contains('setting_button_active'),
-                                             AppDocument.querySelector('#setting_icon_text_header_aright').classList.contains('setting_button_active'));
-                AppDocument.querySelector('#setting_input_reportheader1').style.textAlign= header_align;
-                AppDocument.querySelector('#setting_input_reportheader2').style.textAlign= header_align;
-                AppDocument.querySelector('#setting_input_reportheader3').style.textAlign= header_align;
-                break;
-            }
-        //16=Texts, Report footer align
-        case 16:
-            {
-                //check if clicking on button that is already active then deactivate so no alignment
-                if (AppDocument.querySelector('#' + item_id).classList.contains(settings.button_active_class)){
-                    AppDocument.querySelector('#' + item_id).classList.remove(settings.button_active_class);
+                if (AppDocument.querySelector('#' + item_id).classList.contains(button_active_class)){
+                    AppDocument.querySelector('#' + item_id).classList.remove(button_active_class);
                 }
                 else{
-                    settings.reportfooter_aleft.classList.remove(settings.button_active_class);
-                    settings.reportfooter_acenter.classList.remove(settings.button_active_class);
-                    settings.reportfooter_aright.classList.remove(settings.button_active_class);
-                    AppDocument.querySelector('#' + item_id).classList.add(settings.button_active_class);
+                    AppDocument.querySelector(`#setting_icon_text_${header_footer}_aleft`).classList.remove(button_active_class);
+                    AppDocument.querySelector(`#setting_icon_text_${header_footer}_acenter`).classList.remove(button_active_class);
+                    AppDocument.querySelector(`#setting_icon_text_${header_footer}_aright`).classList.remove(button_active_class);
+                    
+                    AppDocument.querySelector('#' + item_id).classList.add(button_active_class);
                 }
-                const footer_align = get_align(AppDocument.querySelector('#setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
-                                                 AppDocument.querySelector('#setting_icon_text_footer_acenter').classList.contains('setting_button_active'),
-                                                 AppDocument.querySelector('#setting_icon_text_footer_aright').classList.contains('setting_button_active'));
-                AppDocument.querySelector('#setting_input_reportfooter1').style.textAlign= footer_align;
-                AppDocument.querySelector('#setting_input_reportfooter2').style.textAlign= footer_align;
-                AppDocument.querySelector('#setting_input_reportfooter3').style.textAlign= footer_align;
+                const align = get_align(AppDocument.querySelector(`#setting_icon_text_${header_footer}_aleft`).classList.contains('setting_button_active'),
+                                        AppDocument.querySelector(`#setting_icon_text_${header_footer}_acenter`).classList.contains('setting_button_active'),
+                                        AppDocument.querySelector(`#setting_icon_text_${header_footer}_aright`).classList.contains('setting_button_active'));
+                AppDocument.querySelector(`#setting_input_report${header_footer}1`).style.textAlign= align;
+                AppDocument.querySelector(`#setting_input_report${header_footer}2`).style.textAlign= align;
+                AppDocument.querySelector(`#setting_input_report${header_footer}3`).style.textAlign= align;
                 break;
             }
-        //Prayer, method
-        case 17:
+        case 'PRAYER_METHOD':
             {
                 const method = AppDocument.querySelector('#setting_select_method').value;
                 let suffix;
@@ -1174,8 +1119,7 @@ const user_function_app = async (function_name) => {
 const user_logoff_app = () => {
     
     common.user_logoff().then(() => {
-        AppDocument.querySelector('#tab_nav_7').innerHTML = '';
-        AppDocument.querySelector('#user_settings').style.display = 'none';
+        AppDocument.querySelector('#settings_tab_nav_7').innerHTML = '';
         common.ComponentRemove('common_dialogue_profile', true);
         //set default settings
         set_default_settings().then(() => {
@@ -1196,11 +1140,9 @@ const login_common = (avatar) => {
     //create intitial user setting if not exist, send initial=true
     user_settings_function('ADD_LOGIN', true)
     .then(()=>{
-        AppDocument.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
+        AppDocument.querySelector('#settings_tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
         common.set_avatar(avatar, AppDocument.querySelector('#user_setting_avatar_img')); 
 
-        //Show user tab
-        AppDocument.querySelector('#tab_nav_7').style.display = 'inline-block';
         //Hide settings
         AppDocument.querySelector('#settings').style.visibility = 'hidden';
         common.ComponentRemove('common_dialogue_profile');
@@ -1384,8 +1326,6 @@ const user_settings_get = async () => {
             i++;
         }
         select.innerHTML += option_html;
-        //show user setting select
-        AppDocument.querySelector('#user_settings').style.display = 'block';
     })
     .catch(()=>null);
 };
@@ -1471,7 +1411,7 @@ const user_settings_load = async () => {
                                             AppDocument.querySelector('#setting_select_popular_place'),0);
         if (APP_GLOBAL.user_settings[settings_index].gps_popular_place_id||null !=null) {
             //set GPS for chosen popular place
-            update_ui(7);
+            component_setting_update('GPS', 'POPULAR_PLACES');
         }
     }
     if (AppDocument.querySelector('#setting_input_place'))
@@ -1482,7 +1422,7 @@ const user_settings_load = async () => {
         AppDocument.querySelector('#setting_input_long').innerHTML = APP_GLOBAL.user_settings[settings_index].gps_long_text;
 
     //Design
-    if (AppDocument.querySelectorAll(`#setting_themes_day_slider .slide div`)){
+    if (AppDocument.querySelectorAll(`#setting_themes_day_slider .slide div`)[0]){
         set_theme_id('day', APP_GLOBAL.user_settings[settings_index].design_theme_day_id);
         set_theme_id('month', APP_GLOBAL.user_settings[settings_index].design_theme_month_id);
         set_theme_id('year', APP_GLOBAL.user_settings[settings_index].design_theme_year_id);
@@ -1557,7 +1497,7 @@ const user_settings_load = async () => {
             //remove active class if it is active
             AppDocument.querySelector(  '#setting_icon_text_header_a' + 
                                         APP_GLOBAL.user_settings[settings_index].text_header_align).classList.remove('setting_button_active');
-            update_ui(15, 'setting_icon_text_header_a' + APP_GLOBAL.user_settings[settings_index].text_header_align);
+            component_setting_update('TEXT', 'HEADER_ALIGN', 'setting_icon_text_header_a' + APP_GLOBAL.user_settings[settings_index].text_header_align);
         }
     if (AppDocument.querySelector('#setting_input_reportfooter1'))
         AppDocument.querySelector('#setting_input_reportfooter1').innerHTML = APP_GLOBAL.user_settings[settings_index].text_footer_1_text;
@@ -1575,13 +1515,13 @@ const user_settings_load = async () => {
             //remove active class if it is active
             AppDocument.querySelector('#setting_icon_text_footer_a' +
                 APP_GLOBAL.user_settings[settings_index].text_footer_align).classList.remove('setting_button_active');
-            update_ui(16, 'setting_icon_text_footer_a' + APP_GLOBAL.user_settings[settings_index].text_footer_align);
+            component_setting_update('TEXT', 'FOOTER_ALIGN', 'setting_icon_text_footer_a' + APP_GLOBAL.user_settings[settings_index].text_footer_align);
         }
     //Prayer
     if (AppDocument.querySelector('#setting_select_method')){
         AppDocument.querySelector('#setting_select_method').value = APP_GLOBAL.user_settings[settings_index].prayer_method;
         //show method parameters used
-        update_ui(17);
+        component_setting_update('PRAYER', 'METHOD');
     }
     if (AppDocument.querySelector('#setting_select_asr'))
         AppDocument.querySelector('#setting_select_asr').value = APP_GLOBAL.user_settings[settings_index].prayer_asr_method;
@@ -1807,24 +1747,9 @@ const set_default_settings = async () => {
         prayer_column_midnight_checked:     Number(APP_GLOBAL.prayer_default_show_midnight),
         prayer_column_fast_start_end:       Number(APP_GLOBAL.prayer_default_show_fast_start_end)
     }];
-    user_settings_load();
-    if (AppDocument.querySelector('#setting_timezone_current'))
-        AppDocument.querySelector('#setting_timezone_current').innerHTML = common.COMMON_GLOBAL.user_timezone;
     //Design
     AppDocument.querySelector('#paper').className=APP_GLOBAL.design_default_papersize;
-
-    //Hide user tab
-    AppDocument.querySelector('#tab_nav_7').style.display = 'none';
-    //open regional tab in settings
-    openTab(1);
-    
 };
-/**
-     * 
-     * @param {number|string} value 
-     * @returns {number|null}
-     */
- const fixvalue = value =>  (value==''||value==null)?null:Number(value);
  /**
   * 
   * @param {string} value 
@@ -2201,16 +2126,16 @@ const app_event_click = event => {
                     break;
                 }
                 //tab navigation
-                case 'tab_nav_1':
-                case 'tab_nav_2':
-                case 'tab_nav_3':
-                case 'tab_nav_4':
-                case 'tab_nav_5':
-                case 'tab_nav_6':{
-                    openTab(event_target_id.substring(event_target_id.length-1));
+                case 'settings_tab_nav_1':
+                case 'settings_tab_nav_2':
+                case 'settings_tab_nav_3':
+                case 'settings_tab_nav_4':
+                case 'settings_tab_nav_5':
+                case 'settings_tab_nav_6':{
+                    openTab(Number(event_target_id.substring(event_target_id.length-1)));
                     break;
                 }
-                case 'tab_nav_7':
+                case 'settings_tab_nav_7':
                 case 'user_setting_avatar_img':{
                     openTab(7);
                     break;
@@ -2264,7 +2189,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'setting_icon_image_header_clear':{
-                    update_ui(12);
+                    component_setting_update('IMAGE', 'HEADER_CLEAR');
                     settings_update();
                     break;
                 }
@@ -2273,7 +2198,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'setting_icon_image_footer_clear':{
-                    update_ui(14);
+                    component_setting_update('IMAGE', 'FOOTER_CLEAR');
                     settings_update();
                     break;
                 }
@@ -2289,20 +2214,20 @@ const app_event_click = event => {
                     AppDocument.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
                     AppDocument.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
                                                                                         `theme_${theme_type}_${get_theme_id(theme_type)} ` + 
-                                                                                        AppDocument.querySelector('#setting_select_report_arabic_script').value;
+                                                                                        APP_GLOBAL.user_settings[AppDocument.querySelector('#setting_select_user_setting').selectedIndex].regional_arabic_script;
                     break;
                 }
                 case 'setting_icon_text_header_aleft':
                 case 'setting_icon_text_header_acenter':
                 case 'setting_icon_text_header_aright':{
-                    update_ui(15, event_target_id);
+                    component_setting_update('TEXT', 'HEADER_ALIGN', event_target_id);
                     settings_update();
                     break;
                 }
                 case 'setting_icon_text_footer_aleft':
                 case 'setting_icon_text_footer_acenter':
                 case 'setting_icon_text_footer_aright':{
-                    update_ui(16, event_target_id);
+                    component_setting_update('FOOTER', 'FOOTER_ALIGN', event_target_id);
                     settings_update();
                     break;
                 }
@@ -2530,7 +2455,7 @@ const app_event_change = event => {
                 }
                 case 'setting_select_report_timezone':{
                     settings_update();
-                    update_ui(2);
+                    component_setting_update('REGIONAL', 'TIMEZONE');
                     break;
                 }
                 case 'setting_select_report_numbersystem':
@@ -2553,13 +2478,13 @@ const app_event_change = event => {
                 //settings gps
                 case 'setting_select_popular_place':{
                     settings_update();
-                    update_ui(7);
+                    component_setting_update('GPS', 'POPULAR_PLACES');
                     break;
                 }
                 //settings design
                 case 'setting_select_report_papersize':{
                     settings_update();
-                    update_ui(10);
+                    component_setting_update('DESIGN', 'PAPER');
                     break;
                 }
                 case 'setting_select_report_highlight_row':{
@@ -2568,18 +2493,18 @@ const app_event_change = event => {
                 }
                 //settings image
                 case 'setting_input_reportheader_img':{
-                    update_ui(11, event_target_id)
+                    component_setting_update('IMAGE', 'HEADER_LOAD',  event_target_id)
                     .then(()=> settings_update());
                     break;
                 }
                 case 'setting_input_reportfooter_img':{
-                    update_ui(13, event_target_id)
+                    component_setting_update('IMAGE', 'FOOTER_LOAD', event_target_id)
                     .then(()=> settings_update());
                     break;
                 }
                 //settings prayer
                 case 'setting_select_method':{
-                    update_ui(17);
+                    component_setting_update('PRAYER', 'METHOD');
                     settings_update();
                     break;
                 }
@@ -2629,13 +2554,13 @@ const app_event_change = event => {
                 }
                 //module leaflet
                 case 'common_module_leaflet_select_country':{
-                    update_ui(5); 
+                    component_setting_update('GPS', 'CITIES'); 
                     settings_update();
                     break;
                 }
                 case 'common_module_leaflet_select_city':{
                     //popular place not on map is read when saving
-                    update_ui(6);
+                    component_setting_update('GPS', 'CITY');
                     const timezone = getTimezone(   AppDocument.querySelector('#setting_input_lat').innerHTML,
                                                     AppDocument.querySelector('#setting_input_long').innerHTML);
                     app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
@@ -2643,7 +2568,7 @@ const app_event_change = event => {
                     break;
                 }
                 case 'common_module_leaflet_select_mapstyle':{
-                    update_ui(4);
+                    component_setting_update('GPS', 'MAP');
                     break;
                 }
             }
@@ -2669,13 +2594,13 @@ const app_event_keyup = event => {
                 //settings gps
                 case 'setting_input_place':{
                     settings_update();
-                    common.typewatch(update_ui, 8);
+                    common.typewatch(component_setting_update, 'GPS', 'PLACE');
                     break;
                 }
                 case 'setting_input_long':
                 case 'setting_input_lat':{
                     settings_update();
-                    common.typewatch(update_ui, 9);
+                    common.typewatch(component_setting_update, 'GPS', 'POSITION');
                     break;
                 }
                 //settings text
@@ -2745,7 +2670,7 @@ const init_map = async () => {
                 AppDocument.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
                 AppDocument.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
                 //Update GPS position
-                update_ui(9);
+                component_setting_update('GPS', 'POSITION');
                 const timezone = getTimezone(   event.latlng.lat, event.latlng.lng);
                 app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
             }   
@@ -2851,18 +2776,25 @@ const mount_app_app = async (framework=null) => {
  */
  const nvl = value => value==null?'':value;
 /**
- * 
  * @returns {Promise.<void>}
  */
-const settings_load = async () => {
+ const settings_method = async () => {
+    return await common.FFB('DB_API', `/app_settings_display?data_app_id=${common.COMMON_GLOBAL.app_id}&setting_type=METHOD`, 'GET', 'APP_DATA')
+                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .catch((/**@type{Error}*/error)=>error);
+ } 
+/**
+ * @param {number} tab_selected
+ * @returns {Promise.<void>}
+ */
+const settings_load = async (tab_selected) => {    
     /**
      * Get themes
      * @param {number} app_id
-     * @param {string} locale
      * @param {*} app_settings
-     * @returns {[string|null,string|null,string|null]}
+     * @returns {{day:string, month:string,year:string}}
      */
-    const themes = (app_id, locale, app_settings) =>{
+    const themes = (app_id, app_settings) =>{
         let theme_found = false;
         let span_themes_day ='', span_themes_month='', span_themes_year='';
         //get themes and save result in three theme variables
@@ -2921,9 +2853,9 @@ const settings_load = async () => {
             }
         }
         if (theme_found)
-            return [span_themes_day, span_themes_month, span_themes_year];
+            return {day:span_themes_day, month:span_themes_month, year:span_themes_year};
         else
-            return [null, null, null];
+            return {day:'', month:'', year:''};
     };
     /**
      * Get places
@@ -2936,7 +2868,7 @@ const settings_load = async () => {
         let place_found = false;
         let i = 0;
         APP_GLOBAL.places = app_settings.filter((/**@type{*}*/setting)=>setting.app_id==app_id && setting.app_setting_type_name=='PLACE');
-        for (const app_setting of app_settings.filter((/**@type{*}*/setting)=>setting.app_id==app_id && setting.app_setting_type_name=='PLACE')){
+        for (const app_setting of APP_GLOBAL.places){
             if (place_found==false){
                 place_found = true;
                 select_places  =`<option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`;
@@ -2967,8 +2899,12 @@ const settings_load = async () => {
     let APP_COLUMN_TITLE='';
     let APP_CALENDAR_TYPE='';
     let APP_CALENDAR_HIJRI_TYPE='';
+
+    let APP_THEMES={day:'',month:'',year:''};
+    let APP_PLACES = '';
     let APP_PAPER_SIZE='';
     let APP_HIGHLIGHT_ROW='';
+
     let APP_METHOD='';
     let APP_METHOD_ASR='';
     let APP_HIGH_LATITUDE_ADJUSTMENT='';
@@ -2976,151 +2912,175 @@ const settings_load = async () => {
     let APP_HIJRI_DATE_ADJUSTMENT='';
     let APP_IQAMAT='';
     let APP_FAST_START_END='';
-    /**@type{{  id:number,
-     *          value:string,
-     *          text:string,
-     *          app_setting_type_name:string,
-     *          data2:string,
-     *          data3:string,
-     *          data4:string,
-     *          data5:string}[]} */
-    const app_settings_db = await common.FFB('DB_API', `/app_settings?`, 'GET', 'APP_DATA')
-    .then((/**@type{string}*/result)=>JSON.parse(result))
-    .catch((/**@type{Error}*/error)=>{throw error});
-
-    let LOCALES = await common.get_locales_options().catch((/**@type{Error}*/error)=>{throw error;});
-    let option;
-    for (const app_setting of app_settings_db) {
-        option = `<option id=${app_setting.id} value='${app_setting.value}'>${app_setting.text}</option>`;
-        switch (app_setting.app_setting_type_name){
-            case 'TIMEZONE':{
-                USER_TIMEZONE += option;
-                break;
-            }
-            case 'DIRECTION':{
-                USER_DIRECTION += option;
-                break;
-            }
-            case 'ARABIC_SCRIPT':{
-                USER_ARABIC_SCRIPT += option;
-                break;
-            }
-            case 'NUMBER_SYSTEM':{
-                APP_NUMBER_SYSTEM += option;
-                break;
-            }
-            case 'COLUMN_TITLE':{
-                APP_COLUMN_TITLE += option;
-                break;
-            }
-            case 'CALENDAR_TYPE':{
-                APP_CALENDAR_TYPE += option;
-                break;
-            }
-            case 'CALENDAR_HIJRI_TYPE':{
-                APP_CALENDAR_HIJRI_TYPE += option;
-                break;
-            }
-            case 'PAPER_SIZE':{
-                APP_PAPER_SIZE += option;
-                break;
-            }
-            case 'HIGHLIGHT_ROW':{
-                APP_HIGHLIGHT_ROW += option;
-                break;
-            }
-            case 'METHOD':{
-                option = `<option id=${app_setting.id} value='${app_setting.value}' ` +
-                            `data2='${nvl(app_setting.data2)}' data3='${nvl(app_setting.data3)}' data4='${nvl(app_setting.data4)}' data5='${nvl(app_setting.data5)}'>${app_setting.text}</option>`;
-                APP_METHOD += option;
-                break;
-            }
-            case 'METHOD_ASR':{
-                APP_METHOD_ASR += option;
-                break;
-            }
-            case 'HIGH_LATITUDE_ADJUSTMENT':{
-                APP_HIGH_LATITUDE_ADJUSTMENT += option;
-                break;
-            }
-            case 'TIMEFORMAT':{
-                APP_TIMEFORMAT += option;
-                break;
-            }
-            case 'HIJRI_DATE_ADJUSTMENT':{
-                APP_HIJRI_DATE_ADJUSTMENT += option;
-                break;
-            }
-            case 'IQAMAT':{
-                APP_IQAMAT += option;
-                break;
-            }
-            case 'FAST_START_END':{
-                APP_FAST_START_END += option;
-                break;
+    
+    if (tab_selected==1 || tab_selected==2 || tab_selected==3 || tab_selected==6){
+        /**@type{{  id:number,
+         *          value:string,
+         *          text:string,
+         *          app_setting_type_name:string,
+         *          data2:string,
+         *          data3:string,
+         *          data4:string,
+         *          data5:string}[]} */
+        const app_settings_db = await common.FFB('DB_API', `/app_settings?`, 'GET', 'APP_DATA')
+        .then((/**@type{string}*/result)=>JSON.parse(result))
+        .catch((/**@type{Error}*/error)=>{throw error});
+        let option;
+        for (const app_setting of app_settings_db) {
+            option = `<option id=${app_setting.id} value='${app_setting.value}'>${app_setting.text}</option>`;
+            switch (app_setting.app_setting_type_name){
+                case 'TIMEZONE':{
+                    USER_TIMEZONE += option;
+                    break;
+                }
+                case 'DIRECTION':{
+                    USER_DIRECTION += option;
+                    break;
+                }
+                case 'ARABIC_SCRIPT':{
+                    USER_ARABIC_SCRIPT += option;
+                    break;
+                }
+                case 'NUMBER_SYSTEM':{
+                    APP_NUMBER_SYSTEM += option;
+                    break;
+                }
+                case 'COLUMN_TITLE':{
+                    APP_COLUMN_TITLE += option;
+                    break;
+                }
+                case 'CALENDAR_TYPE':{
+                    APP_CALENDAR_TYPE += option;
+                    break;
+                }
+                case 'CALENDAR_HIJRI_TYPE':{
+                    APP_CALENDAR_HIJRI_TYPE += option;
+                    break;
+                }
+                case 'PAPER_SIZE':{
+                    APP_PAPER_SIZE += option;
+                    break;
+                }
+                case 'HIGHLIGHT_ROW':{
+                    APP_HIGHLIGHT_ROW += option;
+                    break;
+                }
+                case 'METHOD':{
+                    option = `<option id=${app_setting.id} value='${app_setting.value}' ` +
+                                `data2='${nvl(app_setting.data2)}' data3='${nvl(app_setting.data3)}' data4='${nvl(app_setting.data4)}' data5='${nvl(app_setting.data5)}'>${app_setting.text}</option>`;
+                    APP_METHOD += option;
+                    break;
+                }
+                case 'METHOD_ASR':{
+                    APP_METHOD_ASR += option;
+                    break;
+                }
+                case 'HIGH_LATITUDE_ADJUSTMENT':{
+                    APP_HIGH_LATITUDE_ADJUSTMENT += option;
+                    break;
+                }
+                case 'TIMEFORMAT':{
+                    APP_TIMEFORMAT += option;
+                    break;
+                }
+                case 'HIJRI_DATE_ADJUSTMENT':{
+                    APP_HIJRI_DATE_ADJUSTMENT += option;
+                    break;
+                }
+                case 'IQAMAT':{
+                    APP_IQAMAT += option;
+                    break;
+                }
+                case 'FAST_START_END':{
+                    APP_FAST_START_END += option;
+                    break;
+                }
             }
         }
+        APP_THEMES = themes(common.COMMON_GLOBAL.app_id, app_settings_db);
+        APP_PLACES = places(common.COMMON_GLOBAL.app_id, app_settings_db);
     }
-    
-    const appthemes = themes(common.COMMON_GLOBAL.app_id, common.COMMON_GLOBAL.user_locale, app_settings_db);
+        
+    switch (tab_selected){
+        case 1:{
+            //tab 1 - settings regional
+            let LOCALES = await common.get_locales_options().catch((/**@type{Error}*/error)=>{throw error;});
+            AppDocument.querySelector('#setting_select_locale').innerHTML = LOCALES;
+            
+            AppDocument.querySelector('#setting_timezone_current').innerHTML = common.COMMON_GLOBAL.user_timezone;
 
-    //settings regional
-    AppDocument.querySelector('#setting_select_locale').innerHTML = LOCALES;
-    AppDocument.querySelector('#setting_select_report_locale_second').innerHTML = `<option id='' value='0' selected='selected'>None</option>${LOCALES}`;
-    AppDocument.querySelector('#setting_select_report_timezone').innerHTML = USER_TIMEZONE;
-    AppDocument.querySelector('#setting_select_report_direction').innerHTML = `<option id='' value=''></option>${USER_DIRECTION}`;
-    AppDocument.querySelector('#setting_select_report_numbersystem').innerHTML = APP_NUMBER_SYSTEM;
-    AppDocument.querySelector('#setting_select_report_coltitle').innerHTML = APP_COLUMN_TITLE;
-    AppDocument.querySelector('#setting_select_report_arabic_script').innerHTML = `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`;
-    AppDocument.querySelector('#setting_select_calendartype').innerHTML = APP_CALENDAR_TYPE;
-    AppDocument.querySelector('#setting_select_calendar_hijri_type').innerHTML = APP_CALENDAR_HIJRI_TYPE;
-    //settings gps
-    AppDocument.querySelector('#setting_select_popular_place').innerHTML = places(common.COMMON_GLOBAL.app_id, app_settings_db);
-    //settings design
-    AppDocument.querySelector('#slides_day').innerHTML = appthemes[0];
-    AppDocument.querySelector('#slides_month').innerHTML = appthemes[1];
-    AppDocument.querySelector('#slides_year').innerHTML = appthemes[2];
-    AppDocument.querySelector('#setting_select_report_papersize').innerHTML = APP_PAPER_SIZE;
-    AppDocument.querySelector('#setting_select_report_highlight_row').innerHTML = APP_HIGHLIGHT_ROW;
-    //settings prayer
-    AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
-    AppDocument.querySelector('#setting_select_asr').innerHTML = APP_METHOD_ASR;
-    AppDocument.querySelector('#setting_select_highlatitude').innerHTML = APP_HIGH_LATITUDE_ADJUSTMENT;
-    AppDocument.querySelector('#setting_select_timeformat').innerHTML = APP_TIMEFORMAT;
-    AppDocument.querySelector('#setting_select_hijri_adjustment').innerHTML = APP_HIJRI_DATE_ADJUSTMENT;
-    AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
-    AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
-    AppDocument.querySelector('#setting_select_report_iqamat_title_fajr').innerHTML = APP_IQAMAT;
-    AppDocument.querySelector('#setting_select_report_iqamat_title_dhuhr').innerHTML = APP_IQAMAT;
-    AppDocument.querySelector('#setting_select_report_iqamat_title_asr').innerHTML = APP_IQAMAT;
-    AppDocument.querySelector('#setting_select_report_iqamat_title_maghrib').innerHTML = APP_IQAMAT;
-    AppDocument.querySelector('#setting_select_report_iqamat_title_isha').innerHTML = APP_IQAMAT;
-    AppDocument.querySelector('#setting_select_report_show_fast_start_end').innerHTML = APP_FAST_START_END;
-
-    //set initial default language from clients locale
-    common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_local, AppDocument.querySelector('#setting_select_locale'),1);
-    
-    //set default geolocation
-    AppDocument.querySelector('#setting_select_popular_place').selectedIndex = 0;
-    AppDocument.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
-    AppDocument.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
-    //load themes in Design tab
-    load_themes();
-    //set papersize
-    zoom_paper();
-
-    //set timers
-    //set current date and time for current locale and timezone
-    /**@ts-ignore */
-    clearInterval(showcurrenttime);
-    setInterval(showcurrenttime, 1000);
-    //set report date and time for current locale, report timezone
-    /**@ts-ignore */
-    clearInterval(showreporttime);
-    setInterval(showreporttime, 1000);
-
+            AppDocument.querySelector('#setting_select_report_locale_second').innerHTML = `<option id='' value='0' selected='selected'></option>${LOCALES}`;
+            AppDocument.querySelector('#setting_select_report_timezone').innerHTML = USER_TIMEZONE;
+            AppDocument.querySelector('#setting_select_report_direction').innerHTML = `<option id='' value=''></option>${USER_DIRECTION}`;
+            AppDocument.querySelector('#setting_select_report_numbersystem').innerHTML = APP_NUMBER_SYSTEM;
+            AppDocument.querySelector('#setting_select_report_coltitle').innerHTML = APP_COLUMN_TITLE;
+            AppDocument.querySelector('#setting_select_report_arabic_script').innerHTML = `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`;
+            AppDocument.querySelector('#setting_select_calendartype').innerHTML = APP_CALENDAR_TYPE;
+            AppDocument.querySelector('#setting_select_calendar_hijri_type').innerHTML = APP_CALENDAR_HIJRI_TYPE;
+            //set initial default language from clients locale
+            common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_local, AppDocument.querySelector('#setting_select_locale'),1);            
+            break;
+        }
+        case 2:{
+            //tab 2 - settings gps
+            AppDocument.querySelector('#setting_select_popular_place').innerHTML = APP_PLACES;
+            //set default geolocation
+            AppDocument.querySelector('#setting_select_popular_place').selectedIndex = 0;
+            AppDocument.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
+            AppDocument.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
+            AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).outerHTML = `<div id='${APP_GLOBAL.gps_module_leaflet_container}'></div>`;
+            //init map thirdparty module
+            init_map().then(()=>{
+                component_setting_update('GPS', 'MAP');
+                common.map_resize();
+            });
+            break;
+        }
+        case 3:{
+            //tab 3 - settings design
+            AppDocument.querySelector('#slides_day').innerHTML = APP_THEMES.day;
+            AppDocument.querySelector('#slides_month').innerHTML = APP_THEMES.month;
+            AppDocument.querySelector('#slides_year').innerHTML = APP_THEMES.year;
+            AppDocument.querySelector('#setting_select_report_papersize').innerHTML = APP_PAPER_SIZE;
+            AppDocument.querySelector('#setting_select_report_highlight_row').innerHTML = APP_HIGHLIGHT_ROW;
+            //load themes in Design tab
+            load_themes();
+            update_all_theme_thumbnails();
+            break;
+        }
+        case 5:{
+            AppDocument.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
+            break;
+        }
+        case 6:{
+            //tab 6 - settings prayer
+            AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
+            AppDocument.querySelector('#setting_select_asr').innerHTML = APP_METHOD_ASR;
+            AppDocument.querySelector('#setting_select_highlatitude').innerHTML = APP_HIGH_LATITUDE_ADJUSTMENT;
+            AppDocument.querySelector('#setting_select_timeformat').innerHTML = APP_TIMEFORMAT;
+            AppDocument.querySelector('#setting_select_hijri_adjustment').innerHTML = APP_HIJRI_DATE_ADJUSTMENT;
+            AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
+            AppDocument.querySelector('#setting_select_method').innerHTML = APP_METHOD;
+            AppDocument.querySelector('#setting_select_report_iqamat_title_fajr').innerHTML = APP_IQAMAT;
+            AppDocument.querySelector('#setting_select_report_iqamat_title_dhuhr').innerHTML = APP_IQAMAT;
+            AppDocument.querySelector('#setting_select_report_iqamat_title_asr').innerHTML = APP_IQAMAT;
+            AppDocument.querySelector('#setting_select_report_iqamat_title_maghrib').innerHTML = APP_IQAMAT;
+            AppDocument.querySelector('#setting_select_report_iqamat_title_isha').innerHTML = APP_IQAMAT;
+            AppDocument.querySelector('#setting_select_report_show_fast_start_end').innerHTML = APP_FAST_START_END;
+            break;
+        }
+    }
+    user_settings_load()
+    .then(()=>{
+        if (tab_selected==1){
+            //set timers
+            //set current date and time for current locale and timezone
+            setInterval(showcurrenttime, 1000);
+            //set report date and time for current locale, report timezone
+            setInterval(showreporttime, 1000);
+        }
+    });
 }
-
 /**
  * 
  * @param {{app:*[],
@@ -3129,18 +3089,14 @@ const settings_load = async () => {
  */
 const init_app = async parameters => {
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
-    .then(()=>common.ComponentRender('tab1', {}, '/component/settings_tab1.js'))
-    .then(()=>common.ComponentRender('tab2', {}, '/component/settings_tab2.js'))
-    .then(()=>common.ComponentRender('tab3', {}, '/component/settings_tab3.js'))
-    .then(()=>common.ComponentRender('tab4', {}, '/component/settings_tab4.js'))
-    .then(()=>common.ComponentRender('tab5', {}, '/component/settings_tab5.js'))
-    .then(()=>common.ComponentRender('tab6', {}, '/component/settings_tab6.js'))
-    .then(()=>common.ComponentRender('tab7', {}, '/component/settings_tab7.js'))
+    .then(()=>common.ComponentRender('settings', {}, '/component/settings.js'))
+    .then(()=>common.ComponentRender('settings_tab7', {}, '/component/settings_tab7.js'))
     .then(()=>common.ComponentRender('app_profile_search', {}, '/common/component/profile_search.js'))
     .then(()=>common.ComponentRender('app_profile_toolbar', {}, '/common/component/profile_toolbar.js'))
     .then(()=>common.ComponentRender('app_user_account', {}, '/common/component/user_account.js'));
     dialogue_loading(1);
-    await settings_load()
+    //set papersize
+    zoom_paper();
     //set app and report globals
     app_report.REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright;
     for (const parameter of parameters.app) {
@@ -3303,7 +3259,8 @@ const init_app = async parameters => {
         app_report.REPORT_GLOBAL.session_currentDate.getMonth(),
         app_report.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
 
-    app_report.set_prayer_method().then(() => {
+	const methods = await settings_method();
+    app_report.set_prayer_method(methods).then(() => {
         //show dialogue about using mobile and scan QR code after 5 seconds
         setTimeout(() => {show_dialogue('SCAN');}, 5000);
         set_default_settings().then(() => {
