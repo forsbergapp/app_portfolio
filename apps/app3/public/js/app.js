@@ -135,20 +135,8 @@ const mount_app_app = async (framework=null) => {
 const init_app = async () => {
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
     getdocs();
-        const docid = window.location.pathname.substring(1);
-        if (docid!=''){
-            AppDocument.querySelector('#dialogue_documents').style.visibility = 'hidden';
-            common.ComponentRender('common_window_info',
-                        {   info:0,
-                            url:AppDocument.querySelector(`#doc_${docid}`).getAttribute('full_size'),
-                            content_type:null, 
-                            iframe_content:null}, '/common/component/window_info.js')
-                            .then(()=>mount_app_app());
-        }
-        else{
-            AppDocument.querySelector('#dialogue_documents').style.visibility = 'visible';
-            mount_app_app();
-        }
+    AppDocument.querySelector('#dialogue_documents').style.visibility = 'visible';
+    mount_app_app();
 };
 /**
  * Init common
