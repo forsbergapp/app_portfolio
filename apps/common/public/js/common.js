@@ -3960,7 +3960,10 @@ const mount_app = async (framework, events) => {
 const init_common = async (parameters) => {
     await ComponentRender('common_app', 
                             {},
-                            '/common/component/app.js');
+                            '/common/component/app.js')
+    .then(()=> ComponentRender('common_fonts', 
+                                {},
+                                '/common/component/fonts.js'));
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL.app_id ==null)
             set_app_service_parameters(parameters.app_service);

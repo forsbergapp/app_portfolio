@@ -74,10 +74,9 @@
     "RENDER_FILES":[
                     ["APP_COMMON",          null,           null,                           "/apps/common/src/index.html"],
                     ["APP_COMMON",          null,           "CommonHead",                   "/apps/common/src/head.html"],
-                    ["APP_COMMON",          null,           "CommonHeadFonts",              "/apps/common/src/fonts.html"],
                     ["APP_COMMON_OPTIONAL", null,           "CommonHeadMap",                "/apps/common/src/head_map.html"],
                     ["REPORT_COMMON",       null,           "CommonReportHead",             "/apps/common/src/report/head.html"],
-                    ["REPORT_COMMON",       null,           "CommonReportHeadFonts",        "/apps/common/src/fonts.html"],
+                    ["REPORT_COMMON",       null,           "CommonReportHeadFonts",        "/apps/common/src/report/fonts.html"],
                     ["MAINTENANCE",         null,           null,                           "/apps/common/src/index_maintenance.html"],
                     ["MAINTENANCE",         null,           "CommonHeadMaintenance",        "/apps/common/src/head_maintenance.html"],
                     ["MAIL",                null,           null,                           "/apps/common/src/mail.html"],
