@@ -6,7 +6,7 @@ import * as Types from './../../../../types.js';
 const {render_app_with_data} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { insertUserPostView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post_view.service.js`);
-
+const {default: QRCode} = await import('easyqrcodejs-nodejs');
 /**
  * App types
  * 
@@ -1926,7 +1926,7 @@ const displayYear = (prayTimes, settings) => {
  * @returns {Promise.<string>}
  */
 const getQRCode = async (url) =>{
-    const {default: QRCode} = await import('easyqrcodejs-nodejs');
+    
     return new Promise((resolve)=>{
         const options = {
                         text: url,
@@ -1938,8 +1938,9 @@ const getQRCode = async (url) =>{
         const qrcode = new QRCode(options);
         qrcode.toSVGText().then((/**@type{string}*/data)=>{
             resolve(data);
-        });    
+        });
     });
+	
 };
 /**
  * Create timetable day, month or year
