@@ -1138,39 +1138,11 @@
  * @typedef {{id:number, category_name:string, app_category_text:string}} db_result_app_category_getAppCategoryAdmin
  * APP LOG
  * @typedef {{  app_id:number,
- *              app_module:string,
- *              app_module_type:string,
- *              app_module_request:string,
- *              app_module_result:string,
- *              app_user_id:number, 
- *              user_language:string,
- *              user_timezone:string,
- *              user_number_system:string,
- *              user_platform:string,
- *              client_latitude:string,
- *              client_longitude:string,
- *              server_remote_addr:string,
- *              server_user_agent:string,
- *              server_http_host:string,
- *              server_http_accept_language:string}} db_parameter_app_log_createLog
+ *              json_data:string}} db_parameter_app_log_createLog
  * @typedef {   db_result_insert} db_result_app_log_createLog
  * @typedef {{  id:number,
  *              app_id:number,
- *              app_module:string,
- *              app_module_type:string,
- *              app_module_request:string,
- *              app_module_result:string,
- *              app_user_id:number,
- *              user_language:string,
- *              user_timezone:string,
- *              user_number_system:string,
- *              user_platform:string,
- *              client_latitude:string,
- *              client_longitude:string,
- *              server_remote_addr:string,
- *              server_user_agent:string,
- *              server_http_host:string,
- *              server_http_accept_language:string,
+ *              json_data:string,
  *              date_created:string,
  *              total_rows:number}} db_result_app_log_getLogsAdmin
  * @typedef {{  chart:number, 
@@ -1178,7 +1150,7 @@
  *              year:number, 
  *              month:number, 
  *              day:number, 
- *              amount:number}} db_result_app_log_getStatUniqueVisitorAdmin
+ *              json_data:string}} db_result_app_log_getStatUniqueVisitorAdmin
  * APP OBJECTS
  * @typedef {{  object:string, 
  *              app_id:number, 
