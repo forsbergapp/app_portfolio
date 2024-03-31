@@ -158,21 +158,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_device TO app_portfoli
 
 CREATE TABLE app_portfolio.app_log (
     id                           INT NOT NULL AUTO_INCREMENT,
-    app_module                   VARCHAR(100),
-    app_module_type              VARCHAR(100),
-    app_module_request           VARCHAR(500),
-    app_module_result            VARCHAR(4000),
-    app_user_id                  VARCHAR(100),
-    user_language                VARCHAR(1000),
-    user_timezone                VARCHAR(1000),
-    user_number_system           VARCHAR(100),
-    user_platform                VARCHAR(1000),
-    client_latitude              VARCHAR(100),
-    client_longitude             VARCHAR(100),
-    server_remote_addr           VARCHAR(1000),
-    server_user_agent            VARCHAR(1000),
-    server_http_host             VARCHAR(1000),
-    server_http_accept_language  VARCHAR(1000),
+    json_data                    LONGBLOB NOT NULL,
     date_created                 DATETIME,
 	app_id                       INTEGER NOT NULL,
 	CONSTRAINT app_log_pk PRIMARY KEY ( id )

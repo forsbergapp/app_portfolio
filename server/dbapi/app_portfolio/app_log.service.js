@@ -10,66 +10,23 @@ const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cw
 /**
  * 
  * @param {number} app_id 
- * @param {Types.db_parameter_app_log_createLog} data 	-app_module_result max 4000 characters
+ * @param {number} data_app_id 
+ * @param {Types.db_parameter_app_log_createLog} json_data
  * @returns {Promise.<Types.db_result_app_log_createLog[]|null>}
  */
-const createLog = async (app_id, data) => {
+const createLog = async (app_id, data_app_id, json_data) => {
 	if (ConfigGet('SERVICE_DB', 'LOG')=='1'){
-		if (data.app_module_result!=null)
-			data.app_module_result = data.app_module_result.substr(0,3999);
 		const sql = `INSERT INTO ${db_schema()}.app_log(
 					app_id,
-					app_module,
-					app_module_type,
-					app_module_request,
-					app_module_result,
-					app_user_id,
-					user_language,
-					user_timezone,
-					user_number_system,
-					user_platform,
-					client_latitude,
-					client_longitude,
-					server_remote_addr,
-					server_user_agent,
-					server_http_host,
-					server_http_accept_language,
+					json_data,
 					date_created)
-				VALUES(:app_id,
-					:app_module,
-					:app_module_type,
-					:app_module_request,
-					:app_module_result,
-					:app_user_id,
-					:user_language,
-					:user_timezone,
-					:user_number_system,
-					:user_platform,
-					:client_latitude,
-					:client_longitude,
-					:server_remote_addr,
-					:server_user_agent,
-					:server_http_host,
-					:server_http_accept_language,
-					CURRENT_TIMESTAMP)`;
+				VALUES(	:app_id,
+					   	:json_data,
+						CURRENT_TIMESTAMP)`;
 		const parameters = {
-						app_id: data.app_id,
-						app_module: data.app_module,
-						app_module_type: data.app_module_type,
-						app_module_request: data.app_module_request,
-						app_module_result: data.app_module_result,
-						app_user_id: data.app_user_id,
-						user_language: data.user_language,
-						user_timezone: data.user_timezone,
-						user_number_system: data.user_number_system,
-						user_platform: data.user_platform,
-						client_latitude: data.client_latitude,
-						client_longitude: data.client_longitude,
-						server_remote_addr: data.server_remote_addr,
-						server_user_agent: data.server_user_agent,
-						server_http_host: data.server_http_host,
-						server_http_accept_language: data.server_http_accept_language
-					};
+								app_id: data_app_id,
+								json_data: JSON.stringify(json_data)
+							};
 		return await db_execute(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), sql, parameters, null);
 	}
 	else
@@ -91,21 +48,7 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 		let sql;
 		sql = `SELECT id "id",
 					  app_id "app_id",
-					  app_module "app_module",
-					  app_module_type "app_module_type",
-					  app_module_request "app_module_request",
-					  app_module_result "app_module_result",
-					  app_user_id "app_user_id",
-					  user_language "user_language",
-					  user_timezone "user_timezone",
-					  user_number_system "user_number_system",
-					  user_platform "user_platform",
-					  client_latitude "client_latitude",
-					  client_longitude "client_longitude",
-					  server_remote_addr "server_remote_addr",
-					  server_user_agent "server_user_agent",
-					  server_http_host "server_http_host",
-					  server_http_accept_language "server_http_accept_language",
+					  json_data "json_data",
 					  date_created "date_created",
 					  count(*) over() "total_rows"
 				 FROM ${db_schema()}.app_log
@@ -132,15 +75,15 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 		
 		const sql = `SELECT t.chart "chart",
-		              t.app_id "app_id",
-					  :year_log "year",
-					  :month_log "month",
-					  t.day_log "day",
-					  COUNT(DISTINCT t.server_remote_addr) 	"amount"
+		              t.app_id 		"app_id",
+					  :year_log 	"year",
+					  :month_log 	"month",
+					  t.day_log 	"day",
+					  json_data 	"json_data"
 				 FROM (SELECT 1										chart,
 							  app_id,
 					          NULL 									day_log,
-					          server_remote_addr
+					          json_data
 						 FROM ${db_schema()}.app_log
 						 WHERE EXTRACT(YEAR FROM date_created) = :year_log
 						  AND EXTRACT(MONTH FROM date_created) = :month_log
@@ -148,17 +91,12 @@ const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 					   SELECT 2										chart,
 					   		  NULL 									app_id,
 							  EXTRACT(DAY FROM date_created) 		day_log,
-							  server_remote_addr
+							  json_data
 						 FROM ${db_schema()}.app_log
 						 WHERE ((app_id = :app_id_log) OR :app_id_log IS NULL)
 						  AND EXTRACT(YEAR FROM date_created) = :year_log
 						  AND EXTRACT(MONTH FROM date_created) = :month_log) t
-				GROUP BY t.chart,
-				         t.app_id,
-						 3,
-						 4,
-						 t.day_log
-				ORDER BY 1, 2, 5`;
+				ORDER BY 1, 2`;
 		const parameters = {app_id_log: data_app_id,
 							year_log: year,
 							month_log: month};

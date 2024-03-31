@@ -448,23 +448,24 @@ const getAppBFF = async (app_id, app_parameters) =>{
     if (ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`]){
         const {createLog} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`);
         await createLog(app_id,
-            { app_id : app_id,
-                app_module : 'APPS',
-                app_module_type : app_module_type,
-                app_module_request : app_parameters.param,
-                app_module_result : result_geodata.place,
-                app_user_id : null,
-                user_language : client_locale(app_parameters.accept_language),
-                user_timezone : result_geodata.timezone,
-                user_number_system : null,
-                user_platform : null,
-                server_remote_addr : app_parameters.ip,
-                server_user_agent : app_parameters.user_agent,
-                server_http_host : app_parameters.host,
-                server_http_accept_language : app_parameters.accept_language,
-                client_latitude : result_geodata.latitude,
-                client_longitude : result_geodata.longitude
-            });
+                        app_id,
+                        {   
+                            app_module : 'APPS',
+                            app_module_type : app_module_type,
+                            app_module_request : app_parameters.param,
+                            app_module_result : result_geodata.place,
+                            app_user_id : null,
+                            user_language : client_locale(app_parameters.accept_language),
+                            user_timezone : result_geodata.timezone,
+                            user_number_system : null,
+                            user_platform : null,
+                            server_remote_addr : app_parameters.ip,
+                            server_user_agent : app_parameters.user_agent,
+                            server_http_host : app_parameters.host,
+                            server_http_accept_language : app_parameters.accept_language,
+                            client_latitude : result_geodata.latitude,
+                            client_longitude : result_geodata.longitude
+                        });
     }
     return app_with_init;
 };

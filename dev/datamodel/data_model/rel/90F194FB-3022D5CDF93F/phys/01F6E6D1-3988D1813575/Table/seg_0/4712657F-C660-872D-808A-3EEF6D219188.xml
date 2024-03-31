@@ -22,85 +22,15 @@
 <createdTime>2021-04-07 00:02:25 UTC</createdTime>
 <ownerDesignName>data_model_20220115</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="client_latitude" id="03D5601B-E332-0DD5-9C4D-A56B5E6A7048">
-<createdBy>admin</createdBy>
-<createdTime>2020-08-06 18:00:54 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="user_timezone" id="1212FC4C-5C59-55A7-1B7E-EE2E26755E5A">
-<createdBy>admin</createdBy>
-<createdTime>2020-08-06 18:00:54 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="server_remote_addr" id="2F38D6CF-AF0D-A72F-686A-70569CF62FB6">
-<createdBy>admin</createdBy>
-<createdTime>2020-08-06 18:00:54 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_module" id="2FCA85E1-C002-6160-97EA-20ED167299D1">
-<createdBy>admin</createdBy>
-<createdTime>2021-03-15 04:10:30 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="date_created" id="5D3C6D94-1456-54D1-D157-B5A26F834166">
 <createdBy>admin</createdBy>
 <createdTime>2020-08-06 18:00:54 UTC</createdTime>
 <ownerDesignName>data_model_20220115</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_module_type" id="6C609C5B-63CD-050F-D196-1451FA815199">
+<ColumnProxy name="json_data" id="776E3A88-8594-E541-6D85-144B47B5C59D">
 <createdBy>admin</createdBy>
-<createdTime>2021-03-15 04:10:30 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_module_request" id="6D12A5D5-137F-4B73-0184-21C82B2C09C5">
-<createdBy>admin</createdBy>
-<createdTime>2021-03-15 04:10:30 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_user_id" id="80539DC2-8F89-8927-3153-C8C21C889C00">
-<createdBy>admin</createdBy>
-<createdTime>2021-03-15 04:10:30 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="user_platform" id="8057C298-9C0E-42E8-4EF2-4A3570322B96">
-<createdBy>admin</createdBy>
-<createdTime>2020-08-06 18:00:54 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="user_language" id="80F8921E-49DE-D39B-9BCD-9C5BA4F5A248">
-<createdBy>admin</createdBy>
-<createdTime>2020-08-06 18:00:54 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="user_number_system" id="93A98CB4-D7FD-AD03-A301-83ECF2DE8306">
-<createdBy>admin</createdBy>
-<createdTime>2020-08-06 18:00:54 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="server_http_host" id="9DA28C7D-D074-188B-8179-99461BE41DC4">
-<createdBy>admin</createdBy>
-<createdTime>2020-08-06 18:00:54 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="server_http_accept_language" id="BBCF3B5E-6DFD-27EE-BF6F-7B5541D9B46E">
-<createdBy>admin</createdBy>
-<createdTime>2020-08-06 18:00:54 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="server_user_agent" id="CDBAC4EB-33BD-7E83-979E-4BCD1A50EE38">
-<createdBy>admin</createdBy>
-<createdTime>2020-08-06 18:00:54 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_module_result" id="CF59B773-3136-E185-99E5-EC7474895C76">
-<createdBy>admin</createdBy>
-<createdTime>2021-03-15 04:10:30 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="client_longitude" id="F9F615E3-8062-8909-8691-3BCA224D608A">
-<createdBy>admin</createdBy>
-<createdTime>2020-08-06 18:00:54 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
+<createdTime>2024-03-31 02:04:54 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
 </columnProxies>
 <indexProxies>
