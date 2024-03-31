@@ -130,22 +130,8 @@ const render_app_html = async (app_id, locale) =>{
     return new Promise((resolve)=>{
         //list config files and return only tag and file content
         /**@type {[string, string][]} */
-        const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];} );
+        const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];} );        
         
-        if (app_config.MAP==true){
-            const common_file = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonHeadMap')[0][4];
-            common_files.push(['CommonHeadMap', common_file]);
-        }
-        else
-            common_files.push(['CommonHeadMap', '']);
-
-        if (app_config.HEAD==true){
-            const app_file = ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppHead')[0][4];
-            common_files.push(['AppHead', app_file]);
-        }
-        else
-            common_files.push(['AppHead', '']);
-
         const app = render_app_with_data(render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'APP_COMMON'), common_files);
         
         //render app parameters from apps.json

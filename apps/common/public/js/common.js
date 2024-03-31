@@ -2358,41 +2358,92 @@ const create_qr = async (div, url) => {
 };
 /**
  * Map init
- * @param {string} container
+ * @param {string} mount_div
  * @param {string} longitude 
  * @param {string} latitude 
  * @param {function|null} doubleclick_event 
  * @param {function} search_event_function 
- * @returns {Promise.<null>}
+ * @returns {Promise.<void>}
  */
-const map_init = async (container, longitude, latitude, doubleclick_event, search_event_function) => {
-    return await new Promise((resolve)=>{
-        /**@ts-ignore */
-        COMMON_GLOBAL.module_leaflet_session_map = null;
-        ComponentRender('mapid', 
-                            {   data_app_id:COMMON_GLOBAL.common_app_id,
-                                locale:COMMON_GLOBAL.user_locale,
-                                container:container,
-                                longitude:longitude,
-                                latitude:latitude,
-                                //module parameters
-                                module_leaflet_zoom:COMMON_GLOBAL.module_leaflet_zoom,
-                                module_leaflet_jumpto:COMMON_GLOBAL.module_leaflet_jumpto,
-                                module_leaflet_map_style:COMMON_GLOBAL.module_leaflet_style,
-                                module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                //functions
-                                function_FFB:FFB,
-                                function_event_doubleclick: doubleclick_event,
-                                function_search_event:search_event_function,
-                                function_get_place_from_gps:get_place_from_gps,
-                                function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
-                                function_map_country:map_country,
-                                function_map_update:map_update,
-                                function_map_setstyle:map_setstyle
-                                },
-                            '/common/component/module_leaflet.js')
-        .then(()=>resolve(null));
-    });
+const map_init = async (mount_div, longitude, latitude, doubleclick_event, search_event_function) => {
+    /**@ts-ignore */
+    COMMON_GLOBAL.module_leaflet_session_map = null;
+    /**
+     * @type {{  id:string,
+     *           value:string, 
+     *           name:null, 
+     *           display_data: string, 
+     *           data2:string|null, 
+     *           data3:string|null, 
+     *           data4:string|null, 
+     *           data5:string|null}[]}  type_map_layer
+     */
+    const map_layers = await FFB('DB_API', `/app_settings_display?data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
+    .then((/**@type{string}*/result)=>JSON.parse(result))
+    .catch((/**@type{Error}*/error)=>error);
+    
+    let map_layer_array = [];
+    for (const map_layer_option of map_layers){
+        map_layer_array.push({  id:map_layer_option.id, 
+                                description:map_layer_option.display_data, 
+                                data:map_layer_option.value, 
+                                data2:map_layer_option.data2, 
+                                data3:map_layer_option.data3, 
+                                data4:map_layer_option.data4,
+                                session_map_layer:null});
+    }
+    /**@ts-ignore */
+    COMMON_GLOBAL.module_leaflet_map_styles =   map_layer_array;
+    /**
+     * 
+     * @typedef {{  doubleClickZoom:function,
+     *              invalidateSize:function,
+     *              removeLayer:function,
+     *              setView:function,
+     *              flyTo:function,
+     *              setZoom:function,
+     *              getZoom:function}} type_map_data
+     * @type {{ library_Leaflet:*,
+     *          module_map: type_map_data,
+     *          leaflet_container:string}}
+     */
+    const leaflet_data = await ComponentRender(mount_div, 
+                        {   
+                            longitude:longitude,
+                            latitude:latitude,
+                            //module parameters
+                            module_leaflet_zoom:COMMON_GLOBAL.module_leaflet_zoom,
+                            module_leaflet_jumpto:COMMON_GLOBAL.module_leaflet_jumpto,
+                            module_leaflet_map_style:COMMON_GLOBAL.module_leaflet_style,
+                            module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                            //functions
+                            function_FFB:FFB,
+                            function_event_doubleclick: doubleclick_event,
+                            function_get_place_from_gps:get_place_from_gps,
+                            function_map_update:map_update
+                            },
+                        '/common/component/module_leaflet.js')
+    .catch(error=>{throw error;});
+    COMMON_GLOBAL.module_leaflet =              leaflet_data.library_Leaflet;
+    COMMON_GLOBAL.module_leaflet_session_map =  leaflet_data.module_map;
+    await ComponentRender(mount_div, //outer app div
+                        {   
+                            data_app_id:COMMON_GLOBAL.common_app_id,
+                            locale:COMMON_GLOBAL.user_locale,
+                            longitude:longitude,
+                            latitude:latitude,
+                            map_layer:COMMON_GLOBAL.module_leaflet_style,
+                            map_layers:COMMON_GLOBAL.module_leaflet_map_styles,
+                            leaflet_container:leaflet_data.leaflet_container,
+                            function_FFB:FFB,
+                            function_search_event:search_event_function,
+                            function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
+                            function_map_setstyle:map_setstyle,
+                            function_map_country:map_country,
+                            //module parameter
+                            module_leaflet_container:leaflet_data.leaflet_container,    //inner Leaflet div returned from Leaflet
+                            },
+                        '/common/component/module_leaflet_control.js');
 };
 /**
  * Map country

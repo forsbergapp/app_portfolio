@@ -68,13 +68,10 @@
         {"MODULE_EASY.QRCODE_HEIGHT": "128"},
         {"MODULE_EASY.QRCODE_WIDTH": "128"}
     ],
-    "RENDER_CONFIG":{   "MAP": true,
-                        "MANIFEST":false,
-                        "HEAD":false},
+    "RENDER_CONFIG":{   "MANIFEST":false},
     "RENDER_FILES":[
                     ["APP_COMMON",          null,           null,                           "/apps/common/src/index.html"],
                     ["APP_COMMON",          null,           "CommonHead",                   "/apps/common/src/head.html"],
-                    ["APP_COMMON_OPTIONAL", null,           "CommonHeadMap",                "/apps/common/src/head_map.html"],
                     ["REPORT_COMMON",       null,           "CommonReportHead",             "/apps/common/src/report/head.html"],
                     ["REPORT_COMMON",       null,           "CommonReportHeadFonts",        "/apps/common/src/report/fonts.html"],
                     ["MAINTENANCE",         null,           null,                           "/apps/common/src/index_maintenance.html"],
@@ -111,9 +108,7 @@
         {"MODULE_EASY.QRCODE_HEIGHT": "128"},
         {"MODULE_EASY.QRCODE_WIDTH": "128"}
     ],
-    "RENDER_CONFIG":{   "MAP": true,
-                        "MANIFEST":false,
-                        "HEAD":false},
+    "RENDER_CONFIG":{   "MANIFEST":false},
     "RENDER_FILES":[],
     "STATUS":"ONLINE"},
     {"APP_ID": 2, "NAME": "Timetables",     "SUBDOMAIN": "app2",    "PATH": "/apps/app2/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"/js/app_report.js",   "CSS": "/css/app.css",   "CSS_REPORT": "/css/app_report.css", "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",              "SHOWPARAM":1, 
@@ -207,13 +202,9 @@
         {"MODULE_EASY.QRCODE_HEIGHT": "128"},
         {"MODULE_EASY.QRCODE_WIDTH": "128"}
     ],
-    "RENDER_CONFIG":{   "MAP": true,
-                        "MANIFEST":true,
-                        "HEAD":true},
+    "RENDER_CONFIG":{   "MANIFEST":true},
     "RENDER_FILES":[
-                    ["APP_OPTIONAL",        null,           "AppHead",                      "/apps/app2/src/fonts.html"],
-                    ["REPORT",              "TIMETABLE",    null,                           "/apps/app2/src/report/timetable.html"],
-                    ["REPORT",              "TIMETABLE",    "AppCommonFonts",               "/apps/app2/src/fonts.html"]
+                    ["REPORT",              "TIMETABLE",    null,                           "/apps/app2/src/report/timetable.html"]
     ],
     "STATUS":"ONLINE"},
     {"APP_ID": 3, "NAME": "Presentation",   "SUBDOMAIN": "app3",    "PATH": "/apps/app3/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",    "SHOWPARAM":0, 
@@ -238,9 +229,7 @@
         {"LINK_TITLE": ""},
         {"LINK_URL": ""}
     ],
-    "RENDER_CONFIG":{   "MAP": false,
-                        "MANIFEST":false,
-                        "HEAD":false},
+    "RENDER_CONFIG":{   "MANIFEST":false},
     "RENDER_FILES":[],
     "STATUS":"ONLINE"},
     {"APP_ID": 4, "NAME": "Maps",           "SUBDOMAIN": "app4",    "PATH": "/apps/app4/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",    "SHOWPARAM":1, 
@@ -265,9 +254,7 @@
         {"LINK_TITLE": ""},
         {"LINK_URL": ""}
     ],
-    "RENDER_CONFIG":{   "MAP": true,
-                        "MANIFEST":false,
-                        "HEAD":false},
+    "RENDER_CONFIG":{   "MANIFEST":false},
     "RENDER_FILES":[],
     "STATUS":"ONLINE"},
     {"APP_ID": 5, "NAME": "Bank",           "SUBDOMAIN": "app5",    "PATH": "/apps/app5/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",    "SHOWPARAM":1, 
@@ -292,9 +279,7 @@
         {"LINK_TITLE": ""},
         {"LINK_URL": ""}
     ],
-    "RENDER_CONFIG":{   "MAP": false,
-                        "MANIFEST":false,
-                        "HEAD":false},
+    "RENDER_CONFIG":{   "MANIFEST":false},
     "RENDER_FILES":[],
     "STATUS":"ONLINE"},
     {"APP_ID": 6, "NAME": "Shop",           "SUBDOMAIN": "app6",    "PATH": "/apps/app6/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",    "SHOWPARAM":1, 
@@ -319,9 +304,7 @@
         {"LINK_TITLE": ""},
         {"LINK_URL": ""}
     ],
-    "RENDER_CONFIG":{   "MAP": false,
-                        "MANIFEST":false,
-                        "HEAD":false},
+    "RENDER_CONFIG":{   "MANIFEST":false},
     "RENDER_FILES":[],
     "STATUS":"ONLINE"}
 ]
