@@ -359,7 +359,7 @@
 	min-width: 100%;
 }
 /* SETTINGS GPS*/
-#mapid {
+#mapid >div{
 	height: 425px;
 	margin-left: 5%;
 	margin-right: 5%;
@@ -777,7 +777,7 @@
 		max-width:90%;
 		width:inherit;
 	}
-	#mapid {
+	#mapid >div{
 		height: 300px;
 	}	
 	#profile_user_settings_title_row div:nth-child(1),
