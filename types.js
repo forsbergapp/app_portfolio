@@ -610,9 +610,7 @@
  *              APP_ACCESS_SECRET:string, 
  *              APP_ACCESS_EXPIRE:string
  *          }} config_apps_secrets
- * @typedef {{  MAP: boolean, 
- *              MANIFEST:boolean,
- *              HEAD:boolean}} config_apps_render_config
+ * @typedef {{  MANIFEST:boolean}} config_apps_render_config
  * @typedef {[{}]} config_apps_parameters
  * @typedef {'ONLINE'|'OFFLINE'} config_apps_status
  * @typedef  {[string,string|null,string|null,string, string|null]} config_apps_render_files
