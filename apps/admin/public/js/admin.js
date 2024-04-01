@@ -22,21 +22,9 @@ const app_secure = await import('app_secure');
  * @returns {void}
  */
 const admin_logoff_app = () => {
-    const clear_common = () => {
-        app_secure.delete_globals();
-        AppDocument.querySelector('#select_broadcast_type').classList.remove('admin','system_admin');
-        AppDocument.querySelector('#select_broadcast_type').classList.remove('admin','system_admin');
-        AppDocument.querySelector('#menu_secure').classList.remove('admin','system_admin');
-        AppDocument.querySelectorAll('.main_content').forEach((/**@type{Element}*/content) => {
-            content.innerHTML = '';
-        });
-        common.show_common_dialogue('LOGIN_ADMIN');
-        AppDocument.querySelector('#menu').style.visibility = 'hidden';
-        AppDocument.querySelector('#menu_open').style.visibility = 'hidden';
-        AppDocument.querySelector('#admin_secure').style.visibility = 'hidden';
-    };
     common.user_logoff(common.COMMON_GLOBAL.system_admin != '').then(() => {
-        clear_common();
+        common.ComponentRemove('admin_secure');
+        common.show_common_dialogue('LOGIN_ADMIN');
     });
 };
 /**
@@ -47,22 +35,13 @@ const admin_login = async () => {
     let system_admin = false;
     if (AppDocument.querySelector('#common_user_start_nav .common_user_start_selected').id == 'common_user_start_login_system_admin')
         system_admin = true;
+    await common.ComponentRender('admin_secure', {}, '/component/admin_secure.js')
+    .then(()=>common.ComponentRender('app_user_account', {},'/common/component/user_account.js'));
     await common.user_login(system_admin)
     .then(()=>{
-        if (system_admin){
-            AppDocument.querySelector('#menu').style.visibility = 'visible';
-            AppDocument.querySelector('#menu_open').style.visibility = 'visible';
-            AppDocument.querySelector('#admin_secure').style.visibility = 'visible';
-            app_secure.init();
-        }
-        else{
-            AppDocument.querySelector('#menu').style.visibility = 'visible';
-            AppDocument.querySelector('#menu_open').style.visibility = 'visible';
-            AppDocument.querySelector('#admin_secure').style.visibility = 'visible';
-            app_secure.init();
-        }
+        app_secure.init();
     })
-    .catch(()=>null);
+    .catch(()=>common.ComponentRemove('admin_secure'));
 };
 /**
  * Event click
@@ -390,9 +369,7 @@ const mount_app_app = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const init_app = async (parameters) => {
-    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
-    .then(()=>common.ComponentRender('dialogue_send_broadcast', {}, '/component/dialogue_send_broadcast.js'))
-    .then(()=>common.ComponentRender('app_user_account', {},'/common/component/user_account.js'));
+    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
     if (parameters.app_service.system_admin_only == 0)
         for (const parameter of parameters.app) {
             if (parameter['MODULE_EASY.QRCODE_WIDTH'])

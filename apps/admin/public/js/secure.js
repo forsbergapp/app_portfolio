@@ -541,12 +541,7 @@ const sendBroadcast = () => {
  * @returns{void}
  */
 const closeBroadcast = () => {
-    AppDocument.querySelector('#dialogue_send_broadcast').style.visibility='hidden'; 
-    AppDocument.querySelector('#client_id_label').style.display='inline-block';
-    AppDocument.querySelector('#client_id').style.display='inline-block';
-    AppDocument.querySelector('#select_app_broadcast').style.display='inline-block';
-    AppDocument.querySelector('#client_id').innerHTML='';
-    AppDocument.querySelector('#send_broadcast_message').innerHTML='';
+    common.ComponentRemove('dialogue_send_broadcast', true);
 };
 /**
  * Broadcast close
@@ -555,43 +550,47 @@ const closeBroadcast = () => {
  * @returns{Promise.<void>}
  */
 const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
-    AppDocument.querySelector('#select_app_broadcast').innerHTML = await get_apps();
-    switch (dialogue_type){
-        case 'CHAT':{
-            //hide and set INFO, should not be able to send MAINTENANCE message here
-            AppDocument.querySelector('#select_broadcast_type').style.display='none';
-            //hide app selection
-            AppDocument.querySelector('#select_app_broadcast').style.display='none';
-            //show client id
-            AppDocument.querySelector('#client_id_label').style.display = 'inline-block';
-            AppDocument.querySelector('#client_id').style.display = 'inline-block';
-            AppDocument.querySelector('#client_id').innerHTML = client_id;
-            break;
+    common.ComponentRender('dialogue_send_broadcast', {
+                                                        system_admin:common.COMMON_GLOBAL.system_admin,
+                                                        apps: await get_apps()
+                                                        }, '/component/dialogue_send_broadcast.js')
+    .then(()=>{
+        switch (dialogue_type){
+            case 'CHAT':{
+                //hide and set INFO, should not be able to send MAINTENANCE message here
+                AppDocument.querySelector('#select_broadcast_type').style.display='none';
+                //hide app selection
+                AppDocument.querySelector('#select_app_broadcast').style.display='none';
+                //show client id
+                AppDocument.querySelector('#client_id_label').style.display = 'inline-block';
+                AppDocument.querySelector('#client_id').style.display = 'inline-block';
+                AppDocument.querySelector('#client_id').innerHTML = client_id;
+                break;
+            }
+            case 'APP':{
+                //hide and set INFO, should not be able to send MAINTENANCE message here
+                AppDocument.querySelector('#select_broadcast_type').style.display='none';
+                //show app selection
+                AppDocument.querySelector('#select_app_broadcast').style.display='block';
+                //hide client id
+                AppDocument.querySelector('#client_id_label').style.display = 'none';
+                AppDocument.querySelector('#client_id').style.display = 'none';
+                AppDocument.querySelector('#client_id').innerHTML = '';
+                break;
+            }
+            case 'ALL':{
+                //show broadcast type and INFO
+                AppDocument.querySelector('#select_broadcast_type').style.display='inline-block';
+                //show app selection
+                AppDocument.querySelector('#select_app_broadcast').style.display='block';
+                //hide client id
+                AppDocument.querySelector('#client_id_label').style.display = 'none';
+                AppDocument.querySelector('#client_id').style.display = 'none';
+                AppDocument.querySelector('#client_id').innerHTML = '';
+                break;
+            }
         }
-        case 'APP':{
-            //hide and set INFO, should not be able to send MAINTENANCE message here
-            AppDocument.querySelector('#select_broadcast_type').style.display='none';
-            //show app selection
-            AppDocument.querySelector('#select_app_broadcast').style.display='block';
-            //hide client id
-            AppDocument.querySelector('#client_id_label').style.display = 'none';
-            AppDocument.querySelector('#client_id').style.display = 'none';
-            AppDocument.querySelector('#client_id').innerHTML = '';
-            break;
-        }
-        case 'ALL':{
-            //show broadcast type and INFO
-            AppDocument.querySelector('#select_broadcast_type').style.display='inline-block';
-            //show app selection
-            AppDocument.querySelector('#select_app_broadcast').style.display='block';
-            //hide client id
-            AppDocument.querySelector('#client_id_label').style.display = 'none';
-            AppDocument.querySelector('#client_id').style.display = 'none';
-            AppDocument.querySelector('#client_id').innerHTML = '';
-            break;
-        }
-    }
-    AppDocument.querySelector('#dialogue_send_broadcast').style.visibility='visible';
+    });
 };
 /**
  * Broadcast set type
@@ -3150,12 +3149,10 @@ const init = () => {
         AppDocument.querySelector(`#menu_${i}`).style.display='none';
     }
     if (common.COMMON_GLOBAL.system_admin!=null){
-        AppDocument.querySelector('#select_broadcast_type').classList.add('system_admin');
         AppDocument.querySelector('#menu_secure').classList.add('system_admin');
         show_menu(1);
     }
     else{
-        AppDocument.querySelector('#select_broadcast_type').classList.add('admin');
         AppDocument.querySelector('#menu_secure').classList.add('admin');
         show_menu(1);
         common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
