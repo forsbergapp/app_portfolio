@@ -866,13 +866,17 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
             /**@type{*} */
             const element_object = {}
             Object.entries(subelement.attributes).forEach((/**@type{*}*/attribute)=>element_object[attribute[1].name] = attribute[1].value);
+            //convert attributes to props
             if (subelement.nodeName=='OPTION'){
-                /**@ts-ignore */
                 props = {   ...element_object,
                             label: subelement.text};
             }
             else
                 props = {   ...element_object}
+            
+            if (props.style)
+                props.style = {style:{...props.style}};
+            //rename class attribute
             if (element_object.class){
                 element_object.className = element_object.class;
                 delete element_object.class;
@@ -3964,7 +3968,14 @@ const mount_app = async (framework, events) => {
                 //JSX syntax
                 //return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
                 //Using pure Javascript
-                return React.createElement('div', { id: COMMON_GLOBAL.app_root});
+                //convert HTML template to React component
+                const div_template = AppDocument.createElement('div');
+                div_template.id = COMMON_GLOBAL.app_root;
+                div_template.innerHTML = `  ${app_element.outerHTML}
+                                            ${common_app_element.outerHTML}`;
+                return React.createElement( div_template.nodeName.toLowerCase(), 
+                                            { id: div_template.id, className: div_template.className}, 
+                                            html2reactcomponent(React.createElement, div_template.children));
             };
             const app_old = app_root_element.innerHTML;
             const application = ReactDOM.createRoot(app_root_element);
