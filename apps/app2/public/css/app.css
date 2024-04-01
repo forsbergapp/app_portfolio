@@ -17,13 +17,13 @@
 #profile_user_settings_info_likes::before{					content:var(--common_app_icon_user_like)}
 #profile_user_settings_info_views::before{					content:var(--common_app_icon_user_views)}
 
-#settings_tab_nav_1::before{											content:var(--common_app_icon_regional)}
-#settings_tab_nav_2::before{											content:var(--common_app_icon_gps)}
-#settings_tab_nav_3::before{											content:var(--common_app_icon_misc_design)}
-#settings_tab_nav_4::before{											content:var(--common_app_icon_misc_image)}
-#settings_tab_nav_5::before{											content:var(--common_app_icon_misc_text)}
-#settings_tab_nav_6::before{											content:var(--common_app_icon_misc_prayer)}
-
+#settings_tab_nav_1::before{								content:var(--common_app_icon_regional)}
+#settings_tab_nav_2::before{								content:var(--common_app_icon_gps)}
+#settings_tab_nav_3::before{								content:var(--common_app_icon_misc_design)}
+#settings_tab_nav_4::before{								content:var(--common_app_icon_misc_image)}
+#settings_tab_nav_5::before{								content:var(--common_app_icon_misc_text)}
+#settings_tab_nav_6::before{								content:var(--common_app_icon_misc_prayer)}
+#settings_close::before{									content:var(--common_app_icon_close)}
 #setting_icon_regional_locale::before{						content:var(--common_app_icon_regional_locale)}
 #setting_icon_regional_timezone_current::before{			content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_gps_position)}
 #setting_icon_regional_timezone::before{					content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_regional_calendar)}
@@ -255,7 +255,7 @@
 	border-style: outset;
 	border-collapse: collapse;
 	margin: 0;
-	z-index: 2;
+	z-index: 50;
 	bottom: 0px;
 	right: 0px;
 	position: fixed;
@@ -300,9 +300,6 @@
 }
 
 /*SETTINGS, common*/
-/*checkbox use switch ui*/
-
-/*other common settings*/
 #settings label {
 	margin: 0 0 3px 0;
 	padding: 0px;
@@ -413,8 +410,6 @@
 .slider_active_year{
 	display: block !important;
 }
-
-
 .slider_prev{
 	text-align: start;
 }
@@ -669,7 +664,11 @@
 #profile_info_user_setting_liked_count{
     vertical-align: sub;
 }
-
+#settings_close{
+	position: absolute;
+    bottom: 70px;
+}
+/*Profile */
 #profile_main_btn_user_settings,
 #profile_main_btn_user_setting_likes,
 #profile_main_btn_user_setting_liked{
