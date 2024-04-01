@@ -666,38 +666,23 @@ const toolbar_button = async (choice) => {
                 if (common.mobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
-                AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
                 printTimetable();
                 break;
             }
-        //day
         case 2:
-            {
-                if (common.mobile())
-                    paper.style.display = 'block';
-                settings.style.visibility = 'hidden';
-                AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
-                await update_timetable_report(0, null, getReportSettings());
-                break;
-            }
-        //month
         case 3:
-            {
-                if (common.mobile())
-                    paper.style.display = 'block';
-                settings.style.visibility = 'hidden';
-                AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
-                await update_timetable_report(1, null, getReportSettings());
-                break;
-            }
-        //year
         case 4:
             {
                 if (common.mobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
-                AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
-                await update_timetable_report(2, null, getReportSettings());
+                AppDocument.querySelector(`#toolbar_btn_day`).classList.remove('toolbar_bottom_selected');
+                AppDocument.querySelector(`#toolbar_btn_month`).classList.remove('toolbar_bottom_selected');
+                AppDocument.querySelector(`#toolbar_btn_year`).classList.remove('toolbar_bottom_selected');
+                AppDocument.querySelector(`#toolbar_btn_${choice==2?'day':choice==3?'month':'year'}`).classList.add('toolbar_bottom_selected');
+
+                //choice day=0, month=1, year=2
+                await update_timetable_report(choice==2?0:choice==3?1:2, null, getReportSettings());
                 break;
             }
         //settings
@@ -706,7 +691,6 @@ const toolbar_button = async (choice) => {
                 //Hide paper on mobile device when showing settings, scrollbug in background
                 if (common.mobile())
                     paper.style.display = 'none';
-                AppDocument.querySelector('#common_profile_btn_top').style.visibility='hidden';
                 settings.style.visibility = 'visible';
                 openTab(1);
                 break;
@@ -1713,7 +1697,7 @@ const settings_update = setting_tab => {
     //save from DOM element if DOM element is mounted in settings component or keep old value
     APP_GLOBAL.user_settings[select_user_settings.selectedIndex] = {
             id:option.id,
-            description:                        setting_tab=='REGIONAL'?AppDocument.querySelector('#setting_input_place').innerHTML:
+            description:                        setting_tab=='GPS'?AppDocument.querySelector('#setting_input_place').innerHTML:
                                                     APP_GLOBAL.user_settings[select_user_settings.selectedIndex].description,
             regional_language_locale:           setting_tab=='REGIONAL'?AppDocument.querySelector('#setting_select_locale').value:
                                                     APP_GLOBAL.user_settings[select_user_settings.selectedIndex].regional_language_locale,
@@ -2090,6 +2074,24 @@ const app_event_click = event => {
                     common.ComponentRemove('dialogue_scan_open_mobile', true);
                     break;
                 }
+                //settings
+                case 'settings_close':{
+                    common.ComponentRemove('settings_tab1');
+                    common.ComponentRemove('settings_tab2');
+                    common.ComponentRemove('settings_tab3');
+                    common.ComponentRemove('settings_tab4');
+                    common.ComponentRemove('settings_tab5');
+                    common.ComponentRemove('settings_tab6');
+                    if (common.mobile())
+                        AppDocument.querySelector('#paper').style.display = 'block';
+                    AppDocument.querySelector('#settings').style.visibility = 'hidden';
+                    const timetable_type = AppDocument.querySelector(`#toolbar_bottom .toolbar_bottom_selected`).id
+                                                .toLowerCase()
+                                                .substring('toolbar_btn_'.length);
+                    update_timetable_report(timetable_type=='day'?0:timetable_type=='month'?1:2, null, getReportSettings());
+                    break;
+                }
+                
                 //setting design
                 case 'slider_prev_day':{
                     theme_nav(-1, 'day');
