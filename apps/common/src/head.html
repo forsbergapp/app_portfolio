@@ -22,32 +22,6 @@
     function custom_React_printWarning(level, format, args){
         console.log('React warning...');
     }
-    var custom_React_listeners=[];
-    custom_React_addEventBubbleListener = (target, eventType, listener)=>{
-        custom_React_listeners.push([target, eventType, listener]);
-        target.addEventListener(eventType, listener, false);
-        return listener;
-    }
-    custom_React_addEventCaptureListener = (target, eventType, listener)=>{
-        custom_React_listeners.push([target, eventType, listener]);
-        target.addEventListener(eventType, listener, true);
-        return listener;
-    }
-    custom_React_addEventCaptureListenerWithPassiveFlag = (target, eventType, listener, passive)=>{
-        custom_React_listeners.push([target, eventType, listener]);
-        target.addEventListener(eventType, listener, {
-        capture: true,
-        passive: passive
-        });
-        return listener;
-    }
-    custom_React_addEventBubbleListenerWithPassiveFlag = (target, eventType, listener, passive)=> {
-        custom_React_listeners.push([target, eventType, listener]);
-        target.addEventListener(eventType, listener, {
-        passive: passive
-        });
-        return listener;
-    }
     /*Vue and React custom function*/
     function custom_console(stack, message, message_type){
         let e = stack.split("@");

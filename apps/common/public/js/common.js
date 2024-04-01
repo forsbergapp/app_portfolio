@@ -50,6 +50,7 @@
             app_framework:number|null,
             app_root:string,
             app_div:string,
+            app_eventListeners:{original:function, LEAFLET:[*]|[], REACT:[*]|[], VUE:[*]|[], OTHER:[*]|[]},
             info_link_policy_name:string|null,
             info_link_disclaimer_name:string|null,
             info_link_terms_name:string|null,
@@ -138,6 +139,7 @@ const COMMON_GLOBAL = {
     app_framework:null,
     app_root:'app_root',
     app_div:'app',
+    app_eventListeners:{original: HTMLElement.prototype.addEventListener, LEAFLET:[], REACT:[], VUE:[], OTHER:[]},
     info_link_policy_name:null,
     info_link_disclaimer_name:null,
     info_link_terms_name:null,
@@ -3842,19 +3844,15 @@ const framework_clean = () =>{
             delete AppDocument[key];
         }
     }
-    //added listener variable in ReactDOM library to be able to remove document listener easier
-    //custom_React_listeners and custom functions are declared in head.html
-    /**@ts-ignore */
-    if (custom_React_listeners.length>0){
-        /**@ts-ignore */
-        for (const ReactListener of custom_React_listeners){
+    if (COMMON_GLOBAL.app_eventListeners.REACT.length>0){
+        for (const ReactListener of COMMON_GLOBAL.app_eventListeners.REACT){
             ReactListener[0].removeEventListener(ReactListener[1], ReactListener[2]);
         }
-        /**@ts-ignore */
-        custom_React_listeners = [];
+        COMMON_GLOBAL.app_eventListeners.REACT = [];
     }
     
     //remove Vue objects
+    COMMON_GLOBAL.app_eventListeners.VUE = []
     /**@ts-ignore */
     delete window.__VUE_DEVTOOLS_HOOK_REPLAY__;
     /**@ts-ignore */
@@ -3898,6 +3896,7 @@ const mount_app = async (framework, events) => {
     });
     //remove listeners
     common_events_remove();
+    COMMON_GLOBAL.app_eventListeners.OTHER = []
     app_element.replaceWith(app_element.cloneNode(true));
     app_root_element.replaceWith(app_root_element.cloneNode(true));
     
@@ -4003,12 +4002,51 @@ const mount_app = async (framework, events) => {
     common_events_add();
 };
 /**
+ * Set custom event and save info about events created
+ * @returns {void}
+ */
+const custom_event_set = () => {
+    COMMON_GLOBAL.app_eventListeners.original = AppDocument.addEventListener;
+    /**
+     * 
+     * @param  {...any} eventParameters 
+     * @returns 
+     */
+    function custom_event (...eventParameters) {
+        const module = () => {
+            /**@ts-ignore */
+            if (Error().stack.toLowerCase().indexOf('leaflet')>-1)
+                return 'LEAFLET';
+            else {
+                /**@ts-ignore */
+                if (Error().stack.toLowerCase().indexOf('react')>-1)
+                    return 'REACT';
+                else {
+                    /**@ts-ignore */
+                    if (Error().stack.toLowerCase().indexOf('vue')>-1)
+                        return 'VUE';
+                    else
+                        return 'OTHER';
+                }
+            }
+        }
+        /**@ts-ignore */
+        COMMON_GLOBAL.app_eventListeners[module()].push([this, eventParameters[0], eventParameters[1], eventParameters[2]]);
+        /**@ts-ignore */
+        return COMMON_GLOBAL.app_eventListeners.original.apply(this, arguments);
+    };
+    //set custom event on both HTMLElement and document level
+    AppDocument.addEventListener = custom_event;
+    HTMLElement.prototype.addEventListener = custom_event;
+}
+/**
  * Init common
  * @param {{app:{}[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
  * @returns {Promise.<void>}
  */
 const init_common = async (parameters) => {
+    custom_event_set();
     await ComponentRender('common_app', 
                             {},
                             '/common/component/app.js')
