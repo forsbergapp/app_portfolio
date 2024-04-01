@@ -726,17 +726,7 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                     case '/modules/react/react.development.js':{
                         fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
                             if (url == '/modules/react/react-dom.development.js'){
-                                modulefile = 'let ReactDOM;\r\n' + modulefile;
-                                //replace functions with custom names declared in apps/common/src/head.html
-                                modulefile = modulefile.replace(  'unsubscribeListener = addEventCaptureListenerWithPassiveFlag',
-                                                                'unsubscribeListener = custom_React_addEventCaptureListenerWithPassiveFlag');
-                                modulefile = modulefile.replace(  'unsubscribeListener = addEventCaptureListener',
-                                                                'unsubscribeListener = custom_React_addEventCaptureListener');
-                                modulefile = modulefile.replace(  'unsubscribeListener = addEventBubbleListenerWithPassiveFlag',
-                                                                'unsubscribeListener = custom_React_addEventBubbleListenerWithPassiveFlag');
-                                modulefile = modulefile.replace(  'unsubscribeListener = addEventBubbleListener',
-                                                                'unsubscribeListener = custom_React_addEventBubbleListener');
-                                
+                                modulefile = 'let ReactDOM;\r\n' + modulefile;                                
                                 modulefile = modulefile.replace(  'exports.version = ReactVersion;',
                                                                 'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
                                 modulefile = modulefile + 'export {ReactDOM}';
