@@ -36,8 +36,8 @@
 	
 	Why 
 	As a certified professional developer, develop a new platform using latest technology and paradigm used today
-	and to show a well structured enterprise level platform implemented with pure technology without unnecessary
-	obscure frameworks to be used as reference project and a manual and guidance for future projects.
+	and to show a well structured enterprise level platform implemented to be used as reference project and a manual and 
+	guidance for future projects.
 	
 	What
 	Create a web app platform with latest technology supporting any language and regional setting with the most optimized,
@@ -58,13 +58,19 @@
 	- all apps should be web apps with open source written in Javascript, HTML and CSS both for front end and back end 
 	  and using JSON and REST API between front end and back end
     - all apps should work on mobile, tablet and desktop computers
+	- all apps should use multi framework supporting pure Javascript, Vue and React without build step
+	- all apps should use typescript and JSDoc without build step
+	- all apps should be able to switch framework at any time allowing mixed framework rendered components simultaneously
+	  or let all apps be controlled by a server parameter to show a default framework only
+	- all apps should mount the app and other components at start using Vue single file component (SFC) similar structure
+		and only render components when needed
 	- all apps should be single page application (SPA)
-	- one app should be Progressive Web App (PWA)
-	- any language, all unicode characters in client and in server, any regional setting, double bilanguage calendar
-	  realtime timetable calculations with all known needed settings configurable with different themes using CSS,
-	- social network
+	- one app should be an installable Progressive Web App (PWA)
+	- all apps should use event delegation declaring events on app root level only
+	- any language, all unicode characters, any regional setting
+	- social network basic functionality with follow, like, follwed, liked and viewed including statistics
 	- Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js. Thirdparty javascript modules 
-	  should be converted from CommonJS to ECMScript modules if necessary.
+	  should be converted from CommonJS to ECMAScript modules if necessary.
 	- report PDF with QR codes pixel perfect design using css pt font size measurement and full unicode support
 	- apps created using server side rendering
 	- database and file logging
@@ -84,20 +90,25 @@
 	  in CSS removed. 
 	- third party modules should be canvas free solutions or configured to not use canvas.
 	- own solution for statistics displayed in graphs
-	- no exposure of server code in client like for example React framework is doing by default
 	- using Scrum agile project management framework to manage project with integrated version control that supports 
 	  code releases of all source code and documentation
+	- development environment should be configured with ESLint for basic code formatting
+	- development environment should be configured with Jasmine to provide test environment
+	- documentation of installation and development environment
+	- establish common app functionality with email code verification in user processes, user info with statistics, search users, QR Code on the user profile
+	- avoid semantic HTML in all apps if not necessary meaning all input, a, table, li, button, label, select or form elements should be replaced by div elements
+	  to avoid different obscure functionality, UI and CSS styles in different browsers.
 
 	Security requirements
 
 	- Content Security Policy against XSS
 	- SHA256 for REST API and Bcrypt for user security
 	- JSON web tokens with extra validation that checks at least token is authorized to correct userid, appid and ip.
-	- admin app logs in with fetched code from server after accesstoken fetched and code deleted after logout
-	  with no traces in navigator history
-	- stateless app meaning cookies or localstorage should not be used in the browser
+	- stateless app meaning cookies or localstorage should not be used in the browser, PWA should not cache files and just be installable
+	- textediting control on app level to block basic cut/copy/paste for apps that need higher security
 	- access control IP blocking,
 	- access control user agent
+	- access control method
 	- access control hostname
 	- access control accept language
 	- access control request url

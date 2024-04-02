@@ -13,7 +13,7 @@
 	Runs in Node.js using Express framework.
 	</div>
 	<div class='text_p'>
-	Apps are component structured and server-side rendered with database data population and single page apps.
+	Apps are component structured and both server-side rendered and client side rendered with database data population and single page apps.
 	Secure REST API with authentication middleware, common ANSI SQL with minium differences for all databases, 
 	centralized common SQL parameter syntax and consolidated data validation in Javascript for all databases.
 	Apps are written using pure CSS, HTML and Javascript and ES6+ Javascript using
@@ -45,8 +45,8 @@
 	<div class='text_h3'>Why</div> 
 	<div class='text_p'>
 	As a certified professional developer, develop a new platform using latest technology and paradigm used today
-	and to show a well structured enterprise level platform implemented with pure technology without unnecessary
-	obscure frameworks to be used as reference project and a manual and guidance for future projects.
+	and to show a well structured enterprise level platform implemented to be used as reference project and a manual and 
+	guidance for future projects.
 	</div>
 	
 	<div class='text_h3'>What</div>
@@ -74,15 +74,22 @@
 	<div class='text_list'>all apps should be web apps with open source written in Javascript, HTML and CSS both for front end and back end 
 	  and using JSON and REST API between front end and back end</div>
 	<div class='text_list'>all apps should work on mobile, tablet and desktop computers</div>
+	<div class='text_list'>all apps should use multi framework supporting pure Javascript, Vue and React without build step</div>
+	<div class='text_list'>all apps should use typescript and JSDoc without build step</div>
+	<div class='text_list'>all apps should be able to switch framework at any time allowing mixed framework rendered components simultaneously
+		or let all apps be controlled by a server parameter to show a default framework only
+	</div>
+	<div class='text_list'>all apps should mount the app and other components at start using Vue single file component (SFC) similar structure
+		and only render components when needed
+	</div>
 	<div class='text_list'>all apps should be single page application (SPA)</div>
-	<div class='text_list'>one app should be Progressive Web App (PWA)</div>
-	<div class='text_list'>any language, all unicode characters in client and in server, any regional setting, double bilanguage calendar
-	  realtime timetable calculations with all known needed settings configurable with different themes using CSS</div>
-	<div class='text_list'>social network</div>
+	<div class='text_list'>one app should be an installable Progressive Web App (PWA)</div>
+	<div class='text_list'>all apps should use event delegation declaring events on app root level only</div>
+	<div class='text_list'>any language, all unicode characters, any regional setting</div>
+	<div class='text_list'>social network basic functionality with follow, like, follwed, liked and viewed including statistics</div>
 	<div class='text_list'>Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js. Thirdparty javascript modules
-	  should be converted from CommonJS to ECMScript modules if necessary.</div>
+	  should be converted from CommonJS to ECMAScript modules if necessary.</div>
 	<div class='text_list'>report PDF with QR codes pixel perfect design using CSS pt font size measurement and full unicode support</div>
-	<div class='text_list'>apps created using server side rendering</div>
 	<div class='text_list'>database and file logging</div>
 	<div class='text_list'>microservice arquitecture</div>
 	<div class='text_list'>MariaDB, MySQL, PostgreSQL and Oracle databases supported deployed on Oracle Cloud with dynamic pool arquitecture
@@ -91,7 +98,6 @@
 	<div class='text_list'>database should support transactions with rollback and commit and be able to save images in the database</div>
 	<div class='text_list'>database ER model and server datamodel using a database data model designer tool that can generate SQL from
 	  the server data model</div>
-	<div class='text_list'>dynamic app installation</div>
 	<div class='text_list'>admin app with monitoring of live connections and logs, statistics, broadcast maintenance, messaging to clients,
 	  database info, OS info, process info and user role management.</div>
 	<div class='text_list'>admin app with access for admin database user supporting superadmin role to monitor apps</div>
@@ -100,22 +106,26 @@
 	  in CSS removed. </div>
 	<div class='text_list'>third party modules should be canvas free solutions or configured to not use canvas.</div>
 	<div class='text_list'>own solution for statistics displayed in graphs</div>
-	<div class='text_list'>no exposure of server code in client like for example React framework is doing by default</div>
 	<div class='text_list'>using Scrum agile project management framework to manage project with integrated version control that supports
 	  code releases of all source code and documentation</div>
 	</div>
-
+	<div class='text_list'>development environment should be configured with ESLint for basic code formatting</div>
+	<div class='text_list'>development environment should be configured with Jasmine to provide test environment</div>
+	<div class='text_list'>documentation of installation and development environment</div>
+	<div class='text_list'>establish common app functionality with email code verification in user processes, user info with statistics, search users, QR Code on the user profile</div>
+	<div class='text_list'>avoid semantic HTML in all apps if not necessary meaning all input, button, a, table, li, label, select or form elements should be replaced by div elements
+	  to avoid different obscure functionality, UI and CSS styles in different browsers.</div>
 	<div class='text_h2'>Security requirements</div>
 
 	<div class='text_p'>
 	<div class='text_list'>Content Security Policy against XSS</div>
 	<div class='text_list'>SHA256 for REST API and Bcrypt for user security</div>
 	<div class='text_list'>JSON web tokens with extra validation that checks at least token is authorized to correct userid, appid and ip.</div>
-	<div class='text_list'>admin app logs in with fetched code from server after accesstoken fetched and code deleted after logout
-	  with no traces in navigator history</div>
-	<div class='text_list'>stateless app meaning cookies or localstorage should not be used in the browser</div>
+	<div class='text_list'>stateless app meaning cookies or localstorage should not be used in the browser, PWA should not cache file and just be installable</div>
+	<div class='text_list'>textediting control on app level to block basic cut/copy/paste for apps that need higher security</div>
 	<div class='text_list'>access control IP blocking</div>
 	<div class='text_list'>access control user agent</div>
+	<div class='text_list'>access control method</div>
 	<div class='text_list'>access control hostname</div>
 	<div class='text_list'>access control accept language</div>
 	<div class='text_list'>access control request url</div>
