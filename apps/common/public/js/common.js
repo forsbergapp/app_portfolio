@@ -1053,6 +1053,8 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
         case 'LOGIN_LOADING':{
             await ComponentRender('common_dialogue_user_start', 
                             {   user_click:null,
+                                system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
+			                    system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
                                 translation_username:'',
                                 translation_password:'',
                                 translation_password_confirm:'', 
@@ -1065,11 +1067,13 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
         case 'LOGIN':{
             await ComponentRender('common_dialogue_user_start', 
                             {   user_click:'common_user_start_login',
-                                translation_username:COMMON_GLOBAL.translate_items.USERNAME,
-                                translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
-                                translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
-                                translation_email:COMMON_GLOBAL.translate_items.EMAIL,
-                                translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
+                                system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
+			                    system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
+                                translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
+                                translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
+                                translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
+                                translation_email:              COMMON_GLOBAL.translate_items.EMAIL,
+                                translation_password_reminder:  COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                 function_FFB:FFB},
                             '/common/component/dialogue_user_start.js');
             break;
@@ -1077,35 +1081,28 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
         case 'LOGIN_ADMIN':{
             //show admin login as default
             await ComponentRender('common_dialogue_user_start', 
-                            {   user_click:COMMON_GLOBAL.system_admin_only==1?'common_user_start_login_system_admin':'common_user_start_login',
-                                translation_username:COMMON_GLOBAL.translate_items.USERNAME,
-                                translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
-                                translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
-                                translation_email:COMMON_GLOBAL.translate_items.EMAIL,
-                                translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
+                            {   user_click:                     COMMON_GLOBAL.system_admin_only==1?'common_user_start_login_system_admin':'common_user_start_login',
+                                system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
+			                    system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
+                                translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
+                                translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
+                                translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
+                                translation_email:              COMMON_GLOBAL.translate_items.EMAIL,
+                                translation_password_reminder:  COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                 function_FFB:FFB},
-                            '/common/component/dialogue_user_start.js')
-            .then(()=>{
-                AppDocument.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
-                if (COMMON_GLOBAL.system_admin_first_time == 1) {
-                    AppDocument.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
-                    AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm_container').style.display = 'block';
-                }
-                if (COMMON_GLOBAL.system_admin_only == 1) {
-                    AppDocument.querySelector('#common_user_start_login').style.display = 'none';
-                    AppDocument.querySelector('#common_user_start_login_form').style.display = 'none';
-                }
-            })
+                            '/common/component/dialogue_user_start.js');
             break;
         }
         case 'SIGNUP':{
             await ComponentRender('common_dialogue_user_start', 
                             {   user_click:'common_user_start_signup',
-                                translation_username:COMMON_GLOBAL.translate_items.USERNAME,
-                                translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
-                                translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
-                                translation_email:COMMON_GLOBAL.translate_items.EMAIL,
-                                translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
+                                system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
+			                    system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
+                                translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
+                                translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
+                                translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
+                                translation_email:              COMMON_GLOBAL.translate_items.EMAIL,
+                                translation_password_reminder:  COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                 function_FFB:FFB},
                             '/common/component/dialogue_user_start.js');
             break;
@@ -1113,11 +1110,13 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
         case 'FORGOT':{
             await ComponentRender('common_dialogue_user_start', 
                             {   user_click:'common_user_start_forgot',
-                                translation_username:COMMON_GLOBAL.translate_items.USERNAME,
-                                translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
-                                translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
-                                translation_email:COMMON_GLOBAL.translate_items.EMAIL,
-                                translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
+                                system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
+			                    system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
+                                translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
+                                translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
+                                translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
+                                translation_email:              COMMON_GLOBAL.translate_items.EMAIL,
+                                translation_password_reminder:  COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                 function_FFB:FFB},
                             '/common/component/dialogue_user_start.js');
             break;
@@ -3214,7 +3213,7 @@ const set_app_service_parameters = async parameters => {
     //system admin
     COMMON_GLOBAL.system_admin = null;
     COMMON_GLOBAL.system_admin_only = parameters.system_admin_only;
-    COMMON_GLOBAL.system_admin_first_time = parameters.first_name;
+    COMMON_GLOBAL.system_admin_first_time = parameters.first_time;
 
     //user info
     COMMON_GLOBAL.user_identity_provider_id=null;
