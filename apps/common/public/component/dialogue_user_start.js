@@ -57,6 +57,8 @@ const template =`   <div id='common_user_start_logo'></div>
  * @param {{common_document:AppDocument,
  *          common_mountdiv:string,
  *          user_click:string|null,
+ *          system_admin_first_time:number,
+ *          system_admin_only:number,
  *          translation_username:string,
  *          translation_password:string,
  *          translation_password_confirm:string,
@@ -98,7 +100,7 @@ const component = async props => {
     const render_template = async () =>{
         return template
                 //if user_click empty means component is called for loading purpose
-                .replace('<COMMON_PROVIDER_BUTTONS/>', props.user_click?await provider_buttons():'')
+                .replace('<COMMON_PROVIDER_BUTTONS/>', props.system_admin_only==1?'':(props.user_click?await provider_buttons():''))
                 .replaceAll('<COMMON_TRANSLATION_USERNAME/>',props.translation_username)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD/>',props.translation_password)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD_CONFIRM/>',props.translation_password_confirm)
@@ -106,6 +108,14 @@ const component = async props => {
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD_REMINDER/>',props.translation_password_reminder);
     }
     const post_component = () =>{
+        if (props.system_admin_first_time == 1) {
+			AppDocument.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
+			AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm_container').style.display = 'block';
+		}
+		if (props.system_admin_only == 1) {
+			AppDocument.querySelector('#common_user_start_login').style.display = 'none';
+			AppDocument.querySelector('#common_user_start_login_form').style.display = 'none';
+		}
         if (props.user_click)
             props.common_document.querySelector(`#${props.user_click}`).click();
     }
