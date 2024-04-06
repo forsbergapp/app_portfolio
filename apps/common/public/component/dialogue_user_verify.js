@@ -7,12 +7,12 @@ const template =`
                 <div id='common_user_verify_data_username'><USERNAME/></div>
                 <div id='common_user_verify_data_password'><PASSWORD/></div>
                 <div id='common_user_verify_verification_container'>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char1' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char2' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char3' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char4' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char5' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char6' contenteditable=true class='common_input common_user_verify_input_verification_char'></div></div>                
+                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char1' contentEditable=true class='common_input common_user_verify_input_verification_char'></div></div>
+                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char2' contentEditable=true class='common_input common_user_verify_input_verification_char'></div></div>
+                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char3' contentEditable=true class='common_input common_user_verify_input_verification_char'></div></div>
+                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char4' contentEditable=true class='common_input common_user_verify_input_verification_char'></div></div>
+                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char5' contentEditable=true class='common_input common_user_verify_input_verification_char'></div></div>
+                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char6' contentEditable=true class='common_input common_user_verify_input_verification_char'></div></div>                
                 </div>
                 <div id='common_user_verify_cancel' class='common_dialogue_button common_icon'></div>`;
 /**

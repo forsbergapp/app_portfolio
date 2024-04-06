@@ -870,6 +870,39 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
             /**@type{*} */
             const element_object = {}
             Object.entries(subelement.attributes).forEach((/**@type{*}*/attribute)=>element_object[attribute[1].name] = attribute[1].value);
+            //always rename class to className, React will not create class if className is empty
+            //but no error/warning will be displayed using this syntax
+            element_object.className = element_object.class;
+            delete element_object.class;
+
+            //rename attributes used
+            const rename_attributes =  [
+                                    //Leaflet SVG:
+                                    ['stroke-opacity',  'strokeOpacity'],
+                                    ['stroke-width',    'strokeWidth'],
+                                    ['stroke-linecap',  'strokeLinecap'],
+                                    ['stroke-linejoin', 'strokeLinejoin'],
+                                    ['pointer-events',  'pointerEvents'],
+                                    //other used SVG attributes:
+                                    ['shape-rendering', 'shapeRendering'],
+                                    ['xmlns:xlink',     'xmlnsXlink'],
+                                    //other attributes
+                                    ['tabindex',        'tabIndex'],
+                                    ['contenteditable', 'contentEditable'],
+                                    ];
+            for (const element_attribute of Object.keys(element_object)){
+                for (const element_svg of rename_attributes)
+                    if (element_attribute== element_svg[0]){
+                        element_object[element_svg[1]] = element_object[element_svg[0]];
+                        delete element_object[element_svg[0]];
+                    }
+                        
+            }
+            //add required unique key
+            const id = element_object.id?
+                            element_object.id:
+                                `React_key_${Date.now().toString()}_${Math.random().toString(36).substring(2)}`;
+            element_object.key = `{${id}}`;
             //convert attributes to props
             if (subelement.nodeName=='OPTION'){
                 props = {   ...element_object,
@@ -878,12 +911,8 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
             else
                 props = {   ...element_object}
             
-            if (props.style)
+            if (props.style){   
                 props.style = {style:{...props.style}};
-            //rename class attribute
-            if (element_object.class){
-                element_object.className = element_object.class;
-                delete element_object.class;
             }
             const reactobj = subelement.childElementCount>0?React_create_element(subelement.nodeName.toLowerCase(), 
                                                 props,

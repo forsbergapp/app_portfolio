@@ -3,7 +3,7 @@
 const template =`   <div id='common_lov_form'>
                     <div id='common_lov_title'></div>
                     <div id='common_lov_search_row'>
-                        <div id='common_lov_search_input' contenteditable=true class='common_input'></div>
+                        <div id='common_lov_search_input' contentEditable=true class='common_input'></div>
                         <div id='common_lov_search_icon' class='common_icon'></div>
                     </div>
                     <div id='common_lov_list' class='common_list_scrollbar'></div>

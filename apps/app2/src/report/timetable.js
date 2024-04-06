@@ -1191,7 +1191,7 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 				break;
 				}
 			case 'notes':{
-				html += `<div class='timetable_month_data_col timetable_month_data_notes'>${''}<div contenteditable=true class='common_input'/></div></div>`;
+				html += `<div class='timetable_month_data_col timetable_month_data_notes'>${''}<div contentEditable=true class='common_input'/></div></div>`;
 				break;
 				}
 			default:{
@@ -1852,7 +1852,7 @@ const displayYear = (prayTimes, settings) => {
 	const year_timetable = ()=>{
 		return `<div id='timetable_year'
 					class='${settings.timetable_class} ${settings.theme_year} ${settings.arabic_script}'
-					style='direction:' ${settings.direction}'>
+					style='direction: ${settings.direction}'>
 					<div id='timetable_header' class='display_font' style='${getstyle(settings.header_img_src, settings.header_align)}'>
 						<div >${settings.header_txt1}</div>
 						<div >${settings.header_txt2}</div>
@@ -1863,7 +1863,7 @@ const displayYear = (prayTimes, settings) => {
 						<div>${timetable_title}</div>
 						<div>${REPORT_GLOBAL.first_language.timetable_title} ${settings.second_locale!='0'?REPORT_GLOBAL.second_language.timetable_title:''}</div>
 					</div>
-					<div id='timetable_year_timetables' ${timetable_class}'>
+					<div id='timetable_year_timetables' ${timetable_class}>
 						<div class='timetable_year_timetables_row'>
 							${months[0]}
 							${months[1]}
@@ -1883,7 +1883,7 @@ const displayYear = (prayTimes, settings) => {
 							${months[11]}
 						</div>
 					</div>
-					<div id='timetable_year_timetables_footer' ${timetable_footer_class}'>
+					<div id='timetable_year_timetables_footer' ${timetable_footer_class}>
 						<div id='timetable_year_timetables_footer_row'>
 							<div id='timetable_year_timetables_footer_col'>
 								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.place}</div>
@@ -1903,7 +1903,7 @@ const displayYear = (prayTimes, settings) => {
 							</div>
 						</div>
 					</div>
-					<div id='timetable_footer' display_font' style='${getstyle(settings.footer_img_src, settings.footer_align)}'>
+					<div id='timetable_footer' class='display_font' style='${getstyle(settings.footer_img_src, settings.footer_align)}'>
 						<div >${settings.footer_txt1}</div>
 						<div >${settings.footer_txt2}</div>
 						<div >${settings.footer_txt3}</div>
