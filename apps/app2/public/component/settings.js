@@ -9,13 +9,13 @@ const template =`   <div id='settings_tab_navigation'>
                         <div id='settings_tab_nav_6' class='settings_tab_nav common_icon'></div>
                         <div id='settings_tab_nav_7' class='settings_tab_nav common_icon'></div>
                     </div>
-                    <div id='settings_tab1' class="settings_tab_content"></div>
-                    <div id='settings_tab2' class="settings_tab_content"></div>
-                    <div id='settings_tab3' class="settings_tab_content"></div>
-                    <div id='settings_tab4' class="settings_tab_content"></div>
-                    <div id='settings_tab5' class="settings_tab_content"></div>
-                    <div id='settings_tab6' class="settings_tab_content"></div>
-                    <div id='settings_tab7' class="settings_tab_content"></div>
+                    <div id='settings_tab1' class='settings_tab_content'></div>
+                    <div id='settings_tab2' class='settings_tab_content'></div>
+                    <div id='settings_tab3' class='settings_tab_content'></div>
+                    <div id='settings_tab4' class='settings_tab_content'></div>
+                    <div id='settings_tab5' class='settings_tab_content'></div>
+                    <div id='settings_tab6' class='settings_tab_content'></div>
+                    <div id='settings_tab7' class='settings_tab_content'></div>
                     <div id='settings_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * 
