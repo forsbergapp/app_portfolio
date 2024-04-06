@@ -372,6 +372,7 @@
  * @property {string|null}  app_link_title
  * @property {string|null}  app_text_edit
  * @property {number}       app_framework
+ * @property {number}       app_framework_messages
  * @property {string}       app_datatoken
  * @property {string}       locale
  * @property {translate_items}  translate_items

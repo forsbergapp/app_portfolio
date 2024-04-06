@@ -200,6 +200,7 @@ const get_module_with_initBFF = async (app_info) => {
                 app_link_title: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_TITLE' in parameter)[0].LINK_TITLE,
                 app_text_edit: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'TEXT_EDIT' in parameter)[0].TEXT_EDIT,
                 app_framework : getNumberValue(ConfigGet('SERVER', 'APP_FRAMEWORK')),
+                app_framework_messages:getNumberValue(ConfigGet('SERVER', 'APP_FRAMEWORK_MESSAGES')),
                 app_datatoken: app_info.datatoken,
                 locale: app_info.locale,
                 translate_items:app_info.translate_items,
@@ -737,8 +738,6 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                                                                 'exports.version = ReactVersion;\r\n  React=exports;');
                                 modulefile = modulefile + 'export {React}';
                             }
-                            modulefile = modulefile.replaceAll('printWarning','custom_React_printWarning');
-                            modulefile = modulefile.replaceAll('function custom_React_printWarning','function printWarning');
                             
                             resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
                         })
