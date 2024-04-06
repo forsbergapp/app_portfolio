@@ -48,8 +48,10 @@
             app_link_title:string|null,
             app_text_edit:string|null,
             app_framework:number|null,
+            app_framework_messages:number|null,
             app_root:string,
             app_div:string,
+            app_console:{warn:function, info:function, error:function},
             app_eventListeners:{original:function, LEAFLET:[*]|[], REACT:[*]|[], VUE:[*]|[], OTHER:[*]|[]},
             info_link_policy_name:string|null,
             info_link_disclaimer_name:string|null,
@@ -137,8 +139,10 @@ const COMMON_GLOBAL = {
     app_link_title:null,
     app_text_edit:null,
     app_framework:null,
+    app_framework_messages:null,
     app_root:'app_root',
     app_div:'app',
+    app_console:{warn:window.console.warn, info:window.console.info, error:window.console.error},
     app_eventListeners:{original: HTMLElement.prototype.addEventListener, LEAFLET:[], REACT:[], VUE:[], OTHER:[]},
     info_link_policy_name:null,
     info_link_disclaimer_name:null,
@@ -3213,7 +3217,8 @@ const set_app_service_parameters = async parameters => {
     COMMON_GLOBAL.app_text_edit= parameters.app_text_edit;
     
     COMMON_GLOBAL.app_framework = parseInt(parameters.app_framework);
-
+    COMMON_GLOBAL.app_framework_messages = parseInt(parameters.app_framework_messages);
+    
     //rest 
     COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
 
@@ -4022,10 +4027,10 @@ const mount_app = async (framework, events) => {
     common_events_add();
 };
 /**
- * Set custom event and save info about events created
+ * Set custom framework functionality overriding console messages and save info about events created
  * @returns {void}
  */
-const custom_event_set = () => {
+const custom_framework = () => {
     COMMON_GLOBAL.app_eventListeners.original = AppDocument.addEventListener;
     /**
      * 
@@ -4055,9 +4060,40 @@ const custom_event_set = () => {
         /**@ts-ignore */
         return COMMON_GLOBAL.app_eventListeners.original.apply(this, arguments);
     };
+    
     //set custom event on both HTMLElement and document level
     AppDocument.addEventListener = custom_event;
     HTMLElement.prototype.addEventListener = custom_event;
+
+    /**
+     * console warn
+     * @param  {...any} parameters 
+     */
+    function console_warn (...parameters) {
+            /**@ts-ignore */
+            COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.warn.apply(this, arguments):null;
+    };
+    /**
+     * console error
+     * @param  {...any} parameters 
+     */
+     function console_error (...parameters) {
+        /**@ts-ignore */
+        COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.error.apply(this, arguments):null;
+    };
+    /**
+     * console info
+     * @param  {...any} parameters 
+     */
+     function console_info (...parameters) {
+        /**@ts-ignore */
+        COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.info.apply(this, arguments):null;
+    };
+    //Vue uses console.warn, show or hide from any framework 
+    window.console.warn = console_warn;
+    //React uses console.info and error, show or hide from any framework
+    window.console.info = console_info;
+    window.console.error = console_error;
 }
 /**
  * Init common
@@ -4066,7 +4102,7 @@ const custom_event_set = () => {
  * @returns {Promise.<void>}
  */
 const init_common = async (parameters) => {
-    custom_event_set();
+    custom_framework();
     await ComponentRender('common_app', 
                             {},
                             '/common/component/app.js')
