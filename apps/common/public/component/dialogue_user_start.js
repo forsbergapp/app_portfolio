@@ -57,6 +57,8 @@ const template =`   <div id='common_user_start_logo'></div>
  * @param {{common_document:AppDocument,
  *          common_mountdiv:string,
  *          user_click:string|null,
+ *          app_id:number,
+ *          common_app_id:number,
  *          system_admin_first_time:number,
  *          system_admin_only:number,
  *          translation_username:string,
@@ -108,6 +110,8 @@ const component = async props => {
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD_REMINDER/>',props.translation_password_reminder);
     }
     const post_component = () =>{
+        if (props.app_id == props.common_app_id)
+            AppDocument.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
         if (props.system_admin_first_time == 1) {
 			AppDocument.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
 			AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm_container').style.display = 'block';
