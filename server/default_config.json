@@ -78,7 +78,7 @@
     {"SCOPE_SERVICE": "SERVICE", "COMMENT": ""},
     {"SCOPE_DB": "DB", "COMMENT": ""},
     {"REQUEST_LEVEL": "1", "COMMENT": "0=none, 1=INFO, 2=VERBOSE"},
-    {"DB_LEVEL": "1", "COMMENT": "0=none, 1=INFO, 2=VERBOSE"},
+    {"DB_LEVEL": "0", "COMMENT": "0=none, 1=INFO, 2=VERBOSE"},
     {"SERVICE_LEVEL": "1", "COMMENT": "0=none, 1=INFO, 2=VERBOSE"},
     {"LEVEL_VERBOSE": "VERBOSE", "COMMENT": ""},
     {"LEVEL_ERROR": "ERROR", "COMMENT": ""},
