@@ -275,13 +275,13 @@
 
 # Installation instructions
 
-1. Download and info about directories
+1. Start
 
-	[docs/1.download_and_info.md](docs/1.download_and_info.md)
+	[docs/1.start.md](docs/1.start.md)
 
-2. Install Node.js, modules on server, set DNS records and create SSL
+2. Update DNS records, install Node.js and modules on server and create SSL
 
-	[docs/2.install_nodejs_dn_ssl.md](docs/2.install_nodejs_dns_ssl.md)
+	[docs/2.update_dns_install_nodejs_ssl.md](docs/2.update_dns_install_nodejs_ssl.md)
 
 3. Install MariaDB/MySQL/Oracle/PostgreSQL on same server or other server
    and run db scripts
