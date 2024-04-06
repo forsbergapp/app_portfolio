@@ -10,7 +10,7 @@ const template =`   <div class='setting_horizontal_row'>
                                     </div>
                                 </div>
                             </div>
-                            <div id='slider_prev_day' class='common_dialogue_button slider_prev common_icon'></i></div>
+                            <div id='slider_prev_day' class='common_dialogue_button slider_prev common_icon'></div>
                             <div id='slider_next_day' class='common_dialogue_button slider_next common_icon'></div>
                             <div id='slider_theme_day_id'></div>
                         </div>

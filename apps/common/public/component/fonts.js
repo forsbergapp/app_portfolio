@@ -3,7 +3,7 @@ const AppDocument = document;
 const template_default =`   <!--Default font
                             Noto Sans + Noto Sans Mono
                             -->
-                            <link media="print" onload="this.media='all'" href="/common/css/font/font1.css" rel="stylesheet">
+                            <link media="all" href="/common/css/font/font1.css" rel="stylesheet">
                         `;
 const template_arabic =`    <!--Arabic fonts
                             Noto Sans Arabic
@@ -11,7 +11,7 @@ const template_arabic =`    <!--Arabic fonts
                             Noto Naskh Arabic
                             Noto Nastaliq Urdu
                             -->
-                            <link media="print" onload="this.media='all'" href="/common/css/font/font2.css" rel="stylesheet">
+                            <link media="all" href="/common/css/font/font2.css" rel="stylesheet">
                         `;
 const template_asian =`    <!--Asian fonts
                             Noto Sans JP
@@ -20,7 +20,7 @@ const template_asian =`    <!--Asian fonts
                             Noto Sans SC
                             Noto Sans TC
                             -->
-                            <link media="print" onload="this.media='all'" href="/common/css/font/font3.css" rel="stylesheet">
+                            <link media="all" href="/common/css/font/font3.css" rel="stylesheet">
                         `;
 const template_prio1 =`     <!--Prio 1 fonts
                             Noto Sans Bengali
@@ -37,7 +37,7 @@ const template_prio1 =`     <!--Prio 1 fonts
                             Noto Sans Telugu
                             Noto Sans Thai
                             -->
-                            <link media="print" onload="this.media='all'" href="/common/css/font/font4.css" rel="stylesheet">
+                            <link media="all" href="/common/css/font/font4.css" rel="stylesheet">
                         `;
 const template_prio2 =`     <!--Prio 2 fonts
                             Noto Emoji
@@ -49,7 +49,7 @@ const template_prio2 =`     <!--Prio 2 fonts
                             Noto Sans Symbols 2
                             Noto Sans Symbols
                             -->
-                            <link media="print" onload="this.media='all'" href="/common/css/font/font5.css" rel="stylesheet">
+                            <link media="all" href="/common/css/font/font5.css" rel="stylesheet">
                         `;
 const template_prio3 =`     <!--Prio 3 fonts
                             Noto Sans Adlam Unjoined
@@ -175,8 +175,8 @@ const template_prio3 =`     <!--Prio 3 fonts
                             m-
                             font7
                             -->
-                            <link media="print" onload="this.media='all'" href="/common/css/font/font6.css" rel="stylesheet">
-                            <link media="print" onload="this.media='all'" href="/common/css/font/font7.css" rel="stylesheet">
+                            <link media="all" href="/common/css/font/font6.css" rel="stylesheet">
+                            <link media="all" href="/common/css/font/font7.css" rel="stylesheet">
                         `;
 /**
  * 

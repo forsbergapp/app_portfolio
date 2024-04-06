@@ -21,8 +21,8 @@ const AppDocument = document;
  *              leaflet_container:string}} leaflet_data
  */
 
-const template =`   <link media="print" onload="this.media='all'" rel="stylesheet" href="<CSS_URL/>" type="text/css"/>
-                    <div id='<LEAFLET_CONTAINER/>'>`;
+const template =`   <link media="all" rel="stylesheet" href="<CSS_URL/>" type="text/css"/>
+                    <div id='<LEAFLET_CONTAINER/>'></div>`;
 
 /**
  * 

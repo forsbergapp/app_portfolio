@@ -14,7 +14,7 @@ const template =`   <div id='send_broadcast_form'>
                         </div>
                         <div id='client_id_label' class='common_icon'></div><div id='client_id'></div>
                         <select id='select_app_broadcast'><APPS/></select>
-                        <div id='send_broadcast_message' contenteditable='true'></div>
+                        <div id='send_broadcast_message' contentEditable='true'></div>
                         <div id='send_broadcast_send' class='common_dialogue_button common_icon' ></div>
                         <div id='send_broadcast_close' class='common_dialogue_button common_icon' ></div>
                     </div>`;

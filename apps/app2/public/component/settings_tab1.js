@@ -128,9 +128,9 @@ const template =`       <div class='setting_horizontal_row'>
                                 <div id='setting_icon_regional_calendar_hijri_type' class='common_icon'></div>
                             </div>
                             <div class='setting_horizontal_col'>
-                            <select id='setting_select_calendar_hijri_type' >
-                                <AppCalendarhijritype/>
-                            </select>
+                                <select id='setting_select_calendar_hijri_type' >
+                                    <AppCalendarhijritype/>
+                                </select>
                             </div>
                             <div class='setting_horizontal_col'></div>
                         </div>`;

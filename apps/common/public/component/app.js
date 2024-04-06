@@ -1,7 +1,6 @@
 /**@type{{querySelector:function}} */
 const AppDocument = document;
-const template =`   <script>const dummy = 0;</script>
-                    <div id='common_toolbar_framework'>
+const template =`   <div id='common_toolbar_framework'>
                         <div id='common_toolbar_framework_js' class='common_icon'></div>
                         <div id='common_toolbar_framework_vue' class='common_icon'></div>
                         <div id='common_toolbar_framework_react' class='common_icon'></div>
@@ -21,7 +20,7 @@ const template =`   <script>const dummy = 0;</script>
                     <div id='common_profile_search'></div>
                     <div id='common_user_account'></div>
                     <div id='common_profile_toolbar'></div>
-                    <div id='common_fonts'></div>`;;
+                    <div id='common_fonts'></div>`;
 /**
  * 
  * @param {{common_document:AppDocument,
