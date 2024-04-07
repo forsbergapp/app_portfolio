@@ -236,7 +236,7 @@ const show_charts = async () => {
                     legend_text_chart1 = Array.from(AppDocument.querySelectorAll('#select_app_menu1 .common_select_option')).filter(app=>parseInt(app.getAttribute('data-value'))==stat.app_id)[0].innerHTML;
                 }
                     
-                html += `<div id='box1_legend_row' class='box_legend_row'>
+                html += `<div class='box_legend_row'>
                             <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/chart_1.length*200},${i/chart_1.length*200},255)'></div>
                             <div id='box1_legend_col2' class='box_legend_col'>${legend_text_chart1}</div>
                         </div>`;
@@ -746,7 +746,7 @@ const show_users = () =>{
                 <div id='list_user_account_title' class='common_icon'></div>
                 <div class='list_search'>
                     <div id='list_user_account_search_input' contentEditable=true class='common_input list_search_input' /></div>
-                    <div id='list_user_search_icon' 'class='list_search_icon common_icon'></div>
+                    <div id='list_user_search_icon' class='list_search_icon common_icon'></div>
                 </div>
                 <div id='list_user_account' class='common_list_scrollbar'></div>
             </div>
@@ -833,7 +833,7 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
                     <div class='list_readonly'>${user.id}</div>
                 </div>
                 <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit ${lov_class}' defaultValue='${user.app_role_id ?? ''}'/>${user.app_role_id ?? ''}</div>
+                    <div ${input_contentEditable} class='common_input list_edit ${lov_class}' data-defaultValue='${user.app_role_id ?? ''}'/>${user.app_role_id ?? ''}</div>
                     ${lov_div}
                 </div>
                 <div class='list_user_account_col'>
@@ -939,19 +939,18 @@ const show_user_account_logon = async (user_account_id) => {
     .then((/**@type{string}*/result)=>{
         let html = `<div id='list_user_account_logon_row_title' class='list_user_account_logon_row'>
                         <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>USER ACCOUNT ID</div>
-                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>DATE CREATED</div>
-                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>APP ID</div>
-                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>RESULT</div>
-                        <div id='list_user_account_logon_col_title2' class='list_user_account_logon_col list_title'>IP</div>
-                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>GPS LONG</div>
-                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>GPS LAT</div>
-                        <div id='list_user_account_logon_col_title3' class='list_user_account_logon_col list_title'>USER AGENT</div>
-                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>ACCESS TOKEN</div>
+                        <div id='list_user_account_logon_col_title2' class='list_user_account_logon_col list_title'>DATE CREATED</div>
+                        <div id='list_user_account_logon_col_title3' class='list_user_account_logon_col list_title'>APP ID</div>
+                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>RESULT</div>
+                        <div id='list_user_account_logon_col_title5' class='list_user_account_logon_col list_title'>IP</div>
+                        <div id='list_user_account_logon_col_title6' class='list_user_account_logon_col list_title'>GPS LONG</div>
+                        <div id='list_user_account_logon_col_title7' class='list_user_account_logon_col list_title'>GPS LAT</div>
+                        <div id='list_user_account_logon_col_title8' class='list_user_account_logon_col list_title'>USER AGENT</div>
+                        <div id='list_user_account_logon_col_title9' class='list_user_account_logon_col list_title'>ACCESS TOKEN</div>
                     </div>`;
-        let i=0;
         for (const user_account_logon of JSON.parse(result)) {
             html += 
-            `<div id='list_user_account_logon_row_${i}' data-changed-record='0' class='list_user_account_logon_row'>
+            `<div data-changed-record='0' class='list_user_account_logon_row'>
                 <div class='list_user_account_logon_col'>
                     <div class='list_readonly'>${user_account_logon.user_account_id}</div>
                 </div>
@@ -980,7 +979,6 @@ const show_user_account_logon = async (user_account_id) => {
                     <div class='list_readonly'>${user_account_logon.access_token ?? ''}</div>
                 </div>
             </div>`;
-            i++;
         }
         AppDocument.querySelector('#list_user_account_logon').classList.remove('common_icon', 'css_spinner');
         AppDocument.querySelector('#list_user_account_logon').innerHTML = html;
@@ -1034,7 +1032,7 @@ const show_apps = async () => {
                     <div class='list_readonly' class='list_readonly'>${app.STATUS}</div>
                 </div>
                 <div class='list_apps_col'>
-                    <div contentEditable=true class='common_input list_edit common_input_lov' defaultValue='${app.APP_CATEGORY_ID ?? ''}'/>${app.APP_CATEGORY_ID ?? ''}</div>
+                    <div contentEditable=true class='common_input list_edit common_input_lov' data-defaultValue='${app.APP_CATEGORY_ID ?? ''}'/>${app.APP_CATEGORY_ID ?? ''}</div>
                     <div class='common_lov_button common_list_lov_click common_icon'></div>
                 </div>
                 <div class='list_apps_col'>
@@ -2704,17 +2702,15 @@ const show_db_info = () => {
                                 <div id='menu_8_db_info_space_detail_col_title4' class='menu_8_db_info_space_detail_col list_title'>DATA FREE ${size}</div>
                                 <div id='menu_8_db_info_space_detail_col_title5' class='menu_8_db_info_space_detail_col list_title'>% USED</div>
                             </div>`;
-                let i=0;
                 for (const databaseInfoSpaceTable of JSON.parse(result)) {
                     html += 
-                    `<div id='menu_8_db_info_space_detail_row_${i}' class='menu_8_db_info_space_detail_row' >
+                    `<div class='menu_8_db_info_space_detail_row' >
                         <div class='menu_8_db_info_space_detail_col'>${databaseInfoSpaceTable.table_name}</div>
                         <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.total_size)}</div>
                         <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.data_used)}</div>
                         <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.data_free)}</div>
                         <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.pct_used)}</div>
                     </div>`;
-                    i=0;
                 }
                 AppDocument.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner');
                 AppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
@@ -3030,7 +3026,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.stopPropagation();
                         event.preventDefault();
                         //set old value
-                        event.target.innerHTML = event.target.getAttribute('defaultValue') ?? '';
+                        event.target.innerHTML = event.target.getAttribute('data-defaultValue') ?? '';
                         event.target.focus();
                         event.target.nextElementSibling?event.target.nextElementSibling.dispatchEvent(new Event('click')):null;
                     }
@@ -3040,14 +3036,14 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                             //set lov text
                             if (event.target.parentNode && event.target.parentNode.nextElementSibling)
                                 event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').innerHTML = Object.values(list_result[0])[2];
-                            //set new value in defaultValue used to save old value when editing next time
-                            event.target.setAttribute('defaultValue', Object.values(list_result[0])[0]);
+                            //set new value in data-defaultValue used to save old value when editing next time
+                            event.target.setAttribute('data-defaultValue', Object.values(list_result[0])[0]);
                         }
                         else{
                             event.stopPropagation();
                             event.preventDefault();
                             //set old value
-                            event.target.innerHTML = event.target.getAttribute('defaultValue') ?? '';
+                            event.target.innerHTML = event.target.getAttribute('data-defaultValue') ?? '';
                             event.target.focus();    
                             //dispatch click on lov button
                             event.target.nextElementSibling.dispatchEvent(new Event('click'));
