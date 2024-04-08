@@ -264,6 +264,7 @@
 
 /*SETTINGS TAB NAVIGATION */
 #settings_tab_navigation{
+	display: block;
 	height:50px;
 	margin: 0px;
     padding: 0px;
@@ -271,25 +272,15 @@
 }
 #settings_tab_navigation .settings_tab_nav{
 	display:inline-block;
-}
-#settings_tab_navigation .settings_tab_nav{
-	font-size: 30px;
 	padding:3px;
 	border:0px;
-	width:50px;
+	width: 1.5em;
+    font-size: 1.5em;
+	cursor: pointer;
+	vertical-align: bottom;
 }
 #settings_tab_navigation .settings_tab_nav:hover,
 #settings_tab_navigation .settings_tab_nav:active{
-	cursor: pointer;
-}
-#settings_tab_navigation{
-	display: block;
-}
-#settings_tab_navigation .settings_tab_nav{
-	display: inline-block;
-	width: 1.5em;
-    padding: 3px;
-    font-size: 1.5em;
 	cursor: pointer;
 }
 #user_setting_avatar_img{
