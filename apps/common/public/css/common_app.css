@@ -115,7 +115,7 @@
 #common_module_leaflet_control_fullscreen_id::before{		content:var(--common_app_icon_fullscreen)}
 #common_module_leaflet_control_my_location_id::before{		content:var(--common_app_icon_map_my_location)}
 #common_module_leaflet_control_layer_button::before{		content:var(--common_app_icon_map_layer)}
-#common_module_leaflet_popup_sub_title::before{				content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_gps_position)}
+.common_module_leaflet_popup_sub_title::before{				content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_gps_position)}
 
 #common_broadcast_close::before{							content:var(--common_app_icon_broadcast_close)}
 #common_broadcast_info_title::before{						content:var(--common_app_icon_alert)}
@@ -1320,10 +1320,10 @@ select {
 	display: inline-block;
 }
 /*Module leaflet, dynamically created popup*/
-#common_module_leaflet_popup_title,
-#common_module_leaflet_popup_sub_title,
-#common_module_leaflet_popup_sub_title_timezone,
-#common_module_leaflet_popup_sub_title_gps{
+.common_module_leaflet_popup_title,
+.common_module_leaflet_popup_sub_title,
+.common_module_leaflet_popup_sub_title_timezone,
+.common_module_leaflet_popup_sub_title_gps{
 	font-weight: bold;
 	text-align: center;
 	display: block;
