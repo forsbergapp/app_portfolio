@@ -3109,7 +3109,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     APP_GLOBAL.previous_row = common.element_row(event.target);
                     event.preventDefault();
                     //focus on first list_edit item in the row
-                    if (common.element_row(event.target).previousSibling)
+                    if (common.element_row(event.target).previousSibling && common.element_row(event.target).previousSibling.classList.contains('common_row'))
                         common.element_row(event.target).previousSibling.querySelectorAll('.list_edit')[0].focus();
                 }
                 if (event.code=='ArrowDown') {
