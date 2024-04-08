@@ -7,6 +7,7 @@
  *        querySelector:function,
  *        querySelectorAll:function}} */
  const AppDocument = document;
+
  /**
  * @typedef {object} AppEvent
  * @property {string} code
@@ -2702,14 +2703,6 @@ const map_setstyle = mapstyle => {
         }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
 };
 /**
- * Map update popup
- * @param {string} title 
- * @return {void}
- */
-const map_update_popup = title => {
-    AppDocument.querySelector('#common_module_leaflet_popup_title').innerHTML = title;
-};
-/**
  * Map update
  * @param {string} longitude 
  * @param {string} latitude 
@@ -2755,13 +2748,22 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
         /**
          * Map update text
          * @param {string|null} timezone_text
+         * @param {string} longitude 
+         * @param {string} latitude 
          * @return {void} 
          */
-        const map_update_text = timezone_text => {
-            const popuptext = `<div id="common_module_leaflet_popup_title">${text_place}</div>
-                                <div id="common_module_leaflet_popup_sub_title" class='common_icon'></div>
-                                <div id="common_module_leaflet_popup_sub_title_timezone">${timezone_text}</div>
-                                <div id="common_module_leaflet_popup_sub_title_gps">${latitude + ', ' + longitude}</div>`;
+        const map_update_text = (timezone_text, longitude, latitude) => {
+            const country = AppDocument.querySelector('#common_module_leaflet_select_country');
+            const city = AppDocument.querySelector('#common_module_leaflet_select_city');
+            const popuptext = `<div class='common_module_leaflet_popup_title'>${text_place}</div>
+                                <div class='common_module_leaflet_popup_sub_title common_icon'></div>
+                                <div class='common_module_leaflet_popup_sub_title_timezone'>${timezone_text}</div>
+                                <div class='common_module_leaflet_popup_sub_title_gps' 
+                                    data-country='${country.options[country.selectedIndex].text}'
+                                    data-city='${city.options[city.selectedIndex].text}'
+                                    data-timezone='${timezone_text}'
+                                    data-latitude='${latitude}' 
+                                    data-longitude='${longitude}'>${latitude + ', ' + longitude}</div>`;
             COMMON_GLOBAL.module_leaflet.popup({ offset: [0, COMMON_GLOBAL.module_leaflet_popup_offset], closeOnClick: false })
                         .setLatLng([latitude, longitude])
                         .setContent(popuptext)
@@ -2773,7 +2775,7 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
         map_update_gps(to_method, zoomvalue, longitude, latitude);
         if (timezone_text == null)
             timezone_text = getTimezone(latitude, longitude);
-        map_update_text(timezone_text);
+        map_update_text(timezone_text, longitude, latitude);
         resolve(timezone_text);
     });
 };
@@ -3691,7 +3693,7 @@ const common_event = async (event_type,event) =>{
                     case 'common_module_leaflet_select_city':{
                         const longitude_selected = event.target.options[event.target.selectedIndex].getAttribute('longitude') ??'';
                         const latitude_selected = event.target.options[event.target.selectedIndex].getAttribute('latitude') ??'';
-                        map_update( longitude_selected, 
+                        await map_update( longitude_selected, 
                                     latitude_selected, 
                                     COMMON_GLOBAL.module_leaflet_zoom_city,
                                     event.target.options[event.target.selectedIndex].text, 
@@ -3898,12 +3900,11 @@ const framework_clean = () =>{
         }
     }
     if (COMMON_GLOBAL.app_eventListeners.REACT.length>0){
-        for (const ReactListener of COMMON_GLOBAL.app_eventListeners.REACT){
-            ReactListener[0].removeEventListener(ReactListener[1], ReactListener[2]);
+        for (const listener of COMMON_GLOBAL.app_eventListeners.REACT){
+            listener[0].removeEventListener(listener[1], listener[2]);
         }
         COMMON_GLOBAL.app_eventListeners.REACT = [];
     }
-    
     //remove Vue objects
     COMMON_GLOBAL.app_eventListeners.VUE = []
     /**@ts-ignore */
@@ -3947,13 +3948,19 @@ const mount_app = async (framework, events) => {
         else
             select_selectedindex = [{id:select.id, index:select.selectedIndex}];
     });
-    //remove listeners
+    //save Leaflet containers with special event management and saved objects on elements if any Leaflet container used
+    const leaflet_containers = AppDocument.querySelectorAll(`.leaflet-container`);
+
+    //remove common listeners
     common_events_remove();
     COMMON_GLOBAL.app_eventListeners.OTHER = []
+
+    //remove all listeners in app and app root divs including all objects saved on elements
     app_element.replaceWith(app_element.cloneNode(true));
     app_root_element.replaceWith(app_root_element.cloneNode(true));
     
     framework_clean();
+
     //set default function if anyone missing
     events.Change?null:events.Change = ((/**@type{AppEvent}*/event)=>common_event('change', event));
     events.Click?null:events.Click = ((/**@type{AppEvent}*/event)=>common_event('click', event));
@@ -4056,10 +4063,17 @@ const mount_app = async (framework, events) => {
                 break;
             }
     }
+    //replace Leaflet containers with the saved ones containing Leaflet objects and events if any Leaflet container used
+    let index= 0;
+    for (const leaflet_container of leaflet_containers){
+        AppDocument.querySelectorAll(`.leaflet-container`)[index].replaceWith(leaflet_container);
+        index++;
+    }
     //update all select with selectedIndex since copying outerHTML does not include setting correct selectedIndex
     select_selectedindex.forEach((/**@type{{id:string,index:number}}*/select) =>AppDocument.querySelector(`#${select.id}`).selectedIndex = select.index);
     //add common events for all apps
     common_events_add();
+    
 };
 /**
  * Set custom framework functionality overriding console messages and save info about events created
@@ -4069,35 +4083,41 @@ const custom_framework = () => {
     COMMON_GLOBAL.app_eventListeners.original = AppDocument.addEventListener;
     /**
      * 
+     * @param {*} stack 
+     * @returns {string}
+     */
+    const module = (stack) => {
+        /**@ts-ignore */
+        if (stack.toLowerCase().indexOf('leaflet')>-1)
+            return 'LEAFLET';
+        else {
+            /**@ts-ignore */
+            if (stack.toLowerCase().indexOf('react')>-1)
+                return 'REACT';
+            else {
+                /**@ts-ignore */
+                if (stack.toLowerCase().indexOf('vue')>-1)
+                    return 'VUE';
+                else
+                    return 'OTHER';
+            }
+        }
+    }
+    /**
+     * 
      * @param  {...any} eventParameters 
      * @returns 
      */
-    function custom_event (...eventParameters) {
-        const module = () => {
-            /**@ts-ignore */
-            if (Error().stack.toLowerCase().indexOf('leaflet')>-1)
-                return 'LEAFLET';
-            else {
-                /**@ts-ignore */
-                if (Error().stack.toLowerCase().indexOf('react')>-1)
-                    return 'REACT';
-                else {
-                    /**@ts-ignore */
-                    if (Error().stack.toLowerCase().indexOf('vue')>-1)
-                        return 'VUE';
-                    else
-                        return 'OTHER';
-                }
-            }
-        }
+    function custom_event (...eventParameters) {   
         /**@ts-ignore */
-        COMMON_GLOBAL.app_eventListeners[module()].push([this, eventParameters[0], eventParameters[1], eventParameters[2]]);
+        COMMON_GLOBAL.app_eventListeners[module(Error().stack)].push([this, eventParameters[0], eventParameters[1], eventParameters[2]]);
         /**@ts-ignore */
         return COMMON_GLOBAL.app_eventListeners.original.apply(this, arguments);
     };
-    
+
     //set custom event on both HTMLElement and document level
     AppDocument.addEventListener = custom_event;
+    window.addEventListener = custom_event;
     HTMLElement.prototype.addEventListener = custom_event;
 
     /**
@@ -4188,7 +4208,7 @@ export{/* GLOBALS*/
        ProviderSignIn,
        /* MODULE LEAFLET  */
        map_init, map_country, map_show_search_on_map, map_resize, map_line_removeall, map_line_create,
-       map_setstyle, map_update_popup, map_update,
+       map_setstyle, map_update,
        /* MODULE EASY.QRCODE */
        create_qr,
        /*FFB */
