@@ -911,8 +911,14 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
             else
                 props = {   ...element_object}
             
-            if (props.style){   
-                props.style = {style:{...props.style}};
+            if (props.style){
+                //props.style contains string, convert to object
+                let style_object = {};
+                for (const style of subelement.style){
+                    /**@ts-ignore */
+                    style_object[style] = subelement.style[style];
+                }
+                props.style = {style:{...style_object}};
             }
             const reactobj = subelement.childElementCount>0?React_create_element(subelement.nodeName.toLowerCase(), 
                                                 props,
