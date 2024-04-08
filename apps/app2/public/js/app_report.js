@@ -1228,7 +1228,7 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 	//set LTR or RTL on table layout if MONTH, on YEAR direction is set on the whole year layout
 	return  `<div id='${settings.reporttype_year_month =='MONTH'?'timetable_month':''}'
 				class='${settings.timetable_class} ${settings.timetable_month} ${settings.theme_month} ${settings.arabic_script} ${year_class}'
-				style='${settings.reporttype_year_month =='MONTH'?'direction:' + settings.direction + ';':''}'>
+				${settings.reporttype_year_month =='MONTH'?'style=direction:' + settings.direction + ';':''}>
 				${settings.reporttype_year_month =='MONTH'?
 				`<div id='timetable_header' class='display_font' style='${getstyle(settings.header_img_src, settings.header_align)}'>
 					<div >${settings.header_txt1}</div>
