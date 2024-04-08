@@ -2768,11 +2768,11 @@ const settings_load = async (tab_selected) => {
                     break;
                 }
             }
-            const new_span = `<span class="slide slide_${theme_type}">
+            const new_span = `<div class="slide slide_${theme_type}">
                                 <div id='theme_${theme_type}_${app_setting.value}'
                                     data-theme_id='${app_setting.value}'> 
                                 </div>
-                            </span>`;
+                            </div>`;
             switch (app_setting.app_setting_type_name){
                 case 'REPORT_THEME_BASIC_DAY':{
                     span_themes_day += new_span;
@@ -2819,7 +2819,7 @@ const settings_load = async (tab_selected) => {
         for (const app_setting of APP_GLOBAL.places){
             if (place_found==false){
                 place_found = true;
-                select_places  =`<option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`;
+                select_places  =`<option value="" id="" latitude="0" longitude="0" timezone="">...</option>`;
             }
             i++;
             //data 2 = latitude
@@ -2837,7 +2837,7 @@ const settings_load = async (tab_selected) => {
         if (place_found)
             return select_places;
         else{
-            return `<option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`;
+            return `<option value="" id="" latitude="0" longitude="0" timezone="">...</option>`;
         }
     };
     let USER_TIMEZONE ='';
@@ -2957,7 +2957,7 @@ const settings_load = async (tab_selected) => {
             
             AppDocument.querySelector('#setting_timezone_current').innerHTML = common.COMMON_GLOBAL.user_timezone;
 
-            AppDocument.querySelector('#setting_select_report_locale_second').innerHTML = `<option id='' value='0' selected='selected'></option>${LOCALES}`;
+            AppDocument.querySelector('#setting_select_report_locale_second').innerHTML = `<option id='' value='0'></option>${LOCALES}`;
             AppDocument.querySelector('#setting_select_report_timezone').innerHTML = USER_TIMEZONE;
             AppDocument.querySelector('#setting_select_report_direction').innerHTML = `<option id='' value=''></option>${USER_DIRECTION}`;
             AppDocument.querySelector('#setting_select_report_numbersystem').innerHTML = APP_NUMBER_SYSTEM;
