@@ -1195,6 +1195,9 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 }
 
 /*MAP*/
+#mapid{
+	height: 100%;
+}
 #mapid >div{
 	width: 100%;
 	height: 100%;
