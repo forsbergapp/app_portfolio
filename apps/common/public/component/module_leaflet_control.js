@@ -19,7 +19,7 @@ const template =`   <div id='common_module_leaflet_control_search' class='common
                                 <COUNTRIES/>
                             </select>
                             <select id='common_module_leaflet_select_city'  >
-                                <option value='' id='' label='…' selected='selected'>…</option>
+                                <option value='' id='' label='…'>…</option>
                             </select>
                             <div id='common_module_leaflet_search_input_row'>
                                 <div id='common_module_leaflet_search_input' contentEditable=true class='common_input'/></div>

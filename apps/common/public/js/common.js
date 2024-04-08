@@ -2503,7 +2503,7 @@ const map_country = lang_code =>{
         //country
         FFB('DB_API', `/country?lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
         .then(result=>{
-            let html='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
+            let html='<option value=\'\' id=\'\' label=\'…\'>…</option>';
             let current_group_name;
             let i=0;
             for (const country of JSON.parse(result)){
@@ -3141,7 +3141,7 @@ const get_cities = async countrycode => {
             let i =0;
             for (const city of cities) {
                 if (i == 0) {
-                    cities_options += `<option value='' id='' label='…' selected='selected'>…</option>
+                    cities_options += `<option value='' id='' label='…'>…</option>
                                 <optgroup label='${city.admin_name}'>`;
                     current_admin_name = city.admin_name;
                 } else
