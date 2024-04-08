@@ -741,9 +741,9 @@ const openTab = async (tab_selected) => {
     common.ComponentRemove('settings_tab5');
     common.ComponentRemove('settings_tab6');
     if (common.COMMON_GLOBAL.user_account_id == null)
-        AppDocument.querySelector(`#settings_tab7`).style.display = 'none';
+        AppDocument.querySelector(`#settings_tab_nav_7`).style.display = 'none';
     else
-        AppDocument.querySelector(`#settings_tab7`).style.display = 'block';
+        AppDocument.querySelector(`#settings_tab_nav_7`).style.display = 'inline-block';
     if (tab_selected==7)
         AppDocument.querySelector('#user_settings').style.display = 'block';
     else
@@ -752,9 +752,10 @@ const openTab = async (tab_selected) => {
     //remove mark for all tabs
     AppDocument.querySelectorAll('.settings_tab_nav').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('settings_tab_nav_selected'));
     //mark active tab
-    AppDocument.querySelector('#settings_tab_nav_' + tab_selected).classList.add('settings_tab_nav_selected');    
-    common.ComponentRender(`settings_tab${tab_selected}`, {}, `/component/settings_tab${tab_selected}.js`)
-    .then(()=>settings_load(tab_selected));
+    AppDocument.querySelector('#settings_tab_nav_' + tab_selected).classList.add('settings_tab_nav_selected');
+    if (tab_selected!=7)
+        common.ComponentRender(`settings_tab${tab_selected}`, {}, `/component/settings_tab${tab_selected}.js`)
+        .then(()=>settings_load(tab_selected));
     
 };
 /**
