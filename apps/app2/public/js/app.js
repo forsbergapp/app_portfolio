@@ -725,6 +725,14 @@ const openTab = async (tab_selected) => {
     /**@ts-ignore */
     clearInterval(showreporttime);
 
+    //remove Leaflet listeners if any one used
+    if (common.COMMON_GLOBAL.app_eventListeners.LEAFLET.length>0){
+        for (const listener of common.COMMON_GLOBAL.app_eventListeners.LEAFLET){
+            listener[0].removeEventListener(listener[1], listener[2]);
+        }
+    }
+    common.COMMON_GLOBAL.app_eventListeners.LEAFLET = [];
+
     //empty all tab content
     common.ComponentRemove('settings_tab1');
     common.ComponentRemove('settings_tab2');
@@ -860,38 +868,31 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             }
         case 'GPS_CITY':
             {                    
-                const country = AppDocument.querySelector('#common_module_leaflet_select_country');
-                const city = AppDocument.querySelector('#common_module_leaflet_select_city');
+                //read from Leaflet module and custom code
+                //read from latest popup
+                const popup = AppDocument.querySelectorAll('.common_module_leaflet_popup_sub_title_gps')[AppDocument.querySelectorAll('.common_module_leaflet_popup_sub_title_gps').length - 1 ];
+                const country = popup.getAttribute('data-country');
+                const city = popup.getAttribute('data-city');
+                const timezone = popup.getAttribute('data-timezone');
+                const latitude = popup.getAttribute('data-latitude');
+                const longitude = popup.getAttribute('data-longitude');
+                
+                //update value in app
                 const select_place = AppDocument.querySelector('#setting_select_popular_place');
                 const gps_lat_input = AppDocument.querySelector('#setting_input_lat');
                 const gps_long_input = AppDocument.querySelector('#setting_input_long');
-                //set GPS and timezone
-                const longitude_selected = city[city.selectedIndex].getAttribute('longitude');
-                const latitude_selected = city[city.selectedIndex].getAttribute('latitude');
-                
-                gps_long_input.innerHTML = longitude_selected;
-                gps_lat_input.innerHTML = latitude_selected;
+                gps_long_input.innerHTML = longitude;
+                gps_lat_input.innerHTML = latitude;
 
                 //Use city + country from list
-                AppDocument.querySelector('#setting_input_place').innerHTML =
-                    city.options[city.selectedIndex].text + ', ' +
-                    country.options[country.selectedIndex].text;
+                AppDocument.querySelector('#setting_input_place').innerHTML = city + ', ' + country;
+                
                 //display empty popular place select
                 common.SearchAndSetSelectedIndex('', select_place,0);
-                if (AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
-                    //Update map
-                    map_update_app( gps_long_input.innerHTML,
-                                    gps_lat_input.innerHTML,
-                                    common.COMMON_GLOBAL.module_leaflet_zoom_city,
-                                    AppDocument.querySelector('#setting_input_place').innerHTML,
-                                    null,
-                                    common.COMMON_GLOBAL.module_leaflet_marker_div_city,
-                                    common.COMMON_GLOBAL.module_leaflet_flyto)
-                    .then((timezone_selected) => {
-                        APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_selected;
-                        settings_update('GPS');
-                    })
-                }
+
+                map_show_qibbla();
+                APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone;
+                settings_update('GPS');    
                 break;
             }
         case 'GPS_POPULAR_PLACES':
@@ -929,11 +930,6 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 const title = select_place.options[select_place.selectedIndex].text;
                 AppDocument.querySelector('#setting_input_place').innerHTML = title;
                 settings_update('GPS');
-                break;
-            }
-        case 'GPS_PLACE':
-            {
-                common.map_update_popup(AppDocument.querySelector('#setting_input_place').innerHTML);
                 break;
             }
         case 'GPS_POSITION':
@@ -2542,7 +2538,6 @@ const app_event_keyup = event => {
                 //settings gps
                 case 'setting_input_place':{
                     settings_update('GPS');
-                    common.typewatch(component_setting_update, 'GPS', 'PLACE');
                     break;
                 }
                 case 'setting_input_long':
