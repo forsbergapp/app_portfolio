@@ -33,8 +33,8 @@ const component = async props => {
     props.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
     const render_template = () =>{
         return template
-                .replace('ADMIN_CLASS', props.system_admin?'system_admin':'admin')
-                .replace('APPS', props.apps);
+                .replace('<ADMIN_CLASS/>', props.system_admin?'system_admin':'admin')
+                .replace('<APPS/>', props.apps);
     }
     return {
         props:  {function_post:null},
