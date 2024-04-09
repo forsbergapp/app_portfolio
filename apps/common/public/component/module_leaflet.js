@@ -42,7 +42,7 @@ const template =`   <link media="all" rel="stylesheet" href="<CSS_URL/>" type="t
 */
 const component = async props => {
     /**@ts-ignore */
-    const {L:Leaflet} = await import('leaflet');
+    const Leaflet = await import('leaflet');
     const LEAFLET_CONTAINER = 'leaflet';
     /*
         how to call:
@@ -102,8 +102,8 @@ const component = async props => {
                 /**
                  * @param{AppEventLeaflet} e
                  */
-                const default_dbl_click_event = (e) => {
-                    if (e.originalEvent.target.id == 'mapid'){
+                const default_dbl_click_event = e => {
+                    if (e.originalEvent.target.id == LEAFLET_CONTAINER){
                         const lng = e.latlng.lng;
                         const lat = e.latlng.lat;
                         //Update GPS position
