@@ -1,6 +1,5 @@
 /**
  * @typedef {{  id:number,
- *              description:string,
  *              display_data:string,
  *              value:string,
  *              data:string,

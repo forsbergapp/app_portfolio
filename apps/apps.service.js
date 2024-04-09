@@ -750,12 +750,9 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                         });
                         break;
                     }
-                    case '/modules/leaflet/leaflet-src.js':{
+                    case '/modules/leaflet/leaflet-src.esm.js':{
                         fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
-                            modulefile = 'let L;\r\n' + modulefile;
-                            modulefile = modulefile.replace(  'window.L = exports;','L = exports;');
                             modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
-                            modulefile = modulefile + 'export {L}';
                             resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
                         });
                         break;
