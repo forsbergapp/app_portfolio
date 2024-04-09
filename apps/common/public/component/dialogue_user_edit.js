@@ -21,7 +21,7 @@ const template =`   <div id='common_user_edit_common'>
                             <div id='common_user_edit_input_username_icon' class='common_icon'></div>
                         </div>
                         <div class='common_setting_horizontal_col'>
-                            <div id='common_user_edit_input_username' class='common_input' contentEditable=true placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
+                            <div id='common_user_edit_input_username' class='common_input' contentEditable='true' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
                         </div>
                     </div>
                     <div class='common_setting_horizontal_row'>
@@ -29,7 +29,7 @@ const template =`   <div id='common_user_edit_common'>
                             <div id='common_user_edit_input_bio_icon' class='common_icon'></div>
                         </div>
                         <div class='common_setting_horizontal_col'>
-                            <div id='common_user_edit_input_bio' class='common_input' contentEditable=true placeholder='<COMMON_TRANSLATION_BIO/>'></div>
+                            <div id='common_user_edit_input_bio' class='common_input' contentEditable='true' placeholder='<COMMON_TRANSLATION_BIO/>'></div>
                         </div>
                     </div>
                     </div>
@@ -47,7 +47,7 @@ const template =`   <div id='common_user_edit_common'>
                             <div id='common_user_edit_input_new_email_icon' class='common_icon'></div>
                         </div>
                         <div class='common_setting_horizontal_col'>
-                            <div id='common_user_edit_input_new_email' class='common_input' contentEditable=true placeholder='<COMMON_TRANSLATION_NEW_EMAIL/>'></div>
+                            <div id='common_user_edit_input_new_email' class='common_input' contentEditable='true' placeholder='<COMMON_TRANSLATION_NEW_EMAIL/>'></div>
                         </div>
                     </div>
                     <div class='common_setting_horizontal_row'>
@@ -56,7 +56,7 @@ const template =`   <div id='common_user_edit_common'>
                         </div>
                         <div class='common_setting_horizontal_col'>
                             <div class='common_password_container'>
-                                <div id='common_user_edit_input_password' class='common_input common_password' contentEditable=true  placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
+                                <div id='common_user_edit_input_password' class='common_input common_password' contentEditable='true'  placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
                                 <div id='common_user_edit_input_password_mask' class='common_input common_password_mask'></div>
                             </div>
                         </div>
@@ -67,7 +67,7 @@ const template =`   <div id='common_user_edit_common'>
                         </div>
                         <div class='common_setting_horizontal_col'>
                             <div class='common_password_container'>
-                                <div id='common_user_edit_input_password_confirm' class='common_input common_password' contentEditable=true placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
+                                <div id='common_user_edit_input_password_confirm' class='common_input common_password' contentEditable='true' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
                                 <div id='common_user_edit_input_password_confirm_mask' class='common_input common_password_mask'></div>
                             </div>
                         </div>
@@ -78,7 +78,7 @@ const template =`   <div id='common_user_edit_common'>
                         </div>
                         <div class='common_setting_horizontal_col'>
                             <div class='common_password_container'>
-                                <div id='common_user_edit_input_password_new' class='common_input common_password' contentEditable=true placeholder='<COMMON_TRANSLATION_NEW_PASSWORD/>'></div>
+                                <div id='common_user_edit_input_password_new' class='common_input common_password' contentEditable='true' placeholder='<COMMON_TRANSLATION_NEW_PASSWORD/>'></div>
                                 <div id='common_user_edit_input_password_new_mask' class='common_input common_password_mask'></div>
                             </div>
                         </div>
@@ -89,7 +89,7 @@ const template =`   <div id='common_user_edit_common'>
                         </div>
                         <div class='common_setting_horizontal_col'>
                             <div class='common_password_container'>
-                                <div id='common_user_edit_input_password_new_confirm' class='common_input common_password' contentEditable=true placeholder='<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>'></div>
+                                <div id='common_user_edit_input_password_new_confirm' class='common_input common_password' contentEditable='true' placeholder='<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>'></div>
                                 <div id='common_user_edit_input_password_new_confirm_mask' class='common_input common_password_mask'></div>
                             </div>
                         </div>
@@ -99,7 +99,7 @@ const template =`   <div id='common_user_edit_common'>
                             <div id='common_user_edit_input_password_reminder_icon' class='common_icon'></div>
                         </div>
                         <div class='common_setting_horizontal_col'>
-                            <div id='common_user_edit_input_password_reminder' class='common_input' contentEditable=true placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'></div>
+                            <div id='common_user_edit_input_password_reminder' class='common_input' contentEditable='true' placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'></div>
                         </div>
                     </div>
                     </div>

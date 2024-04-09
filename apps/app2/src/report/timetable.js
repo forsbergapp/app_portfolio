@@ -1191,7 +1191,7 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 				break;
 				}
 			case 'notes':{
-				html += `<div class='timetable_month_data_col timetable_month_data_notes'>${''}<div contentEditable=true class='common_input'/></div></div>`;
+				html += `<div class='timetable_month_data_col timetable_month_data_notes'>${''}<div contentEditable='true' class='common_input'/></div></div>`;
 				break;
 				}
 			default:{

@@ -22,7 +22,7 @@ const template =`   <div id='common_module_leaflet_control_search' class='common
                                 <option value='' id='' label='…'>…</option>
                             </select>
                             <div id='common_module_leaflet_search_input_row'>
-                                <div id='common_module_leaflet_search_input' contentEditable=true class='common_input'/></div>
+                                <div id='common_module_leaflet_search_input' contentEditable='true' class='common_input'/></div>
                                 <div id='common_module_leaflet_search_icon' class='common_icon'></div>
                             </div>
                             <div id='common_module_leaflet_search_list_wrap'>
@@ -109,7 +109,6 @@ const component = async props => {
     //mount custom code inside Leaflet container
     props.common_document.querySelectorAll(`#${props.common_mountdiv} #${props.module_leaflet_container} .leaflet-control`)[0].innerHTML += await render_template();
     const post_component = async () =>{
-        
         if (props.function_search_event){
             //add search function in data-function that event delegation will use
             props.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.function_search_event;

@@ -1,7 +1,7 @@
 /**@type{{querySelector:function}} */
 const AppDocument = document;
 const template =`   <div id='common_profile_input_row'>
-                        <div id='common_profile_search_input' contentEditable=true class='common_input '/></div>
+                        <div id='common_profile_search_input' contentEditable='true' class='common_input '/></div>
                         <div id='common_profile_search_icon' class='common_icon'></div>
                     </div>
                     <div id='common_profile_search_list_wrap'>

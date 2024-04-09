@@ -3,11 +3,11 @@ const AppDocument = document;
 const template =`   <div id='common_user_password_new_icon' class='common_icon'></div>
                     <div id='common_user_password_new_auth'><AUTH/></div>
                     <div class='common_password_container'>
-                        <div id='common_user_password_new' contentEditable=true class='common_password_new_input common_input common_password' placeholder='<COMMON_TRANSLATION_NEW_PASSWORD/>'></div>
+                        <div id='common_user_password_new' contentEditable='true' class='common_password_new_input common_input common_password' placeholder='<COMMON_TRANSLATION_NEW_PASSWORD/>'></div>
                         <div id='common_user_password_new_mask' class='common_input common_password_mask'/></div>
                     </div>
                     <div class='common_password_container'>
-                        <div id='common_user_password_new_confirm' contentEditable=true class='common_password_new_input common_input common_password' placeholder='<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>'></div>
+                        <div id='common_user_password_new_confirm' contentEditable='true' class='common_password_new_input common_input common_password' placeholder='<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>'></div>
                         <div id='common_user_password_new_confirm_mask' class='common_input common_password_mask'></div>
                     </div>
                     <div id='common_user_password_new_button_row'>

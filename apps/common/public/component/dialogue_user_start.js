@@ -8,9 +8,9 @@ const template =`   <div id='common_user_start_logo'></div>
                         <div id='common_user_start_forgot' class='common_icon' ></div>
                     </div>
                     <div id='common_user_start_login_form' class='common_user_start_form'>
-                        <div id='common_user_start_login_username' contentEditable=true class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
+                        <div id='common_user_start_login_username' contentEditable='true' class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
                         <div class='common_password_container'>
-                            <div id='common_user_start_login_password' contentEditable=true class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
+                            <div id='common_user_start_login_password' contentEditable='true' class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
                             <div id='common_user_start_login_password_mask' class='common_input common_password_mask'></div>
                         </div>
                         <div id='common_user_start_login_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
@@ -20,9 +20,9 @@ const template =`   <div id='common_user_start_logo'></div>
                     </div>
                     <div id='common_user_start_login_system_admin_form' class='common_user_start_form'>
                         <div id='common_user_start_login_system_admin_first_time'></div>
-                        <div id='common_user_start_login_system_admin_username' contentEditable=true class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
+                        <div id='common_user_start_login_system_admin_username' contentEditable='true' class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
                         <div class='common_password_container'>
-                            <div id='common_user_start_login_system_admin_password' contentEditable=true class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
+                            <div id='common_user_start_login_system_admin_password' contentEditable='true' class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
                             <div id='common_user_start_login_system_admin_password_mask' class='common_input common_password_mask'></div>
                         </div>
                         <div id='common_user_start_login_system_admin_password_confirm_container'>
@@ -34,21 +34,21 @@ const template =`   <div id='common_user_start_logo'></div>
                         <div id='common_user_start_login_system_admin_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
                     </div>
                     <div id='common_user_start_signup_form' class='common_user_start_form'>
-                        <div id='common_user_start_signup_username' contentEditable=true  class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
-                        <div id='common_user_start_signup_email' contentEditable=true  class='common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'></div>
+                        <div id='common_user_start_signup_username' contentEditable='true'  class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
+                        <div id='common_user_start_signup_email' contentEditable='true'  class='common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'></div>
                         <div class='common_password_container'>
-                            <div id='common_user_start_signup_password' contentEditable=true  class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
+                            <div id='common_user_start_signup_password' contentEditable='true'  class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
                             <div id='common_user_start_signup_password_mask' class='common_input common_password_mask'></div>
                         </div>
                         <div class='common_password_container'>
-                            <div id='common_user_start_signup_password_confirm' contentEditable=true  class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
+                            <div id='common_user_start_signup_password_confirm' contentEditable='true'  class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
                             <div id='common_user_start_signup_password_confirm_mask' class='common_input common_password_mask'></div>
                         </div>
-                        <div id='common_user_start_signup_password_reminder' contentEditable=true  class='common_input' placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'></div>
+                        <div id='common_user_start_signup_password_reminder' contentEditable='true'  class='common_input' placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'></div>
                         <div id='common_user_start_signup_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
                     </div>
                     <div id='common_user_start_forgot_form' class='common_user_start_form'>
-                        <div id='common_user_start_forgot_email' contentEditable=true class='common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'></div>
+                        <div id='common_user_start_forgot_email' contentEditable='true' class='common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'></div>
                         <div id='common_user_start_forgot_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
                     </div>
                     <div id='common_user_start_close' class='common_dialogue_button common_icon' ></div>`;
