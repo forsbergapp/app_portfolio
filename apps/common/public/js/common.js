@@ -41,7 +41,6 @@
  * @typedef {{  id:number|null,
  *              display_data: string|null, 
  *              value?:string|null, 
- *              data?:string|null, 
  *              data2:string|null, 
  *              data3:string|null, 
  *              data4:string|null,
@@ -219,7 +218,7 @@ const COMMON_GLOBAL = {
     module_leaflet_marker_div_gps:'',
     module_leaflet_marker_div_city:'',
     module_leaflet_marker_div_pp:'',
-    module_leaflet_map_styles:[{id:null, display_data:null, value:null, data:null, data2:null, data3:null, data4:null, session_map_layer:null}],
+    module_leaflet_map_styles:[{id:null, display_data:null, value:null, data2:null, data3:null, data4:null, session_map_layer:null}],
     'module_easy.qrcode_width':null,
     'module_easy.qrcode_height':null,
     'module_easy.qrcode_color_dark':null,
@@ -2441,7 +2440,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
     for (const map_layer_option of map_layers){
         map_layer_array.push({  id:map_layer_option.id, 
                                 display_data:map_layer_option.display_data, 
-                                data:map_layer_option.value, 
+                                value:map_layer_option.value, 
                                 data2:map_layer_option.data2, 
                                 data3:map_layer_option.data3, 
                                 data4:map_layer_option.data4,
@@ -2690,7 +2689,7 @@ const map_setstyle = mapstyle => {
             COMMON_GLOBAL.module_leaflet_session_map.removeLayer(module_leaflet_map_style.session_map_layer);
         }
     }
-    const mapstyle_record = COMMON_GLOBAL.module_leaflet_map_styles.filter(map_style=>map_style.data==mapstyle)[0];
+    const mapstyle_record = COMMON_GLOBAL.module_leaflet_map_styles.filter(map_style=>map_style.value==mapstyle)[0];
     if (mapstyle_record.data3)
         mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet.tileLayer(mapstyle_record.data2, {
             maxZoom: mapstyle_record.data3,
