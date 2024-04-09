@@ -16,7 +16,7 @@
     {"NAME":"GEOLOCATION",  "HOST":"localhost","PORT":3002,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4002,"STATUS":"ONLINE","PATH":"geolocation",
         "CONFIG":[
                     {"URL_IP":"http://www.geoplugin.net/json.gp?ip=<IP/>",   "COMMENT":"" },
-                    {"URL_PLACE":"http://www.geoplugin.net/extras/location.gp?format=json&lat=<LATITUDE/>&long=<LONGTITUDE/>",   "COMMENT":"" }
+                    {"URL_PLACE":"http://www.geoplugin.net/extras/location.gp?format=json&lat=<LATITUDE/>&long=<LONGITUDE/>",   "COMMENT":"" }
         ]},
     {"NAME":"WORLDCITIES",  "HOST":"localhost","PORT":3003,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4003,"STATUS":"ONLINE","PATH":"worldcities",
         "CONFIG":"" },

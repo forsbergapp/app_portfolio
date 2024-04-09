@@ -909,7 +909,6 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 const timezone_selected = select_place[select_place.selectedIndex].getAttribute('timezone');
                 gps_long_input.innerHTML = longitude_selected;
                 gps_lat_input.innerHTML = latitude_selected;
-                if (AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
                     //Update map
                     map_update_app( gps_long_input.innerHTML,
                                     gps_lat_input.innerHTML,
@@ -926,7 +925,6 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                         city.removeChild(old_groups[old_index]);
                     //display first empty city
                     common.SearchAndSetSelectedIndex('', city,0);
-                }
                 APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_selected;
                 const title = select_place.options[select_place.selectedIndex].text;
                 AppDocument.querySelector('#setting_input_place').innerHTML = title;
@@ -944,21 +942,19 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 common.get_place_from_gps(gps_long_input.innerHTML, gps_lat_input.innerHTML).then((/**@type{string}*/gps_place) => {
                     //Update map
                     AppDocument.querySelector('#setting_input_place').innerHTML = gps_place;
-                    if (AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
-                        map_update_app( gps_long_input.innerHTML,
-                                        gps_lat_input.innerHTML,
-                                        null, //do not change zoom 
-                                        gps_place,
-                                        null,
-                                        common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                        common.COMMON_GLOBAL.module_leaflet_jumpto).then((timezone_text) => {
-                                                APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_text;
-                                        });
-                        //display empty country and city
-                        common.SearchAndSetSelectedIndex('', country,0);
-                        common.SearchAndSetSelectedIndex('', city,0);
-                        settings_update('GPS');
-                    }
+                    map_update_app( gps_long_input.innerHTML,
+                                    gps_lat_input.innerHTML,
+                                    null, //do not change zoom 
+                                    gps_place,
+                                    null,
+                                    common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                    common.COMMON_GLOBAL.module_leaflet_jumpto).then((timezone_text) => {
+                                            APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_text;
+                                    });
+                    //display empty country and city
+                    common.SearchAndSetSelectedIndex('', country,0);
+                    common.SearchAndSetSelectedIndex('', city,0);
+                    settings_update('GPS');
                 });
                 break;
             }
@@ -2610,7 +2606,7 @@ const init_map = async () => {
          * @param{AppEventLeaflet} event
          */
         const dbl_click_event = event => {
-            if (event.originalEvent.target.id == APP_GLOBAL.gps_module_leaflet_container){
+            if (event.originalEvent.target.parentNode.id == APP_GLOBAL.gps_module_leaflet_container){
                 AppDocument.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
                 AppDocument.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
                 //Update GPS position
