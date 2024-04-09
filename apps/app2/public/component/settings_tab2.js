@@ -19,7 +19,7 @@ const template =`   <div id='mapid'></div>
                             <div id='setting_icon_gps_place' class='common_icon'></div>
                         </div>
                         <div class='setting_horizontal_col'>
-                            <div id='setting_input_place' contentEditable=true class='common_input'></div>
+                            <div id='setting_input_place' contentEditable='true' class='common_input'></div>
                         </div>
                         <div class='setting_horizontal_col'></div>
                     </div>
@@ -27,7 +27,7 @@ const template =`   <div id='mapid'></div>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
-                            <div id='setting_input_lat' contentEditable=true class='common_input'></div>
+                            <div id='setting_input_lat' contentEditable='true' class='common_input'></div>
                         </div>
                         <div class='setting_horizontal_col'></div>
                     </div>
@@ -35,7 +35,7 @@ const template =`   <div id='mapid'></div>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
-                            <div id='setting_input_long' contentEditable=true class='common_input'></div>
+                            <div id='setting_input_long' contentEditable='true' class='common_input'></div>
                         </div>
                         <div class='setting_horizontal_col'></div>
                     </div>`;
