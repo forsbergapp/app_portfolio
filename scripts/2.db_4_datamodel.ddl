@@ -690,22 +690,15 @@ ALTER TABLE app_portfolio.user_account_like ADD CONSTRAINT user_account_like_pk 
                                                                                               user_account_id_like );
 
 CREATE TABLE app_portfolio.user_account_logon (
-    user_account_id   INTEGER NOT NULL,
-    app_id            INTEGER NOT NULL,
-    result            INTEGER NOT NULL,
-    access_token      VARCHAR2(500),
-    client_ip         VARCHAR2(1000),
-    client_user_agent VARCHAR2(1000),
-    client_longitude  VARCHAR2(100),
-    client_latitude   VARCHAR2(100),
-    date_created      DATE NOT NULL
+    user_account_id INTEGER,
+    app_id          INTEGER NOT NULL,
+    json_data       CLOB,
+    date_created    DATE NOT NULL
 );
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO app_portfolio_role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_logon TO app_portfolio_role_app_admin;
-
-ALTER TABLE app_portfolio.user_account_logon ADD CONSTRAINT user_account_logon_access_token_un UNIQUE ( access_token );
 
 CREATE TABLE app_portfolio.user_account_view (
     user_account_id      INTEGER,

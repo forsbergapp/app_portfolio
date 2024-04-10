@@ -631,21 +631,14 @@ GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO app_p
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_like TO app_portfolio_role_app_admin;
 
 CREATE TABLE app_portfolio.user_account_logon (
-    user_account_id    INTEGER NOT NULL,
+    user_account_id    INTEGER,
     app_id             INTEGER NOT NULL,
-    result             INTEGER NOT NULL,
-    access_token       VARCHAR(500),
-    client_ip          VARCHAR(1000),
-    client_user_agent  VARCHAR(1000),
-    client_longitude   VARCHAR(100),
-    client_latitude    VARCHAR(100),
+    json_data          LONGBLOB,
     date_created       TIMESTAMP NOT NULL
 );
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO app_portfolio_role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_logon TO app_portfolio_role_app_admin;
-
-ALTER TABLE app_portfolio.user_account_logon ADD CONSTRAINT user_account_logon_access_token_un UNIQUE ( access_token );
 
 CREATE TABLE app_portfolio.user_account_view (
     user_account_id       INTEGER,

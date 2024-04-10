@@ -151,7 +151,10 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
                         import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`).then(({checkLogin}) => {
                             checkLogin(app_id, user_account_logon_user_account_id, authorization.replace('Bearer ',''), ip)
                             .then((/**@type{Types.db_result_user_account_logon_Checklogin[]}*/result)=>{
-                                if (result.length==1)
+                                if (result.filter(row=>
+                                    JSON.parse(row.json_data).result==1 && 
+                                    JSON.parse(row.json_data).access_token == token && 
+                                    JSON.parse(row.json_data).client_ip == ip).length==1)
                                     next();
                                 else
                                     res.status(401).send('⛔');

@@ -107,6 +107,21 @@
 <logicalDatatype>LOGDT008</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="id1" id="D11F114B-9052-FB23-A4E5-2A7EB6823540">
+<createdBy>admin</createdBy>
+<createdTime>2024-04-10 03:23:34 UTC</createdTime>
+<generatorID>C1134DFF-AA11-B1C7-660D-20DE52748937</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>918A9830-5215-FD81-432C-21C3D352AF58</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="282FCEEF-AF8B-40EA-4506-449A7F5B04C0" name="USER PK">

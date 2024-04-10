@@ -172,7 +172,7 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
             const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
             //remove statusMessage or [ERR_INVALID_CHAR] might occur
             bff_parameters.res.statusMessage = '';
-            if (error.startsWith('MICROSERVICE ERROR'))
+            if (typeof error === 'string' && error.startsWith('MICROSERVICE ERROR'))
                 bff_parameters.res.status(statusCode).send('MICROSERVICE ERROR');
             else
                 bff_parameters.res.status(statusCode).send(error);

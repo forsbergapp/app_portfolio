@@ -58,7 +58,19 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
                     body:email_rendered};
     return await BFF_microservices(data);
 };
-
+/**
+ * 
+ * @param {number} app_id 
+ */
+const login_error = async (app_id) =>{
+    return getSettingDisplayData
+        (   app_id,
+            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+            'MESSAGE',
+            '20300')
+    .then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>result_message[0].display_data)
+    .catch((/**@type{Types.error}*/error)=>{throw error;});
+}
 /**
  * 
  * @param {number} app_id
@@ -70,43 +82,45 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
  * @param {Types.res} res
  */
 const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject)=>{        
+        
         /**@type{Types.db_parameter_user_account_userLogin} */
         const data_login =    {   username: data.username};
         service.userLogin(app_id, data_login)
         .then((/**@type{Types.db_result_user_account_userLogin[]}*/result_login)=>{
+            const user_account_id = result_login[0]?getNumberValue(result_login[0].id):null;
+            /**@type{Types.db_parameter_user_account_logon_insertUserAccountLogon} */
+            const data_body = { result:             0,
+                                client_ip:          ip,
+                                client_user_agent:  user_agent,
+                                client_longitude:   data.client_longitude ?? null,
+                                client_latitude:    data.client_latitude ?? null,
+                                access_token:       null};
             if (result_login[0]) {
                 compare(data.password, result_login[0].password).then((result_password)=>{
-                    const data_body = { user_account_id:    getNumberValue(result_login[0].id),
-                                        app_id:             app_id,
-                                        result:             Number(result_password),
-                                        client_ip:          ip,
-                                        client_user_agent:  user_agent,
-                                        client_longitude:   data.client_longitude ?? null,
-                                        client_latitude:    data.client_latitude ?? null,
-                                        access_token:       null};
+                    data_body.result = Number(result_password);
                     if (result_password) {
                         if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
                                 app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
-                            createUserAccountApp(app_id, result_login[0].id)
+                            data_body.access_token = AuthorizeToken(app_id, null, 'APP_ACCESS');
+                            insertUserAccountLogon(app_id, user_account_id, data_body)
                             .then(()=>{
-                                //if user not activated then send email with new verification code
-                                const new_code = service.verification_code();
-                                if (result_login[0].active == 0){
-                                    service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
-                                    .then(()=>{
-                                        //send email UNVERIFIED
-                                        sendUserEmail(  app_id, 
-                                                        ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_UNVERIFIED, 
-                                                        ip, 
-                                                        user_agent,
-                                                        accept_language,
-                                                        result_login[0].id, 
-                                                        new_code, 
-                                                        result_login[0].email)
+                                createUserAccountApp(app_id, result_login[0].id)
+                                .then(()=>{
+                                    //if user not activated then send email with new verification code
+                                    const new_code = service.verification_code();
+                                    if (result_login[0].active == 0){
+                                        service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
                                         .then(()=>{
-                                            data_body.access_token = AuthorizeToken(app_id, null, 'APP_ACCESS');
-                                            insertUserAccountLogon(app_id, data_body)
+                                            //send email UNVERIFIED
+                                            sendUserEmail(  app_id, 
+                                                            ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_UNVERIFIED, 
+                                                            ip, 
+                                                            user_agent,
+                                                            accept_language,
+                                                            result_login[0].id, 
+                                                            new_code, 
+                                                            result_login[0].email)
                                             .then(()=>{
                                                 resolve({
                                                     accessToken: data_body.access_token,
@@ -114,62 +128,46 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                                                 });
                                             })
                                             .catch((/**@type{Types.error}*/error)=>reject(error));
-                                        })
-                                        .catch((/**@type{Types.error}*/error)=>reject(error));
-                                    });
-                                }
-                                else{
-                                    data_body.access_token = AuthorizeToken(app_id, null, 'APP_ACCESS');
-                                    insertUserAccountLogon(app_id, data_body)
-                                    .then(()=>{
+                                        });
+                                    }
+                                    else{
                                         resolve({
                                             accessToken: data_body.access_token,
                                             items: Array(result_login[0])
                                         });
-                                    })
-                                    .catch((/**@type{Types.error}*/error)=>reject(error));
-                                }
+                                    }
+                                })
+                                .catch((/**@type{Types.error}*/error)=>reject(error));
                             })
                             .catch((/**@type{Types.error}*/error)=>reject(error));
                         }
                         else{
-                            res.statusMessage = 'unauthorized admin login attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + data_login.username;
-                            res.statusCode = 401;
-                            //unauthorized, only admin allowed to log in to admin
-                            reject('⛔');
+                            //Unauthorized, only admin allowed to log in to admin
+                            insertUserAccountLogon(app_id, user_account_id, data_body)
+                            .then(()=>{
+                                res.statusCode = 401;
+                                login_error(app_id)
+                                .then((/**@type{string}*/text)=>reject(text));
+                            });
                         }
-                        
                     } else {
-                        insertUserAccountLogon(app_id, data_body)
+                        //Username or password not found
+                        insertUserAccountLogon(app_id, user_account_id, data_body)
                         .then(()=>{
-                            res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + data_login.username;
                             res.statusCode = 400;
-                            //Username or password not found
-                            getSettingDisplayData( app_id,
-                                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                    'MESSAGE',
-                                                    '20300')
-                            .then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
-                                reject(result_message[0].display_data);
-                            })
-                            .catch((/**@type{Types.error}*/error)=>reject(error));
+                            login_error(app_id)
+                            .then((/**@type{string}*/text)=>reject(text));
                         })
                         .catch((/**@type{Types.error}*/error)=>reject(error));
                     }
                 });
             } else{
-                if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-                    res.statusMessage = 'admin user not found:' + data_login.username;
-                else
-                    res.statusMessage = 'user not found:' + data_login.username;
-                res.statusCode = 404;
                 //User not found
-                getSettingDisplayData(  app_id,
-                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                        'MESSAGE',
-                                        '20305')
-                .then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
-                    reject(result_message[0].display_data);
+                insertUserAccountLogon(app_id, null, data_body)
+                .then(()=>{
+                    res.statusCode = 404;
+                    login_error(app_id)
+                    .then((/**@type{string}*/text)=>reject(text));
                 })
                 .catch((/**@type{Types.error}*/error)=>reject(error));
             }
@@ -211,63 +209,76 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
                                 provider_image_url:     data.provider_image_url,
                                 provider_email:         data.provider_email,
                                 admin:                  0};
-            const data_login = {user_account_id:        data.user_account_id,
-                                result:                 1,
+            const user_account_id = result_signin[0]?result_signin[0].id:null;
+            /**@type{Types.db_parameter_user_account_logon_insertUserAccountLogon} */
+            const data_login = {result:                 0,
                                 client_ip:              ip,
                                 client_user_agent:      user_agent,
                                 client_longitude:       data.client_longitude,
                                 client_latitude:        data.client_latitude,
                                 access_token:           null};
-            if (result_signin.length > 0) {
-                service.updateSigninProvider(app_id, result_signin[0].id, data_user)
-                .then(()=>{
-                    data_login.user_account_id = result_signin[0].id;
-                    createUserAccountApp(app_id, result_signin[0].id)
+            if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && result_signin[0] && (result_signin[0].app_role_id == 0 || result_signin[0].app_role_id == 1))||
+                    app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
+                data_login.access_token = AuthorizeToken(app_id, null, 'APP_ACCESS');
+                data_login.result = 1;
+                if (result_signin.length > 0) {        
+                    insertUserAccountLogon(app_id, user_account_id, data_login)
                     .then(()=>{
-                        data_login.access_token = AuthorizeToken(app_id, null, 'APP_ACCESS');
-                        insertUserAccountLogon(app_id, data_login)
+                        service.updateSigninProvider(app_id, result_signin[0].id, data_user)
                         .then(()=>{
-                            resolve({
-                                accessToken: data_login.access_token,
-                                items: result_signin,
-                                userCreated: 0
-                            });
+                            createUserAccountApp(app_id, result_signin[0].id)
+                            .then(()=>{
+                                resolve({
+                                    accessToken: data_login.access_token,
+                                    items: result_signin,
+                                    userCreated: 0
+                                });    
+                            })
+                            .catch((/**@type{Types.error}*/error)=>reject(error));
                         })
-                        .catch((/**@type{Types.error}*/error)=>reject(error));
+                        .catch((/**@type{Types.error}*/error)=>{
+                            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                        });    
                     })
                     .catch((/**@type{Types.error}*/error)=>reject(error));
-                })
-                .catch((/**@type{Types.error}*/error)=>{
-                    checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
-                });            
-            } else {
-                //if provider user not found then create user and one user setting
-                //avatar not used by providers, set default null
-                data_user.avatar = data.avatar ?? null;
-                data_user.provider_image = data.provider_image ?? null;
-                service.create(app_id, data_user)
-                .then((/**@type{Types.db_result_user_account_create} */result_create)=>{
-                    data_login.user_account_id = result_create.insertId;
-                        createUserAccountApp(app_id, result_create.insertId)
+                }
+                else{
+                    //if provider user not found then create user and one user setting
+                    //avatar not used by providers, set default null
+                    data_user.avatar = data.avatar ?? null;
+                    data_user.provider_image = data.provider_image ?? null;
+                    service.create(app_id, data_user)
+                    .then((/**@type{Types.db_result_user_account_create} */result_create)=>{
+                        insertUserAccountLogon(app_id, result_create.insertId, data_login)
                         .then(()=>{
-                            service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), getNumberValue(query.get('PUT_ID')))
-                            .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
-                                data_login.access_token = AuthorizeToken(app_id, null, 'APP_ACCESS');
-                                insertUserAccountLogon(app_id, data_login)
-                                .then(()=>{
+                            createUserAccountApp(app_id, result_create.insertId)
+                            .then(()=>{
+                                service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), getNumberValue(query.get('PUT_ID')))
+                                .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
                                     resolve({
                                         accessToken: data_login.access_token,
                                         items: result_signin2,
                                         userCreated: 1
-                                    });
+                                    });        
                                 })
                                 .catch((/**@type{Types.error}*/error)=>reject(error));
                             })
                             .catch((/**@type{Types.error}*/error)=>reject(error));
                         })
                         .catch((/**@type{Types.error}*/error)=>reject(error));
-                })
-                .catch((/**@type{Types.error}*/error)=>reject(error));
+                    })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                }
+            }
+            else{
+                //Unauthorized, only admin allowed to log in to admin
+                //if data_login.user_account_id is empty then user has not logged in before
+                insertUserAccountLogon(app_id, user_account_id, data_login)
+                .then(()=>{
+                    res.statusCode = 401;
+                    login_error(app_id)
+                    .then((/**@type{string}*/text)=>reject(text));
+                });
             }
         })
         .catch((/**@type{Types.error}*/error)=>reject(error));
@@ -401,17 +412,15 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data, re
                 //return accessToken since PASSWORD_RESET is in progress
                 //email was verified and activated with data token, but now the password will be updated
                 //using accessToken and authentication code
-
+                /**@type{Types.db_parameter_user_account_logon_insertUserAccountLogon} */
                 const data_body = { 
-                    user_account_id:    getNumberValue(query.get('PUT_ID')) ?? 0,
-                    app_id:             app_id,
                     result:             1,
                     client_ip:          ip,
                     client_user_agent:  user_agent,
                     client_longitude:   data.client_longitude ?? null,
                     client_latitude:    data.client_latitude ?? null,
                     access_token:       AuthorizeToken(app_id, null, 'APP_ACCESS')};
-                insertUserAccountLogon(app_id, data_body)
+                insertUserAccountLogon(app_id, getNumberValue(query.get('PUT_ID')), data_body)
                 .then(()=>{
                     resolve({
                         count: result_activate.affectedRows,
@@ -687,7 +696,10 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
  * @param {number} app_id 
  * @param {*} query 
  */
-const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumberValue(query.get('data_user_account_id')), getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
+const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(   app_id, 
+                                                                    getNumberValue(query.get('data_user_account_id')), 
+                                                                    getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
+                                            .then((/**@type{Types.db_result_user_account_logon_getUserAccountLogonAdmin[]}*/result)=>result.map(record=>{return {...record, ...JSON.parse(record.json_data)}}))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
     
 /**
