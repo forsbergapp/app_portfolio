@@ -13,6 +13,7 @@
 <createdTime>2021-04-13 02:51:53 UTC</createdTime>
 <generatorID>A701AB16-1178-1303-E736-347660767868</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
@@ -38,80 +39,15 @@
 <colAssociation fkAssociation="B6AF12B2-0221-BFE9-4EB1-3D1297ABB818" referredColumn="F7F6B3F8-5214-ED25-BF0E-44685E0C79AF"/>
 </associations>
 </Column>
-<Column name="result" id="F6703964-E5E1-17C4-D570-011BC7F5C9B3">
+<Column name="json_data" id="8D828A8C-5649-B9FE-5608-827D51633D8D">
 <createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<generatorID>1030558E-DDFD-66E8-DC71-FFB7AE20B0BC</generatorID>
+<createdTime>2024-04-10 03:36:55 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
+<logicalDatatype>LOGDT028</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="access_token" id="DB3D2517-8158-BACA-4E4C-D1CB3DB04A6E">
-<createdBy>admin</createdBy>
-<createdTime>2022-08-17 18:49:13 UTC</createdTime>
-<generatorID>0B57191F-F875-BB16-2ACA-338E6F12DACE</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>500</dataTypeSize>
-<ownDataTypeParameters>500,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="client_ip" id="C8DB4B52-588D-900B-91FE-EB175F2202E2">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<generatorID>324EC684-37BB-CD1D-017C-16DD6E209AD8</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>1000</dataTypeSize>
-<ownDataTypeParameters>1000,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="client_user_agent" id="3E966DB5-FCDF-2B96-D357-737CBC27117E">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<generatorID>2E89DD4E-2083-3C09-41E8-CC27548DEA41</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>1000</dataTypeSize>
-<ownDataTypeParameters>1000,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="client_longitude" id="06727515-A2BF-5759-F79E-FA8A13365F3A">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<generatorID>705681FA-0D26-B647-B8B7-5B5A2EBC48B3</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="client_latitude" id="99E16B48-1663-5069-4EF0-91059E59C48D">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<generatorID>E6C83EF7-CBF3-61D3-DD3D-E5EF89E07106</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="date_created" id="C86A74A3-083F-8A28-C480-F10D1D231EA5">
@@ -127,17 +63,6 @@
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="DCE533A8-80DF-86F9-9D33-241718288F29" name="user_account_logon_access_token_UN">
-<createdBy>admin</createdBy>
-<createdTime>2022-08-17 18:49:13 UTC</createdTime>
-<generatorID>A17AA48E-828B-73A5-E19A-775F293C6B30</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="DB3D2517-8158-BACA-4E4C-D1CB3DB04A6E"/>
-</indexColumnUsage>
-</ind_PK_UK>
 <ind_PK_UK id="0E91A430-54B3-F272-3577-209D5DA23CAE" name="user_account_logon_app_FK">
 <createdBy>admin</createdBy>
 <createdTime>2022-01-15 13:58:05 UTC</createdTime>
