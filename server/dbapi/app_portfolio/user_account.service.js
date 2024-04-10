@@ -951,7 +951,8 @@ const providerSignIn = async (app_id, identity_provider_id, search_id) => {
 						u.provider_last_name "provider_last_name",
 						u.provider_image "provider_image",
 						u.provider_image_url "provider_image_url",
-						u.provider_email "provider_email"
+						u.provider_email "provider_email",
+						u.app_role_id "app_role_id"
 				FROM ${db_schema()}.user_account u
 				WHERE u.provider_id = :provider_id
 				AND u.identity_provider_id = :identity_provider_id`;

@@ -1391,6 +1391,7 @@
  *              provider_image:string|null,
  *              provider_image_url:string|null,
  *              provider_image_email:string|null,
+ *              app_role_id:number,
  *              date_created:string
  *              date_modified:string}} db_result_user_account_providerSignIn
  * @typedef {{  id:number,
@@ -1517,16 +1518,10 @@
  * USER ACCOUNT LOGON
  * @typedef {{  user_account_id:number,
  *              app_id:number,
- *              result:number,
- *              access_token:string,
- *              client_ip:string,
- *              client_user_agent:string,
- *              client_longitude:string,
- *              client_latitude:string,
+ *              json_data:string,
  *              date_created:string}} db_result_user_account_logon_getUserAccountLogonAdmin
- * @typedef {{  login:number}} db_result_user_account_logon_Checklogin
- * @typedef {{  access_token:string,
- *              user_account_id:number,
+ * @typedef {{  json_data:string}} db_result_user_account_logon_Checklogin
+ * @typedef {{  access_token:string|null,
  *              result:number,
  *              client_ip:string,
  *              client_user_agent:string,

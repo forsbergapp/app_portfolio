@@ -24,6 +24,7 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
+<nullsAllowed>true</nullsAllowed>
 <referedAttribute>A028F8AE-2874-B058-F3DA-38793B0FBE2F</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -44,93 +45,18 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="result" id="1030558E-DDFD-66E8-DC71-FFB7AE20B0BC">
+<Attribute name="json_data" id="861BE531-CF34-CD89-EA9C-A81F9B03CA2A">
 <createdBy>admin</createdBy>
-<createdTime>2021-04-13 01:47:36 UTC</createdTime>
+<createdTime>2024-04-10 03:32:23 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
+<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
+<logicalDatatype>LOGDT028</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="access_token" id="0B57191F-F875-BB16-2ACA-338E6F12DACE">
-<createdBy>admin</createdBy>
-<createdTime>2022-07-31 20:22:32 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>500</dataTypeSize>
-<ownDataTypeParameters>500,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="client_ip" id="324EC684-37BB-CD1D-017C-16DD6E209AD8">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 01:46:44 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>1000</dataTypeSize>
-<ownDataTypeParameters>1000,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="client_user_agent" id="2E89DD4E-2083-3C09-41E8-CC27548DEA41">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 01:46:54 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>1000</dataTypeSize>
-<ownDataTypeParameters>1000,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="client_longitude" id="705681FA-0D26-B647-B8B7-5B5A2EBC48B3">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 01:47:05 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="client_latitude" id="E6C83EF7-CBF3-61D3-DD3D-E5EF89E07106">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 01:47:20 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="date_created" id="109FA6EE-B715-E973-BB56-AF8AED546F63">
 <createdBy>admin</createdBy>
@@ -146,19 +72,4 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
-<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="A17AA48E-828B-73A5-E19A-775F293C6B30" name="USER_ACCOUNT_LOGON_ACCESSTOKEN_UN">
-<createdBy>admin</createdBy>
-<createdTime>2022-07-31 20:25:26 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<newElementsIDs>0B57191F-F875-BB16-2ACA-338E6F12DACE</newElementsIDs>
-<usedAttributes>
-<attributeRef>0B57191F-F875-BB16-2ACA-338E6F12DACE</attributeRef>
-</usedAttributes>
-</identifier>
-</identifiers>
 </Entity>

@@ -11,47 +11,22 @@
 <rejectLimit></rejectLimit>
 <storeAs>CLOB</storeAs>
 <columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
-<ColumnProxy name="client_longitude" id="06727515-A2BF-5759-F79E-FA8A13365F3A">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="client_user_agent" id="3E966DB5-FCDF-2B96-D357-737CBC27117E">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="app_id" id="695C2535-A1A2-BBB5-E093-87602D0708C5">
 <createdBy>admin</createdBy>
 <createdTime>2022-02-14 20:34:51 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="json_data" id="8D828A8C-5649-B9FE-5608-827D51633D8D">
+<createdBy>admin</createdBy>
+<createdTime>2024-04-10 03:36:55 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
 <ColumnProxy name="user_account_id" id="902A5E0D-55F8-B287-EFF6-8422F2773A09">
 <createdBy>admin</createdBy>
 <createdTime>2021-04-13 02:51:53 UTC</createdTime>
 <ownerDesignName>data_model_20220115</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="client_latitude" id="99E16B48-1663-5069-4EF0-91059E59C48D">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="date_created" id="C86A74A3-083F-8A28-C480-F10D1D231EA5">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="client_ip" id="C8DB4B52-588D-900B-91FE-EB175F2202E2">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<ownerDesignName>data_model_20220115</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="access_token" id="DB3D2517-8158-BACA-4E4C-D1CB3DB04A6E">
-<createdBy>admin</createdBy>
-<createdTime>2022-08-17 18:49:13 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="result" id="F6703964-E5E1-17C4-D570-011BC7F5C9B3">
 <createdBy>admin</createdBy>
 <createdTime>2021-04-13 02:51:53 UTC</createdTime>
 <ownerDesignName>data_model_20220115</ownerDesignName>
@@ -69,12 +44,4 @@
 <ownerDesignName>data_model</ownerDesignName>
 </ForeignKey>
 </foreignKeys>
-<uniqueKeys>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="user_account_logon_access_token_UN" id="DCE533A8-80DF-86F9-9D33-241718288F29">
-<createdBy>admin</createdBy>
-<createdTime>2022-08-17 18:49:13 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</UniqueKey>
-</uniqueKeys>
 </TableProxyOraclev20c>
