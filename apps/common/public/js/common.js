@@ -401,10 +401,11 @@ const common_translate_ui = async lang_code => {
             case 'APP_LOV':{
                 //translate items in select lists in current app
                 const select_element = AppDocument.querySelector('#' + app_object.object_item_name.toLowerCase());
-                for (let option_element = 0; option_element < select_element.options.length; option_element++){
-                    if (select_element.options[option_element].id == app_object.id)
-                        select_element.options[option_element].text = app_object.text;
-                }
+                if (select_element)
+                    for (let option_element = 0; option_element < select_element.options.length; option_element++){
+                        if (select_element.options[option_element].id == app_object.id)
+                            select_element.options[option_element].text = app_object.text;
+                    }
                 break;
             }   
         }
@@ -415,22 +416,17 @@ const common_translate_ui = async lang_code => {
  * @returns {Promise<string>}
  */
 const get_locales_options = async () =>{
-    let path;
-    if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
-        path = `/locale/admin?lang_code=${COMMON_GLOBAL.user_locale}`;
-    }
-    else{
-        path = `/locale?lang_code=${COMMON_GLOBAL.user_locale}`;
-    }
-    const locales_json = await FFB('DB_API', path, 'GET', 'APP_DATA', null);
-    let html='';
-    
-    let i=0;
-    for (const locale of JSON.parse(locales_json)){
-        html += `<option id="${i}" value="${locale.locale}">${locale.text}</option>`;
-        i++;
-    }
-    return html;
+
+    const path = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id)?
+                    `/locale/admin?lang_code=${COMMON_GLOBAL.user_locale}`:
+                    `/locale?lang_code=${COMMON_GLOBAL.user_locale}`;
+
+    const locales = await FFB('DB_API', path, 'GET', 'APP_DATA', null)
+                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .catch((/**@type{Error}*/error)=>{throw error});
+    return locales.map((/**@type{*}*/row, /**@type{number}*/index)=>
+        `<option id="${index}" value="${row.locale}">${row.text}</option>`
+        ).join('');
 };
 /**
  * Format JSON date with user timezone
