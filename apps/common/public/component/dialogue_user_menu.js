@@ -1,62 +1,65 @@
 /**@type{{querySelector:function}} */
 const AppDocument = document;
-/**@type{{id:number, app_setting_type_name:string, value:string, display_data:string}[]} */
-let settings = [];
-/**@type {{locale:string, text:string}[]} */
-let locales = [];
-const template = () =>` <div id='common_dialogue_user_menu_username'><USERNAME/></div>
-                        <div id='common_dialogue_user_menu_app_theme'></div>
-                        <div id='common_dialogue_user_menu_preferences'>
-                            <div id='common_dialogue_user_menu_preference_locale' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
-                            <div class='common_dialogue_user_menu_preference_col2'>
-                                <select id='common_dialogue_user_menu_user_locale_select' >
-                                ${locales.map((/**@type{*}*/row, index)=>
-                                    `<option id="${index}" value="${row.locale}">${row.text}</option>`
-                                    ).join('')
-                                }
-                                </select>
-                            </div>
-                            <div id='common_dialogue_user_menu_preference_timezone' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
-                            <div class='common_dialogue_user_menu_preference_col2'>
-                                <select id='common_dialogue_user_menu_user_timezone_select' >
-                                    ${settings.map((/**@type{*}*/row)=>
-                                        row.app_setting_type_name=='TIMEZONE'?
-                                        `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`:''
+
+/**
+ * 
+ * @param {{locales:{locale:string, text:string}[],
+ *          settings:{id:number, app_setting_type_name:string, value:string, display_data:string}[]}} props 
+ * @returns 
+ */
+const template = props =>`  <div id='common_dialogue_user_menu_username'><USERNAME/></div>
+                            <div id='common_dialogue_user_menu_app_theme'></div>
+                            <div id='common_dialogue_user_menu_preferences'>
+                                <div id='common_dialogue_user_menu_preference_locale' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
+                                <div class='common_dialogue_user_menu_preference_col2'>
+                                    <select id='common_dialogue_user_menu_user_locale_select' >
+                                    ${props.locales.map((/**@type{*}*/row, index)=>
+                                        `<option id="${index}" value="${row.locale}">${row.text}</option>`
                                         ).join('')
                                     }
-                                </select>
-                            </div>
-                            <div id='common_dialogue_user_menu_preference_direction' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
-                            <div class='common_dialogue_user_menu_preference_col2'>
-                                <select id='common_dialogue_user_menu_user_direction_select' >
-                                    <option id='' value=''></option>
-                                    ${settings.map((/**@type{*}*/row)=>
-                                        row.app_setting_type_name=='DIRECTION'?
+                                    </select>
+                                </div>
+                                <div id='common_dialogue_user_menu_preference_timezone' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
+                                <div class='common_dialogue_user_menu_preference_col2'>
+                                    <select id='common_dialogue_user_menu_user_timezone_select' >
+                                        ${props.settings.map((/**@type{*}*/row)=>
+                                            row.app_setting_type_name=='TIMEZONE'?
                                             `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`:''
-                                        ).join('')
-                                    }
-                                </select>
+                                            ).join('')
+                                        }
+                                    </select>
+                                </div>
+                                <div id='common_dialogue_user_menu_preference_direction' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
+                                <div class='common_dialogue_user_menu_preference_col2'>
+                                    <select id='common_dialogue_user_menu_user_direction_select' >
+                                        <option id='' value=''></option>
+                                        ${props.settings.map((/**@type{*}*/row)=>
+                                            row.app_setting_type_name=='DIRECTION'?
+                                                `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`:''
+                                            ).join('')
+                                        }
+                                    </select>
+                                </div>
+                                <div id='common_dialogue_user_menu_preference_arabic_script' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
+                                <div class='common_dialogue_user_menu_preference_col2'>
+                                    <select id='common_dialogue_user_menu_user_arabic_script_select' >
+                                        <option id='' value=''></option>
+                                        ${props.settings.map((/**@type{*}*/row)=>
+                                            row.app_setting_type_name=='ARABIC_SCRIPT'?
+                                            `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`:''
+                                            ).join('')
+                                        }
+                                    </select>
+                                </div>
                             </div>
-                            <div id='common_dialogue_user_menu_preference_arabic_script' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
-                            <div class='common_dialogue_user_menu_preference_col2'>
-                                <select id='common_dialogue_user_menu_user_arabic_script_select' >
-                                    <option id='' value=''></option>
-                                    ${settings.map((/**@type{*}*/row)=>
-                                        row.app_setting_type_name=='ARABIC_SCRIPT'?
-                                        `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`:''
-                                        ).join('')
-                                    }
-                                </select>
+                            <div id='common_dialogue_user_menu_logged_in'>
+                                <div id='common_dialogue_user_menu_edit' class='common_icon'></div>
+                                <div id='common_dialogue_user_menu_log_out' class='common_icon'></div>
                             </div>
-                        </div>
-                        <div id='common_dialogue_user_menu_logged_in'>
-                            <div id='common_dialogue_user_menu_edit' class='common_icon'></div>
-                            <div id='common_dialogue_user_menu_log_out' class='common_icon'></div>
-                        </div>
-                        <div id='common_dialogue_user_menu_logged_out'>
-                            <div id='common_dialogue_user_menu_signup' class='common_icon'></div>
-                            <div id='common_dialogue_user_menu_log_in' class='common_icon'></div>
-                        </div>`;
+                            <div id='common_dialogue_user_menu_logged_out'>
+                                <div id='common_dialogue_user_menu_signup' class='common_icon'></div>
+                                <div id='common_dialogue_user_menu_log_in' class='common_icon'></div>
+                            </div>`;
 /**
  * div common_dialogue_user_menu_app_theme used to show optional component app_theme.js
  * @param {{common_document:AppDocument,
@@ -124,13 +127,16 @@ const component = async props => {
             else{
                 path = `/locale?lang_code=${props.current_locale}`;
             }
-            locales = await props.function_FFB('DB_API', path, 'GET', 'APP_DATA', null)
-                                .then((/**@type{string}*/result)=>JSON.parse(result))
-                                .catch((/**@type{Error}*/error)=>{throw error});
-            settings = await props.function_FFB('DB_API', `/app_settings_display?data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
-                                .then((/**@type{string}*/result)=>JSON.parse(result))
-                                .catch((/**@type{Error}*/error)=>{throw error});
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
+            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({
+                locales:await props.function_FFB('DB_API', path, 'GET', 'APP_DATA', null)
+                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .catch((/**@type{Error}*/error)=>{throw error}),
+                settings: await props.function_FFB('DB_API', `/app_settings_display?data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
+                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .catch((/**@type{Error}*/error)=>{throw error}),
+                username:props.username,
+                system_admin:props.system_admin
+            });
             //set current value on all the selects
             const common_dialogue_user_menu_user_locale_select =           props.common_document.querySelector('#common_dialogue_user_menu_user_locale_select');
             common_dialogue_user_menu_user_locale_select.value =           props.current_locale;
@@ -140,19 +146,25 @@ const component = async props => {
             common_dialogue_user_menu_user_direction_select.value =        props.current_direction;
             const common_dialogue_user_menu_user_arabic_script_select =    props.common_document.querySelector('#common_dialogue_user_menu_user_arabic_script_select');
             common_dialogue_user_menu_user_arabic_script_select.value =    props.current_arabic_script;
-            settings = [];
-            locales = [];
         }
         await adjust_logged_out_logged_in();   
     }
-    const render_template = () =>{
-        return template()
-                .replace('<USERNAME/>',                 props.username ?? props.system_admin ?? '');
+    /**
+     * 
+     * @param {{locales:{locale:string, text:string}[],
+     *          settings:{id:number, app_setting_type_name:string, value:string, display_data:string}[],
+     *          username:string,
+     *          system_admin:string}} props 
+     * @returns 
+     */
+    const render_template = props =>{
+        return template(props)
+                .replace('<USERNAME/>', props.username ?? props.system_admin ?? '');
     }
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template()
+        template: render_template({locales:[], settings:[], username:props.username, system_admin:props.system_admin})
     };
 }
 export default component;

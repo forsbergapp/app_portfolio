@@ -1,22 +1,25 @@
 /**@type{{querySelector:function}} */
 const AppDocument = document;
-/**@type{*}*/
-let lov_list = [];
-let lov_column_value='';
-const template = () =>` <div id='common_lov_form'>
+/**
+ * 
+ * @param {{list:*,
+ *          lov_column_value:string}} props 
+ * @returns 
+ */
+const template = props =>` <div id='common_lov_form'>
                             <div id='common_lov_title' class='common_icon'></div>
                             <div id='common_lov_search_row'>
                                 <div id='common_lov_search_input' contentEditable='true' class='common_input'></div>
                                 <div id='common_lov_search_icon' class='common_icon'></div>
                             </div>
                             <div id='common_lov_list' class='common_list_scrollbar <SPINNER/>'>
-                            ${lov_list.map((/**@type{*}*/list_row)=>(
-                                `<div data-id='${list_row.id}' data-value='${list_row[lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
+                            ${props.list.map((/**@type{*}*/list_row)=>(
+                                `<div data-id='${list_row.id}' data-value='${list_row[props.lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
                                     <div class='common_list_lov_col'>
                                         <div>${list_row.id}</div>
                                     </div>
                                     <div class='common_list_lov_col'>
-                                        <div>${list_row[lov_column_value]}</div>
+                                        <div>${list_row[props.lov_column_value]}</div>
                                     </div>
                                 </div>
                                 `)).join('')
@@ -40,13 +43,13 @@ const component = async props => {
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     let spinner = 'css_spinner';
     /**
-     * Lov show
      * @returns {void}
      */
-     const lov_show = () =>{
+     const post_component = () =>{
         let path = '';
         let token_type = '';
         let service = '';
+        let lov_column_value = '';
         switch (props.lov){
             case 'SERVER_LOG_FILES':{
                 props.common_document.querySelector('#common_lov_title').classList.add('server_log_file');
@@ -75,27 +78,29 @@ const component = async props => {
         }
         props.function_FFB(service, path, 'GET', token_type, null)
         .then((/**@type{string}*/result)=>{
-                lov_list = JSON.parse(result);
                 spinner = '';
-                props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
+                props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({list:JSON.parse(result), lov_column_value:lov_column_value});
                 props.common_document.querySelector('#common_lov_list')['data-function'] = props.function_event;
                 props.common_document.querySelector('#common_lov_search_input').focus();
-                lov_list = [];
-                lov_column_value = '';
         })
         .catch(()=>props.common_document.querySelector('#common_lov_list').classList.remove('css_spinner'));
     }
-
-    const render_template = () =>{
-        return template()
+    /**
+     * 
+     * @param {{list:*,
+     *          lov_column_value:string}} props 
+     * @returns 
+     */
+    const render_template = props =>{
+        return template(props)
                 .replace('<SPINNER/>', spinner);
     }
     //render first time with spinner and empty records
     //post function will render again without spinner
     return {
-        props:  {function_post:lov_show},
+        props:  {function_post:post_component},
         data:   null,
-        template: render_template()
+        template: render_template({list: [], lov_column_value:''})
     };
 }
 export default component;

@@ -24,51 +24,55 @@ const AppDocument = document;
  *              count_views:number|null,
  *              followed:number|null,
  *              liked:number|null}} profile_user
+ * @typedef {{id:number, username:string, avatar:string|null, provider_image: string|null, count:number}}   top_profile_records
  */
-/**@type{{id:number, username:string, avatar:string|null, provider_image: string|null, count:number}[]} */
-let profile_top_records = [];
-let tab = '';
-/**@type{function} */
-let list_image_format_src;
-/**@type{function} */
-let info_function_format_json_date;
-/**@type{profile_user}} */
-let profile = { id:null, 
-                bio:null, 
-                private:null, 
-                friends:null, 
-                user_level:null, 
-                date_created:null, 
-                username:null,
-                avatar:null,
-                identity_provider_id:null,
-                provider_id:null,
-                provider_first_name:null,
-                provider_last_name:null,
-                provider_image:null,
-                provider_image_url:null,
-                count_following:null,
-                count_followed:null,
-                count_likes:null,
-                count_liked:null,
-                count_views:null,
-                followed:null,
-                liked:null};
-const template = () =>` <div id='common_profile_home' class='common_dialogue_button common_icon' ></div>
+const profile_empty = { id:null, 
+                        bio:null, 
+                        private:null, 
+                        friends:null, 
+                        user_level:null, 
+                        date_created:null, 
+                        username:null,
+                        avatar:null,
+                        identity_provider_id:null,
+                        provider_id:null,
+                        provider_first_name:null,
+                        provider_last_name:null,
+                        provider_image:null,
+                        provider_image_url:null,
+                        count_following:null,
+                        count_followed:null,
+                        count_likes:null,
+                        count_liked:null,
+                        count_views:null,
+                        followed:null,
+                        liked:null};
+ let profile = profile_empty;
+/**
+ * 
+ * @param {{tab:string,
+ *          info_profile:profile_user,
+ *          top_profile_records:top_profile_records[]|[],
+ *          top_function_list_image_format_src:function,
+ *          info_function_format_json_date:function}} props 
+ * @returns 
+ */
+const template = props =>
+                    `   <div id='common_profile_home' class='common_dialogue_button common_icon' ></div>
                         <div id='common_profile_info'>
-                            ${tab=='INFO'?
+                            ${props.tab=='INFO'?
                             `   <div id='common_profile_main'>
                                     <div id='common_profile_main_row1' class='common_profile_main_row'>
                                         <div class='common_profile_main_col'>
-                                            <div id='common_profile_id'>${profile.id}</div>
+                                            <div id='common_profile_id'>${props.info_profile.id}</div>
                                             <div id='common_profile_avatar_container'>
                                                 <div id='common_profile_avatar_image'>
                                                     <img id='common_profile_avatar' src='' alt=''/>
                                                 </div>
                                                 <div id='common_profile_avatar_online_status' class='common_icon'></div>
                                             </div>
-                                            <div id='common_profile_username'>${profile.username}</div>
-                                            <div id='common_profile_bio'>${profile.bio ?? ''}</div>
+                                            <div id='common_profile_username'>${props.info_profile.username}</div>
+                                            <div id='common_profile_bio'>${props.info_profile.bio ?? ''}</div>
                                         </div>
                                         <div class='common_profile_main_col'>
                                             <div id='common_profile_qr'></div>
@@ -78,7 +82,7 @@ const template = () =>` <div id='common_profile_home' class='common_dialogue_but
                                         <div class='common_profile_main_col'>
                                             <div id='common_profile_joined'>
                                                 <div id='common_profile_joined_date_icon' class='common_icon'></div>
-                                                <div id='common_profile_joined_date'>${info_function_format_json_date(profile.date_created, true)}</div>
+                                                <div id='common_profile_joined_date'>${props.info_function_format_json_date(props.info_profile.date_created, true)}</div>
                                             </div>
                                         </div>    
                                         <div class='common_profile_main_col'>
@@ -94,30 +98,30 @@ const template = () =>` <div id='common_profile_home' class='common_dialogue_but
                                     </div>
                                 </div>
                                 <div id='common_profile_public'>
-                                    ${profile.private==0?
+                                    ${props.info_profile.private==0?
                                     `<div id='common_profile_main_stat_row1'>
                                         <div id='common_profile_info_view'>
                                             <div id='common_profile_info_view_count_icon' class='common_icon'></div>
-                                            <div id='common_profile_info_view_count'>${profile.count_views}</div>
+                                            <div id='common_profile_info_view_count'>${props.info_profile.count_views}</div>
                                         </div>
                                         <div id='common_profile_info_following'>
                                             <div id='common_profile_main_btn_following' class='common_link common_icon'></div>
-                                            <div id='common_profile_info_following_count'>${profile.count_following}</div>
+                                            <div id='common_profile_info_following_count'>${props.info_profile.count_following}</div>
                                         </div>
                                         <div id='common_profile_info_followers'>
                                             <div id='common_profile_main_btn_followed' class='common_link common_icon'></div>
-                                            <div id='common_profile_info_followers_count'>${profile.count_followed}</div>
+                                            <div id='common_profile_info_followers_count'>${props.info_profile.count_followed}</div>
                                         </div>
                                         <div id='common_profile_info_likes'>
                                             <div id='common_profile_main_btn_likes' class='common_icon common_link common_like'></div>
-                                            <div id='common_profile_info_likes_count'>${profile.count_likes}</div>
+                                            <div id='common_profile_info_likes_count'>${props.info_profile.count_likes}</div>
                                         </div>
                                         <div id='common_profile_info_liked'>
                                             <div id='common_profile_main_btn_liked' >
                                                 <div id='common_profile_main_btn_liked_heart' class='common_icon common_link common_like'></div>
                                                 <div id='common_profile_main_btn_liked_users' class='common_link common_icon'></div>
                                             </div>
-                                            <div id='common_profile_info_liked_count'>${profile.count_liked}</div>
+                                            <div id='common_profile_info_liked_count'>${props.info_profile.count_liked}</div>
                                         </div>
                                     </div>
                                     <div id='common_profile_main_stat_row2'></div>
@@ -127,13 +131,13 @@ const template = () =>` <div id='common_profile_home' class='common_dialogue_but
                                     }
                                 </div>
                                 <div id='common_profile_private'>
-                                    ${profile.private==1?`<div id='common_profile_private_title' class='common_icon'></div>`:''}
+                                    ${props.info_profile.private==1?`<div id='common_profile_private_title' class='common_icon'></div>`:''}
                                 </div>
                                 `:''
                             }
                         </div>
                         <div id='common_profile_top'>
-                            ${tab=='TOP'?
+                            ${props.tab=='TOP'?
                             `<div id='common_profile_top_row1'>
                                 <div id='common_profile_top_row1_1' class='common_link common_icon'></div>
                                 <div id='common_profile_top_row1_2' class='common_link common_icon'></div>
@@ -141,13 +145,13 @@ const template = () =>` <div id='common_profile_home' class='common_dialogue_but
                                 </div>
                                 <div id='common_profile_top_row2'></div>
                                 <div id='common_profile_top_list' <SPINNER_CLASS/>>
-                                    ${profile_top_records.map(row=>
+                                    ${props.top_profile_records.map(row=>
                                         `   <div data-user_account_id='${row.id}' class='common_profile_top_list_row common_row'>
                                                 <div class='common_profile_top_list_col'>
                                                     <div class='common_profile_top_list_user_account_id'>${row.id}</div>
                                                 </div>
                                                 <div class='common_profile_top_list_col'>
-                                                    <img class='common_profile_top_list_avatar' ${list_image_format_src(row.avatar ?? row.provider_image)}>
+                                                    <img class='common_profile_top_list_avatar' ${props.top_function_list_image_format_src(row.avatar ?? row.provider_image)}>
                                                 </div>
                                                 <div class='common_profile_top_list_col'>
                                                     <div class='common_profile_top_list_username common_wide_list_column common_link'>
@@ -196,8 +200,6 @@ const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     let spinner = `class='css_spinner'`;
-    list_image_format_src = props.top_function_list_image_format_src;
-    info_function_format_json_date = props.info_function_format_json_date;
     if (props.tab=='INFO'){
         let path;
         let user_account_id_search;            
@@ -239,7 +241,8 @@ const component = async props => {
         if (user_account_id_other == null && props.info_user_account_id == null && username == null) {
             null;
         } else {
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
+            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
+                render_template(profile, []);
 
             props.info_function_set_avatar(profile.avatar ?? profile.provider_image, props.common_document.querySelector('#common_profile_avatar')); 
             props.info_function_create_qr('common_profile_qr', props.info_function_getHostname() + '/' + profile.username);
@@ -306,23 +309,28 @@ const component = async props => {
                 /*other statschoice, apps can use >3 and return same columns*/
                 path = `${app_rest_url}?statchoice=${statchoice}`;
             }
-            profile_top_records = await props.function_FFB('DB_API', path, 'GET', 'APP_DATA', null)
-                                        .then((/**@type{string}*/result)=>JSON.parse(result))
-                                        .catch((/**@type{Error}*/error)=>{throw error});
+            const profile_top_records = await props.function_FFB('DB_API', path, 'GET', 'APP_DATA', null)
+                                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                                            .catch((/**@type{Error}*/error)=>{throw error});
             spinner = '';
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
+            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
+                render_template(profile_empty, profile_top_records);
             props.common_document.querySelector('#common_profile_top_list')['data-function'] = function_user_click;
-            profile_top_records = [];
-            tab = '';
-
     };
     /**
      * div common_profile_main_stat_row2 and common_profile_top_row2 used for app components
+     * @param {profile_user} profile
+     * @param {top_profile_records[]|[]} top_profile_records
      * @returns {string}
      */
-    const render_template = () =>{
-        tab = props.tab;
-        return template()
+    const render_template = (profile, top_profile_records) =>{
+        return template({
+                            info_profile:profile,
+                            top_profile_records:top_profile_records,
+                            tab:props.tab,
+                            top_function_list_image_format_src:props.top_function_list_image_format_src,
+                            info_function_format_json_date:props.info_function_format_json_date
+                        })
                 .replace('<SPINNER_CLASS/>', spinner);
     }
     const post_component = async () =>{
@@ -337,7 +345,7 @@ const component = async props => {
                     profile_id:profile.id,
                     private:profile.private
                 }:null,
-        template: render_template()
+        template: render_template(profile_empty, [])
     };
 }
 export default component;

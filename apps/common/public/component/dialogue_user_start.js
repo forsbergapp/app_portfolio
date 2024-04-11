@@ -1,8 +1,14 @@
 /**@type{{querySelector:function}} */
 const AppDocument = document;
-/**@type{*}*/
-let providers = [];
-const template = () =>` <div id='common_user_start_logo'></div>
+/**
+ * @typedef {{id:number, provider_name:string}} provider_type
+ */
+/**
+ * 
+ * @param {{providers:provider_type[]}} props 
+ * @returns 
+ */
+const template = props =>` <div id='common_user_start_logo'></div>
                         <div id='common_user_start_nav'>
                             <div id='common_user_start_login'  class='common_icon'></div>
                             <div id='common_user_start_login_system_admin'  class='common_icon'></div>
@@ -17,7 +23,7 @@ const template = () =>` <div id='common_user_start_logo'></div>
                             </div>
                             <div id='common_user_start_login_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
                             <div id='common_user_start_identity_provider_login' <SPINNER/>>
-                                ${providers.map((/**@type{*}*/row)=>(
+                                ${props.providers.map((/**@type{*}*/row)=>(
                                     `<div class='common_user_start_button common_link common_row' >
                                         <div class='common_login_provider_id'>${row.id}</div>
                                         <div class='common_login_provider_name'>${row.provider_name}</div>
@@ -84,8 +90,13 @@ const component = async props => {
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     let spinner = `class='css_spinner'`;
 
-    const render_template = () =>{
-        return template()
+    /**
+     * 
+     * @param {{providers:provider_type[]}} props_records 
+     * @returns 
+     */
+    const render_template = props_records =>{
+        return template(props_records)
                 .replace('<SPINNER/>', spinner)
                 .replaceAll('<COMMON_TRANSLATION_USERNAME/>',props.translation_username)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD/>',props.translation_password)
@@ -110,18 +121,16 @@ const component = async props => {
         adjust_elements();
         props.function_FFB('DB_API', `/identity_provider?`, 'GET', 'APP_DATA', null)
         .then((/**@type{string}*/providers_json)=>{
-            providers = JSON.parse(providers_json);
             spinner = '';
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template();
+            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({providers:JSON.parse(providers_json)});
             adjust_elements();
-            providers = [];
         })
         .catch ((/**@type{Error} */err)=>props.common_document.querySelector('#common_lov_list').classList.remove('css_spinner'));
     }
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template()
+        template: render_template({providers:[]})
     };
 }
 export default component;
