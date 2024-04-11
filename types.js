@@ -1275,7 +1275,6 @@
  * @typedef {   db_result_update} db_result_user_account_updateUserVerificationCode
  * @typedef {{  id:number,
  *              bio:string|null
- *              last_logontime:string,
  *              private: number|null,
  *              user_level:number|null,
  *              username:string|null,
@@ -1376,7 +1375,6 @@
  * @typedef {   db_result_update} db_result_user_account_updateSigninProvider
  * @typedef {{  id:number,
  *              bio:string|null,
- *              last_logontime:string,
  *              username:string, 
  *              password:string, 
  *              password_reminder:string, 
@@ -1519,7 +1517,7 @@
  * @typedef {{  user_account_id:number,
  *              app_id:number,
  *              json_data:string,
- *              date_created:string}} db_result_user_account_logon_getUserAccountLogonAdmin
+ *              date_created:string}} db_result_user_account_logon_getUserAccountLogon
  * @typedef {{  json_data:string}} db_result_user_account_logon_Checklogin
  * @typedef {{  access_token:string|null,
  *              result:number,

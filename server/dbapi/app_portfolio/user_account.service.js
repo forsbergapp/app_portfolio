@@ -451,10 +451,6 @@ const updateUserVerificationCode = async (app_id, id, verification_code) => {
 const getUserByUserId = async (app_id, id) => {
 	const sql = `SELECT	u.id "id",
 						u.bio "bio",
-						(SELECT MAX(ul.date_created)
-							FROM ${db_schema()}.user_account_logon ul
-							WHERE ul.user_account_id = u.id
-							AND ul.result=1) "last_logontime",
 						u.private "private",
 						u.user_level "user_level",
 						u.username "username",
