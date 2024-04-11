@@ -1042,27 +1042,6 @@ const ComponentRemove = (div, remove_modal=false) => {
 }
 
 /**
- * Show message info list
- * @param {{}[]} list_obj 
- * @returns {string}
- */
-const show_message_info_list = list_obj =>{
-    let html = '';
-    for (const item of list_obj){
-        html += `<div id='common_message_info_list'>
-                    <div class='common_message_info_list_row'>
-                        <div class='common_message_info_list_col'>
-                            <div>${Object.keys(item)}</div>
-                        </div>
-                        <div class='common_message_info_list_col'>
-                            <div>${Object.values(item)}</div>
-                        </div>
-                    </div>
-                </div>`;
-    }
-    return html;
-};
-/**
  * Show common dialogue
  * @param {string} dialogue 
  * @param {string|null} user_verification_type 
@@ -1175,6 +1154,7 @@ const show_message = async (message_type, code, function_event, text_class=null,
                                                 code:code,
                                                 text_class:text_class,
                                                 message:message,
+                                                show_message_info_list:message_type=='LOG'?message:null,
                                                 translation_confirm_question:COMMON_GLOBAL.translate_items.CONFIRM_QUESTION,
                                                 function_componentremove:ComponentRemove,
                                                 function_FFB:FFB, 
@@ -4145,7 +4125,7 @@ export{/* GLOBALS*/
        /* COMPONENTS */
        ComponentRender,ComponentRemove,
        /* MESSAGE & DIALOGUE */
-       show_message_info_list, show_common_dialogue, show_message,
+       show_common_dialogue, show_message,
        lov_close, lov_show,
        /* PROFILE */
        profile_follow_like, profile_top, profile_detail, profile_show,

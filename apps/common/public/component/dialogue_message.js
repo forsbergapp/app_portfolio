@@ -1,17 +1,36 @@
 /**@type{{querySelector:function}} */
 const AppDocument = document;
-const template =`   <div id='common_confirm_question' class='common_icon'><COMMON_TRANSLATION_CONFIRM_QUESTION/></div>
-                    <div id='common_message_title_container'>
-                        <div id='common_message_title_icon' class='common_icon'></div>
-                        <div id='common_message_title'></div>
-                    </div>
-                    <div id='common_message_progressbar_wrap'>
-                        <div id='common_message_progressbar'></div>
-                    </div>
-                    <div id='common_message_buttons'>
-                        <div id='common_message_cancel' class='common_dialogue_button common_icon' ></div>
-                        <div id='common_message_close' class='common_dialogue_button common_icon' ></div>
-                    </div>`;
+/**
+ * 
+ * @param {{message_type:string,
+ *          list:*}} props 
+ * @returns 
+ */
+const template = props =>`  <div id='common_confirm_question' class='common_icon'><COMMON_TRANSLATION_CONFIRM_QUESTION/></div>
+                            <div id='common_message_title_container'>
+                                <div id='common_message_title_icon' class='common_icon'></div>
+                                <div id='common_message_title'>
+                                    ${props.list.map((/**@type{*}*/list_row)=>
+                                        `<div id='common_message_info_list'>
+                                            <div class='common_message_info_list_row'>
+                                                <div class='common_message_info_list_col'>
+                                                    <div>${Object.keys(list_row)}</div>
+                                                </div>
+                                                <div class='common_message_info_list_col'>
+                                                    <div>${Object.values(list_row)}</div>
+                                                </div>
+                                            </div>
+                                        </div>`).join('')
+                                    }
+                                </div>
+                            </div>
+                            <div id='common_message_progressbar_wrap'>
+                                <div id='common_message_progressbar'></div>
+                            </div>
+                            <div id='common_message_buttons'>
+                                <div id='common_message_cancel' class='common_dialogue_button common_icon' ></div>
+                                <div id='common_message_close' class='common_dialogue_button common_icon' ></div>
+                            </div>`;
 /**
  * 
  * @param {{common_document:AppDocument,
@@ -21,6 +40,7 @@ const template =`   <div id='common_confirm_question' class='common_icon'><COMMO
  *          data_app_id:number,
  *          code:string,
  *          message:{message:string, sqlMessage:string,errorNum:string, text:string}|*,
+ *          show_message_info_list:{}[]|null,
  *          translation_confirm_question:string,
  *          function_FFB:function,
  *          function_event:function,
@@ -136,7 +156,6 @@ const component = async props => {
                 confirm_question.style.display = hide;
                 message_title.style.display = show;
                 message_title.style.fontSize = fontsize_log;
-                message_title.innerHTML = props.message;
                 progressbar.style.display = hide;
                 progressbar_wrap.style.display = hide;
                 button_cancel.style.display = hide;
@@ -163,7 +182,10 @@ const component = async props => {
     }
 
     const render_template = () =>{
-        return template
+        return template({
+                            message_type:props.message_type, 
+                            list:props.message_type=='LOG'?props.show_message_info_list:[]
+                        })
                 .replaceAll('<COMMON_TRANSLATION_CONFIRM_QUESTION/>',props.translation_confirm_question);
     }
     return {
