@@ -26,7 +26,7 @@ const template =`
  *          password_signup:string,
  *          title:string,
  *          function_data_function:function}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */
@@ -65,7 +65,7 @@ const component = async props => {
                 .replace('<USERNAME/>',username)
                 .replace('<PASSWORD/>',password);
     }
-    const post_component = () =>{
+    const post_component = async () =>{
         props.common_document.querySelector(`#${props.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.function_data_function;
     }
     return {

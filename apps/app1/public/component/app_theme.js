@@ -36,7 +36,7 @@ const component = async props => {
         return template;
     }
    
-    const post_component = () =>{
+    const post_component = async () =>{
         //set app theme
         props.function_app_theme_update();
     }

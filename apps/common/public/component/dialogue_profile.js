@@ -148,7 +148,7 @@ const template_profile_top_list_record = `  <div data-user_account_id='<CommonLi
  *          top_function_user_click:function,
  *          function_FFB:function,
  *          }} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   result_profile|null,
  *                      template:string}>}
  */
@@ -332,7 +332,7 @@ const component = async props => {
                 .replace('<CommonProfileTop/>',props.tab=='TOP'?template_profile_top ?? '':'');
     }
     const template_rendered = render_template();
-    const post_component = () =>{
+    const post_component = async () =>{
         if (props.tab=='INFO')
             profile_show(props.info_user_account_id_other, props.info_username);
         else

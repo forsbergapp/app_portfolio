@@ -19,7 +19,7 @@ const method = async props => {
     const render_template = () =>{
         return template;
     }
-    const post_component = () =>{
+    const post_component = async () =>{
         props.function_create_qr('scan_open_mobile_qrcode', props.function_getHostname());
     }
     return {

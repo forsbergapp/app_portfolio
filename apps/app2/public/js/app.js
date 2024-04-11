@@ -2597,34 +2597,6 @@ const serviceworker = () => {
     }
 };
 /**
- * Map init
- * @returns {Promise.<void>}
- */
-const init_map = async () => {
-    return await new Promise((resolve) => {
-        /**
-         * @param{AppEventLeaflet} event
-         */
-        const dbl_click_event = event => {
-            if (event.originalEvent.target.parentNode.id == APP_GLOBAL.gps_module_leaflet_container){
-                AppDocument.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
-                AppDocument.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
-                //Update GPS position
-                component_setting_update('GPS', 'POSITION');
-                const timezone = getTimezone(   event.latlng.lat, event.latlng.lng);
-                app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
-            }   
-        };
-        common.map_init(APP_GLOBAL.gps_module_leaflet_container,
-                        AppDocument.querySelector('#setting_input_long').innerHTML, 
-                        AppDocument.querySelector('#setting_input_lat').innerHTML,
-                        dbl_click_event,
-                        map_show_search_on_map_app).then(() => {
-            resolve();
-        });
-    });
-};
-/**
  * Map show qibbla
  * @returns {void}
  */
@@ -2970,7 +2942,24 @@ const settings_load = async (tab_selected) => {
             AppDocument.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
             AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).outerHTML = `<div id='${APP_GLOBAL.gps_module_leaflet_container}'></div>`;
             //init map thirdparty module
-            init_map().then(()=>{
+            /**
+             * @param{AppEventLeaflet} event
+             */
+            const dbl_click_event = event => {
+                if (event.originalEvent.target.parentNode.id == APP_GLOBAL.gps_module_leaflet_container){
+                    AppDocument.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
+                    AppDocument.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
+                    //Update GPS position
+                    component_setting_update('GPS', 'POSITION');
+                    const timezone = getTimezone(   event.latlng.lat, event.latlng.lng);
+                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
+                }   
+            };
+            await common.map_init(APP_GLOBAL.gps_module_leaflet_container,
+                            AppDocument.querySelector('#setting_input_long').innerHTML, 
+                            AppDocument.querySelector('#setting_input_lat').innerHTML,
+                            dbl_click_event,
+                            map_show_search_on_map_app).then(() => {
                 component_setting_update('GPS', 'MAP');
                 common.map_resize();
             });

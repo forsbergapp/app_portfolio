@@ -5,7 +5,7 @@ const template =`   <div id='common_profile_btn_top' class='common_toolbar_butto
  * 
  * @param {{common_document:AppDocument,
  *          common_mountdiv:string}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:   null,
  *                      template:string}>}
  */

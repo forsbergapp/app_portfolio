@@ -10,7 +10,7 @@ const template =`   <select id='common_dialogue_user_menu_app_select_theme'>
  * @param {{common_document:AppDocument,
  *          common_mountdiv:string,
  *          function_app_theme_update:function}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */
@@ -19,7 +19,7 @@ const component = async props => {
     const render_template = async () =>{
         return template;
     }
-    const post_component = () =>{
+    const post_component = async () =>{
         //set app theme
         props.function_app_theme_update();
     }

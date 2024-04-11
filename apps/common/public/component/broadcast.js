@@ -19,7 +19,7 @@ const template =`<div id='common_broadcast_info'>
  * @param {{common_document:AppDocument,
  *          common_mountdiv:string,
  *          message:string}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:   null,
  *                      template:string}>}
  */

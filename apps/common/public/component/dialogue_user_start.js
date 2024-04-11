@@ -75,7 +75,7 @@ const template = () =>` <div id='common_user_start_logo'></div>
  *          translation_password_reminder:string,
  *          translation_email:string,
  *          function_FFB:function}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */
@@ -106,7 +106,7 @@ const component = async props => {
 		}
         props.common_document.querySelector(`#${props.user_click}`).click();
     }
-    const post_component = () =>{
+    const post_component = async () =>{
         adjust_elements();
         props.function_FFB('DB_API', `/identity_provider?`, 'GET', 'APP_DATA', null)
         .then((/**@type{string}*/providers_json)=>{

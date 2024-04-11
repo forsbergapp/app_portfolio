@@ -35,7 +35,7 @@ const method = async props => {
                 .replace('<INFO_LINK3/>',   props.info_link_terms_name)
                 .replace('<INFO_LINK4/>',   props.info_link_about_name)
     }
-    const post_component = () =>{
+    const post_component = async () =>{
         if ((props.app_link_url ?? '')=='')
             AppDocument.querySelector('#about_logo').style.backgroundImage=`url(${props.about_logo})`;
         else
