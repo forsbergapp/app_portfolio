@@ -19,55 +19,55 @@ let current_group_name = '';
 let longitude = '';
 let latitude = '';
 
-const template = () =>`   <div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='<TITLE_SEARCH/>' role='button'>
-                        <div id='common_module_leaflet_control_search_button' class='common_icon'></div>
-                        <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
-                            <select id='common_module_leaflet_select_country'>
-                                <option value='' id='' label='…'>…</option>
-                                ${countries.map((/**@type{*}*/country, index)=>{
-                                        const row = (current_group_name !== country.group_name?`<optgroup label=${country.group_name}/>`:'')
-                                                    +
-                                                    `<option value=${index}
-                                                            id=${country.id} 
-                                                            country_code=${country.country_code} 
-                                                            flag_emoji=${country.flag_emoji} 
-                                                            group_name=${country.group_name}>${country.flag_emoji} ${country.text}
-                                                    </option>`;
-                                        current_group_name = country.group_name;
-                                        return row;
-                                    }).join('')
-                                }
-                            </select>
-                            <select id='common_module_leaflet_select_city'  >
-                                <option value='' id='' label='…'>…</option>
-                            </select>
-                            <div id='common_module_leaflet_search_input_row'>
-                                <div id='common_module_leaflet_search_input' contentEditable='true' class='common_input'/></div>
-                                <div id='common_module_leaflet_search_icon' class='common_icon'></div>
-                            </div>
-                            <div id='common_module_leaflet_search_list_wrap'>
-                                <div id='common_module_leaflet_search_list'></div>
+const template = () =>` <div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='<TITLE_SEARCH/>' role='button'>
+                            <div id='common_module_leaflet_control_search_button' class='common_icon'></div>
+                            <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
+                                <select id='common_module_leaflet_select_country'>
+                                    <option value='' id='' label='…'>…</option>
+                                    ${countries.map((/**@type{*}*/country, index)=>{
+                                            const row = (current_group_name !== country.group_name?`<optgroup label=${country.group_name}/>`:'')
+                                                        +
+                                                        `<option value=${index}
+                                                                id=${country.id} 
+                                                                country_code=${country.country_code} 
+                                                                flag_emoji=${country.flag_emoji} 
+                                                                group_name=${country.group_name}>${country.flag_emoji} ${country.text}
+                                                        </option>`;
+                                            current_group_name = country.group_name;
+                                            return row;
+                                        }).join('')
+                                    }
+                                </select>
+                                <select id='common_module_leaflet_select_city'  >
+                                    <option value='' id='' label='…'>…</option>
+                                </select>
+                                <div id='common_module_leaflet_search_input_row'>
+                                    <div id='common_module_leaflet_search_input' contentEditable='true' class='common_input'/></div>
+                                    <div id='common_module_leaflet_search_icon' class='common_icon'></div>
+                                </div>
+                                <div id='common_module_leaflet_search_list_wrap'>
+                                    <div id='common_module_leaflet_search_list'></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button common_icon' title='<TITLE_FULLSCREEN/>' role='button'></div>
-                    ${(longitude == '' && latitude=='')?'':
-                        `<div   id='common_module_leaflet_control_my_location_id' 
-                                class='common_module_leaflet_control_button common_icon' 
-                                title='<TITLE_MY_LOCATION/>' role='button'>
-                        </div>`
-                    }
-                    <div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' title='Layer' role='button'>
-                        <div id='common_module_leaflet_control_layer_button' class='common_icon'></div>
-                        <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
-                            <select id='common_module_leaflet_select_mapstyle' >
-                                ${map_layers.map((/**@type{*}*/row)=>(
-                                    `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`)
-                                    ).join('')
-                                }
-                            </select>
-                        </div>
-                    </div>`;
+                        <div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button common_icon' title='<TITLE_FULLSCREEN/>' role='button'></div>
+                        ${(longitude == '' && latitude=='')?'':
+                            `<div   id='common_module_leaflet_control_my_location_id' 
+                                    class='common_module_leaflet_control_button common_icon' 
+                                    title='<TITLE_MY_LOCATION/>' role='button'>
+                            </div>`
+                        }
+                        <div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' title='Layer' role='button'>
+                            <div id='common_module_leaflet_control_layer_button' class='common_icon'></div>
+                            <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
+                                <select id='common_module_leaflet_select_mapstyle' >
+                                    ${map_layers.map((/**@type{*}*/row)=>(
+                                        `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`)
+                                        ).join('')
+                                    }
+                                </select>
+                            </div>
+                        </div>`;
 /**
  * 
  * @param {{common_document:AppDocument,
