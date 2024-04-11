@@ -938,7 +938,7 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
 }
 /**
  * Component render
- * @param {string} div 
+ * @param {string|null} div 
  * @param {{}} props 
  * @param {string} component_path
  * @returns {Promise.<*>}
@@ -955,7 +955,7 @@ const ComponentRender = async (div,props, component_path) => {
     const component = await component_function({...props, ...{ common_document:AppDocument,
                                                 common_mountdiv:div}})
                                                 .catch((/**@type{Error}*/error)=>{
-                                                    ComponentRemove(div, true);
+                                                    div?ComponentRemove(div, true):null;
                                                     exception(COMMON_GLOBAL.exception_app_function, error);
                                                     return null;
                                                 });
@@ -2711,37 +2711,20 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
                 //also have COMMON_GLOBAL.module_leaflet_session_map.panTo(new COMMON_GLOBAL.module_leaflet.LatLng({lng: longitude, lat: latitude}));
             }
         };
-        /**
-         * Map update text
-         * @param {string|null} timezone_text
-         * @param {string} longitude 
-         * @param {string} latitude 
-         * @return {void} 
-         */
-        const map_update_text = (timezone_text, longitude, latitude) => {
-            const country = AppDocument.querySelector('#common_module_leaflet_select_country');
-            const city = AppDocument.querySelector('#common_module_leaflet_select_city');
-            const popuptext = `<div class='common_module_leaflet_popup_title'>${text_place}</div>
-                                <div class='common_module_leaflet_popup_sub_title common_icon'></div>
-                                <div class='common_module_leaflet_popup_sub_title_timezone'>${timezone_text}</div>
-                                <div class='common_module_leaflet_popup_sub_title_gps' 
-                                    data-country='${country.options[country.selectedIndex].text}'
-                                    data-city='${city.options[city.selectedIndex].text}'
-                                    data-timezone='${timezone_text}'
-                                    data-latitude='${latitude}' 
-                                    data-longitude='${longitude}'>${latitude + ', ' + longitude}</div>`;
-            COMMON_GLOBAL.module_leaflet.popup({ offset: [0, COMMON_GLOBAL.module_leaflet_popup_offset], closeOnClick: false })
-                        .setLatLng([latitude, longitude])
-                        .setContent(popuptext)
-                        .openOn(COMMON_GLOBAL.module_leaflet_session_map);
-            const marker = COMMON_GLOBAL.module_leaflet.marker([latitude, longitude]).addTo(COMMON_GLOBAL.module_leaflet_session_map);
-            //setting id so apps can customize if necessary
-            marker._icon.id = marker_id;
-        };
         map_update_gps(to_method, zoomvalue, longitude, latitude);
         if (timezone_text == null)
             timezone_text = getTimezone(latitude, longitude);
-        map_update_text(timezone_text, longitude, latitude);
+
+        ComponentRender(null,{  
+                                timezone_text:timezone_text,
+                                latitude:latitude,
+                                longitude:longitude,
+                                marker_id:marker_id,
+                                text_place:text_place,
+                                module_leaflet:COMMON_GLOBAL.module_leaflet,
+                                module_leaflet_popup_offset: COMMON_GLOBAL.module_leaflet_popup_offset,
+                                module_leaflet_session_map:COMMON_GLOBAL.module_leaflet_session_map
+                            },'/common/component/module_leaflet_popup.js');
         resolve(timezone_text);
     });
 };
