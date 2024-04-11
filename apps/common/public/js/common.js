@@ -1097,22 +1097,6 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                 ComponentRemove('common_dialogue_user_start');
                 break;
             }
-        case 'LOGIN_LOADING':{
-            await ComponentRender('common_dialogue_user_start', 
-                            {   user_click:                     null,
-                                app_id:                         COMMON_GLOBAL.app_id,
-                                common_app_id:                  COMMON_GLOBAL.common_app_id,
-                                system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
-			                    system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
-                                translation_username:           '',
-                                translation_password:           '',
-                                translation_password_confirm:   '', 
-                                translation_email:              '',
-                                translation_password_reminder:  '',
-                                function_FFB:                   FFB},
-                            '/common/component/dialogue_user_start.js');
-            break;
-        }
         case 'LOGIN':{
             await ComponentRender('common_dialogue_user_start', 
                             {   user_click:                     'common_user_start_login',
