@@ -1019,7 +1019,7 @@ const ComponentRender = async (div,props, component_path) => {
                 COMMON_GLOBAL.module_leaflet_session_map =  component.data.module_map;
                 COMMON_GLOBAL.module_leaflet_map_styles =   component.data.map_layer_array;
             }
-            component.props.function_post();
+            await component.props.function_post();
         }
         return component.data;
     }
@@ -2471,14 +2471,11 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                             latitude:latitude,
                             map_layer:COMMON_GLOBAL.module_leaflet_style,
                             map_layers:COMMON_GLOBAL.module_leaflet_map_styles,
-                            leaflet_container:leaflet_data.leaflet_container,
+                            module_leaflet_container:leaflet_data.leaflet_container,    //inner Leaflet div returned from Leaflet
                             function_FFB:FFB,
                             function_search_event:search_event_function,
                             function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
-                            function_map_setstyle:map_setstyle,
-                            function_map_country:map_country,
-                            //module parameter
-                            module_leaflet_container:leaflet_data.leaflet_container,    //inner Leaflet div returned from Leaflet
+                            function_map_setstyle:map_setstyle
                             },
                         '/common/component/module_leaflet_control.js');
 };
@@ -2489,33 +2486,24 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
  */
 const map_country = lang_code =>{
     return new Promise ((resolve, reject)=>{
+        let current_group_name = '';
         //country
         FFB('DB_API', `/country?lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
-        .then(result=>{
-            let html='<option value=\'\' id=\'\' label=\'…\'>…</option>';
-            let current_group_name;
-            let i=0;
-            for (const country of JSON.parse(result)){
-                if (i === 0){
-                    html += `<optgroup label=${country.group_name} />`;
-                    current_group_name = country.group_name;
-                }
-                else{
-                    if (country.group_name !== current_group_name){
-                        html += `<optgroup label=${country.group_name} />`;
-                        current_group_name = country.group_name;
-                    }
-                    html +=
-                    `<option value=${i}
-                            id=${country.id} 
-                            country_code=${country.country_code} 
-                            flag_emoji=${country.flag_emoji} 
-                            group_name=${country.group_name}>${country.flag_emoji} ${country.text}
-                    </option>`;
-                }
-                i++;
-            }
-            resolve(html);
+        .then(result=>{resolve(
+            `<option value='' id='' label='…'>…</option>`
+            +
+            JSON.parse(result).map((/**@type{*}*/country, /**@type{number}*/index)=>{
+                const row = (current_group_name !== country.group_name?`<optgroup label=${country.group_name}/>`:'')
+                            +
+                            `<option value=${index}
+                                    id=${country.id} 
+                                    country_code=${country.country_code} 
+                                    flag_emoji=${country.flag_emoji} 
+                                    group_name=${country.group_name}>${country.flag_emoji} ${country.text}
+                            </option>`;
+                current_group_name = country.group_name;
+                return row;
+            }).join(''));
         })
         .catch(err=>reject(err));
     });

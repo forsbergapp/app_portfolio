@@ -188,7 +188,7 @@ const template_prio3 =`     <!--Prio 3 fonts
  *          font_prio1:boolean|null,
  *          font_prio2:boolean|null,
  *          font_prio3:boolean|null}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:   null,
  *                      template:string}>}
  */

@@ -54,7 +54,7 @@ const template =`   <div id='common_dialogue_user_menu_username'><USERNAME/></di
  *          function_get_locales_options:function,
  *          function_show_message:function,
  *          function_FFB:function}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */

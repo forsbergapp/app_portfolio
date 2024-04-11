@@ -31,7 +31,7 @@ const template = () =>` <div id='common_lov_form'>
  *          lov:string,
  *          function_event:function,
  *          function_FFB:function}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */
