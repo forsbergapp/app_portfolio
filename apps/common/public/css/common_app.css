@@ -256,7 +256,7 @@ select {
 	width:100%;
 }
 #common_lov_search_input{
-	width: 85%;
+	width: calc(100% - 30px);
 	display: inline-block;
 	border-radius: 4px;
 	padding:2px;
@@ -595,6 +595,12 @@ select {
 #common_user_start_close{
 	width: 100%;
 	margin-top:10px;
+}
+#common_user_start_login_button{
+	width: 100%;
+}
+#common_user_start_identity_provider_login{
+	display: inline-block;
 }
 /*Dialogue user edit*/
 #common_dialogue_user_edit.common_dialogue_show1{

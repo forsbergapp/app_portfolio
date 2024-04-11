@@ -385,9 +385,7 @@ const init_app = async (parameters) => {
         }
         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
             common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
-    mount_app_app()
-    .then (()=>AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner'))
-    .catch(()=>AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner'));
+    mount_app_app();
 };
 /**
  * Init common
@@ -399,11 +397,7 @@ const init = async parameters => {
     AppDocument.body.className = 'app_theme1';
     common.COMMON_GLOBAL.exception_app_function = admin_exception;
     common.init_common(parameters).then(()=>{
-        common.show_common_dialogue('LOGIN_LOADING')
-        .then(()=>{
-                AppDocument.querySelector('#common_user_start_login_button').classList.add('css_spinner');
-                init_app(parameters);
-        });
+        init_app(parameters);
     });
 };
 export { init };
