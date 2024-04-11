@@ -13,7 +13,7 @@ const template = props =>` <div id='common_lov_form'>
                                 <div id='common_lov_search_icon' class='common_icon'></div>
                             </div>
                             <div id='common_lov_list' class='common_list_scrollbar <SPINNER/>'>
-                            ${props.list.map((/**@type{*}*/list_row)=>(
+                            ${props.list.map((/**@type{*}*/list_row)=>
                                 `<div data-id='${list_row.id}' data-value='${list_row[props.lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
                                     <div class='common_list_lov_col'>
                                         <div>${list_row.id}</div>
@@ -22,7 +22,7 @@ const template = props =>` <div id='common_lov_form'>
                                         <div>${list_row[props.lov_column_value]}</div>
                                     </div>
                                 </div>
-                                `)).join('')
+                                `).join('')
                             }
                             </div>
                             <div id='common_lov_close' class='common_dialogue_button common_icon'></div>
