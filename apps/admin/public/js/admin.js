@@ -119,7 +119,6 @@ const app_event_click = event => {
                             current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
                             //functions
                             function_FFB:common.FFB,
-                            function_get_locales_options:common.get_locales_options,
                             function_show_message:common.show_message},
                                                 '/common/component/dialogue_user_menu.js')
                         .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
