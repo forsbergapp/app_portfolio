@@ -2570,7 +2570,7 @@ const installation_function = (id, db_icon, path, method, tokentype, data) => {
                 AppDocument.querySelector('#install_db_icon').classList.add('installed');
             else
                 AppDocument.querySelector('#install_db_icon').classList.remove('installed');
-        common.show_message('LOG', null, null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
+        common.show_message('LOG', null, null, null, JSON.parse(result).info, common.COMMON_GLOBAL.common_app_id);
     })
     .catch(()=>AppDocument.querySelector(`#${id}`).classList.remove('css_spinner'));
 };
