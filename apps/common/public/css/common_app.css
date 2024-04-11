@@ -784,9 +784,6 @@ select {
 	word-break: unset;
 	position:fixed;
 }
-#common_profile_info{
-	display:none;
-}
 #common_profile_close{
 	display: block;
     inset-inline-start: calc(50% - 30px);
