@@ -920,10 +920,10 @@ const getUserByUserId = (app_id, query, res) => {
                 getUserAccountLogon(    app_id, 
                                         getNumberValue(query.get('user_account_id')), 
                                         app_id)
-                .then((/**@type{Types.db_result_user_account_logon_getUserAccountLogon[]}*/result)=>result.map(user_account_logons=>{
-                    const last_logontime = JSON.parse(user_account_logons.json_data).map((/**@type{Types.db_parameter_user_account_logon_insertUserAccountLogon}*/row)=>row.result==1)[0];
-                    return {...result[0], ...{last_logontime:last_logontime?last_logontime.row.date_created:null}};
-                }))
+                .then((/**@type{Types.db_result_user_account_logon_getUserAccountLogon[]}*/user_account_logons)=>{
+                    const last_logontime = user_account_logons.filter(row=>JSON.parse(row.json_data).result==1)[0];
+                    resolve({...result[0], ...{last_logontime:last_logontime?last_logontime.date_created:null}});
+                })
                 .catch((/**@type{Types.error}*/error)=>{throw error;});
             }
                 
