@@ -200,7 +200,7 @@ const template =`   <div id='common_user_edit_common'>
  *          function_format_json_date:function,
  *          function_show_message:function,
  *          function_FFB:function}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */

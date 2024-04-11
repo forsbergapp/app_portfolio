@@ -36,7 +36,7 @@ const template =`   <link media="all" rel="stylesheet" href="<CSS_URL/>" type="t
  *          function_event_doubleclick:function,
  *          function_get_place_from_gps:function,
  *          function_map_update:function}} props 
-* @returns {Promise.<{ props:{function_post:function|null}, 
+* @returns {Promise.<{ props:{function_post:null}, 
 *                      data:   leaflet_data,
 *                      template:null}>}
 */
@@ -44,38 +44,6 @@ const component = async props => {
     /**@ts-ignore */
     const Leaflet = await import('leaflet');
     const LEAFLET_CONTAINER = 'leaflet';
-    /*
-        how to call:
-        const leaflet_data = await
-        ComponentRender('mapid', 
-                        {   
-                            longitude:common.COMMON_GLOBAL.client_longitude,
-                            latitude:common.COMMON_GLOBAL.client_latitude,
-                            //module parameters
-                            module_leaflet_zoom:COMMON_GLOBAL.module_leaflet_zoom,
-                            module_leaflet_jumpto:COMMON_GLOBAL.module_leaflet_jumpto,
-                            module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                            //functions
-                            function_event_doubleclick: doubleclick_event / null,
-                            function_get_place_from_gps:get_place_from_gps,
-                            function_map_update:map_update
-                            },
-                        '/common/component/module_leaflet.js');
-
-        COMMON_GLOBAL.module_leaflet =              leaflet_data.library_Leaflet;
-        COMMON_GLOBAL.module_leaflet_session_map =  leaflet_data.module_map;
-        //adding custom code inside Leaflet rendered div
-        ComponentRender('mapid', //outer app div
-                        {   
-                            //props
-                            ...
-                            //module parameter
-                            module_leaflet_container:leaflet_data.leaflet_container,    //inner Leaflet div returned from Leaflet
-                            //functions
-                            ...
-                            },
-                        '/component/[custom_component].js');
-     */
     
     /**
      * Map init

@@ -16,7 +16,7 @@ const method = async props => {
     const render_template = () =>{
         return template;
     }
-    const post_component = () =>{
+    const post_component = async () =>{
         AppDocument.querySelector('#dialogue_loading_content').classList.add('css_spinner');
     }
     return {

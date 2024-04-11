@@ -22,7 +22,7 @@ const template =`   <div id='common_window_info_btn_close' class='common_toolbar
  *          iframe_content:string,
  *          iframe_class:string,
  *          info:number}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */

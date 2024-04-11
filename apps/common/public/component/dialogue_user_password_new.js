@@ -21,7 +21,7 @@ const template =`   <div id='common_user_password_new_icon' class='common_icon'>
  *          auth:string,
  *          translation_new_password:string,
  *          translation_new_password_confirm:string}} props 
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:   null,
  *                      template:string}>}
  */
