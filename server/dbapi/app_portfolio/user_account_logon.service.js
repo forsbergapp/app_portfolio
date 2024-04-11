@@ -12,9 +12,9 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {number} app_id 
  * @param {number} user_account_id 
  * @param {number} app_id_select 
- * @returns {Promise.<Types.db_result_user_account_logon_getUserAccountLogonAdmin[]>}
+ * @returns {Promise.<Types.db_result_user_account_logon_getUserAccountLogon[]>}
  */
-const getUserAccountLogonAdmin = async (app_id, user_account_id, app_id_select) => {
+const getUserAccountLogon = async (app_id, user_account_id, app_id_select) => {
 	const sql = `SELECT user_account_id "user_account_id",
 						app_id "app_id",
 						json_data "json_data",
@@ -76,4 +76,4 @@ const insertUserAccountLogon = async (app_id, user_account_id, data) => {
 					};
 	return await db_execute(app_id, sql, parameters, null);
 };
-export{getUserAccountLogonAdmin, checkLogin, insertUserAccountLogon};
+export{getUserAccountLogon, checkLogin, insertUserAccountLogon};
