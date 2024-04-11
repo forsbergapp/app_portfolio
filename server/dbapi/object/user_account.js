@@ -14,7 +14,7 @@ const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.serv
 const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
 const { createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
 
-const { insertUserAccountLogon, getUserAccountLogonAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);
+const { insertUserAccountLogon, getUserAccountLogon } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);
 const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_event.service.js`);
 
 const user_account_follow_service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow.service.js`);
@@ -696,10 +696,10 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
  * @param {number} app_id 
  * @param {*} query 
  */
-const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(   app_id, 
-                                                                    getNumberValue(query.get('data_user_account_id')), 
-                                                                    getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
-                                            .then((/**@type{Types.db_result_user_account_logon_getUserAccountLogonAdmin[]}*/result)=>result.map(record=>{return {...record, ...JSON.parse(record.json_data)}}))
+const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id, 
+                                                                getNumberValue(query.get('data_user_account_id')), 
+                                                                getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
+                                            .then((/**@type{Types.db_result_user_account_logon_getUserAccountLogon[]}*/result)=>result.map(record=>{return {...record, ...JSON.parse(record.json_data)}}))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
     
 /**
@@ -916,8 +916,17 @@ const getUserByUserId = (app_id, query, res) => {
     return new Promise((resolve, reject)=>{
         service.getUserByUserId(app_id, getNumberValue(query.get('user_account_id')))
         .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result)=>{
-            if (result[0])
-                resolve(result[0]);
+            if (result[0]){
+                getUserAccountLogon(    app_id, 
+                                        getNumberValue(query.get('user_account_id')), 
+                                        app_id)
+                .then((/**@type{Types.db_result_user_account_logon_getUserAccountLogon[]}*/result)=>result.map(user_account_logons=>{
+                    const last_logontime = JSON.parse(user_account_logons.json_data).map((/**@type{Types.db_parameter_user_account_logon_insertUserAccountLogon}*/row)=>row.result==1)[0];
+                    return {...result[0], ...{last_logontime:last_logontime?last_logontime.row.date_created:null}};
+                }))
+                .catch((/**@type{Types.error}*/error)=>{throw error;});
+            }
+                
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
