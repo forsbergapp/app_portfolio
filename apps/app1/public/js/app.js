@@ -536,7 +536,8 @@ const init_app = async (parameters) => {
     .then(()=>common.ComponentRender('dialogue_info', {}, '/component/dialogue_info.js'))
     .then(()=>common.ComponentRender('common_profile_search',{}, '/common/component/profile_search.js'))
     .then(()=>common.ComponentRender('app_profile_toolbar',{}, '/common/component/profile_toolbar.js'))
-    .then(()=>common.ComponentRender('common_user_account', {},'/common/component/user_account.js'));
+    .then(()=>common.ComponentRender('common_user_account', {},'/common/component/user_account.js'))
+    .then(()=>common.ComponentRender('theme_background', {},'/component/background.js'));
     AppDocument.querySelector('#apps').classList.add('common_icon', 'css_spinner');
     AppDocument.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
 

@@ -182,34 +182,34 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 /* ANIMATIONS */
 @keyframes animateCloud {
     0% {
-        margin-left: -500px;
+        margin-inline-start: -500px;
     }
     100% {
-        margin-left: 100%;
+        margin-inline-start: 100%;
     }
 }
 .x1 {
-	animation: animateCloud 35s linear infinite;	
+	animation: animateCloud 55s linear infinite;	
 	transform: scale(0.7);
 }
 
 .x2 {
-	animation: animateCloud 20s linear infinite;
+	animation: animateCloud 40s linear infinite;
 	transform: scale(0.6);
 }
 
 .x3 {
-	animation: animateCloud 30s linear infinite;
+	animation: animateCloud 50s linear infinite;
 	transform: scale(0.8);
 }
 
 .x4 {
-	animation: animateCloud 18s linear infinite;
+	animation: animateCloud 38s linear infinite;
 	transform: scale(0.6);
 }
 
 .x5 {
-	animation: animateCloud 25s linear infinite;
+	animation: animateCloud 45s linear infinite;
 	transform: scale(0.7);
 	margin-top: -160px;
 }
@@ -601,10 +601,10 @@ div.ray8 {
 	}
 	@keyframes animateCloud {
 		0% {
-			margin-left: -1000px;
+			margin-inline-start: -1000px;
 		}
 		100% {
-			margin-left: 100%;
+			margin-inline-start: 100%;
 		}
 	}	
 }
