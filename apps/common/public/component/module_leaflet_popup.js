@@ -28,6 +28,8 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
  *          latitude:string,
  *          longitude:string,
  *          marker_id:string,
+ *          country:string,
+ *          city:string,
  *          text_place:string,
  *          module_leaflet:*,
  *          module_leaflet_popup_offset: number,
@@ -37,14 +39,12 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
  *                      template:null}>}
  */
 const component = async props => {
-    const country = props.common_document.querySelector('#common_module_leaflet_select_country');
-    const city = props.common_document.querySelector('#common_module_leaflet_select_city');
     
     props.module_leaflet.popup({ offset: [0, props.module_leaflet_popup_offset], closeOnClick: false })
         .setLatLng([props.latitude, props.longitude])
         .setContent(template({
-            country:country.options[country.selectedIndex].text,
-            city:city.options[city.selectedIndex].text,
+            country:props.country,
+            city:props.city,
             text_place:props.text_place,
             timezone_text:props.timezone_text,
             latitude:props.latitude,
