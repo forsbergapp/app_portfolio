@@ -1384,68 +1384,29 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
  */
 const search_profile = click_function => {
     AppDocument.querySelector('#common_profile_search_input').classList.remove('common_input_error');
-    const profile_search_list = AppDocument.querySelector('#common_profile_search_list');
     AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
-    profile_search_list.innerHTML ='';
     if (AppDocument.querySelector('#common_profile_search_input').innerText==''){
         AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         AppDocument.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
     else{
-        profile_search_list.classList.add('css_spinner');
         const searched_username = AppDocument.querySelector('#common_profile_search_input').innerText;
-        let path;
-        let token;
-        let json_data;
         if (input_control(null,{check_valid_list_elements:[[AppDocument.querySelector('#common_profile_search_input'),null]]})==false)
             return;
-        if (COMMON_GLOBAL.user_account_id!=null){
-            //search using access token with logged in user_account_id
-            path = `/user_account/profile/username/searchA?search=${encodeURI(searched_username)}`;
-            token = 'APP_ACCESS';
-            json_data = {   user_account_id:    COMMON_GLOBAL.user_account_id,
-                            client_latitude:    COMMON_GLOBAL.client_latitude,
-                            client_longitude:   COMMON_GLOBAL.client_longitude
-                        };
-        }
-        else{
-            //search using data token without logged in user_account_id
-            path = `/user_account/profile/username/searchD?search=${encodeURI(searched_username)}`;
-            token = 'APP_DATA';
-            json_data = {   client_latitude:    COMMON_GLOBAL.client_latitude,
-                            client_longitude:   COMMON_GLOBAL.client_longitude
-                        };
-        }
-        FFB('DB_API', path, 'POST', token, json_data)
-        .then(result=>{
-            if (JSON.parse(result).length == 0){
-                AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-            }
-            let html = '';
-            let image= '';
-            for (const search_profile of JSON.parse(result)) {
-                image = list_image_format_src(search_profile.avatar ?? search_profile.provider_image);
-                html +=
-                `<div data-user_account_id='${search_profile.id}' class='common_profile_search_list_row common_row' tabindex=-1>
-                    <div class='common_profile_search_list_col'>
-                        <div class='common_profile_search_list_user_account_id'>${search_profile.id}</div>
-                    </div>
-                    <div class='common_profile_search_list_col'>
-                        <img class='common_profile_search_list_avatar' ${image}>
-                    </div>
-                    <div class='common_profile_search_list_col'>
-                        <div class='common_profile_search_list_username common_wide_list_column common_link'>
-                            ${search_profile.username}
-                        </div>
-                    </div>
-                </div>`;
-            }
-            profile_search_list.classList.remove('css_spinner');
-            profile_search_list.innerHTML = html;
-            AppDocument.querySelector('#common_profile_search_list')['data-function'] = click_function;
-        })
+        ComponentRender('common_profile_search_list_wrap',
+                        {
+                            user_account_id:COMMON_GLOBAL.user_account_id,
+                            searched_username:searched_username,
+                            client_latitude:COMMON_GLOBAL.client_latitude,
+                            client_longitude:COMMON_GLOBAL.client_longitude,
+                            function_list_image_format_src:list_image_format_src,
+                            function_click_function:click_function,
+                            function_FFB:FFB
+                        },
+                        '/common/component/profile_search_list.js')
+        .then(()=>AppDocument.querySelector('#common_profile_search_list').innerHTML==''?
+                        AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none':null)
         .catch(()=>{
-            profile_search_list.classList.remove('css_spinner');
             AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         });
     }
@@ -3111,49 +3072,13 @@ const get_cities = async countrycode => {
  * @returns {Promise.<void>}
  */
 const worldcities_search = async (event_function) =>{
-    const search = AppDocument.querySelector('#common_module_leaflet_search_input').innerText;
-    AppDocument.querySelector('#common_module_leaflet_search_list').innerHTML = '';
-    if (search !=''){
-        /**
-         * 
-         * @param {string} search 
-         * @returns {Promise.<{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]>}
-         */
-        const get_cities = async search =>{
-            return new Promise ((resolve, reject)=>{
-                FFB('WORLDCITIES', `/city/search?search=${encodeURI(search)}`, 'GET', 'APP_DATA', null)
-                .then(result=>resolve(JSON.parse(result)))
-                .catch((error)=>reject(error));
-            });
-        };
-        AppDocument.querySelector('#common_module_leaflet_search_list').classList.add('css_spinner');
-        const cities = await get_cities(search);
-        AppDocument.querySelector('#common_module_leaflet_search_list').classList.remove('css_spinner');
-        let html = '';
-        if (cities.length > 0){
-            for (const city of cities){
-                html += `<div data-city='${city.city}' data-country='${city.admin_name + ',' + city.country}' data-latitude='${city.lat}' data-longitude='${city.lng}' class='common_module_leaflet_search_list_row common_row' tabindex=-1>
-                            <div class='common_module_leaflet_search_list_col'>
-                                <div class='common_module_leaflet_search_list_city_id'>${city.id}</div>
-                            </div>
-                            <div class='common_module_leaflet_search_list_col'>
-                                <div class='common_module_leaflet_search_list_city common_link common_module_leaflet_click_city'>${city.city}</div>
-                            </div>
-                            <div class='common_module_leaflet_search_list_col'>
-                                <div class='common_module_leaflet_search_list_country common_link common_module_leaflet_click_city'>${city.admin_name + ',' + city.country}</div>
-                            </div>
-                            <div class='common_module_leaflet_search_list_col'>
-                                <div class='common_module_leaflet_search_list_latitude'>${city.lat}</div>
-                            </div>
-                            <div class='common_module_leaflet_search_list_col'>
-                                <div class='common_module_leaflet_search_list_longitude'>${city.lng}</div>
-                            </div>
-                        </div>`;
-            }
-            AppDocument.querySelector('#common_module_leaflet_search_list').innerHTML = html;
-            AppDocument.querySelector('#common_module_leaflet_search_list')['data-function'] = event_function;
-        }
-    }
+    ComponentRender('common_module_leaflet_search_list_wrap',
+                        {
+                            search:AppDocument.querySelector('#common_module_leaflet_search_input').innerText,
+                            function_click_function:event_function,
+                            function_FFB:FFB
+                        },
+                        '/common/component/module_leaflet_search_city.js');
 };
 /**
  * Exception function
