@@ -53,15 +53,15 @@ const app_event_click = event =>{
         .then(()=>{
             switch (event_target_id){
                 case 'common_toolbar_framework_js':{
-                    init_map(1);
+                    mount_app_app(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                    init_map(2);
+                    mount_app_app(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                    init_map(3);
+                    mount_app_app(3);
                     break;
                 }
                 //dialogue user menu
@@ -154,29 +154,43 @@ const app_event_click = event =>{
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
+ const mount_app_app = async (framework=null) => {
+    await common.mount_app(framework,
+        {   Click: app_event_click,
+            Change: app_event_change,
+            KeyDown: null,
+            KeyUp: null,
+            Focus: null,
+            Input:null});
+};
+
+/**
+ * Init app
+ * @param {number|null} framework 
+ * @returns {Promise.<void>}
+ */
 const init_map = async (framework=null)=>{
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
     AppDocument.querySelector('#mapid').outerHTML = '<div id="mapid"></div>';
-    await common.mount_app(framework,
-                    {   Click: app_event_click,
-                        Change: app_event_change,
-                        KeyDown: null,
-                        KeyUp: null,
-                        Focus: null,
-                        Input:null})
-    .then(()=>  common.map_init(APP_GLOBAL.module_leaflet_map_container,
+    common.map_init(APP_GLOBAL.module_leaflet_map_container,
                                 common.COMMON_GLOBAL.client_longitude,
                                 common.COMMON_GLOBAL.client_latitude,
                                 null,
-                                null))
-    .then(()=>  common.map_update(  common.COMMON_GLOBAL.client_longitude,
-                                    common.COMMON_GLOBAL.client_latitude,
-                                    common.COMMON_GLOBAL.module_leaflet_zoom,
-                                    common.COMMON_GLOBAL.client_place,
-                                    null,
-                                    common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                    common.COMMON_GLOBAL.module_leaflet_jumpto)
-    );
+                                null)
+    .then(()=>  
+        common.map_update({ 
+                            longitude:common.COMMON_GLOBAL.client_longitude,
+                            latitude:common.COMMON_GLOBAL.client_latitude,
+                            zoomvalue:common.COMMON_GLOBAL.module_leaflet_zoom,
+                            text_place: common.COMMON_GLOBAL.client_place,
+                            country:'',
+                            city:'',
+                            timezone_text :null,
+                            marker_id:common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                            to_method:common.COMMON_GLOBAL.module_leaflet_jumpto
+                        }))
+    .then(()=>  
+        mount_app_app());
 };
 /**
  * Init app

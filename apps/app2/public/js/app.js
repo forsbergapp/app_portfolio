@@ -845,13 +845,16 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             {
                 const gps_lat_input = AppDocument.querySelector('#setting_input_lat');
                 const gps_long_input = AppDocument.querySelector('#setting_input_long');
-                map_update_app( gps_long_input.innerHTML,
-                                gps_lat_input.innerHTML,
-                                common.COMMON_GLOBAL.module_leaflet_zoom,
-                                AppDocument.querySelector('#setting_input_place').innerHTML,
-                                null,
-                                common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                common.COMMON_GLOBAL.module_leaflet_jumpto);
+                map_update_app({longitude:gps_long_input.innerHTML,
+                                latitude:gps_lat_input.innerHTML,
+                                zoomvalue:common.COMMON_GLOBAL.module_leaflet_zoom,
+                                text_place:AppDocument.querySelector('#setting_input_place').innerHTML,
+                                country:'',
+                                city:'',
+                                timezone_text :null,
+                                marker_id:common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                to_method:common.COMMON_GLOBAL.module_leaflet_jumpto
+                            });
                 break;
             }
         case 'GPS_CITIES':
@@ -885,14 +888,21 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 gps_long_input.innerHTML = longitude;
                 gps_lat_input.innerHTML = latitude;
 
-                //Use city + country from list
-                AppDocument.querySelector('#setting_input_place').innerHTML = city + ', ' + country;
-                
+                if (city=='' && country==''){
+                    //Set place from city + country from popup title
+                    AppDocument.querySelector('#setting_input_place').innerHTML = 
+                        AppDocument.querySelectorAll('.common_module_leaflet_popup_title')[AppDocument.querySelectorAll('.common_module_leaflet_popup_title').length - 1 ].innerHTML;
+                }
+                else{
+                    //Set place from city + country from data attributes
+                    AppDocument.querySelector('#setting_input_place').innerHTML = city + ', ' + country;
+                }
                 //display empty popular place select
                 common.SearchAndSetSelectedIndex('', select_place,0);
 
                 map_show_qibbla();
                 APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone;
+                app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
                 settings_update('GPS');    
                 break;
             }
@@ -910,13 +920,16 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 gps_long_input.innerHTML = longitude_selected;
                 gps_lat_input.innerHTML = latitude_selected;
                     //Update map
-                    map_update_app( gps_long_input.innerHTML,
-                                    gps_lat_input.innerHTML,
-                                    common.COMMON_GLOBAL.module_leaflet_zoom_pp, //zoom for popular places
-                                    select_place.options[select_place.selectedIndex].text,
-                                    timezone_selected,
-                                    common.COMMON_GLOBAL.module_leaflet_marker_div_pp, //marker for popular places
-                                    common.COMMON_GLOBAL.module_leaflet_flyto);
+                    map_update_app({longitude:gps_long_input.innerHTML,
+                                    latitude:gps_lat_input.innerHTML,
+                                    zoomvalue:common.COMMON_GLOBAL.module_leaflet_zoom_pp, //zoom for popular places
+                                    text_place:select_place.options[select_place.selectedIndex].text,
+                                    country:'',
+                                    city:'',
+                                    timezone_text :timezone_selected,
+                                    marker_id:common.COMMON_GLOBAL.module_leaflet_marker_div_pp, //marker for popular places
+                                    to_method:common.COMMON_GLOBAL.module_leaflet_flyto
+                                });
                     //display empty country
                     common.SearchAndSetSelectedIndex('', country,0);
                     //remove old city list:            
@@ -942,15 +955,18 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 common.get_place_from_gps(gps_long_input.innerHTML, gps_lat_input.innerHTML).then((/**@type{string}*/gps_place) => {
                     //Update map
                     AppDocument.querySelector('#setting_input_place').innerHTML = gps_place;
-                    map_update_app( gps_long_input.innerHTML,
-                                    gps_lat_input.innerHTML,
-                                    null, //do not change zoom 
-                                    gps_place,
-                                    null,
-                                    common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                    common.COMMON_GLOBAL.module_leaflet_jumpto).then((timezone_text) => {
-                                            APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_text;
-                                    });
+                    map_update_app({longitude:gps_long_input.innerHTML,
+                                    latitude:gps_lat_input.innerHTML,
+                                    zoomvalue:null, //do not change zoom 
+                                    text_place:gps_place,
+                                    country:'',
+                                    city:'',
+                                    timezone_text :null,
+                                    marker_id:common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                    to_method:common.COMMON_GLOBAL.module_leaflet_jumpto})
+                    .then((timezone_text) => {
+                        APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_text;
+                    });
                     //display empty country and city
                     common.SearchAndSetSelectedIndex('', country,0);
                     common.SearchAndSetSelectedIndex('', city,0);
@@ -2501,10 +2517,6 @@ const app_event_change = event => {
                 case 'common_module_leaflet_select_city':{
                     //popular place not on map is read when saving
                     component_setting_update('GPS', 'CITY');
-                    const timezone = getTimezone(   AppDocument.querySelector('#setting_input_lat').innerHTML,
-                                                    AppDocument.querySelector('#setting_input_long').innerHTML);
-                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
-                    settings_update('GPS');
                     break;
                 }
                 case 'common_module_leaflet_select_mapstyle':{
@@ -2624,19 +2636,31 @@ const map_show_qibbla = () => {
 };
 /**
  * Map update
- * @param {string} longitude 
- * @param {string} latitude 
- * @param {number|null} zoom 
- * @param {string} text1 
- * @param {string|null} text2 
- * @param {string} marker_id 
- * @param {number} to_method 
+ * @param {{longitude:string,
+ *          latitude:string,
+ *          zoomvalue:number|null,
+ *          text_place:string,
+ *          country:string,
+ *          city:string,
+ *          timezone_text :string|null,
+ *          marker_id:string,
+ *          to_method:number
+ *          }} parameters
  * @returns {Promise.<string>}
  */
-const map_update_app = async (longitude, latitude, zoom, text1, text2, marker_id, to_method) => {
+const map_update_app = async (parameters) => {
     return new Promise((resolve) => {
         map_show_qibbla();
-        common.map_update(longitude, latitude, zoom, text1, text2, marker_id, to_method).then((/**@type{string}*/timezonetext)=> {
+        common.map_update({ longitude:parameters.longitude,
+                            latitude:parameters.latitude,
+                            zoomvalue:parameters.zoomvalue,
+                            text_place:parameters.text_place,
+                            country:'',
+                            city:'',
+                            timezone_text :parameters.timezone_text,
+                            marker_id:parameters.marker_id,
+                            to_method:parameters.to_method
+                        }).then((/**@type{string}*/timezonetext)=> {
             resolve(timezonetext);
         });
     });
@@ -2647,15 +2671,8 @@ const map_update_app = async (longitude, latitude, zoom, text1, text2, marker_id
  * @returns {Promise.<void>}
  */
 const map_show_search_on_map_app = async (data) =>{
-    common.map_show_search_on_map(data);
-    map_show_qibbla();
-    common.SearchAndSetSelectedIndex('', AppDocument.querySelector('#setting_select_popular_place'),0);
-    AppDocument.querySelector('#setting_input_place').innerHTML =  data.city + ', ' + data.country;
-    AppDocument.querySelector('#setting_input_long').innerHTML = data.longitude;
-    AppDocument.querySelector('#setting_input_lat').innerHTML = data.latitude;
-    AppDocument.querySelector('#setting_select_report_timezone').value = getTimezone(  AppDocument.querySelector('#setting_input_lat').innerHTML, 
-                                                                                    AppDocument.querySelector('#setting_input_long').innerHTML);
-    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(AppDocument.querySelector('#setting_select_report_timezone').value);
+    await common.map_show_search_on_map(data);
+    component_setting_update('GPS', 'CITY')
 };
 /**
  * App exception function
@@ -2937,31 +2954,6 @@ const settings_load = async (tab_selected) => {
             AppDocument.querySelector('#setting_select_popular_place').innerHTML = APP_PLACES;
             //set default geolocation
             AppDocument.querySelector('#setting_select_popular_place').selectedIndex = 0;
-            AppDocument.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
-            AppDocument.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
-            AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).outerHTML = `<div id='${APP_GLOBAL.gps_module_leaflet_container}'></div>`;
-            //init map thirdparty module
-            /**
-             * @param{AppEventLeaflet} event
-             */
-            const dbl_click_event = event => {
-                if (event.originalEvent.target.parentNode.id == APP_GLOBAL.gps_module_leaflet_container){
-                    AppDocument.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
-                    AppDocument.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
-                    //Update GPS position
-                    component_setting_update('GPS', 'POSITION');
-                    const timezone = getTimezone(   event.latlng.lat, event.latlng.lng);
-                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
-                }   
-            };
-            await common.map_init(APP_GLOBAL.gps_module_leaflet_container,
-                            AppDocument.querySelector('#setting_input_long').innerHTML, 
-                            AppDocument.querySelector('#setting_input_lat').innerHTML,
-                            dbl_click_event,
-                            map_show_search_on_map_app).then(() => {
-                component_setting_update('GPS', 'MAP');
-                common.map_resize();
-            });
             break;
         }
         case 3:{
@@ -2998,16 +2990,43 @@ const settings_load = async (tab_selected) => {
             break;
         }
     }
-    user_settings_load(tab_selected)
-    .then(()=>{
-        if (tab_selected==1){
+    await user_settings_load(tab_selected)
+    switch (tab_selected){
+        case 1:{
             //set timers
             //set current date and time for current locale and timezone
             setInterval(showcurrenttime, 1000);
             //set report date and time for current locale, report timezone
             setInterval(showreporttime, 1000);
+            break;
         }
-    });
+        case 2:{
+            AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).outerHTML = `<div id='${APP_GLOBAL.gps_module_leaflet_container}'></div>`;
+            //init map thirdparty module
+            /**
+             * @param{AppEventLeaflet} event
+             */
+            const dbl_click_event = event => {
+                if (event.originalEvent.target.parentNode.id == APP_GLOBAL.gps_module_leaflet_container){
+                    AppDocument.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
+                    AppDocument.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
+                    //Update GPS position
+                    component_setting_update('GPS', 'POSITION');
+                    const timezone = getTimezone(   event.latlng.lat, event.latlng.lng);
+                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
+                }   
+            };
+            await common.map_init(APP_GLOBAL.gps_module_leaflet_container,
+                            AppDocument.querySelector('#setting_input_long').innerHTML, 
+                            AppDocument.querySelector('#setting_input_lat').innerHTML,
+                            dbl_click_event,
+                            map_show_search_on_map_app).then(() => {
+                component_setting_update('GPS', 'MAP');
+                common.map_resize();
+            });
+            break;
+        }
+    }
 }
 /**
  * 

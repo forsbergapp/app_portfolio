@@ -76,13 +76,16 @@ const component = async props => {
                         const lat = e.latlng.lat;
                         //Update GPS position
                         props.function_get_place_from_gps(lng, lat).then((/**@type{string}*/gps_place) => {
-                            props.function_map_update(  lng,
-                                                        lat,
-                                                        null, //do not change zoom 
-                                                        gps_place,
-                                                        null,
-                                                        props.module_leaflet_marker_div_gps,
-                                                        props.module_leaflet_jumpto);
+                            props.function_map_update({ longitude:lng,
+                                                        latitude:lat,
+                                                        zoomvalue:null,//do not change zoom 
+                                                        text_place: gps_place,
+                                                        country:'',
+                                                        city:'',
+                                                        timezone_text :null,
+                                                        marker_id:props.module_leaflet_marker_div_gps,
+                                                        to_method:props.module_leaflet_jumpto
+                                                    });
                         });
                     }
                 };

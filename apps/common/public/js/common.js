@@ -2494,18 +2494,20 @@ const map_toolbar_reset = ()=>{
 /**
  * Map show search on map
  * @param {{city:string, country:string, longitude:string, latitude:string}} data 
- * @returns {void}
+ * @returns {Promise<void>}
  */
-const map_show_search_on_map = data =>{
-    
+const map_show_search_on_map = async data =>{
     const place =  data.city + ', ' + data.country;
-    map_update( data.longitude,
-                data.latitude,
-                COMMON_GLOBAL.module_leaflet_zoom_city,
-                place,
-                null,
-                COMMON_GLOBAL.module_leaflet_marker_div_city,
-                COMMON_GLOBAL.module_leaflet_jumpto);
+    await map_update({  longitude:data.longitude,
+                        latitude:data.latitude,
+                        zoomvalue:COMMON_GLOBAL.module_leaflet_zoom_city,
+                        text_place:place,
+                        country:'',
+                        city:'',
+                        timezone_text :null,
+                        marker_id:COMMON_GLOBAL.module_leaflet_marker_div_city,
+                        to_method:COMMON_GLOBAL.module_leaflet_jumpto
+                    });
     map_toolbar_reset();
 };
 /**
@@ -2611,16 +2613,19 @@ const map_setstyle = mapstyle => {
 };
 /**
  * Map update
- * @param {string} longitude 
- * @param {string} latitude 
- * @param {number|null} zoomvalue 
- * @param {string} text_place 
- * @param {string|null} timezone_text 
- * @param {string} marker_id 
- * @param {number} to_method 
+ * @param {{longitude:string,
+ *          latitude:string,
+ *          zoomvalue:number|null,
+ *          text_place:string,
+ *          country:string,
+ *          city:string,
+ *          timezone_text :string|null,
+ *          marker_id:string,
+ *          to_method:number
+ *          }} parameters
  * @returns {Promise.<string|null>}
  */
-const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_text = null, marker_id, to_method) => {
+const map_update = async (parameters) => {
     /**@ts-ignore */
     const {getTimezone} = await import('regional');
     return new Promise((resolve)=> {
@@ -2652,21 +2657,23 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
                 //also have COMMON_GLOBAL.module_leaflet_session_map.panTo(new COMMON_GLOBAL.module_leaflet.LatLng({lng: longitude, lat: latitude}));
             }
         };
-        map_update_gps(to_method, zoomvalue, longitude, latitude);
-        if (timezone_text == null)
-            timezone_text = getTimezone(latitude, longitude);
+        map_update_gps(parameters.to_method, parameters.zoomvalue, parameters.longitude, parameters.latitude);
+        if (parameters.timezone_text == null)
+            parameters.timezone_text = getTimezone(parameters.latitude, parameters.longitude);
 
         ComponentRender(null,{  
-                                timezone_text:timezone_text,
-                                latitude:latitude,
-                                longitude:longitude,
-                                marker_id:marker_id,
-                                text_place:text_place,
+                                timezone_text:parameters.timezone_text,
+                                latitude:parameters.latitude,
+                                longitude:parameters.longitude,
+                                marker_id:parameters.marker_id,
+                                text_place:parameters.text_place,
+                                country:parameters.country,
+                                city:parameters.city,
                                 module_leaflet:COMMON_GLOBAL.module_leaflet,
                                 module_leaflet_popup_offset: COMMON_GLOBAL.module_leaflet_popup_offset,
                                 module_leaflet_session_map:COMMON_GLOBAL.module_leaflet_session_map
-                            },'/common/component/module_leaflet_popup.js');
-        resolve(timezone_text);
+                            },'/common/component/module_leaflet_popup.js')
+        .then(()=>resolve(parameters.timezone_text));
     });
 };
 /**
@@ -3409,13 +3416,16 @@ const common_event = async (event_type,event) =>{
                         }
                         case 'common_module_leaflet_control_my_location_id':{
                             if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
-                                map_update( COMMON_GLOBAL.client_longitude,
-                                            COMMON_GLOBAL.client_latitude,
-                                            COMMON_GLOBAL.module_leaflet_zoom,
-                                            COMMON_GLOBAL.client_place,
-                                            null,
-                                            COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                            COMMON_GLOBAL.module_leaflet_jumpto);
+                                map_update({longitude:COMMON_GLOBAL.client_longitude,
+                                            latitude:COMMON_GLOBAL.client_latitude,
+                                            zoomvalue:COMMON_GLOBAL.module_leaflet_zoom,
+                                            text_place:COMMON_GLOBAL.client_place,
+                                            country:'',
+                                            city:'',
+                                            timezone_text :null,
+                                            marker_id:COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                            to_method:COMMON_GLOBAL.module_leaflet_jumpto
+                                        });
                                 const select_country = AppDocument.querySelector('#common_module_leaflet_select_country');
                                 select_country.selectedIndex = 0;
                                 const select_city = AppDocument.querySelector('#common_module_leaflet_select_city');
@@ -3547,13 +3557,16 @@ const common_event = async (event_type,event) =>{
                     case 'common_module_leaflet_select_city':{
                         const longitude_selected = event.target.options[event.target.selectedIndex].getAttribute('longitude') ??'';
                         const latitude_selected = event.target.options[event.target.selectedIndex].getAttribute('latitude') ??'';
-                        await map_update( longitude_selected, 
-                                    latitude_selected, 
-                                    COMMON_GLOBAL.module_leaflet_zoom_city,
-                                    event.target.options[event.target.selectedIndex].text, 
-                                    null, 
-                                    COMMON_GLOBAL.module_leaflet_marker_div_city,
-                                    COMMON_GLOBAL.module_leaflet_flyto).then(()=> {
+                        await map_update({  longitude:longitude_selected,
+                                            latitude:latitude_selected,
+                                            zoomvalue:COMMON_GLOBAL.module_leaflet_zoom_city,
+                                            text_place:event.target.options[event.target.selectedIndex].text,
+                                            country:'',
+                                            city:'',
+                                            timezone_text :null,
+                                            marker_id:COMMON_GLOBAL.module_leaflet_marker_div_city,
+                                            to_method:COMMON_GLOBAL.module_leaflet_flyto
+                                        }).then(()=> {
                             map_toolbar_reset();
                         });
                         break;
