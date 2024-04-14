@@ -399,14 +399,6 @@ const show_start = async (yearvalues) =>{
     show_charts();
 };
 /**
- * Get user agent
- * @param {string} user_agent 
- * @returns {string}
- */
-const show_user_agent = user_agent => {
-    return user_agent;
-};
-/**
  * Get apps div select HTML
  * @returns{Promise.<string|null>}
  */
@@ -1896,7 +1888,7 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
                                             ${log.gps_longitude ?? ''}
                                         </div>
                                         <div class='list_connected_col common_wide_list_column'>
-                                            ${show_user_agent(log.user_agent) ?? ''}
+                                            ${common.getUserAgentPlatform(log.user_agent) ?? ''}
                                         </div>
                                         <div class='list_connected_col chat_click common_icon' data-id='${log.id}'></div>
                                     </div>`;
