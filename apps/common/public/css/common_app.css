@@ -37,6 +37,16 @@
 #common_dialogue_user_menu_preference_direction::before{	content:var(--common_app_icon_regional_direction)}
 #common_dialogue_user_menu_preference_arabic_script::before{content:var(--common_app_icon_regional_script)}
 
+#common_dialogue_apps_info::before{							content:var(--common_app_icon_info)}
+
+#common_dialogue_info_home::before{							content:var(--common_app_icon_home)}
+#common_dialogue_info_title1::before{						content:var(--common_app_icon_sky_cloud) ' ' var(--common_app_icon_misc_model)}
+#common_dialogue_info_title2::before{						content:var(--common_app_icon_database) ' ' var(--common_app_icon_misc_model)}
+#common_dialogue_info_contact_text::before{					content:var(--common_app_icon_email)}
+#common_dialogue_info_app_menu_apps::before{				content:var(--common_app_icon_apps)}
+#common_dialogue_info_app_menu_info::before{				content:var(--common_app_icon_info)}
+
+
 #common_user_verify_email_icon::before{						content:var(--common_app_icon_email)}
 #common_user_verify_cancel::before{							content:var(--common_app_icon_cancel)}
 
@@ -60,7 +70,6 @@
 #common_user_password_new_icon::before{						content:var(--common_app_icon_user_password)}
 #common_user_password_new_cancel::before{					content:var(--common_app_icon_cancel)}
 #common_user_password_new_ok::before{						content:var(--common_app_icon_close)}
-
 
 #common_profile_search_icon::before{						content:var(--common_app_icon_search)}
 
@@ -410,6 +419,141 @@ select {
     100% { 
         opacity: 0.5;
     }
+}
+/*DIALOGUE APPS*/
+#common_dialogue_apps_info{
+	width: 100%;
+}
+#common_dialogue_apps{
+	overflow: hidden;
+}
+#common_dialogue_info_app_menu_content{
+	width: 100%;
+}
+#common_dialogue_apps_list.css_spinner, #common_dialogue_info_app_menu_content_apps_list.css_spinner{
+	height: 30px !important;
+	display: inline-block;
+}
+#common_dialogue_apps_list, #common_dialogue_info_app_menu_content_apps_list{
+	margin-top:10px;
+	height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+	text-align: center;
+    box-sizing: content-box;
+	padding: 0px;
+}
+#common_dialogue_apps_list{
+	font-size: 0.7em;
+}
+
+#common_dialogue_apps_list .common_dialogue_apps_app_link_row{
+	width: 45%;
+    display: inline-block;
+	vertical-align: top;
+}
+#common_dialogue_apps_list .common_dialogue_apps_app_link_col{
+	width: 100%;
+    display: block;
+	margin-left: unset;
+    margin-top: unset;
+}
+.common_dialogue_apps_app_link_row{
+	padding-top: 4px;
+    padding-bottom: 4px;
+}
+.common_dialogue_apps_app_link_col:nth-child(1),.common_dialogue_apps_app_link_col:nth-child(2){
+	display: none;
+}
+.common_dialogue_apps_app_link_col:nth-child(3){
+	width: 20%;
+    display: inline-block;
+	margin-left: 5px;
+    margin-top: 3px;
+}
+.common_dialogue_apps_app_link_col:nth-child(4){
+	width: 70%;
+    text-align: start;
+    display: inline-block;
+    vertical-align: top;
+}
+.common_dialogue_apps_app_name{
+	font-weight: bold;
+	cursor: default;
+}
+.common_dialogue_apps_app_category{
+	font-size: 0.7em;
+}
+.common_dialogue_apps_app_description{
+	cursor: default;
+	font-size: 0.7em;
+}
+.common_dialogue_apps_app_logo:hover, .common_dialogue_apps_app_logo:active {
+	transform: scale(1.2);
+	cursor: pointer;
+}
+.common_dialogue_apps_app_logo{
+	width: 40px;
+	height: 40px;
+	margin: 0 auto;
+}	
+.common_dialogue_apps_app_url{
+	display:none;
+}
+/*DIALOGUE INFO*/
+#common_dialogue_info_app_page{
+	display: flex;
+	flex-direction: row;
+}
+#common_dialogue_info_app_menu{
+	width: 75px;
+	flex-direction: row;
+	border-inline-end:0.5px solid;
+}
+#common_dialogue_info_app_menu_space{
+	height: 200px;
+}
+#common_dialogue_info_app_menu_content_apps{
+	display: none;
+}
+#common_dialogue_info_app_menu_content_info{
+	display: block;
+}
+#common_dialogue_info_app_menu_content_info #common_dialogue_info_datamodel{
+	margin-bottom:30px;
+}
+#common_dialogue_info_app_menu_content_info #common_dialogue_info_contact_text, #common_dialogue_info_app_email{
+	display: inline-block;
+}
+
+#common_dialogue_info_app_menu_content_info #common_dialogue_info_title1, #common_dialogue_info_title2{
+    height: 30px;
+    margin: 0 auto;
+}
+#common_dialogue_info_app_menu_content_info #common_dialogue_info_start_links, #common_dialogue_info_contact, #common_dialogue_info_app_copyright{
+	font-size: 11px;
+	width: 300px;
+}
+#common_dialogue_info_app_menu_content_info #common_dialogue_info_start_links #common_dialogue_info_app_link_row, #common_dialogue_info_info_link_row{
+	text-align: center;
+	width: 100%;
+}
+#common_dialogue_info_app_menu_content_info #common_dialogue_info_app_link_row div, #common_dialogue_info_info_link_row div{
+	display: inline-block;
+	margin:5px;
+}
+#common_dialogue_info_app_menu_content_info #common_dialogue_info_info_diagram_img, #common_dialogue_info_info_datamodel_img{
+	width: 113.77px;
+	height: 64px;
+}
+#common_dialogue_info_app_menu_content_info #common_dialogue_info_info_diagram, #common_dialogue_info_info_datamodel{
+	cursor:pointer;
+}
+
+#common_dialogue_apps.common_dialogue_show0,
+#common_dialogue_info.common_dialogue_show0{
+	width: 350px;
+	height: calc(100% - 200px);
 }
 /* DIALOGUE MESSAGE*/
 #common_dialogue_message.common_dialogue_show3{
@@ -1421,6 +1565,9 @@ select {
 	#common_profile_bio{
 		font-size: 0.7em;
 	}	
+	#common_dialogue_info_start_links, #common_dialogue_info_contact, #common_dialogue_info_app_copyright{
+		font-size: 14px;
+	}
 	#common_dialogue_user_edit{
 		width:500px;
 	}

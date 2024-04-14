@@ -1,10 +1,6 @@
 /**@type{{querySelector:function}} */
 const AppDocument = document;
 const template =`   <div id="theme_background"></div>
-                    <div id='dialogues'>
-                        <div id='dialogue_start' class='dialogue'></div>
-                        <div id='dialogue_info' class='dialogue'></div>
-                    </div>
                     <div id='app_profile_toolbar'></div>`;
 /**
  * 
