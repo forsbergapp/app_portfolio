@@ -25,13 +25,6 @@
 /**@ts-ignore */
 const common = await import('common');
 
-const APP_GLOBAL = {
-    'img_diagram_img':'/common/documents/app_portfolio.webp',
-    'img_diagram_img_small':'/common/documents/app_portfolio_small.webp',
-    'img_datamodel_img':'/common/documents/data_model.webp',
-    'img_datamodel_img_small':'/common/documents/data_model_small.webp'
-};
-Object.seal(APP_GLOBAL);
 /**
  * Show or hide dialogue
  * @returns {void}
@@ -64,96 +57,14 @@ const app_event_click = event => {
         const event_target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
-            if (event.target.className == 'app_logo')
-                window.open(common.element_row(event.target).querySelector('.app_url').innerHTML);
+            if (event.target.className == 'common_dialogue_apps_app_logo')
+                window.open(common.element_row(event.target).querySelector('.common_dialogue_apps_app_url').innerHTML);
             else{
                 switch (event_target_id){
-                    case 'app_menu_apps':{
-                        AppDocument.querySelector('#app_menu_content_apps' ).style.display ='block';
-                        AppDocument.querySelector('#app_menu_content_info' ).style.display ='none';
-                        break;
-                    }
-                    case 'app_menu_info':{
-                        AppDocument.querySelector('#app_menu_content_apps' ).style.display ='none';
-                        AppDocument.querySelector('#app_menu_content_info' ).style.display ='block';
-                        break;
-                    }
                     case 'theme_background':{
                         show_hide_apps_dialogue();
                         break;
-                    }
-                    //start page
-                    case 'start_message':{
-                        event.preventDefault();
-                        AppDocument.querySelector('#dialogue_info_content' ).style.visibility ='visible';
-                        AppDocument.querySelector('#dialogue_start_content' ).style.visibility ='hidden';
-                        break;
-                    }
-                    //second page
-                    case 'info_diagram':
-                    case 'info_diagram_img':{
-                        common.ComponentRender('common_window_info',
-                                                {   info:0,
-                                                    url:APP_GLOBAL.img_diagram_img, 
-                                                    content_type:null, 
-                                                    iframe_content:null}, '/common/component/window_info.js');
-                        break;
-                    }
-                    case 'info_datamodel':
-                    case 'info_datamodel_img':{
-                        common.ComponentRender('common_window_info',
-                                                {   info:0,
-                                                    url:APP_GLOBAL.img_datamodel_img,
-                                                    content_type:null, 
-                                                    iframe_content:null}, '/common/component/window_info.js');
-                        break;
-                    }
-                    case 'info_message':{
-                        event.preventDefault();
-                        AppDocument.querySelector('#dialogue_info_content' ).style.visibility ='hidden';
-                        AppDocument.querySelector('#dialogue_start_content' ).style.visibility ='visible';
-                        break;
-                    }
-                    case 'app_email':{
-                        window.open(`mailto:${common.COMMON_GLOBAL.app_email}`,'_blank','');
-                        break;
-                    }
-                    case 'app_link':{
-                        if (common.COMMON_GLOBAL.app_link_url)
-                            window.open(common.COMMON_GLOBAL.app_link_url,'_blank','');
-                        break;
-                    }
-                    case 'info_link1':{
-                        common.ComponentRender('common_window_info',
-                                                {   info:1,
-                                                    url:common.COMMON_GLOBAL.info_link_policy_url,
-                                                    content_type:null, 
-                                                    iframe_content:null}, '/common/component/window_info.js');
-                        break;
-                    }
-                    case 'info_link2':{
-                        common.ComponentRender('common_window_info',
-                                                {   info:1,
-                                                    url:common.COMMON_GLOBAL.info_link_disclaimer_url,
-                                                    content_type:null, 
-                                                    iframe_content:null}, '/common/component/window_info.js');
-                        break;
-                    }
-                    case 'info_link3':{
-                        common.ComponentRender('common_window_info',
-                                                {   info:1,
-                                                    url:common.COMMON_GLOBAL.info_link_terms_url,
-                                                    content_type:null, 
-                                                    iframe_content:null}, '/common/component/window_info.js');
-                        break;
-                    }case 'info_link4':{
-                        common.ComponentRender('common_window_info',
-                                                {   info:1,
-                                                    url:common.COMMON_GLOBAL.info_link_about_url,
-                                                    content_type:null, 
-                                                    iframe_content:null}, '/common/component/window_info.js');
-                        break;
-                    }
+                    }                    
                     //user preferences
                     case 'app_theme_checkbox':{
                         app_theme_update(true);
@@ -208,7 +119,7 @@ const app_event_click = event => {
                         common.user_logoff();
                         break;
                     }
-                    //profil button
+                    //profile button
                     case 'common_profile_btn_top':{
                         common.profile_top(1);
                         break;
@@ -430,62 +341,21 @@ const profile_show_app = async (user_account_id_other, username) =>{
  * @returns {void}
  */
 const get_apps = () => {
-    
-    AppDocument.querySelector('#apps').innerHTML = '';
-    AppDocument.querySelector('#app_menu_content_apps_list').innerHTML = '';
-    AppDocument.querySelector('#apps').classList.add('common_icon', 'css_spinner');
-    AppDocument.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
-    common.FFB ('APP', `/apps?id=${common.COMMON_GLOBAL.common_app_id}`, 'GET', 'APP_DATA', null)
-    .then((/**@type{string}*/result)=>{
-        let html_apps ='';
-        let html_menu_apps_list ='';
-        let apps_count=0;
-        for (const app of JSON.parse(result)) {
-            apps_count++;
-            html_apps +=`<div class='app_link_row common_row'>
-                            <div class='app_link_col'>
-                                <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
-                            </div>
-                            <div class='app_link_col'>
-                                <img class='app_logo' src='${app.LOGO}' />
-                            </div>
-                            <div class='app_link_col'>
-                                <div class='app_name'>${app.APP_NAME_TRANSLATION}</div>
-                            </div>
-                        </div>`;
-            html_menu_apps_list +=`<div class='app_link_row common_row'>
-                                        <div class='app_link_col'>
-                                            <div class='app_id'>${app.APP_ID}</div>
-                                        </div>
-                                        <div class='app_link_col'>
-                                            <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
-                                        </div>
-                                        <div class='app_link_col'>
-                                            <img class='app_logo' src='${app.LOGO}' />
-                                        </div>
-                                        <div class='app_link_col'>
-                                            <div class='app_name'>${app.NAME} - ${app.APP_NAME_TRANSLATION}</div>
-                                            <div class='app_category'>${app.APP_CATEGORY==null?'':app.APP_CATEGORY}</div>
-                                            <div class='app_description'>${app.APP_DESCRIPTION==null?'':app.APP_DESCRIPTION}</div>
-                                        </div>
-                                    </div>`;
-        }
-        //if odd add extra empty column
-        if (apps_count & 1)
-            html_apps +=`<div class='app_link_row common_row'>
-                            <div class='app_link_col'></div>
-                            <div class='app_link_col'></div>
-                            <div class='app_link_col'></div>
-                        </div>`;
-        AppDocument.querySelector('#apps').classList.remove('common_icon', 'css_spinner');
-        AppDocument.querySelector('#app_menu_content_apps_list').classList.remove('common_icon', 'css_spinner');
-        AppDocument.querySelector('#apps').innerHTML = html_apps;
-        AppDocument.querySelector('#app_menu_content_apps_list').innerHTML = html_menu_apps_list;
-    })
-    .catch(()=>{
-        AppDocument.querySelector('#apps').classList.remove('common_icon', 'css_spinner');
-        AppDocument.querySelector('#app_menu_content_apps_list').classList.remove('common_icon', 'css_spinner');
-    });
+    common.ComponentRender('common_dialogue_apps',
+                            {
+                                common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                app_copyright:common.COMMON_GLOBAL.app_copyright,
+                                app_email:common.COMMON_GLOBAL.app_email,
+                                app_link_url:common.COMMON_GLOBAL.app_link_url,
+                                app_link_title:common.COMMON_GLOBAL.app_link_title,
+                                info_link_policy_name:common.COMMON_GLOBAL.info_link_policy_name,
+                                info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
+                                info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name,
+                                info_link_about_name:common.COMMON_GLOBAL.info_link_about_name,
+                                function_FFB:common.FFB,
+                                function_ComponentRender:common.ComponentRender
+                            },
+                            '/common/component/dialogue_apps.js');
 };
 /**
  * App exception function
@@ -532,14 +402,10 @@ const mount_app_app = async (framework=null) => {
  */
 const init_app = async (parameters) => {
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')    
-    .then(()=>common.ComponentRender('dialogue_start', {}, '/component/dialogue_start.js'))
-    .then(()=>common.ComponentRender('dialogue_info', {}, '/component/dialogue_info.js'))
     .then(()=>common.ComponentRender('common_profile_search',{}, '/common/component/profile_search.js'))
     .then(()=>common.ComponentRender('app_profile_toolbar',{}, '/common/component/profile_toolbar.js'))
     .then(()=>common.ComponentRender('common_user_account', {},'/common/component/user_account.js'))
     .then(()=>common.ComponentRender('theme_background', {},'/component/background.js'));
-    AppDocument.querySelector('#apps').classList.add('common_icon', 'css_spinner');
-    AppDocument.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
 
     for (const parameter of parameters.app) {
         if (parameter['MODULE_EASY.QRCODE_WIDTH'])
@@ -553,27 +419,9 @@ const init_app = async (parameters) => {
         if (parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'])
             common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'];
     }
-    
-    //info
-    AppDocument.querySelector('#info_diagram_img').src=APP_GLOBAL.img_diagram_img_small;
-    AppDocument.querySelector('#info_datamodel_img').src=APP_GLOBAL.img_datamodel_img_small;
-    
-    AppDocument.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
-    AppDocument.querySelector('#app_email').innerHTML=common.COMMON_GLOBAL.app_email;
-    
-    if (common.COMMON_GLOBAL.app_link_url==null)
-        AppDocument.querySelector('#app_link').style.display = 'none';
-    else
-        AppDocument.querySelector('#app_link').innerHTML = common.COMMON_GLOBAL.app_link_title;
-    AppDocument.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
-    AppDocument.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
-    AppDocument.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
-    AppDocument.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
-    AppDocument.querySelector('#dialogue_start_content').style.visibility = 'visible';
     if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-        common.common_translate_ui(common.COMMON_GLOBAL.user_locale).then(()=>get_apps());
-    else
-        get_apps();
+        await common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
+    get_apps();
     
     const user = window.location.pathname.substring(1);
     if (user !='') {
