@@ -3264,6 +3264,97 @@ const common_event = async (event_type,event) =>{
                             AppDocument.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                             break;
                         }
+                        //Dialogue apps
+                        case 'common_dialogue_apps_list':
+                            if (event.target.className == 'common_dialogue_apps_app_logo'){
+                                const app_url = element_row(event.target).querySelector('.common_dialogue_apps_app_url');
+                                if (app_url)
+                                    window.open(app_url.innerHTML);
+                            }
+                            break;
+                        case 'common_dialogue_apps_info':{
+                            event.preventDefault();
+                            AppDocument.querySelector('#common_dialogue_info' ).style.visibility ='visible';
+                            AppDocument.querySelector('#common_dialogue_apps' ).style.visibility ='hidden';
+                            break;
+                        }
+                        case 'common_dialogue_info_app_link':{
+                            if (COMMON_GLOBAL.app_link_url)
+                                window.open(COMMON_GLOBAL.app_link_url,'_blank','');
+                            break;
+                        }
+                        //Dialogue info
+                        case 'common_dialogue_info_app_menu_apps':{
+                            AppDocument.querySelector('#common_dialogue_info_app_menu_content_apps' ).style.display ='block';
+                            AppDocument.querySelector('#common_dialogue_info_app_menu_content_info' ).style.display ='none';
+                            break;
+                        }
+                        case 'common_dialogue_info_app_menu_info':{
+                            AppDocument.querySelector('#common_dialogue_info_app_menu_content_apps' ).style.display ='none';
+                            AppDocument.querySelector('#common_dialogue_info_app_menu_content_info' ).style.display ='block';
+                            break;
+                        }
+                        case 'common_dialogue_info_info_diagram':
+                        case 'common_dialogue_info_info_diagram_img':{
+                            ComponentRender('common_window_info',
+                                            {   info:0,
+                                                url:AppDocument.querySelector('#common_dialogue_info_info_diagram_img').getAttribute('data-src'), 
+                                                content_type:null, 
+                                                iframe_content:null}, 
+                                            '/common/component/window_info.js');
+                            break;
+                        }
+                        case 'common_dialogue_info_info_datamodel':
+                        case 'common_dialogue_info_info_datamodel_img':{
+                            ComponentRender('common_window_info',
+                                            {   info:0,
+                                                url:AppDocument.querySelector('#common_dialogue_info_info_datamodel_img').getAttribute('data-src'),
+                                                content_type:null, 
+                                                iframe_content:null}, 
+                                            '/common/component/window_info.js');
+                            break;
+                        }
+                        case 'common_dialogue_info_home':{
+                            event.preventDefault();
+                            AppDocument.querySelector('#common_dialogue_info' ).style.visibility ='hidden';
+                            AppDocument.querySelector('#common_dialogue_apps' ).style.visibility ='visible';
+                            break;
+                        }
+                        case 'common_dialogue_info_app_email':{
+                            window.open(`mailto:${COMMON_GLOBAL.app_email}`,'_blank','');
+                            break;
+                        }
+                        case 'common_dialogue_info_info_link1':{
+                            ComponentRender('common_window_info',
+                                            {   info:1,
+                                                url:COMMON_GLOBAL.info_link_policy_url,
+                                                content_type:null, 
+                                                iframe_content:null}, '/common/component/window_info.js');
+                            break;
+                        }
+                        case 'common_dialogue_info_info_link2':{
+                            ComponentRender('common_window_info',
+                                            {   info:1,
+                                                url:COMMON_GLOBAL.info_link_disclaimer_url,
+                                                content_type:null, 
+                                                iframe_content:null}, '/common/component/window_info.js');
+                            break;
+                        }
+                        case 'common_dialogue_info_info_link3':{
+                            ComponentRender('common_window_info',
+                                            {   info:1,
+                                                url:COMMON_GLOBAL.info_link_terms_url,
+                                                content_type:null, 
+                                                iframe_content:null}, '/common/component/window_info.js');
+                            break;
+                        }case 'common_dialogue_info_info_link4':{
+                            ComponentRender('common_window_info',
+                                            {   info:1,
+                                                url:COMMON_GLOBAL.info_link_about_url,
+                                                content_type:null, 
+                                                iframe_content:null}, '/common/component/window_info.js');
+                            break;
+                        }
                         //window info
                         case 'common_window_info_btn_close':{
                             ComponentRemove('common_window_info');
