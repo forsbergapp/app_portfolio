@@ -224,13 +224,6 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	height:100%;
 }
 
-#app_user_account{
-	margin:10px;
-	display: grid;
-	margin-top: 10px;
-	width: 60px;
-}
-
 #menu{
 	width:150px;
 	height:100%;
@@ -983,7 +976,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	width:70px;
 }
 .list_connected_col:nth-child(10){
-	width:540px;
+	width:70px;
 }
 /*APP LOG*/
 #list_app_log, #list_connected{
@@ -1231,6 +1224,18 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 #common_dialouge_user_menu_log_out{
 	display:none;
 }
+#common_user_menu{
+	margin-inline-start:unset !important;
+	margin-top: unset !important;
+}
+#common_user_menu_default_avatar{
+	font-size: inherit !important;
+}
+#common_user_menu_avatar_img{
+	width:2em !important;
+	height: 2em !important;
+}
+
 /*RESPONSIVE SECURE*/
 @media only screen and (min-width: 768px) {
 	body{

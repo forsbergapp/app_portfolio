@@ -1,4 +1,6 @@
 :root {
+	/*app useragent fixes*/
+	--common_app_useragent_fix_margin_top: 0px;
 	/*app colors*/	
 	--common_app_color_king: #32398D;
 	--common_app_color_prince: #755FBE;
