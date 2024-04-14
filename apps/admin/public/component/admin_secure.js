@@ -5,7 +5,7 @@ const template =`       <div id='dialogues'>
                         </div>
                         <div id='menu_open' class='common_dialogue_button common_icon'></div>
                         <div id='menu'>
-                            <div id='app_user_account'></div>
+                            <div id='app_user_account' class='menuitem'></div>
                             <div id='menu_secure'>
                                 <div id='menu_close' class='common_dialogue_button common_icon'></div>
                                 <div id='menu_1' class='menuitem common_icon'></div>

@@ -787,6 +787,22 @@ const input_control = (dialogue, validate_items) =>{
         return true;
 };
 /**
+ * 
+ * @param {string} useragent 
+ */
+const getUserAgentPlatform = useragent =>{
+    if (useragent.toLowerCase().indexOf('windows'))
+        return 'Windows';
+    else
+        if (useragent.toLowerCase().indexOf('mobile'))
+            return 'Mobile';
+        else
+            if (useragent.toLowerCase().indexOf('linux'))
+                return 'Linux';
+            else
+                return 'Other';
+}
+/**
  * Get user variables
  * @returns {{  user_language:string,
  *              user_timezone:string,
@@ -800,7 +816,7 @@ const get_uservariables = () => {
     return {    user_language:      navigator.language,
                 user_timezone:      Intl.DateTimeFormat().resolvedOptions().timeZone,
                 user_number_system: Intl.NumberFormat().resolvedOptions().numberingSystem,
-                user_platform:      navigator.platform,
+                user_platform:      getUserAgentPlatform(navigator.userAgent),
                 client_latitude:    COMMON_GLOBAL.client_latitude,
                 client_longitude:   COMMON_GLOBAL.client_longitude,
                 client_place:       COMMON_GLOBAL.client_place
@@ -3943,6 +3959,14 @@ const mount_app = async (framework, events) => {
     
 };
 /**
+ * Set useragent attributes
+ * @returns {void}
+ */
+ const setUserAgentAttibutes = () => {
+    if (navigator.userAgent.toLowerCase().indexOf('firefox')>-1)
+        AppDocument.querySelector(':root').style.setProperty('--common_app_useragent_fix_margin_top', '-5px');
+ }
+/**
  * Set custom framework functionality overriding console messages and save info about events created
  * @returns {void}
  */
@@ -4024,6 +4048,7 @@ const custom_framework = () => {
  * @returns {Promise.<void>}
  */
 const init_common = async (parameters) => {
+    setUserAgentAttibutes();
     custom_framework();
     await ComponentRender('common_app', 
                             {},
@@ -4057,7 +4082,7 @@ export{/* GLOBALS*/
        common_translate_ui, get_locales_options, 
        mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
-       inIframe, show_image, getHostname, input_control, SearchAndSetSelectedIndex,
+       inIframe, show_image, getHostname, input_control, getUserAgentPlatform, SearchAndSetSelectedIndex,
        common_theme_update_from_body,common_preferences_post_mount,
        common_preferences_update_body_class_from_preferences,
        /* COMPONENTS */

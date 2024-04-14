@@ -229,13 +229,10 @@ select {
 	font-weight: 900;
 	font-style: normal;
 	display: inline-block;
-	padding-top: 4px;
-    padding-bottom: 4px;
 }  
 .common_icon::before{
-	display: inline-block;
     white-space: nowrap;
-	vertical-align: sub;
+	vertical-align: middle;
 }
 .common_icon svg{
 	font-size: 2em;
@@ -721,6 +718,7 @@ select {
 /*profile search*/
 #common_profile_input_row{
 	position: fixed;
+	margin-top: 10px;
 	z-index: 1;
 	margin-inline-start: calc(50% - 140px);
 }
@@ -1069,22 +1067,19 @@ select {
 }
 
 /*User account*/
-#common_user_account{
-	display: grid;
-	margin-top: 10px;
-	width: 60px;
-}
 #common_user_menu{
 	margin-inline-start: 10px;
-	width: 47px;
-	height:47px;
+	width: 48px;
+	height:48px;
 	z-index:1;
 	border-radius: 50% !important;
 	cursor:pointer;
+	position:fixed;
+	margin-top:10px;
 }
 #common_user_menu_avatar_img{
-	width:47px;
-	height:47px;
+	width:48px;
+	height:48px;
 	border-radius:50%;
 	vertical-align: middle;
 }
@@ -1093,11 +1088,18 @@ select {
 }
 #common_user_menu_logged_out{
 	display: inline-block;
+	height: 48px;
 }
 #common_user_menu_default_avatar{
 	font-size: 48px;
-	margin-top:-14px;
+	height: 48px;
+	margin-top: var(--common_app_useragent_fix_margin_top);
 }
+#common_user_menu_default_avatar::before{
+	vertical-align: top;
+	display: inline-block;
+}
+
 /* Dialogue user menu */
 #common_dialogue_user_menu.common_dialogue_show1{
 	text-align: center;
