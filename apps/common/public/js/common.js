@@ -4142,11 +4142,15 @@ const init_common = async (parameters) => {
     setUserAgentAttibutes();
     custom_framework();
     await ComponentRender('common_app', 
-                            {},
-                            '/common/component/app.js')
-    .then(()=> ComponentRender('common_fonts', 
-                                {},
-                                '/common/component/fonts.js'));
+                            {
+                            font_default:   true,
+                            font_arabic:    true,
+                            font_asian:     true,
+                            font_prio1:     true,
+                            font_prio2:     true,
+                            font_prio3:     true
+                            },
+                            '/common/component/app.js');
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL.app_id ==null)
             set_app_service_parameters(parameters.app_service);
