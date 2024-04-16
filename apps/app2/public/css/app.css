@@ -1006,7 +1006,7 @@ body,
 }
 /* THEME COMMON */
 .common_toolbar_selected{
-	background-color: var(--app_theme_main_color1);
+	background-color: var(--app_theme_main_color1) !important;
 }
 #common_toolbar_framework{
 	color: var(--app_theme_main_color3);

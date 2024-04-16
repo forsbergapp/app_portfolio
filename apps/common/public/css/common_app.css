@@ -368,6 +368,7 @@ select {
 	cursor:pointer;
 	width: 1.25em;
 	text-align: center;
+	height: 30px !important;
 }
 
 /*dialogue*/

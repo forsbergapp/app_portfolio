@@ -106,7 +106,7 @@ body{
 	background-color:var(--app_theme_user_menu_hover_background_color);	
 }
 .common_toolbar_selected{
-	background-color: var(--app_theme_main_branding_color1);
+	background-color: var(--app_theme_main_branding_color1) !important;
 }
 .common_input{
 	background-color:var(--app_theme_main_branding_color1) !important;

@@ -715,7 +715,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 	background-color: var(--app_theme_list_selected_background_color);
 }
 .common_toolbar_selected{
-	background-color: var(--app_theme_list_selected_background_color);
+	background-color: var(--app_theme_list_selected_background_color) !important;
 }
 #common_toolbar_framework {
     color: var(--app_theme_main_branding_color1);
@@ -764,13 +764,11 @@ border-left: 12px solid var(--app_theme_sun_color);
 	background-color: var(--app_theme_switch_checked_background_color);
 }
 #common_user_menu:hover,
-#common_user_menu:active,
-#common_dialouge_user_menu:hover,
-#common_dialouge_user_menu:active{
+#common_user_menu:active{
 	box-shadow: 0 0 35px 4px var(--app_theme_dialogue_boxshadow_active_color);
 }  
 #common_user_menu,
-#common_dialouge_user_menu{
+#common_dialogue_user_menu{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
@@ -778,10 +776,10 @@ border-left: 12px solid var(--app_theme_sun_color);
 #common_dialogue_user_menu_username:active,
 #common_profile_btn_top:hover,
 #common_profile_btn_top:active,
-#common_dialouge_user_menu_logged_in div:hover,
-#common_dialouge_user_menu_logged_in div:active,
-#common_dialouge_user_menu_logged_out div:hover,
-#common_dialouge_user_menu_logged_out div:active{
+#common_dialogue_user_menu_logged_in div:hover,
+#common_dialogue_user_menu_logged_in div:active,
+#common_dialogue_user_menu_logged_out div:hover,
+#common_dialogue_user_menu_logged_out div:active{
 	background-color:var(--app_theme_menu_selected_hover_background_color);
 	color: var(--app_theme_menu_selected_hover_color);
 }
@@ -829,15 +827,6 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_dialogue_content{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
-}
-.common_dialogue_content:hover, 
-.common_dialogue_content:active{
-	box-shadow: 0 0 35px 4px var(--app_theme_dialogue_boxshadow_active_color);
-}
-#common_dialogue_user_start:hover, 
-#common_dialogue_user_start:active
-{
-	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2) !important;
 }
 .common_like {
     color: var(--common_app_color_red) !important;
