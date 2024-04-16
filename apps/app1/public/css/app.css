@@ -753,9 +753,6 @@ border-left: 12px solid var(--app_theme_sun_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
 
-.common_load-spinner div:after {
-	background-color: var(--app_theme_spinner_background_color);
-}
 .common_switch::before {
 	background-color: var(--app_theme_switch_unchecked_background_color);
 }

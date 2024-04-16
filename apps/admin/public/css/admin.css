@@ -277,12 +277,6 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	margin:10px;
 	display:inline-block;
 }
-.button_save #common_app_spinner{
-	position:unset;
-	margin:0px;
-	margin-top:-20px;
-}
-
 .list_search{
 	margin-bottom: 10px;
 	border-radius: 4px;
@@ -1679,9 +1673,6 @@ body{
 }
 .common_profile_btn_selected{
 	background-color: var(--app_theme_nav_selected_background_color);
-}
-.common_load-spinner div:after {
-	background-color: var(--app_theme_spinner_background_color);
 }
 #common_dialouge_user_menu{
 	background-color: var(--app_theme_dialogue_background_color);
