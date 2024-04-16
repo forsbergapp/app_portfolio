@@ -3036,8 +3036,6 @@ const settings_load = async (tab_selected) => {
  */
 const init_app = async parameters => {
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
-    .then(()=>common.ComponentRender('settings', {}, '/component/settings.js'))
-    .then(()=>common.ComponentRender('settings_tab7', {}, '/component/settings_tab7.js'))
     .then(()=>common.ComponentRender('app_profile_search', {}, '/common/component/profile_search.js'))
     .then(()=>common.ComponentRender('app_profile_toolbar', {}, '/common/component/profile_toolbar.js'))
     .then(()=>common.ComponentRender('app_user_account', {}, '/common/component/user_account.js'));
