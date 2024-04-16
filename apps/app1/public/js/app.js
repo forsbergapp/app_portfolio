@@ -404,8 +404,7 @@ const init_app = async (parameters) => {
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')    
     .then(()=>common.ComponentRender('common_profile_search',{}, '/common/component/profile_search.js'))
     .then(()=>common.ComponentRender('app_profile_toolbar',{}, '/common/component/profile_toolbar.js'))
-    .then(()=>common.ComponentRender('common_user_account', {},'/common/component/user_account.js'))
-    .then(()=>common.ComponentRender('theme_background', {},'/component/background.js'));
+    .then(()=>common.ComponentRender('common_user_account', {},'/common/component/user_account.js'));
 
     for (const parameter of parameters.app) {
         if (parameter['MODULE_EASY.QRCODE_WIDTH'])
