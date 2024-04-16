@@ -1086,64 +1086,65 @@ const show_app_parameter = (app_id) => {
  * @param {string} item 
  */
 const button_save = async (item) => {
-    if (item=='apps_save'){
-        //save changes in list_apps
-        let x = AppDocument.querySelectorAll('.list_apps_row');
-        for (const record of x){
-            if (record.getAttribute('data-changed-record')=='1'){
-                await update_record('app',
-                                    record,
-                                    item,
-                                    {   user_account:{  id:0,
-                                                        app_role_id:0,
-                                                        active:0,
-                                                        user_level:0,
-                                                        private:0,
-                                                        username:'',
-                                                        bio:'',
-                                                        email:'',
-                                                        email_unverified:'',
-                                                        password:'',
-                                                        password_reminder:'',
-                                                        verification_code:''},
-                                        app:{           id: record.children[0].children[0].innerHTML,
-                                                        app_category_id: record.children[5].children[0].innerHTML},
-                                        app_parameter: {app_id:0,
-                                                        parameter_name:'',
-                                                        parameter_value:'',
-                                                        parameter_comment:''}});
+    switch (item){
+        case 'apps_save':{
+            //save changes in list_apps
+            let x = AppDocument.querySelectorAll('.list_apps_row');
+            for (const record of x){
+                if (record.getAttribute('data-changed-record')=='1'){
+                    await update_record('app',
+                                        record,
+                                        item,
+                                        {   user_account:{  id:0,
+                                                            app_role_id:0,
+                                                            active:0,
+                                                            user_level:0,
+                                                            private:0,
+                                                            username:'',
+                                                            bio:'',
+                                                            email:'',
+                                                            email_unverified:'',
+                                                            password:'',
+                                                            password_reminder:'',
+                                                            verification_code:''},
+                                            app:{           id: record.children[0].children[0].innerHTML,
+                                                            app_category_id: record.children[5].children[0].innerHTML},
+                                            app_parameter: {app_id:0,
+                                                            parameter_name:'',
+                                                            parameter_value:'',
+                                                            parameter_comment:''}});
+                }
             }
-        }
-        //save changes in list_app_parameter
-        x = AppDocument.querySelectorAll('.list_app_parameter_row');
-        for (const record of x){
-            if (record.getAttribute('data-changed-record')=='1'){
-                await update_record('app_parameter',
-                                    record,
-                                    item,
-                                    {   user_account:{  id:0,
-                                                        app_role_id:0,
-                                                        active:0,
-                                                        user_level:0,
-                                                        private:0,
-                                                        username:'',
-                                                        bio:'',
-                                                        email:'',
-                                                        email_unverified:'',
-                                                        password:'',
-                                                        password_reminder:'',
-                                                        verification_code:''},
-                                        app:{           id: 0,
-                                                        app_category_id: 0},
-                                        app_parameter: {app_id:record.children[0].children[0].innerHTML,
-                                                        parameter_name:  record.children[1].children[0].innerHTML,
-                                                        parameter_value: record.children[2].children[0].innerHTML,
-                                                        parameter_comment: record.children[3].children[0].innerHTML}});
+            //save changes in list_app_parameter
+            x = AppDocument.querySelectorAll('.list_app_parameter_row');
+            for (const record of x){
+                if (record.getAttribute('data-changed-record')=='1'){
+                    await update_record('app_parameter',
+                                        record,
+                                        item,
+                                        {   user_account:{  id:0,
+                                                            app_role_id:0,
+                                                            active:0,
+                                                            user_level:0,
+                                                            private:0,
+                                                            username:'',
+                                                            bio:'',
+                                                            email:'',
+                                                            email_unverified:'',
+                                                            password:'',
+                                                            password_reminder:'',
+                                                            verification_code:''},
+                                            app:{           id: 0,
+                                                            app_category_id: 0},
+                                            app_parameter: {app_id:record.children[0].children[0].innerHTML,
+                                                            parameter_name:  record.children[1].children[0].innerHTML,
+                                                            parameter_value: record.children[2].children[0].innerHTML,
+                                                            parameter_comment: record.children[3].children[0].innerHTML}});
+                }
             }
+            break;
         }
-    }
-    else 
-        if (item == 'users_save'){
+        case 'users_save':{
             //save changes in list_user_account
             const x = AppDocument.querySelectorAll('.list_user_account_row');
             for (const record of x){
@@ -1171,51 +1172,53 @@ const button_save = async (item) => {
                                                             parameter_comment: ''}});
                 }
             }
+            break;
         }
-        else
-            if (item == 'config_save'){
-                const config_create_server_json = () => {
-                    /**@type{object[]} */
-                    const config_json = [];
-                    AppDocument.querySelectorAll('#list_config .list_config_group').forEach((/**@type{HTMLElement}*/e_group) => 
-                        {
-                            let config_group='';
-                            AppDocument.querySelectorAll(`#${e_group.id} .list_config_row`).forEach((/**@type{HTMLElement}*/e_row) => 
-                                    {
-                                        config_group += `{"${e_row.children[0].children[0].innerHTML}": ${JSON.stringify(e_row.children[1].children[0].innerHTML)}, 
-                                                          "COMMENT": ${JSON.stringify(e_row.children[2].children[0].innerHTML)}}`;
-                                        if (e_group.lastChild != e_row)
-                                            config_group += ',';
-                                    }
-                            );
-                            config_json.push(JSON.parse(`[${config_group}]`));
-                        }
-                    );
-                    return {   
-                                SERVER:             config_json[0],
-                                SERVICE_IAM:        config_json[1],
-                                SERVICE_SOCKET:     config_json[2],
-                                SERVICE_DB:         config_json[3],
-                                SERVICE_LOG:        config_json[4]
-                            };
-                };
-                //the filename is fetched from end of item name list_config_nav_X that is a li element
-                const file = AppDocument.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16).toUpperCase();
-                const json_data = { config_json:    [
-                                                    ['CONFIG',                  file=='CONFIG'?config_create_server_json():null],
-                                                    ['APPS',                    file=='APPS'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                    ['IAM_BLOCKIP',             file=='IAM_BLOCKIP'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                    ['IAM_POLICY',              file=='IAM_POLICY'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                    ['IAM_USERAGENT',           file=='IAM_USERAGENT'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                    ['IAM_USER',                file=='IAM_USER'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                    ['MICROSERVICE_CONFIG',     file=='MICROSERVICE_CONFIG'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                    ['MICROSERVICE_SERVICES',   file=='MICROSERVICE_SERVICES'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null]
-                                                    ]};
-                AppDocument.querySelector('#' + item).classList.add('css_spinner');
-                common.FFB('SERVER', '/config/systemadmin?', 'PUT', 'SYSTEMADMIN', json_data)
-                .then(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'))
-                .catch(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'));
-            }    
+        case 'config_save':{
+            const config_create_server_json = () => {
+                /**@type{object[]} */
+                const config_json = [];
+                AppDocument.querySelectorAll('#list_config .list_config_group').forEach((/**@type{HTMLElement}*/e_group) => 
+                    {
+                        let config_group='';
+                        AppDocument.querySelectorAll(`#${e_group.id} .list_config_row`).forEach((/**@type{HTMLElement}*/e_row) => 
+                                {
+                                    config_group += `{"${e_row.children[0].children[0].innerHTML}": ${JSON.stringify(e_row.children[1].children[0].innerHTML)}, 
+                                                      "COMMENT": ${JSON.stringify(e_row.children[2].children[0].innerHTML)}}`;
+                                    if (e_group.lastChild != e_row)
+                                        config_group += ',';
+                                }
+                        );
+                        config_json.push(JSON.parse(`[${config_group}]`));
+                    }
+                );
+                return {   
+                            SERVER:             config_json[0],
+                            SERVICE_IAM:        config_json[1],
+                            SERVICE_SOCKET:     config_json[2],
+                            SERVICE_DB:         config_json[3],
+                            SERVICE_LOG:        config_json[4]
+                        };
+            };
+            //the filename is fetched from end of item name list_config_nav_X that is a li element
+            const file = AppDocument.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16).toUpperCase();
+            const json_data = { config_json:    [
+                                                ['CONFIG',                  file=='CONFIG'?config_create_server_json():null],
+                                                ['APPS',                    file=='APPS'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
+                                                ['IAM_BLOCKIP',             file=='IAM_BLOCKIP'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
+                                                ['IAM_POLICY',              file=='IAM_POLICY'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
+                                                ['IAM_USERAGENT',           file=='IAM_USERAGENT'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
+                                                ['IAM_USER',                file=='IAM_USER'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
+                                                ['MICROSERVICE_CONFIG',     file=='MICROSERVICE_CONFIG'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
+                                                ['MICROSERVICE_SERVICES',   file=='MICROSERVICE_SERVICES'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null]
+                                                ]};
+            AppDocument.querySelector('#' + item).classList.add('css_spinner');
+            common.FFB('SERVER', '/config/systemadmin?', 'PUT', 'SYSTEMADMIN', json_data)
+            .then(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'))
+            .catch(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'));
+            break;
+        }
+    }
 };
 /**
  * Update record
@@ -2931,9 +2934,14 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                      */
                     const lov_event = event_lov => {
                         //setting values from LOV
-                        common.element_row(event.target).querySelector('.common_input_lov').innerHTML = common.element_row(event_lov.target).getAttribute('data-id');
-                        common.element_row(event.target).querySelector('.common_input_lov').focus();
-                        common.element_row(event.target).querySelector('.common_lov_value').innerHTML = common.element_row(event_lov.target).getAttribute('data-value');
+                        const row = common.element_row(event.target);
+                        const row_lov = common.element_row(event_lov.target);
+                        const common_input_lov = row.querySelector('.common_input_lov');
+                        const common_lov_value = row.querySelector('.common_lov_value');
+                        common_input_lov.innerHTML = row_lov.getAttribute('data-id');
+                        common_input_lov.focus();
+                        common_lov_value.innerHTML = row_lov.getAttribute('data-value');
+                        common_input_lov.dispatchEvent(new Event('input'));
                         AppDocument.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
                     };
                     if (event.target.classList.contains('common_list_lov_click')){
