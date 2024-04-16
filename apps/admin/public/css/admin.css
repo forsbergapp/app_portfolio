@@ -1625,7 +1625,7 @@ body{
 }
 /*APP THEME COMMON*/
 .common_toolbar_selected{
-	background-color: var(--app_theme_login_nav_selected_background_color);
+	background-color: var(--app_theme_login_nav_selected_background_color) !important;
 }
 #common_toolbar_framework {
     color: var(--app_theme_text_color);
