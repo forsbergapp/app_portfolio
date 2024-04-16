@@ -3898,7 +3898,7 @@ const framework_clean = () =>{
     Object.entries(app_root_element.attributes).forEach((/**@type{*}*/attribute)=>attribute[1].name=='id'?null:app_root_element.removeAttribute(attribute[1].name));
 }
 /**
- * Mounts app using given framework or pure javascript and using given list of event functions
+ * Sets framework and uses given list of event functions
  * @param {number} framework
  * @param {{Click:function,
  *          Change:function,
@@ -3908,7 +3908,7 @@ const framework_clean = () =>{
  *          Input:function}} events 
  * @returns {Promise.<void>}
  */
-const mount_app = async (framework, events) => {
+const framework_set = async (framework, events) => {
     const app_root_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
     const app_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_div}`);
     const common_app_element = AppDocument.querySelector(`#common_app`);
@@ -4205,5 +4205,5 @@ export{/* GLOBALS*/
        get_cities,
        /* INIT */
        common_event,
-       mount_app,
+       framework_set,
        init_common};

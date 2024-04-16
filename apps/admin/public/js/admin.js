@@ -87,15 +87,15 @@ const app_event_click = event => {
                 }
                 //common
                 case 'common_toolbar_framework_js':{
-                    mount_app_app(1);
+                   framework_set(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                    mount_app_app(2);
+                   framework_set(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                    mount_app_app(3);
+                   framework_set(3);
                     break;
                 }
                 /**user account */
@@ -344,12 +344,12 @@ const admin_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
 };
 /**
- * Mounts app
+ * Sets framework
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
-const mount_app_app = async (framework=null) => {
-    common.mount_app(framework,
+const framework_set = async (framework=null) => {
+    common.framework_set(framework,
                     {   Click: app_event_click,
                         Change: app_event_change,
                         KeyDown: app_event_keydown,
@@ -384,7 +384,7 @@ const init_app = async (parameters) => {
         }
         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
             common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
-    mount_app_app();
+   framework_set();
 };
 /**
  * Init common

@@ -72,15 +72,15 @@ const app_event_click = event => {
                     }
                     //common
                     case 'common_toolbar_framework_js':{
-                        mount_app_app(1);
+                       framework_set(1);
                         break;
                     }
                     case 'common_toolbar_framework_vue':{
-                        mount_app_app(2);
+                       framework_set(2);
                         break;
                     }
                     case 'common_toolbar_framework_react':{
-                        mount_app_app(3);
+                       framework_set(3);
                         break;
                     }
                     //dialogue user menu
@@ -381,12 +381,12 @@ const user_delete_app = async () => {
     .catch(()=>null);
 };
 /**
- * Mounts app
+ * Sets framework
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
-const mount_app_app = async (framework=null) => {
-    await common.mount_app(framework,
+const framework_set = async (framework=null) => {
+    await common.framework_set(framework,
         {   Click: app_event_click,
             Change: app_event_change,
             KeyDown: null,
@@ -428,7 +428,7 @@ const init_app = async (parameters) => {
         //show profile for user entered in url
         profile_show_app(null, user);
     }
-    mount_app_app();
+   framework_set();
 };
 /**
  * Init common

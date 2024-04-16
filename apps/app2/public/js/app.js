@@ -2257,15 +2257,15 @@ const app_event_click = event => {
                 }
                 //common
                 case 'common_toolbar_framework_js':{
-                    mount_app_app(1);
+                   framework_set(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                    mount_app_app(2);
+                   framework_set(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                    mount_app_app(3);
+                   framework_set(3);
                     break;
                 }
                 //dialogue user menu
@@ -2683,12 +2683,12 @@ const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
 };
 /**
- * Mount app
+ * Sets framework
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
-const mount_app_app = async (framework=null) => {
-    await common.mount_app(framework,
+const framework_set = async (framework=null) => {
+    await common.framework_set(framework,
         {   Click: app_event_click,
             Change: app_event_change,
             KeyDown: null,
@@ -3227,9 +3227,9 @@ const init_app = async parameters => {
                         serviceworker();
                         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
                             common.common_translate_ui(common.COMMON_GLOBAL.user_locale)
-                            .then(()=> mount_app_app());
+                            .then(()=>framework_set());
                         else
-                            mount_app_app();
+                           framework_set();
                     });
                 });
             });

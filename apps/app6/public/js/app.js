@@ -48,15 +48,15 @@ const app_event_click = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'common_toolbar_framework_js':{
-                    mount_app_app(1);
+                   framework_set(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                    mount_app_app(2);
+                   framework_set(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                    mount_app_app(3);
+                   framework_set(3);
                     break;
                 }
             }
@@ -64,12 +64,12 @@ const app_event_click = event => {
     }
 };
 /**
- * Mount app
+ * Sets framework
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
- const mount_app_app = async (framework=null) => {
-    await common.mount_app(framework,
+ const framework_set = async (framework=null) => {
+    await common.framework_set(framework,
         {   Click: app_event_click,
             Change: null,
             KeyDown: null,
@@ -84,7 +84,7 @@ const app_event_click = event => {
 const init_app = async () => {
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
     .then(()=>common.ComponentRender('app_construction', {}, '/common/component/construction.js'));
-    mount_app_app();
+   framework_set();
 };
 /**
  * Init common
