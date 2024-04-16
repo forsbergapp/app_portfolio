@@ -67,7 +67,7 @@ body {
 }
 /* APP THEME COMMON*/
 .common_toolbar_selected{
-	background-color: var(--common_app_color_blue1);
+	background-color: var(--common_app_color_blue1) !important;
 }
 #common_toolbar_framework {
     color: var(--common_app_color_black);
