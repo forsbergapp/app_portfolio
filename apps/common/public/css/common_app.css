@@ -832,9 +832,6 @@ select {
     border-radius: 4px;
     text-align: start;
 }
-#common_lov_list #common_app_spinner{
-	visibility: unset;
-}
 #common_lov_search_icon{
 	cursor:pointer;	
 }
@@ -881,7 +878,7 @@ select {
 	border-radius: 4px;
 	padding: 6px;
 	width: 275px;
-	z-index:1;
+	z-index:50;
 	position:fixed;
 	max-height: calc(100% - 140px);
 	margin-inline-start: calc(50% - 140px);
@@ -1316,90 +1313,6 @@ select {
 	border-radius:50%;
 }
 
-#common_app_spinner{
-	visibility: visible;
-	display: inline-block;
-	position: relative;
-	z-index:1;
-	vertical-align: middle;
-}
-.common_list_scrollbar #common_app_spinner{
-	justify-self: center;
-}
-.common_load-spinner {
-	visibility: hidden;
-	position: absolute;
-	z-index:1;
-}
-.common_load-spinner div {
-	animation: common_lds-spinner 1.2s linear infinite;
-}
-.common_load-spinner div:after {
-	content: ' ';
-	display: block;
-	position: absolute;
-	inset-inline-start: 7px;
-	width: 7px;
-	height: 2px;
-	border-radius: 20%;
-}
-.common_load-spinner div:nth-child(1) {
-	transform: rotate(0deg);
-	animation-delay: -1.1s;
-	margin-top:-4px;
-}
-.common_load-spinner div:nth-child(2) {
-	transform: rotate(30deg);
-	animation-delay: -1s;
-}
-.common_load-spinner div:nth-child(3) {
-	transform: rotate(60deg);
-	animation-delay: -0.9s;
-}
-.common_load-spinner div:nth-child(4) {
-	transform: rotate(90deg);
-	animation-delay: -0.8s;
-}
-.common_load-spinner div:nth-child(5) {
-	transform: rotate(120deg);
-	animation-delay: -0.7s;
-}
-.common_load-spinner div:nth-child(6) {
-	transform: rotate(150deg);
-	animation-delay: -0.6s;
-}
-.common_load-spinner div:nth-child(7) {
-	transform: rotate(180deg);
-	animation-delay: -0.5s;
-}
-.common_load-spinner div:nth-child(8) {
-	transform: rotate(210deg);
-	animation-delay: -0.4s;
-}
-.common_load-spinner div:nth-child(9) {
-	transform: rotate(240deg);
-	animation-delay: -0.3s;
-}
-.common_load-spinner div:nth-child(10) {
-	transform: rotate(270deg);
-	animation-delay: -0.2s;
-}
-.common_load-spinner div:nth-child(11) {
-	transform: rotate(300deg);
-	animation-delay: -0.1s;
-}
-.common_load-spinner div:nth-child(12) {
-	transform: rotate(330deg);
-	animation-delay: 0s;
-}
-@keyframes common_lds-spinner {
-	0% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
-	}
-}
 /*WINDOW INFO*/
 #common_window_info {
     width:100%;
@@ -1420,11 +1333,6 @@ select {
 }
 #common_window_info_info img{
 	max-width: 100%;
-}
-#common_window_info_info #common_app_spinner{
-	margin-top:100px;
-	margin-bottom:unset;
-	transform: unset;
 }
 #common_window_info_content{
 	margin-bottom:20px;

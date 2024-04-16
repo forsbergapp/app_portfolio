@@ -26,11 +26,6 @@
 #common_user_account{
 	width: 100% !important;
 }
-#common_app_spinner{
-	top: 50%;
-	transform: scale(1) !important;
-	margin-inline-start: 50%;
-}
 /*APP THEME*/
 .app_theme1 {
 	--app_theme_main_branding_color1: var(--common_app_color_white1);
@@ -127,9 +122,6 @@ body{
 }
 .common_module_leaflet_control_expand{
 	background-color: var(--app_theme_main_branding_color2);
-}
-.common_load-spinner div:after {
-	background-color: var(--app_theme_spinner_background_color);
 }
 #common_module_leaflet_search_list_wrap{
 	background-color: var(--app_theme_dialogue_background_color);
