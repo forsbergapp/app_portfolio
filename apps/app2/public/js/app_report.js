@@ -1424,7 +1424,6 @@ const displayDay = (prayTimes, settings, item_id, user_settings) => {
 						<div>${settings.show_gps == 1 ? user_gps_longitude.toLocaleString(user_locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system):''}</div>
 					</div>
 					${settings.show_timezone == 1?`<div class='timetable_day_timetable_footer_row'>
-														<div class='timetable_day_current_time'></div>
 														<div class='timetable_day_timezone'>${REPORT_GLOBAL.first_language.timezone_text + ' ' + user_timezone}</div>
 													</div>`:''}
 				</div>`;
@@ -1489,7 +1488,6 @@ const displayDay = (prayTimes, settings, item_id, user_settings) => {
 					<div>${settings.footer_txt3}</div>
 					<div></div>
 				</div>
-				<div id='timetable_day_time' class='default_font'></div>
 			</div>`;
 };
 /**
