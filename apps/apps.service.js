@@ -710,18 +710,20 @@ const getApps = async (app_id, id, lang_code) =>{
  */
 const getAssetFile = (app_id, url, basepath, res) =>{
     return new Promise((resolve, reject)=>{
-        const maxage = getNumberValue(ConfigGet('SERVER','APP_CACHE_CONTROL_MAX_AGE'));
-        const maxage_font = getNumberValue(ConfigGet('SERVER','APP_CACHE_CONTROL_MAX_AGE_FONT'));
+        const app_cache_control = ConfigGet('SERVER','APP_CACHE_CONTROL');
+        const app_cache_control_font = ConfigGet('SERVER','APP_CACHE_CONTROL_FONT');
         switch (url.toLowerCase().substring(url.lastIndexOf('.'))){
             case '.css':{
                 res.type('text/css');
-                res.set('Cache-Control', `max-age=${maxage}`);
+                if (app_cache_control !='')
+                    res.set('Cache-Control', app_cache_control);
                 resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.js':{
                 res.type('text/javascript');
-                res.set('Cache-Control', `max-age=${maxage}`);
+                if (app_cache_control !='')
+                    res.set('Cache-Control', app_cache_control);
                 switch (url){
                     case '/modules/react/react-dom.development.js':
                     case '/modules/react/react.development.js':{
@@ -794,37 +796,43 @@ const getAssetFile = (app_id, url, basepath, res) =>{
             }
             case '.html':{
                 res.type('text/html');
-                res.set('Cache-Control', `max-age=${maxage}`);
+                if (app_cache_control !='')
+                    res.set('Cache-Control', app_cache_control);
                 resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.webp':{
                 res.type('image/webp');
-                res.set('Cache-Control', `max-age=${maxage}`);
+                if (app_cache_control !='')
+                    res.set('Cache-Control', app_cache_control);
                 resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.png':{
                 res.type('image/png');
-                res.set('Cache-Control', `max-age=${maxage}`);
+                if (app_cache_control !='')
+                    res.set('Cache-Control', app_cache_control);
                 resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.woff2':{
                 res.type('font/woff');
-                res.set('Cache-Control', `max-age=${maxage_font}`);
+                if (app_cache_control_font !='')
+                    res.set('Cache-Control', app_cache_control_font);
                 resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.ttf':{
                 res.type('font/ttf');
-                res.set('Cache-Control', `max-age=${maxage_font}`);
+                if (app_cache_control_font !='')
+                    res.set('Cache-Control', app_cache_control_font);
                 resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
             case '.json':{
                 res.type('application/json');
-                res.set('Cache-Control', `max-age=${maxage}`);
+                if (app_cache_control !='')
+                    res.set('Cache-Control', app_cache_control);
                 resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 break;
             }
