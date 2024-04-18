@@ -83,6 +83,8 @@ const {getTimezone} = await import('regional');
  *          prayer_column_midnight_checked: number,
  *          prayer_column_fast_start_end: number
  *      }} json_data_user_setting
+ * 
+ * @typedef {{id:string|null, app_id:number|null, app_setting_type_name:string, value:string, data2:string, data3:string, data4:string, data5:string, text:string}} place_type
  */
 /**@type{json_data_user_setting} */
 const user_settings_empty = {   id:0,
@@ -137,6 +139,72 @@ const user_settings_empty = {   id:0,
                                 prayer_column_sunset_checked: 0,
                                 prayer_column_midnight_checked: 0,
                                 prayer_column_fast_start_end: 0};
+/**
+ * @type {{
+ *          app_default_startup_page:number,
+ *          app_report_timetable:string,
+ *          regional_default_direction:string,
+ *          regional_default_locale_second:string,
+ *          regional_default_coltitle:string,
+ *          regional_default_arabic_script:string,
+ *          regional_default_calendartype:string,
+ *          regional_default_calendar_hijri_type:string,
+ *          gps_default_place_id:number,
+ *          gps_module_leaflet_container:string,
+ *          gps_module_leaflet_qibbla_title:string,
+ *          gps_module_leaflet_qibbla_text_size:number,
+ *          gps_module_leaflet_qibbla_lat:number,
+ *          gps_module_leaflet_qibbla_long:number,
+ *          gps_module_leaflet_qibbla_color:string,
+ *          gps_module_leaflet_qibbla_width:number,
+ *          gps_module_leaflet_qibbla_opacity:number,
+ *          gps_module_leaflet_qibbla_old_title:string,
+ *          gps_module_leaflet_qibbla_old_text_size:number,
+ *          gps_module_leaflet_qibbla_old_lat:number,
+ *          gps_module_leaflet_qibbla_old_long:number,
+ *          gps_module_leaflet_qibbla_old_color:string,
+ *          gps_module_leaflet_qibbla_old_width:number,
+ *          gps_module_leaflet_qibbla_old_opacity:number,
+ *          design_default_theme_day:string,
+ *          design_default_theme_month:string,
+ *          design_default_theme_year:string,
+ *          design_default_papersize:string,
+ *          design_default_highlight_row:string,
+ *          design_default_show_weekday:boolean,
+ *          design_default_show_calendartype:boolean,
+ *          design_default_show_notes:boolean,
+ *          design_default_show_gps:boolean,
+ *          design_default_show_timezone:boolean,
+ *          image_default_report_header_src:string,
+ *          image_default_report_footer_src:string,
+ *          image_header_footer_width:string,
+ *          image_header_footer_height:string,
+ *          text_default_reporttitle1:string,
+ *          text_default_reporttitle2:string,
+ *          text_default_reporttitle3:string,
+ *          text_default_reportfooter1:string,
+ *          text_default_reportfooter2:string,
+ *          text_default_reportfooter3:string,
+ *          prayer_default_method:string,
+ *          prayer_default_asr:string,
+ *          prayer_default_highlatitude:string,
+ *          prayer_default_timeformat:string,
+ *          prayer_default_hijri_adjustment:number,
+ *          prayer_default_iqamat_title_fajr:string,
+ *          prayer_default_iqamat_title_dhuhr:string,
+ *          prayer_default_iqamat_title_asr:string,
+ *          prayer_default_iqamat_title_maghrib:string,
+ *          prayer_default_iqamat_title_isha:string,
+ *          prayer_default_show_imsak:boolean,
+ *          prayer_default_show_sunset:boolean,
+ *          prayer_default_show_midnight:boolean,
+ *          prayer_default_show_fast_start_end:number,
+ *          timetable_type:number,
+ *          places:place_type[],
+ *          user_settings:json_data_user_setting[],
+ *          SettingsTimesIntervalId:number|null
+ *          }}
+ */
 const APP_GLOBAL = {
     app_default_startup_page:0,
     app_report_timetable:'',
@@ -206,7 +274,8 @@ const APP_GLOBAL = {
     //session variables
     timetable_type:0,
     places:[{id:null, app_id:null, app_setting_type_name:'', value:'', data2:'', data3:'', data4:'', data5:'', text:''}],
-    user_settings:[user_settings_empty]
+    user_settings:[user_settings_empty],
+    SettingsTimesIntervalId:null
 };
 Object.seal(APP_GLOBAL);
 /**
@@ -241,7 +310,7 @@ const printTimetable = async () => {
  */
 const getReportSettings = () => {
     const setting_global = APP_GLOBAL.user_settings[AppDocument.querySelector('#setting_select_user_setting').selectedIndex];
-    const place = APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==setting_global.gps_popular_place_id)[0];
+    const place = APP_GLOBAL.places.filter(place=>place.id==setting_global.gps_popular_place_id)[0];
     return {    locale              	: setting_global.regional_language_locale,
                 timezone            	: setting_global.regional_timezone,
                 number_system       	: setting_global.regional_number_system,
@@ -579,77 +648,32 @@ const get_align = (al,ac,ar) => {
 	return null;
 };
 /**
- * Show current time for users timezone
+ * Show settings times for users timezone and timetable timezone
  * @returns {void}
  */
-const showcurrenttime = () => {
-    if (AppDocument.querySelector('#setting_current_date_time_display')){
-        const options = {
-            timeZone: common.COMMON_GLOBAL.user_timezone,
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZoneName: 'long'
-        };
-        /**@ts-ignore */
-        AppDocument.querySelector('#setting_current_date_time_display').innerHTML = new Date().toLocaleTimeString(common.COMMON_GLOBAL.user_locale, options);    
-    }
-};
-/**
- * Show timetable time
- * @returns {void}
- */
-const showreporttime = () => {
+const settingsTimesShow = () => {
+    //user timezone
+    const options = {
+        timeZone: common.COMMON_GLOBAL.user_timezone,
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZoneName: 'long'
+    };
+    /**@ts-ignore */
+    AppDocument.querySelector('#setting_current_date_time_display').innerHTML = new Date().toLocaleTimeString(common.COMMON_GLOBAL.user_locale, options);    
+    // timetable timezone
     const select = AppDocument.querySelector('#setting_select_report_timezone');
     if (select && select.selectedIndex>0){
-        const options = {
-            timeZone: select[select.selectedIndex].value,
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZoneName: 'long'
-        };
+        options.timeZone = select[select.selectedIndex].value;
         /**@ts-ignore */
         AppDocument.querySelector('#setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(AppDocument.querySelector('#setting_select_locale').value, options);
-        //If day report created with time, display time there also
-        if (AppDocument.querySelector('#timetable_day_time')) {
-            AppDocument.querySelector('#timetable_day_time').innerHTML = AppDocument.querySelector('#setting_report_date_time_display').innerHTML;
-        }
-        if (AppDocument.querySelectorAll('.timetable_day_current_time').length > 0) {
-            const user_current_time = AppDocument.querySelectorAll('.timetable_day_current_time');
-            let user_locale;
-            let user_options;
-            //loop user settings
-            for (const setting of APP_GLOBAL.user_settings) {
-                user_options = {
-                    timeZone: setting.regional_timezone,
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    timeZoneName: 'long'
-                };
-    
-                user_locale = setting.regional_language_locale;
-                //set user setting time, select index and order should be the same as div timetable_day_current_time indexes
-                /**@ts-ignore */
-                user_current_time[setting.index].innerHTML = new Date().toLocaleTimeString(user_locale, user_options);
-            }
-        }
     }
-    
-};
+}
 /**
  * Toolbar button
  * @param {number} choice 
@@ -720,10 +744,7 @@ const toolbar_button = async (choice) => {
  */
 const openTab = async (tab_selected) => {
     //remove interval in tab 1 regional
-    /**@ts-ignore */
-    clearInterval(showcurrenttime);
-    /**@ts-ignore */
-    clearInterval(showreporttime);
+    APP_GLOBAL.SettingsTimesIntervalId?clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;
 
     //remove Leaflet listeners if any one used
     if (common.COMMON_GLOBAL.app_eventListeners.LEAFLET.length>0){
@@ -836,9 +857,8 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
         case 'REGIONAL_TIMEZONE':
             {
                 //Update report date and time for current locale, report timezone format
-                /**@ts-ignore */
-                clearInterval(showreporttime);
-                setInterval(showreporttime, 1000);
+                APP_GLOBAL.SettingsTimesIntervalId?clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;                
+                APP_GLOBAL.SettingsTimesIntervalId = window.setInterval(settingsTimesShow, 1000);
                 break;
             }
         case 'GPS_MAP':
@@ -1373,12 +1393,8 @@ const user_settings_load = async (tab_selected) => {
         }
         case 2:{
             //GPS
-            common.SearchAndSetSelectedIndex(   APP_GLOBAL.user_settings[settings_index].gps_popular_place_id,
+            common.SearchAndSetSelectedIndex(   APP_GLOBAL.user_settings[settings_index].gps_popular_place_id?.toString(),
                                                 AppDocument.querySelector('#setting_select_popular_place'),0);
-            if (APP_GLOBAL.user_settings[settings_index].gps_popular_place_id||null !=null) {
-                //set GPS for chosen popular place
-                component_setting_update('GPS', 'POPULAR_PLACES');
-            }
             AppDocument.querySelector('#setting_input_place').innerHTML = APP_GLOBAL.user_settings[settings_index].description;
             AppDocument.querySelector('#setting_input_lat').innerHTML = APP_GLOBAL.user_settings[settings_index].gps_lat_text;
             AppDocument.querySelector('#setting_input_long').innerHTML = APP_GLOBAL.user_settings[settings_index].gps_long_text;
@@ -1727,7 +1743,8 @@ const settings_update = setting_tab => {
             regional_calendar_hijri_type:       setting_tab=='REGIONAL'?AppDocument.querySelector('#setting_select_calendar_hijri_type').value:
                                                     APP_GLOBAL.user_settings[select_user_settings.selectedIndex].regional_calendar_hijri_type,
             gps_popular_place_id:               setting_tab=='GPS'?
-                                                    AppDocument.querySelector('#setting_select_popular_place')[AppDocument.querySelector('#setting_select_popular_place').selectedIndex].getAttribute('id'):
+                                                    (AppDocument.querySelector('#setting_select_popular_place')[AppDocument.querySelector('#setting_select_popular_place').selectedIndex].getAttribute('id')==''?null:
+                                                     Number(AppDocument.querySelector('#setting_select_popular_place')[AppDocument.querySelector('#setting_select_popular_place').selectedIndex].getAttribute('id'))):
                                                         APP_GLOBAL.user_settings[select_user_settings.selectedIndex].gps_popular_place_id,
             gps_lat_text:                       setting_tab=='GPS'?fixFloat(AppDocument.querySelector('#setting_input_lat').innerHTML):
                                                     APP_GLOBAL.user_settings[select_user_settings.selectedIndex].gps_lat_text,
@@ -2545,6 +2562,8 @@ const app_event_keyup = event => {
             switch(event_target_id){
                 //settings gps
                 case 'setting_input_place':{
+                    const select_place = AppDocument.querySelector('#setting_select_popular_place');
+                    common.SearchAndSetSelectedIndex('', select_place,0)
                     settings_update('GPS');
                     break;
                 }
@@ -2990,14 +3009,12 @@ const settings_load = async (tab_selected) => {
             break;
         }
     }
-    await user_settings_load(tab_selected)
+    await user_settings_load(tab_selected);
     switch (tab_selected){
         case 1:{
-            //set timers
-            //set current date and time for current locale and timezone
-            setInterval(showcurrenttime, 1000);
-            //set report date and time for current locale, report timezone
-            setInterval(showreporttime, 1000);
+            //show settings times
+            APP_GLOBAL.SettingsTimesIntervalId?clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;                
+            APP_GLOBAL.SettingsTimesIntervalId = window.setInterval(settingsTimesShow, 1000);
             break;
         }
         case 2:{
