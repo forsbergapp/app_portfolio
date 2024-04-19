@@ -81,9 +81,12 @@
             client_longitude:string,
             client_place:string,
             client_timezone:string,
-            rest_at:string|null,
-            rest_dt:string|null,
-            rest_admin_at:string|null,
+            token_at:string|null,
+            token_dt:string|null,
+            token_admin_at:string|null,
+            token_exp:number|null,
+            token_iat:number|null,
+            token_timestamp:number|null,
             rest_resource_bff:string|null,
             image_file_allowed_type1:string|null,
             image_file_allowed_type2:string|null,
@@ -172,9 +175,12 @@ const COMMON_GLOBAL = {
     client_longitude:'',
     client_place:'',
     client_timezone:'',
-    rest_at:null,
-    rest_dt:null,
-    rest_admin_at:null,
+    token_at:null,
+    token_dt:null,
+    token_admin_at:null,
+    token_exp:null,
+    token_iat:null,
+    token_timestamp:null,
     rest_resource_bff:null,
     image_file_allowed_type1:null,
     image_file_allowed_type2:null,
@@ -1183,7 +1189,7 @@ const show_message = async (message_type, code, function_event, text_class=null,
 const dialogue_password_new_clear = () => {
     ComponentRemove('common_dialogue_user_password_new');
     COMMON_GLOBAL.user_account_id = null;
-    COMMON_GLOBAL.rest_at = '';
+    COMMON_GLOBAL.token_at = '';
 };
 /**
  * Lov close
@@ -1694,7 +1700,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         .then(result=>{
             if (system_admin){
                 COMMON_GLOBAL.system_admin = JSON.parse(result).username==''?null:JSON.parse(result).username;
-                COMMON_GLOBAL.rest_admin_at = JSON.parse(result).token_at;
+                COMMON_GLOBAL.token_admin_at = JSON.parse(result).token_at;
                 updateOnlineStatus()
                 .then(()=>{
                     AppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
@@ -1711,23 +1717,23 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                 .catch((error)=>reject(error));
             }
             else{
-                const user = JSON.parse(result).items[0];
-                COMMON_GLOBAL.user_account_id = parseInt(user.id);
-                if (user.active==0){
-                    show_common_dialogue('VERIFY', 'LOGIN', user.email, null);
+                const login_data = JSON.parse(result).login[0];
+                COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
+                if (login_data.active==0){
+                    show_common_dialogue('VERIFY', 'LOGIN', login_data.email, null);
                     reject('ERROR');
                 }
                 else{
                     profile_close();
                     
-                    COMMON_GLOBAL.user_account_id = parseInt(user.id);
-                    COMMON_GLOBAL.user_account_username = user.username;
+                    COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
+                    COMMON_GLOBAL.user_account_username = login_data.username;
                     COMMON_GLOBAL.user_identity_provider_id = null;
-                    COMMON_GLOBAL.user_app_role_id = user.app_role_id;
-                    COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
+                    COMMON_GLOBAL.user_app_role_id = login_data.app_role_id;
+                    COMMON_GLOBAL.token_at	= JSON.parse(result).accessToken;
                     
                     //set avatar or empty
-                    set_avatar(user.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
+                    set_avatar(login_data.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
                     AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
                     AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
                     updateOnlineStatus()
@@ -1736,10 +1742,10 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                         .then(()=>{
                             AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
                             ComponentRemove(current_dialogue, true);
-                            resolve({   user_id: user.id,
-                                        username: user.username,
-                                        bio: user.bio,
-                                        avatar: user.avatar});
+                            resolve({   user_id: login_data.id,
+                                        username: login_data.username,
+                                        bio: login_data.bio,
+                                        avatar: login_data.avatar});
                         })
                     })
                     .catch((error)=>reject(error));
@@ -1759,7 +1765,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
 const user_logoff = async (system_admin) => {
     ComponentRemove('common_dialogue_user_menu');
     if (system_admin){
-        COMMON_GLOBAL.rest_admin_at = '';
+        COMMON_GLOBAL.token_admin_at = '';
         COMMON_GLOBAL.system_admin = null;
         AppDocument.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
         AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
@@ -1773,7 +1779,7 @@ const user_logoff = async (system_admin) => {
     }
     else{
         //remove access token
-        COMMON_GLOBAL.rest_at ='';
+        COMMON_GLOBAL.token_at ='';
         COMMON_GLOBAL.user_account_id = null;
         COMMON_GLOBAL.user_account_username = null;
 
@@ -1902,7 +1908,7 @@ const user_signup = () => {
         .then(result=>{
             AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
             const signup = JSON.parse(result);
-            COMMON_GLOBAL.rest_at = signup.accessToken;
+            COMMON_GLOBAL.token_at = signup.accessToken;
             COMMON_GLOBAL.user_account_id = parseInt(signup.id);
             show_common_dialogue('VERIFY', 'SIGNUP', email, null);
         })
@@ -1973,7 +1979,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                             }
                             case 3:{
                                 //FORGOT
-                                COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
+                                COMMON_GLOBAL.token_at	= JSON.parse(result).accessToken;
                                 //show dialogue new password
                                 show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth)
                                 resolve_function();
@@ -2300,7 +2306,7 @@ const ProviderSignIn = (provider_id) => {
             FFB('IAM', `/provider?PUT_ID=${provider_data.profile_id}`, 'POST', 'IAM', json_data)
             .then(result=>{
                 const user_login = JSON.parse(result).items[0];
-                COMMON_GLOBAL.rest_at = JSON.parse(result).accessToken;
+                COMMON_GLOBAL.token_at = JSON.parse(result).accessToken;
                 COMMON_GLOBAL.user_account_id = parseInt(user_login.id);
                 COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
                 updateOnlineStatus()
@@ -2709,19 +2715,19 @@ const FFB = async (service, path, method, authorization_type, json_data=null) =>
     switch (authorization_type){
         case 'APP_DATA':{
             //data token authorization check
-            authorization = `Bearer ${COMMON_GLOBAL.rest_dt}`;
+            authorization = `Bearer ${COMMON_GLOBAL.token_dt}`;
             bff_path = `${COMMON_GLOBAL.rest_resource_bff}/app_data`;
             break;
         }
         case 'APP_SIGNUP':{
             //data token signup authorization check
-            authorization = `Bearer ${COMMON_GLOBAL.rest_dt}`;
+            authorization = `Bearer ${COMMON_GLOBAL.token_dt}`;
             bff_path = `${COMMON_GLOBAL.rest_resource_bff}/app_signup`;
             break;
         }
         case 'APP_ACCESS':{
             //user or admins authorization
-            authorization = `Bearer ${COMMON_GLOBAL.rest_at}`;
+            authorization = `Bearer ${COMMON_GLOBAL.token_at}`;
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id)
                 bff_path = `${COMMON_GLOBAL.rest_resource_bff}/admin`;
             else
@@ -2730,19 +2736,19 @@ const FFB = async (service, path, method, authorization_type, json_data=null) =>
         }
         case 'SUPERADMIN':{
             // super admin authorization
-            authorization = `Bearer ${COMMON_GLOBAL.rest_at}`;
+            authorization = `Bearer ${COMMON_GLOBAL.token_at}`;
             bff_path = `${COMMON_GLOBAL.rest_resource_bff}/superadmin`;
             break;
         }
         case 'SYSTEMADMIN':{
             //systemadmin authorization
-            authorization = `Bearer ${COMMON_GLOBAL.rest_admin_at}`;
+            authorization = `Bearer ${COMMON_GLOBAL.token_admin_at}`;
             bff_path = `${COMMON_GLOBAL.rest_resource_bff}/systemadmin`;
             break;
         }
         case 'SOCKET':{
             //broadcast connect authorization
-            authorization = `Bearer ${COMMON_GLOBAL.rest_dt}`;
+            authorization = `Bearer ${COMMON_GLOBAL.token_dt}`;
             //use query to send authorization since EventSource does not support headers
             path += `&authorization=${authorization}`;
             json_data = null;
@@ -3005,10 +3011,10 @@ const get_gps_from_ip = async () => {
         let tokentype;
         const path = '/ip?';
         
-        if (COMMON_GLOBAL.system_admin!=null && COMMON_GLOBAL.rest_admin_at)
+        if (COMMON_GLOBAL.system_admin!=null && COMMON_GLOBAL.token_admin_at)
             tokentype = 'SYSTEMADMIN';
         else
-            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.rest_at){
+            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.token_at){
                 //admin
                 tokentype = 'APP_ACCESS';
             }
@@ -3137,7 +3143,7 @@ const set_app_service_parameters = async parameters => {
     COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
 
     //client credentials
-    COMMON_GLOBAL.rest_dt = parameters.app_datatoken;
+    COMMON_GLOBAL.token_dt = parameters.app_datatoken;
 
     //system admin
     COMMON_GLOBAL.system_admin = null;

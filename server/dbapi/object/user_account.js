@@ -80,6 +80,12 @@ const login_error = async (app_id) =>{
  * @param {*} query
  * @param {*} data
  * @param {Types.res} res
+ * @return {Promise.<{
+ *                  accessToken:string|null,
+ *                  exp:number,
+ *                  iat:number,
+ *                  tokentimestamp:number,
+ *                  login:Types.db_result_user_account_userLogin[]}>}
  */
 const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
     return new Promise((resolve, reject)=>{        
@@ -102,7 +108,8 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                     if (result_password) {
                         if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
                                 app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
-                            data_body.access_token = AuthorizeToken(app_id, null, 'APP_ACCESS');
+                            const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
+                            data_body.access_token = jwt_data.token;
                             insertUserAccountLogon(app_id, user_account_id, data_body)
                             .then(()=>{
                                 createUserAccountApp(app_id, result_login[0].id)
@@ -124,7 +131,10 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                                             .then(()=>{
                                                 resolve({
                                                     accessToken: data_body.access_token,
-                                                    items: Array(result_login[0])
+                                                    exp:jwt_data.exp,
+                                                    iat:jwt_data.iat,
+                                                    tokentimestamp:jwt_data.tokentimestamp,
+                                                    login: Array(result_login[0])
                                                 });
                                             })
                                             .catch((/**@type{Types.error}*/error)=>reject(error));
@@ -133,7 +143,10 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                                     else{
                                         resolve({
                                             accessToken: data_body.access_token,
-                                            items: Array(result_login[0])
+                                            exp:jwt_data.exp,
+                                            iat:jwt_data.iat,
+                                            tokentimestamp:jwt_data.tokentimestamp,
+                                            login: Array(result_login[0])
                                         });
                                     }
                                 })
@@ -183,6 +196,13 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
  * @param {*} query 
  * @param {*} data 
  * @param {Types.res} res
+ * @return {Promise.<{
+ *                  accessToken:string|null,
+ *                  exp:number,
+ *                  iat:number,
+ *                  tokentimestamp:number,
+ *                  items:Types.db_result_user_account_providerSignIn[],
+ *                  userCreated:0|1}>}
  */
 const login_provider = (app_id, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
@@ -219,7 +239,8 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
                                 access_token:           null};
             if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && result_signin[0] && (result_signin[0].app_role_id == 0 || result_signin[0].app_role_id == 1))||
                     app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
-                data_login.access_token = AuthorizeToken(app_id, null, 'APP_ACCESS');
+                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
+                data_login.access_token = jwt_data.token;
                 data_login.result = 1;
                 if (result_signin.length > 0) {        
                     insertUserAccountLogon(app_id, user_account_id, data_login)
@@ -230,6 +251,9 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
                             .then(()=>{
                                 resolve({
                                     accessToken: data_login.access_token,
+                                    exp:jwt_data.exp,
+                                    iat:jwt_data.iat,
+                                    tokentimestamp:jwt_data.tokentimestamp,
                                     items: result_signin,
                                     userCreated: 0
                                 });    
@@ -257,6 +281,9 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
                                 .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
                                     resolve({
                                         accessToken: data_login.access_token,
+                                        exp:jwt_data.exp,
+                                        iat:jwt_data.iat,
+                                        tokentimestamp:jwt_data.tokentimestamp,
                                         items: result_signin2,
                                         userCreated: 1
                                     });        
@@ -293,7 +320,13 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
  * @param {*} query 
  * @param {*} data 
  * @param {Types.res} res 
- * @returns 
+ * @return {Promise.<{
+ *              accessToken:string|null,
+ *              exp:number,
+ *              iat:number,
+ *              tokentimestamp:number,
+ *              id:number,
+ *              data:Types.db_result_user_account_create}>}
  */
 const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
     return new Promise((resolve, reject)=>{
@@ -333,20 +366,30 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                                 data_body.verification_code, 
                                 data_body.email ?? '')
                 .then(()=>{
+                    const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
                     resolve({
-                        accessToken: AuthorizeToken(app_id, null, 'APP_ACCESS'),
+                        accessToken: jwt_data.token,
+                        exp:jwt_data.exp,
+                        iat:jwt_data.iat,
+                        tokentimestamp:jwt_data.tokentimestamp,
                         id: result_create.insertId,
                         data: result_create
                     });
                 })
                 .catch((/**@type{Types.error}*/error)=>reject(error));
             }
-            else
+            else{
+                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
                 resolve({
-                    accessToken: AuthorizeToken(app_id, null, 'APP_ACCESS'),
+                    accessToken: jwt_data.token,
+                    exp:jwt_data.exp,
+                    iat:jwt_data.iat,
+                    tokentimestamp:jwt_data.tokentimestamp,
                     id: result_create.insertId,
                     data: result_create
                 });
+            }
+                
         })
         .catch((/**@type{Types.error}*/error)=>{
             checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
@@ -363,6 +406,14 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
  * @param {*} query 
  * @param {*} data 
  * @param {Types.res} res
+ * @return {Promise.<{
+ *              count: number,
+ *              auth: string|null,
+ *              accessToken: string|null,
+ *              exp:number|null,
+ *              iat:number|null,
+ *              tokentimestamp:number|null,
+ *              items: Types.db_result_user_account_activateUser[]}>}
  */
 const activate = (app_id, ip, user_agent, accept_language, host, query, data, res) =>{
     return new Promise((resolve, reject)=>{
@@ -397,6 +448,11 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data, re
                     .then((/**@type{Types.db_result_user_account_event_insertUserEvent}*/result_insert)=>{
                         resolve({
                             count: result_insert.affectedRows,
+                            auth: null,
+                            accessToken: null,
+                            exp:null,
+                            iat:null,
+                            tokentimestamp:null,
                             items: Array(result_insert)
                         });
                     })
@@ -405,10 +461,16 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data, re
                 else
                     resolve({
                         count: result_activate.affectedRows,
+                        auth: null,
+                        accessToken: null,
+                        exp:null,
+                        iat:null,
+                        tokentimestamp:null,
                         items: Array(result_activate)
                     });
             }
             else{
+                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
                 //return accessToken since PASSWORD_RESET is in progress
                 //email was verified and activated with data token, but now the password will be updated
                 //using accessToken and authentication code
@@ -419,13 +481,16 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data, re
                     client_user_agent:  user_agent,
                     client_longitude:   data.client_longitude ?? null,
                     client_latitude:    data.client_latitude ?? null,
-                    access_token:       AuthorizeToken(app_id, null, 'APP_ACCESS')};
+                    access_token:       jwt_data.token};
                 insertUserAccountLogon(app_id, getNumberValue(query.get('PUT_ID')), data_body)
                 .then(()=>{
                     resolve({
                         count: result_activate.affectedRows,
                         auth: auth_password_new,
                         accessToken: data_body.access_token,
+                        exp:jwt_data.exp,
+                        iat:jwt_data.iat,
+                        tokentimestamp:jwt_data.tokentimestamp,
                         items: Array(result_activate)
                     });
                 })

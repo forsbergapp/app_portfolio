@@ -6,13 +6,19 @@ import * as Types from './../types.js';
 const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {default:{sign, verify}} = await import('jsonwebtoken');
+const {default:jwt} = await import('jsonwebtoken');
 /**
  * Middleware authenticates system admin login
  * @param {number} app_id
  * @param {string} authorization
  * @param {string} ip
  * @param {Types.res} res 
+ * @return {Promise.<{
+ *                  username:string,
+ *                  token_at:string,
+ *                  exp:number,
+ *                  iat:number,
+ *                  tokentimestamp:number}>}
  */
 const AuthenticateSystemadmin = async (app_id, authorization, ip,res)=>{
     return new Promise((resolve, reject)=>{
@@ -25,12 +31,12 @@ const AuthenticateSystemadmin = async (app_id, authorization, ip,res)=>{
                 result = 1;
             else
                 result = 0;
-            const jsontoken_at = AuthorizeToken(app_id, null, 'SYSTEMADMIN');
+            const jwt_data = AuthorizeToken(app_id, 'SYSTEMADMIN');
             /**@type{Types.iam_systemadmin_login_record} */
             const file_content = {	app_id:             app_id,
                                     username:		    username,
                                     result:				1,
-                                    systemadmin_token:  jsontoken_at,
+                                    systemadmin_token:  jwt_data.token,
                                     client_ip:          ip,
                                     client_user_agent:  null,
                                     client_longitude:   null,
@@ -40,7 +46,10 @@ const AuthenticateSystemadmin = async (app_id, authorization, ip,res)=>{
             .then(()=>{
                 if (result == 1)
                     resolve({   username:username,
-                                token_at: jsontoken_at});
+                                token_at: jwt_data.token,
+                                exp:jwt_data.exp,
+                                iat:jwt_data.iat,
+                                tokentimestamp:jwt_data.tokentimestamp});
                 else{
                     res.statusCode =401;
                     reject ('⛔');
@@ -142,7 +151,7 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
         const token = authorization.slice(7);
         switch (token_type){
             case 'APP_ACCESS':{
-                verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET, (/**@type{Types.error}*/err) => {
+                jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET, (/**@type{Types.error}*/err) => {
                     if (err)
                         res.status(401).send('⛔');
                     else {
@@ -170,7 +179,7 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
                 break;
             }
             case 'APP_DATA':{
-				verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET, (/**@type{Types.error}*/err) => {
+				jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET, (/**@type{Types.error}*/err) => {
                     if (err)
                         res.status(401).send('⛔');
                     else{
@@ -191,7 +200,7 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
                 break;
             }
             case 'SYSTEMADMIN':{
-                verify(token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET'), (/**@type{Types.error}*/err) => {
+                jwt.verify(token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET'), (/**@type{Types.error}*/err) => {
                     if (err)
                         res.status(401).send('⛔');
                     else{
@@ -309,7 +318,7 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  const AuthenticateDataTokenSocket = async (app_id, token) =>{
     if (token){
         token = token.slice(7);
-        verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET, (/**@type{Types.error}*/err) => {
+        jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET, (/**@type{Types.error}*/err) => {
             if (err){
                 return false;
             } else {
@@ -521,7 +530,7 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  const AuthorizeTokenApp = async (app_id, ip)=>{
     const secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET;
     const expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_EXPIRE;
-    const jsontoken_at = sign ({tokentimstamp: Date.now()}, secret, {expiresIn: expiresin});
+    const jsontoken_at = jwt.sign ({tokentimestamp: Date.now()}, secret, {expiresIn: expiresin});
     /**@type{Types.iam_app_token_record} */
     const file_content = {	app_id:             app_id,
                             result:				1,
@@ -537,11 +546,14 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  * Authorize token
  * 
  * @param {number} app_id
- * @param {string|null} ip
  * @param {'APP_ACCESS'|'SYSTEMADMIN'} tokentype
- * @returns {string}
+ * @returns {{
+ *              token:string, 
+ *              exp:number,             //expires at
+ *              iat:number,             //issued at
+ *              tokentimestamp:number}}
  */
- const AuthorizeToken = (app_id, ip, tokentype)=>{
+ const AuthorizeToken = (app_id, tokentype)=>{
     let secret = '';
     let expiresin = '';
     switch (tokentype){
@@ -556,7 +568,14 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
             break;
         }
     }
-    return sign ({tokentimstamp: Date.now()}, secret, {expiresIn: expiresin});
+    const token = jwt.sign ({tokentimestamp: Date.now()}, secret, {expiresIn: expiresin});
+    return {token:token,
+            /**@ts-ignore */
+            exp:jwt.decode(token, { complete: true }).payload.exp,
+            /**@ts-ignore */
+            iat:jwt.decode(token, { complete: true }).payload.iat,
+            /**@ts-ignore */
+            tokentimestamp:jwt.decode(token, { complete: true }).payload.tokentimestamp};
 };
 
 export{ AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
