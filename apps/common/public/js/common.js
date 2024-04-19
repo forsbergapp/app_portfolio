@@ -87,6 +87,7 @@
             token_exp:number|null,
             token_iat:number|null,
             token_timestamp:number|null,
+            tokenCountdownTimeoutId:number|null
             rest_resource_bff:string|null,
             image_file_allowed_type1:string|null,
             image_file_allowed_type2:string|null,
@@ -181,6 +182,7 @@ const COMMON_GLOBAL = {
     token_exp:null,
     token_iat:null,
     token_timestamp:null,
+    tokenCountdownTimeoutId:null,
     rest_resource_bff:null,
     image_file_allowed_type1:null,
     image_file_allowed_type2:null,
@@ -1712,6 +1714,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                     AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
         
                     ComponentRemove(current_dialogue, true);
+                    countdown_token_set();
                     resolve({   user_id: null,
                                     username: JSON.parse(result).username,
                                     bio: null,
@@ -1747,6 +1750,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                         .then(()=>{
                             AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
                             ComponentRemove(current_dialogue, true);
+                            countdown_token_set();
                             resolve({   user_id: login_data.id,
                                         username: login_data.username,
                                         bio: login_data.bio,
@@ -1764,12 +1768,12 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
 };
 /**
  * User logoff
- * @param {*} system_admin 
  * @returns {Promise.<void>}
  */
-const user_logoff = async (system_admin) => {
+const user_logoff = async () => {
     ComponentRemove('common_dialogue_user_menu');
-    if (system_admin){
+    countdown_token_remove();
+    if (COMMON_GLOBAL.system_admin != ''){
         COMMON_GLOBAL.token_admin_at = '';
         COMMON_GLOBAL.token_exp = null;
         COMMON_GLOBAL.token_iat = null;
@@ -1977,6 +1981,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                         const resolve_function = () => {
                             ComponentRemove('common_dialogue_user_verify');
                             ComponentRemove('common_dialogue_user_edit', true);
+                            countdown_token_set();
                             resolve({   actived: 1, 
                                         verification_type : verification_type});
                         }
@@ -2284,7 +2289,7 @@ const user_preferences_set_default_globals = (preference) => {
 };
 
 /**
- * Proivder signin
+ * Provider signin
  * @param {number} provider_id 
  * @returns {Promise.<{ user_account_id: number,
  *                      username: string,
@@ -2342,6 +2347,7 @@ const ProviderSignIn = (provider_id) => {
 
                         AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
                         ComponentRemove('common_dialogue_user_start', true);
+                        countdown_token_set();
                         resolve({   user_account_id: user_login.id,
                                     username: user_login.username,
                                     bio: user_login.bio,
@@ -2361,6 +2367,20 @@ const ProviderSignIn = (provider_id) => {
         });
     });
 };
+/**
+ * Countdown token set
+ */
+const countdown_token_set = () => {
+    COMMON_GLOBAL.tokenCountdownTimeoutId = window.setTimeout(() => {user_logoff()}, ((COMMON_GLOBAL.token_exp ?? 0) * 1000) - (Date.now()));
+}
+/**
+ * Countdown token remove
+ */
+const countdown_token_remove = () => {
+    /**@ts-ignore */
+    window.clearTimeout(COMMON_GLOBAL.tokenCountdownTimeoutId);    
+}
+
 /**
  * Create QR code
  * @param {string} div 
