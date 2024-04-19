@@ -22,7 +22,7 @@ const app_secure = await import('app_secure');
  * @returns {void}
  */
 const admin_logoff_app = () => {
-    common.user_logoff(common.COMMON_GLOBAL.system_admin != '').then(() => {
+    common.user_logoff().then(() => {
         common.ComponentRemove('admin_secure');
         common.show_common_dialogue('LOGIN_ADMIN');
     });
