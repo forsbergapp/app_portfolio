@@ -28,6 +28,7 @@
 #common_user_menu_default_avatar::before{					content:var(--common_app_icon_user_avatar)}
 .app_role_system_admin::before{								content:var(--common_app_icon_user_system_admin) !important}
 
+#common_dialogue_user_menu_token_countdown_icon::before{	content:var(--common_app_icon_user_password)}
 #common_dialogue_user_menu_edit::before{					content:var(--common_app_icon_edit)}
 #common_dialogue_user_menu_log_out::before{					content:var(--common_app_icon_logoff)}
 #common_dialogue_user_menu_signup::before{					content:var(--common_app_icon_signup)}
@@ -1218,6 +1219,9 @@ select {
 	cursor:pointer;
 	position:fixed;
 	margin-top:10px;
+}
+#common_dialogue_user_menu_token_countdown > div {
+	display: inline-block;
 }
 #common_user_menu_avatar_img{
 	width:48px;
