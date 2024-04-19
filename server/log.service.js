@@ -366,7 +366,8 @@ const LogApp = async (app_id, level_info, app_filename, app_function_name, app_l
  */
 const LogAppI = async (app_id, app_filename, app_function_name, app_line, logtext) => {
     return await new Promise((resolve) => {
-        if (ConfigGet('SERVER', 'APP_LOG')=='1')
+        //log if INFO or VERBOSE level
+        if (ConfigGet('SERVICE_LOG', 'APP_LEVEL')=='1' || ConfigGet('SERVICE_LOG', 'APP_LEVEL')=='2')
             resolve(LogApp(app_id, ConfigGet('SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext));
         else
             resolve(null);
