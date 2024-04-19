@@ -1,13 +1,24 @@
 /**@type{{querySelector:function}} */
 const AppDocument = document;
+/**
+ * @typedef {object} AppEvent
+ */
 
 /**
  * 
  * @param {{locales:{locale:string, text:string}[],
- *          settings:{id:number, app_setting_type_name:string, value:string, display_data:string}[]}} props 
+ *          settings:{id:number, app_setting_type_name:string, value:string, display_data:string}[],
+ *          username:string,
+ *          countdown:0|1}} props 
  * @returns 
  */
-const template = props =>`  <div id='common_dialogue_user_menu_username'><USERNAME/></div>
+const template = props =>`  <div id='common_dialogue_user_menu_username'>${props.username}</div>
+                            ${props.countdown==1?
+                                `<div id='common_dialogue_user_menu_token_countdown'>
+                                    <div id='common_dialogue_user_menu_token_countdown_icon' class='common_icon'></div>
+                                    <div id='common_dialogue_user_menu_token_countdown_time'></div>
+                                </div>`:''
+                            }
                             <div id='common_dialogue_user_menu_app_theme'></div>
                             <div id='common_dialogue_user_menu_preferences'>
                                 <div id='common_dialogue_user_menu_preference_locale' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
@@ -69,6 +80,9 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'><USERNA
  *          common_app_id:number,
  *          data_app_id:number,
  *          username:string,
+ *          token_exp:number|null,
+ *          token_iat:number|null,
+ *          token_timestamp:number|null,
  *          system_admin:string,
  *          system_admin_only:number,
  *          current_locale:string,
@@ -84,7 +98,6 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'><USERNA
 const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
-
     const is_provider_user = async () =>{
         const user = await props.function_FFB('DB_API', `/user_account?user_account_id=${props.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
@@ -118,7 +131,7 @@ const component = async props => {
                 props.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'inline-block';
             }
     }
-    const post_component = async () =>{
+    const post_component = async () =>{                                                                                             
         if ((props.system_admin_only == 1)==false){
             let path = '';
             if (props.app_id == props.common_app_id){
@@ -134,8 +147,8 @@ const component = async props => {
                 settings: await props.function_FFB('DB_API', `/app_settings_display?data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error}),
-                username:props.username,
-                system_admin:props.system_admin
+                username:props.username ?? props.system_admin ?? '',
+                countdown:(props.token_exp && props.token_iat)?1:0
             });
             //set current value on all the selects
             const common_dialogue_user_menu_user_locale_select =           props.common_document.querySelector('#common_dialogue_user_menu_user_locale_select');
@@ -147,24 +160,49 @@ const component = async props => {
             const common_dialogue_user_menu_user_arabic_script_select =    props.common_document.querySelector('#common_dialogue_user_menu_user_arabic_script_select');
             common_dialogue_user_menu_user_arabic_script_select.value =    props.current_arabic_script;
         }
-        await adjust_logged_out_logged_in();   
+        await adjust_logged_out_logged_in();
+        if (props.token_exp && props.token_iat){
+            /**
+             * Countdown function to monitor token expire time
+             * Uses event listener on element instead of setInterval since component will be closed and then event listener will automatically be removed
+             */
+            const countdown = async () => {
+                const time_left = ((props.token_exp ?? 0) * 1000) - (Date.now());
+                if (time_left < 0)
+                    props.common_document.querySelector('#common_dialogue_user_menu_token_countdown_time').innerHTML = 'Session expired';
+                else{
+                    const days = Math.floor(time_left / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((time_left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((time_left % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((time_left % (1000 * 60)) / 1000);
+                    props.common_document.querySelector('#common_dialogue_user_menu_token_countdown_time').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                    //wait 1 second
+                    await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 1000);});
+                    if (props.common_document.querySelector('#common_dialogue_user_menu_token_countdown_time'))
+                        props.common_document.querySelector('#common_dialogue_user_menu_token_countdown_time').dispatchEvent(new Event('change'));
+                }
+            }
+            props.common_document.querySelector('#common_dialogue_user_menu_token_countdown_time').addEventListener('change', (/**@type{AppEvent}*/event) => {
+                countdown();
+            });
+            countdown();
+        }   
     }
     /**
      * 
      * @param {{locales:{locale:string, text:string}[],
      *          settings:{id:number, app_setting_type_name:string, value:string, display_data:string}[],
      *          username:string,
-     *          system_admin:string}} props 
+     *          countdown:0|1}} props 
      * @returns 
      */
     const render_template = props =>{
-        return template(props)
-                .replace('<USERNAME/>', props.username ?? props.system_admin ?? '');
+        return template(props);
     }
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({locales:[], settings:[], username:props.username, system_admin:props.system_admin})
+        template: render_template({locales:[], settings:[], username:props.username ?? props.system_admin ?? '', countdown:0})
     };
 }
 export default component;

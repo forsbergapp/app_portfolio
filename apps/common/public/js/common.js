@@ -1701,6 +1701,9 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             if (system_admin){
                 COMMON_GLOBAL.system_admin = JSON.parse(result).username==''?null:JSON.parse(result).username;
                 COMMON_GLOBAL.token_admin_at = JSON.parse(result).token_at;
+                COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
+                COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
+                COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
                 updateOnlineStatus()
                 .then(()=>{
                     AppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
@@ -1731,7 +1734,9 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                     COMMON_GLOBAL.user_identity_provider_id = null;
                     COMMON_GLOBAL.user_app_role_id = login_data.app_role_id;
                     COMMON_GLOBAL.token_at	= JSON.parse(result).accessToken;
-                    
+                    COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
+                    COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
+                    COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
                     //set avatar or empty
                     set_avatar(login_data.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
                     AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
@@ -1766,6 +1771,9 @@ const user_logoff = async (system_admin) => {
     ComponentRemove('common_dialogue_user_menu');
     if (system_admin){
         COMMON_GLOBAL.token_admin_at = '';
+        COMMON_GLOBAL.token_exp = null;
+        COMMON_GLOBAL.token_iat = null;
+        COMMON_GLOBAL.token_timestamp = null;
         COMMON_GLOBAL.system_admin = null;
         AppDocument.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
         AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
@@ -1780,6 +1788,9 @@ const user_logoff = async (system_admin) => {
     else{
         //remove access token
         COMMON_GLOBAL.token_at ='';
+        COMMON_GLOBAL.token_exp = null;
+        COMMON_GLOBAL.token_iat = null;
+        COMMON_GLOBAL.token_timestamp = null;
         COMMON_GLOBAL.user_account_id = null;
         COMMON_GLOBAL.user_account_username = null;
 
@@ -1909,6 +1920,9 @@ const user_signup = () => {
             AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
             const signup = JSON.parse(result);
             COMMON_GLOBAL.token_at = signup.accessToken;
+            COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
+            COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
+            COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
             COMMON_GLOBAL.user_account_id = parseInt(signup.id);
             show_common_dialogue('VERIFY', 'SIGNUP', email, null);
         })
@@ -1980,6 +1994,9 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                             case 3:{
                                 //FORGOT
                                 COMMON_GLOBAL.token_at	= JSON.parse(result).accessToken;
+                                COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
+                                COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
+                                COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
                                 //show dialogue new password
                                 show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth)
                                 resolve_function();
@@ -2307,7 +2324,11 @@ const ProviderSignIn = (provider_id) => {
             .then(result=>{
                 const user_login = JSON.parse(result).items[0];
                 COMMON_GLOBAL.token_at = JSON.parse(result).accessToken;
+                COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
+                COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
+                COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
                 COMMON_GLOBAL.user_account_id = parseInt(user_login.id);
+                COMMON_GLOBAL.user_account_username = user_login.username;
                 COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
                 updateOnlineStatus()
                 .then(()=>{
