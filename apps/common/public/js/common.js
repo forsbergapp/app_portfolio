@@ -4181,11 +4181,17 @@ const custom_framework = () => {
 }
 /**
  * Init common
- * @param {{app:{}[],
- *          app_service:{system_admin_only:number, first_time:number}}} parameters 
- * @returns {Promise.<void>}
+ * @param {string} parameters 
+ * @returns {Promise.<{ app:{}[],
+ *                      app_service:{system_admin_only:number, first_time:number}}>}
  */
 const init_common = async (parameters) => {
+    /**
+     * Encoded parameters
+     * @type {{ app:{}[],
+     *          app_service:{system_admin_only:number, first_time:number}}}
+     */
+    const decoded_parameters = JSON.parse(window.atob(parameters));
     setUserAgentAttibutes();
     custom_framework();
     await ComponentRender('common_app', 
@@ -4200,7 +4206,7 @@ const init_common = async (parameters) => {
                             '/common/component/app.js');
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL.app_id ==null)
-            set_app_service_parameters(parameters.app_service);
+            set_app_service_parameters(decoded_parameters.app_service);
         if (COMMON_GLOBAL.app_framework==0){
             AppDocument.querySelector('#common_toolbar_framework').classList.add('show');
             AppDocument.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
@@ -4208,12 +4214,12 @@ const init_common = async (parameters) => {
             
         broadcast_init();
         if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.system_admin_only==1){
-            resolve();
+            resolve(decoded_parameters);
         }
         else{
-            set_app_parameters(parameters.app);
+            set_app_parameters(decoded_parameters.app);
             common_events_add();
-            resolve();
+            resolve(decoded_parameters);
         }
     });
 };

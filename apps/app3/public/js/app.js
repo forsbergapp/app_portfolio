@@ -140,8 +140,7 @@ const init_app = async () => {
 };
 /**
  * Init common
- * @param {{app:*[],
- *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @param {string} parameters 
  * @returns {void}
  */
 const init = parameters => {
