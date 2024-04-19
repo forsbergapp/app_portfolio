@@ -15,7 +15,7 @@ const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cw
  * @returns {Promise.<Types.db_result_app_log_createLog[]|null>}
  */
 const createLog = async (app_id, data_app_id, json_data) => {
-	if (ConfigGet('SERVICE_DB', 'LOG')=='1'){
+	if (ConfigGet('SERVICE_DB', 'APP_LOG')=='1'){
 		const sql = `INSERT INTO ${db_schema()}.app_log(
 					app_id,
 					json_data,
