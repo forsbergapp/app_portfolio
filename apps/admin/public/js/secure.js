@@ -2813,7 +2813,7 @@ const show_server_info = () => {
  * Checks if tokens have values
  * @returns {boolean}
  */
-const admin_token_has_value = () => !(common.COMMON_GLOBAL.rest_at=='' && common.COMMON_GLOBAL.rest_admin_at =='');
+const admin_token_has_value = () => !(common.COMMON_GLOBAL.token_at=='' && common.COMMON_GLOBAL.token_admin_at =='');
 
 /**
  * App events
