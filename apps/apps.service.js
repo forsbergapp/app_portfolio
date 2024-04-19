@@ -213,10 +213,12 @@ const get_module_with_initBFF = async (app_info) => {
                 rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF'),
                 first_time: first_time
             };
-            render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify({
-                                                                app_service: app_service_parameters,
-                                                                app: app_parameters
-                                                            })]);
+            const json_parameters = JSON.stringify({
+                app_service: app_service_parameters,
+                app: app_parameters
+            });
+            const encoded = Buffer.from(json_parameters, 'binary').toString('base64')
+            render_variables.push(['ITEM_COMMON_PARAMETERS',`'${encoded}'`]);
             return render_app_with_data(module, render_variables);
         }
         else

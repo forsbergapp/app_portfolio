@@ -434,15 +434,14 @@ const init_app = async (parameters) => {
 };
 /**
  * Init common
- * @param {{app:*[],
- *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @param {string} parameters 
  * @returns {void}
  */
 const init = parameters => {
     AppDocument.body.className = 'app_theme_sun';
     common.COMMON_GLOBAL.exception_app_function = app_exception;
-    common.init_common(parameters).then(()=>{
-        init_app(parameters);
+    common.init_common(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
+        init_app(decodedparameters);
     });
 };
 export{init};
