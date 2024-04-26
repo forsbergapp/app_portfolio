@@ -1657,7 +1657,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                             {
                             username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
                             password: AppDocument.querySelector('#common_user_start_login_system_admin_password'),
-                            password_confirm: AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm').style.display == 'block'?
+                            password_confirm: AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm')?
                                                 AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm'):null
                             })==false)
             return reject('ERROR');   

@@ -687,12 +687,6 @@ select {
 	width: 300px;
 	height: 430px;
 }
-#common_user_start_login_system_admin, 
-#common_user_start_login_system_admin_form,
-#common_user_start_login_system_admin_first_time, 
-#common_user_start_login_system_admin_password_confirm_container{
-	display:none;
-}
 .common_user_start_form{
 	width: 100%;
 	display:none;
