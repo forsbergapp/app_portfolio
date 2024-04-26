@@ -31,6 +31,7 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 							FROM ${db_schema()}.app_translation aot,
 								${db_schema()}.language l
 							WHERE l.id = aot.language_id
+							AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM ${db_schema()}.language l1,
 														${db_schema()}.app_translation aot1
@@ -59,6 +60,7 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 							AND s.app_setting_type_app_id = st.app_id
 							AND l.id = str.language_id
 							AND str.app_setting_id = s.id
+							AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM ${db_schema()}.language l1,
 														${db_schema()}.app_translation str1
@@ -81,6 +83,7 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 							FROM ${db_schema()}.app_translation aoit,
 								${db_schema()}.language l
 							WHERE l.id = aoit.language_id
+							AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM ${db_schema()}.language l1,
 														${db_schema()}.app_translation aoit1
