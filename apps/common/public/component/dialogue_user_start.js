@@ -5,67 +5,82 @@ const AppDocument = document;
  */
 /**
  * 
- * @param {{providers:provider_type[]}} props 
- * @returns 
+ * @param {{providers:provider_type[],
+ *          admin_app:boolean,
+ *          first_time: boolean,
+ *          system_admin_only: boolean}} props 
+ * @returns {string}
  */
-const template = props =>` <div id='common_user_start_logo'></div>
-                        <div id='common_user_start_nav'>
-                            <div id='common_user_start_login'  class='common_icon'></div>
-                            <div id='common_user_start_login_system_admin'  class='common_icon'></div>
-                            <div id='common_user_start_signup' class='common_icon' ></div>
-                            <div id='common_user_start_forgot' class='common_icon' ></div>
-                        </div>
-                        <div id='common_user_start_login_form' class='common_user_start_form'>
-                            <div id='common_user_start_login_username' contentEditable='true' class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
-                            <div class='common_password_container'>
-                                <div id='common_user_start_login_password' contentEditable='true' class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
-                                <div id='common_user_start_login_password_mask' class='common_input common_password_mask'></div>
-                            </div>
-                            <div id='common_user_start_login_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
-                            <div id='common_user_start_identity_provider_login' <SPINNER/>>
-                                ${props.providers.map((/**@type{*}*/row)=>(
-                                    `<div class='common_user_start_button common_link common_row' >
-                                        <div class='common_login_provider_id'>${row.id}</div>
-                                        <div class='common_login_provider_name'>${row.provider_name}</div>
-                                    </div>
-                                    `)).join('')
+const template = props =>`  <div id='common_user_start_logo'></div>
+                            <div id='common_user_start_nav'>
+                                ${props.system_admin_only?'':
+                                    `<div id='common_user_start_login'  class='common_icon'></div>`
+                                }
+                                ${props.admin_app?
+                                    `<div id='common_user_start_login_system_admin'  class='common_icon'></div>`:
+                                    `<div id='common_user_start_signup' class='common_icon' ></div>
+                                    <div id='common_user_start_forgot' class='common_icon' ></div>`
                                 }
                             </div>
-                        </div>
-                        <div id='common_user_start_login_system_admin_form' class='common_user_start_form'>
-                            <div id='common_user_start_login_system_admin_first_time'></div>
-                            <div id='common_user_start_login_system_admin_username' contentEditable='true' class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
-                            <div class='common_password_container'>
-                                <div id='common_user_start_login_system_admin_password' contentEditable='true' class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
-                                <div id='common_user_start_login_system_admin_password_mask' class='common_input common_password_mask'></div>
-                            </div>
-                            <div id='common_user_start_login_system_admin_password_confirm_container'>
+                            ${props.system_admin_only?'':
+                            `<div id='common_user_start_login_form' class='common_user_start_form'>
+                                <div id='common_user_start_login_username' contentEditable='true' class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
                                 <div class='common_password_container'>
-                                    <div id='common_user_start_login_system_admin_password_confirm' contentEditable="true" class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
-                                    <div id='common_user_start_login_system_admin_password_confirm_mask' class='common_input common_password_mask'></div>
+                                    <div id='common_user_start_login_password' contentEditable='true' class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
+                                    <div id='common_user_start_login_password_mask' class='common_input common_password_mask'></div>
                                 </div>
-                            </div>
-                            <div id='common_user_start_login_system_admin_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
-                        </div>
-                        <div id='common_user_start_signup_form' class='common_user_start_form'>
-                            <div id='common_user_start_signup_username' contentEditable='true'  class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
-                            <div id='common_user_start_signup_email' contentEditable='true'  class='common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'></div>
-                            <div class='common_password_container'>
-                                <div id='common_user_start_signup_password' contentEditable='true'  class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
-                                <div id='common_user_start_signup_password_mask' class='common_input common_password_mask'></div>
-                            </div>
-                            <div class='common_password_container'>
-                                <div id='common_user_start_signup_password_confirm' contentEditable='true'  class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
-                                <div id='common_user_start_signup_password_confirm_mask' class='common_input common_password_mask'></div>
-                            </div>
-                            <div id='common_user_start_signup_password_reminder' contentEditable='true'  class='common_input' placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'></div>
-                            <div id='common_user_start_signup_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
-                        </div>
-                        <div id='common_user_start_forgot_form' class='common_user_start_form'>
-                            <div id='common_user_start_forgot_email' contentEditable='true' class='common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'></div>
-                            <div id='common_user_start_forgot_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
-                        </div>
-                        <div id='common_user_start_close' class='common_dialogue_button common_icon' ></div>`;
+                                <div id='common_user_start_login_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
+                                <div id='common_user_start_identity_provider_login' <SPINNER/>>
+                                    ${props.providers.map((/**@type{*}*/row)=>(
+                                        `<div class='common_user_start_button common_link common_row' >
+                                            <div class='common_login_provider_id'>${row.id}</div>
+                                            <div class='common_login_provider_name'>${row.provider_name}</div>
+                                        </div>
+                                        `)).join('')
+                                    }
+                                </div>
+                            </div>`
+                            }
+                            ${props.admin_app?
+                                `<div id='common_user_start_login_system_admin_form' class='common_user_start_form'>
+                                    ${props.first_time?
+                                        `<div id='common_user_start_login_system_admin_first_time'></div>`:''
+                                    }
+                                    <div id='common_user_start_login_system_admin_username' contentEditable='true' class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
+                                    <div class='common_password_container'>
+                                        <div id='common_user_start_login_system_admin_password' contentEditable='true' class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
+                                        <div id='common_user_start_login_system_admin_password_mask' class='common_input common_password_mask'></div>
+                                    </div>
+                                    ${props.first_time?
+                                        `<div id='common_user_start_login_system_admin_password_confirm_container'>
+                                            <div class='common_password_container'>
+                                                <div id='common_user_start_login_system_admin_password_confirm' contentEditable="true" class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
+                                                <div id='common_user_start_login_system_admin_password_confirm_mask' class='common_input common_password_mask'></div>
+                                            </div>
+                                        </div>`:''
+                                    }
+                                    <div id='common_user_start_login_system_admin_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
+                                </div>`:
+                                `<div id='common_user_start_signup_form' class='common_user_start_form'>
+                                    <div id='common_user_start_signup_username' contentEditable='true'  class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
+                                    <div id='common_user_start_signup_email' contentEditable='true'  class='common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'></div>
+                                    <div class='common_password_container'>
+                                        <div id='common_user_start_signup_password' contentEditable='true'  class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
+                                        <div id='common_user_start_signup_password_mask' class='common_input common_password_mask'></div>
+                                    </div>
+                                    <div class='common_password_container'>
+                                        <div id='common_user_start_signup_password_confirm' contentEditable='true'  class='common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
+                                        <div id='common_user_start_signup_password_confirm_mask' class='common_input common_password_mask'></div>
+                                    </div>
+                                    <div id='common_user_start_signup_password_reminder' contentEditable='true'  class='common_input' placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'></div>
+                                    <div id='common_user_start_signup_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
+                                </div>
+                                <div id='common_user_start_forgot_form' class='common_user_start_form'>
+                                    <div id='common_user_start_forgot_email' contentEditable='true' class='common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'></div>
+                                    <div id='common_user_start_forgot_button' class='common_dialogue_button common_user_start_button common_icon' ></div>
+                                </div>`
+                            }
+                            <div id='common_user_start_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * 
  * @param {{common_document:AppDocument,
@@ -92,11 +107,14 @@ const component = async props => {
 
     /**
      * 
-     * @param {{providers:provider_type[]}} props_records 
+     * @param {{providers:provider_type[],
+     *          admin_app:boolean,
+     *          first_time: boolean,
+     *          system_admin_only: boolean}} props_template
      * @returns 
      */
-    const render_template = props_records =>{
-        return template(props_records)
+    const render_template = props_template =>{
+        return template(props_template)
                 .replace('<SPINNER/>', spinner)
                 .replaceAll('<COMMON_TRANSLATION_USERNAME/>',props.translation_username)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD/>',props.translation_password)
@@ -104,33 +122,33 @@ const component = async props => {
                 .replaceAll('<COMMON_TRANSLATION_EMAIL/>',props.translation_email)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD_REMINDER/>',props.translation_password_reminder);
     }
-    const adjust_elements = ()=>{
-        if (props.app_id == props.common_app_id)
-            AppDocument.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
-        if (props.system_admin_first_time == 1) {
-			AppDocument.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
-			AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm_container').style.display = 'block';
-		}
-		if (props.system_admin_only == 1) {
-			AppDocument.querySelector('#common_user_start_login').style.display = 'none';
-			AppDocument.querySelector('#common_user_start_login_form').style.display = 'none';
-		}
-        props.common_document.querySelector(`#${props.user_click}`).click();
-    }
     const post_component = async () =>{
-        adjust_elements();
-        props.function_FFB('DB_API', `/identity_provider?`, 'GET', 'APP_DATA', null)
-        .then((/**@type{string}*/providers_json)=>{
-            spinner = '';
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({providers:JSON.parse(providers_json)});
-            adjust_elements();
-        })
-        .catch ((/**@type{Error} */err)=>props.common_document.querySelector('#common_lov_list').classList.remove('css_spinner'));
+        props.common_document.querySelector(`#${props.user_click}`).click();
+        //fetch providers if not system admin only when database is available
+        const providers = props.system_admin_only == 1?[]:
+                            await props.function_FFB('DB_API', `/identity_provider?`, 'GET', 'APP_DATA', null)
+                                        .then((/**@type{string}*/result)=>JSON.parse(result))
+                                        .catch((/**@type{Error}*/error)=>{
+                                                                            props.common_document.querySelector('#common_lov_list').classList.remove('css_spinner');
+                                                                            throw error});
+        spinner = '';
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
+            render_template({
+                                providers:providers,
+                                admin_app:props.app_id == props.common_app_id,
+                                first_time: props.system_admin_first_time == 1,
+                                system_admin_only: props.system_admin_only == 1
+                            });
+            props.common_document.querySelector(`#${props.user_click}`).click();
     }
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({providers:[]})
+        template: render_template({
+                        providers:[], 
+                        admin_app:props.app_id == props.common_app_id,
+                        first_time: props.system_admin_first_time == 1,
+                        system_admin_only: props.system_admin_only == 1})
     };
 }
 export default component;

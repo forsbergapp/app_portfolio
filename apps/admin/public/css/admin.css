@@ -1199,16 +1199,6 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 #common_user_start_close{
 	display: none;
 }
-#common_user_start_login_system_admin, 
-#common_user_start_login_system_admin_form{
-	display: inline-block;
-}
-#common_user_start_signup,
-#common_user_start_signup_form,
-#common_user_start_forgot,
-#common_user_start_forgot_form{
-	display: none;	
-}
 
 #common_profile_input_row,
 #common_profile_search_list_wrap{
