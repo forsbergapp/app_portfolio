@@ -25,6 +25,7 @@ const getApp = async (app_id, id,lang_code) => {
 													WHERE l1.id  = aot1.language_id
 														AND aot1.app_id  = aot.app_id
 														AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+														AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
 													)
 								  AND aot.app_id = a.id
 								  AND aot.language_id = l.id
@@ -38,6 +39,7 @@ const getApp = async (app_id, id,lang_code) => {
 												WHERE l1.id  = act1.language_id
 													AND act1.app_category_id  = act.app_category_id
 													AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+													AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
 												)
 							  AND act.app_category_id = a.app_category_id
 							  AND act.language_id = l.id
