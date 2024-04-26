@@ -89,24 +89,22 @@ const fs = await import('node:fs');
  const BFF_start = async (req, res, next) =>{
     const check_redirect = () =>{
         //redirect naked domain to www except for localhost
-        if (((req.headers.host.split('.').length - 1) == 1) &&
-            req.headers.host.indexOf('localhost')==-1)
+        if (req.headers.host.startsWith(ConfigGet('SERVER','HOST')) && req.headers.host.indexOf('localhost')==-1)
             if (req.protocol=='http' && ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
-                res.redirect('https://' + 'www.' + req.headers.host + req.originalUrl);
+                res.redirect(`https://www.${req.headers.host}${req.originalUrl}`);
             else
-                res.redirect('http://' + 'www.' + req.headers.host + req.originalUrl);
+                res.redirect(`http://www.${req.headers.host}${req.originalUrl}`);
         else{
             //redirect from http to https if https enabled
             if (req.protocol=='http' && ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
-                res.redirect('https://' + req.headers.host + req.originalUrl);
-            else{
-                next();        
-            }
+                res.redirect(`https://${req.headers.host}${req.originalUrl}`);
+            else
+                next();
         }
     };
     //if first time, when no system admin exists, then redirect everything to admin
     if (CheckFirstTime() && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
-        res.redirect(`http://admin.${req.headers.host.lastIndexOf('.')==-1?req.headers.host:req.headers.host.lastIndexOf('.')}`);
+        res.redirect(`http://admin.${ConfigGet('SERVER','HOST')}`)
     else{
         //check if SSL verification using letsencrypt should be enabled when validating domains
         if (ConfigGet('SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){

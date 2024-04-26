@@ -862,7 +862,8 @@ const getAssetFile = (app_id, url, basepath, res) =>{
  * @param {Types.res} res
  */
 const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, messagequeue, info, res) =>{
-    const app_id = ConfigGetAppHost(host, 'SUBDOMAIN');
+    const host_no_port = host.substring(0,host.indexOf(':')==-1?host.length:host.indexOf(':'));
+    const app_id = ConfigGetAppHost(host_no_port, 'SUBDOMAIN');
     if (app_id==null){
         res.statusCode = 301;
         return null;
