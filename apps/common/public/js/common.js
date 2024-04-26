@@ -3189,7 +3189,7 @@ const set_app_service_parameters = async parameters => {
     //system admin
     COMMON_GLOBAL.system_admin = null;
     COMMON_GLOBAL.system_admin_only = parameters.system_admin_only;
-    COMMON_GLOBAL.system_admin_first_time = parameters.first_timeZ;
+    COMMON_GLOBAL.system_admin_first_time = parameters.first_time;
 
     //user info
     COMMON_GLOBAL.user_identity_provider_id=null;
