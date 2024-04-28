@@ -1773,7 +1773,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
 const user_logoff = async () => {
     ComponentRemove('common_dialogue_user_menu');
     countdown_token_remove();
-    if (COMMON_GLOBAL.system_admin != ''){
+    if (COMMON_GLOBAL.system_admin != null){
         COMMON_GLOBAL.token_admin_at = '';
         COMMON_GLOBAL.token_exp = null;
         COMMON_GLOBAL.token_iat = null;
