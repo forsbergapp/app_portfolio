@@ -1162,14 +1162,8 @@ const login_common = (avatar) => {
  * @returns {Promise.<void>}
  */
 const ProviderSignIn_app = async (provider_id) => {
-    common.ProviderSignIn(provider_id)
-    .then((/**@type{{   user_account_id: number,
-                        username: string,
-                        bio: string,
-                        avatar: string,
-                        first_name: string,
-                        last_name: string,
-                        userCreated:string}}*/result)=>{
+    common.user_login(null, null, null, provider_id)
+    .then((/**@type{{avatar: string}}*/result)=>{
         login_common(result.avatar);
     })
     .catch(()=>null);
@@ -2510,7 +2504,8 @@ const app_event_change = event => {
                     break;
                 }
                 //common
-                case 'common_dialogue_user_menu_app_select_theme':{
+                case 'common_dialogue_user_menu_app_select_theme':
+                case 'common_dialogue_user_menu_user_arabic_script_select':{
                     AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
                     common.common_preferences_update_body_class_from_preferences();
                     break;
@@ -2521,11 +2516,6 @@ const app_event_change = event => {
                 }
                 case 'common_dialogue_user_menu_user_timezone_select':{
                     AppDocument.querySelector('#setting_timezone_current').innerHTML = event.target.value;
-                    break;
-                }
-                case 'common_dialogue_user_menu_user_arabic_script_select':{
-                    AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
-                    common.common_preferences_update_body_class_from_preferences();
                     break;
                 }
                 //module leaflet

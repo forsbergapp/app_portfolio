@@ -1641,130 +1641,151 @@ const list_key_event = (event, module, event_function=null) => {
  * @param {boolean} system_admin 
  * @param {string|null} username_verify
  * @param {string|null} password_verify
- * @returns {Promise. <{    user_id: number|null,
- *                          username: string,
- *                          bio: string|null,
- *                          avatar: string|null}>}
+ * @param {number|null} provider_id 
+ * @returns {Promise. <{    avatar: string|null}>}
  */
-const user_login = async (system_admin=false, username_verify=null, password_verify=null) => {
-    return new Promise((resolve,reject)=>{
-        let path = '';
-        let username = '';
-        let password = '';
-        if (system_admin) {
-            path = '/systemadmin?';
-            if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
-                            {
-                            username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
-                            password: AppDocument.querySelector('#common_user_start_login_system_admin_password'),
-                            password_confirm: AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm')?
-                                                AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm'):null
-                            })==false)
-            return reject('ERROR');   
-            username = AppDocument.querySelector('#common_user_start_login_system_admin_username').innerHTML;
-            password = AppDocument.querySelector('#common_user_start_login_system_admin_password').innerHTML;
+const user_login = async (system_admin=false, username_verify=null, password_verify=null, provider_id=null) => {
+    let path = '';
+    let json_data = {};
+    let spinner_item = '';
+    let current_dialogue = '';
+    if (system_admin){
+        spinner_item = 'common_user_start_login_system_admin_button';
+        current_dialogue = 'common_dialogue_user_start';
+    }
+    else{
+        if (username_verify){
+            spinner_item = 'common_user_verify_email_icon';
+            current_dialogue = 'common_dialogue_user_verify';
         }
         else{
+            spinner_item = 'common_user_start_login_button';
+            current_dialogue = 'common_dialogue_user_start';
+        }
+        AppDocument.querySelector(`#${spinner_item}`).classList.add('css_spinner');
+    }
+    if (system_admin) {
+        // ES6 object spread operator for user variables
+        json_data = {   username:  encodeURI(AppDocument.querySelector('#common_user_start_login_system_admin_username').innerHTML),
+                        password:  encodeURI(AppDocument.querySelector('#common_user_start_login_system_admin_password').innerHTML),
+                        ...get_uservariables()
+        };
+        path = '/systemadmin?';
+        if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
+                        {
+                        username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
+                        password: AppDocument.querySelector('#common_user_start_login_system_admin_password'),
+                        password_confirm: AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm')?
+                                            AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm'):
+                                                null
+                        })==false)
+        throw 'ERROR';
+        
+    }
+    else{
+        if (provider_id){
+            const provider_data = { identity_provider_id:   provider_id,
+                                    profile_id:             provider_id,
+                                    profile_first_name:     `PROVIDER_USERNAME${provider_id}`,
+                                    profile_last_name:      `PROVIDER LAST_NAME${provider_id}`,
+                                    profile_image_url:      '',
+                                    profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`};
+            const profile_image = await convert_image(  provider_data.profile_image_url, 
+                                                        COMMON_GLOBAL.image_avatar_width,
+                                                        COMMON_GLOBAL.image_avatar_height)
+            json_data ={    username:               null,
+                            password:               null,
+                            active:                 1,
+                            identity_provider_id:   provider_data.identity_provider_id,
+                            provider_id:            provider_data.profile_id,
+                            provider_first_name:    provider_data.profile_first_name,
+                            provider_last_name:     provider_data.profile_last_name,
+                            provider_image:         window.btoa(profile_image),
+                            provider_image_url:     provider_data.profile_image_url,
+                            provider_email:         provider_data.profile_email,
+                            ...get_uservariables()
+                        };
+            path = `/provider?PUT_ID=${provider_data.profile_id}`;
+        }
+        else{
+            // ES6 object spread operator for user variables
+            json_data = {   username:  encodeURI(username_verify?
+                                            AppDocument.querySelector(`#${username_verify}`).innerHTML:
+                                                AppDocument.querySelector('#common_user_start_login_username').innerHTML),
+                            password:  encodeURI(password_verify?
+                                            AppDocument.querySelector(`#${password_verify}`).innerHTML:
+                                                AppDocument.querySelector('#common_user_start_login_password').innerHTML),
+                            ...get_uservariables()
+            };
             path = '/user?';
             if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
                             {
-                            username: username_verify?AppDocument.querySelector(`#${username_verify}`):AppDocument.querySelector('#common_user_start_login_username'),
-                            password: password_verify?AppDocument.querySelector(`#${password_verify}`):AppDocument.querySelector('#common_user_start_login_password')
+                            username: username_verify?
+                                            AppDocument.querySelector(`#${username_verify}`):
+                                                AppDocument.querySelector('#common_user_start_login_username'),
+                            password: password_verify?
+                                            AppDocument.querySelector(`#${password_verify}`):
+                                                AppDocument.querySelector('#common_user_start_login_password')
                             })==false)
-                return reject('ERROR');
-            username = username_verify?AppDocument.querySelector(`#${username_verify}`).innerHTML:AppDocument.querySelector('#common_user_start_login_username').innerHTML;
-            password = password_verify?AppDocument.querySelector(`#${password_verify}`).innerHTML:AppDocument.querySelector('#common_user_start_login_password').innerHTML;
-        }
+                throw 'ERROR';
             
-        // ES6 object spread operator for user variables
-        const json_data = { username:  encodeURI(username),
-                            password:  encodeURI(password),
-                            ...get_uservariables()
-                        };
-        let spinner_item = '';
-        let current_dialogue = '';
-        if (system_admin){
-            spinner_item = 'common_user_start_login_system_admin_button';
-            current_dialogue = 'common_dialogue_user_start';
+        }            
+    }
+    
+    const result = await FFB('IAM', path, 'POST', 'IAM', json_data)
+    .catch(err=>{
+        AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+        throw err;
+    });
+    if (system_admin){
+        COMMON_GLOBAL.system_admin = JSON.parse(result).username==''?null:JSON.parse(result).username;
+        COMMON_GLOBAL.token_admin_at = JSON.parse(result).token_at;
+        COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
+        COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
+        COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
+        await updateOnlineStatus().catch((error)=>{throw error});
+        AppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
+        AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+        AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
+        AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+
+        ComponentRemove(current_dialogue, true);
+        countdown_token_set();
+        return {avatar: null};
+    }
+    else{
+        const login_data = provider_id?JSON.parse(result).items[0]:JSON.parse(result).login[0];
+        COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
+        if (login_data.active==0){
+            show_common_dialogue('VERIFY', 'LOGIN', login_data.email, null);
+            throw 'ERROR';
         }
         else{
-            if (username_verify){
-                spinner_item = 'common_user_verify_email_icon';
-                current_dialogue = 'common_dialogue_user_verify';
-            }
-            else{
-                spinner_item = 'common_user_start_login_button';
-                current_dialogue = 'common_dialogue_user_start';
-            }
-            AppDocument.querySelector(`#${spinner_item}`).classList.add('css_spinner');
-        }
-        FFB('IAM', path, 'POST', 'IAM', json_data)
-        .then(result=>{
-            if (system_admin){
-                COMMON_GLOBAL.system_admin = JSON.parse(result).username==''?null:JSON.parse(result).username;
-                COMMON_GLOBAL.token_admin_at = JSON.parse(result).token_at;
-                COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
-                COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
-                COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
-                updateOnlineStatus()
-                .then(()=>{
-                    AppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
-                    AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
-                    AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
-                    AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-        
-                    ComponentRemove(current_dialogue, true);
-                    countdown_token_set();
-                    resolve({   user_id: null,
-                                    username: JSON.parse(result).username,
-                                    bio: null,
-                                    avatar: null});
-                })
-                .catch((error)=>reject(error));
-            }
-            else{
-                const login_data = JSON.parse(result).login[0];
-                COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
-                if (login_data.active==0){
-                    show_common_dialogue('VERIFY', 'LOGIN', login_data.email, null);
-                    reject('ERROR');
-                }
-                else{
-                    profile_close();
-                    
-                    COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
-                    COMMON_GLOBAL.user_account_username = login_data.username;
-                    COMMON_GLOBAL.user_identity_provider_id = null;
-                    COMMON_GLOBAL.user_app_role_id = login_data.app_role_id;
-                    COMMON_GLOBAL.token_at	= JSON.parse(result).accessToken;
-                    COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
-                    COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
-                    COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
-                    //set avatar or empty
-                    set_avatar(login_data.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
-                    AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-                    AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
-                    updateOnlineStatus()
-                    .then(()=>{
-                        user_preference_get()
-                        .then(()=>{
-                            AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
-                            ComponentRemove(current_dialogue, true);
-                            countdown_token_set();
-                            resolve({   user_id: login_data.id,
-                                        username: login_data.username,
-                                        bio: login_data.bio,
-                                        avatar: login_data.avatar});
-                        })
-                    })
-                    .catch((error)=>reject(error));
-                }
-            }
-        })
-        .catch(err=>{
+            profile_close();
+            
+            COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
+            COMMON_GLOBAL.user_account_username = login_data.username;
+            COMMON_GLOBAL.user_identity_provider_id = provider_id?login_data.identity_provider_id:null;
+            
+            COMMON_GLOBAL.user_app_role_id = login_data.app_role_id;
+            COMMON_GLOBAL.token_at	= JSON.parse(result).accessToken;
+            COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
+            COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
+            COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
+            
+            //set avatar or empty
+            set_avatar(provider_id?login_data.provider_image:login_data.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
+            AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+            AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
+
+            await updateOnlineStatus().catch((error)=>{throw error});
+            await user_preference_get().catch((error)=>{throw error});
             AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
-            reject(err);});
-    });
+            ComponentRemove(current_dialogue, true);
+            countdown_token_set();
+            return {avatar: provider_id?login_data.provider_image:login_data.avatar};
+        }
+    }
 };
 /**
  * User logoff
@@ -2288,85 +2309,7 @@ const user_preferences_set_default_globals = (preference) => {
     }
 };
 
-/**
- * Provider signin
- * @param {number} provider_id 
- * @returns {Promise.<{ user_account_id: number,
- *                      username: string,
- *                      bio: string,
- *                      avatar: string,
- *                      first_name: string,
- *                      last_name: string,
- *                      userCreated: string}>}
- */
-const ProviderSignIn = (provider_id) => {
-    return new Promise((resolve, reject)=>{
-        //add REST API to get user provider data
-        const provider_data = { identity_provider_id:   provider_id,
-                                profile_id:             provider_id,
-                                profile_first_name:     `PROVIDER_USERNAME${provider_id}`,
-                                profile_last_name:      `PROVIDER LAST_NAME${provider_id}`,
-                                profile_image_url:      '',
-                                profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`};
 
-        AppDocument.querySelector('#common_user_start_login_button').classList.add('css_spinner');
-        convert_image(provider_data.profile_image_url, 
-            COMMON_GLOBAL.image_avatar_width,
-            COMMON_GLOBAL.image_avatar_height).then((profile_image)=>{
-            const json_data ={  username:               null,
-                                password:               null,
-                                active:                 1,
-                                identity_provider_id:   provider_data.identity_provider_id,
-                                provider_id:            provider_data.profile_id,
-                                provider_first_name:    provider_data.profile_first_name,
-                                provider_last_name:     provider_data.profile_last_name,
-                                provider_image:         window.btoa(profile_image),
-                                provider_image_url:     provider_data.profile_image_url,
-                                provider_email:         provider_data.profile_email,
-                                ...get_uservariables()
-                            };
-            FFB('IAM', `/provider?PUT_ID=${provider_data.profile_id}`, 'POST', 'IAM', json_data)
-            .then(result=>{
-                const user_login = JSON.parse(result).items[0];
-                COMMON_GLOBAL.token_at = JSON.parse(result).accessToken;
-                COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
-                COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
-                COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
-                COMMON_GLOBAL.user_account_id = parseInt(user_login.id);
-                COMMON_GLOBAL.user_account_username = user_login.username;
-                COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
-                updateOnlineStatus()
-                .then(()=>{
-                    user_preference_get()
-                    .then(()=>{
-                        //set avatar or empty
-                        set_avatar(result.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
-
-                        AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-                        AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
-
-                        AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
-                        ComponentRemove('common_dialogue_user_start', true);
-                        countdown_token_set();
-                        resolve({   user_account_id: user_login.id,
-                                    username: user_login.username,
-                                    bio: user_login.bio,
-                                    avatar: profile_image,
-                                    first_name: provider_data.profile_first_name,
-                                    last_name: provider_data.profile_last_name,
-                                    userCreated: JSON.parse(result).userCreated});
-                    });
-                })
-                .catch((error)=>reject(error));
-                
-            })
-            .catch(err=>{
-                AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
-                reject(err);
-            });
-        });
-    });
-};
 /**
  * Countdown token set
  */
@@ -4244,8 +4187,6 @@ export{/* GLOBALS*/
        /* USER  */
        user_login, user_logoff, user_update, user_signup, user_verify_check_input, user_delete, user_function,
        updatePassword,
-       /* USER PROVIDER */
-       ProviderSignIn,
        /* MODULE LEAFLET  */
        map_init, map_country, map_show_search_on_map, map_resize, map_line_removeall, map_line_create,
        map_setstyle, map_update,

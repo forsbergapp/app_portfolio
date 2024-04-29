@@ -4,32 +4,97 @@ html, body, #app {
 }
 body {
 	text-align: center;
+	overflow: hidden;
 }
-#app_logo{
+#app_root{
+	height:100%;
+}
+#app_top, #app_bottom{
+	display: flex;
+	justify-content: space-between;
+	height: 60px;
+	width: 100%;
+}
+#app_top_logo{
 	background-image: url('/images/logo.png');
 	background-size: contain;
-	width: 192px;
-	height: 192px;
-	margin: 0 auto;
+	width: 60px;
+	height: 60px;
+	display: inline-block;
+	margin-inline-start: 5px;
 }
-.dialogue{
-	width: 100%;
+#app_top_usermenu{
+	width: 48px;
+	height: 48px;
+	display: inline-block;
+	margin: 5px;
+}
+#app_main{
+	height: calc(100% - 120px);
+}
+#app_main_page{
 	height: 100%;
-	top:15%;
-	text-align: center;
-	position:fixed;
 }
-.dialogue_content{
-	padding: 3em;
+#app_page_start_get_bankaccount{
+	cursor: pointer;
+	margin-top: 20px;
+}
+#app_page_start_divs{
+	height: 90%;
+	display: grid;
+	justify-content: center;
+	align-content: space-around;
+}
+.app_page_start_divs_row{
+	width: 100%;
+	display: block;
+}
+.app_page_start_bank_div{
+	height: 35%;
+	width: 200px;
+	cursor:pointer;
+}
+.app_bank_div {
+	padding: 2em;
 	display:inline-block;
 	border-radius: 4px;	
+	transition-duration: .3s;
+    transition-property: box-shadow;
+	vertical-align: middle;
+	margin: 10px;
+}
+#app_page_secure_account{
+	height: 80%;
+	text-align: start;
+}
+#app_page_secure_transactions{
+	text-align: center;
+	margin-top: 20px;
+}
+#app_page_secure_balance{
+	font-size: 2en;
+	font-weight: bold;
+}
+#app_page_secure_transactions_list{
+	font-size:0.7em;
+	margin-top: 10px;
+	display: inline-block;
+}
+.app_page_secure_transactions_row div{
+	display: inline-block;
+}
+.app_page_secure_transactions_origin{
+	width: 150px;
+	text-align: start;
+}
+.app_page_secure_transactions_amount_deposit,
+.app_page_secure_transactions_amount_withdrawal{
+	width: 75px;
+    text-align: end;	
 }
 /*COMMON*/
 #common_profile_input_row,
 #common_profile_search_list_wrap{
-	visibility: hidden;
-}
-#common_user_account{
 	visibility: hidden;
 }
 #common_window_info_content{
@@ -44,34 +109,55 @@ body {
 	margin:20px;
 	margin-top:-70px;
 }
+#common_toolbar_framework{
+    bottom: 0px !important;
+    top: unset !important;
+	position: fixed !important;
+}
+#common_user_menu{
+	margin-inline-start: unset !important;
+	position: unset !important;
+	margin-top: unset !important;
+}
 /*APP THEME*/
 body {
-	--common_app_color_spinner:var(--common_app_color_black);
-	--common_app_color_background_spinner:var(--common_app_color_blue1);
-	color: var(--common_app_color_black);
-	background: var(--common_app_color_blue1);
-	caret-color: var(--common_app_color_black);
+	--common_app_color_spinner:var(--common_app_color_gold);
+	--common_app_color_background_spinner:var(--common_app_color_white);
+	color: var(--common_app_color_gold);
+	background: var(--common_app_color_white);
+	caret-color: var(--common_app_color_gold);
 }
-.dialogue_content{
-	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1), 0 6px 20px 0 var(--common_app_color_shadow2);
-	background-color: var(--common_app_color_white1);
+.app_bank_div{
+	background-color: var(--common_app_color_white3);
+	box-shadow: 0 0 1px var(--common_app_color_light);
 }
-.dialogue_content:hover, 
-.dialogue_content:active{
-	box-shadow: 0 0 35px 4px var(--common_app_color_white_transparent);
+.app_page_start_bank_div:hover,
+.app_page_start_bank_div:active{
+	box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
 }
 /* APP THEME COMMON*/
+.common_input{
+	border: 1px solid var(--common_app_color_gold);
+	background-color: var(--common_app_color_white);
+}
+.common_user_start_selected {
+    background-color: var(--common_app_color_white3);
+}
+.common_link:hover,
+.common_link:active{
+	color:var(--common_app_color_green);
+}
 .common_toolbar_selected{
-	background-color: var(--common_app_color_blue1) !important;
+	background-color: var(--common_app_color_cafe_latte3) !important;
 }
 #common_toolbar_framework {
-    color: var(--common_app_color_black);
+    color: var(--common_app_color_gold);
     background-color: var(--common_app_color_white1);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1), 0 6px 20px 0 var(--common_app_color_shadow2);
 }
 .common_dialogue_button,
 .common_toolbar_button{
-	color: var(--common_app_color_black) !important;
+	color: var(--common_app_color_gold) !important;
 }
 .common_dialogue_button:hover,
 .common_dialogue_button:active,
@@ -79,10 +165,6 @@ body {
 .common_toolbar_button:active{
 	color:var(--common_app_color_green) !important;
 }
-.common_dialogue_content:hover, 
-.common_dialogue_content:active{
-	box-shadow: 0 0 35px 4px var(--common_app_color_white_transparent);
-}  
 .common_dialogue_content{
 	background-color: var(--common_app_color_white1);
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);	
