@@ -132,7 +132,7 @@ const app_event_click = event => {
                 /**Dialogue user start */
                 case 'common_user_start_identity_provider_login':{
                     const target_row = common.element_row(event.target);
-                    common.ProviderSignIn(target_row.querySelector('.common_login_provider_id').innerHTML);
+                    common.user_login(null, null, null, target_row.querySelector('.common_login_provider_id').innerHTML);
                     break;
                 }
                 case 'common_user_start_login_button':
@@ -228,14 +228,10 @@ const app_event_change = event => {
                     common.common_translate_ui((/**@type{AppEvent}*/event.target.value), ()=>{});
                     break;
                 }
-                case 'common_dialogue_user_menu_user_arabic_script_select':{
-                    AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
-                    common.common_preferences_update_body_class_from_preferences()
-                    break;
-                }
+                case 'common_dialogue_user_menu_user_arabic_script_select':
                 case 'common_dialogue_user_menu_app_select_theme':{
                     AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
-                    common.common_preferences_update_body_class_from_preferences();
+                    common.common_preferences_update_body_class_from_preferences()
                     break;
                 }
                 default:{

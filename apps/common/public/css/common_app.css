@@ -20,6 +20,8 @@
 .common_like::before{										content:var(--common_app_icon_user_like)}	
 .common_user_follow::before{								content:var(--common_app_icon_user_follow_user)}
 .common_user_followed::before{								content:var(--common_app_icon_user_followed_user)}
+.common_search_icon::before{								content:var(--common_app_icon_search)}
+.common_reload::before{										content:var(--common_app_icon_reload)}
 #common_user_edit_btn_user_delete_account::before{			content:var(--common_app_icon_delete)}	
 #common_user_edit_btn_user_update.spinner::before{			content: ''}
 #common_user_edit_btn_user_update::before{					content:var(--common_app_icon_update)}	
@@ -370,6 +372,10 @@ select {
 	width: 1.25em;
 	text-align: center;
 	height: 30px !important;
+}
+/* search*/
+.common_search_input{
+	width: 94%;
 }
 
 /*dialogue*/
