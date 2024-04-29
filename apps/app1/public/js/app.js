@@ -187,7 +187,7 @@ const app_event_click = event => {
                     }
                     case 'common_user_start_identity_provider_login':{
                         const target_row = common.element_row(event.target);
-                        common.ProviderSignIn(target_row.querySelector('.common_login_provider_id').innerHTML);
+                        common.user_login(null, null, null, target_row.querySelector('.common_login_provider_id').innerHTML);
                         break;
                     }
                     case 'common_user_edit_btn_user_delete_account':{

@@ -7,6 +7,7 @@
 	--common_app_color_princess:#E195CB;
 	--common_app_color_blue1: rgb(81, 171, 255);
 	--common_app_color_blue2: rgb(197 227 255);
+	--common_app_color_blue3: #006dbf;
 	--common_app_color_black: #404040;
 	--common_app_color_black_transparent1: rgba(0,0,0,0.2);
 	--common_app_color_black_transparent2: rgba(0,0,0,0.3);
@@ -135,7 +136,7 @@
     --common_app_icon_role:                 '\f630';
     --common_app_icon_active:               '\f205';
     --common_app_icon_inactive:             '\f204';
-    
+    --common_app_icon_reload:				'↻';
     --common_app_icon_sum:                  '∑';
     --common_app_icon_home:                 '\f015';
     --common_app_icon_type:                 '\f059';
