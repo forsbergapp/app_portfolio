@@ -119,7 +119,7 @@ const app_event_click = event => {
                         break;
                     }
                     case 'common_dialogue_user_menu_log_out':{
-                        common.user_logoff();
+                        user_logoff_app();
                         break;
                     }
                     //profile button
@@ -178,7 +178,7 @@ const app_event_click = event => {
                         break;
                     }
                     case 'common_user_start_login_button':{
-                        common.user_login().catch(()=>null);
+                        user_login_app().catch(()=>null);
                         break;
                     }
                     case 'common_user_start_signup_button':{
@@ -187,7 +187,7 @@ const app_event_click = event => {
                     }
                     case 'common_user_start_identity_provider_login':{
                         const target_row = common.element_row(event.target);
-                        common.user_login(null, null, null, target_row.querySelector('.common_login_provider_id').innerHTML);
+                        user_login_app(null, null, null, target_row.querySelector('.common_login_provider_id').innerHTML);
                         break;
                     }
                     case 'common_user_edit_btn_user_delete_account':{
@@ -251,7 +251,7 @@ const app_event_keyup = event => {
                 case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
-                        common.user_login().catch(()=>null);
+                        user_login_app().catch(()=>null);
                     }        
                     break;
                 }
@@ -262,11 +262,11 @@ const app_event_keyup = event => {
                 case 'common_user_verify_verification_char4':
                 case 'common_user_verify_verification_char5':{
                     common.user_verify_check_input( AppDocument.querySelector(`#${event_target_id}`), 
-                                                    'common_user_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), common.user_login);
+                                                    'common_user_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), user_login_app);
                     break;
                 }
                 case 'common_user_verify_verification_char6':{
-                    common.user_verify_check_input(AppDocument.querySelector(`#${event_target_id}`), '', common.user_login);
+                    common.user_verify_check_input(AppDocument.querySelector(`#${event_target_id}`), '', user_login_app);
                     break;
                 }
             }
@@ -340,6 +340,27 @@ const profile_show_app = async (user_account_id_other, username) =>{
     });
 }
 /**
+ * User login app
+ * @param {boolean|null} system_admin 
+ * @param {string|null} username_verify
+ * @param {string|null} password_verify
+ * @param {number|null} provider_id 
+ * @returns {Promise.<void>}
+ */
+const user_login_app = async (system_admin=false, username_verify=null, password_verify=null, provider_id=null) =>{
+    common.user_login(system_admin, username_verify, password_verify, provider_id)
+    .then(()=>get_apps());
+}
+/**
+ * User logoff app
+ * @returns {Promise.<void>}
+ */
+ const user_logoff_app = async () =>{
+    common.user_logoff()
+    .then(()=>get_apps());
+}
+
+/**
  * Get apps
  * @returns {void}
  */
@@ -376,7 +397,7 @@ const user_delete_app = async () => {
     
     const function_delete_user_account = () => { 
                                                 common.user_delete(1, null)
-                                                .then(()=>common.user_logoff())
+                                                .then(()=>user_logoff_app())
                                                 .catch(()=>null);
                                             };
     await common.user_delete(null, function_delete_user_account)

@@ -1638,7 +1638,7 @@ const list_key_event = (event, module, event_function=null) => {
 };
 /**
  * User login
- * @param {boolean} system_admin 
+ * @param {boolean|null} system_admin 
  * @param {string|null} username_verify
  * @param {string|null} password_verify
  * @param {number|null} provider_id 
@@ -1733,10 +1733,10 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
     }
     
     const result = await FFB('IAM', path, 'POST', 'IAM', json_data)
-    .catch(err=>{
-        AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
-        throw err;
-    });
+                    .catch(err=>{
+                        AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+                        throw err;
+                    });
     if (system_admin){
         COMMON_GLOBAL.system_admin = JSON.parse(result).username==''?null:JSON.parse(result).username;
         COMMON_GLOBAL.token_admin_at = JSON.parse(result).token_at;
@@ -1756,22 +1756,22 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
     else{
         const login_data = provider_id?JSON.parse(result).items[0]:JSON.parse(result).login[0];
         COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
+        COMMON_GLOBAL.token_at	= JSON.parse(result).accessToken;
+        COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
+        COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
+        COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
+        await user_preference_get().catch((error)=>{throw error});
+        await common_translate_ui(COMMON_GLOBAL.user_locale);
         if (login_data.active==0){
             show_common_dialogue('VERIFY', 'LOGIN', login_data.email, null);
             throw 'ERROR';
         }
         else{
             profile_close();
-            
-            COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
             COMMON_GLOBAL.user_account_username = login_data.username;
             COMMON_GLOBAL.user_identity_provider_id = provider_id?login_data.identity_provider_id:null;
             
             COMMON_GLOBAL.user_app_role_id = login_data.app_role_id;
-            COMMON_GLOBAL.token_at	= JSON.parse(result).accessToken;
-            COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
-            COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
-            COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
             
             //set avatar or empty
             set_avatar(provider_id?login_data.provider_image:login_data.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
@@ -1779,7 +1779,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
 
             await updateOnlineStatus().catch((error)=>{throw error});
-            await user_preference_get().catch((error)=>{throw error});
+            
             AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
             ComponentRemove(current_dialogue, true);
             countdown_token_set();
@@ -1823,7 +1823,7 @@ const user_logoff = async () => {
         AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
         AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
 
-        updateOnlineStatus()
+        await updateOnlineStatus()
         .then(()=>{
             ComponentRemove('common_dialogue_user_edit');
             dialogue_password_new_clear();
@@ -1835,6 +1835,7 @@ const user_logoff = async () => {
             user_preferences_set_default_globals('ARABIC_SCRIPT');
             //update body class with app theme, direction and arabic script usage classes
             common_preferences_update_body_class_from_preferences();
+            common_translate_ui(COMMON_GLOBAL.user_locale);
         })
         .catch((error)=>{throw error;});
     }
