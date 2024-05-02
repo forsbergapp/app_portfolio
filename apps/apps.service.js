@@ -865,7 +865,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
     const host_no_port = host.substring(0,host.indexOf(':')==-1?host.length:host.indexOf(':'));
     const app_id = ConfigGetAppHost(host_no_port, 'SUBDOMAIN');
     if (app_id==null){
-        res.statusCode = 301;
+        res.statusCode = 404;
         return null;
     }
     else
@@ -929,9 +929,12 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                                         ip:             ip, 
                                                         user_agent:     user_agent,
                                                         accept_language:accept_language,
-                                                        host:           host}).then(app_result=>{
+                                                        host:           host})
+                                        .then(app_result=>{
                                             LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '2 ' + new Date().toISOString())
                                             .then(()=>{
+                                                if (app_result == null)
+                                                    res.statusCode = 301;
                                                 resolve(app_result);
                                             })
                                             .catch((/**@type{Types.error}*/err)=>{
