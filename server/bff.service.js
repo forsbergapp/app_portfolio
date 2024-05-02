@@ -244,10 +244,17 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
                     }
                     else{
                         //result from APP can request to redirect
-                        if (bff_parameters.res.statusCode==301)
+                        if (parameters.service=='APP' && bff_parameters.res.statusCode==301)
                             bff_parameters.res.redirect('/');
-                        else
-                            bff_parameters.res.status(200).send(result_service);
+                        else 
+                            if (parameters.service=='APP' && bff_parameters.res.statusCode==404){
+                                if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
+                                    bff_parameters.res.redirect(`https://${ConfigGet('SERVER', 'HOST')}`);
+                                else
+                                    bff_parameters.res.redirect(`http://${ConfigGet('SERVER', 'HOST')}`);
+                            }
+                            else
+                                bff_parameters.res.status(200).send(result_service);
                     }  
                 })
             }
