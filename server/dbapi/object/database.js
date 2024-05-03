@@ -133,15 +133,14 @@ const install_db_get_files = async (json_type) =>{
                     install_sql = await fs.promises.readFile(`${process.cwd()}/apps/app${file[2]}/scripts/${install_row.script}`, 'utf8');
                 }
             }
+            //remove comments
+            //rows starting with '--' and ends width '\r\n'
+            install_sql = install_sql.split('\r\n').filter(row=>!row.startsWith('--')).join('\r\n');
             //split script file into separate sql statements
             for (let sql of install_sql.split(';')){
-                const check_sql = (/**@type{string}*/sql) =>{
-                    if (!sql || sql.endsWith('\r\n') || sql=='\n' || sql=='\n\n')
-                        return false;
-                    else
-                        return true;
-                };
-                if (check_sql(sql)){
+                if (sql.startsWith('\r\n'))
+                    sql = sql.substring(2);
+                if (sql.length>0){
                     if (file[0] == 0 && sql.includes(password_tag)){
                         let sql_and_pw;
                         if (sql.toUpperCase().includes('INSERT INTO'))
@@ -150,7 +149,7 @@ const install_db_get_files = async (json_type) =>{
                             sql_and_pw = await sql_with_password('app_portfolio', sql);
                         sql = sql_and_pw[0];
                     }
-                    sql = sql.replace('<APP_ID/>', file[2]?file[2].toString():'0');
+                    sql = sql.replaceAll('<APP_ID/>', file[2]?file[2].toString():'0');
                         
                     //if ; must be in wrong place then set tag in import script and convert it
                     if (sql.includes('<SEMICOLON/>'))
@@ -259,7 +258,7 @@ const install_db_get_files = async (json_type) =>{
                                                             parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
                                                             parameter_value:    sql_and_pw[1]});
                         }
-                        users_row.sql = users_row.sql.replace('<APP_ID/>', file[2]);
+                        users_row.sql = users_row.sql.replaceAll('<APP_ID/>', file[2]);
                         users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_username);
                         break;
                     }
@@ -340,7 +339,7 @@ const install_db_get_files = async (json_type) =>{
                 sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app_admin');
             else
                 sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app' + file[2]);
-            sql_row.sql = sql_row.sql.replace('<APP_ID/>', file[2]?file[2]:'0');
+            sql_row.sql = sql_row.sql.replaceAll('<APP_ID/>', file[2]?file[2]:'0');
             await db_execute(app_id, sql_row.sql, {}, DBA)
             .then(()=>{count_statements += 1;})
             .catch(()=>{count_statements_fail += 1;});
