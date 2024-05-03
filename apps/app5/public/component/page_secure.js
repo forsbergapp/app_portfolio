@@ -10,20 +10,30 @@ const AppDocument = document;
  */
 /**
  *  
- * @param {{text_currency_symbol:string,
- *          text_currency_text:string,
+ * @param {{bank_name:string,
+ *          bank_account:string,
+ *          bank_statement_date:string,
+ *          bank_currency_symbol:string,
+ *          bank_currency_text:string,
  *          function_account_balance:function,
  *          function_format_number:function,
  *          transactions:transaction_type[]|[]}} props 
  * @returns 
  */
 const template = props => ` <div id='app_page_secure_account' class='app_bank_div'>
-                                <div class='app_page_secure_divs_row'>
-                                    <div id='app_page_secure_balance'>${props.transactions.length>0? 
-                                                                            props.text_currency_symbol + 
-                                                                            props.function_format_number(props.function_account_balance(props.transactions)):''}</div>
-                                    <div id='app_page_secure_currency'>${props.text_currency_text}</div>
-                                    <div id='app_page_secure_refresh' class='common_reload common_link'></div>
+                                <div id='app_page_secure_bank_statement_row'>
+                                    <div class='app_page_secure_bank_statement_col'>
+                                        <div id='app_page_secure_account'>${props.bank_account}</div>
+                                        <div id='app_page_secure_statement_date'>${props.bank_statement_date}</div>
+                                        <div id='app_page_secure_balance'>${props.transactions.length>0? 
+                                                                                props.bank_currency_symbol + 
+                                                                                props.function_format_number(props.function_account_balance(props.transactions)):''}</div>
+                                        <div id='app_page_secure_currency'>${props.bank_currency_text}</div>
+                                        <div id='app_page_secure_refresh' class='common_reload common_link'></div>
+                                    </div>
+                                    <div class='app_page_secure_bank_statement_col'>
+                                        <div id='app_page_secure_bank_name'>${props.bank_name}</div>
+                                    </div>
                                 </div>
                                 <div id='app_page_secure_transactions'>
                                     <div id='app_page_secure_transactions_search' class='common_search'>
@@ -58,6 +68,14 @@ const template = props => ` <div id='app_page_secure_account' class='app_bank_di
  * @param {{common_document:AppDocument,
  *          common_mountdiv:string,
  *          locale:string,
+ *          app_data_bank_id:number,
+ *          app_data_bank_name:string,
+ *          app_data_bank_country_code:string,
+ *          app_data_bank_account_currency: string,
+ *          app_data_bank_account_currency_name:string,
+ *          app_data_customer_bban:string,
+ *          user_timezone:string,
+ *          function_IBAN_compose:function,
  *          function_FFB:function}} props,
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
@@ -79,8 +97,11 @@ const component = async props => {
      */
     const account_balance = transactions => transactions.reduce((balance, current_row)=>balance += (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0)
     /**
-     * @param {{text_currency_symbol:string,
-     *          text_currency_text:string,
+     * @param {{bank_name:string,
+     *          bank_account:string,
+     *          bank_statement_date:string,
+     *          bank_currency_symbol:string,
+     *          bank_currency_text:string,
      *          function_account_balance:function, 
      *          function_format_number:function,
      *          transactions:transaction_type[]|[]}} props_template
@@ -96,7 +117,7 @@ const component = async props => {
         //demo transactions
         let transactions = [];
         //create 10 random generated transactions
-        for (const dummy of Array(10)){
+        for (const dummy of Array(30)){
             const new_date = new Date();
             const transaction_date = new Date(	new_date.getUTCFullYear(),new_date.getUTCMonth(),new_date.getUTCDate())
                                         .toLocaleString(props.locale, {timeZone: 'UTC', year:'numeric', month:'numeric', day:'numeric'});
@@ -114,17 +135,23 @@ const component = async props => {
         //                                    .then((/**@type{string}*/result)=>JSON.parse(result))
         //                                    .catch((/**@type{Error}*/error)=>{throw error});
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
-            render_template({   text_currency_symbol: '$',
-                                text_currency_text:'Money currency',
-                                function_account_balance:account_balance,
-                                function_format_number:format_number,
-                                transactions:transactions});
+            render_template({   bank_name:                  props.app_data_bank_name,
+                                bank_account:               props.function_IBAN_compose(props.app_data_bank_country_code, props.app_data_bank_id, props.app_data_customer_bban, true),
+                                bank_statement_date:        new Date().toLocaleString(props.locale, {timeZone: props.user_timezone, year:'numeric', month:'numeric', day:'numeric'}),
+                                bank_currency_symbol:       props.app_data_bank_account_currency,
+                                bank_currency_text:         props.app_data_bank_account_currency_name,
+                                function_account_balance:   account_balance,
+                                function_format_number:     format_number,
+                                transactions:               transactions});
     }
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({ text_currency_symbol: '',
-                                    text_currency_text:'',
+        template: render_template({ bank_name:'',
+                                    bank_account:'',
+                                    bank_statement_date:'',
+                                    bank_currency_symbol: '',
+                                    bank_currency_text:'',
                                     function_account_balance:account_balance,
                                     function_format_number:format_number,
                                     transactions:[]})
