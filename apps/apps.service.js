@@ -16,7 +16,8 @@ const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/se
  * @returns {boolean}
  */
  const app_start = (app_id=null)=>{
-    if (getNumberValue(file_get_cached('CONFIG').MAINTENANCE)==0 && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
+    if (getNumberValue(file_get_cached('CONFIG').MAINTENANCE)==0 && ConfigGet('SERVICE_DB', 'START')=='1' && 
+        ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START=='1' &&
         ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`] )
         if (app_id == null)
             return true;
@@ -199,8 +200,9 @@ const get_module_with_initBFF = async (app_info) => {
                 app_link_url: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_URL' in parameter)[0].LINK_URL,
                 app_link_title: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_TITLE' in parameter)[0].LINK_TITLE,
                 app_text_edit: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'TEXT_EDIT' in parameter)[0].TEXT_EDIT,
-                app_framework : getNumberValue(ConfigGet('SERVER', 'APP_FRAMEWORK')),
-                app_framework_messages:getNumberValue(ConfigGet('SERVER', 'APP_FRAMEWORK_MESSAGES')),
+                app_framework : getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK),
+                app_framework_messages:getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES),
+                app_rest_api_version:getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_REST_API_VERSION' in parameter)[0].APP_REST_API_VERSION),
                 app_datatoken: app_info.datatoken,
                 locale: app_info.locale,
                 translate_items:app_info.translate_items,
@@ -502,7 +504,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
     const ps = query_parameters_obj.ps; //papersize     A4/Letter
     const hf = (query_parameters_obj.hf==1); //header/footer 1/0    1= true
     
-    const use_message_queue = (getNumberValue(ConfigGet('SERVER', 'APP_PDF_METHOD'))==1);
+    const use_message_queue = (getNumberValue(ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_PDF_METHOD' in parameter)[0].APP_PDF_METHOD)==1);
     
     const host =    (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://') + 
                     ConfigGetApp(app_id, app_id, 'SUBDOMAIN') + '.' +  
@@ -712,8 +714,8 @@ const getApps = async (app_id, id, lang_code) =>{
  */
 const getAssetFile = (app_id, url, basepath, res) =>{
     return new Promise((resolve, reject)=>{
-        const app_cache_control = ConfigGet('SERVER','APP_CACHE_CONTROL');
-        const app_cache_control_font = ConfigGet('SERVER','APP_CACHE_CONTROL_FONT');
+        const app_cache_control = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_CACHE_CONTROL' in parameter)[0].APP_CACHE_CONTROL;
+        const app_cache_control_font = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_CACHE_CONTROL_FONT' in parameter)[0].APP_CACHE_CONTROL_FONT;
         switch (url.toLowerCase().substring(url.lastIndexOf('.'))){
             case '.css':{
                 res.type('text/css');

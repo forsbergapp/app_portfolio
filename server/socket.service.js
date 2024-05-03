@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
@@ -344,7 +344,8 @@ const ClientAdd = (newClient) => {
  */
  const SocketCheckMaintenance = () => {
     //start interval if apps are started
-    if (ConfigGet('SERVER', 'APP_START')=='1'){
+    const app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
+    if (ConfigGetApp(app_id, app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START =='1'){
         setInterval(() => {
             if (getNumberValue(file_get_cached('CONFIG').MAINTENANCE)==1){
                 CONNECTED_CLIENTS.forEach(client=>{

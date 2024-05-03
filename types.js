@@ -373,6 +373,7 @@
  * @property {string|null}  app_text_edit
  * @property {number}       app_framework
  * @property {number}       app_framework_messages
+ * @property {number}       app_rest_api_version
  * @property {string}       app_datatoken
  * @property {string}       locale
  * @property {translate_items}  translate_items

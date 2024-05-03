@@ -57,6 +57,7 @@
             app_text_edit:string|null,
             app_framework:number|null,
             app_framework_messages:number|null,
+            app_rest_api_version:number|null,
             app_root:string,
             app_div:string,
             app_console:{warn:function, info:function, error:function},
@@ -152,6 +153,7 @@ const COMMON_GLOBAL = {
     app_text_edit:null,
     app_framework:null,
     app_framework_messages:null,
+    app_rest_api_version:null,
     app_root:'app_root',
     app_div:'app',
     app_console:{warn:window.console.warn, info:window.console.info, error:window.console.error},
@@ -2747,6 +2749,7 @@ const FFB = async (service, path, method, authorization_type, json_data=null) =>
             break;
         }
     }
+    bff_path += '/v' + (COMMON_GLOBAL.app_rest_api_version ?? 1);
     let options = {};
     if (json_data ==null)
         options = {
@@ -3121,8 +3124,9 @@ const set_app_service_parameters = async parameters => {
     COMMON_GLOBAL.app_link_title= parameters.app_link_title;
     COMMON_GLOBAL.app_text_edit= parameters.app_text_edit;
     
-    COMMON_GLOBAL.app_framework = parseInt(parameters.app_framework);
-    COMMON_GLOBAL.app_framework_messages = parseInt(parameters.app_framework_messages);
+    COMMON_GLOBAL.app_framework = parameters.app_framework;
+    COMMON_GLOBAL.app_framework_messages = parameters.app_framework_messages;
+    COMMON_GLOBAL.app_rest_api_version = parameters.app_rest_api_version
     
     //rest 
     COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
