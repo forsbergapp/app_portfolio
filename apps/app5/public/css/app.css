@@ -63,22 +63,36 @@ body {
 	vertical-align: middle;
 	margin: 10px;
 }
+#app_page_secure_bank_statement_row{
+	height: 3em;
+}
 #app_page_secure_account{
 	height: 80%;
 	text-align: start;
-}
-#app_page_secure_transactions{
-	text-align: center;
-	margin-top: 20px;
 }
 #app_page_secure_balance{
 	font-size: 2en;
 	font-weight: bold;
 }
-#app_page_secure_transactions_list{
-	font-size:0.7em;
-	margin-top: 10px;
+#app_page_secure_transactions{
+	text-align: start;
+	margin-top: 3em;
+	display: flex !important;
+    flex-direction: column;
+	height:calc(100% - 4em);
+}
+#app_page_secure_bank_statement_row{
+	font-size:0.5em;
+}
+#app_page_secure_bank_statement_row .app_page_secure_bank_statement_col{
+	width:calc(50% - 1em);
 	display: inline-block;
+    vertical-align: top;
+}
+#app_page_secure_transactions_list{
+	font-size:0.5em;
+	margin-top: 10px;
+	overflow: auto;
 }
 .app_page_secure_transactions_row div{
 	display: inline-block;
@@ -91,6 +105,17 @@ body {
 .app_page_secure_transactions_amount_withdrawal{
 	width: 75px;
     text-align: end;	
+}
+/*RESPONSIVE SETTINGS*/
+/*CSS for minimum 768px*/
+@media only screen and (min-width: 768px) {
+	#app_page_secure_transactions_list{
+		font-size: 0.7em;
+	}
+	#app_page_secure_bank_statement_row{
+		font-size:0.7em;
+	}
+	
 }
 /*COMMON*/
 #common_profile_input_row,
