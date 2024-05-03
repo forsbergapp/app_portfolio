@@ -4,7 +4,7 @@
 import * as Types from './../../../types.js';
 
 const { getNumberValue } = await import(`file://${process.cwd()}/server/server.service.js`);
-const { ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+const { ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
@@ -15,7 +15,8 @@ const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cw
  * @returns {Promise.<Types.db_result_app_log_createLog[]|null>}
  */
 const createLog = async (app_id, data_app_id, json_data) => {
-	if (ConfigGet('SERVICE_DB', 'APP_LOG')=='1'){
+		
+	if (ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').APP_LOG=='1'){
 		const sql = `INSERT INTO ${db_schema()}.app_log(
 					app_id,
 					json_data,

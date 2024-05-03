@@ -99,17 +99,17 @@ const COMMON = {
     const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam} = await import(`file://${process.cwd()}/server/bff.js`);
     //auth
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
-    app.route('*').all                  (BFF_init);
-    app.route('*').get                  (BFF_start);
-    app.route('/bff/app_data').all      (iam.AuthenticateDataToken, BFF_app_data);
-    app.route('/bff/app_signup').post   (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
-    app.route('/bff/app_access').all    (iam.AuthenticateAccessToken, BFF_app_access);
-    app.route('/bff/admin').all         (iam.AuthenticateAccessTokenAdmin, BFF_admin);    
-    app.route('/bff/superadmin').put    (iam.AuthenticateAccessTokenSuperAdmin, BFF_superadmin);
-    app.route('/bff/systemadmin').all   (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
-    app.route('/bff/socket').get        (iam.AuthenticateSocket, BFF_socket);
-    app.route('/bff/iam').post          (iam.AuthenticateIAM, BFF_iam);
-    app.route('*').get                  (BFF_app);
+    app.route('*').all                      (BFF_init);
+    app.route('*').get                      (BFF_start);
+    app.route('/bff/app_data/v1').all      (iam.AuthenticateDataToken, BFF_app_data);
+    app.route('/bff/app_signup/v1').post   (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
+    app.route('/bff/app_access/v1').all    (iam.AuthenticateAccessToken, BFF_app_access);
+    app.route('/bff/admin/v1').all         (iam.AuthenticateAccessTokenAdmin, BFF_admin);    
+    app.route('/bff/superadmin/v1').put    (iam.AuthenticateAccessTokenSuperAdmin, BFF_superadmin);
+    app.route('/bff/systemadmin/v1').all   (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
+    app.route('/bff/socket/v1').get        (iam.AuthenticateSocket, BFF_socket);
+    app.route('/bff/iam/v1').post          (iam.AuthenticateIAM, BFF_iam);
+    app.route('*').get                      (BFF_app);
     
     //ERROR LOGGING
     app.use((/**@type{Types.error}*/err,/**@type{Types.req}*/req,/**@type{Types.res}*/res, /**@type{function}*/next) => {
