@@ -124,11 +124,32 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) common
  * 
- * @param {Types.bff_parameters} bff_parameters
+ * @param {Types.req} req
+ * @param {Types.res} res
+ * returns {{}}
  */
-const BFF = (bff_parameters) =>{
-    service.BFF(bff_parameters);
-};
+ const BFF_common = (req, res) =>{
+
+    return {
+        //app control
+        app_id: getNumberValue(req.query.app_id), 
+        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        //request
+        host: req.headers.host, 
+        url:req.originalUrl,
+        method: req.method, 
+        parameters: req.query.parameters ?? '',
+        body: req.body, 
+        authorization:  req.headers.authorization, 
+        //metadata
+        ip: req.ip, 
+        user_agent: req.headers['user-agent'], 
+        accept_language: req.headers['accept-language'], 
+        //response
+        res: res
+    };
+ }
 /**
  * Backend for frontend (BFF) APP including assets, report and info pages
  * 
@@ -137,26 +158,12 @@ const BFF = (bff_parameters) =>{
  */
  const BFF_app = (req, res) =>{
     /**@type{Types.bff_parameters} */
-    const bff_parameters = {
-        app_id: getNumberValue(req.query.app_id), 
-        endpoint:'APP', 
-        service: 'APP', 
-        ip: req.ip, 
-        host: req.headers.host, 
-        method: req.method, 
-        authorization:  req.headers.authorization, 
-        user_agent: req.headers['user-agent'], 
-        accept_language: req.headers['accept-language'], 
-        url:req.originalUrl,
-        parameters: '', 
-        body: req.body, 
-        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
-        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
-        res: res
-    };
-    BFF(bff_parameters);
+    const bff_parameters = {endpoint:'APP', 
+                            service: 'APP', 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
 };
-
 /**
  * Backend for frontend (BFF) APP_DATA
  * 
@@ -165,24 +172,11 @@ const BFF = (bff_parameters) =>{
  */
  const BFF_app_data = (req, res) =>{
     /**@type{Types.bff_parameters} */
-    const bff_parameters = {
-        app_id: getNumberValue(req.query.app_id), 
-        endpoint:'APP_DATA', 
-        service: req.query.service, 
-        ip: req.ip, 
-        host: req.headers.host, 
-        method: req.method, 
-        authorization:  req.headers.authorization, 
-        user_agent: req.headers['user-agent'], 
-        accept_language: req.headers['accept-language'], 
-        url:req.originalUrl,
-        parameters: req.query.parameters, 
-        body: req.body, 
-        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
-        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
-        res: res
-    };
-    BFF(bff_parameters);
+    const bff_parameters = {endpoint:'APP_DATA', 
+                            service: req.query.service, 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) APP_SIGNUP
@@ -192,24 +186,11 @@ const BFF = (bff_parameters) =>{
  */
  const BFF_app_signup = (req, res) =>{
     /**@type{Types.bff_parameters} */
-    const bff_parameters = {
-        app_id: getNumberValue(req.query.app_id), 
-        endpoint:'APP_SIGNUP', 
-        service: req.query.service, 
-        ip: req.ip, 
-        host: req.headers.host, 
-        method: req.method, 
-        authorization:  req.headers.authorization, 
-        user_agent: req.headers['user-agent'], 
-        accept_language: req.headers['accept-language'], 
-        url:req.originalUrl,
-        parameters: req.query.parameters, 
-        body: req.body, 
-        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
-        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
-        res: res
-    };
-    BFF(bff_parameters);
+    const bff_parameters = {endpoint:'APP_SIGNUP', 
+                            service: req.query.service, 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) APP_ACCESS
@@ -219,24 +200,11 @@ const BFF = (bff_parameters) =>{
  */
  const BFF_app_access = (req, res) =>{
     /**@type{Types.bff_parameters} */
-    const bff_parameters = {
-        app_id: getNumberValue(req.query.app_id), 
-        endpoint:'APP_ACCESS', 
-        service: req.query.service, 
-        ip: req.ip, 
-        host: req.headers.host, 
-        method: req.method, 
-        authorization:  req.headers.authorization, 
-        user_agent: req.headers['user-agent'], 
-        accept_language: req.headers['accept-language'], 
-        url:req.originalUrl,
-        parameters: req.query.parameters, 
-        body: req.body, 
-        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
-        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
-        res: res
-    };
-    BFF(bff_parameters);
+    const bff_parameters = {endpoint:'APP_ACCESS', 
+                            service: req.query.service, 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) ADMIN
@@ -246,24 +214,11 @@ const BFF = (bff_parameters) =>{
  */
  const BFF_admin = (req, res) =>{
     /**@type{Types.bff_parameters} */
-    const bff_parameters = {
-        app_id: getNumberValue(req.query.app_id), 
-        endpoint:'ADMIN', 
-        service: req.query.service, 
-        ip: req.ip, 
-        host: req.headers.host, 
-        method: req.method, 
-        authorization:  req.headers.authorization, 
-        user_agent: req.headers['user-agent'], 
-        accept_language: req.headers['accept-language'], 
-        url:req.originalUrl,
-        parameters: req.query.parameters, 
-        body: req.body, 
-        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
-        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
-        res: res
-    };
-    BFF(bff_parameters);
+    const bff_parameters = {endpoint:'ADMIN', 
+                            service: req.query.service, 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) SUPERADMIN
@@ -273,24 +228,11 @@ const BFF = (bff_parameters) =>{
  */
  const BFF_superadmin = (req, res) =>{
     /**@type{Types.bff_parameters} */
-    const bff_parameters = {
-        app_id: getNumberValue(req.query.app_id), 
-        endpoint:'SUPERADMIN', 
-        service: req.query.service, 
-        ip: req.ip, 
-        host: req.headers.host, 
-        method: req.method, 
-        authorization:  req.headers.authorization, 
-        user_agent: req.headers['user-agent'], 
-        accept_language: req.headers['accept-language'], 
-        url:req.originalUrl,
-        parameters: req.query.parameters, 
-        body: req.body, 
-        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
-        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
-        res: res
-    };
-    BFF(bff_parameters);
+    const bff_parameters = {endpoint:'SUPERADMIN', 
+                            service: req.query.service, 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
 };
 
 /**
@@ -301,24 +243,11 @@ const BFF = (bff_parameters) =>{
  */
  const BFF_systemadmin = (req, res) =>{
     /**@type{Types.bff_parameters} */
-    const bff_parameters = {
-        app_id: getNumberValue(req.query.app_id), 
-        endpoint:'SYSTEMADMIN', 
-        service: req.query.service, 
-        ip: req.ip, 
-        host: req.headers.host, 
-        method: req.method, 
-        authorization:  req.headers.authorization, 
-        user_agent: req.headers['user-agent'], 
-        accept_language: req.headers['accept-language'], 
-        url:req.originalUrl,
-        parameters: req.query.parameters, 
-        body: req.body, 
-        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
-        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id),
-        res: res
-    };
-    BFF(bff_parameters);
+    const bff_parameters = {endpoint:'SYSTEMADMIN', 
+                            service: req.query.service, 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
 };
 
 /**
@@ -329,24 +258,11 @@ const BFF = (bff_parameters) =>{
  */
 const BFF_socket = (req, res) =>{
     /**@type{Types.bff_parameters} */
-    const bff_parameters = {
-        app_id: getNumberValue(req.query.app_id), 
-        endpoint:'SOCKET', 
-        service: req.query.service, 
-        ip: req.ip, 
-        host: req.headers.host, 
-        method: req.method, 
-        authorization:  req.headers.authorization, 
-        user_agent: req.headers['user-agent'], 
-        accept_language: req.headers['accept-language'], 
-        url:req.originalUrl,
-        parameters: req.query.parameters, 
-        body: req.body, 
-        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
-        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
-        res: res
-    };
-    BFF(bff_parameters);
+    const bff_parameters = {endpoint:'SOCKET', 
+                            service: req.query.service, 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) IAM
@@ -356,24 +272,11 @@ const BFF_socket = (req, res) =>{
  */
 const BFF_iam = (req, res) =>{
     /**@type{Types.bff_parameters} */
-    const bff_parameters = {
-        app_id: getNumberValue(req.query.app_id), 
-        endpoint:'IAM', 
-        service: req.query.service, 
-        ip: req.ip, 
-        host: req.headers.host, 
-        method: req.method, 
-        authorization:  req.headers.authorization, 
-        user_agent: req.headers['user-agent'], 
-        accept_language: req.headers['accept-language'], 
-        url:req.originalUrl,
-        parameters: req.query.parameters, 
-        body: req.body, 
-        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
-        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
-        res: res
-    };
-    BFF(bff_parameters);
+    const bff_parameters = {endpoint:'IAM', 
+                            service: req.query.service, 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
 };
 
 export{BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam};

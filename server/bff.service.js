@@ -88,7 +88,7 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
  };
 /**
  * Backend for frontend BFF server
- * @param {Types.bff_parameters_server} bff_parameters
+ * @param {Types.bff_parameters} bff_parameters
  * @returns {Promise<(*)>}
  */
  const BFF_server = async (bff_parameters) => {
@@ -107,6 +107,7 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
                     //add system admin if logged on
                     decodedparameters += bff_parameters.system_admin?`&system_admin=${bff_parameters.system_admin}`:'';
                 }
+                //check allowed endpoints and service
                 switch (bff_parameters.endpoint + '_' + bff_parameters.service){
                     case 'APP_APP':
                     case 'APP_DATA_APP':
@@ -184,15 +185,22 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
         bff_parameters.service == 'WORLDCITIES'){
         /**@type {Types.bff_parameters_microservices} */
         const parameters = {
+            //app control
             app_id: bff_parameters.app_id, 
             endpoint:bff_parameters.endpoint, 
             service: bff_parameters.service, 
-            ip: bff_parameters.ip, 
+            //request
+            //  no host
+            //  no url
             method: bff_parameters.method,
-            user_agent: bff_parameters.user_agent, 
-            accept_language: bff_parameters.accept_language, 
             parameters: bff_parameters.parameters, 
-            body: bff_parameters.body
+            body: bff_parameters.body,
+            //  no authorization
+            //metadata
+            ip: bff_parameters.ip, 
+            user_agent: bff_parameters.user_agent, 
+            accept_language: bff_parameters.accept_language
+            //  no response
         };
         BFF_microservices(parameters)
         .then((/**@type{*}*/result_service) => {
@@ -207,27 +215,9 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
         });
     }        
     else{
-        /**@type {Types.bff_parameters_server} */
-        const parameters = {
-            app_id: bff_parameters.app_id, 
-            endpoint:bff_parameters.endpoint, 
-            service: bff_parameters.service, 
-            ip: bff_parameters.ip, 
-            host: bff_parameters.host, 
-            method: bff_parameters.method, 
-            authorization:  bff_parameters.authorization, 
-            user_agent: bff_parameters.user_agent, 
-            accept_language: bff_parameters.accept_language, 
-            url:bff_parameters.url,
-            parameters: bff_parameters.parameters, 
-            body: bff_parameters.body, 
-            system_admin: bff_parameters.system_admin,
-            user_account_logon_user_account_id: bff_parameters.user_account_logon_user_account_id, 
-            res: bff_parameters.res
-        };
-        BFF_server(parameters)
+        BFF_server(bff_parameters)
         .then((/**@type{*}*/result_service) => {
-            if (parameters.endpoint=='APP' && parameters.service=='APP' && result_service!=null && result_service.STATIC){
+            if (bff_parameters.endpoint=='APP' && bff_parameters.service=='APP' && result_service!=null && result_service.STATIC){
                 if (result_service.SENDFILE){
                     bff_parameters.res.sendFile(result_service.SENDFILE);
                     bff_parameters.res.status(200);
@@ -244,10 +234,10 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
                     }
                     else{
                         //result from APP can request to redirect
-                        if (parameters.service=='APP' && bff_parameters.res.statusCode==301)
+                        if (bff_parameters.service=='APP' && bff_parameters.res.statusCode==301)
                             bff_parameters.res.redirect('/');
                         else 
-                            if (parameters.service=='APP' && bff_parameters.res.statusCode==404){
+                            if (bff_parameters.service=='APP' && bff_parameters.res.statusCode==404){
                                 if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
                                     bff_parameters.res.redirect(`https://${ConfigGet('SERVER', 'HOST')}`);
                                 else
