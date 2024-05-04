@@ -511,11 +511,11 @@ const sendBroadcast = () => {
         let path='';
         let token_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
-            path = '/socket/message/SystemAdmin?';
+            path = '/socket/message/systemdmin?';
             token_type = 'SYSTEMADMIN';
         }
         else{
-            path = '/socket/message/Admin?';
+            path = '/socket/message/admin?';
             token_type = 'APP_ACCESS';
         }
         common.FFB('SOCKET', path, 'POST', token_type, json_data)
@@ -666,7 +666,7 @@ const count_users = async () => {
          * @returns{Promise.<{count_connected:number}>}
          */
         const get_count = async (identity_provider_id, count_logged_in) => {
-            return await common.FFB('SOCKET', `/socket/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'APP_ACCESS', null)
+            return await common.FFB('SOCKET', `/socket/connection/admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'APP_ACCESS', null)
             .then((/**@type{string}*/result)=>JSON.parse(result))
             .catch((/**@type{Error}*/err)=>{throw err;});
         };
@@ -1556,12 +1556,12 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL.system_admin!=null){
-                    path = `/socket/connection/SystemAdmin?${url_parameters}`;
+                    path = `/socket/connection/systemadmin?${url_parameters}`;
                     service = 'SOCKET';
                     token_type = 'SYSTEMADMIN';
                 }
                 else{
-                    path = `/socket/connection/Admin?${url_parameters}`;
+                    path = `/socket/connection/admin?${url_parameters}`;
                     service = 'SOCKET';
                     token_type = 'APP_ACCESS';
                 }
