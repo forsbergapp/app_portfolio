@@ -203,355 +203,355 @@ const COMMON = {
                                 method == routesparameters.method;
                 //using switch (true) pattern
                 switch (true){
-                    case route('APP_DATA','APP','/apps', 'GET'):{
+                    case route('APP_DATA',      'APP','/apps', 'GET'):{
                         resolve(app.getApps(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_SIGNUP', 'DB_API', '/user_account/signup', 'POST'):{
+                    case route('APP_SIGNUP',    'DB_API',   '/user_account/signup', 'POST'):{
                         resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA', 'SOCKET', '/socket/connection', 'PATCH'):{
+                    case route('APP_DATA',      'SOCKET',   '/socket/connection', 'PATCH'):{
                         resolve(socket.ConnectedUpdate(app_query));
                         break;
                     }
-                    case route('APP_DATA', 'SOCKET', '/socket/connection/check', 'GET'):{
+                    case route('APP_DATA',      'SOCKET',   '/socket/connection/check', 'GET'):{
                         resolve(socket.ConnectedCheck(app_query));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/apps', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/apps', 'GET'):{
                         resolve(db_app.getApp(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/app_object', 'GET'):
-                    case route('APP_DATA', 'DB_API', '/app_object/admin', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/app_object', 'GET'):
+                    case route('APP_DATA',      'DB_API',   '/app_object/admin', 'GET'):{
                         resolve(db_app_object.getObjects(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/country', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/country', 'GET'):{
                         resolve(db_country.getCountries(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/identity_provider', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/identity_provider', 'GET'):{
                         resolve(db_identity_provider.getIdentityProviders(routesparameters.app_id));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/locale', 'GET'):
-                    case route('APP_DATA', 'DB_API', '/locale/admin', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/locale', 'GET'):
+                    case route('APP_DATA',      'DB_API',   '/locale/admin', 'GET'):{
                         resolve(db_locale.getLocales(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/app_settings', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/app_settings', 'GET'):{
                         resolve(db_app_setting.getSettings(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/app_settings_display', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/app_settings_display', 'GET'):{
                         resolve(db_app_setting.getSettingDisplayData(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/user_account/activate', 'PUT'):{
+                    case route('APP_DATA',      'DB_API',   '/user_account/activate', 'PUT'):{
                         resolve(db_user_account.activate(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/user_account/forgot', 'PUT'):{
+                    case route('APP_DATA',      'DB_API',   '/user_account/forgot', 'PUT'):{
                         resolve(db_user_account.forgot(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, routesparameters.body));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/user_account/profile/top', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/user_account/profile/top', 'GET'):{
                         resolve(db_user_account.getProfileTop(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/user_account/profile/id', 'POST'):
-                    case route('APP_DATA', 'DB_API', '/user_account/profile/username', 'POST'):{
+                    case route('APP_DATA',      'DB_API',   '/user_account/profile/id', 'POST'):
+                    case route('APP_DATA',      'DB_API',   '/user_account/profile/username', 'POST'):{
                         resolve(db_user_account.getProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/user_account/profile/username/searchd', 'POST'):{
+                    case route('APP_DATA',      'DB_API',   '/user_account/profile/username/searchd', 'POST'):{
                         resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/user_account_app_data_post/all', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/user_account_app_data_post/all', 'GET'):{
                         resolve(db_user_account_app_data_post.getUserPostsByUserId(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/user_account_app_data_post/profile', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/user_account_app_data_post/profile', 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileUserPost(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/user_account_app_data_post/profile/all', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/user_account_app_data_post/profile/all', 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileUserPosts(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA', 'DB_API', '/user_account_app_data_post/profile/top', 'GET'):{
+                    case route('APP_DATA',      'DB_API',   '/user_account_app_data_post/profile/top', 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileTopPost(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS','DB_API', '/user_account/password', 'PUT'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account/password', 'PUT'):{
                         resolve(db_user_account.updatePassword(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('ADMIN',     'DB_API', '/user_account', 'PUT'):
-                    case route('APP_ACCESS','DB_API', '/user_account', 'PUT'):{
+                    case route('ADMIN',         'DB_API',   '/user_account', 'PUT'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account', 'PUT'):{
                         resolve(db_user_account.updateUserLocal(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account', 'GET'):
-                    case route('APP_ACCESS', 'DB_API', '/user_account', 'GET'):{
+                    case route('ADMIN',         'DB_API',   '/user_account', 'GET'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account', 'GET'):{
                         resolve(db_user_account.getUserByUserId(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account/common', 'PUT'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account/common', 'PUT'):{
                         resolve(db_user_account.updateUserCommon(routesparameters.app_id, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account/common', 'DELETE'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account/common', 'DELETE'):{
                         resolve(db_user_account.deleteUser(routesparameters.app_id, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account/profile/detail', 'GET'):
-                    case route('APP_ACCESS', 'DB_API', '/user_account/profile/detail', 'GET'):{
+                    case route('ADMIN',         'DB_API',   '/user_account/profile/detail', 'GET'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account/profile/detail', 'GET'):{
                         resolve(db_user_account.getProfileDetail(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account/profile/username/searcha', 'POST'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account/profile/username/searcha', 'POST'):{
                         resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account_follow', 'POST'):
-                    case route('APP_ACCESS', 'DB_API', '/user_account_follow', 'POST'):{
+                    case route('ADMIN',         'DB_API',   '/user_account_follow', 'POST'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_follow', 'POST'):{
                         resolve(db_user_account.follow(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account_follow', 'DELETE'):
-                    case route('APP_ACCESS', 'DB_API', '/user_account_follow', 'DELETE'):{
+                    case route('ADMIN',         'DB_API',   '/user_account_follow', 'DELETE'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_follow', 'DELETE'):{
                         resolve(db_user_account.unfollow(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account_like', 'POST'):
-                    case route('APP_ACCESS', 'DB_API', '/user_account_like', 'POST'):{
+                    case route('ADMIN',         'DB_API',   '/user_account_like', 'POST'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_like', 'POST'):{
                         resolve(db_user_account.like(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account_like', 'DELETE'):
-                    case route('APP_ACCESS', 'DB_API', '/user_account_like', 'DELETE'):{
+                    case route('ADMIN',         'DB_API',   '/user_account_like', 'DELETE'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_like', 'DELETE'):{
                         resolve(db_user_account.unlike(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account_app', 'GET'):
-                    case route('APP_ACCESS', 'DB_API', '/user_account_app', 'GET'):{
+                    case route('ADMIN',         'DB_API',   '/user_account_app', 'GET'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app', 'GET'):{
                         resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account_app/apps', 'GET'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app/apps', 'GET'):{
                         resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account_app', 'PATCH'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app', 'PATCH'):{
                         resolve(db_user_account_app.updateUserAccountApp(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account_app', 'DELETE'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app', 'DELETE'):{
                         resolve(db_user_account_app.deleteUserAccountApp(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account_app_data_post/profile/detail', 'GET'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post/profile/detail', 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account_app_data_post', 'POST'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post', 'POST'):{
                         resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account_app_data_post', 'PUT'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post', 'PUT'):{
                         resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account_app_data_post', 'DELETE'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post', 'DELETE'):{
                         resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account_app_data_post_like', 'POST'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post_like', 'POST'):{
                         resolve(db_user_account_app_data_post.like(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('APP_ACCESS', 'DB_API', '/user_account_app_data_post_like', 'DELETE'):{
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post_like', 'DELETE'):{
                         resolve(db_user_account_app_data_post.unlike(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'SOCKET', '/socket/message/admin', 'POST'):{
+                    case route('ADMIN',         'SOCKET',   '/socket/message/admin', 'POST'):{
                         resolve(socket.SocketSendAdmin(routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'SOCKET', '/socket/connection/admin', 'GET'):{
+                    case route('ADMIN',         'SOCKET',   '/socket/connection/admin', 'GET'):{
                         resolve(socket.ConnectedListAdmin(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('ADMIN', 'SOCKET', '/socket/connection/admin/count', 'GET'):{
+                    case route('ADMIN',         'SOCKET',   '/socket/connection/admin/count', 'GET'):{
                         resolve(socket.ConnectedCount(app_query));
                         break;
                     }
-                    case route('ADMIN', 'SERVER', '/config/admin', 'GET'):{
+                    case route('ADMIN',         'SERVER',   '/config/admin', 'GET'):{
                         resolve(config.ConfigGet(app_query));
                         break;
                     }
-                    case route('ADMIN', 'CONFIG', '/app', 'GET'):{
+                    case route('ADMIN',         'CONFIG',   '/app', 'GET'):{
                         resolve(config.ConfigGetApp(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('ADMIN', 'CONFIG', '/app/parameter', 'PUT'):{
+                    case route('ADMIN',         'CONFIG',   '/app/parameter', 'PUT'):{
                         resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/admin/demo', 'POST'):{
+                    case route('ADMIN',         'DB_API',   '/admin/demo', 'POST'):{
                         resolve(db_database.DemoInstall(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/admin/demo', 'DELETE'):{
+                    case route('ADMIN',         'DB_API',   '/admin/demo', 'DELETE'):{
                         resolve(db_database.DemoUninstall(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('ADMIN', 'APP', '/apps/admin', 'GET'):{
+                    case route('ADMIN',         'APP',      '/apps/admin', 'GET'):{
                         resolve(app.getAppsAdmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/apps/admin', 'PUT'):{
+                    case route('ADMIN',         'DB_API',   '/apps/admin', 'PUT'):{
                         resolve(db_app.updateAdmin(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/app_category/admin', 'GET'):{
+                    case route('ADMIN',         'DB_API',   '/app_category/admin', 'GET'):{
                         resolve(db_app_category.getAppCategoryAdmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/app_log/admin', 'GET'):{
+                    case route('ADMIN',         'DB_API',   '/app_log/admin', 'GET'):{
                         resolve(db_app_log.getLogsAdmin(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/app_log/admin/stat/uniquevisitor', 'GET'):{
+                    case route('ADMIN',         'DB_API',   '/app_log/admin/stat/uniquevisitor', 'GET'):{
                         resolve(db_app_log.getStatUniqueVisitorAdmin(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/app_role/admin', 'GET'):{
+                    case route('ADMIN',         'DB_API',   '/app_role/admin', 'GET'):{
                         resolve(db_app_role.getAppRoleAdmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account/admin/count', 'GET'):{
+                    case route('ADMIN',         'DB_API',   '/user_account/admin/count', 'GET'):{
                         resolve(db_user_account.getStatCountAdmin(routesparameters.app_id));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account_app', 'PATCH'):{
+                    case route('ADMIN',         'DB_API',   '/user_account_app', 'PATCH'):{
                         resolve(db_user_account_app.update(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account/admin', 'GET'):{
+                    case route('ADMIN',         'DB_API',   '/user_account/admin', 'GET'):{
                         resolve(db_user_account.getUsersAdmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('ADMIN', 'DB_API', '/user_account_logon/admin', 'GET'):{
+                    case route('ADMIN',         'DB_API',   '/user_account_logon/admin', 'GET'):{
                         resolve(db_user_account.getLogonAdmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('SUPERADMIN', 'DB_API', '/user_account/admin/:RESOURCE_ID', 'PUT'):{
+                    case route('SUPERADMIN',    'DB_API',   '/user_account/admin/:RESOURCE_ID', 'PUT'):{
                         const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
                         resolve(db_user_account.updateAdmin(routesparameters.app_id, resource_id, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'SOCKET', '/socket/message/systemadmin', 'POST'):{
+                    case route('SYSTEMADMIN',   'SOCKET',   '/socket/message/systemadmin', 'POST'):{
                         resolve(socket.SocketSendSystemAdmin(routesparameters.body));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'SOCKET', '/socket/connection/systemadmin', 'GET'):{
+                    case route('SYSTEMADMIN',   'SOCKET',   '/socket/connection/systemadmin', 'GET'):{
                         resolve(socket.ConnectedListSystemadmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'SOCKET', '/socket/connection/systemadmin', 'PATCH'):{
+                    case route('SYSTEMADMIN',   'SOCKET',   '/socket/connection/systemadmin', 'PATCH'):{
                         resolve(socket.ConnectedUpdate(app_query));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'SERVER', '/config/systemadmin', 'PUT'):{
+                    case route('SYSTEMADMIN',   'SERVER',   '/config/systemadmin', 'PUT'):{
                         resolve(config.ConfigSave(routesparameters.body));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'SERVER', '/config/systemadmin', 'GET'):{
+                    case route('SYSTEMADMIN',   'SERVER',   '/config/systemadmin', 'GET'):{
                         resolve(config.ConfigGet(app_query));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'SERVER', '/config/systemadmin/apps', 'GET'):{
+                    case route('SYSTEMADMIN',   'SERVER',   '/config/systemadmin/apps', 'GET'):{
                         resolve(config.ConfigGetApps());
                         break;
                     }
-                    case route('SYSTEMADMIN', 'SERVER', '/config/systemadmin/saved', 'GET'):{
+                    case route('SYSTEMADMIN',   'SERVER',   '/config/systemadmin/saved', 'GET'):{
                         resolve(config.ConfigGetSaved(app_query));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'SERVER', '/config/systemadmin/maintenance', 'GET'):{
+                    case route('SYSTEMADMIN',   'SERVER',   '/config/systemadmin/maintenance', 'GET'):{
                         resolve(config.ConfigMaintenanceGet());
                         break;
                     }
-                    case route('SYSTEMADMIN', 'SERVER', '/config/systemadmin/matinenance', 'PATCH'):{
+                    case route('SYSTEMADMIN',   'SERVER',   '/config/systemadmin/maintenance', 'PATCH'):{
                         resolve(config.ConfigMaintenanceSet(routesparameters.body));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'SERVER', '/info', 'GET'):{
+                    case route('SYSTEMADMIN',   'SERVER',   '/info', 'GET'):{
                         resolve(info.Info());
                         break;
                     }
-                    case route('SYSTEMADMIN', 'DB_API', '/systemadmin/dbinfo', 'GET'):{
+                    case route('SYSTEMADMIN',   'DB_API',   '/systemadmin/dbinfo', 'GET'):{
                         resolve(db_database.Info(routesparameters.app_id));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'DB_API', '/systemadmin/dbinfospace', 'GET'):{
+                    case route('SYSTEMADMIN',   'DB_API',   '/systemadmin/dbinfospace', 'GET'):{
                         resolve(db_database.InfoSpace(routesparameters.app_id));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'DB_API', '/systemadmin/dbinfospacesum', 'GET'):{
+                    case route('SYSTEMADMIN',   'DB_API',   '/systemadmin/dbinfospacesum', 'GET'):{
                         resolve(db_database.InfoSpaceSum(routesparameters.app_id));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'DB_API', '/systemadmin/install', 'POST'):{
+                    case route('SYSTEMADMIN',   'DB_API',   '/systemadmin/install', 'POST'):{
                         resolve(db_database.Install(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'DB_API', '/systemadmin/install', 'GET'):{
+                    case route('SYSTEMADMIN',   'DB_API',   '/systemadmin/install', 'GET'):{
                         resolve(db_database.InstalledCheck(routesparameters.app_id));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'DB_API', '/systemadmin/install', 'DELETE'):{
+                    case route('SYSTEMADMIN',   'DB_API',   '/systemadmin/install', 'DELETE'):{
                         resolve(db_database.Uninstall(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'LOG', '/log/parameters', 'GET'):{
+                    case route('SYSTEMADMIN',   'LOG',      '/log/parameters', 'GET'):{
                         resolve(log.getLogParameters());
                         break;
                     }
-                    case route('SYSTEMADMIN', 'LOG', '/log/logs', 'GET'):{
+                    case route('SYSTEMADMIN',   'LOG',      '/log/logs', 'GET'):{
                         resolve(log.getLogs(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'LOG', '/log/statuscode', 'GET'):{
+                    case route('SYSTEMADMIN',   'LOG',      '/log/statuscode', 'GET'):{
                         resolve(log.getStatusCodes());
                         break;
                     }
-                    case route('SYSTEMADMIN', 'LOG', '/log/logs_stat', 'GET'):{
+                    case route('SYSTEMADMIN',   'LOG',      '/log/logs_stat', 'GET'):{
                         resolve(log.getLogStats(app_query));
                         break;
                     }
-                    case route('SYSTEMADMIN', 'LOG', '/log/files', 'GET'):{
+                    case route('SYSTEMADMIN',   'LOG',      '/log/files', 'GET'):{
                         resolve(log.getFiles());
                         break;
                     }
-                    case route('SOCKET', 'SOCKET', '/socket/connection/connect', 'GET'):{
+                    case route('SOCKET',        'SOCKET',   '/socket/connection/connect', 'GET'):{
                         resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.res));
                         break;
                     }
-                    case route('IAM', 'IAM', '/systemadmin', 'POST'):{
+                    case route('IAM',           'IAM',      '/systemadmin', 'POST'):{
                         resolve(iam.AuthenticateSystemadmin(routesparameters.app_id, routesparameters.ip, routesparameters.authorization, routesparameters.res));
                         break;
                     }
-                    case route('IAM', 'IAM', '/user', 'POST'):{
+                    case route('IAM',           'IAM',      '/user', 'POST'):{
                         resolve(db_user_account.login(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('IAM', 'IAM', '/provider', 'POST'):{
+                    case route('IAM',           'IAM',      '/provider', 'POST'):{
                         resolve(db_user_account.login_provider(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
