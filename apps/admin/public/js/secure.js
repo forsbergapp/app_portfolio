@@ -1267,7 +1267,7 @@ const update_record = async (table,
                                 password_new:       parameters.user_account.password,
                                 password_reminder:  parameters.user_account.password_reminder,
                                 verification_code:  parameters.user_account.verification_code};
-                path = `/user_account/admin?PUT_ID=${parameters.user_account.id}`;
+                path = `/user_account/admin/${parameters.user_account.id}?`;
                 token_type = 'SUPERADMIN';
                 service = 'DB_API'
                 break;

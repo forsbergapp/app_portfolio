@@ -688,14 +688,15 @@ const searchProfile = (app_id, ip, user_agent, query, data) =>{
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {*} query 
  * @param {*} data
  * @param {Types.res} res
  */
-const updateAdmin =(app_id, query, data, res) =>{
+const updateAdmin =(app_id, resource_id, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         // get avatar and provider column used to validate
-        service.getUserByUserId(app_id, getNumberValue(query.get('PUT_ID')))
+        service.getUserByUserId(app_id, resource_id)
         .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
             if (result_user[0]) {
                 /**@type{Types.db_parameter_user_account_updateUserSuperAdmin} */
@@ -714,12 +715,12 @@ const updateAdmin =(app_id, query, data, res) =>{
                                 provider_id:        result_user[0].provider_id,
                                 avatar:             result_user[0].avatar,
                                 admin:              1};
-                service.updateUserSuperAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
+                service.updateUserSuperAdmin(app_id, resource_id, body)
                 .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result_update)=>{
                     if (data.app_role_id!=0 && data.app_role_id!=1){
                         //delete admin app from user if user is not an admin anymore
                         import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
-                            deleteUserAccountApps(app_id, getNumberValue(query.get('PUT_ID')), app_id)
+                            deleteUserAccountApps(app_id, resource_id, app_id)
                             .then(()=>{
                                 resolve(result_update);
                             });
