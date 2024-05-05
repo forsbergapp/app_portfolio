@@ -154,17 +154,18 @@ const createUserPost = (app_id, query, data) => {
 /**
  * 
  * @param {number} app_id 
+ * @param {*} resource_id
  * @param {*} query 
  * @param {*} data 
  * @param {Types.res} res
  */
-const updateUserPost = (app_id, query, data, res) => {
+const updateUserPost = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
         /**@type{Types.db_parameter_user_account_app_data_post_updateUserPost} */
         const data_update = {	description:		data.description,
                                 json_data: 		    data.json_data,
                                 user_account_id:	getNumberValue(data.user_account_id)};
-        service.updateUserPost(app_id, data_update, getNumberValue(query.get('PUT_ID')))
+        service.updateUserPost(app_id, data_update, resource_id)
         .then((/**@type{Types.db_result_user_account_app_data_post_updateUserPost}*/result)=>{
             if (result)
                 resolve(result);
@@ -179,12 +180,13 @@ const updateUserPost = (app_id, query, data, res) => {
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {*} query 
  * @param {Types.res} res
  */
-const deleteUserPost = (app_id, query, res) => {
+const deleteUserPost = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
-        service.deleteUserPost(app_id, getNumberValue(query.get('DELETE_ID')))
+        service.deleteUserPost(app_id, resource_id)
         .then((/**@type{Types.db_result_user_account_app_data_post_deleteUserPost}*/result)=>{
             if (result)
                 resolve(result);

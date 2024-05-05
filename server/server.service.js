@@ -94,21 +94,34 @@ const COMMON = {
     // set JSON maximum size
     app.use(express.json({ limit: ConfigGet('SERVER', 'JSON_LIMIT') }));
     
-    //ROUTES
+    //ROUTES MIDDLEWARE
     //apps
     const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam} = await import(`file://${process.cwd()}/server/bff.js`);
     //auth
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
+    
+    //ROUTES 
+    //logs EventSource and response when closed, authenticates request and will end request if not passing controls, 
+    //sets headers, returns disallow for robots.txt and empty favicon.ico
     app.route('*').all                      (BFF_init);
+    
+    //checks redirects naked domain, http to https if enabled and to admin subdomain if first time, responds to SSL verification if enabled
     app.route('*').get                      (BFF_start);
-    app.route('/bff/app_data/v1').all      (iam.AuthenticateDataToken, BFF_app_data);
-    app.route('/bff/app_signup/v1').post   (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
-    app.route('/bff/app_access/v1').all    (iam.AuthenticateAccessToken, BFF_app_access);
-    app.route('/bff/admin/v1').all         (iam.AuthenticateAccessTokenAdmin, BFF_admin);    
-    app.route('/bff/superadmin/v1').put    (iam.AuthenticateAccessTokenSuperAdmin, BFF_superadmin);
-    app.route('/bff/systemadmin/v1').all   (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
-    app.route('/bff/socket/v1').get        (iam.AuthenticateSocket, BFF_socket);
-    app.route('/bff/iam/v1').post          (iam.AuthenticateIAM, BFF_iam);
+    
+    //REST API 
+    //URI syntax implemented:
+    //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource]/[optional resource id]?URI query
+	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
+    app.route('/bff/app_data/v1*').all      (iam.AuthenticateDataToken, BFF_app_data);
+    app.route('/bff/app_signup/v1*').post   (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
+    app.route('/bff/app_access/v1*').all    (iam.AuthenticateAccessToken, BFF_app_access);
+    app.route('/bff/admin/v1*').all         (iam.AuthenticateAccessTokenAdmin, BFF_admin);    
+    app.route('/bff/superadmin/v1*').put    (iam.AuthenticateAccessTokenSuperAdmin, BFF_superadmin);
+    app.route('/bff/systemadmin/v1*').all   (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
+    app.route('/bff/socket/v1*').get        (iam.AuthenticateSocket, BFF_socket);
+    app.route('/bff/iam/v1*').post          (iam.AuthenticateIAM, BFF_iam);
+    
+    //app asset, common asset, info page, report and app
     app.route('*').get                      (BFF_app);
     
     //ERROR LOGGING
@@ -172,28 +185,21 @@ const COMMON = {
     //server db api object user account app data post
     const db_user_account_app_data_post = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_data_post.js`);
     
-    //app route: URI path = case sensitive url and URI query = null
-    //all other requests: URI path (lower case, excecpt resource id) and URI query using ISO20022
-    const app_parameters = (routesparameters.endpoint =='APP' && routesparameters.service =='APP')?routesparameters.url:routesparameters.parameters;
-    //ISO20022 variables
-    const URI_query = app_parameters.indexOf('?')>-1?app_parameters.substring(app_parameters.indexOf('?')):null;
-    const URI_path = app_parameters.indexOf('?')>-1?app_parameters.substring(0, app_parameters.indexOf('?')):app_parameters;
-
-    const app_query = URI_query?new URLSearchParams(URI_query):null;
-
     return new Promise((resolve, reject)=>{
         try {
             if (routesparameters.endpoint == 'APP' && routesparameters.service =='APP' && routesparameters.method == 'GET'){
-                //App route for app asset, common asset, app info page, app report and app
+                //App route for app asset, common asset, app info page, app report (using query) and app
+                const URI_query = routesparameters.url.startsWith('/report')?routesparameters.url.substring(routesparameters.url.indexOf('?')):null;
+                const app_query = URI_query?new URLSearchParams(URI_query):null;
                 resolve(app.getAppMain(routesparameters.ip, routesparameters.host, routesparameters.user_agent, routesparameters.accept_language, routesparameters.url, app_query, routesparameters.res));
             }
             else{
                 /**
                 * 
-                * @param {*} endpoint 
-                * @param {*} service 
-                * @param {*} uri_path_route
-                * @param {*} method 
+                * @param {string} endpoint 
+                * @param {string} service 
+                * @param {string} uri_path_route
+                * @param {string} method 
                 * @returns {boolean}
                 */
                 const route = (endpoint, service, uri_path_route , method) => 
@@ -201,6 +207,11 @@ const COMMON = {
                                 service == routesparameters.service && 
                                 (uri_path_route.indexOf('/:RESOURCE_ID')>-1?uri_path_route. replace('/:RESOURCE_ID', URI_path.substring(URI_path.lastIndexOf('/'))):uri_path_route) == URI_path && 
                                 method == routesparameters.method;
+            
+                const URI_query = routesparameters.parameters;
+                const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
+
+                const app_query = URI_query?new URLSearchParams(URI_query):null;
                 //using switch (true) pattern
                 switch (true){
                     case route('APP_DATA',      'APP','/apps', 'GET'):{
@@ -249,11 +260,12 @@ const COMMON = {
                         resolve(db_app_setting.getSettingDisplayData(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_DATA',      'DB_API',   '/user_account/activate', 'PUT'):{
-                        resolve(db_user_account.activate(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, app_query, routesparameters.body, routesparameters.res));
+                    case route('APP_DATA',      'DB_API',   '/user_account/activate/:RESOURCE_ID', 'PUT'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.activate(routesparameters.app_id, resource_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA',      'DB_API',   '/user_account/forgot', 'PUT'):{
+                    case route('APP_DATA',      'DB_API',   '/user_account/forgot', 'POST'):{
                         resolve(db_user_account.forgot(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, routesparameters.body));
                         break;
                     }
@@ -261,9 +273,10 @@ const COMMON = {
                         resolve(db_user_account.getProfileTop(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA',      'DB_API',   '/user_account/profile/id', 'POST'):
+                    case route('APP_DATA',      'DB_API',   '/user_account/profile/id/:RESOURCE_ID', 'POST'):
                     case route('APP_DATA',      'DB_API',   '/user_account/profile/username', 'POST'):{
-                        resolve(db_user_account.getProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.getProfile(routesparameters.app_id, resource_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route('APP_DATA',      'DB_API',   '/user_account/profile/username/searchd', 'POST'):{
@@ -286,13 +299,15 @@ const COMMON = {
                         resolve(db_user_account_app_data_post.getProfileTopPost(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account/password', 'PUT'):{
-                        resolve(db_user_account.updatePassword(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   '/user_account/password/:RESOURCE_ID', 'PUT'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.updatePassword(routesparameters.app_id, resource_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account', 'PUT'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account', 'PUT'):{
-                        resolve(db_user_account.updateUserLocal(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                    case route('ADMIN',         'DB_API',   '/user_account/:RESOURCE_ID', 'PUT'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account/:RESOURCE_ID', 'PUT'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.updateUserLocal(routesparameters.app_id, resource_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route('ADMIN',         'DB_API',   '/user_account', 'GET'):
@@ -300,12 +315,14 @@ const COMMON = {
                         resolve(db_user_account.getUserByUserId(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account/common', 'PUT'):{
-                        resolve(db_user_account.updateUserCommon(routesparameters.app_id, app_query, routesparameters.body, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   '/user_account/common/:RESOURCE_ID', 'PUT'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.updateUserCommon(routesparameters.app_id, resource_id, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account/common', 'DELETE'):{
-                        resolve(db_user_account.deleteUser(routesparameters.app_id, app_query, routesparameters.body, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   '/user_account/common/:RESOURCE_ID', 'DELETE'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.deleteUser(routesparameters.app_id, resource_id, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route('ADMIN',         'DB_API',   '/user_account/profile/detail', 'GET'):
@@ -317,24 +334,28 @@ const COMMON = {
                         resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_follow', 'POST'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_follow', 'POST'):{
-                        resolve(db_user_account.follow(routesparameters.app_id, app_query, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   '/user_account_follow/:RESOURCE_ID', 'POST'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_follow/:RESOURCE_ID', 'POST'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.follow(routesparameters.app_id, resource_id, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_follow', 'DELETE'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_follow', 'DELETE'):{
-                        resolve(db_user_account.unfollow(routesparameters.app_id, app_query, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   '/user_account_follow/:RESOURCE_ID', 'DELETE'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_follow/:RESOURCE_ID', 'DELETE'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.unfollow(routesparameters.app_id, resource_id, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_like', 'POST'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_like', 'POST'):{
-                        resolve(db_user_account.like(routesparameters.app_id, app_query, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   '/user_account_like/:RESOURCE_ID', 'POST'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_like/:RESOURCE_ID', 'POST'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.like(routesparameters.app_id, resource_id, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_like', 'DELETE'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_like', 'DELETE'):{
-                        resolve(db_user_account.unlike(routesparameters.app_id, app_query, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   '/user_account_like/:RESOURCE_ID', 'DELETE'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_like/:RESOURCE_ID', 'DELETE'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.unlike(routesparameters.app_id, resource_id, routesparameters.body));
                         break;
                     }
                     case route('ADMIN',         'DB_API',   '/user_account_app', 'GET'):
@@ -346,8 +367,10 @@ const COMMON = {
                         resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app', 'PATCH'):{
-                        resolve(db_user_account_app.updateUserAccountApp(routesparameters.app_id, app_query, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   '/user_account_app/:RESOURCE_ID', 'PATCH'):
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app/:RESOURCE_ID', 'PATCH'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account_app.update(routesparameters.app_id, resource_id, app_query, routesparameters.body));
                         break;
                     }
                     case route('APP_ACCESS',    'DB_API',   '/user_account_app', 'DELETE'):{
@@ -362,12 +385,14 @@ const COMMON = {
                         resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post', 'PUT'):{
-                        resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, app_query, routesparameters.body, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post/:RESOURCE_ID', 'PUT'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, resource_id, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post', 'DELETE'):{
-                        resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, app_query, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post/:RESOURCE_ID', 'DELETE'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, resource_id, app_query, routesparameters.res));
                         break;
                     }
                     case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post_like', 'POST'):{
@@ -398,8 +423,9 @@ const COMMON = {
                         resolve(config.ConfigGetApp(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('ADMIN',         'CONFIG',   '/app/parameter', 'PUT'):{
-                        resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, routesparameters.body));
+                    case route('ADMIN',         'CONFIG',   '/app/parameter/:RESOURCE_ID', 'PUT'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, resource_id, routesparameters.body));
                         break;
                     }
                     case route('ADMIN',         'DB_API',   '/admin/demo', 'POST'):{
@@ -414,8 +440,9 @@ const COMMON = {
                         resolve(app.getAppsAdmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/apps/admin', 'PUT'):{
-                        resolve(db_app.updateAdmin(routesparameters.app_id, app_query, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   '/apps/admin/:RESOURCE_ID', 'PUT'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_app.updateAdmin(routesparameters.app_id, resource_id, routesparameters.body));
                         break;
                     }
                     case route('ADMIN',         'DB_API',   '/app_category/admin', 'GET'):{
@@ -438,10 +465,7 @@ const COMMON = {
                         resolve(db_user_account.getStatCountAdmin(routesparameters.app_id));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_app', 'PATCH'):{
-                        resolve(db_user_account_app.update(routesparameters.app_id, app_query, routesparameters.body));
-                        break;
-                    }
+                    
                     case route('ADMIN',         'DB_API',   '/user_account/admin', 'GET'):{
                         resolve(db_user_account.getUsersAdmin(routesparameters.app_id, app_query));
                         break;
@@ -551,8 +575,9 @@ const COMMON = {
                         resolve(db_user_account.login(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('IAM',           'IAM',      '/provider', 'POST'):{
-                        resolve(db_user_account.login_provider(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
+                    case route('IAM',           'IAM',      '/provider/:RESOURCE_ID', 'POST'):{
+                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                        resolve(db_user_account.login_provider(routesparameters.app_id, resource_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     default:{

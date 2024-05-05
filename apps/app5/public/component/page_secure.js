@@ -113,6 +113,7 @@ const component = async props => {
     }
     const post_component = async () =>{
         let path = '';
+        let query;
         spinner = '';
         //demo transactions
         let transactions = [];
@@ -131,7 +132,7 @@ const component = async props => {
             //delay 10 ms
             await new Promise ((resolve)=>{setTimeout(()=> resolve(null),10)});
         }
-        //const transactions = await props.function_FFB('DB_API', path, 'GET', 'APP_DATA', null)
+        //const transactions = await props.function_FFB('DB_API', path, query, 'GET', 'APP_DATA', null)
         //                                    .then((/**@type{string}*/result)=>JSON.parse(result))
         //                                    .catch((/**@type{Error}*/error)=>{throw error});
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 

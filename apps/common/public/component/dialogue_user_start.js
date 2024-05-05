@@ -126,7 +126,7 @@ const component = async props => {
         props.common_document.querySelector(`#${props.user_click}`).click();
         //fetch providers if not system admin only when database is available
         const providers = props.system_admin_only == 1?[]:
-                            await props.function_FFB('DB_API', `/identity_provider?`, 'GET', 'APP_DATA', null)
+                            await props.function_FFB('DB_API', '/identity_provider', null, 'GET', 'APP_DATA', null)
                                         .then((/**@type{string}*/result)=>JSON.parse(result))
                                         .catch((/**@type{Error}*/error)=>{
                                                                             props.common_document.querySelector('#common_lov_list').classList.remove('css_spinner');

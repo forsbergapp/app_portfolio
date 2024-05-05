@@ -1,5 +1,5 @@
 /** BFF
- * @typedef {{app_id: req_id_number,
+ * @typedef {{
  *          endpoint: string,
  *          service: string,
  *          ip: string,
@@ -9,24 +9,21 @@
  *          user_agent:string,
  *          accept_language:string,
  *          url:string,
- *          parameters: string
+ *          iam: string
+ *          query: string
  *          body:object,
- *          system_admin:string|null,
- *          user_account_logon_user_account_id:number|null,
  *          res: res}} bff_parameters
  * 
- * @typedef {{  app_id: req_id_number,
- *              endpoint: string,
- *              service: string,
+ * @typedef {{  service: string,
+ *              path:string,
  *              ip: string,
  *              method: string,
  *              user_agent:string,
  *              accept_language:string,
- *              parameters: string,
+ *              query: string,
  *              body:object|null}} bff_parameters_microservices
  * 
- * @typedef {{  app_id: req_id_number,
- *              endpoint: string,
+ * @typedef {{  endpoint: string,
  *              service: string,
  *              ip: string,
  *              host:string, 
@@ -37,8 +34,6 @@
  *              url:string,
  *              parameters: string
  *              body:object|null,
- *              system_admin:string|null,
- *              user_account_logon_user_account_id:number|null,
  *              res: res}} bff_parameters_server
  * 
  * Routes paramaters
@@ -86,6 +81,9 @@
  * @property {string} params.app_id                                 - app portfolio parameter
  * @property {string} params.code                                   - app portfolio parameter
  * @property {string} params.statchoice                             - app portfolio parameter
+ * route
+ * @property {object} route
+ * @property {string} route.path
  * body
  * @property {object} body
  * @property {string} body.value                                    - Server parameter
@@ -176,6 +174,7 @@
  * @property {number|null} query.uid_view                           - Report parameter
  * @property {string|*} query.service
  * @property {string|*} query.parameters
+ * @property {string} query.iam
  * @property {number} query.PATCH_ID                                - app portfolio parameter
  * @property {number} query.data_app_id                             - app portfolio parameter
  * @property {string} query.object                                  - app portfolio parameter

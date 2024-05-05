@@ -47,16 +47,16 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
                                     })
                                     .catch((/**@type{Types.error}*/error)=>{throw error;});
         
-        
-    const data = {  app_id:app_id, 
-                    service:'MAIL', 
+    /**@type{Types.bff_parameters_microservices}*/
+    const data = {  service:'MAIL', 
+                    path:'',
                     ip:ip,
                     method:'POST', 
                     user_agent:user_agent,
                     accept_language:accept_language,
-                    parameters:new Buffer('/sendemail?').toString('base64'),
+                    query:new Buffer('/sendemail?').toString('base64'),
                     body:email_rendered};
-    return await BFF_microservices(data);
+    return await BFF_microservices(app_id, data);    
 };
 /**
  * 
@@ -191,6 +191,7 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {string} ip 
  * @param {string} user_agent 
  * @param {*} query 
@@ -204,9 +205,9 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
  *                  items:Types.db_result_user_account_providerSignIn[],
  *                  userCreated:0|1}>}
  */
-const login_provider = (app_id, ip, user_agent, query, data, res) =>{
+const login_provider = (app_id, resource_id, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
-        service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), getNumberValue(query.get('PUT_ID')))
+        service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
         .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin)=>{
             /** @type{Types.db_parameter_user_account_create} */
             const data_user = { bio:                    null,
@@ -277,7 +278,7 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
                         .then(()=>{
                             createUserAccountApp(app_id, result_create.insertId)
                             .then(()=>{
-                                service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), getNumberValue(query.get('PUT_ID')))
+                                service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
                                 .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
                                     resolve({
                                         accessToken: data_login.access_token,
@@ -399,6 +400,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {string} ip 
  * @param {string} user_agent 
  * @param {string} accept_language 
@@ -415,7 +417,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
  *              tokentimestamp:number|null,
  *              items: Types.db_result_user_account_activateUser[]}>}
  */
-const activate = (app_id, ip, user_agent, accept_language, host, query, data, res) =>{
+const activate = (app_id, resource_id, ip, user_agent, accept_language, host, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         /**@type{string|null} */
         let auth_password_new = null;
@@ -423,14 +425,14 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data, re
             //reset password
             auth_password_new = service.verification_code();
         }
-        service.activateUser(app_id, getNumberValue(query.get('PUT_ID')), getNumberValue(data.verification_type), data.verification_code, auth_password_new)
+        service.activateUser(app_id, resource_id, getNumberValue(data.verification_type), data.verification_code, auth_password_new)
         .then((/**@type{Types.db_result_user_account_activateUser}*/result_activate)=>{
             if (auth_password_new == null){
                 if (result_activate.affectedRows==1 && getNumberValue(data.verification_type)==4){
                     //new email verified
                     /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
                     const eventData = {
-                        user_account_id: getNumberValue(query.get('PUT_ID')) ?? 0,
+                        user_account_id: resource_id ?? 0,
                         event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
                         event_status: 'SUCCESSFUL',
                         user_language: data.user_language,
@@ -482,7 +484,7 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data, re
                     client_longitude:   data.client_longitude ?? null,
                     client_latitude:    data.client_latitude ?? null,
                     access_token:       jwt_data.token};
-                insertUserAccountLogon(app_id, getNumberValue(query.get('PUT_ID')), data_body)
+                insertUserAccountLogon(app_id, resource_id, data_body)
                 .then(()=>{
                     resolve({
                         count: result_activate.affectedRows,
@@ -584,6 +586,7 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {string} ip 
  * @param {string} user_agent 
  * @param {*} query 
@@ -591,9 +594,9 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
  * @param {Types.res} res
  * @returns 
  */
-const getProfile = (app_id, ip, user_agent, query, data, res) =>{
+const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileUser(app_id, getNumberValue(query.get('POST_ID')), getNumberValue(query.get('POST_ID'))==null?query.get('search'):null, getNumberValue(query.get('id')))
+        service.getProfileUser(app_id, resource_id, resource_id==null?query.get('search'):null, getNumberValue(query.get('id')))
         .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
             if (result_getProfileUser[0]){
                 //always save stat who is viewing, same user, none or someone else
@@ -771,6 +774,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {string} ip 
  * @param {string} user_agent 
  * @param {string} host 
@@ -779,17 +783,17 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
  * @param {*} data 
  * @param {Types.res} res
  */
- const updatePassword = (app_id, ip, user_agent, host, accept_language, query, data, res) => {
+ const updatePassword = (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
     return new Promise((resolve, reject)=>{
         /**@type{Types.db_parameter_user_account_updatePassword} */
         const data_update = {   password_new:   data.password_new,
                                 auth:           data.auth};
-        service.updatePassword(app_id, getNumberValue(query.get('PUT_ID')), data_update)
+        service.updatePassword(app_id, resource_id, data_update)
         .then((/**@type{Types.db_result_user_account_updatePassword}*/result_update)=>{
             if (result_update) {
                 /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
                 const eventData = {
-                    user_account_id: getNumberValue(query.get('PUT_ID')),
+                    user_account_id: resource_id,
                     event: 'PASSWORD_RESET',
                     event_status: 'SUCCESSFUL',
                     user_language: data.user_language,
@@ -825,6 +829,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {string} ip
  * @param {string} user_agent
  * @param {string} host
@@ -833,11 +838,11 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
  * @param {*} data 
  * @param {Types.res} res 
  */
- const updateUserLocal = async (app_id, ip, user_agent, host, accept_language, query, data, res) => {
+ const updateUserLocal = async (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
     /**@type{Types.db_result_user_account_getUserByUserId[]}*/
-    const result_user = await service.getUserByUserId(app_id, getNumberValue(query.get('PUT_ID')));
+    const result_user = await service.getUserByUserId(app_id, resource_id);
     /**@type{Types.db_result_user_account_event_getLastUserEvent[]}*/
-    const result_user_event = await getLastUserEvent(app_id, getNumberValue(query.get('PUT_ID')), 'EMAIL_VERIFIED_CHANGE_EMAIL');
+    const result_user_event = await getLastUserEvent(app_id, resource_id, 'EMAIL_VERIFIED_CHANGE_EMAIL');
     return new Promise((resolve, reject)=>{
         if (result_user[0]) {
             compare(data.password, result_user[0].password ?? '').then((result_compare)=>{
@@ -863,14 +868,14 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
                                             provider_id:        result_user[0].provider_id,
                                             admin:              0
                                         };
-                    service.updateUserLocal(app_id, data_update, getNumberValue(query.get('PUT_ID')))
+                    service.updateUserLocal(app_id, data_update, resource_id)
                     .then((/**@type{Types.db_result_user_account_updateUserLocal}*/result_update)=>{
                         if (result_update){
                             if (send_email){
                                 //no change email in progress or older than at least 1 day
                                 /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
                                 const eventData = {
-                                    user_account_id: getNumberValue(query.get('PUT_ID')),
+                                    user_account_id: resource_id,
                                     event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
                                     event_status: 'INPROGRESS',
                                     user_language: data.user_language,
@@ -892,7 +897,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
-                                                    getNumberValue(query.get('PUT_ID')),
+                                                    resource_id,
                                                     data.verification_code, 
                                                     data.new_email)
                                     .then(()=>{
@@ -917,7 +922,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
                 } 
                 else {
                     res.statusCode=400;
-                    res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('PUT_ID'));
+                    res.statusMessage = 'invalid password attempt for user id:' + resource_id;
                     //invalid password
                     getSettingDisplayData(  app_id,
                                             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
@@ -947,17 +952,18 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
 /**
  * 
  * @param {number} app_id
+ * @param {number} resource_id
  * @param {*} query
  * @param {*} data
  * @param {Types.res} res
  */
- const updateUserCommon = (app_id, query, data, res) => {
+ const updateUserCommon = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
         /**@type{Types.db_parameter_user_account_updateUserCommon} */
         const data_update = {   username:   data.username,
                                 bio:        data.bio,
                                 private:    data.private};
-        service.updateUserCommon(app_id, data_update, getNumberValue(query.get('PUT_ID')))
+        service.updateUserCommon(app_id, data_update, resource_id)
         .then((/**@type{Types.db_result_user_account_updateUserCommon}*/result_update)=>{
             if (result_update)
                 resolve(result_update);
@@ -1005,17 +1011,18 @@ const getUserByUserId = (app_id, query, res) => {
 /**
  * 
  * @param {number} app_id
+ * @param {number} resource_id
  * @param {*} query
  * @param {*} data
  * @param {Types.res} res 
  */
- const deleteUser = (app_id, query, data, res) => {
+ const deleteUser = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
-        service.getUserByUserId(app_id, getNumberValue(query.get('DELETE_ID')))
+        service.getUserByUserId(app_id, resource_id)
         .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
             if (result_user[0]) {
                 if (result_user[0].provider_id !=null){
-                    service.deleteUser(app_id, getNumberValue(query.get('DELETE_ID')))
+                    service.deleteUser(app_id, resource_id)
                     .then((/**@type{Types.db_result_user_account_deleteUser}*/result_delete)=>{
                         if (result_delete)
                             resolve(result_delete);
@@ -1028,12 +1035,12 @@ const getUserByUserId = (app_id, query, res) => {
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 }
                 else{
-                    service.checkPassword(app_id, getNumberValue(query.get('DELETE_ID')))
+                    service.checkPassword(app_id, resource_id)
                     .then((/**@type{Types.db_result_user_account_checkPassword[]}*/result_password)=>{
                         if (result_password[0]) {
                             compare(data.password, result_password[0].password).then((result_password)=>{
                                 if (result_password){
-                                    service.deleteUser(app_id, getNumberValue(query.get('DELETE_ID')))
+                                    service.deleteUser(app_id, resource_id)
                                     .then((/**@type{Types.db_result_user_account_deleteUser}*/result_delete)=>{
                                         if (result_delete)
                                             resolve(result_delete);
@@ -1046,7 +1053,7 @@ const getUserByUserId = (app_id, query, res) => {
                                     .catch((/**@type{Types.error}*/error)=>reject(error));
                                 }
                                 else{
-                                    res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('DELETE_ID'));
+                                    res.statusMessage = 'invalid password attempt for user id:' + resource_id;
                                     res.statusCode = 400;
                                     //invalid password
                                     getSettingDisplayData(  app_id,
@@ -1116,35 +1123,35 @@ const getUserByUserId = (app_id, query, res) => {
 };
 /**
  * @param {number} app_id
- * @param {*} query 
+ * @param {number} resource_id
  * @param {*} data
  */
-const follow = (app_id, query, data) => user_account_follow_service.follow(app_id, getNumberValue(query.get('POST_ID')),getNumberValue(data.user_account_id))
+const follow = (app_id, resource_id, data) => user_account_follow_service.follow(app_id, resource_id, getNumberValue(data.user_account_id))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
 /**
  * @param {number} app_id
- * @param {*} query 
+ * @param {number} resource_id
  * @param {*} data
  */
-const unfollow = (app_id, query, data) => user_account_follow_service.unfollow(app_id, getNumberValue(query.get('DELETE_ID')),getNumberValue(data.user_account_id))
+const unfollow = (app_id, resource_id, data) => user_account_follow_service.unfollow(app_id, resource_id, getNumberValue(data.user_account_id))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
+ * @param {number} resource_id
  * @param {*} data
  */
-const like = (app_id, query, data) => user_account_like_service.like(app_id, getNumberValue(query.get('POST_ID')), getNumberValue(data.user_account_id))
+const like = (app_id, resource_id, data) => user_account_like_service.like(app_id, resource_id, getNumberValue(data.user_account_id))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
  * 
- * @param {number} app_id 
- * @param {*} query 
+ * @param {number} app_id
+ * @param {number} resource_id
  * @param {*} data
  */
-const unlike = (app_id, query, data) => user_account_like_service.unlike(app_id, getNumberValue(query.get('DELETE_ID')), getNumberValue(data.user_account_id))
+const unlike = (app_id, resource_id, data) => user_account_like_service.unlike(app_id, resource_id, getNumberValue(data.user_account_id))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 export {/*DATA_LOGIN*/

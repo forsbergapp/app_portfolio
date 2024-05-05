@@ -594,7 +594,7 @@ const settings_translate = async (first=true) => {
     if (locale != '0'){
         //fetch any message with first language always
         //show translation using first or second language
-        await common.FFB('DB_API', `/app_object?data_lang_code=${locale}&object_name=REPORT`, 'GET', 'APP_DATA', null)
+        await common.FFB('DB_API', '/app_object', `data_lang_code=${locale}&object_name=REPORT`,  'GET', 'APP_DATA', null)
         .then((/**@type{string}*/result)=>{
             for (const app_object_item of JSON.parse(result)){
                 if (first==true)
@@ -1251,7 +1251,7 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, click_func
  */
 const user_settings_get = async () => {
     const select = AppDocument.querySelector('#setting_select_user_setting');
-    await common.FFB('DB_API', `/user_account_app_data_post/all?user_account_id=${common.COMMON_GLOBAL.user_account_id??''}`, 'GET', 'APP_DATA', null)
+    await common.FFB('DB_API', '/user_account_app_data_post/all', `user_account_id=${common.COMMON_GLOBAL.user_account_id??''}`, 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         select.innerHTML = '';
         APP_GLOBAL.user_settings = [];
@@ -1537,27 +1537,30 @@ const user_settings_function = async (function_name, initial_user_setting) => {
                         };
         let method;
         let path;
+        let query;
         switch (function_name){
             case 'ADD_LOGIN':
             case 'ADD':{
                 if (function_name=='ADD')
                     AppDocument.querySelector('#setting_btn_user_add').classList.add('css_spinner');
                 method = 'POST';
-                path = `/user_account_app_data_post?initial=${initial_user_setting==true?1:0}`;
+                path = '/user_account_app_data_post';
+                query = `initial=${initial_user_setting==true?1:0}`;
                 break;
             }
             case 'SAVE':{
                 AppDocument.querySelector('#setting_btn_user_save').classList.add('css_spinner');
                 method = 'PUT';
                 const user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-                path = `/user_account_app_data_post?PUT_ID=${user_setting_id}`;
+                path = `/user_account_app_data_post/${user_setting_id}`;
+                query = null;
                 break;
             }
             default:{
                 break;
             }
         }
-        await common.FFB('DB_API', path, method, 'APP_ACCESS', json_data)
+        await common.FFB('DB_API', path, query, method, 'APP_ACCESS', json_data)
         .then((/**@type{string}*/result)=>{
             switch (function_name){
                 case 'ADD':{
@@ -1606,7 +1609,7 @@ const user_settings_delete = (choice=null) => {
         }
         case 1:{
             AppDocument.querySelector('#setting_btn_user_delete').classList.add('css_spinner');
-            common.FFB('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'APP_ACCESS', null)
+            common.FFB('DB_API', `/user_account_app_data_post/${user_setting_id}`, null, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
                 common.ComponentRemove('common_dialogue_message', true);
                 const select = AppDocument.querySelector('#setting_select_user_setting');
@@ -1819,7 +1822,7 @@ const settings_update = setting_tab => {
  * @returns {void}
  */
 const profile_user_setting_stat = id => {
-    common.FFB('DB_API', `/user_account_app_data_post/profile?id=${id}`, 'GET', 'APP_DATA', null)
+    common.FFB('DB_API', '/user_account_app_data_post/profile', `id=${id}`, 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         AppDocument.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
         AppDocument.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
@@ -1882,8 +1885,10 @@ const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
 const profile_show_user_setting = () => {
     AppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
 
-    common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${AppDocument.querySelector('#common_profile_id').innerHTML}` + 
-                        `&id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 'GET', 'APP_DATA', null)
+    common.FFB( 'DB_API', 
+                '/user_account_app_data_post/profile/all', 
+                `id=${AppDocument.querySelector('#common_profile_id').innerHTML}&id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
+                'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         const profile_select_user_settings = AppDocument.querySelector('#profile_select_user_settings');
         profile_select_user_settings.innerHTML='';
@@ -1915,8 +1920,10 @@ const profile_show_user_setting = () => {
  */
 const profile_user_setting_update_stat = () => {
     const profile_id = AppDocument.querySelector('#common_profile_id').innerHTML;
-    common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${profile_id}` +
-                        `&id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 'GET', 'APP_DATA', null)
+    common.FFB( 'DB_API', 
+                '/user_account_app_data_post/profile/all', 
+                `id=${profile_id}&id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
+                'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         const profile_select_user_settings = AppDocument.querySelector('#profile_select_user_settings');
         for (const profile_setting of JSON.parse(result)) {
@@ -1950,7 +1957,10 @@ const user_settings_like = user_account_app_data_post_id => {
             method = 'POST';
         else
             method = 'DELETE';
-        common.FFB('DB_API', `/user_account_app_data_post_like?user_account_id=${common.COMMON_GLOBAL.user_account_id??''}`, method, 'APP_ACCESS', json_data)
+        common.FFB( 'DB_API', 
+                    '/user_account_app_data_post_like', 
+                    `user_account_id=${common.COMMON_GLOBAL.user_account_id??''}`, 
+                    method, 'APP_ACCESS', json_data)
         .then(()=>profile_user_setting_update_stat())
         .catch(()=>null);
     }
@@ -2719,7 +2729,10 @@ const framework_set = async (framework=null) => {
  * @returns {Promise.<void>}
  */
  const settings_method = async () => {
-    return await common.FFB('DB_API', `/app_settings_display?data_app_id=${common.COMMON_GLOBAL.app_id}&setting_type=METHOD`, 'GET', 'APP_DATA')
+    return await common.FFB('DB_API', 
+                            '/app_settings_display', 
+                            `data_app_id=${common.COMMON_GLOBAL.app_id}&setting_type=METHOD`, 
+                            'GET', 'APP_DATA')
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>error);
  } 
@@ -2862,7 +2875,7 @@ const settings_load = async (tab_selected) => {
          *          data3:string,
          *          data4:string,
          *          data5:string}[]} */
-        const app_settings_db = await common.FFB('DB_API', `/app_settings?`, 'GET', 'APP_DATA')
+        const app_settings_db = await common.FFB('DB_API', '/app_settings', null, 'GET', 'APP_DATA')
         .then((/**@type{string}*/result)=>JSON.parse(result))
         .catch((/**@type{Error}*/error)=>{throw error});
         let option;

@@ -63,7 +63,7 @@ const component = async props => {
         let json_data;
         if (props.user_account_id!=null){
             //search using access token with logged in user_account_id
-            path = `/user_account/profile/username/searchA?search=${encodeURI(props.searched_username)}`;
+            path = '/user_account/profile/username/searchA';
             token = 'APP_ACCESS';
             json_data = {   user_account_id:    props.user_account_id,
                             client_latitude:    props.client_latitude,
@@ -72,13 +72,13 @@ const component = async props => {
         }
         else{
             //search using data token without logged in user_account_id
-            path = `/user_account/profile/username/searchD?search=${encodeURI(props.searched_username)}`;
+            path = '/user_account/profile/username/searchD';
             token = 'APP_DATA';
             json_data = {   client_latitude:    props.client_latitude,
                             client_longitude:   props.client_longitude
                         };
         }
-        const records = await props.function_FFB('DB_API', path, 'POST', token, json_data)
+        const records = await props.function_FFB('DB_API', path, `search=${encodeURI(props.searched_username)}`, 'POST', token, json_data)
                                         .then((/**@type{string}*/result)=>JSON.parse(result))
                                         .catch((/**@type{Error}*/error)=>{throw error});
         spinner = '';

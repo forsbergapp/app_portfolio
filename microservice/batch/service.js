@@ -326,8 +326,6 @@ const start_jobs = async () =>{
                         end:null, 
                         status:'CANCELED', 
                         result:'SERVER RESTART'});
-    /**@type{Types.microservice_config_service_record}*/
-    const config = ConfigServices('BATCH');
     /**@type{{  jobid:number,
      *          name:string,
      *          command_type:'OS',
@@ -338,7 +336,7 @@ const start_jobs = async () =>{
      *          cron_expression:string,
      *          enabled:boolean}[]} 
      */
-    const jobs = config.CONFIG;
+    const jobs = ConfigServices('BATCH').CONFIG.jobs;
     for (const job of jobs){
         //schedule enabled jobs and for current platform
         //use cron expression syntax
