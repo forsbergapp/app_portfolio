@@ -14,6 +14,18 @@ const CONFIG_SERVICES = await file_get('MICROSERVICE_SERVICES').then((/**@type{T
 
 const timeout_message = '🗺⛔?';
 
+/**
+ * 
+ * @param {string} route_path
+ * @param {string} route_method
+ * @param {string} request_path
+ * @param {string} request_method 
+ * @returns {boolean}
+ */
+const route = (route_path, route_method, request_path , request_method) => 
+ (route_path.indexOf('/:RESOURCE_ID')>-1?route_path. replace('/:RESOURCE_ID', request_path.substring(request_path.lastIndexOf('/'))):route_path) == request_path && 
+  route_method == request_method;
+
 class CircuitBreaker {
     constructor() {
         /**@type{[index:any][*]} */
@@ -455,4 +467,4 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         }
     });
 };
-export {getNumberValue, return_result, MicroServiceServer, CONFIG, ConfigServices, microserviceRequest, MessageQueue};
+export {route, getNumberValue, return_result, MicroServiceServer, CONFIG, ConfigServices, microserviceRequest, MessageQueue};

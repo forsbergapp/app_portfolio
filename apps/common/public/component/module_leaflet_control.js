@@ -111,7 +111,7 @@ const component = async props => {
     }
     
     const post_component = async () =>{
-        await props.function_FFB('DB_API', `/country?lang_code=${props.locale}`, 'GET', 'APP_DATA', null)
+        await props.function_FFB('DB_API', '/country', `lang_code=${props.locale}`, 'GET', 'APP_DATA', null)
         .then((/**@type{string}*/countries_json)=>{
             //mount custom code inside Leaflet container
             props.common_document.querySelectorAll(`#${props.common_mountdiv} #${props.module_leaflet_container} .leaflet-control`)[0].innerHTML += render_template(JSON.parse(countries_json));

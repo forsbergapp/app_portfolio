@@ -99,12 +99,12 @@ const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     const is_provider_user = async () =>{
-        const user = await props.function_FFB('DB_API', `/user_account?user_account_id=${props.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
+        const user = await props.function_FFB('DB_API', '/user_account', `user_account_id=${props.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error});
-        if (props.user_account_id == parseInt(user.id)) {
+        if (props.user_account_id == parseInt(user.id))
             return user.identity_provider_id!=null;
-        } else {
+        else {
             //User not found
             props.function_show_message('ERROR', '20305', null, null, null, props.common_app_id);
             return null;
@@ -134,17 +134,15 @@ const component = async props => {
     const post_component = async () =>{                                                                                             
         if ((props.system_admin_only == 1)==false){
             let path = '';
-            if (props.app_id == props.common_app_id){
-                path = `/locale/admin?lang_code=${props.current_locale}`;
-            }
-            else{
-                path = `/locale?lang_code=${props.current_locale}`;
-            }
+            if (props.app_id == props.common_app_id)
+                path = '/locale/admin';
+            else
+                path = '/locale';
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({
-                locales:await props.function_FFB('DB_API', path, 'GET', 'APP_DATA', null)
+                locales:await props.function_FFB('DB_API', path, `lang_code=${props.current_locale}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error}),
-                settings: await props.function_FFB('DB_API', `/app_settings_display?data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
+                settings: await props.function_FFB('DB_API', '/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error}),
                 username:props.username ?? props.system_admin ?? '',

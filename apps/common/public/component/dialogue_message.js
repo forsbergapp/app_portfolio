@@ -79,7 +79,10 @@ const component = async props => {
                 progressbar_wrap.style.display = hide;
                 button_cancel.style.display = hide;
                 button_close.style.display = show;
-                const text = await props.function_FFB('DB_API', `/app_settings_display?data_app_id=${props.data_app_id}&setting_type=MESSAGE&value=${props.code}`, 'GET', 'APP_DATA')
+                const text = await props.function_FFB(  'DB_API', 
+                                                        '/app_settings_display', 
+                                                        `data_app_id=${props.data_app_id}&setting_type=MESSAGE&value=${props.code}`, 
+                                                        'GET', 'APP_DATA')
                             .then((/**@type{string}*/result)=>JSON.parse(result)[0].display_data)
                             .catch((/**@type{Error}*/error)=>error);
                 message_title.innerHTML = text;

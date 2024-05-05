@@ -171,19 +171,20 @@ const app_portfolio_title = 'App Portfolio';
  /**
  * Config app parameter update
  * @param {number} app_id
+ * @param {number} resource_id
  * @param {{app_id:             number,
  *          parameter_name:     string,
  *          parameter_value:    string,
  *          parameter_comment:  string|null}} data
  * @returns {Promise.<void>}
  */
-  const ConfigAppParameterUpdate = async (app_id, data) => {
+  const ConfigAppParameterUpdate = async (app_id, resource_id, data) => {
     const file = await file_get('APPS', true);
     
     for (const app of file.file_content.APPS){
         if (app.APP_ID == data.app_id)
             for (const parameter of app.PARAMETERS){
-                if (data.parameter_name in parameter){
+                if (resource_id in parameter){
                     parameter[data.parameter_name] = data.parameter_value;
                     if (parameter.COMMENT)
                         parameter.COMMENT = data.parameter_comment;

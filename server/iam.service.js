@@ -7,6 +7,15 @@ const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin
 const {file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {default:jwt} = await import('jsonwebtoken');
+
+/**
+ * 
+ * @param {string} iam 
+ * @returns {URLSearchParams}
+ */
+ const iam_decode = iam =>{
+    return new URLSearchParams(atob(iam))
+}
 /**
  * Middleware authenticates system admin login
  * @param {number} app_id
@@ -75,39 +84,38 @@ const AuthenticateSystemadmin = async (app_id, authorization, ip,res)=>{
 };
 /**
  * Middleware authenticates system admin access token
- * @param {number} app_id
+ * @param {string} iam
  * @param {string} ip
- * @param {string} system_admin
  * @param {string} token
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateAccessTokenSystemAdmin = (app_id, token, ip, system_admin, res, next) => {
-    AuthenticateTokenCommon(app_id, 'SYSTEMADMIN', token, ip, system_admin, null, res, next);
+ const AuthenticateAccessTokenSystemAdmin = (iam, token, ip, res, next) => {
+    AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'SYSTEMADMIN', token, ip, iam_decode(iam).get('system_admin'), null, res, next);
 };
 /**
  * Middleware authenticates data token
- * @param {number} app_id
+ * @param {string} iam
  * @param {string} token
  * @param {string} ip
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateDataToken = async (app_id, token, ip, res, next) =>{
-    AuthenticateTokenCommon(app_id, 'APP_DATA', token, ip, null, null, res, next);
+ const AuthenticateDataToken = async (iam, token, ip, res, next) =>{
+    AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', token, ip, null, null, res, next);
 };
 
 /**
  * Middleware authenticates data token registration
- * @param {number} app_id 
+ * @param {string} iam
  * @param {string} token 
  * @param {string} ip 
  * @param {Types.res} res 
  * @param {function} next 
  */
-const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
+const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
     if (ConfigGet('SERVICE_IAM', 'ENABLE_USER_REGISTRATION')=='1')
-        AuthenticateTokenCommon(app_id, 'APP_DATA', token, ip, null, null, res, next);
+        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', token, ip, null, null, res, next);
     else{
         //return 403 Forbidden
         res.status(403).send('⛔');
@@ -115,15 +123,15 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
 };
 /**
  * Middleware authenticates data token login
- * @param {number} app_id 
+ * @param {string} iam 
  * @param {string} token 
  * @param {string} ip
  * @param {Types.res} res 
  * @param {function} next 
  */
- const AuthenticateDataTokenLogin = (app_id, token, ip, res, next) =>{
+ const AuthenticateDataTokenLogin = (iam, token, ip, res, next) =>{
     if (ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN')=='1')
-        AuthenticateTokenCommon(app_id, 'APP_DATA', token, ip, null, null, res, next);
+        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', token, ip, null, null, res, next);
     else{
         //return 403 Forbidden
         res.status(403).send('⛔');
@@ -232,20 +240,19 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
 };
 /**
  * Middleware authenticates access token superadmin
- * @param {number} app_id
+ * @param {string} iam
  * @param {string} authorization
  * @param {string} ip
- * @param {number} user_account_logon_user_account_id
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateAccessTokenSuperAdmin = (app_id, authorization, ip, user_account_logon_user_account_id, res, next) => {
-    if (app_id==0)
+const AuthenticateAccessTokenSuperAdmin = (iam, authorization, ip, res, next) => {
+    if (getNumberValue(iam_decode(iam).get('app_id'))==0)
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getUserAppRoleAdmin}) => {
-            getUserAppRoleAdmin(app_id, user_account_logon_user_account_id)
+            getUserAppRoleAdmin(getNumberValue(iam_decode(iam).get('app_id')), getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')))
             .then((/**@type{Types.db_result_user_account_getUserRoleAdmin[]}*/result)=>{
                 if (result[0].app_role_id == 0){
-                    AuthenticateTokenCommon(app_id, 'APP_ACCESS', authorization, ip, null, user_account_logon_user_account_id, res, next);
+                    AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')), res, next);
                 }
                 else
                     res.status(401).send('⛔');
@@ -261,51 +268,47 @@ const AuthenticateAccessTokenSuperAdmin = (app_id, authorization, ip, user_accou
 };
 /**
  * Middleware authenticates access token admin
- * @param {number} app_id 
+ * @param {string} iam
  * @param {string} authorization
  * @param {string} ip
- * @param {number} user_account_logon_user_account_id
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateAccessTokenAdmin = (app_id, authorization, ip, user_account_logon_user_account_id, res, next) => {
-    if (app_id==0){
-        AuthenticateTokenCommon(app_id, 'APP_ACCESS', authorization, ip, null, user_account_logon_user_account_id, res, next);
+const AuthenticateAccessTokenAdmin = (iam, authorization, ip, res, next) => {
+    if (getNumberValue(iam_decode(iam).get('app_id'))==0){
+        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')), res, next);
     }
     else
         res.status(401).send('⛔');
 };
 /**
  * Middleware authenticates access token
- * @param {number} app_id 
+ * @param {string} iam
  * @param {string} authorization
  * @param {string} ip
- * @param {number} user_account_logon_user_account_id
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateAccessToken = (app_id, authorization, ip, user_account_logon_user_account_id, res, next)  => {
+const AuthenticateAccessToken = (iam, authorization, ip, res, next)  => {
     //if user login is disabled then check also current logged in user
     //so they can't modify anything anymore with current accesstoken
     if (ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN')=='1'){
-        AuthenticateTokenCommon(app_id, 'APP_ACCESS', authorization, ip, null, user_account_logon_user_account_id, res, next);
+        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')), res, next);
     }
     else
         res.status(401).send('⛔');
 };
 /**
  * Middleware authenticate socket used for EventSource
- * @param {string} service
- * @param {string} parameters
+ * @param {string} iam
+ * @param {string} path
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateSocket = (service, parameters, res, next) =>{
+const AuthenticateSocket = (iam, path, res, next) =>{
     //check inparameters
-    if (service.toUpperCase()=='SOCKET' && 
-        Buffer.from(parameters, 'base64').toString('utf-8').startsWith('/socket/connection/connect')){
-            next();
-        }
+    if ((iam_decode(iam).get('service')??'').toUpperCase()=='SOCKET' && path.startsWith('/socket/connection/connect'))
+        next();
     else
         res.status(401).send('⛔');
 };
@@ -332,14 +335,14 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
 };
 /**
  * Middleware authenticate IAM
- * @param {string} service
+ * @param {string} iam
  * @param {string} authorization
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateIAM = (service, authorization, res, next) =>{
+ const AuthenticateIAM = (iam, authorization, res, next) =>{
     //check inparameters
-    if (service.toUpperCase()=='IAM' && authorization.toUpperCase().startsWith('BASIC'))
+    if ((iam_decode(iam).get('service')??'').toUpperCase()=='IAM' && authorization.toUpperCase().startsWith('BASIC'))
         next();
     else
         res.status(401).send('⛔');
@@ -578,7 +581,8 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
             tokentimestamp:jwt.decode(token, { complete: true }).payload.tokentimestamp};
 };
 
-export{ AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
+export{ iam_decode,
+        AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
         AuthenticateDataToken, AuthenticateDataTokenRegistration, AuthenticateDataTokenLogin,
         AuthenticateAccessToken, AuthenticateAccessTokenSuperAdmin, AuthenticateAccessTokenAdmin,
         AuthenticateSocket,
