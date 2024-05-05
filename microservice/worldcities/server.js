@@ -4,7 +4,7 @@
 import * as Types from './../../types.js';
 
 const service = await import('./service.js');
-const { getNumberValue, return_result, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const { route, getNumberValue, return_result, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 const { AuthenticateApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**
  * Starts the server
@@ -14,51 +14,43 @@ const startserver = async () =>{
 	request.server.createServer(request.options, (/**@type{Types.req_microservice}*/req, /**@type{Types.res_microservice}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'GET');
 		res.setHeader('Access-Control-Allow-Origin', '*');
-		const query = new URLSearchParams(req.url.substring(req.url.indexOf('?')));
-		req.query = {	app_id:getNumberValue(query.get('app_id')),
-						data:{	limit:	query.get('limit')?Number(query.get('limit')):0,
-								search: query.get('search') ?? '',
-								country:query.get('country') ?? ''}
+		const URI_query = req.url.substring(req.url.indexOf('?'));
+		const URI_path = req.url.substring(0, req.url.indexOf('?'));
+		const app_query = new URLSearchParams(URI_query);
+		req.query = {	app_id:getNumberValue(app_query.get('app_id')),
+						data:{	limit:	app_query.get('limit')?Number(app_query.get('limit')):0,
+								search: app_query.get('search') ?? '',
+								country:app_query.get('country') ?? ''}
 					};
-		switch (req.method + '_' + req.url.substring(0, req.url.indexOf('?'))){
-			case 'GET_/worldcities/city/search':{
-				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
-					if (authenticate)
+		AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
+			if (authenticate){
+				switch (true){
+					case route('/worldcities/v1/city/search' , 'GET', URI_path, req.method):{
 						service.getCitySearch(decodeURI(req.query.data.search), req.query.data.limit)
 						.then((result)=>return_result(200, null, result, null, res))
 						.catch((error) =>return_result(500, error, null, null, res));
-					else
-						return_result(401, '⛔', null, null, res);
-				});
-				break;
-			}
-			case 'GET_/worldcities/city/random':{
-				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
-					if (authenticate)
+						break;
+					}
+					case route('/worldcities/v1/city/random' , 'GET', URI_path, req.method):{
 						service.getCityRandom()
 						.then((result)=>return_result(200, null, result, null, res))
 						.catch((error) =>return_result(500, error, null, null, res));
-					else
-						return_result(401, '⛔', null, null, res);
-				});
-				break;
-			}
-			case 'GET_/worldcities/country':{
-				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
-					if (authenticate)
+						break;
+					}
+					case route('/worldcities/v1/country' , 'GET', URI_path, req.method):{
 						service.getCities(req.query.data.country)
 						.then((result)=>return_result(200, null, result, null, res))
 						.catch((error) =>return_result(500, error, null, null, res));
-					else
+						break;
+					}
+					default:{
 						return_result(401, '⛔', null, null, res);
-				});
-				break;
+					}
+				}
 			}
-			default:{
+			else
 				return_result(401, '⛔', null, null, res);
-			}
-		}
-
+		});
 	}).listen(request.port, ()=>{
 		console.log(`MICROSERVICE WORLDCITIES PORT ${request.port} `);
 	});

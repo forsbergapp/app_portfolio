@@ -202,26 +202,30 @@ const component = async props => {
     let spinner = `class='css_spinner'`;
     if (props.tab=='INFO'){
         let path;
+        let query;
         let user_account_id_search;            
         if (props.info_user_account_id_other !== null) {
             user_account_id_search = props.info_user_account_id_other;
-            path = `/user_account/profile/id?POST_ID=${user_account_id_search ?? ''}&id=${props.info_user_account_id ?? ''}`;
+            path = `/user_account/profile/id/${user_account_id_search ?? ''}`;
+            query = `id=${props.info_user_account_id ?? ''}`;
         } 
         else
             if (props.info_username !== null) {
                 user_account_id_search = '';
-                path = `/user_account/profile/username?search=${props.info_username}&id=${props.info_user_account_id ?? ''}`;
+                path = '/user_account/profile/username';
+                query = `search=${props.info_username}&id=${props.info_user_account_id ?? ''}`;
             } 
             else {
                 user_account_id_search = props.info_user_account_id;
-                path = `/user_account/profile/id?POST_ID=${user_account_id_search ?? ''}&id=${props.info_user_account_id ?? ''}`;
+                path = `/user_account/profile/id/${user_account_id_search ?? ''}`;
+                query = `id=${props.info_user_account_id ?? ''}`;
             }
         const json_data ={  
             client_latitude:    props.info_client_latitude,
             client_longitude:   props.info_client_longitude
         };
         
-        profile = await props.function_FFB('DB_API', path, 'POST', 'APP_DATA', json_data)
+        profile = await props.function_FFB('DB_API', path, query, 'POST', 'APP_DATA', json_data)
                                         .then((/**@type{string}*/result)=>JSON.parse(result))
                                         .catch((/**@type{Error}*/error)=>{throw error});
     }
@@ -303,13 +307,13 @@ const component = async props => {
             let path;
             if (statchoice ==1 || statchoice ==2 || statchoice ==3){
                 /*statschoice 1,2,3: user_account*/
-                path = `/user_account/profile/top?statchoice=${statchoice}`;
+                path = '/user_account/profile/top';
             }
             else{
                 /*other statschoice, apps can use >3 and return same columns*/
-                path = `${app_rest_url}?statchoice=${statchoice}`;
+                path = app_rest_url;
             }
-            const profile_top_records = await props.function_FFB('DB_API', path, 'GET', 'APP_DATA', null)
+            const profile_top_records = await props.function_FFB('DB_API', path, `statchoice=${statchoice}`, 'GET', 'APP_DATA', null)
                                             .then((/**@type{string}*/result)=>JSON.parse(result))
                                             .catch((/**@type{Error}*/error)=>{throw error});
             spinner = '';

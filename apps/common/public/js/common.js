@@ -388,13 +388,13 @@ const fromBase64 = (str) => {
 const common_translate_ui = async lang_code => {
     let path='';
     if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
-        path = `/app_object/admin?data_lang_code=${lang_code}&object_name=APP`;
+        path = '/app_object/admin';
     }
     else{
-        path = `/app_object?data_lang_code=${lang_code}&object_name=APP`;
+        path = '/app_object';
     }
     //translate objects
-    const app_objects_json = await FFB('DB_API', path, 'GET', 'APP_DATA', null);
+    const app_objects_json = await FFB('DB_API', path, `data_lang_code=${lang_code}&object_name=APP`, 'GET', 'APP_DATA', null);
     /**
      * @typedef {   'USERNAME'|'EMAIL'|'NEW_EMAIL'|'BIO'|'PASSWORD'|'PASSWORD_CONFIRM'|'PASSWORD_REMINDER'|'NEW_PASSWORD_CONFIRM'|'NEW_PASSWORD'|'CONFIRM_QUESTION'} translation_key
      */
@@ -427,11 +427,9 @@ const common_translate_ui = async lang_code => {
  */
 const get_locales_options = async () =>{
 
-    const path = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id)?
-                    `/locale/admin?lang_code=${COMMON_GLOBAL.user_locale}`:
-                    `/locale?lang_code=${COMMON_GLOBAL.user_locale}`;
+    const path = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id)?'/locale/admin':'/locale';
 
-    const locales = await FFB('DB_API', path, 'GET', 'APP_DATA', null)
+    const locales = await FFB('DB_API', path, `lang_code=${COMMON_GLOBAL.user_locale}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error});
     return locales.map((/**@type{*}*/row, /**@type{number}*/index)=>
@@ -1331,9 +1329,8 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
     }
     else{
         /* detailchoice 5, apps, returns same columns*/
-        path = `${rest_url_app}`;
+        path = rest_url_app;
     }
-    path += `?user_account_id=${AppDocument.querySelector('#common_profile_id').innerHTML}&detailchoice=${detailchoice}`;
     //DETAIL
     //show only if user logged in
     if (COMMON_GLOBAL.user_account_id || 0 !== 0) {
@@ -1344,7 +1341,8 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
         else
             AppDocument.querySelector('#common_profile_detail').style.display = 'block';
         if (fetch_detail){
-            FFB('DB_API', path, 'GET', 'APP_ACCESS', null)
+            FFB('DB_API', path, `user_account_id=${AppDocument.querySelector('#common_profile_id').innerHTML}&detailchoice=${detailchoice}`, 
+                'GET', 'APP_ACCESS', null)
             .then(result=>{
                 let html = '';
                 let image = '';
@@ -1488,7 +1486,7 @@ const profile_update_stat = async () => {
                         };
         //get updated stat for given user
         //to avoid update in stat set searched by same user
-        FFB('DB_API', `/user_account/profile/id?POST_ID=${profile_id.innerHTML}&id=${profile_id.innerHTML}`, 'POST', 'APP_DATA', json_data)
+        FFB('DB_API', `/user_account/profile/id/${profile_id.innerHTML}`, `id=${profile_id.innerHTML}`, 'POST', 'APP_DATA', json_data)
         .then(result=>{
             const user_stat = JSON.parse(result);
             AppDocument.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
@@ -1672,7 +1670,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                         password:  encodeURI(AppDocument.querySelector('#common_user_start_login_system_admin_password').innerHTML),
                         ...get_uservariables()
         };
-        path = '/systemadmin?';
+        path = '/systemadmin';
         if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
                         {
                         username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
@@ -1707,7 +1705,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                             provider_email:         provider_data.profile_email,
                             ...get_uservariables()
                         };
-            path = `/provider?PUT_ID=${provider_data.profile_id}`;
+            path = `/provider/${provider_data.profile_id}`;
         }
         else{
             // ES6 object spread operator for user variables
@@ -1719,7 +1717,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                                                 AppDocument.querySelector('#common_user_start_login_password').innerHTML),
                             ...get_uservariables()
             };
-            path = '/user?';
+            path = '/user';
             if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
                             {
                             username: username_verify?
@@ -1734,7 +1732,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         }            
     }
     
-    const result = await FFB('IAM', path, 'POST', 'IAM', json_data)
+    const result = await FFB('IAM', path, null, 'POST', 'IAM', json_data)
                     .catch(err=>{
                         AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
                         throw err;
@@ -1888,7 +1886,7 @@ const user_update = async () => {
                             avatar:             avatar,
                             ...get_uservariables()
                         };
-            path = `/user_account?PUT_ID=${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
         } else {
             if (input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
                             {
@@ -1900,11 +1898,11 @@ const user_update = async () => {
                             bio:            bio,
                             private:        Number(AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
                         };
-            path = `/user_account/common?PUT_ID=${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/user_account/common/${COMMON_GLOBAL.user_account_id ?? ''}`;
         }
         AppDocument.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
         //update user using REST API
-        FFB('DB_API', path, 'PUT', 'APP_ACCESS', json_data)
+        FFB('DB_API', path, null, 'PUT', 'APP_ACCESS', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             const user_update = JSON.parse(result);
@@ -1943,7 +1941,7 @@ const user_signup = () => {
         
         AppDocument.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
     
-        FFB('DB_API', '/user_account/signup?', 'POST', 'APP_SIGNUP', json_data)
+        FFB('DB_API', '/user_account/signup', null, 'POST', 'APP_SIGNUP', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
             const signup = JSON.parse(result);
@@ -1997,7 +1995,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                                 verification_type:  verification_type,
                                 ...get_uservariables()
                             };
-                FFB('DB_API', `/user_account/activate?PUT_ID=${COMMON_GLOBAL.user_account_id ?? ''}`, 'PUT', 'APP_DATA', json_data)
+                FFB('DB_API', `/user_account/activate/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PUT', 'APP_DATA', json_data)
                 .then(result=>{
                     AppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     const user_activate = JSON.parse(result).items[0];
@@ -2096,7 +2094,7 @@ const user_delete = async (choice=null, function_delete_event ) => {
                 AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
                 const json_data = { password: password};
     
-                FFB('DB_API', `/user_account/common?DELETE_ID=${COMMON_GLOBAL.user_account_id ?? ''}`, 'DELETE', 'APP_ACCESS', json_data)
+                FFB('DB_API', `/user_account/common/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'DELETE', 'APP_ACCESS', json_data)
                 .then(()=>{
                     AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
                     resolve({deleted: 1});
@@ -2125,16 +2123,16 @@ const user_function = function_name => {
         const json_data = { user_account_id: user_id_profile};
         const check_div = AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`);
         if (check_div.children[0].style.display == 'block') {
-            path = `/user_account_${function_name.toLowerCase()}?POST_ID=${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/user_account_${function_name.toLowerCase()}/${COMMON_GLOBAL.user_account_id ?? ''}`;
             method = 'POST';
         } else {
-            path = `/user_account_${function_name.toLowerCase()}?DELETE_ID=${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/user_account_${function_name.toLowerCase()}/${COMMON_GLOBAL.user_account_id ?? ''}`;
             method = 'DELETE';
         }
         if (COMMON_GLOBAL.user_account_id == null)
             show_common_dialogue('LOGIN');
         else {
-            FFB('DB_API', path, method, 'APP_ACCESS', json_data)
+            FFB('DB_API', path, null, method, 'APP_ACCESS', json_data)
             .then(()=> {
                 if (AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
                     //follow/like
@@ -2167,7 +2165,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
         }
         case 1:{
             ComponentRemove('common_dialogue_message');
-            FFB('DB_API', `/user_account_app?DELETE_USER_ACCOUNT_ID=${user_account_id}&DELETE_APP_ID=${app_id}`, 'DELETE', 'APP_ACCESS', null)
+            FFB('DB_API', '/user_account_app', `delete_user_account_id=${user_account_id}&delete_app_id=${app_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
                 //execute event and refresh app list
                 AppDocument.querySelector('#common_profile_main_btn_cloud').click();
@@ -2193,7 +2191,7 @@ const user_forgot = async () => {
                     email: AppDocument.querySelector('#common_user_start_forgot_email')
                     })==true){
         AppDocument.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
-        FFB('DB_API', '/user_account/forgot?', 'PUT', 'APP_DATA', json_data)
+        FFB('DB_API', '/user_account/forgot', null, 'POST', 'APP_DATA', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
             const forgot = JSON.parse(result);
@@ -2223,7 +2221,7 @@ const updatePassword = () => {
                      
                      })==true){
         AppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
-        FFB('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id ?? ''}`, 'PUT', 'APP_ACCESS', json_data)
+        FFB('DB_API', `/user_account/password/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PUT', 'APP_ACCESS', json_data)
         .then(()=>{
             AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
             dialogue_password_new_clear();
@@ -2249,7 +2247,7 @@ const user_preference_save = async () => {
                 app_setting_preference_direction_id:    select_direction.selectedIndex==-1?null:select_direction.options[select_direction.selectedIndex].id,
                 app_setting_preference_arabic_script_id:select_arabic_script.selectedIndex==-1?null:select_arabic_script.options[select_arabic_script.selectedIndex].id
             };
-        await FFB('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id ?? ''}`, 'PATCH', 'APP_ACCESS', json_data);
+        await FFB('DB_API', `/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data);
     }
 };
 /**
@@ -2258,7 +2256,7 @@ const user_preference_save = async () => {
  */
 const user_preference_get = async () => {
     return new Promise((resolve,reject)=>{
-        FFB('DB_API', `/user_account_app?user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
+        FFB('DB_API', '/user_account_app', `user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
         .then(result=>{
             const user_account_app = JSON.parse(result)[0];
             //locale
@@ -2362,7 +2360,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
     COMMON_GLOBAL.module_leaflet_session_map = null;
     
     /** @type {type_map_layer[]}*/
-    const map_layers = await FFB('DB_API', `/app_settings_display?data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
+    const map_layers = await FFB('DB_API', '/app_settings_display', `data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
     .then((/**@type{string}*/result)=>JSON.parse(result))
     .catch((/**@type{Error}*/error)=>error);
     
@@ -2434,7 +2432,7 @@ const map_country = lang_code =>{
     return new Promise ((resolve, reject)=>{
         let current_group_name = '';
         //country
-        FFB('DB_API', `/country?lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
+        FFB('DB_API', '/country', `lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
         .then(result=>{resolve(
             `<option value='' id='' label='…'>…</option>`
             +
@@ -2689,137 +2687,146 @@ const map_update = async (parameters) => {
  * Frontend for Backend (FFB)
  * @param {string} service 
  * @param {string} path 
+ * @param {string|null} query
  * @param {string} method 
  * @param {string} authorization_type 
  * @param {*} json_data 
  * @returns {Promise.<*>} 
  */
-const FFB = async (service, path, method, authorization_type, json_data=null) => {
+const FFB = async (service, path, query, method, authorization_type, json_data=null) => {
     /**@type{number} */
     let status;
     let authorization;
-    let bff_path;
+    let service_path;
     switch (authorization_type){
         case 'APP_DATA':{
             //data token authorization check
             authorization = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/app_data`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_data`;
             break;
         }
         case 'APP_SIGNUP':{
             //data token signup authorization check
             authorization = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/app_signup`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_signup`;
             break;
         }
         case 'APP_ACCESS':{
             //user or admins authorization
             authorization = `Bearer ${COMMON_GLOBAL.token_at}`;
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id)
-                bff_path = `${COMMON_GLOBAL.rest_resource_bff}/admin`;
+                service_path = `${COMMON_GLOBAL.rest_resource_bff}/admin`;
             else
-                bff_path = `${COMMON_GLOBAL.rest_resource_bff}/app_access`;
+                service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_access`;
             break;
         }
         case 'SUPERADMIN':{
             // super admin authorization
             authorization = `Bearer ${COMMON_GLOBAL.token_at}`;
-            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/superadmin`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/superadmin`;
             break;
         }
         case 'SYSTEMADMIN':{
             //systemadmin authorization
             authorization = `Bearer ${COMMON_GLOBAL.token_admin_at}`;
-            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/systemadmin`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/systemadmin`;
             break;
         }
         case 'SOCKET':{
             //broadcast connect authorization
             authorization = `Bearer ${COMMON_GLOBAL.token_dt}`;
             //use query to send authorization since EventSource does not support headers
-            path += `&authorization=${authorization}`;
+            query += `&authorization=${authorization}`;
             json_data = null;
-            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/socket`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/socket`;
             break;
         }
         case 'IAM':{
             //user,admin or system admin login
             authorization = `Basic ${window.btoa(json_data.username + ':' + json_data.password)}`;
-            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/iam`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/iam`;
             break;
         }
     }
-    bff_path += '/v' + (COMMON_GLOBAL.app_rest_api_version ?? 1);
-    let options = {};
-    if (json_data ==null)
-        options = {
-                    method: method,
-                    headers: {
-                                Authorization: authorization
-                            },
-                    body: null
-                };
-    else
-        options = {
-                method: method,
-                headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: authorization
-                        },
-                body: JSON.stringify(json_data)
-            };
-    path += `&lang_code=${COMMON_GLOBAL.user_locale}`;
-    const encodedparameters = toBase64(path);
-    let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL.app_id??''}&parameters=${encodedparameters}`;
-    url += `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}`;
+    
+    //add common query parameter
+    query += query?`&lang_code=${COMMON_GLOBAL.user_locale}`:'';
+    //encode query parameters
+    const encodedparameters = query?toBase64(query):'';
+    //add and encode IAM parameters
+    const iam =  toBase64(  `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
+                            `&service=${service}&app_id=${COMMON_GLOBAL.app_id??''}`);
+
+    let url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${path}?parameters=${encodedparameters}&iam=${iam}`;
+
     if (service=='SOCKET' && authorization_type=='SOCKET'){
         return new EventSource(url);
     }
-    else
+    else{
+        //add options to fetch
+        let options = {};
+        if (json_data ==null)
+            options = {
+                        method: method,
+                        headers: {
+                                    Authorization: authorization
+                                },
+                        body: null
+                    };
+        else
+            options = {
+                    method: method,
+                    headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: authorization
+                            },
+                    body: JSON.stringify(json_data)
+                };
         return await fetch(url, options)
-        .then((response) => {
-            status = response.status;
-            return response.text();
-        })
-        .then((result) => {
-            switch (status){
-                case 200:{
-                    //OK
-                    return result;
-                }
-                case 400:{
-                    //Bad request
-                    show_message('INFO', null,null, null, result, COMMON_GLOBAL.app_id);
-                    throw result;
-                }
-                case 404:{
-                    //Not found
-                    show_message('INFO', null,null, null, result, COMMON_GLOBAL.app_id);
-                    throw result;
-                }
-                case 401:{
-                    //Unauthorized, token expired
-                    exception(COMMON_GLOBAL.exception_app_function, result);
-                    throw result;
-                }
-                case 403:{
-                    //Forbidden, not allowed to login or register new user
-                    show_message('INFO', null,null, null, result, COMMON_GLOBAL.app_id);
-                    throw result;
-                }
-                case 500:{
-                    //Unknown error
-                    exception(COMMON_GLOBAL.exception_app_function, result);
-                    throw result;
-                }
-                case 503:{
-                    //Service unavailable or other error in microservice
-                    exception(COMMON_GLOBAL.exception_app_function, result);
-                    throw result;
-                }
-            }
-        })
-        .catch(error=>{throw error;});
+                .then((response) => {
+                    status = response.status;
+                    return response.text();
+                })
+                .then((result) => {
+                    switch (status){
+                        case 200:{
+                            //OK
+                            return result;
+                        }
+                        case 400:{
+                            //Bad request
+                            show_message('INFO', null,null, null, result, COMMON_GLOBAL.app_id);
+                            throw result;
+                        }
+                        case 404:{
+                            //Not found
+                            show_message('INFO', null,null, null, result, COMMON_GLOBAL.app_id);
+                            throw result;
+                        }
+                        case 401:{
+                            //Unauthorized, token expired
+                            exception(COMMON_GLOBAL.exception_app_function, result);
+                            throw result;
+                        }
+                        case 403:{
+                            //Forbidden, not allowed to login or register new user
+                            show_message('INFO', null,null, null, result, COMMON_GLOBAL.app_id);
+                            throw result;
+                        }
+                        case 500:{
+                            //Unknown error
+                            exception(COMMON_GLOBAL.exception_app_function, result);
+                            throw result;
+                        }
+                        case 503:{
+                            //Service unavailable or other error in microservice
+                            exception(COMMON_GLOBAL.exception_app_function, result);
+                            throw result;
+                        }
+                    }
+                })
+                .catch(error=>{throw error;});
+    }        
 };
 /**
  * Broadcast init
@@ -2901,21 +2908,22 @@ const updateOnlineStatus = async () => {
     return await new Promise((resolve, reject)=>{
         let token_type='';
         let path='';
+        let query;
         if (COMMON_GLOBAL.system_admin!=null){
-            path =   '/socket/connection/systemadmin'+ 
-                    `?client_id=${COMMON_GLOBAL.service_socket_client_ID??''}`+
+            path =  '/socket/connection/systemadmin';
+            query = `client_id=${COMMON_GLOBAL.service_socket_client_ID??''}`+
                     `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id ??''}` +
                     `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
             token_type='SYSTEMADMIN';
         }
         else{
-            path =   '/socket/connection'+ 
-                    `?client_id=${COMMON_GLOBAL.service_socket_client_ID??''}`+
+            path =  '/socket/connection';
+            query = `client_id=${COMMON_GLOBAL.service_socket_client_ID??''}`+
                     `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
                     `&system_admin=&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
             token_type='APP_DATA';
         }
-        FFB('SOCKET', path, 'PATCH', token_type, null)
+        FFB('SOCKET', path, query, 'PATCH', token_type, null)
         .then(()=>resolve())
         .catch((error)=>reject(error));
     })
@@ -2925,10 +2933,11 @@ const updateOnlineStatus = async () => {
  * @returns {Promise.<void>}
  */
 const connectOnline = async () => {
-    FFB('SOCKET',   '/socket/connection/connect' +
-                    `?identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
-                    `&system_admin=${COMMON_GLOBAL.system_admin ?? ''}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
-         'GET', 'SOCKET', null)
+    FFB('SOCKET',   
+        '/socket/connection/connect',
+        `identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
+        `&system_admin=${COMMON_GLOBAL.system_admin ?? ''}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
+        'GET', 'SOCKET', null)
     .then((result_eventsource)=>{
         COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
         if (COMMON_GLOBAL.service_socket_eventsource){
@@ -2951,7 +2960,7 @@ const connectOnline = async () => {
  * @returns {void}
  */
 const checkOnline = (div_icon_online, user_account_id) => {
-    FFB('SOCKET', `/socket/connection/check?user_account_id=${user_account_id}`, 'GET', 'APP_DATA', null)
+    FFB('SOCKET', '/socket/connection/check', `user_account_id=${user_account_id}`, 'GET', 'APP_DATA', null)
     .then(result=>AppDocument.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online == 1?'online':'offline'));
 };
 /**
@@ -2963,7 +2972,6 @@ const checkOnline = (div_icon_online, user_account_id) => {
 const get_place_from_gps = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
         let tokentype;
-        const path = `/place?longitude=${longitude}&latitude=${latitude}`;
 
         if (COMMON_GLOBAL.system_admin!=null)
             tokentype = 'SYSTEMADMIN';
@@ -2976,7 +2984,7 @@ const get_place_from_gps = async (longitude, latitude) => {
                 //not logged in or a user
                 tokentype = 'APP_DATA';
             }
-        FFB('GEOLOCATION', path, 'GET', tokentype, null)
+        FFB('GEOLOCATION', '/place', `longitude=${longitude}&latitude=${latitude}`, 'GET', tokentype, null)
         .then(result=>{
             const json = JSON.parse(result);
             if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
@@ -2997,7 +3005,6 @@ const get_gps_from_ip = async () => {
 
     return new Promise((resolve)=>{
         let tokentype;
-        const path = '/ip?';
         
         if (COMMON_GLOBAL.system_admin!=null && COMMON_GLOBAL.token_admin_at)
             tokentype = 'SYSTEMADMIN';
@@ -3010,7 +3017,7 @@ const get_gps_from_ip = async () => {
                 //not logged in or a user
                 tokentype = 'APP_DATA';
             }
-        FFB('GEOLOCATION', path, 'GET', tokentype, null)
+        FFB('GEOLOCATION', '/ip', null, 'GET', tokentype, null)
         .then(result=>{
             const geodata = JSON.parse(result);
             COMMON_GLOBAL.client_latitude  = geodata.geoplugin_latitude;
@@ -3034,7 +3041,7 @@ const get_gps_from_ip = async () => {
  */
 const get_cities = async countrycode => {
     return new Promise((resolve, reject)=>{
-        FFB('WORLDCITIES', `/country?country=${countrycode}`, 'GET', 'APP_DATA', null)
+        FFB('WORLDCITIES', '/country', `country=${countrycode}`, 'GET', 'APP_DATA', null)
         .then(result=>{
             /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
             const cities = JSON.parse(result);
