@@ -1604,7 +1604,7 @@ const user_settings_delete = (choice=null) => {
     
     switch (choice){
         case null:{
-            common.show_message('CONFIRM',null,function_delete_user_setting, null, null, common.COMMON_GLOBAL.app_id);
+            common.show_message('CONFIRM',null,function_delete_user_setting, null, null, null, common.COMMON_GLOBAL.app_id);
             break;
         }
         case 1:{

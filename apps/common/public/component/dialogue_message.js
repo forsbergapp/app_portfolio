@@ -1,3 +1,11 @@
+/**
+ * @typedef {{"error":{
+ *               "http":number, 
+ *               "code":number|null,
+ *               "text":string, 
+ *               "developer_text":string|null,
+ *               "more_info":string|null}}} error_message_ISO20022
+ */
 /**@type{{querySelector:function}} */
 const AppDocument = document;
 /**
@@ -39,7 +47,8 @@ const template = props =>`  <div id='common_confirm_question' class='common_icon
  *          message_type:string,
  *          data_app_id:number,
  *          code:string,
- *          message:{message:string, sqlMessage:string,errorNum:string, text:string}|*,
+ *          message:{message:string, sqlMessage:string,errorNum:string, text:string}|*
+ *          message_iso:string,
  *          show_message_info_list:{}[]|null,
  *          translation_confirm_question:string,
  *          function_FFB:function,
@@ -70,6 +79,23 @@ const component = async props => {
         props.common_document.querySelector('#common_message_title_icon').setAttribute('data-text_class',props.text_class);
         props.common_document.querySelector('#common_message_title_container').style.display = show;
         switch (props.message_type){
+            case 'ERROR_BFF':{
+                message_title.innerHTML = '';
+                confirm_question.style.display = hide;
+                message_title.style.display = show;
+                message_title.style.fontSize = fontsize_normal;
+                progressbar.style.display = hide;
+                progressbar_wrap.style.display = hide;
+                button_cancel.style.display = hide;
+                button_close.style.display = show;
+                /**@type{error_message_ISO20022} */
+                const message_iso = JSON.parse(props.message_iso);
+                message_title.innerHTML = message_iso.error.text;
+                button_close['data-function'] = function_close;
+                dialogue.style.visibility = 'visible';
+                button_close.focus();
+                break;
+            }
             case 'ERROR':{
                 message_title.innerHTML = '';
                 confirm_question.style.display = hide;

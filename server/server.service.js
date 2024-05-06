@@ -4,6 +4,27 @@
 import * as Types from './../types.js';
 
 /**
+ * Sends ISO 20022 error format
+ * @param {Types.res} res 
+ * @param {number} http 
+ * @param {string|null} code 
+ * @param {string|number|object|null} text 
+ * @param {string|null} developer_text 
+ * @param {string|null} more_info 
+ */
+ const send_iso_error = (res, http, code, text, developer_text, more_info) => {
+    //ISO20022 error format
+    const message = {"error":{
+                        "http":http, 
+                        "code":code, 
+                        "text":text, 
+                        "developer_text":developer_text, 
+                        "more_info":more_info}};
+    //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
+    res.statusMessage = '';
+    res.status(http).send(message);
+}
+/**
  * Get number value from request key
  * returns number or null for numbers
  * so undefined and '' are avoided sending arguement to service functions
@@ -105,7 +126,7 @@ const COMMON = {
     //sets headers, returns disallow for robots.txt and empty favicon.ico
     app.route('*').all                      (BFF_init);
     
-    //checks redirects naked domain, http to https if enabled and to admin subdomain if first time, responds to SSL verification if enabled
+    //redirects naked domain, http to https if enabled and to admin subdomain if first time, responds to SSL verification if enabled
     app.route('*').get                      (BFF_start);
     
     //REST API 
@@ -652,4 +673,4 @@ const serverStart = async () =>{
     
 };
 
-export {COMMON, getNumberValue, responsetime, serverRoutes, serverStart };
+export {COMMON, send_iso_error, getNumberValue, responsetime, serverRoutes, serverStart };
