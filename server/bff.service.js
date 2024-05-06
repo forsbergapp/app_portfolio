@@ -4,7 +4,7 @@ import * as Types from './../types.js';
 
 const {ConfigServices, microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
-const {getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {send_iso_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/log.service.js`);
 const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
@@ -159,6 +159,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  * @param {Types.bff_parameters} bff_parameters
  */
  const BFF = (bff_parameters) =>{
+    
     /**
      * @param {number} app_id
      * @param {Types.error} error 
@@ -166,12 +167,13 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
     const log_error = (app_id, error) =>{
         LogServiceE(app_id ?? null, bff_parameters.service ?? null, bff_parameters.query ?? null, error).then(() => {
             const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
-            //remove statusMessage or [ERR_INVALID_CHAR] might occur
-            bff_parameters.res.statusMessage = '';
-            if (typeof error === 'string' && error.startsWith('MICROSERVICE ERROR'))
-                bff_parameters.res.status(statusCode).send('MICROSERVICE ERROR');
-            else
-                bff_parameters.res.status(statusCode).send(error);
+            send_iso_error( bff_parameters.res, 
+                            statusCode, 
+                            null, 
+                            bff_parameters.res.statusMessage, 
+                            null, 
+                            (typeof error === 'string' && error.startsWith('MICROSERVICE ERROR'))?'MICROSERVICE ERROR':error);
+            
         });
     }
     const app_id = bff_parameters.iam?getNumberValue(iam_decode(bff_parameters.iam).get('app_id')):null;
@@ -254,4 +256,4 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
         });
     }
 };
-export{BFF, BFF_microservices};
+export{send_iso_error, BFF, BFF_microservices};
