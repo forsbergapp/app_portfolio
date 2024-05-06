@@ -125,9 +125,9 @@ const component = async props => {
             const transaction_time = new Date(	new_date.getUTCFullYear(),new_date.getUTCMonth(),new_date.getUTCDate(), new_date.getUTCHours(), new_date.getUTCMinutes())
                                         .toLocaleString(props.locale, {timeZone: 'UTC', hour:'numeric', hour12:false, minute:'2-digit'});
             const amount = Number((10000 + Math.random() * 10000).toFixed(2));
-            const deposit_withdrawal = (0 + Math.random() * 1)>1/2;
+            const deposit = (0 + Math.random() * 1)>1/8;
             transactions.push(
-                {date:transaction_date, time:transaction_time,logo:'',origin:'ORIGIN ' + Math.random().toString(36).substring(2),amount_deposit:deposit_withdrawal?amount:null,amount_withdrawal:deposit_withdrawal?null:amount},
+                {date:transaction_date, time:transaction_time,logo:'',origin:'ORIGIN ' + Math.random().toString(36).substring(2),amount_deposit:deposit?amount:null,amount_withdrawal:deposit?null:amount*-1},
             );
             //delay 10 ms
             await new Promise ((resolve)=>{setTimeout(()=> resolve(null),10)});
