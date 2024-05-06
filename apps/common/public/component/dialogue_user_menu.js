@@ -106,7 +106,7 @@ const component = async props => {
             return user.identity_provider_id!=null;
         else {
             //User not found
-            props.function_show_message('ERROR', '20305', null, null, null, props.common_app_id);
+            props.function_show_message('ERROR', '20305', null, null, null, null, props.common_app_id);
             return null;
         }
     }
