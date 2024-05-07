@@ -48,7 +48,7 @@ const component = async props => {
                                     text_account:'BANK ACCOUNT',
                                     text_statements:'BANK STATEMENTS',
                                     text_directpayment:'DIRECT PAYMENT',
-                                    text_iso:'ISO STANDARDS: ISO23029 REST API, ISO20022 - transactions'})
+                                    text_iso:'ISO STANDARDS'})
     };
 }
 export default component;
