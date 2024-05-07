@@ -586,8 +586,9 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
                         accept_language:accept_language,
                         query:`ip=${ip}`,
                         body:null};
+    //ignore error in this case and fetch randcom geolocation using WORLDCITIES service instead if GEOLOCATION is not available
     const result_gps = await BFF_microservices(app_id, parameters)
-    .catch((/**@type{Types.error}*/error)=>error);
+    .catch((/**@type{Types.error}*/error)=>null);
     const result_geodata = {};
     if (result_gps){
         result_geodata.latitude =   JSON.parse(result_gps).geoplugin_latitude;
@@ -607,7 +608,7 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
                             accept_language:accept_language,
                             query:'', 
                             body:null};
-        const result_city = await BFF_microservices(app_id, parameters, );
+        const result_city = await BFF_microservices(app_id, parameters);
         result_geodata.latitude =   JSON.parse(result_city).lat;
         result_geodata.longitude=   JSON.parse(result_city).lng;
         result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
