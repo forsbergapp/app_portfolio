@@ -170,9 +170,9 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
             send_iso_error( bff_parameters.res, 
                             statusCode, 
                             null, 
-                            bff_parameters.res.statusMessage, 
+                            (typeof error === 'string' && error.startsWith('MICROSERVICE ERROR'))?'MICROSERVICE ERROR':error, 
                             null, 
-                            (typeof error === 'string' && error.startsWith('MICROSERVICE ERROR'))?'MICROSERVICE ERROR':error);
+                            null);
             
         });
     }
