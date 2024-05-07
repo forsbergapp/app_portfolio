@@ -137,8 +137,8 @@ const install_db_get_files = async (json_type) =>{
                     }
                 }
                 //remove comments
-                //rows starting with '--' and ends width '\r\n'
-                const sql_split = '\r\n';
+                //rows starting with '--' and ends width '\r\n' or '\n'
+                const sql_split = process.platform == 'win32'?'\r\n':'\n';
                 install_sql = install_sql.split(sql_split).filter(row=>!row.startsWith('--')).join(sql_split);
                 //split script file into separate sql statements
                 for (let sql of install_sql.split(';')){
