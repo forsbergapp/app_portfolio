@@ -1692,7 +1692,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                                     profile_last_name:      `PROVIDER LAST_NAME${provider_id}`,
                                     profile_image_url:      '',
                                     profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`};
-            const profile_image = await convert_image(  provider_data.profile_image_url, 
+            const profile_image = provider_data.profile_image_url==''?null:await convert_image(  provider_data.profile_image_url, 
                                                         COMMON_GLOBAL.image_avatar_width,
                                                         COMMON_GLOBAL.image_avatar_height)
             json_data ={    username:               null,
@@ -1702,7 +1702,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                             provider_id:            provider_data.profile_id,
                             provider_first_name:    provider_data.profile_first_name,
                             provider_last_name:     provider_data.profile_last_name,
-                            provider_image:         window.btoa(profile_image),
+                            provider_image:         profile_image?window.btoa(profile_image):null,
                             provider_image_url:     provider_data.profile_image_url,
                             provider_email:         provider_data.profile_email,
                             ...get_uservariables()
@@ -1776,7 +1776,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             COMMON_GLOBAL.user_app_role_id = login_data.app_role_id;
             
             //set avatar or empty
-            set_avatar(provider_id?login_data.provider_image:login_data.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
+            set_avatar(provider_id?login_data.provider_image:login_data.avatar ?? null, AppDocument.querySelector('#common_user_menu_avatar_img'));
             AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
             AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
 
