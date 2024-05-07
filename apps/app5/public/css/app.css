@@ -43,16 +43,18 @@ body {
 	height: 90%;
 	display: grid;
 	justify-content: center;
-	align-content: space-around;
+	align-content: center;
 }
 .app_page_start_divs_row{
 	width: 100%;
+	margin: 0.1em;
 	display: block;
 }
 .app_page_start_bank_div{
-	height: 35%;
-	width: 200px;
+	height: 1em;
+	width: 9em;
 	cursor:pointer;
+	font-size: 0.7em;
 }
 .app_bank_div {
 	padding: 2em;
@@ -61,7 +63,6 @@ body {
 	transition-duration: .3s;
     transition-property: box-shadow;
 	vertical-align: middle;
-	margin: 10px;
 }
 #app_page_secure_bank_statement_row{
 	height: 3em;
@@ -115,7 +116,12 @@ body {
 	#app_page_secure_bank_statement_row{
 		font-size:0.7em;
 	}
-	
+	.app_page_start_bank_div{
+		height: 1em;
+		width: 9em;
+		cursor:pointer;
+		font-size: 1em;
+	}
 }
 /*COMMON*/
 #common_profile_input_row,
@@ -143,6 +149,10 @@ body {
 	margin-inline-start: unset !important;
 	position: unset !important;
 	margin-top: unset !important;
+}
+#common_user_menu{
+	transition-duration: .3s;
+    transition-property: box-shadow;
 }
 /*APP THEME*/
 body {
@@ -196,6 +206,10 @@ body {
 }
 #common_dialouge_user_menu{
 	background-color: var(--common_app_color_white);
+}
+#common_user_menu:hover,
+#common_user_menu:active{
+	box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
 }
 #common_window_info_toolbar{
 	background: var(--common_app_color_white);
