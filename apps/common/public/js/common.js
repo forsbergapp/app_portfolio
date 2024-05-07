@@ -2868,7 +2868,7 @@ const show_broadcast = (broadcast_message) => {
             break;
         }
 		case 'PROGRESS':{
-			show_message('PROGRESS', null, null, null, null, JSON.parse(window.atob(message)));
+			show_message('PROGRESS', null, null, null, JSON.parse(window.atob(message)));
             break;
         }
     }
