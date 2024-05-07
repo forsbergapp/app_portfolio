@@ -16,13 +16,13 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  */
  const BFF_microservices = async (app_id, microservice_parameters) => {
     return new Promise((resolve, reject) => {
-        if (app_id !=null && microservice_parameters.service && microservice_parameters.query){
-            let path = '';
-            const call_microservice = async (/**@type{string}*/path, /**@type{string}*/service) => {
+        if (app_id !=null && microservice_parameters.service && microservice_parameters.path){
+            let microservice_path = '';
+            const call_microservice = async (/**@type{string}*/microservice_path, /**@type{string}*/service) => {
                 //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
                 const authorization = `Basic ${Buffer.from(ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_ID + ':' + ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_SECRET,'utf-8').toString('base64')}`;
                 microserviceRequest(app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then send true
-                                    path,service, microservice_parameters.method,microservice_parameters.ip, authorization, microservice_parameters.user_agent, microservice_parameters.accept_language, microservice_parameters.body?microservice_parameters.body:null)
+                                    microservice_path,service, microservice_parameters.method,microservice_parameters.ip, authorization, microservice_parameters.user_agent, microservice_parameters.accept_language, microservice_parameters.body?microservice_parameters.body:null)
                 .then((/**@type{string}*/result)=>resolve(result))
                 .catch((/**@type{Types.error}*/error)=>reject(error));
             };
@@ -54,7 +54,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
                                 }
                                 microservice_parameters.query = `${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
                             }
-                            path = `/geolocation/v${microservice_api_version('GEOLOCATION')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                            microservice_path = `/geolocation/v${microservice_api_version('GEOLOCATION')}${microservice_parameters.path}?${microservice_parameters.query}`;
                             
                         }
                         else
@@ -65,22 +65,22 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
                         //limit records here in server for this service:
                         if (microservice_parameters.path.startsWith('/city/search'))
                             microservice_parameters.query = microservice_parameters.query + `&limit=${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
-                        path = `/worldcities/v${microservice_api_version('WORLDCITIES')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                        microservice_path = `/worldcities/v${microservice_api_version('WORLDCITIES')}${microservice_parameters.path}?${microservice_parameters.query}`;
                         break;
                     }
                     case 'MAIL':{
-                        path = `/mail/v${microservice_api_version('MAIL')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                        microservice_path = `/mail/v${microservice_api_version('MAIL')}${microservice_parameters.path}?${microservice_parameters.query}`;
                         break;
                     }
                     case 'PDF':{
-                        path = `/pdf/v${microservice_api_version('PDF')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                        microservice_path = `/pdf/v${microservice_api_version('PDF')}${microservice_parameters.path}?${microservice_parameters.query}`;
                         break;
                     }
                     default:{
                         return reject ('⛔');
                     }
                 }
-                return call_microservice(`${path}&app_id=${app_id}`, microservice_parameters.service);
+                return call_microservice(`${microservice_path}&app_id=${app_id}`, microservice_parameters.service);
             }
             else
                 return reject ('⛔');
