@@ -150,7 +150,14 @@ const microserviceRequest = async (admin, path,service, method,client_ip,authori
     res.statusCode = code;
     if (error){
         console.log(error);
-        res.write(error, 'utf8');
+        //ISO20022 error format
+        const message = {"error":{
+                            "http":code, 
+                            "code":'MICROSERVICE',
+                            "text":error, 
+                            "developer_text":null, 
+                            "more_info":null}};
+        res.write(message, 'utf8');
     }
     else{
         if (pdf){

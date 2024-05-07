@@ -608,7 +608,7 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
                             accept_language:accept_language,
                             query:'', 
                             body:null};
-        const result_city = await BFF_microservices(app_id, parameters);
+        const result_city = await BFF_microservices(app_id, parameters).catch((/**@type{Types.error}*/error)=>{throw error});
         result_geodata.latitude =   JSON.parse(result_city).lat;
         result_geodata.longitude=   JSON.parse(result_city).lng;
         result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
@@ -942,6 +942,11 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                                 res.statusMessage = err;
                                                 reject(err);
                                             });
+                                        })
+                                        .catch((/**@type{Types.error}*/err)=>{
+                                            res.statusCode = 500;
+                                            res.statusMessage = 'SERVER ERROR';
+                                            reject('SERVER ERROR');
                                         });
                                     });
                                 else{
