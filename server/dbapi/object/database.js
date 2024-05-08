@@ -143,7 +143,7 @@ const install_db_get_files = async (json_type) =>{
                 //split script file into separate sql statements
                 for (let sql of install_sql.split(';')){
                     if (sql.startsWith(sql_split))
-                        sql = sql.substring(2);
+                        sql = sql.substring(sql_split.length);
                     if (sql.length>0){
                         if (file[0] == 0 && sql.includes(password_tag)){
                             let sql_and_pw;
