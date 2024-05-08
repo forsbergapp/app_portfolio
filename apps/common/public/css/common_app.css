@@ -596,6 +596,12 @@ select {
 	cursor:default;
 	display:inline-block;
 }
+#common_message_title.common_font_log{
+	font-size: 0.5em;
+}
+#common_message_title.common_font_normal{
+	font-size: 1em;
+}
 #common_message_title_icon{
 	display: inline-block;
 }
