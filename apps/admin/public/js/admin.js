@@ -148,11 +148,6 @@ const app_event_click = event => {
                     }
                     break;
                 }
-                /**Dialogue message */
-                case 'common_message_cancel':{
-                    AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                    break;
-                }
                 /**Dialogue profile */
                 case 'common_profile_home':{
                     common.profile_top(1);

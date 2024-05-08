@@ -262,7 +262,7 @@ const component = async props => {
                 props.function_set_avatar(user.avatar ?? user.provider_image, props.common_document.querySelector('#common_user_menu_avatar_img'));
             } else {
                 //User not found
-                props.function_show_message('ERROR', '20305', null, null, null, props.common_app_id);
+                props.function_show_message('ERROR', '20305', null, null, props.common_app_id);
             }
         })
         .catch(()=>null);
