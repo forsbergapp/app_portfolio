@@ -31,20 +31,20 @@ const update = (app_id, resource_id, query, data) => {
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
+ * @param {number} resource_id
  */
-const getUserAccountApp = (app_id, query) => service.getUserAccountApp(app_id, getNumberValue(query.get('user_account_id')))
+const getUserAccountApp = (app_id, resource_id) => service.getUserAccountApp(app_id, resource_id)
                                                 .catch((/**@type{Types.error}*/error)=>{throw error;});
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
+ * @param {number} resource_id
  */
-const getUserAccountApps = async (app_id, query) => {
+const getUserAccountApps = async (app_id, resource_id) => {
     const fs = await import('node:fs');
     const {ConfigGet, ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
     /**@type{Types.db_result_user_account_app_getUserAccountApps_with_app_registry[]}*/
-    const apps_db = await service.getUserAccountApps(app_id, getNumberValue(query.get('user_account_id')));
+    const apps_db = await service.getUserAccountApps(app_id, resource_id);
     const apps_registry = ConfigGetApps();
     /**@type{Types.config_apps_with_db_columns[]}*/
     const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=> 

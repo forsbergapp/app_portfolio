@@ -7,9 +7,10 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**
  * 
  * @param {number} app_id
+ * @param {number|null} resource_id
  * @param {*} query
  */
-const getApps = async (app_id, query) => service.getApps(app_id, getNumberValue(query.get('id')), query.get('lang_code'));
+const getApps = async (app_id, resource_id, query) => service.getApps(app_id, resource_id, query.get('lang_code'));
 
 /**
  * 

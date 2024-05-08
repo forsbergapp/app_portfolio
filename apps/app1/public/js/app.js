@@ -157,24 +157,24 @@ const app_event_click = event => {
                         break;
                     }
                     case 'common_profile_main_btn_following':{
-                        common.profile_detail(1, null, true);
+                        common.profile_detail(1, true);
                         break;
                     }
                     case 'common_profile_main_btn_followed':{
-                        common.profile_detail(2, null, true);
+                        common.profile_detail(2, true);
                         break;
                     }
                     case 'common_profile_main_btn_likes':{
-                        common.profile_detail(3, null, true);
+                        common.profile_detail(3, true);
                         break;
                     }
                     case 'common_profile_main_btn_liked':
                     case 'common_profile_main_btn_liked_users':{
-                        common.profile_detail(4, null, true);
+                        common.profile_detail(4, true);
                         break;
                     }
                     case 'common_profile_main_btn_cloud':{
-                        common.profile_detail(5, '/user_account_app/apps', true);
+                        common.profile_detail(5, true);
                         break;
                     }
                     case 'common_user_start_login_button':{

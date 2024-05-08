@@ -11,12 +11,13 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {*} query 
  * @param {Types.error} res
  */
-const getUserPostsByUserId = (app_id, query, res) =>{
+const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getUserPostsByUserId(app_id, getNumberValue(query.get('user_account_id')))
+        service.getUserPostsByUserId(app_id, resource_id)
         .then((/**@type{Types.db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result)=>{
             if (result)
                 resolve(result);
@@ -30,12 +31,13 @@ const getUserPostsByUserId = (app_id, query, res) =>{
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {*} query
  * @param {Types.res} res
  */
-const getProfileUserPost = (app_id, query, res) =>{
+const getProfileUserPost = (app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileUserPost(app_id, getNumberValue(query.get('id')))
+        service.getProfileUserPost(app_id, resource_id)
         .then((/**@type{Types.db_result_user_account_app_data_post_getProfileUserPost[]}*/result)=>{
             if (result[0])
                 resolve(result);
@@ -49,12 +51,13 @@ const getProfileUserPost = (app_id, query, res) =>{
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {*} query
  * @param {Types.res} res
  */
-const getProfileUserPosts =(app_id, query, res) =>{
+const getProfileUserPosts =(app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileUserPosts(app_id, getNumberValue(query.get('id')), getNumberValue(query.get('id_current_user')))
+        service.getProfileUserPosts(app_id, resource_id, getNumberValue(query.get('id_current_user')))
         .then((/**@type{Types.db_result_user_account_app_data_post_getProfileUserPosts[]}*/result)=>{
             if (result)
                 resolve(result);
@@ -90,12 +93,13 @@ const getProfileTopPost = (app_id, query, res) =>{
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {*} query 
  * @param {*} res
  */
-const getProfileUserPostDetail = (app_id, query, res) => {
+const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
-        service.getProfileUserPostDetail(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(query.get('detailchoice')))
+        service.getProfileUserPostDetail(app_id, resource_id, getNumberValue(query.get('detailchoice')))
         .then((/**@type{Types.db_result_user_account_app_data_post_getProfileUserPostDetail[]}*/result)=>{
             if (result)
                 resolve(result);
@@ -201,19 +205,19 @@ const deleteUserPost = (app_id, resource_id, query, res) => {
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
+ * @param {number} resource_id
  * @param {*} data
  */
-const like = (app_id, query, data) => user_account_app_data_post_like_service.like(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_account_app_data_post_id))
+const like = (app_id, resource_id, data) => user_account_app_data_post_like_service.like(app_id, resource_id, getNumberValue(data.user_account_app_data_post_id))
                                         .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
+ * @param {number} resource_id
  * @param {*} data
  */
-const unlike = (app_id, query, data) => user_account_app_data_post_like_service.unlike(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_account_app_data_post_id))
+const unlike = (app_id, resource_id, data) => user_account_app_data_post_like_service.unlike(app_id, resource_id, getNumberValue(data.user_account_app_data_post_id))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 export{ getUserPostsByUserId, getProfileUserPost, getProfileUserPosts, getProfileTopPost,

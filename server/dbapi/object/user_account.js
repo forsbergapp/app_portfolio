@@ -981,16 +981,17 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
 /**
  * 
  * @param {number} app_id 
+ * @param {number} resource_id
  * @param {*} query 
  * @param {Types.res} res 
  */
-const getUserByUserId = (app_id, query, res) => {
+const getUserByUserId = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
-        service.getUserByUserId(app_id, getNumberValue(query.get('user_account_id')))
+        service.getUserByUserId(app_id, resource_id)
         .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result)=>{
             if (result[0]){
                 getUserAccountLogon(    app_id, 
-                                        getNumberValue(query.get('user_account_id')), 
+                                        resource_id, 
                                         app_id)
                 .then((/**@type{Types.db_result_user_account_logon_getUserAccountLogon[]}*/user_account_logons)=>{
                     const last_logontime = user_account_logons.filter(row=>JSON.parse(row.json_data).result==1)[0];
@@ -1102,12 +1103,13 @@ const getUserByUserId = (app_id, query, res) => {
 /**
  * 
  * @param {number} app_id
+ * @param {number} resource_id
  * @param {*} query
  * @param {Types.res} res 
  */
- const getProfileDetail = (app_id, query, res) => {
+ const getProfileDetail = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
-        service.getProfileDetail(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(query.get('detailchoice')))
+        service.getProfileDetail(app_id, resource_id, getNumberValue(query.get('detailchoice')))
         .then((/**@type{Types.db_result_user_account_getProfileDetail[]}*/result)=>{
             if (result)
                 resolve(result);
