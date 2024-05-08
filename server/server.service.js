@@ -225,7 +225,7 @@ const COMMON = {
                  * if resource id not requested for a route using resource id and last part of path is string then return null
                  * @returns {number|null}
                  */
-                const resource_id_get = () => typeof URI_path.substring(URI_path.lastIndexOf('/') + 1) =='string'?
+                const resource_id_get = () => getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1))==NaN?
                                                 null:
                                                     getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
                 /**
