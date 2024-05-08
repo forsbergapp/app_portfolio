@@ -215,6 +215,19 @@ const COMMON = {
                 resolve(app.getAppMain(routesparameters.ip, routesparameters.host, routesparameters.user_agent, routesparameters.accept_language, routesparameters.url, app_query, routesparameters.res));
             }
             else{
+                const resource_id_string = ':RESOURCE_ID';
+                const URI_query = routesparameters.parameters;
+                const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
+                const app_query = URI_query?new URLSearchParams(URI_query):null;
+
+                /**
+                 * Returns resource id from URI path
+                 * if resource id not requested for a route using resource id and last part of path is string then return null
+                 * @returns {number|null}
+                 */
+                const resource_id_get = () => typeof URI_path.substring(URI_path.lastIndexOf('/') + 1) =='string'?
+                                                null:
+                                                    getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
                 /**
                 * 
                 * @param {string} endpoint 
@@ -223,36 +236,29 @@ const COMMON = {
                 * @param {string} method 
                 * @returns {boolean}
                 */
-                const route = (endpoint, service, uri_path_route , method) => 
+                const route = (endpoint, service, uri_path_route , method) =>
                                 endpoint == routesparameters.endpoint && 
                                 service == routesparameters.service && 
-                                (uri_path_route.indexOf('/:RESOURCE_ID')>-1?uri_path_route. replace('/:RESOURCE_ID', URI_path.substring(URI_path.lastIndexOf('/'))):uri_path_route) == URI_path && 
+                                (uri_path_route.indexOf('/' + resource_id_string)>-1?uri_path_route. replace('/' + resource_id_string, URI_path.substring(URI_path.lastIndexOf('/'))):uri_path_route) == URI_path && 
                                 method == routesparameters.method;
             
-                const URI_query = routesparameters.parameters;
-                const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
-
-                const app_query = URI_query?new URLSearchParams(URI_query):null;
+                
                 //using switch (true) pattern
                 switch (true){
-                    case route('APP_DATA',      'APP','/apps', 'GET'):{
-                        resolve(app.getApps(routesparameters.app_id, app_query));
+                    case route('APP_DATA',      'APP',`/apps/${resource_id_string}`, 'GET'):{
+                        resolve(app.getApps(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
                     case route('APP_SIGNUP',    'DB_API',   '/user_account/signup', 'POST'):{
                         resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA',      'SOCKET',   '/socket/connection', 'PATCH'):{
-                        resolve(socket.ConnectedUpdate(app_query));
+                    case route('APP_DATA',      'SOCKET',   `/socket/connection/${resource_id_string}`, 'PATCH'):{
+                        resolve(socket.ConnectedUpdate(resource_id_get(), app_query));
                         break;
                     }
                     case route('APP_DATA',      'SOCKET',   '/socket/connection/check', 'GET'):{
                         resolve(socket.ConnectedCheck(app_query));
-                        break;
-                    }
-                    case route('APP_DATA',      'DB_API',   '/apps', 'GET'):{
-                        resolve(db_app.getApp(routesparameters.app_id, app_query));
                         break;
                     }
                     case route('APP_DATA',      'DB_API',   '/app_object', 'GET'):
@@ -281,9 +287,8 @@ const COMMON = {
                         resolve(db_app_setting.getSettingDisplayData(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('APP_DATA',      'DB_API',   '/user_account/activate/:RESOURCE_ID', 'PUT'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.activate(routesparameters.app_id, resource_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, app_query, routesparameters.body, routesparameters.res));
+                    case route('APP_DATA',      'DB_API',   `/user_account/activate/${resource_id_string}`, 'PUT'):{
+                        resolve(db_user_account.activate(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route('APP_DATA',      'DB_API',   '/user_account/forgot', 'POST'):{
@@ -294,134 +299,122 @@ const COMMON = {
                         resolve(db_user_account.getProfileTop(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA',      'DB_API',   '/user_account/profile/id/:RESOURCE_ID', 'POST'):
+                    case route('APP_DATA',      'DB_API',   `/user_account/profile/id/${resource_id_string}`, 'POST'):
                     case route('APP_DATA',      'DB_API',   '/user_account/profile/username', 'POST'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.getProfile(routesparameters.app_id, resource_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
+                        resolve(db_user_account.getProfile(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route('APP_DATA',      'DB_API',   '/user_account/profile/username/searchd', 'POST'):{
                         resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body));
                         break;
                     }
-                    case route('APP_DATA',      'DB_API',   '/user_account_app_data_post/all', 'GET'):{
-                        resolve(db_user_account_app_data_post.getUserPostsByUserId(routesparameters.app_id, app_query));
+                    case route('APP_DATA',      'DB_API',   `/user_account_app_data_post/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account_app_data_post.getUserPostsByUserId(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
-                    case route('APP_DATA',      'DB_API',   '/user_account_app_data_post/profile', 'GET'):{
-                        resolve(db_user_account_app_data_post.getProfileUserPost(routesparameters.app_id, app_query, routesparameters.res));
+                    case route('APP_DATA',      'DB_API',   `/user_account_app_data_post/profile/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account_app_data_post.getProfileUserPost(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_DATA',      'DB_API',   '/user_account_app_data_post/profile/all', 'GET'):{
-                        resolve(db_user_account_app_data_post.getProfileUserPosts(routesparameters.app_id, app_query, routesparameters.res));
+                    case route('APP_DATA',      'DB_API',   `/user_account_app_data_post/profile/all/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account_app_data_post.getProfileUserPosts(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
                     case route('APP_DATA',      'DB_API',   '/user_account_app_data_post/profile/top', 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileTopPost(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account/password/:RESOURCE_ID', 'PUT'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.updatePassword(routesparameters.app_id, resource_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   `/user_account/password/${resource_id_string}`, 'PATCH'):{
+                        resolve(db_user_account.updatePassword(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account/:RESOURCE_ID', 'PUT'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account/:RESOURCE_ID', 'PUT'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.updateUserLocal(routesparameters.app_id, resource_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                    case route('ADMIN',         'DB_API',   `/user_account/${resource_id_string}`, 'PATCH'):
+                    case route('APP_ACCESS',    'DB_API',   `/user_account/${resource_id_string}`, 'PATCH'):{
+                        resolve(db_user_account.updateUserLocal(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account', 'GET'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account', 'GET'):{
-                        resolve(db_user_account.getUserByUserId(routesparameters.app_id, app_query, routesparameters.res));
+                    case route('ADMIN',         'DB_API',   `/user_account/${resource_id_string}`, 'GET'):
+                    case route('APP_ACCESS',    'DB_API',   `/user_account/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account.getUserByUserId(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account/common/:RESOURCE_ID', 'PUT'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.updateUserCommon(routesparameters.app_id, resource_id, app_query, routesparameters.body, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   `/user_account/common/${resource_id_string}`, 'PATCH'):{
+                        resolve(db_user_account.updateUserCommon(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account/common/:RESOURCE_ID', 'DELETE'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.deleteUser(routesparameters.app_id, resource_id, app_query, routesparameters.body, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   `/user_account/common/${resource_id_string}`, 'DELETE'):{
+                        resolve(db_user_account.deleteUser(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account/profile/detail', 'GET'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account/profile/detail', 'GET'):{
-                        resolve(db_user_account.getProfileDetail(routesparameters.app_id, app_query, routesparameters.res));
+                    case route('ADMIN',         'DB_API',   `/user_account/profile/detail/${resource_id_string}`, 'GET'):
+                    case route('APP_ACCESS',    'DB_API',   `/user_account/profile/detail/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account.getProfileDetail(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
                     case route('APP_ACCESS',    'DB_API',   '/user_account/profile/username/searcha', 'POST'):{
                         resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_follow/:RESOURCE_ID', 'POST'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_follow/:RESOURCE_ID', 'POST'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.follow(routesparameters.app_id, resource_id, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   `/user_account_follow/${resource_id_string}`, 'POST'):
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_follow/${resource_id_string}`, 'POST'):{
+                        resolve(db_user_account.follow(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_follow/:RESOURCE_ID', 'DELETE'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_follow/:RESOURCE_ID', 'DELETE'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.unfollow(routesparameters.app_id, resource_id, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   `/user_account_follow/${resource_id_string}`, 'DELETE'):
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_follow/${resource_id_string}`, 'DELETE'):{
+                        resolve(db_user_account.unfollow(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_like/:RESOURCE_ID', 'POST'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_like/:RESOURCE_ID', 'POST'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.like(routesparameters.app_id, resource_id, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   `/user_account_like/${resource_id_string}`, 'POST'):
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_like/${resource_id_string}`, 'POST'):{
+                        resolve(db_user_account.like(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_like/:RESOURCE_ID', 'DELETE'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_like/:RESOURCE_ID', 'DELETE'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.unlike(routesparameters.app_id, resource_id, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   `/user_account_like/${resource_id_string}`, 'DELETE'):
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_like/${resource_id_string}`, 'DELETE'):{
+                        resolve(db_user_account.unlike(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_app', 'GET'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app', 'GET'):{
-                        resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, app_query));
+                    case route('ADMIN',         'DB_API',   `/user_account_app/${resource_id_string}`, 'GET'):
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_app/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app/apps', 'GET'):{
-                        resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, app_query));
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_app/apps/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, resource_id_get()));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/user_account_app/:RESOURCE_ID', 'PATCH'):
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app/:RESOURCE_ID', 'PATCH'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account_app.update(routesparameters.app_id, resource_id, app_query, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   `/user_account_app/${resource_id_string}`, 'PATCH'):
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_app/${resource_id_string}`, 'PATCH'):{
+                        resolve(db_user_account_app.update(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app', 'DELETE'):{
-                        resolve(db_user_account_app.deleteUserAccountApp(routesparameters.app_id, app_query));
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_app/${resource_id_string}`, 'DELETE'):{
+                        resolve(db_user_account_app.deleteUserAccountApp(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post/profile/detail', 'GET'):{
-                        resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, app_query, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_app_data_post/profile/detail/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
                     case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post', 'POST'):{
                         resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post/:RESOURCE_ID', 'PUT'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, resource_id, app_query, routesparameters.body, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_app_data_post/${resource_id_string}`, 'PUT'):{
+                        resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post/:RESOURCE_ID', 'DELETE'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, resource_id, app_query, routesparameters.res));
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_app_data_post/${resource_id_string}`, 'DELETE'):{
+                        resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post_like', 'POST'):{
-                        resolve(db_user_account_app_data_post.like(routesparameters.app_id, app_query, routesparameters.body));
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_app_data_post_like/${resource_id_string}`, 'POST'):{
+                        resolve(db_user_account_app_data_post.like(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route('APP_ACCESS',    'DB_API',   '/user_account_app_data_post_like', 'DELETE'):{
-                        resolve(db_user_account_app_data_post.unlike(routesparameters.app_id, app_query, routesparameters.body));
+                    case route('APP_ACCESS',    'DB_API',   `/user_account_app_data_post_like/${resource_id_string}`, 'DELETE'):{
+                        resolve(db_user_account_app_data_post.unlike(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
                     case route('ADMIN',         'SOCKET',   '/socket/message/admin', 'POST'):{
@@ -444,9 +437,8 @@ const COMMON = {
                         resolve(config.ConfigGetApp(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('ADMIN',         'CONFIG',   '/app/parameter/:RESOURCE_ID', 'PUT'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, resource_id, routesparameters.body));
+                    case route('ADMIN',         'CONFIG',   `/app/parameter/${resource_id_string}`, 'PUT'):{
+                        resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
                     case route('ADMIN',         'DB_API',   '/admin/demo', 'POST'):{
@@ -461,9 +453,8 @@ const COMMON = {
                         resolve(app.getAppsAdmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('ADMIN',         'DB_API',   '/apps/admin/:RESOURCE_ID', 'PUT'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_app.updateAdmin(routesparameters.app_id, resource_id, routesparameters.body));
+                    case route('ADMIN',         'DB_API',   `/apps/admin/${resource_id_string}`, 'PUT'):{
+                        resolve(db_app.updateAdmin(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
                     case route('ADMIN',         'DB_API',   '/app_category/admin', 'GET'):{
@@ -495,9 +486,8 @@ const COMMON = {
                         resolve(db_user_account.getLogonAdmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('SUPERADMIN',    'DB_API',   '/user_account/admin/:RESOURCE_ID', 'PUT'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.updateAdmin(routesparameters.app_id, resource_id, app_query, routesparameters.body, routesparameters.res));
+                    case route('SUPERADMIN',    'DB_API',   `/user_account/admin/${resource_id_string}`, 'PATCH'):{
+                        resolve(db_user_account.updateAdmin(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route('SYSTEMADMIN',   'SOCKET',   '/socket/message/systemadmin', 'POST'):{
@@ -508,8 +498,8 @@ const COMMON = {
                         resolve(socket.ConnectedListSystemadmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route('SYSTEMADMIN',   'SOCKET',   '/socket/connection/systemadmin', 'PATCH'):{
-                        resolve(socket.ConnectedUpdate(app_query));
+                    case route('SYSTEMADMIN',   'SOCKET',   `/socket/connection/systemadmin/${resource_id_string}`, 'PATCH'):{
+                        resolve(socket.ConnectedUpdate(resource_id_get(), app_query));
                         break;
                     }
                     case route('SYSTEMADMIN',   'SERVER',   '/config/systemadmin', 'PUT'):{
@@ -585,6 +575,7 @@ const COMMON = {
                         break;
                     }
                     case route('SOCKET',        'SOCKET',   '/socket/connection/connect', 'GET'):{
+                        //EventSource uses GET method, should otherwise be POST
                         resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.res));
                         break;
                     }
@@ -596,9 +587,8 @@ const COMMON = {
                         resolve(db_user_account.login(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route('IAM',           'IAM',      '/provider/:RESOURCE_ID', 'POST'):{
-                        const resource_id = getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
-                        resolve(db_user_account.login_provider(routesparameters.app_id, resource_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
+                    case route('IAM',           'IAM',      `/provider/${resource_id_string}`, 'POST'):{
+                        resolve(db_user_account.login_provider(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     default:{
