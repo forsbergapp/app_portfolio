@@ -604,13 +604,13 @@ const show_image = async (item_img, item_input, image_width, image_height) => {
         const fileExtension = fileName.split('.').pop();
         if (!allowedExtensions.includes(fileExtension)){
             //File type not allowed
-            show_message('ERROR', '20307', null,null, null, null, COMMON_GLOBAL.common_app_id);
+            show_message('ERROR', '20307', null,null, null, COMMON_GLOBAL.common_app_id);
             resolve(null);
         }
         else
             if (fileSize > COMMON_GLOBAL.image_file_max_size){
                 //File size too large
-                show_message('ERROR', '20308', null, null, null, null, COMMON_GLOBAL.common_app_id);
+                show_message('ERROR', '20308', null, null, null, COMMON_GLOBAL.common_app_id);
                 resolve(null);
             }
             else {
@@ -788,7 +788,7 @@ const input_control = (dialogue, validate_items) =>{
     }
     /**@ts-ignore */
     if (result==false){
-        show_message('INFO', null, null, 'message_text','!', null, COMMON_GLOBAL.common_app_id);
+        show_message('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
         return false;
     }
     else
@@ -1170,17 +1170,14 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
  * @param {function|null} function_event 
  * @param {string|null} text_class
  * @param {*} message 
- * @param {*} message_iso 
  * @param {number|null} data_app_id 
  */
-const show_message = async (message_type, code, function_event, text_class=null, message=null, message_iso=null, data_app_id=null) => {
+const show_message = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
     ComponentRender('common_dialogue_message', {message_type:message_type,
                                                 data_app_id:data_app_id,
                                                 code:code,
                                                 text_class:text_class,
                                                 message:message,
-                                                message_iso:message_iso,
-                                                show_message_info_list:message_type=='LOG'?message:null,
                                                 translation_confirm_question:COMMON_GLOBAL.translate_items.CONFIRM_QUESTION,
                                                 function_componentremove:ComponentRemove,
                                                 function_FFB:FFB, 
@@ -2047,7 +2044,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                         AppDocument.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
                         AppDocument.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
                         //code not valid
-                        show_message('ERROR', '20306', null, null, null, null, COMMON_GLOBAL.common_app_id);
+                        show_message('ERROR', '20306', null, null, null, COMMON_GLOBAL.common_app_id);
                         reject('ERROR');
                     }
                 })
@@ -2086,7 +2083,7 @@ const user_delete = async (choice=null, function_delete_event ) => {
                                     })==false)
                     resolve(null);
                 else{
-                    show_message('CONFIRM',null,function_delete_event, null, null, null, COMMON_GLOBAL.app_id);
+                    show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
                     resolve(null);
                 }
                 break;
@@ -2162,7 +2159,7 @@ const user_function = function_name => {
 const user_account_app_delete = (choice=null, user_account_id, app_id, function_delete_event=null) => {
     switch (choice){
         case null:{
-            show_message('CONFIRM',null,function_delete_event, null, null, null, COMMON_GLOBAL.app_id);
+            show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
             break;
         }
         case 1:{
@@ -2797,22 +2794,22 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
                         }
                         case 400:{
                             //Bad request
-                            show_message('ERROR_BFF', null, null, null, null, result, COMMON_GLOBAL.app_id);
+                            show_message('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
                             throw result;
                         }
                         case 404:{
                             //Not found
-                            show_message('ERROR_BFF', null, null, null, null, result, COMMON_GLOBAL.app_id);
+                            show_message('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
                             throw result;
                         }
                         case 401:{
                             //Unauthorized, token expired
-                            show_message('ERROR_BFF', null, null, null, null, result, COMMON_GLOBAL.app_id);
+                            show_message('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
                             throw result;
                         }
                         case 403:{
                             //Forbidden, not allowed to login or register new user
-                            show_message('ERROR_BFF', null, null, null, null, result, COMMON_GLOBAL.app_id);
+                            show_message('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
                             throw result;
                         }
                         case 500:{
@@ -2822,7 +2819,7 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
                         }
                         case 503:{
                             //Service unavailable or other error in microservice
-                            show_message('ERROR_BFF', null, null, null, null, result, COMMON_GLOBAL.app_id);
+                            show_message('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
                             throw result;
                         }
                     }
@@ -3238,11 +3235,11 @@ const common_event = async (event_type,event) =>{
                         case 'common_message_close':{
                             if (AppDocument.querySelector('#common_message_close')['data-function'])
                                 AppDocument.querySelector('#common_message_close')['data-function']();
-                            ComponentRemove('common_dialogue_message');
+                            ComponentRemove('common_dialogue_message',true);
                             break;
                         }
                         case 'common_message_cancel':{
-                            ComponentRemove('common_dialogue_message');
+                            ComponentRemove('common_dialogue_message',true);
                             break;
                         }
                         //dialogue password
