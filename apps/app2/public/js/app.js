@@ -1222,12 +1222,11 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
 /**
  * 
  * @param {number} detailchoice 
- * @param {string|null} rest_url_app 
  * @param {boolean} fetch_detail 
  * @param {function|null} click_function 
  * @returns {void}
  */
-const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, click_function) => {
+const profile_detail_app = (detailchoice, fetch_detail, click_function) => {
     if (common.COMMON_GLOBAL.user_account_id || 0 !== 0) {
         if (detailchoice == 0){
             //user settings
@@ -1240,7 +1239,7 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, click_func
             //8 Liked user setting
             AppDocument.querySelector('#profile_user_settings_row').style.display = 'none';
         }
-        common.profile_detail(detailchoice, rest_url_app, fetch_detail, click_function);
+        common.profile_detail(detailchoice, fetch_detail, click_function);
     } 
     else
         common.show_common_dialogue('LOGIN');
@@ -1251,7 +1250,7 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, click_func
  */
 const user_settings_get = async () => {
     const select = AppDocument.querySelector('#setting_select_user_setting');
-    await common.FFB('DB_API', '/user_account_app_data_post/all', `user_account_id=${common.COMMON_GLOBAL.user_account_id??''}`, 'GET', 'APP_DATA', null)
+    await common.FFB('DB_API', `/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, null, 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         select.innerHTML = '';
         APP_GLOBAL.user_settings = [];
@@ -1822,7 +1821,7 @@ const settings_update = setting_tab => {
  * @returns {void}
  */
 const profile_user_setting_stat = id => {
-    common.FFB('DB_API', '/user_account_app_data_post/profile', `id=${id}`, 'GET', 'APP_DATA', null)
+    common.FFB('DB_API', `/user_account_app_data_post/profile/${id}`, null, 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         AppDocument.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
         AppDocument.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
@@ -1886,8 +1885,8 @@ const profile_show_user_setting = () => {
     AppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
 
     common.FFB( 'DB_API', 
-                '/user_account_app_data_post/profile/all', 
-                `id=${AppDocument.querySelector('#common_profile_id').innerHTML}&id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
+                `/user_account_app_data_post/profile/all/${AppDocument.querySelector('#common_profile_id').innerHTML}`, 
+                `id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
                 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         const profile_select_user_settings = AppDocument.querySelector('#profile_select_user_settings');
@@ -1921,8 +1920,8 @@ const profile_show_user_setting = () => {
 const profile_user_setting_update_stat = () => {
     const profile_id = AppDocument.querySelector('#common_profile_id').innerHTML;
     common.FFB( 'DB_API', 
-                '/user_account_app_data_post/profile/all', 
-                `id=${profile_id}&id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
+                `/user_account_app_data_post/profile/all/${profile_id}`,
+                `id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
                 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         const profile_select_user_settings = AppDocument.querySelector('#profile_select_user_settings');
@@ -1958,8 +1957,8 @@ const user_settings_like = user_account_app_data_post_id => {
         else
             method = 'DELETE';
         common.FFB( 'DB_API', 
-                    '/user_account_app_data_post_like', 
-                    `user_account_id=${common.COMMON_GLOBAL.user_account_id??''}`, 
+                    `/user_account_app_data_post_like/${common.COMMON_GLOBAL.user_account_id??''}`,
+                    null, 
                     method, 'APP_ACCESS', json_data)
         .then(()=>profile_user_setting_update_stat())
         .catch(()=>null);
@@ -2242,7 +2241,7 @@ const app_event_click = event => {
                 case 'profile_main_btn_user_settings':{
                     AppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(0, '/user_account_app_data_post/profile/detail', false, null);
+                    profile_detail_app(0, false, null);
                     break;
                 }
                 case 'profile_main_btn_user_setting_likes':
@@ -2250,7 +2249,7 @@ const app_event_click = event => {
                 case 'profile_main_btn_user_setting_likes_user_setting':{
                     AppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, profile_show_app);
+                    profile_detail_app(6, true, profile_show_app);
                     break;
                 }
                 case 'profile_main_btn_user_setting_liked':
@@ -2258,7 +2257,7 @@ const app_event_click = event => {
                 case 'profile_main_btn_user_setting_liked_user_setting':{
                     AppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, profile_show_app);
+                    profile_detail_app(7, true, profile_show_app);
                     break;
                 }
                 case 'profile_top_row2_1':{
@@ -2348,21 +2347,21 @@ const app_event_click = event => {
                 }
                 //dialogue profile
                 case 'common_profile_main_btn_following':{
-                    profile_detail_app(1, null, true, profile_show_app);
+                    profile_detail_app(1, true, profile_show_app);
                     break;
                 }
                 case 'common_profile_main_btn_followed':{
-                    profile_detail_app(2, null, true, profile_show_app);
+                    profile_detail_app(2, true, profile_show_app);
                     break;
                 }
                 case 'common_profile_main_btn_likes':{
-                    profile_detail_app(3, null, true, profile_show_app);
+                    profile_detail_app(3, true, profile_show_app);
                     break;
                 }
                 case 'common_profile_main_btn_liked':
                 case 'common_profile_main_btn_liked_heart':
                 case 'common_profile_main_btn_liked_users':{
-                    profile_detail_app(4, null, true, profile_show_app);
+                    profile_detail_app(4, true, profile_show_app);
                     break;
                 }
                 case 'common_profile_follow':{

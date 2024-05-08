@@ -639,17 +639,17 @@ const getMaintenance = (app_id) => {
 /**
  * 
  * @param {number} app_id 
- * @param {number} id 
+ * @param {number} resource_id 
  * @param {string} lang_code 
  */
-const getApps = async (app_id, id, lang_code) =>{
+const getApps = async (app_id, resource_id, lang_code) =>{
     const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
     const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
     const fs = await import('node:fs');
 
     /**@type{Types.db_result_app_getApp[]}*/
-    const apps_db =  await getApp(app_id, id, lang_code);
-    const apps_registry = ConfigGetApps().filter((/**@type{Types.config_apps_record}*/app)=>app.APP_ID==id || id == 0);
+    const apps_db =  await getApp(app_id, resource_id, lang_code);
+    const apps_registry = ConfigGetApps().filter((/**@type{Types.config_apps_record}*/app)=>app.APP_ID==resource_id || resource_id == null);
     /**@type{Types.config_apps_with_db_columns[]}*/
     const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=>
                                         app.concat({APP_ID:current.APP_ID,

@@ -8,11 +8,11 @@ const service = await import(`file://${process.cwd()}/server/socket.service.js`)
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
- * 
+ * @param {number} resource_id
  * @param {*} query 
  * @returns 
  */
-const ConnectedUpdate = (query) => service.ConnectedUpdate( getNumberValue(query.get('client_id')), 
+const ConnectedUpdate = (resource_id, query) => service.ConnectedUpdate( resource_id, 
                                                             getNumberValue(query.get('user_account_logon_user_account_id')), 
                                                             query.get('system_admin'), 
                                                             getNumberValue(query.get('identity_provider_id')), 

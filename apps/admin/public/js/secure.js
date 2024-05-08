@@ -1258,6 +1258,7 @@ const update_record = async (table,
         let json_data;
         let token_type;
         let service;
+        let method;
         AppDocument.querySelector('#' + button).classList.add('css_spinner');
         switch (table){
             case 'user_account':{
@@ -1274,7 +1275,8 @@ const update_record = async (table,
                                 verification_code:  parameters.user_account.verification_code};
                 path = `/user_account/admin/${parameters.user_account.id}?`;
                 token_type = 'SUPERADMIN';
-                service = 'DB_API'
+                service = 'DB_API';
+                method = 'PATCH';
                 break;
             }
             case 'app':{
@@ -1283,7 +1285,8 @@ const update_record = async (table,
                             };
                 path = `/apps/admin/${parameters.app.id}`;
                 token_type = 'APP_ACCESS';
-                service = 'DB_API'
+                service = 'DB_API';
+                method = 'PUT';
                 break;
             }
             case 'app_parameter':{
@@ -1292,7 +1295,8 @@ const update_record = async (table,
                                 parameter_comment:  parameters.app_parameter.parameter_comment};
                 path = `/app/parameter/${parameters.app_parameter.parameter_name}`;
                 token_type = 'APP_ACCESS';
-                service = 'CONFIG'
+                service = 'CONFIG';
+                method = 'PUT';
                 break;
             }
         }

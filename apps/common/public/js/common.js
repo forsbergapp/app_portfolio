@@ -1312,23 +1312,33 @@ const profile_top = async (statchoice, app_rest_url = null, function_user_click=
 /**
  * Profile detail
  * @param {number} detailchoice 
- * @param {string} rest_url_app 
  * @param {boolean} fetch_detail 
  * @param {function} click_function 
  * @returns {void}
  */
-const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function) => {
+const profile_detail = (detailchoice, fetch_detail, click_function) => {
     let path;
     const profile_detail_list = AppDocument.querySelector('#common_profile_detail_list');
     profile_detail_list.innerHTML = '';
     profile_detail_list.classList.add('css_spinner');
-    if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
-        /*detailchoice 1,2,3, 4: user_account*/
-        path = '/user_account/profile/detail';
-    }
-    else{
-        /* detailchoice 5, apps, returns same columns*/
-        path = rest_url_app;
+    switch (detailchoice){
+        case 0:
+        case 6:
+        case 7:{
+            /*detailchoice 0, 6, 7: app specific */
+            path = '/user_account_app_data_post/profile/detail';
+        }
+        case 1:
+        case 2:
+        case 3:
+        case 4:{
+            /*detailchoice 1,2,3, 4: user_account*/
+            path = '/user_account/profile/detail';
+        }
+        case 5:{
+            /* detailchoice 5, apps, returns same columns*/
+            path = '/user_account_app/apps';
+        }
     }
     //DETAIL
     //show only if user logged in
@@ -1340,7 +1350,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
         else
             AppDocument.querySelector('#common_profile_detail').style.display = 'block';
         if (fetch_detail){
-            FFB('DB_API', path, `user_account_id=${AppDocument.querySelector('#common_profile_id').innerHTML}&detailchoice=${detailchoice}`, 
+            FFB('DB_API', `${path}/${AppDocument.querySelector('#common_profile_id').innerHTML}`, `detailchoice=${detailchoice}`, 
                 'GET', 'APP_ACCESS', null)
             .then(result=>{
                 let html = '';
@@ -1901,7 +1911,7 @@ const user_update = async () => {
         }
         AppDocument.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
         //update user using REST API
-        FFB('DB_API', path, null, 'PUT', 'APP_ACCESS', json_data)
+        FFB('DB_API', path, null, 'PATCH', 'APP_ACCESS', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             const user_update = JSON.parse(result);
@@ -2164,7 +2174,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
         }
         case 1:{
             ComponentRemove('common_dialogue_message');
-            FFB('DB_API', '/user_account_app', `delete_user_account_id=${user_account_id}&delete_app_id=${app_id}`, 'DELETE', 'APP_ACCESS', null)
+            FFB('DB_API', `/user_account_app/${user_account_id}`, `delete_app_id=${app_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
                 //execute event and refresh app list
                 AppDocument.querySelector('#common_profile_main_btn_cloud').click();
@@ -2220,7 +2230,7 @@ const updatePassword = () => {
                      
                      })==true){
         AppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
-        FFB('DB_API', `/user_account/password/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PUT', 'APP_ACCESS', json_data)
+        FFB('DB_API', `/user_account/password/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data)
         .then(()=>{
             AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
             dialogue_password_new_clear();
@@ -2255,7 +2265,7 @@ const user_preference_save = async () => {
  */
 const user_preference_get = async () => {
     return new Promise((resolve,reject)=>{
-        FFB('DB_API', '/user_account_app', `user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}`, 'GET', 'APP_ACCESS', null)
+        FFB('DB_API', `/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
         .then(result=>{
             const user_account_app = JSON.parse(result)[0];
             //locale
@@ -2909,16 +2919,14 @@ const updateOnlineStatus = async () => {
         let path='';
         let query;
         if (COMMON_GLOBAL.system_admin!=null){
-            path =  '/socket/connection/systemadmin';
-            query = `client_id=${COMMON_GLOBAL.service_socket_client_ID??''}`+
-                    `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id ??''}` +
+            path =  `/socket/connection/systemadmin/${COMMON_GLOBAL.service_socket_client_ID??''}`;
+            query = `identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id ??''}` +
                     `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
             token_type='SYSTEMADMIN';
         }
         else{
-            path =  '/socket/connection';
-            query = `client_id=${COMMON_GLOBAL.service_socket_client_ID??''}`+
-                    `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
+            path =  `/socket/connection/${COMMON_GLOBAL.service_socket_client_ID??''}`;
+            query = `identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
                     `&system_admin=&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
             token_type='APP_DATA';
         }
@@ -3040,7 +3048,7 @@ const get_gps_from_ip = async () => {
  */
 const get_cities = async countrycode => {
     return new Promise((resolve, reject)=>{
-        FFB('WORLDCITIES', '/country', `country=${countrycode}`, 'GET', 'APP_DATA', null)
+        FFB('WORLDCITIES', '/country', `${countrycode}`, 'GET', 'APP_DATA', null)
         .then(result=>{
             /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
             const cities = JSON.parse(result);
