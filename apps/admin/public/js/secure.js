@@ -2692,7 +2692,7 @@ const show_db_info = () => {
                     <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                 </div>`;
         AppDocument.querySelector('#menu_8_db_info1').classList.add('css_spinner');
-        common.FFB('DB_API', '/systemadmin/DBInfo', null, 'GET', 'SYSTEMADMIN', null)
+        common.FFB('DB_API', '/systemadmin/dbinfo', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             const database = JSON.parse(result)[0];
             AppDocument.querySelector('#menu_8_db_info1').classList.remove('css_spinner');
@@ -2705,7 +2705,7 @@ const show_db_info = () => {
                         <div id='menu_8_db_info_connections_title' class='common_icon'></div>       <div id='menu_8_db_info_connections_data'>${database.connections}</div>
                         <div id='menu_8_db_info_started_title' class='common_icon'></div>           <div id='menu_8_db_info_started_data'>${database.started}</div>`;
             AppDocument.querySelector('#menu_8_db_info_space_detail').classList.add('css_spinner');
-            common.FFB('DB_API', '/systemadmin/DBInfoSpace', null, 'GET', 'SYSTEMADMIN', null)
+            common.FFB('DB_API', '/systemadmin/dbinfospace', null, 'GET', 'SYSTEMADMIN', null)
             .then((/**@type{string}*/result)=>{
                 let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
                                 <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>TABLE NAME</div>
@@ -2726,7 +2726,7 @@ const show_db_info = () => {
                 }
                 AppDocument.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner');
                 AppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
-                common.FFB('DB_API', '/systemadmin/DBInfoSpaceSum', null, 'GET', 'SYSTEMADMIN', null)
+                common.FFB('DB_API', '/systemadmin/dbinfospacesum', null, 'GET', 'SYSTEMADMIN', null)
                 .then((/**@type{string}*/result)=>{
                     const databaseInfoSpaceSum = JSON.parse(result)[0];
                     AppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML += 
