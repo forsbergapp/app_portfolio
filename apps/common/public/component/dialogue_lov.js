@@ -54,15 +54,15 @@ const component = async props => {
             case 'SERVER_LOG_FILES':{
                 props.common_document.querySelector('#common_lov_title').classList.add('server_log_file');
                 lov_column_value = 'filename';
-                path = '/log/files';
-                service = 'LOG';
+                path = '/log-files';
+                service = 'SERVER';
                 token_type = 'SYSTEMADMIN';
                 break;
             }
             case 'APP_CATEGORY':{
                 props.common_document.querySelector('#common_lov_title').classList.add('app_category');
                 lov_column_value = 'app_category_text';
-                path = '/app_category/admin';
+                path = '/admin/app_category';
                 service = 'DB_API';
                 token_type = 'APP_ACCESS';
                 break;
@@ -70,7 +70,7 @@ const component = async props => {
             case 'APP_ROLE':{
                 props.common_document.querySelector('#common_lov_title').classList.add('app_role');
                 lov_column_value = 'icon';
-                path = '/app_role/admin';
+                path = '/admin/app_role';
                 service = 'DB_API';
                 token_type = 'APP_ACCESS';
                 break;

@@ -170,8 +170,8 @@ const show_charts = async () => {
         let query;
         let authorization_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
-            service = 'LOG';
-            path = '/log/logs_stat';
+            service = 'SERVER';
+            path = '/log-stat';
             if (system_admin_statGroup=='REQUEST'){
                 query = `select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`
             }
@@ -335,7 +335,7 @@ const show_start = async (yearvalues) =>{
      */
     const get_system_admin_stat = async () =>{
         return new Promise((resolve)=>{
-            common.FFB('LOG', '/log/statuscode', null, 'GET', 'SYSTEMADMIN', null)
+            common.FFB('SERVER', '/statuscode', null, 'GET', 'SYSTEMADMIN', null)
             .then((/**@type{string}*/result)=>{
                 let html = `<optgroup label='REQUEST'>
                                 <option value='ip_total' unique=0 statGroup='ip'>IP TOTAL</option>
@@ -1585,8 +1585,8 @@ const show_list = async (list_div, query, sort, order_by) => {
             }
             case 'list_server_log':{
                 logscope = AppDocument.querySelector('#select_logscope5')[AppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
-                path = '/log/logs';
-                service = 'LOG';
+                path = '/log';
+                service = 'SERVER';
                 token_type = 'SYSTEMADMIN';
                 break;
             }
@@ -2333,7 +2333,7 @@ const list_item_click = (item_type, data) => {
  */
 const get_log_parameters = async () => {
     return new Promise((resolve)=>{
-        common.FFB('LOG', '/log/parameters', null, 'GET', 'SYSTEMADMIN', null)
+        common.FFB('SERVER', '/log-parameters', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             const log_parameters = JSON.parse(result);
             const logscope_level_options = 
@@ -2590,7 +2590,7 @@ const db_install = () =>{
     common.ComponentRemove('common_dialogue_message');
     const optional = Number(AppDocument.querySelector('#install_db_country_language_translations').classList.contains('checked'));
     installation_function(  'install_db_button_install', true, 
-                            '/systemadmin/install', 
+                            '/database', 
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}&optional=${optional}`, 
                             'POST', 'SYSTEMADMIN', null);
 };
@@ -2601,7 +2601,7 @@ const db_install = () =>{
 const db_uninstall = () =>{
     common.ComponentRemove('common_dialogue_message');
     installation_function(  'install_db_button_uninstall', false, 
-                            '/systemadmin/install', 
+                            '/database', 
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 'DELETE', 'SYSTEMADMIN', null);
 };
 /**
@@ -2615,7 +2615,7 @@ const demo_install = () =>{
                         })==true){
         const json_data = {demo_password: AppDocument.querySelector('#install_demo_password').innerHTML};
         installation_function(  'install_demo_button_install', null, 
-                                '/admin/demo', 
+                                '/database-demo', 
                                 `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
                                 'POST', 'APP_ACCESS', json_data);
     }
@@ -2626,7 +2626,7 @@ const demo_install = () =>{
  */
 const demo_uninstall = () =>{
     installation_function(  'install_demo_button_uninstall', null, 
-                            '/admin/demo', 
+                            '/database-demo', 
                             `?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
                             'DELETE', 'APP_ACCESS', null);
 };
@@ -2651,7 +2651,7 @@ const show_installation = () =>{
                 </div>
             </div>`;
         AppDocument.querySelector('#install_db_icon').classList.add('css_spinner');
-        common.FFB('DB_API', '/systemadmin/install', null, 'GET', 'SYSTEMADMIN', null)
+        common.FFB('DB_API', '/database-installed', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             AppDocument.querySelector('#install_db_icon').classList.remove('css_spinner');
             AppDocument.querySelector('#install_db_icon').classList.remove('installed');
@@ -2696,7 +2696,7 @@ const show_db_info = () => {
                     <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                 </div>`;
         AppDocument.querySelector('#menu_8_db_info1').classList.add('css_spinner');
-        common.FFB('DB_API', '/systemadmin/dbinfo', null, 'GET', 'SYSTEMADMIN', null)
+        common.FFB('DB_API', '/database', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             const database = JSON.parse(result)[0];
             AppDocument.querySelector('#menu_8_db_info1').classList.remove('css_spinner');
@@ -2709,7 +2709,7 @@ const show_db_info = () => {
                         <div id='menu_8_db_info_connections_title' class='common_icon'></div>       <div id='menu_8_db_info_connections_data'>${database.connections}</div>
                         <div id='menu_8_db_info_started_title' class='common_icon'></div>           <div id='menu_8_db_info_started_data'>${database.started}</div>`;
             AppDocument.querySelector('#menu_8_db_info_space_detail').classList.add('css_spinner');
-            common.FFB('DB_API', '/systemadmin/dbinfospace', null, 'GET', 'SYSTEMADMIN', null)
+            common.FFB('DB_API', '/database-space', null, 'GET', 'SYSTEMADMIN', null)
             .then((/**@type{string}*/result)=>{
                 let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
                                 <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>TABLE NAME</div>
@@ -2730,7 +2730,7 @@ const show_db_info = () => {
                 }
                 AppDocument.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner');
                 AppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
-                common.FFB('DB_API', '/systemadmin/dbinfospacesum', null, 'GET', 'SYSTEMADMIN', null)
+                common.FFB('DB_API', '/database-spacesum', null, 'GET', 'SYSTEMADMIN', null)
                 .then((/**@type{string}*/result)=>{
                     const databaseInfoSpaceSum = JSON.parse(result)[0];
                     AppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML += 

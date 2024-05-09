@@ -2920,7 +2920,7 @@ const updateOnlineStatus = async () => {
         let path='';
         let query;
         if (COMMON_GLOBAL.system_admin!=null){
-            path =  `/socket/connection/systemadmin/${COMMON_GLOBAL.service_socket_client_ID??''}`;
+            path =  `/socket/connection/${COMMON_GLOBAL.service_socket_client_ID??''}`;
             query = `identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id ??''}` +
                     `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
             token_type='SYSTEMADMIN';
