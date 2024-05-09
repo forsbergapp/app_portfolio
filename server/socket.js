@@ -6,23 +6,25 @@ import * as Types from './../types.js';
 const service = await import(`file://${process.cwd()}/server/socket.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 /**
  * @param {number} resource_id
+ * @param {string} iam
  * @param {*} query 
  * @returns 
  */
-const ConnectedUpdate = (resource_id, query) => service.ConnectedUpdate( resource_id, 
-                                                            getNumberValue(query.get('user_account_logon_user_account_id')), 
+const ConnectedUpdate = (resource_id, iam, query) => service.ConnectedUpdate( resource_id, 
+                                                            getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')), 
                                                             query.get('system_admin'), 
                                                             getNumberValue(query.get('identity_provider_id')), 
                                                             query.get('latitude'), 
                                                             query.get('longitude'));
 /**
  * 
- * @param {*} query 
+ * @param {number} resource_id 
  */
-const ConnectedCheck = (query) =>service.ConnectedCheck(getNumberValue(query.get('user_account_id')));
+const ConnectedGet = resource_id =>service.ConnectedGet(resource_id);
 
 /**
  * 
@@ -99,26 +101,25 @@ const ConnectedListAdmin = (app_id, query, res) =>{
  * @returns 
  */
 const ConnectedCount = (query) => service.ConnectedCount(   getNumberValue(query.get('identity_provider_id')), 
-                                                            getNumberValue(query.get('count_logged_in')));
+                                                            getNumberValue(query.get('logged_in')));
                                                             
 /**
  * 
  * @param {number} app_id 
+ * @param {string} iam
  * @param {string} ip  
  * @param {string} user_agent 
  * @param {*} query
  * @param {Types.res} res
  */
-
-const SocketConnect = (app_id, ip, user_agent, query, res) => service.SocketConnect(app_id, 
+const SocketConnect = (app_id, iam, ip, user_agent, query, res) => service.SocketConnect(app_id, 
                                                                                     getNumberValue(query.get('identity_provider_id')),
-                                                                                    getNumberValue(query.get('user_account_logon_user_account_id')),
+                                                                                    getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')),
                                                                                     query.get('system_admin'),
                                                                                     query.get('latitude'),
                                                                                     query.get('longitude'),
-                                                                                    query.get('authorization'),
                                                                                     user_agent,
                                                                                     ip,
                                                                                     res); 
 
-export{ConnectedUpdate, ConnectedCheck, SocketSendSystemAdmin, ConnectedListSystemadmin, SocketSendAdmin, ConnectedListAdmin, ConnectedCount, SocketConnect};
+export{ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedListSystemadmin, SocketSendAdmin, ConnectedListAdmin, ConnectedCount, SocketConnect};

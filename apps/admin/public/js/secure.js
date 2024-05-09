@@ -514,14 +514,14 @@ const sendBroadcast = () => {
         let path='';
         let token_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
-            path = '/socket/message';
+            path = '/socket-message';
             token_type = 'SYSTEMADMIN';
         }
         else{
-            path = '/socket/message';
+            path = '/socket-message';
             token_type = 'APP_ACCESS';
         }
-        common.FFB('SOCKET', path, null, 'POST', token_type, json_data)
+        common.FFB('SERVER', path, null, 'POST', token_type, json_data)
         .then((/**@type{string}*/result)=>{
             if (Number(JSON.parse(result).sent) > 0)
                 common.show_message('INFO', null, null, 'message_success', `(${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
@@ -661,76 +661,50 @@ const count_users = async () => {
                         <div id='list_user_stat' class='common_list_scrollbar'></div>
                     </div>
                 </div>`;
-    const count_connected = async () => {
-        /**
-         * Count users for given provider and if logged in or not
-         * @param {string} identity_provider_id 
-         * @param {number} count_logged_in 
-         * @returns{Promise.<{count_connected:number}>}
-         */
-        const get_count = async (identity_provider_id, count_logged_in) => {
-            return await common.FFB('SOCKET', 
-                                    '/socket/connection/count', 
-                                    `identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'APP_ACCESS', null)
-            .then((/**@type{string}*/result)=>JSON.parse(result))
-            .catch((/**@type{Error}*/err)=>{throw err;});
-        };
-        for (const row of AppDocument.querySelectorAll('.list_user_stat_row')){
-            if (row.id !='list_user_stat_row_title'){
-                if (row.id=='list_user_stat_row_not_connected')
-                    await get_count(row.children[0].children[0].innerHTML,0)
-                        .then(result=>row.children[3].children[0].innerHTML = result.count_connected);
-                else
-                    await get_count(row.children[0].children[0].innerHTML,1)
-                        .then(result=>row.children[3].children[0].innerHTML = result.count_connected);
-            }
-        }
-    };    
+    /**
+     * Count users for given provider and if logged in or not
+     * @param {string|null} identity_provider_id 
+     * @param {number} logged_in 
+     * @returns{Promise.<{count_connected:number}>}
+     */
+    const get_count = async (identity_provider_id, logged_in) => {
+        return await common.FFB('SERVER', 
+                                '/socket-stat', 
+                                `identity_provider_id=${identity_provider_id}&logged_in=${logged_in}`, 'GET', 'APP_ACCESS', null)
+        .then((/**@type{string}*/result)=>JSON.parse(result))
+        .catch((/**@type{Error}*/err)=>{throw err;});
+    };
     if (admin_token_has_value()){
         AppDocument.querySelector('#list_user_stat').classList.add('common_icon', 'css_spinner');
         AppDocument.querySelector('#list_user_stat').innerHTML = '';
-        await common.FFB('DB_API', '/admin/user_account/count', null, 'GET', 'APP_ACCESS', null)
-        .then((/**@type{string}*/result)=>{
-            let html='';
-            let i=0;
-            for (const user of JSON.parse(result)){
-                html +=  `<div id='list_user_stat_row_${i}' class='list_user_stat_row'>
-                                <div class='list_user_stat_col'>
-                                    <div>${user.identity_provider_id ?? ''}</div>
-                                </div>
-                                <div class='list_user_stat_col'>
-                                    <div class='${user.provider_name==null?'list_user_start_common_logo':''}'>${user.provider_name==null?'':user.provider_name}</div>
-                                </div>
-                                <div class='list_user_stat_col'>
-                                    <div>${user.count_users}</div>
-                                </div>
-                                <div class='list_user_stat_col'>
-                                    <div></div>
-                                </div>
-                          </div>`;
-                i++;
-            }
-            //count not logged in
-            html += `<div id='list_user_stat_row_not_connected' class='list_user_stat_row'>
-                        <div class='list_user_stat_col'>
-                            <div></div>
-                        </div>
-                        <div class='list_user_stat_col'>
-                            <div id='list_user_stat_not_connected_icon' class='common_icon'></div>
-                        </div>
-                        <div class='list_user_stat_col'>
-                            <div></div>
-                        </div>
-                        <div class='list_user_stat_col'>
-                            <div></div>
-                        </div>
-                    </div>`;
-            AppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner');
-            AppDocument.querySelector('#list_user_stat').innerHTML = html;
-            //count logged in
-            count_connected();
-        })
+        const user_stat = await common.FFB('DB_API', '/admin/user_account/count', null, 'GET', 'APP_ACCESS', null)
+        .then((/**@type{string}*/result)=>JSON.parse(result))
         .catch(()=>AppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner'));
+        
+        let html='';
+        let i=0;
+        for (const user of user_stat){
+            html +=  `<div id='list_user_stat_row_${i}' class='list_user_stat_row'>
+                            <div class='list_user_stat_col'>${user.identity_provider_id ?? ''}</div>
+                            <div class='list_user_stat_col'>
+                                <div class='${user.provider_name==null?'list_user_start_common_logo':''}'>${user.provider_name==null?'':user.provider_name}</div>
+                            </div>
+                            <div class='list_user_stat_col'>${user.count_users}</div>
+                            <div class='list_user_stat_col'>${await get_count(user.identity_provider_id ?? '',1).then(result=>result.count_connected)}</div>
+                        </div>`;
+            i++;
+        }
+        //count not logged in
+        html += `<div id='list_user_stat_row_not_connected' class='list_user_stat_row'>
+                    <div class='list_user_stat_col'></div>
+                    <div class='list_user_stat_col'>
+                        <div id='list_user_stat_not_connected_icon' class='common_icon'></div>
+                    </div>
+                    <div class='list_user_stat_col'></div>
+                    <div class='list_user_stat_col'>${await get_count('',0).then(result=>result.count_connected)}</div>
+                </div>`;
+        AppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner');
+        AppDocument.querySelector('#list_user_stat').innerHTML = html;
     }
 };
 /**
@@ -1566,13 +1540,13 @@ const show_list = async (list_div, query, sort, order_by) => {
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL.system_admin!=null){
-                    path = '/socket/connection';
-                    service = 'SOCKET';
+                    path = '/socket';
+                    service = 'SERVER';
                     token_type = 'SYSTEMADMIN';
                 }
                 else{
-                    path = '/socket/connection';
-                    service = 'SOCKET';
+                    path = '/socket';
+                    service = 'SERVER';
                     token_type = 'APP_ACCESS';
                 }
                 break;

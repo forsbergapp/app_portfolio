@@ -2705,25 +2705,26 @@ const map_update = async (parameters) => {
 const FFB = async (service, path, query, method, authorization_type, json_data=null) => {
     /**@type{number} */
     let status;
-    let authorization;
+    let authorization_bearer = null;
+    let authorization_basic = null;
     let service_path;
     query = query==null?'':query;
     switch (authorization_type){
         case 'APP_DATA':{
             //data token authorization check
-            authorization = `Bearer ${COMMON_GLOBAL.token_dt}`;
+            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_data`;
             break;
         }
         case 'APP_SIGNUP':{
             //data token signup authorization check
-            authorization = `Bearer ${COMMON_GLOBAL.token_dt}`;
+            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_signup`;
             break;
         }
         case 'APP_ACCESS':{
             //user or admins authorization
-            authorization = `Bearer ${COMMON_GLOBAL.token_at}`;
+            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_at}`;
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id)
                 service_path = `${COMMON_GLOBAL.rest_resource_bff}/admin`;
             else
@@ -2732,28 +2733,28 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
         }
         case 'SUPERADMIN':{
             // super admin authorization
-            authorization = `Bearer ${COMMON_GLOBAL.token_at}`;
+            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_at}`;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/superadmin`;
             break;
         }
         case 'SYSTEMADMIN':{
             //systemadmin authorization
-            authorization = `Bearer ${COMMON_GLOBAL.token_admin_at}`;
+            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_admin_at}`;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/systemadmin`;
             break;
         }
         case 'SOCKET':{
             //broadcast connect authorization
-            authorization = `Bearer ${COMMON_GLOBAL.token_dt}`;
+            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
             //use query to send authorization since EventSource does not support headers
-            query += `&authorization=${authorization}`;
             json_data = null;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/socket`;
             break;
         }
         case 'IAM':{
             //user,admin or system admin login
-            authorization = `Basic ${window.btoa(json_data.username + ':' + json_data.password)}`;
+            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
+            authorization_basic = `Basic ${window.btoa(json_data.username + ':' + json_data.password)}`;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/iam`;
             break;
         }
@@ -2764,12 +2765,12 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
     //encode query parameters
     const encodedparameters = query?toBase64(query):'';
     //add and encode IAM parameters
-    const iam =  toBase64(  `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
+    const iam =  toBase64(  `authorization_bearer=${authorization_bearer}&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
                             `&service=${service}&app_id=${COMMON_GLOBAL.app_id??''}`);
 
     let url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}/${service.toLowerCase()}${path}?parameters=${encodedparameters}&iam=${iam}`;
 
-    if (service=='SOCKET' && authorization_type=='SOCKET'){
+    if (service=='SERVER' && authorization_type=='SOCKET'){
         return new EventSource(url);
     }
     else{
@@ -2779,7 +2780,7 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
             options = {
                         method: method,
                         headers: {
-                                    Authorization: authorization
+                                    Authorization: authorization_basic ?? authorization_bearer
                                 },
                         body: null
                     };
@@ -2788,7 +2789,7 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
                     method: method,
                     headers: {
                                 'Content-Type': 'application/json',
-                                Authorization: authorization
+                                Authorization: authorization_basic ?? authorization_bearer
                             },
                     body: JSON.stringify(json_data)
                 };
@@ -2920,18 +2921,18 @@ const updateOnlineStatus = async () => {
         let path='';
         let query;
         if (COMMON_GLOBAL.system_admin!=null){
-            path =  `/socket/connection/${COMMON_GLOBAL.service_socket_client_ID??''}`;
+            path =  `/socket/${COMMON_GLOBAL.service_socket_client_ID??''}`;
             query = `identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id ??''}` +
                     `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
             token_type='SYSTEMADMIN';
         }
         else{
-            path =  `/socket/connection/${COMMON_GLOBAL.service_socket_client_ID??''}`;
+            path =  `/socket/${COMMON_GLOBAL.service_socket_client_ID??''}`;
             query = `identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
                     `&system_admin=&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
             token_type='APP_DATA';
         }
-        FFB('SOCKET', path, query, 'PATCH', token_type, null)
+        FFB('SERVER', path, query, 'PATCH', token_type, null)
         .then(()=>resolve())
         .catch((error)=>reject(error));
     })
@@ -2941,8 +2942,8 @@ const updateOnlineStatus = async () => {
  * @returns {Promise.<void>}
  */
 const connectOnline = async () => {
-    FFB('SOCKET',   
-        '/socket/connection/connect',
+    FFB('SERVER',
+        '/socket',
         `identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
         `&system_admin=${COMMON_GLOBAL.system_admin ?? ''}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
         'GET', 'SOCKET', null)
@@ -2968,8 +2969,8 @@ const connectOnline = async () => {
  * @returns {void}
  */
 const checkOnline = (div_icon_online, user_account_id) => {
-    FFB('SOCKET', '/socket/connection/check', `user_account_id=${user_account_id}`, 'GET', 'APP_DATA', null)
-    .then(result=>AppDocument.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online == 1?'online':'offline'));
+    FFB('SERVER', `/socket/${user_account_id}`, null, 'GET', 'APP_DATA', null)
+    .then(result=>AppDocument.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).length>0?'online':'offline'));
 };
 /**
  * Get place from GPS

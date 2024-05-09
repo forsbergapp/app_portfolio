@@ -222,6 +222,9 @@
  * @property {function} write
  * @property {function} flush           - Used for EventSource
  * @property {function} set
+ * @property {object}   req
+ * @property {object}   req.query
+ * @property {string}   req.query.iam
  */
 
 /**

@@ -89,51 +89,22 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
     return new Promise((resolve, reject) => {
         if ((bff_parameters.endpoint=='APP' && bff_parameters.service=='APP') ||
             (app_id !=null && bff_parameters.endpoint && bff_parameters.service)){
-            try {
-                
-                //check allowed endpoints and service
-                switch (bff_parameters.endpoint + '_' + bff_parameters.service){
-                    case 'APP_APP':
-                    case 'APP_DATA_APP':
-                    case 'APP_DATA_SOCKET':
-                    case 'APP_DATA_DB_API':
-                    case 'APP_SIGNUP_DB_API':
-                    case 'APP_ACCESS_DB_API':
-                    case 'ADMIN_SOCKET':
-                    case 'ADMIN_SERVER':
-                    case 'ADMIN_CONFIG':
-                    case 'ADMIN_DB_API':
-                    case 'ADMIN_APP':
-                    case 'SUPERADMIN_DB_API':
-                    case 'SYSTEMADMIN_SOCKET':
-                    case 'SYSTEMADMIN_SERVER':
-                    case 'SYSTEMADMIN_DB_API':
-                    case 'SYSTEMADMIN_LOG':
-                    case 'SOCKET_SOCKET':
-                    case 'IAM_IAM':
-                        serverRoutes({  app_id:app_id, 
-                                        service:bff_parameters.service, 
-                                        endpoint:bff_parameters.endpoint,
-                                        method:bff_parameters.method.toUpperCase(), 
-                                        ip:bff_parameters.ip, 
-                                        host:bff_parameters.host, 
-                                        url:bff_parameters.url,
-                                        route_path:bff_parameters.route_path,
-                                        user_agent:bff_parameters.user_agent, 
-                                        accept_language:bff_parameters.accept_language, 
-                                        authorization:bff_parameters.authorization, 
-                                        parameters:app_query, 
-                                        body:bff_parameters.body, 
-                                        res:bff_parameters.res})
-                        .then((/**@type{string}*/result)=>resolve(result))
-                        .catch((/**@type{Types.error}*/error)=>reject(error));
-                        break;
-                    default:
-                        return reject ('⛔');
-                }
-            } catch (error) {
-                return reject(error);
-            }
+            serverRoutes({  app_id:app_id, 
+                            service:bff_parameters.service, 
+                            endpoint:bff_parameters.endpoint,
+                            method:bff_parameters.method.toUpperCase(), 
+                            ip:bff_parameters.ip, 
+                            host:bff_parameters.host, 
+                            url:bff_parameters.url,
+                            route_path:bff_parameters.route_path,
+                            user_agent:bff_parameters.user_agent, 
+                            accept_language:bff_parameters.accept_language, 
+                            authorization:bff_parameters.authorization, 
+                            parameters:app_query, 
+                            body:bff_parameters.body, 
+                            res:bff_parameters.res})
+            .then((/**@type{string}*/result)=>resolve(result))
+            .catch((/**@type{Types.error}*/error)=>reject(error));
         }
         else{
             //required parameters not provided

@@ -80,13 +80,8 @@ const ClientAdd = (newClient) => {
  * Socket check connected
  * @param {number} user_account_id
  */
- const ConnectedCheck = (user_account_id) => {
-    for (const connected of CONNECTED_CLIENTS){
-        if (connected.user_account_id == user_account_id){
-            return {online: 1};
-        }
-    }
-    return {online: 0};
+ const ConnectedGet = user_account_id => {
+    return CONNECTED_CLIENTS.filter(client => client.user_account_id == user_account_id);
 };
 
 /**
@@ -263,30 +258,21 @@ const ClientAdd = (newClient) => {
 /**
  * Socket connected count
  * @param {number} identity_provider_id
- * @param {number} count_logged_in
+ * @param {number} logged_in
  */
- const ConnectedCount = (identity_provider_id, count_logged_in) => {
-    let count_connected=0;
-    for (const connected of CONNECTED_CLIENTS){
-        if ((count_logged_in==1 &&
-                connected.identity_provider_id == identity_provider_id &&
-                identity_provider_id !=null &&
-                connected.user_account_id != null) ||
-            (count_logged_in==1 &&
-                identity_provider_id ==null &&
-                connected.identity_provider_id ==null &&
-                (connected.user_account_id != null ||
-                connected.system_admin == 1)) ||
-            (count_logged_in==0 && 
-                identity_provider_id ==null &&
-                connected.identity_provider_id ==null &&
-                connected.user_account_id ==null &&
-                connected.system_admin == 0))
-            {
-            count_connected = count_connected + 1;
-        }
-    }
-    return {count_connected};
+ const ConnectedCount = (identity_provider_id, logged_in) => {
+    if (logged_in == 1)
+        return {count_connected:CONNECTED_CLIENTS.filter(connected =>   (connected.identity_provider_id == identity_provider_id &&
+                                                        identity_provider_id !=null &&
+                                                        connected.user_account_id != null)||
+                                                        (identity_provider_id ==null &&
+                                                        connected.identity_provider_id ==null &&
+                                                        (connected.user_account_id != null ||connected.system_admin == 1))).length};
+    else
+        return {count_connected:CONNECTED_CLIENTS.filter(connected =>identity_provider_id ==null &&
+                                                    connected.identity_provider_id ==null &&
+                                                    connected.user_account_id ==null &&
+                                                    connected.system_admin == 0).length};
 };
 
 /**
@@ -298,7 +284,6 @@ const ClientAdd = (newClient) => {
  * @param {number} system_admin
  * @param {string} latitude
  * @param {string} longitude
- * @param {string} authorization
  * @param {string} headers_user_agent
  * @param {string} ip
  * @param {Types.res} response
@@ -309,34 +294,28 @@ const ClientAdd = (newClient) => {
                                 system_admin,
                                 latitude, 
                                 longitude, 
-                                authorization, 
                                 headers_user_agent, 
                                 ip, 
                                 response) =>{
-    const {AuthenticateDataTokenSocket} = await import(`file://${process.cwd()}/server/iam.service.js`);
-    if (AuthenticateDataTokenSocket(app_id, authorization)){
-        const client_id = Date.now();
-        ClientConnect(response);
-        ClientOnClose(response, client_id);
-        /**@type{Types.socket_connect_list} */
-        const newClient = {
-                            id:                     client_id,
-                            app_id:                 app_id,
-                            user_account_id:        user_account_logon_user_account_id,
-                            identity_provider_id:   identity_provider_id,
-                            system_admin:           system_admin,
-                            connection_date:        new Date().toISOString(),
-                            gps_latitude:           latitude,
-                            gps_longitude:          longitude,
-                            ip:                     ip,
-                            user_agent:             headers_user_agent,
-                            response:               response
-                        };
-        ClientAdd(newClient);
-        ClientSend(response, `{\\"client_id\\": ${client_id}}`, 'CONNECTINFO');
-    }
-    else
-        response.status(401).send('⛔');
+    const client_id = Date.now();
+    ClientConnect(response);
+    ClientOnClose(response, client_id);
+    /**@type{Types.socket_connect_list} */
+    const newClient = {
+                        id:                     client_id,
+                        app_id:                 app_id,
+                        user_account_id:        user_account_logon_user_account_id,
+                        identity_provider_id:   identity_provider_id,
+                        system_admin:           system_admin,
+                        connection_date:        new Date().toISOString(),
+                        gps_latitude:           latitude,
+                        gps_longitude:          longitude,
+                        ip:                     ip,
+                        user_agent:             headers_user_agent,
+                        response:               response
+                    };
+    ClientAdd(newClient);
+    ClientSend(response, `{\\"client_id\\": ${client_id}}`, 'CONNECTINFO');
 };
 
 /**
@@ -358,4 +337,4 @@ const ClientAdd = (newClient) => {
     }
 };
 
-export {ConnectedUpdate, ConnectedCheck, SocketSendSystemAdmin, ConnectedList, SocketSendAdmin, ConnectedCount, SocketConnect, SocketCheckMaintenance};
+export {ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedList, SocketSendAdmin, ConnectedCount, SocketConnect, SocketCheckMaintenance};
