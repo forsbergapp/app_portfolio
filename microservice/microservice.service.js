@@ -13,7 +13,16 @@ const CONFIG = await file_get('MICROSERVICE_CONFIG').then((/**@type{Types.db_fil
 const CONFIG_SERVICES = await file_get('MICROSERVICE_SERVICES').then((/**@type{Types.db_file_result_file_get}*/file)=>file.file_content?file.file_content.SERVICES:null);
 
 const timeout_message = '🗺⛔?';
-
+const resource_id_string = ':RESOURCE_ID';
+/**
+ * Returns resource id from URI path
+ * if resource id not requested for a route using resource id and last part of path is string then return null
+ * @param {string} uri_path
+ * @returns {number|string|null}
+ */
+ const resource_id_get = (uri_path) => isNaN(getNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1))??0)?
+                                            uri_path.substring(uri_path.lastIndexOf('/') + 1):
+                                                getNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1));
 /**
  * 
  * @param {string} route_path
@@ -26,6 +35,16 @@ const route = (route_path, route_method, request_path , request_method) =>
  (route_path.indexOf('/:RESOURCE_ID')>-1?route_path. replace('/:RESOURCE_ID', request_path.substring(request_path.lastIndexOf('/'))):route_path) == request_path && 
   route_method == request_method;
 
+/**
+ * 
+ * @param {'GEOLOCATION'|'WORLDCITIES'|'MAIL'|'PDF'} service 
+ * @returns {number}
+ */
+ const microservice_api_version = service =>{
+    /**@type{Types.microservice_config_service_record} */
+    const config_service = ConfigServices(service)
+    return config_service.CONFIG.filter((/**@type{*}*/row)=>'APP_REST_API_VERSION' in row)[0].APP_REST_API_VERSION;
+} 
 class CircuitBreaker {
     constructor() {
         /**@type{[index:any][*]} */
@@ -474,4 +493,4 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         }
     });
 };
-export {route, getNumberValue, return_result, MicroServiceServer, CONFIG, ConfigServices, microserviceRequest, MessageQueue};
+export {resource_id_string, resource_id_get, route, microservice_api_version, getNumberValue, return_result, MicroServiceServer, CONFIG, ConfigServices, microserviceRequest, MessageQueue};

@@ -2,16 +2,17 @@
  * @typedef {{
  *          endpoint: string,
  *          service: string,
- *          ip: string,
- *          host:string, 
+ *          host:string,
+ *          url:string,
+ *          route_path:string,
  *          method: string,
+ *          iam: string,
+ *          query: string,
+ *          body:object,
  *          authorization:string,
+ *          ip: string,
  *          user_agent:string,
  *          accept_language:string,
- *          url:string,
- *          iam: string
- *          query: string
- *          body:object,
  *          res: res}} bff_parameters
  * 
  * @typedef {{  service: string,
@@ -40,15 +41,16 @@
  * @typedef {{  app_id: req_id_number,
 *               endpoint: string,
 *               service: string,
-*               ip: string,
 *               host:string,
 *               url:string,
+*               route_path:string,
 *               method: string,
+*               parameters: string,
+*               body:*,
 *               authorization:string,
+*               ip: string,
 *               user_agent:string,
 *               accept_language:string,
-*               parameters: string
-*               body:*,
 *               res: res}} routesparameters
  */
 /**

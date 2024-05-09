@@ -129,7 +129,7 @@ const component = async props => {
                             await props.function_FFB('DB_API', '/identity_provider', null, 'GET', 'APP_DATA', null)
                                         .then((/**@type{string}*/result)=>JSON.parse(result))
                                         .catch((/**@type{Error}*/error)=>{
-                                                                            props.common_document.querySelector('#common_lov_list').classList.remove('css_spinner');
+                                                                            props.common_document.querySelector('#common_user_start_identity_provider_login').classList.remove('css_spinner');
                                                                             throw error});
         spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 

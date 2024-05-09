@@ -78,7 +78,7 @@ const AuthenticateAccessToken = (req, res, next) => service.AuthenticateAccessTo
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateSocket = (req, res, next) => service.AuthenticateSocket(req.query.iam, req.originalUrl.substring(req.route.path.indexOf('*')), res, next);    
+ const AuthenticateSocket = (req, res, next) => service.AuthenticateSocket(req.originalUrl.substring(req.route.path.indexOf('*')), res, next);    
 
 /**
  * Middleware authenticates IAM 

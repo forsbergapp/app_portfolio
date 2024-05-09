@@ -1214,6 +1214,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 }
 #common_user_menu_default_avatar{
 	font-size: inherit !important;
+	height: unset !important;
 }
 #common_user_menu_avatar_img{
 	width:2em !important;
