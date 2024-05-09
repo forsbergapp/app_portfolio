@@ -27,7 +27,7 @@ const startserver = async () =>{
 		AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 			if (authenticate){
 				switch (true){
-					case route('/pdf/v1' , 'GET', URI_path, req.method):{
+					case route('/pdf/v1/pdf' , 'GET', URI_path, req.method):{
 						service.getPDF(req.query.data)
 						.then((pdf)=>return_result(200, null, null, pdf, res))
 						.catch((error) =>return_result(500, error, null, null, res));

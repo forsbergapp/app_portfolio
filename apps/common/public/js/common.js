@@ -2707,6 +2707,7 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
     let status;
     let authorization;
     let service_path;
+    query = query==null?'':query;
     switch (authorization_type){
         case 'APP_DATA':{
             //data token authorization check
@@ -2759,14 +2760,14 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
     }
     
     //add common query parameter
-    query += query?`&lang_code=${COMMON_GLOBAL.user_locale}`:'';
+    query += `&lang_code=${COMMON_GLOBAL.user_locale}`;
     //encode query parameters
     const encodedparameters = query?toBase64(query):'';
     //add and encode IAM parameters
     const iam =  toBase64(  `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
                             `&service=${service}&app_id=${COMMON_GLOBAL.app_id??''}`);
 
-    let url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${path}?parameters=${encodedparameters}&iam=${iam}`;
+    let url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}/${service.toLowerCase()}${path}?parameters=${encodedparameters}&iam=${iam}`;
 
     if (service=='SOCKET' && authorization_type=='SOCKET'){
         return new EventSource(url);
@@ -3048,7 +3049,7 @@ const get_gps_from_ip = async () => {
  */
 const get_cities = async countrycode => {
     return new Promise((resolve, reject)=>{
-        FFB('WORLDCITIES', '/country', `${countrycode}`, 'GET', 'APP_DATA', null)
+        FFB('WORLDCITIES', `/country/${countrycode}`, null, 'GET', 'APP_DATA', null)
         .then(result=>{
             /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
             const cities = JSON.parse(result);

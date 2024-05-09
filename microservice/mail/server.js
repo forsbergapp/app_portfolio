@@ -33,7 +33,7 @@ const startserver = async () =>{
 		AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 			if (authenticate){
 				switch (true){
-					case route('/mail/sendemail' , 'POST', URI_path, req.method):{
+					case route('/mail/v1/mail/sendemail' , 'POST', URI_path, req.method):{
 						req.query.data = app_query.get('data') ?? '';
 						service.sendEmail(req.query.data)
 						.then((result)=>return_result(200, null, result, null, res))

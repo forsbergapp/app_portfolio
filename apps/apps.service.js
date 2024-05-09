@@ -536,7 +536,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
                         new Buffer(Object.entries(query_parameters_obj).reduce((/**@type{*}*/total, current)=>total += (total==''?'':'&') + current[0] + '=' + current[1],''),'utf-8').toString('base64');
             /**@type{Types.bff_parameters_microservices}*/
             const parameters = {service:'PDF', 
-                                path:'',
+                                path:'/pdf',
                                 ip:ip, 
                                 method:'GET', 
                                 user_agent:user_agent, 
@@ -579,7 +579,7 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
     //get GPS from IP
     /**@type{Types.bff_parameters_microservices}*/
     const parameters = {service:'GEOLOCATION', 
-                        path:'/ip',
+                        path:'/geolocation/ip',
                         ip:ip, 
                         method:'GET', 
                         user_agent:user_agent, 
@@ -601,7 +601,7 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
     else{
         /**@type{Types.bff_parameters_microservices}*/
         const parameters = {service:'WORLDCITIES', 
-                            path:'/city/random',
+                            path:'/worldcities/city/random',
                             ip:ip, 
                             method:'GET', 
                             user_agent:user_agent, 

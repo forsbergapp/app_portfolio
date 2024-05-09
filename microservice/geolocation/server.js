@@ -26,13 +26,13 @@ const startserver = async () =>{
 		AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 			if (authenticate){
 				switch (true){
-					case route('/geolocation/v1/place' , 'GET', URI_path, req.method):{
+					case route('/geolocation/v1/geolocation/place' , 'GET', URI_path, req.method):{
 						service.getPlace(req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
 						.then((result)=>return_result(200, null, JSON.parse(result), null, res))
 						.catch((error) =>return_result(500, error, null, null, res));
 						break;
 					}
-					case route('/geolocation/v1/ip' , 'GET', URI_path, req.method):{
+					case route('/geolocation/v1/geolocation/ip' , 'GET', URI_path, req.method):{
 						service.getIp(req.query.data.ip, req.headers['accept-language'])
 						.then((result)=>return_result(200, null, JSON.parse(result), null, res))
 						.catch((error) =>return_result(500, error, null, null, res));

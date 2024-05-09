@@ -133,7 +133,8 @@ const fs = await import('node:fs');
     return {
         //request
         host: req.headers.host, 
-        url:req.originalUrl.substring(req.route.path.indexOf('*')),
+        url:req.originalUrl,
+        route_path: req.originalUrl.substring(req.route.path.indexOf('*')),
         method: req.method,
         iam: req.query.iam,
         query: req.query.parameters,

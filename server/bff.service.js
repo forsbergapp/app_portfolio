@@ -2,7 +2,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const {ConfigServices, microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const {microservice_api_version, microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {send_iso_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/log.service.js`);
@@ -26,64 +26,53 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
                 .then((/**@type{string}*/result)=>resolve(result))
                 .catch((/**@type{Types.error}*/error)=>reject(error));
             };
-            /**
-             * 
-             * @param {'GEOLOCATION'|'WORLDCITIES'|'MAIL'|'PDF'} service 
-             * @returns {number}
-             */
-            const microservice_api_version = service =>{
-                /**@type{Types.microservice_config_service_record} */
-                const config_service = ConfigServices(service)
-                return config_service.CONFIG.filter((/**@type{*}*/row)=>'APP_REST_API_VERSION' in row)[0].APP_REST_API_VERSION;
-            } 
-            if (microservice_parameters.query !=null){
-                switch (microservice_parameters.service){
-                    case 'GEOLOCATION':{
-                        //ENABLE_GEOLOCATION control is for ip to geodata service /place and /timezone should be allowed
-                        if ((ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION')=='1' || microservice_parameters.query.startsWith('/ip')==false)){
-                            //set ip from client in case ip query parameter is missing
-                            if (microservice_parameters.path.startsWith('/ip')){    
-                                const params = microservice_parameters.query.split('&');
-                                //if ip parameter does not exist
-                                if (params.filter(parm=>parm.includes('ip=')).length==0 )
-                                    params.push(`ip=${microservice_parameters.ip}`);
-                                else{
-                                    //if empty ip parameter
-                                    if (params.filter(parm=>parm == 'ip=').length==1)
-                                        params.map(parm=>parm = parm.replace('ip=', `ip=${microservice_parameters.ip}`));
-                                }
-                                microservice_parameters.query = `${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
+            
+            
+            switch (microservice_parameters.service){
+                case 'GEOLOCATION':{
+                    //ENABLE_GEOLOCATION control is for ip to geodata service /place and /timezone should be allowed
+                    if ((ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION')=='1' || microservice_parameters.query.startsWith('/ip')==false)){
+                        //set ip from client in case ip query parameter is missing
+                        if (microservice_parameters.path.startsWith('/geolocation/ip')){    
+                            const params = microservice_parameters.query.split('&');
+                            //if ip parameter does not exist
+                            if (params.filter(parm=>parm.includes('ip=')).length==0 )
+                                params.push(`ip=${microservice_parameters.ip}`);
+                            else{
+                                //if empty ip parameter
+                                if (params.filter(parm=>parm == 'ip=').length==1)
+                                    params.map(parm=>parm = parm.replace('ip=', `ip=${microservice_parameters.ip}`));
                             }
-                            microservice_path = `/geolocation/v${microservice_api_version('GEOLOCATION')}${microservice_parameters.path}?${microservice_parameters.query}`;
-                            
+                            microservice_parameters.query = `${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
                         }
-                        else
-                            return resolve('');
-                        break;
+                        microservice_path = `/geolocation/v${microservice_api_version('GEOLOCATION')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                        
                     }
-                    case 'WORLDCITIES':{
-                        //limit records here in server for this service:
-                        if (microservice_parameters.path.startsWith('/city/search'))
-                            microservice_parameters.query = microservice_parameters.query + `&limit=${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
-                        microservice_path = `/worldcities/v${microservice_api_version('WORLDCITIES')}${microservice_parameters.path}?${microservice_parameters.query}`;
-                        break;
-                    }
-                    case 'MAIL':{
-                        microservice_path = `/mail/v${microservice_api_version('MAIL')}${microservice_parameters.path}?${microservice_parameters.query}`;
-                        break;
-                    }
-                    case 'PDF':{
-                        microservice_path = `/pdf/v${microservice_api_version('PDF')}${microservice_parameters.path}?${microservice_parameters.query}`;
-                        break;
-                    }
-                    default:{
-                        return reject ('⛔');
-                    }
+                    else
+                        return resolve('');
+                    break;
                 }
-                return call_microservice(`${microservice_path}&app_id=${app_id}`, microservice_parameters.service);
+                case 'WORLDCITIES':{
+                    //limit records here in server for this service:
+                    if (microservice_parameters.path.startsWith('/worldcities/city/search'))
+                        microservice_parameters.query = microservice_parameters.query + `&limit=${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
+                    microservice_path = `/worldcities/v${microservice_api_version('WORLDCITIES')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                    break;
+                }
+                case 'MAIL':{
+                    microservice_path = `/mail/v${microservice_api_version('MAIL')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                    break;
+                }
+                case 'PDF':{
+                    microservice_path = `/pdf/v${microservice_api_version('PDF')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                    break;
+                }
+                default:{
+                    return reject ('⛔');
+                }
             }
-            else
-                return reject ('⛔');
+            //Microservice URI : [protocol]://[subdomain.][domain]:[port]/[service]/v[version]/[resource (servicename lowercase)]/[path]?[query]
+            return call_microservice(`${microservice_path}&app_id=${app_id}`, microservice_parameters.service);
         }
         else
             return reject ('⛔');
@@ -99,7 +88,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  const BFF_server = async (app_id, bff_parameters, app_query) => {
     return new Promise((resolve, reject) => {
         if ((bff_parameters.endpoint=='APP' && bff_parameters.service=='APP') ||
-            (app_id !=null && bff_parameters.endpoint && bff_parameters.service && bff_parameters.query)){
+            (app_id !=null && bff_parameters.endpoint && bff_parameters.service)){
             try {
                 
                 //check allowed endpoints and service
@@ -129,6 +118,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
                                         ip:bff_parameters.ip, 
                                         host:bff_parameters.host, 
                                         url:bff_parameters.url,
+                                        route_path:bff_parameters.route_path,
                                         user_agent:bff_parameters.user_agent, 
                                         accept_language:bff_parameters.accept_language, 
                                         authorization:bff_parameters.authorization, 
@@ -179,7 +169,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
     const app_id = bff_parameters.iam?getNumberValue(iam_decode(bff_parameters.iam).get('app_id')):null;
     let decodedquery = '';
     if ((bff_parameters.endpoint=='APP' && bff_parameters.service=='APP'))
-        decodedquery = bff_parameters.url;
+        decodedquery = bff_parameters.route_path;
     else
         decodedquery = bff_parameters.query?Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString():'';
     
@@ -193,7 +183,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
             service: bff_parameters.service, 
             //request
             //  no host
-            path:bff_parameters.url,
+            path:bff_parameters.route_path,
             method: bff_parameters.method,
             query: decodedquery, 
             body: bff_parameters.body,
