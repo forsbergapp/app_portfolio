@@ -294,14 +294,13 @@ const AuthenticateAccessToken = (iam, authorization, ip, res, next)  => {
 };
 /**
  * Middleware authenticate socket used for EventSource
- * @param {string} iam
  * @param {string} path
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateSocket = (iam, path, res, next) =>{
+const AuthenticateSocket = (path, res, next) =>{
     //check inparameters
-    if ((iam_decode(iam).get('service')??'').toUpperCase()=='SOCKET' && path.startsWith('/socket/connection/connect'))
+    if (path.startsWith('/socket/socket/connection/connect'))
         next();
     else
         not_authorized(res, 401, 'AuthenticateSocket, not SOCKET or not starting with correct path');

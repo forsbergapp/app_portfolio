@@ -181,7 +181,7 @@ const show_charts = async () => {
         }
         else{
             service = 'DB_API';
-            path = '/app_log/admin/stat/uniquevisitor';
+            path = '/admin/app_log/stat/uniquevisitor';
             query = `select_app_id=${app_id}&year=${year}&month=${month}`;
             authorization_type = 'APP_ACCESS';
         }
@@ -418,7 +418,7 @@ const get_apps_div = async () =>{
         }
         else{
             service = 'APP';
-            path = '/apps/admin';
+            path = '/admin/apps';
             authorization_type = 'APP_ACCESS';
         }
         common.FFB(service, path, null, 'GET', authorization_type, null)
@@ -461,7 +461,7 @@ const get_apps = async () => {
         }
         else{
             service = 'APP';
-            path = '/apps/admin';
+            path = '/admin/apps';
             authorization_type = 'APP_ACCESS';
         }
         common.FFB(service, path, null, 'GET', authorization_type, null)
@@ -514,11 +514,11 @@ const sendBroadcast = () => {
         let path='';
         let token_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
-            path = '/socket/message/systemdmin';
+            path = '/socket/message';
             token_type = 'SYSTEMADMIN';
         }
         else{
-            path = '/socket/message/admin';
+            path = '/socket/message';
             token_type = 'APP_ACCESS';
         }
         common.FFB('SOCKET', path, null, 'POST', token_type, json_data)
@@ -670,7 +670,7 @@ const count_users = async () => {
          */
         const get_count = async (identity_provider_id, count_logged_in) => {
             return await common.FFB('SOCKET', 
-                                    '/socket/connection/admin/count', 
+                                    '/socket/connection/count', 
                                     `identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'APP_ACCESS', null)
             .then((/**@type{string}*/result)=>JSON.parse(result))
             .catch((/**@type{Error}*/err)=>{throw err;});
@@ -689,7 +689,7 @@ const count_users = async () => {
     if (admin_token_has_value()){
         AppDocument.querySelector('#list_user_stat').classList.add('common_icon', 'css_spinner');
         AppDocument.querySelector('#list_user_stat').innerHTML = '';
-        await common.FFB('DB_API', '/user_account/admin/count', null, 'GET', 'APP_ACCESS', null)
+        await common.FFB('DB_API', '/admin/user_account/count', null, 'GET', 'APP_ACCESS', null)
         .then((/**@type{string}*/result)=>{
             let html='';
             let i=0;
@@ -774,7 +774,7 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
     //show all records if no search criteria
     if (AppDocument.querySelector('#list_user_account_search_input').innerText!='')
         search_user = encodeURI(AppDocument.querySelector('#list_user_account_search_input').innerText);
-    common.FFB('DB_API', '/user_account/admin', `search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'APP_ACCESS', null)
+    common.FFB('DB_API', '/admin/user_account', `search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div class='list_user_account_row'>
                         <div data-column='avatar' class='list_user_account_col list_title common_icon'></div>
@@ -932,7 +932,7 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
 const show_user_account_logon = async (user_account_id) => {
     AppDocument.querySelector('#list_user_account_logon').classList.add('common_icon', 'css_spinner');
     AppDocument.querySelector('#list_user_account_logon').innerHTML = '';
-    common.FFB('DB_API', '/user_account_logon/admin', `data_user_account_id=${user_account_id}&data_app_id=''`, 'GET', 'APP_ACCESS', null)
+    common.FFB('DB_API', '/admin/user_account_logon', `data_user_account_id=${user_account_id}&data_app_id=''`, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div id='list_user_account_logon_row_title' class='list_user_account_logon_row'>
                         <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>USER ACCOUNT ID</div>
@@ -999,7 +999,7 @@ const show_apps = async () => {
              <div id='apps_save' class='common_dialogue_button button_save common_icon'></div>
          </div>
      </div>`;
-    await common.FFB('APP', '/apps/admin', null, 'GET', 'APP_ACCESS', null)
+    await common.FFB('APP', '/admin/apps', null, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div id='list_apps_row_title' class='list_apps_row'>
                         <div id='list_apps_col_title1' class='list_apps_col list_title'>ID</div>
@@ -1273,7 +1273,7 @@ const update_record = async (table,
                                 password_new:       parameters.user_account.password,
                                 password_reminder:  parameters.user_account.password_reminder,
                                 verification_code:  parameters.user_account.verification_code};
-                path = `/user_account/admin/${parameters.user_account.id}?`;
+                path = `/admin/user_account/${parameters.user_account.id}?`;
                 token_type = 'SUPERADMIN';
                 service = 'DB_API';
                 method = 'PATCH';
@@ -1283,7 +1283,7 @@ const update_record = async (table,
                 json_data = {   
                                 app_category_id:parameters.app.app_category_id
                             };
-                path = `/apps/admin/${parameters.app.id}`;
+                path = `/admin/apps/${parameters.app.id}`;
                 token_type = 'APP_ACCESS';
                 service = 'DB_API';
                 method = 'PUT';
@@ -1566,19 +1566,19 @@ const show_list = async (list_div, query, sort, order_by) => {
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL.system_admin!=null){
-                    path = '/socket/connection/systemadmin';
+                    path = '/socket/connection';
                     service = 'SOCKET';
                     token_type = 'SYSTEMADMIN';
                 }
                 else{
-                    path = '/socket/connection/admin';
+                    path = '/socket/connection';
                     service = 'SOCKET';
                     token_type = 'APP_ACCESS';
                 }
                 break;
             }
             case 'list_app_log':{
-                path = '/app_log/admin';
+                path = '/admin/app_log';
                 service = 'DB_API';
                 token_type = 'APP_ACCESS';
                 break;
@@ -3076,7 +3076,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     if (event.target.innerHTML=='')
                         event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').innerHTML = '';
                     else{
-                        common.FFB('DB_API', '/app_category/admin', `id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null)
+                        common.FFB('DB_API', '/admin/app_category', `id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null)
                         .then((/**@type{string}*/result)=>lov_action(null, result, event))
                         .catch((/**@type{Error}*/err)=>lov_action(err, null, event));
                     }
@@ -3089,7 +3089,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         app_role_id_lookup='2';
                     else
                         app_role_id_lookup=event.target.innerHTML;
-                    common.FFB('DB_API', '/app_role/admin', `id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null)
+                    common.FFB('DB_API', '/admin/app_role', `id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null)
                     .then((/**@type{string}*/result)=>{
                         lov_action(null, result, event);
                         //if wrong value then field is empty again, fetch default value for empty app_role
