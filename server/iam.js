@@ -5,8 +5,6 @@ import * as Types from './../types.js';
 
 const service = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-
 /**
  * Middleware authenticates system admin login
  * @param {number} app_id 
@@ -22,7 +20,7 @@ const AuthenticateSystemadmin = (app_id, ip, authorization, res) => service.Auth
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateAccessTokenSystemAdmin = (req, res, next) => service.AuthenticateAccessTokenSystemAdmin(req.query.iam, req.get('authorization'), req.ip, res, next);
+ const AuthenticateAccessTokenSystemAdmin = (req, res, next) => service.AuthenticateAccessTokenSystemAdmin(req.query.iam, req.headers.authorization, req.ip, res, next);
 
 /**
  * Middleware authenticates data token
@@ -30,7 +28,7 @@ const AuthenticateSystemadmin = (app_id, ip, authorization, res) => service.Auth
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateDataToken = (req, res, next) => service.AuthenticateDataToken(req.query.iam, req.get('authorization'), req.ip, res, next);
+const AuthenticateDataToken = (req, res, next) => service.AuthenticateDataToken(req.query.iam, req.headers.authorization, req.ip, res, next);
 
 /**
  * Middleware authenticates data token registration
@@ -38,7 +36,7 @@ const AuthenticateDataToken = (req, res, next) => service.AuthenticateDataToken(
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateDataTokenRegistration = (req, res, next) => service.AuthenticateDataTokenRegistration(req.query.iam, req.get('authorization'), req.ip, res, next);
+const AuthenticateDataTokenRegistration = (req, res, next) => service.AuthenticateDataTokenRegistration(req.query.iam, req.headers.authorization, req.ip, res, next);
 
 /**
  * Middleware authenticates data token login
@@ -46,7 +44,7 @@ const AuthenticateDataTokenRegistration = (req, res, next) => service.Authentica
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateDataTokenLogin = (req, res, next) => service.AuthenticateDataTokenLogin(req.query.iam, req.get('authorization'), req.ip, res, next);
+const AuthenticateDataTokenLogin = (req, res, next) => service.AuthenticateDataTokenLogin(req.query.iam, req.headers.authorization, req.ip, res, next);
 
 /**
  * Middleware authenticates access token superadmin
@@ -54,7 +52,7 @@ const AuthenticateDataTokenLogin = (req, res, next) => service.AuthenticateDataT
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateAccessTokenSuperAdmin = (req, res, next) => service.AuthenticateAccessTokenSuperAdmin(req.query.iam, req.get('authorization'), req.ip, res, next);
+const AuthenticateAccessTokenSuperAdmin = (req, res, next) => service.AuthenticateAccessTokenSuperAdmin(req.query.iam, req.headers.authorization, req.ip, res, next);
     
 /**
  * Middleware authenticates access token admin
@@ -62,7 +60,7 @@ const AuthenticateAccessTokenSuperAdmin = (req, res, next) => service.Authentica
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateAccessTokenAdmin = (req, res, next) => service.AuthenticateAccessTokenAdmin(req.query.iam, req.get('authorization'), req.ip, res, next);
+const AuthenticateAccessTokenAdmin = (req, res, next) => service.AuthenticateAccessTokenAdmin(req.query.iam, req.headers.authorization, req.ip, res, next);
     
 /**
  * Middleware authenticates access token
@@ -70,7 +68,7 @@ const AuthenticateAccessTokenAdmin = (req, res, next) => service.AuthenticateAcc
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateAccessToken = (req, res, next) => service.AuthenticateAccessToken(req.query.iam, req.get('authorization'), req.ip, res, next);    
+const AuthenticateAccessToken = (req, res, next) => service.AuthenticateAccessToken(req.query.iam, req.headers.authorization, req.ip, res, next);    
 
 /**
  * Middleware authenticates socket used for EventSource
@@ -78,7 +76,7 @@ const AuthenticateAccessToken = (req, res, next) => service.AuthenticateAccessTo
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateSocket = (req, res, next) => service.AuthenticateSocket(req.originalUrl.substring(req.route.path.indexOf('*')), res, next);    
+ const AuthenticateSocket = (req, res, next) => service.AuthenticateSocket(req.query.iam, req.originalUrl.substring(req.route.path.indexOf('*')), req.ip, res, next);    
 
 /**
  * Middleware authenticates IAM 
@@ -86,7 +84,7 @@ const AuthenticateAccessToken = (req, res, next) => service.AuthenticateAccessTo
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateIAM = (req, res, next) => service.AuthenticateIAM(req.query.iam, req.headers.authorization, res, next);    
+const AuthenticateIAM = (req, res, next) => service.AuthenticateIAM(req.query.iam, req.headers.authorization, req.ip, res, next);    
 
 export{ AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
         AuthenticateDataToken, AuthenticateDataTokenRegistration, AuthenticateDataTokenLogin,
