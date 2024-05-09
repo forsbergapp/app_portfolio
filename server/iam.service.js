@@ -9,11 +9,11 @@ const {send_iso_error, getNumberValue} = await import(`file://${process.cwd()}/s
 const {default:jwt} = await import('jsonwebtoken');
 /**
  * 
- * @param {string} iam 
+ * @param {string} query 
  * @returns {URLSearchParams}
  */
- const iam_decode = iam =>{
-    return new URLSearchParams(atob(iam))
+ const iam_decode = query =>{
+    return new URLSearchParams(atob(query))
 }
 /**
  * @param {Types.res} res
@@ -150,7 +150,7 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
  */
  const AuthenticateTokenCommon = (app_id, token_type, authorization, ip, system_admin, user_account_logon_user_account_id, res, next) => {
     if (authorization){
-        const token = authorization.slice(7);
+        const token = authorization.substring(authorization.lastIndexOf(' ')+1);
         switch (token_type){
             case 'APP_ACCESS':{
                 jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET, (/**@type{Types.error}*/err) => {
@@ -295,52 +295,39 @@ const AuthenticateAccessToken = (iam, authorization, ip, res, next)  => {
 /**
  * Middleware authenticate socket used for EventSource
  * @param {string} path
+ * @param {string} iam
+ * @param {string} ip
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateSocket = (path, res, next) =>{
-    //check inparameters
-    if (path.startsWith('/socket/socket/connection/connect'))
-        next();
-    else
-        not_authorized(res, 401, 'AuthenticateSocket, not SOCKET or not starting with correct path');
-};
-/**
- * Middleware authenticates data token socket
- * @param {number} app_id
- * @param {string} token
-
- */
- const AuthenticateDataTokenSocket = async (app_id, token) =>{
-    if (token){
-        token = token.slice(7);
-        jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET, (/**@type{Types.error}*/err) => {
-            if (err){
-                return false;
-            } else {
-                return true;
-            }
-        });    
+const AuthenticateSocket = (iam, path, ip, res, next) =>{
+    if (path.startsWith('/server/socket')){
+        //validate Bearer autorization
+        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, null, null, res, next);
     }
-    else{
-        return false;
-    } 
+    else
+        not_authorized(res, 401, 'AuthenticateSocket');
 };
 /**
  * Middleware authenticate IAM
  * @param {string} iam
  * @param {string} authorization
+ * @param {string} ip
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateIAM = (iam, authorization, res, next) =>{
-    //check inparameters
+ const AuthenticateIAM = (iam, authorization, ip, res, next) =>{
+    //check inparameters and Basic authorization
     if ((iam_decode(iam).get('service')??'').toUpperCase()=='IAM' && authorization.toUpperCase().startsWith('BASIC'))
-        if (getNumberValue(iam_decode(iam).get('app_id'))==getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID')))
-            next();
+        if (getNumberValue(iam_decode(iam).get('app_id'))==getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'))){
+            //validate Bearer authorization
+            AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, null, null, res, next);
+        }
         else
-            if (getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1)
-                next();
+            if (getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1){
+                //validate Bearer authorization
+                AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, null, null, res, next);
+            }
             else
                 not_authorized(res, 403, 'AuthenticateIAM, user login disabled');
     else
@@ -585,7 +572,6 @@ export{ iam_decode,
         AuthenticateDataToken, AuthenticateDataTokenRegistration,
         AuthenticateAccessToken, AuthenticateAccessTokenSuperAdmin, AuthenticateAccessTokenAdmin,
         AuthenticateSocket,
-        AuthenticateDataTokenSocket,
         AuthenticateIAM,
         AuthenticateRequest,
         AuthenticateApp,

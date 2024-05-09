@@ -131,7 +131,7 @@ const COMMON = {
     
     //REST API 
     //URI syntax implemented:
-    //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource]/[optional resource id]?URI query
+    //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
     app.route('/bff/app_data/v1*').all      (iam.AuthenticateDataToken, BFF_app_data);
     app.route('/bff/app_signup/v1*').post   (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
@@ -243,16 +243,12 @@ const COMMON = {
                         resolve(app.getApps(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
-                    case route(`/bff/app_signup/v1/db_api/user_account/signup`, 'POST'):{
-                        resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                    case route(`/bff/app_data/v1/server/socket/${resource_id_string}`, 'PATCH'):{
+                        resolve(socket.ConnectedUpdate(resource_id_get(), routesparameters.res.req.query.iam, app_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/socket/socket/connection/${resource_id_string}`, 'PATCH'):{
-                        resolve(socket.ConnectedUpdate(resource_id_get(), app_query));
-                        break;
-                    }
-                    case route(`/bff/app_data/v1/socket/socket/connection/check`, 'GET'):{
-                        resolve(socket.ConnectedCheck(app_query));
+                    case route(`/bff/app_data/v1/server/socket/${resource_id_string}`, 'GET'):{
+                        resolve(socket.ConnectedGet(resource_id_get(), app_query));
                         break;
                     }
                     case route(`/bff/app_data/v1/db_api/app_object`, 'GET'):
@@ -414,16 +410,16 @@ const COMMON = {
                         resolve(db_user_account_app_data_post.unlike(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/socket/socket/message`, 'POST'):{
+                    case route(`/bff/admin/v1/server/socket-message`, 'POST'):{
                         resolve(socket.SocketSendAdmin(routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/socket/socket/connection`, 'GET'):{
-                        resolve(socket.ConnectedListAdmin(routesparameters.app_id, app_query, routesparameters.res));
+                    case route(`/bff/admin/v1/server/socket-stat`, 'GET'):{
+                        resolve(socket.ConnectedCount(app_query));
                         break;
                     }
-                    case route(`/bff/admin/v1/socket/socket/connection/count`, 'GET'):{
-                        resolve(socket.ConnectedCount(app_query));
+                    case route(`/bff/admin/v1/server/socket`, 'GET'):{
+                        resolve(socket.ConnectedListAdmin(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
                     case route(`/bff/admin/v1/server/config/admin`, 'GET'):{
@@ -486,16 +482,16 @@ const COMMON = {
                         resolve(db_user_account.updateAdmin(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/socket/socket/message`, 'POST'):{
+                    case route(`/bff/systemadmin/v1/server/socket-message`, 'POST'):{
                         resolve(socket.SocketSendSystemAdmin(routesparameters.body));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/socket/socket/connection`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/server/socket`, 'GET'):{
                         resolve(socket.ConnectedListSystemadmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/socket/socket/connection/${resource_id_string}`, 'PATCH'):{
-                        resolve(socket.ConnectedUpdate(resource_id_get(), app_query));
+                    case route(`/bff/systemadmin/v1/server/socket/${resource_id_string}`, 'PATCH'):{
+                        resolve(socket.ConnectedUpdate(resource_id_get(), routesparameters.res.req.query.iam, app_query));
                         break;
                     }
                     case route(`/bff/systemadmin/v1/server/config/systemadmin`, 'PUT'):{
@@ -570,9 +566,13 @@ const COMMON = {
                         resolve(log.getFiles());
                         break;
                     }
-                    case route(`/bff/socket/v1/socket/socket/connection/connect`, 'GET'):{
+                    case route(`/bff/socket/v1/server/socket`, 'GET'):{
                         //EventSource uses GET method, should otherwise be POST
-                        resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.res));
+                        resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.res));
+                        break;
+                    }
+                    case route(`/bff/app_signup/v1/db_api/user_account/signup`, 'POST'):{
+                        resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route(`/bff/iam/v1/iam/systemadmin`, 'POST'):{
