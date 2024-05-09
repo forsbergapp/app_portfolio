@@ -438,11 +438,11 @@ const COMMON = {
                         resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/db_api/admin/demo`, 'POST'):{
+                    case route(`/bff/admin/v1/db_api/database-demo`, 'POST'):{
                         resolve(db_database.DemoInstall(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/db_api/admin/demo`, 'DELETE'):{
+                    case route(`/bff/admin/v1/db_api/database-demo`, 'DELETE'):{
                         resolve(db_database.DemoUninstall(routesparameters.app_id, app_query));
                         break;
                     }
@@ -526,47 +526,47 @@ const COMMON = {
                         resolve(info.Info());
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/db_api/systemadmin/dbinfo`, 'GET'):{
-                        resolve(db_database.Info(routesparameters.app_id));
-                        break;
-                    }
-                    case route(`/bff/systemadmin/v1/db_api/systemadmin/dbinfospace`, 'GET'):{
-                        resolve(db_database.InfoSpace(routesparameters.app_id));
-                        break;
-                    }
-                    case route(`/bff/systemadmin/v1/db_api/systemadmin/dbinfospacesum`, 'GET'):{
-                        resolve(db_database.InfoSpaceSum(routesparameters.app_id));
-                        break;
-                    }
-                    case route(`/bff/systemadmin/v1/db_api/systemadmin/install`, 'POST'):{
-                        resolve(db_database.Install(routesparameters.app_id, app_query));
-                        break;
-                    }
-                    case route(`/bff/systemadmin/v1/db_api/systemadmin/install`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/db_api/database-installed`, 'GET'):{
                         resolve(db_database.InstalledCheck(routesparameters.app_id));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/db_api/systemadmin/install`, 'DELETE'):{
+                    case route(`/bff/systemadmin/v1/db_api/database-space`, 'GET'):{
+                        resolve(db_database.InfoSpace(routesparameters.app_id));
+                        break;
+                    }
+                    case route(`/bff/systemadmin/v1/db_api/database-spacesum`, 'GET'):{
+                        resolve(db_database.InfoSpaceSum(routesparameters.app_id));
+                        break;
+                    }
+                    case route(`/bff/systemadmin/v1/db_api/database`, 'GET'):{
+                        resolve(db_database.Info(routesparameters.app_id));
+                        break;
+                    }
+                    case route(`/bff/systemadmin/v1/db_api/database`, 'POST'):{
+                        resolve(db_database.Install(routesparameters.app_id, app_query));
+                        break;
+                    }
+                    case route(`/bff/systemadmin/v1/db_api/database`, 'DELETE'):{
                         resolve(db_database.Uninstall(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/log/log/parameters`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/server/log-parameters`, 'GET'):{
                         resolve(log.getLogParameters());
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/log/log/logs`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/server/log`, 'GET'):{
                         resolve(log.getLogs(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/log/log/statuscode`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/server/statuscode`, 'GET'):{
                         resolve(log.getStatusCodes());
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/log/log/logs_stat`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/server/log-stat`, 'GET'):{
                         resolve(log.getLogStats(app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/log/log/files`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/server/log-files`, 'GET'):{
                         resolve(log.getFiles());
                         break;
                     }
