@@ -163,7 +163,6 @@
  * @property {(string|number|*)} query.app_user_id
  * @property {(string|number|*)} query.client_id
  * @property {(string|number|*)} query.user_account_id
- * @property {(string|number|*)} query.user_account_logon_user_account_id
  * @property {string} query.lang_code
  * @property {string} query.authorization                           - EventSource parameter
  * @property {string} query.latitude                                - Socket and geolocation parameter
@@ -174,9 +173,9 @@
  * @property {string} query.ps                                      - Report parameter
  * @property {boolean} query.hf                                     - Report parameter
  * @property {number|null} query.uid_view                           - Report parameter
- * @property {string|*} query.service
  * @property {string|*} query.parameters
- * @property {string} query.iam
+ * @property {string} query.iam                                     - encoded string
+ *                                                                  - content:authorization_bearer=[string]&user_id=[number]&system_admin=[string]&service=[string]&app_id=[number]
  * @property {number} query.PATCH_ID                                - app portfolio parameter
  * @property {number} query.data_app_id                             - app portfolio parameter
  * @property {string} query.object                                  - app portfolio parameter
