@@ -732,7 +732,7 @@ const toolbar_button = async (choice) => {
             {
                 settings.style.visibility = 'hidden';
                 common.ComponentRemove('common_dialogue_user_menu');
-                profile_top_app(1, null, profile_show_app);
+                profile_stat_app(1, null, profile_show_app);
                 break;
             }
     }
@@ -1183,12 +1183,12 @@ const profile_update_stat_app = async () => {
  * @param {function|null} function_user_click
  * @returns {Promise.<void>}
  */
- const profile_top_app = async (statchoice, app_rest_url, function_user_click) => {
-    await common.profile_top(statchoice, app_rest_url, function_user_click)
+ const profile_stat_app = async (statchoice, app_rest_url, function_user_click) => {
+    await common.profile_stat(statchoice, app_rest_url, function_user_click)
     .then(()=>{
-        common.ComponentRender('common_profile_top_row2', 
+        common.ComponentRender('common_profile_stat_row2', 
                                 {},
-                                '/component/profile_top.js');
+                                '/component/profile_stat.js');
     })
  }
 /**
@@ -1822,7 +1822,7 @@ const settings_update = setting_tab => {
  * @returns {void}
  */
 const profile_user_setting_stat = id => {
-    common.FFB('DB_API', `/user_account_app_data_post/profile/${id}`, null, 'GET', 'APP_DATA', null)
+    common.FFB('DB_API', `/user_account_app_data_post-profile/${id}`, null, 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         AppDocument.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
         AppDocument.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
@@ -1886,7 +1886,7 @@ const profile_show_user_setting = () => {
     AppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
 
     common.FFB( 'DB_API', 
-                `/user_account_app_data_post/profile/all/${AppDocument.querySelector('#common_profile_id').innerHTML}`, 
+                `/user_account_app_data_post-profile-all/${AppDocument.querySelector('#common_profile_id').innerHTML}`, 
                 `id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
                 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
@@ -1921,7 +1921,7 @@ const profile_show_user_setting = () => {
 const profile_user_setting_update_stat = () => {
     const profile_id = AppDocument.querySelector('#common_profile_id').innerHTML;
     common.FFB( 'DB_API', 
-                `/user_account_app_data_post/profile/all/${profile_id}`,
+                `/user_account_app_data_post-profile-all/${profile_id}`,
                 `id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
                 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
@@ -2261,12 +2261,12 @@ const app_event_click = event => {
                     profile_detail_app(7, true, profile_show_app);
                     break;
                 }
-                case 'profile_top_row2_1':{
-                    profile_top_app(4, '/user_account_app_data_post/profile/top', profile_show_app);
+                case 'profile_stat_row2_1':{
+                    profile_stat_app(4, '/user_account_app_data_post-profile-stat', profile_show_app);
                     break;
                 }
-                case 'profile_top_row2_2':{
-                    profile_top_app(5, '/user_account_app_data_post/profile/top', profile_show_app);
+                case 'profile_stat_row2_2':{
+                    profile_stat_app(5, '/user_account_app_data_post-profile-stat', profile_show_app);
                     break;
                 }
                 case 'profile_user_settings_day':
@@ -2373,16 +2373,16 @@ const app_event_click = event => {
                     user_function_app('LIKE');
                     break;
                 }
-                case 'common_profile_top_row1_1':{
-                    profile_top_app(1, null, profile_show_app);
+                case 'common_profile_stat_row1_1':{
+                    profile_stat_app(1, null, profile_show_app);
                     break;
                 }
-                case 'common_profile_top_row1_2':{
-                    profile_top_app(2, null, profile_show_app);
+                case 'common_profile_stat_row1_2':{
+                    profile_stat_app(2, null, profile_show_app);
                     break;
                 }
-                case 'common_profile_top_row1_3':{
-                    profile_top_app(3, null, profile_show_app);
+                case 'common_profile_stat_row1_3':{
+                    profile_stat_app(3, null, profile_show_app);
                     break;
                 }
                 case 'common_profile_home':{

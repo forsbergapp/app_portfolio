@@ -389,15 +389,8 @@ const fromBase64 = (str) => {
  * @returns {Promise.<void>}
  */
 const common_translate_ui = async lang_code => {
-    let path='';
-    if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
-        path = '/app_object/admin';
-    }
-    else{
-        path = '/app_object';
-    }
     //translate objects
-    const app_objects_json = await FFB('DB_API', path, `data_lang_code=${lang_code}&object_name=APP`, 'GET', 'APP_DATA', null);
+    const app_objects_json = await FFB('DB_API', '/app_object', `data_lang_code=${lang_code}&object_name=APP`, 'GET', 'APP_DATA', null);
     /**
      * @typedef {   'USERNAME'|'EMAIL'|'NEW_EMAIL'|'BIO'|'PASSWORD'|'PASSWORD_CONFIRM'|'PASSWORD_REMINDER'|'NEW_PASSWORD_CONFIRM'|'NEW_PASSWORD'|'CONFIRM_QUESTION'} translation_key
      */
@@ -429,10 +422,7 @@ const common_translate_ui = async lang_code => {
  * @returns {Promise<string>}
  */
 const get_locales_options = async () =>{
-
-    const path = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id)?'/locale/admin':'/locale';
-
-    const locales = await FFB('DB_API', path, `lang_code=${COMMON_GLOBAL.user_locale}`, 'GET', 'APP_DATA', null)
+    const locales = await FFB('DB_API', '/locale', `lang_code=${COMMON_GLOBAL.user_locale}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error});
     return locales.map((/**@type{*}*/row, /**@type{number}*/index)=>
@@ -1300,7 +1290,7 @@ const profile_follow_like = async (function_name) => {
  * @param {function|null} function_user_click
  * @returns {Promise.<void>}
  */
-const profile_top = async (statchoice, app_rest_url = null, function_user_click=null) => {
+const profile_stat = async (statchoice, app_rest_url = null, function_user_click=null) => {
     await ComponentRender('common_dialogue_profile', 
                     {   
                         tab:'TOP',
@@ -1329,18 +1319,18 @@ const profile_detail = (detailchoice, fetch_detail, click_function) => {
         case 6:
         case 7:{
             /*detailchoice 0, 6, 7: app specific */
-            path = '/user_account_app_data_post/profile/detail';
+            path = '/user_account_app_data_post-profile-detail';
         }
         case 1:
         case 2:
         case 3:
         case 4:{
             /*detailchoice 1,2,3, 4: user_account*/
-            path = '/user_account/profile/detail';
+            path = '/user_account-profile-detail';
         }
         case 5:{
             /* detailchoice 5, apps, returns same columns*/
-            path = '/user_account_app/apps';
+            path = '/user_account_app-apps';
         }
     }
     //DETAIL
@@ -1450,7 +1440,7 @@ const search_profile = click_function => {
 /**
  * Profile show
  * profile_show(null, null)     from dropdown menu in apps or choosing logged in users profile
- * profile_show(userid, null) 	from choosing profile in profile_top, profile_detail and search_profile
+ * profile_show(userid, null) 	from choosing profile in profile_stat, profile_detail and search_profile
  * profile_show(null, username) from init startup when user enters url
  * 
  * @param {number|null} user_account_id_other 
@@ -1498,7 +1488,7 @@ const profile_update_stat = async () => {
                         };
         //get updated stat for given user
         //to avoid update in stat set searched by same user
-        FFB('DB_API', `/user_account/profile/id/${profile_id.innerHTML}`, `id=${profile_id.innerHTML}`, 'POST', 'APP_DATA', json_data)
+        FFB('DB_API', `/user_account-profile-id/${profile_id.innerHTML}`, `id=${profile_id.innerHTML}`, 'POST', 'APP_DATA', json_data)
         .then(result=>{
             const user_stat = JSON.parse(result);
             AppDocument.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
@@ -1914,7 +1904,7 @@ const user_update = async () => {
                             bio:            bio,
                             private:        Number(AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
                         };
-            path = `/user_account/common/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/user_account-common/${COMMON_GLOBAL.user_account_id ?? ''}`;
         }
         AppDocument.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
         //update user using REST API
@@ -1957,7 +1947,7 @@ const user_signup = () => {
         
         AppDocument.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
     
-        FFB('DB_API', '/user_account/signup', null, 'POST', 'APP_SIGNUP', json_data)
+        FFB('DB_API', '/user_account-signup', null, 'POST', 'APP_SIGNUP', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
             const signup = JSON.parse(result);
@@ -2011,7 +2001,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                                 verification_type:  verification_type,
                                 ...get_uservariables()
                             };
-                FFB('DB_API', `/user_account/activate/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PUT', 'APP_DATA', json_data)
+                FFB('DB_API', `/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PUT', 'APP_DATA', json_data)
                 .then(result=>{
                     AppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     const user_activate = JSON.parse(result).items[0];
@@ -2110,7 +2100,7 @@ const user_delete = async (choice=null, function_delete_event ) => {
                 AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
                 const json_data = { password: password};
     
-                FFB('DB_API', `/user_account/common/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'DELETE', 'APP_ACCESS', json_data)
+                FFB('DB_API', `/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'DELETE', 'APP_ACCESS', json_data)
                 .then(()=>{
                     AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
                     resolve({deleted: 1});
@@ -2207,7 +2197,7 @@ const user_forgot = async () => {
                     email: AppDocument.querySelector('#common_user_start_forgot_email')
                     })==true){
         AppDocument.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
-        FFB('DB_API', '/user_account/forgot', null, 'POST', 'APP_DATA', json_data)
+        FFB('DB_API', '/user_account-forgot', null, 'POST', 'APP_DATA', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
             const forgot = JSON.parse(result);
@@ -2237,7 +2227,7 @@ const updatePassword = () => {
                      
                      })==true){
         AppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
-        FFB('DB_API', `/user_account/password/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data)
+        FFB('DB_API', `/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data)
         .then(()=>{
             AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
             dialogue_password_new_clear();
@@ -3474,9 +3464,9 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         //dialogue profile and profile top
-                        case 'common_profile_top_list':
+                        case 'common_profile_stat_list':
                         case 'common_profile_detail_list':{
-                            if (event.target.classList.contains('common_profile_top_list_username')||
+                            if (event.target.classList.contains('common_profile_stat_list_username')||
                                 event.target.classList.contains('common_profile_detail_list_username')){
                                 //execute function from inparameter or use default when not specified
                                 if (AppDocument.querySelector(`#${element_id(event.target)}`)['data-function'])
@@ -4208,7 +4198,7 @@ export{/* GLOBALS*/
        show_common_dialogue, show_message,
        lov_close, lov_show,
        /* PROFILE */
-       profile_follow_like, profile_top, profile_detail, profile_show,
+       profile_follow_like, profile_stat, profile_detail, profile_show,
        profile_close, profile_update_stat, list_key_event,
        /* USER  */
        user_login, user_logoff, user_update, user_signup, user_verify_check_input, user_delete, user_function,

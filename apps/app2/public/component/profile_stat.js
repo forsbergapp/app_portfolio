@@ -1,9 +1,9 @@
 /**@type{{querySelector:function}} */
 const AppDocument = document;
-const template =`   <div id='profile_top_app2'>
-                    <div id='profile_top_row2'>
-                        <div id='profile_top_row2_1' class='common_link common_icon'></div>
-                        <div id='profile_top_row2_2' class='common_link common_icon'></div>
+const template =`   <div id='profile_stat_app2'>
+                    <div id='profile_stat_row2'>
+                        <div id='profile_stat_row2_1' class='common_link common_icon'></div>
+                        <div id='profile_stat_row2_2' class='common_link common_icon'></div>
                     </div>
                     </div>`;
 /**
