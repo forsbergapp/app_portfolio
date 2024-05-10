@@ -2625,7 +2625,7 @@ const show_installation = () =>{
                 </div>
             </div>`;
         AppDocument.querySelector('#install_db_icon').classList.add('css_spinner');
-        common.FFB('DB_API', '/database-installed', null, 'GET', 'SYSTEMADMIN', null)
+        common.FFB('DB_API', '/database-installation', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             AppDocument.querySelector('#install_db_icon').classList.remove('css_spinner');
             AppDocument.querySelector('#install_db_icon').classList.remove('installed');
