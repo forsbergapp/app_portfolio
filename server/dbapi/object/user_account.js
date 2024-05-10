@@ -586,7 +586,7 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
 /**
  * 
  * @param {number} app_id 
- * @param {number} resource_id
+ * @param {number|string|null} resource_id
  * @param {string} ip 
  * @param {string} user_agent 
  * @param {*} query 
@@ -596,6 +596,29 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
  */
 const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
+        /**
+         * Clear private data if private
+         * @param {Types.db_result_user_account_getProfileUser[]} result_getProfileUser 
+         * @returns {Types.db_result_user_account_getProfileUser[]}
+         */
+        const clear_private = result_getProfileUser =>
+            result_getProfileUser.map(row=>{
+                if ((row.private==1 && row.friends==null) || result_getProfileUser.length>1){
+                    //private and not friends or anonymous visit, remove stats
+                    row.count_following = null;
+                    row.count_followed = null;
+                    row.count_likes = null;
+                    row.count_liked = null;
+                }
+                else
+                    if (row.private==1 && row.friends==1){
+                        //private and friends, remove private
+                        row.private = null;
+                    }
+                return row;
+            });
+        if (resource_id=='')
+            resource_id = null;
         //resource id can be number, string or empty if searching
         service.getProfileUser(app_id, resource_id, query.get('search'), getNumberValue(query.get('id')))
         .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
@@ -611,7 +634,7 @@ const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
                                             client_latitude:    query.get('client_latitude')};
                     insertProfileSearch(app_id, data_insert)
                     .then(()=>{
-                        resolve(result_getProfileUser);
+                        resolve(clear_private(result_getProfileUser));
                     })
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 });
@@ -628,20 +651,7 @@ const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
                                             client_latitude:        query.get('client_latitude')};
                         insertUserAccountView(app_id, data_body)
                         .then(()=>{
-                            if (result_getProfileUser[0].private==1 && result_getProfileUser[0].friends==null){
-                                //private and not friends or anonymous visit, remove stats
-                                result_getProfileUser[0].count_following = null;
-                                result_getProfileUser[0].count_followed = null;
-                                result_getProfileUser[0].count_likes = null;
-                                result_getProfileUser[0].count_liked = null;
-                            }
-                            else
-                                if (result_getProfileUser[0].private==1 && result_getProfileUser[0].friends==1){
-                                    //private and friends, remove private
-                                    result_getProfileUser[0].private = null;
-                                }
-                            //send without {} so the variablename is not sent
-                            resolve(result_getProfileUser[0]);
+                            resolve(clear_private(result_getProfileUser)[0]);
                         })
                         .catch((/**@type{Types.error}*/error)=>reject(error));
                     });
