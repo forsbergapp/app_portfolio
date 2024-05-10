@@ -287,16 +287,8 @@ const COMMON = {
                         resolve(db_user_account.getProfileTop(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account-profile-id/${resource_id_string}`, 'POST'):{
-                        resolve(db_user_account.getProfile(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route(`/bff/app_data/v1/db_api/user_account-profile-username`, 'POST'):{
-                        resolve(db_user_account.getProfile(routesparameters.app_id, null, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route(`/bff/app_data/v1/db_api/user_account-profile-username-searchd`, 'POST'):{
-                        resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body));
+                    case route(`/bff/app_data/v1/db_api/user_account-profile/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account.getProfile(routesparameters.app_id, URI_path.substring(URI_path.lastIndexOf('/') + 1), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route(`/bff/app_data/v1/db_api/user_account_app_data_post/${resource_id_string}`, 'GET'):{
@@ -340,10 +332,6 @@ const COMMON = {
                     case route(`/bff/admin/v1/db_api/user_account-profile-detail/${resource_id_string}`, 'GET'):
                     case route(`/bff/app_access/v1/db_api/user_account-profile-detail/${resource_id_string}`, 'GET'):{
                         resolve(db_user_account.getProfileDetail(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
-                        break;
-                    }
-                    case route(`/bff/app_access/v1/db_api/user_account-profile-username-searcha`, 'POST'):{
-                        resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body));
                         break;
                     }
                     case route(`/bff/admin/v1/db_api/user_account_follow/${resource_id_string}`, 'POST'):

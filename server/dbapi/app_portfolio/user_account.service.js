@@ -478,12 +478,12 @@ const getUserByUserId = async (app_id, id) => {
 /**
  * 
  * @param {number} app_id 
- * @param {number} id 
- * @param {string|null} username 
+ * @param {number|string} resource_id 
+ * @param {string|null} search
  * @param {number} id_current_user
  * @returns {Promise.<Types.db_result_user_account_getProfileUser[]>}
  */
-const getProfileUser = async (app_id, id, username, id_current_user) => {
+const getProfileUser = async (app_id, resource_id, search, id_current_user) => {
 	const sql = `SELECT	u.id "id",
 						u.bio "bio",
 						u.private "private",
@@ -535,9 +535,13 @@ const getProfileUser = async (app_id, id, username, id_current_user) => {
 							WHERE u_liked_current_user.user_account_id_like = u.id
 							AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
 				 FROM ${db_schema()}.user_account u
-				WHERE (u.id = :id 
+				WHERE ((u.id = :resource_id OR :resource_id IS NULL)
 					   OR 
-					   u.username = :username)
+					   (u.username = :resource_id OR :resource_id IS NULL)
+					   OR
+					   u.username LIKE :search
+					   OR
+					   u.provider_first_name LIKE :search)
 				  AND u.active = 1
 				  AND EXISTS(SELECT NULL
 							   FROM ${db_schema()}.user_account_app uap
@@ -545,43 +549,10 @@ const getProfileUser = async (app_id, id, username, id_current_user) => {
 								AND uap.app_id = :app_id)`;
 	const parameters ={
 						user_accound_id_current_user: id_current_user,
-						id: id,
-						username: username,
+						resource_id: resource_id,
+						search: search,
 						app_id: app_id
 					}; 
-	return await db_execute(app_id, sql, parameters, null);
-};
-/**
- * 
- * @param {number} app_id 
- * @param {string} username
- * @returns {Promise.<Types.db_result_user_account_searchProfileUser[]>}
- */
-const searchProfileUser = async (app_id, username) => {
-	let sql;
-	sql= `SELECT	u.id "id",
-					u.username "username",
-					u.avatar "avatar",
-					u.identity_provider_id "identity_provider_id",
-					u.provider_id "provider_id",
-					u.provider_first_name "provider_first_name",
-					u.provider_image "provider_image",
-					u.provider_image_url "provider_image_url"
-			FROM ${db_schema()}.user_account u
-		   WHERE (u.username LIKE :username
-					OR
-					u.provider_first_name LIKE :provider_first_name)
-			 AND u.active = 1 
-			 AND EXISTS(SELECT NULL
-						  FROM ${db_schema()}.user_account_app uap
-						 WHERE uap.user_account_id = u.id
-						   AND uap.app_id = :app_id)`;
-	sql = db_limit_rows(sql, 1);
-	const parameters = {
-						username: '%' + username + '%',
-						provider_first_name: '%' + username + '%',
-						app_id: app_id
-					};
 	return await db_execute(app_id, sql, parameters, null);
 };
 /**
@@ -1024,6 +995,6 @@ export{	verification_code,
 		/* database functions */
 		getUsersAdmin, getUserAppRoleAdmin, getStatCountAdmin, updateUserSuperAdmin, create,
 		activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
-		searchProfileUser, getProfileDetail, getProfileTop, checkPassword, updatePassword,
+		getProfileDetail, getProfileTop, checkPassword, updatePassword,
 		updateUserLocal, updateUserCommon, deleteUser, userLogin, updateSigninProvider, providerSignIn,
 		getEmailUser, getUserRoleAdmin, getDemousers};
