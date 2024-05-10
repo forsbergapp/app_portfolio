@@ -727,7 +727,7 @@ const toolbar_button = async (choice) => {
                 profile_show_app(null,null);
                 break;
             }
-        //profile top
+        //profile stat
         case 7:
             {
                 settings.style.visibility = 'hidden';

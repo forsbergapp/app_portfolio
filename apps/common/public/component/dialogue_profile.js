@@ -202,32 +202,20 @@ const component = async props => {
     let spinner = `class='css_spinner'`;
     if (props.tab=='INFO'){
         let path;
-        let query;
-        let user_account_id_search;            
-        if (props.info_user_account_id_other !== null) {
-            user_account_id_search = props.info_user_account_id_other;
-            path = `/user_account-profile-id/${user_account_id_search ?? ''}`;
-            query = `id=${props.info_user_account_id ?? ''}`;
-        } 
+        if (props.info_user_account_id_other !== null)
+            path = `/user_account-profile/${props.info_user_account_id_other ?? ''}`;
         else
-            if (props.info_username !== null) {
-                user_account_id_search = '';
-                path = '/user_account-profile-username';
-                query = `search=${props.info_username}&id=${props.info_user_account_id ?? ''}`;
-            } 
-            else {
-                user_account_id_search = props.info_user_account_id;
-                path = `/user_account-profile-id/${user_account_id_search ?? ''}`;
-                query = `id=${props.info_user_account_id ?? ''}`;
-            }
-        const json_data ={  
-            client_latitude:    props.info_client_latitude,
-            client_longitude:   props.info_client_longitude
-        };
-        
-        profile = await props.function_FFB('DB_API', path, query, 'POST', 'APP_DATA', json_data)
-                                        .then((/**@type{string}*/result)=>JSON.parse(result))
-                                        .catch((/**@type{Error}*/error)=>{throw error});
+            if (props.info_username !== null)
+                path = `/user_account-profile/${props.info_username}`;
+            else
+                path = `/user_account-profile/${props.info_user_account_id ?? ''}`;
+        profile = await props.function_FFB(
+                            'DB_API', 
+                            path, 
+                            `id=${props.info_user_account_id ?? ''}&client_latitude=${props.info_client_latitude}&client_longitude=${props.info_client_longitude}`, 
+                            'GET', 'APP_DATA', null)
+                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .catch((/**@type{Error}*/error)=>{throw error});
     }
         
     /**

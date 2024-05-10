@@ -362,7 +362,7 @@ const getInfo = async (app_id, info) => {
         };
         if (param!=null && ConfigGetApp(app_id, app_id, 'SHOWPARAM') == 1){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getProfileUser}) => {
-                getProfileUser(app_id, null, param, null)
+                getProfileUser(app_id, param, null, null)
                 .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result)=>{
                     if (result[0])
                         main(app_id);
