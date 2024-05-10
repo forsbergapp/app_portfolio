@@ -327,16 +327,22 @@ const app_theme_update = (toggle_theme=false) => {
  */
 const profile_show_app = async (user_account_id_other, username) =>{
     await common.profile_show(user_account_id_other, username)
-    .then(()=>{
-        common.ComponentRender('common_profile_main_stat_row2', 
-                                {},
-                                '/component/profile_info.js');
-    })
-    .then(()=>{
-        common.ComponentRender(`profile_info_apps`, 
-                                {},
-                                '/common/component/profile_info_apps.js')
-                                ;
+    .then((/**@type{{profile_id:number, private:number}}*/result)=>{
+        if (result.profile_id != null){
+            if (result.private==1 && (common.COMMON_GLOBAL.user_account_id == result.profile_id)==false) {
+                //private
+                null;
+            }
+            else
+                common.ComponentRender('common_profile_main_stat_row2', 
+                                        {},
+                                        '/component/profile_info.js')
+                .then(()=>{
+                    common.ComponentRender(`profile_info_apps`, 
+                                            {},
+                                            '/common/component/profile_info_apps.js');
+                });
+        }
     });
 }
 /**
