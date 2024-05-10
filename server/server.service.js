@@ -508,7 +508,7 @@ const COMMON = {
                         resolve(info.Info());
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/db_api/database-installed`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/db_api/database-installation`, 'GET'):{
                         resolve(db_database.InstalledCheck(routesparameters.app_id));
                         break;
                     }
