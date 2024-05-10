@@ -244,7 +244,7 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/app_data/v1/server/socket/${resource_id_string}`, 'PATCH'):{
-                        resolve(socket.ConnectedUpdate(resource_id_get(), routesparameters.res.req.query.iam, app_query));
+                        resolve(socket.ConnectedUpdate(resource_id_get(), routesparameters.res.req.query.iam, routesparameters.body));
                         break;
                     }
                     case route(`/bff/app_data/v1/server/socket/${resource_id_string}`, 'GET'):{
@@ -491,7 +491,7 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/systemadmin/v1/server/socket/${resource_id_string}`, 'PATCH'):{
-                        resolve(socket.ConnectedUpdate(resource_id_get(), routesparameters.res.req.query.iam, app_query));
+                        resolve(socket.ConnectedUpdate(resource_id_get(), routesparameters.res.req.query.iam, routesparameters.body));
                         break;
                     }
                     case route(`/bff/systemadmin/v1/server/config/systemadmin`, 'PUT'):{
