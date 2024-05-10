@@ -76,10 +76,10 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
  * @param {*} query
  * @param {Types.res} res
  */
-const getProfileTopPost = (app_id, query, res) =>{
+const getProfileStatPost = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileTopPost(app_id, getNumberValue(query.get('statchoice')))
-        .then((/**@type{Types.db_result_user_account_app_data_post_getProfileTopPost[]}*/result)=>{
+        service.getProfileStatPost(app_id, getNumberValue(query.get('statchoice')))
+        .then((/**@type{Types.db_result_user_account_app_data_post_getProfileStatPost[]}*/result)=>{
             if (result)
                 resolve(result); 
             else
@@ -220,6 +220,6 @@ const like = (app_id, resource_id, data) => user_account_app_data_post_like_serv
 const unlike = (app_id, resource_id, data) => user_account_app_data_post_like_service.unlike(app_id, resource_id, getNumberValue(data.user_account_app_data_post_id))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
 
-export{ getUserPostsByUserId, getProfileUserPost, getProfileUserPosts, getProfileTopPost,
+export{ getUserPostsByUserId, getProfileUserPost, getProfileUserPosts, getProfileStatPost,
         /*ACCESS */
         getProfileUserPostDetail, createUserPost, updateUserPost, deleteUserPost, like, unlike};

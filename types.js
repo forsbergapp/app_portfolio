@@ -302,20 +302,6 @@
  * @property {string} html
  */
 /**
- * Apps - App config
- *
- * @typedef {object} app_config                  - app configuration
- * @property {string} locale                     - locale
- * @property {boolean} map                       - return map styles and map header, true/false
- * @property {string} custom_tag_profile_search  - [custom tag]/null, optional custom app placement of component
- * @property {string} custom_tag_user_account    - [custom tag]/null, optional custom app placement of component
- * @property {string} custom_tag_profile_top     - [custom tag]/null, optional custom app placement of component
- * @property {boolean} app_themes                - render app themes, true/false
- * @property {boolean} render_locales            - render locales, true/false
- * @property {boolean} render_settings           - render settings, true/false
- * @property {boolean} render_provider_buttons   - render provider buttons, true/false
- */
-/**
  * @typedef {{  USERNAME:string,
  *              EMAIL:string,
  *              NEW_EMAIL:string,
@@ -1336,7 +1322,7 @@
  *              provider_image:string|null,
  *              provider_image_url:string|null,
  *              username:string,
- *              provider_first_name:string|null}} db_result_user_account_getProfileTop
+ *              provider_first_name:string|null}} db_result_user_account_getProfileStat
  * @typedef {{  password:string}} db_result_user_account_checkPassword
  * @typedef {{  password_new:string|null,
  *              auth:string|null}} db_parameter_user_account_updatePassword
@@ -1463,7 +1449,7 @@
  *              provider_image_url:string,
  *              username:string,
  *              provider_first_name:string,
- *              count:number}} db_result_user_account_app_data_post_getProfileTopPost
+ *              count:number}} db_result_user_account_app_data_post_getProfileStatPost
  * @typedef {{  description:string,
  *              json_data:object,
  *              user_account_id:number}} db_parameter_user_account_app_data_post_updateUserPost

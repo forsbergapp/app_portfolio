@@ -643,9 +643,9 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
  * 
  * @param {number} app_id 
  * @param {number} statchoice 
- * @returns {Promise.<Types.db_result_user_account_getProfileTop[]>}
+ * @returns {Promise.<Types.db_result_user_account_getProfileStat[]>}
  */
-const getProfileTop = async (app_id, statchoice) => {
+const getProfileStat = async (app_id, statchoice) => {
 	let sql;
 	sql = `SELECT	top "top", 
 					id "id", 
@@ -995,6 +995,6 @@ export{	verification_code,
 		/* database functions */
 		getUsersAdmin, getUserAppRoleAdmin, getStatCountAdmin, updateUserSuperAdmin, create,
 		activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
-		getProfileDetail, getProfileTop, checkPassword, updatePassword,
+		getProfileDetail, getProfileStat, checkPassword, updatePassword,
 		updateUserLocal, updateUserCommon, deleteUser, userLogin, updateSigninProvider, providerSignIn,
 		getEmailUser, getUserRoleAdmin, getDemousers};

@@ -207,9 +207,9 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
  * 
  * @param {number} app_id 
  * @param {number} statchoice 
- * @returns {Promise.<Types.db_result_user_account_app_data_post_getProfileTopPost[]>}
+ * @returns {Promise.<Types.db_result_user_account_app_data_post_getProfileStatPost[]>}
  */
-const getProfileTopPost = async (app_id, statchoice) => {
+const getProfileStatPost = async (app_id, statchoice) => {
 		let sql;
 		sql = `SELECT top "top", 
 					  id "id", 
@@ -308,4 +308,4 @@ const deleteUserPost = async (app_id, id) => {
 		return await db_execute(app_id, sql, parameters, null);
 	};
 export{	createUserPost, getUserPost, getUserPostsByUserId, getProfileUserPost, getProfileUserPosts, 
-		getProfileUserPostDetail, getProfileTopPost, updateUserPost, deleteUserPost};
+		getProfileUserPostDetail, getProfileStatPost, updateUserPost, deleteUserPost};
