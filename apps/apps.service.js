@@ -219,7 +219,7 @@ const get_module_with_initBFF = async (app_info) => {
                 app_service: app_service_parameters,
                 app: app_parameters
             });
-            const encoded = Buffer.from(json_parameters, 'binary').toString('base64')
+            const encoded = Buffer.from(json_parameters).toString('base64');
             render_variables.push(['ITEM_COMMON_PARAMETERS',`'${encoded}'`]);
             return render_app_with_data(module, render_variables);
         }

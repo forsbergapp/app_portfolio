@@ -10,6 +10,9 @@
 
  /**
  * @typedef {object} AppEvent
+ * @property {string} type
+ * @property {object} clipboardData
+ * @property {function} clipboardData.getData
  * @property {string} code
  * @property {function} preventDefault
  * @property {string} key
@@ -3764,11 +3767,18 @@ const common_event = async (event_type,event) =>{
  * @param {AppEvent} event 
  */
  const disable_copy_paste_cut = event => {
-    if (disable_textediting())
+    if (disable_textediting()){
         if(event.target.nodeName !='SELECT'){
             event.preventDefault();
             event.target.focus();
         }
+    }
+    else{
+        if (event.type=='paste'){
+            event.preventDefault();
+            event.target.innerText = event.clipboardData.getData('Text');
+        }
+    }
 };
 /**
  * Disable common input textediting
@@ -4155,7 +4165,7 @@ const init_common = async (parameters) => {
      * @type {{ app:{}[],
      *          app_service:{system_admin_only:number, first_time:number}}}
      */
-    const decoded_parameters = JSON.parse(window.atob(parameters));
+    const decoded_parameters = JSON.parse(fromBase64(parameters));
     setUserAgentAttibutes();
     custom_framework();
     await ComponentRender('common_app', 

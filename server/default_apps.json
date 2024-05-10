@@ -41,7 +41,6 @@
         {"EMAIL": ""},
         {"LINK_TITLE": ""},
         {"LINK_URL": ""},
-        {"TEXT_DEFAULT_REPORTTITLE1": ""},
         {"IMAGE_FILE_ALLOWED_TYPE1": ""},
         {"INFO_LINK_POLICY_NAME": "Privacy Policy"},
         {"INFO_LINK_POLICY_URL": "/info/privacy_policy"},
