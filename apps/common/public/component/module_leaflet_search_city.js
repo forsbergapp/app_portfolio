@@ -48,7 +48,7 @@ const component = async props => {
     /**
      * 
      * @param {{
-     *          records:record_type[]} props 
+     *          records:record_type[]}} props 
      * @returns {string}
      */
     const render_template = props =>{

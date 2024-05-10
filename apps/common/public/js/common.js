@@ -2768,7 +2768,7 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
     //encode query parameters
     const encodedparameters = query?toBase64(query):'';
     //add and encode IAM parameters
-    const iam =  toBase64(  `authorization_bearer=${authorization_bearer}&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
+    const iam =  toBase64(  `authorization_bearer=${authorization_bearer}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
                             `&service=${service}&app_id=${COMMON_GLOBAL.app_id??''}`);
 
     let url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}/${service.toLowerCase()}${path}?parameters=${encodedparameters}&iam=${iam}`;
