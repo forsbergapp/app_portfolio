@@ -200,7 +200,7 @@ const user_settings_empty = {   id:0,
  *          prayer_default_show_midnight:boolean,
  *          prayer_default_show_fast_start_end:number,
  *          timetable_type:number,
- *          places:place_type[],
+ *          places:place_type[]|null,
  *          user_settings:json_data_user_setting[],
  *          SettingsTimesIntervalId:number|null
  *          }}
@@ -273,7 +273,7 @@ const APP_GLOBAL = {
 
     //session variables
     timetable_type:0,
-    places:[{id:null, app_id:null, app_setting_type_name:'', value:'', data2:'', data3:'', data4:'', data5:'', text:''}],
+    places:null,
     user_settings:[user_settings_empty],
     SettingsTimesIntervalId:null
 };
@@ -310,7 +310,7 @@ const printTimetable = async () => {
  */
 const getReportSettings = () => {
     const setting_global = APP_GLOBAL.user_settings[AppDocument.querySelector('#setting_select_user_setting').selectedIndex];
-    const place = APP_GLOBAL.places.filter(place=>place.id==setting_global.gps_popular_place_id)[0];
+    const place = APP_GLOBAL.places?APP_GLOBAL.places.filter(place=>place.id==setting_global.gps_popular_place_id)[0]:null;
     return {    locale              	: setting_global.regional_language_locale,
                 timezone            	: setting_global.regional_timezone,
                 number_system       	: setting_global.regional_number_system,
@@ -1648,7 +1648,8 @@ const set_default_settings = async () => {
         regional_language_locale:           common.COMMON_GLOBAL.user_locale,
         regional_timezone:                  (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?
                                                 getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude):
-                                                    APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data4,
+                                                    (APP_GLOBAL.places?APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data4:
+                                                        Intl.DateTimeFormat().resolvedOptions().timeZone),
         regional_number_system:             Intl.NumberFormat().resolvedOptions().numberingSystem,
         regional_layout_direction:          APP_GLOBAL.regional_default_direction,
         regional_second_language_locale:    APP_GLOBAL.regional_default_locale_second,
@@ -1659,9 +1660,9 @@ const set_default_settings = async () => {
         gps_popular_place_id:               (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?null:
                                                 APP_GLOBAL.gps_default_place_id,
         gps_lat_text:                       (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?fixFloat(common.COMMON_GLOBAL.client_latitude):
-                                                fixFloat(APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data2),
+                                                (APP_GLOBAL.places?fixFloat(APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data2):0),
         gps_long_text:                      (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?fixFloat(common.COMMON_GLOBAL.client_longitude):
-                                                fixFloat(APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data3),
+                                                (APP_GLOBAL.places?fixFloat(APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data3):0),
         design_theme_day_id:                APP_GLOBAL.design_default_theme_day,
         design_theme_month_id:              APP_GLOBAL.design_default_theme_month,
         design_theme_year_id:               APP_GLOBAL.design_default_theme_year,
@@ -2820,7 +2821,7 @@ const settings_load = async (tab_selected) => {
         let place_found = false;
         let i = 0;
         APP_GLOBAL.places = app_settings.filter((/**@type{*}*/setting)=>setting.app_id==app_id && setting.app_setting_type_name=='PLACE');
-        for (const app_setting of APP_GLOBAL.places){
+        for (const app_setting of APP_GLOBAL.places ?? []){
             if (place_found==false){
                 place_found = true;
                 select_places  =`<option value="" id="" latitude="0" longitude="0" timezone="">...</option>`;
