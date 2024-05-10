@@ -11,15 +11,15 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
 /**
  * @param {number} resource_id
  * @param {string} iam
- * @param {*} query 
+ * @param {*} data 
  * @returns 
  */
-const ConnectedUpdate = (resource_id, iam, query) => service.ConnectedUpdate( resource_id, 
-                                                            getNumberValue(iam_decode(iam).get('user_id')), 
-                                                            query.get('system_admin'), 
-                                                            getNumberValue(query.get('identity_provider_id')), 
-                                                            query.get('latitude'), 
-                                                            query.get('longitude'));
+const ConnectedUpdate = (resource_id, iam, data) => service.ConnectedUpdate(resource_id, 
+                                                                            getNumberValue(iam_decode(iam).get('user_id')), 
+                                                                            data.system_admin, 
+                                                                            getNumberValue(data.identity_provider_id), 
+                                                                            data.latitude, 
+                                                                            data.longitude);
 /**
  * 
  * @param {number} resource_id 

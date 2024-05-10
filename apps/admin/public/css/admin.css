@@ -300,6 +300,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	margin-bottom:5px;
 	box-sizing:unset !important;
 	inset-inline-start: calc(50% - 40px);
+	height: 40px !important;
 }
 
 /*MENU 1 DASHBOARD*/
