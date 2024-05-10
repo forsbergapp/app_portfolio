@@ -284,7 +284,7 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/app_data/v1/db_api/user_account-profile-stat`, 'GET'):{
-                        resolve(db_user_account.getProfileTop(routesparameters.app_id, app_query, routesparameters.res));
+                        resolve(db_user_account.getProfileStat(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
                     case route(`/bff/app_data/v1/db_api/user_account-profile/${resource_id_string}`, 'GET'):{
@@ -304,7 +304,7 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/app_data/v1/db_api/user_account_app_data_post-profile-stat`, 'GET'):{
-                        resolve(db_user_account_app_data_post.getProfileTopPost(routesparameters.app_id, app_query, routesparameters.res));
+                        resolve(db_user_account_app_data_post.getProfileStatPost(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
                     case route(`/bff/app_access/v1/db_api/user_account-password/${resource_id_string}`, 'PATCH'):{
