@@ -321,7 +321,7 @@ const COMMON = {
                         resolve(db_user_account.getUserByUserId(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/db_api/user_account/common/${resource_id_string}`, 'PATCH'):{
+                    case route(`/bff/app_access/v1/db_api/user_account-common/${resource_id_string}`, 'PATCH'):{
                         resolve(db_user_account.updateUserCommon(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
