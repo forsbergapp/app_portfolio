@@ -251,8 +251,7 @@ const COMMON = {
                         resolve(socket.ConnectedGet(resource_id_get(), app_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/app_object`, 'GET'):
-                    case route(`/bff/app_data/v1/db_api/app_object/admin`, 'GET'):{
+                    case route(`/bff/app_data/v1/db_api/app_object`, 'GET'):{
                         resolve(db_app_object.getObjects(routesparameters.app_id, app_query));
                         break;
                     }
@@ -264,8 +263,7 @@ const COMMON = {
                         resolve(db_identity_provider.getIdentityProviders(routesparameters.app_id));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/locale`, 'GET'):
-                    case route(`/bff/app_data/v1/db_api/locale/admin`, 'GET'):{
+                    case route(`/bff/app_data/v1/db_api/locale`, 'GET'):{
                         resolve(db_locale.getLocales(routesparameters.app_id, app_query));
                         break;
                     }
@@ -277,27 +275,27 @@ const COMMON = {
                         resolve(db_app_setting.getSettingDisplayData(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account/activate/${resource_id_string}`, 'PUT'):{
+                    case route(`/bff/app_data/v1/db_api/user_account-activate/${resource_id_string}`, 'PUT'):{
                         resolve(db_user_account.activate(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account/forgot`, 'POST'):{
+                    case route(`/bff/app_data/v1/db_api/user_account-forgot`, 'POST'):{
                         resolve(db_user_account.forgot(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, routesparameters.body));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account/profile/top`, 'GET'):{
+                    case route(`/bff/app_data/v1/db_api/user_account-profile-stat`, 'GET'):{
                         resolve(db_user_account.getProfileTop(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account/profile/id/${resource_id_string}`, 'POST'):{
+                    case route(`/bff/app_data/v1/db_api/user_account-profile-id/${resource_id_string}`, 'POST'):{
                         resolve(db_user_account.getProfile(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account/profile/username`, 'POST'):{
+                    case route(`/bff/app_data/v1/db_api/user_account-profile-username`, 'POST'):{
                         resolve(db_user_account.getProfile(routesparameters.app_id, null, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account/profile/username/searchd`, 'POST'):{
+                    case route(`/bff/app_data/v1/db_api/user_account-profile-username-searchd`, 'POST'):{
                         resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body));
                         break;
                     }
@@ -305,19 +303,19 @@ const COMMON = {
                         resolve(db_user_account_app_data_post.getUserPostsByUserId(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account_app_data_post/profile/${resource_id_string}`, 'GET'):{
+                    case route(`/bff/app_data/v1/db_api/user_account_app_data_post-profile/${resource_id_string}`, 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileUserPost(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account_app_data_post/profile/all/${resource_id_string}`, 'GET'):{
+                    case route(`/bff/app_data/v1/db_api/user_account_app_data_post-profile-all/${resource_id_string}`, 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileUserPosts(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account_app_data_post/profile/top`, 'GET'):{
+                    case route(`/bff/app_data/v1/db_api/user_account_app_data_post-profile-stat`, 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileTopPost(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/db_api/user_account/password/${resource_id_string}`, 'PATCH'):{
+                    case route(`/bff/app_access/v1/db_api/user_account-password/${resource_id_string}`, 'PATCH'):{
                         resolve(db_user_account.updatePassword(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
@@ -335,16 +333,16 @@ const COMMON = {
                         resolve(db_user_account.updateUserCommon(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/db_api/user_account/common/${resource_id_string}`, 'DELETE'):{
+                    case route(`/bff/app_access/v1/db_api/user_account/${resource_id_string}`, 'DELETE'):{
                         resolve(db_user_account.deleteUser(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/admin/v1/db_api/user_account/profile/detail/${resource_id_string}`, 'GET'):
-                    case route(`/bff/app_access/v1/db_api/user_account/profile/detail/${resource_id_string}`, 'GET'):{
+                    case route(`/bff/admin/v1/db_api/user_account-profile-detail/${resource_id_string}`, 'GET'):
+                    case route(`/bff/app_access/v1/db_api/user_account-profile-detail/${resource_id_string}`, 'GET'):{
                         resolve(db_user_account.getProfileDetail(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/db_api/user_account/profile/username/searcha`, 'POST'):{
+                    case route(`/bff/app_access/v1/db_api/user_account-profile-username-searcha`, 'POST'):{
                         resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body));
                         break;
                     }
@@ -373,7 +371,7 @@ const COMMON = {
                         resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
-                    case route(`/bff/app_access/v1/db_api/user_account_app/apps/${resource_id_string}`, 'GET'):{
+                    case route(`/bff/app_access/v1/db_api/user_account_app-apps/${resource_id_string}`, 'GET'):{
                         resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, resource_id_get()));
                         break;
                     }
@@ -386,7 +384,7 @@ const COMMON = {
                         resolve(db_user_account_app.deleteUserAccountApp(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
-                    case route(`/bff/app_access/v1/db_api/user_account_app_data_post/profile/detail/${resource_id_string}`, 'GET'):{
+                    case route(`/bff/app_access/v1/db_api/user_account_app_data_post-profile-detail/${resource_id_string}`, 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
@@ -458,7 +456,7 @@ const COMMON = {
                         resolve(db_app_log.getLogsAdmin(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/admin/v1/db_api/admin/app_log/stat/uniquevisitor`, 'GET'):{
+                    case route(`/bff/admin/v1/db_api/admin/app_log-stat`, 'GET'):{
                         resolve(db_app_log.getStatUniqueVisitorAdmin(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
@@ -466,7 +464,7 @@ const COMMON = {
                         resolve(db_app_role.getAppRoleAdmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/admin/v1/db_api/admin/user_account/count`, 'GET'):{
+                    case route(`/bff/admin/v1/db_api/admin/user_account-stat`, 'GET'):{
                         resolve(db_user_account.getStatCountAdmin(routesparameters.app_id));
                         break;
                     }
@@ -571,7 +569,7 @@ const COMMON = {
                         resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_signup/v1/db_api/user_account/signup`, 'POST'):{
+                    case route(`/bff/app_signup/v1/db_api/user_account-signup`, 'POST'):{
                         resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }

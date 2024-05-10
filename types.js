@@ -498,7 +498,7 @@
  * @typedef {{   START:string,
  *               USE:string,
  *               LIMIT_LIST_SEARCH:string,
- *               LIMIT_PROFILE_TOP:string,
+ *               LIMIT_PROFILE_STAT:string,
  *               LOG:string,
  *               DB1_SYSTEM_ADMIN_USER:string,
  *               DB1_SYSTEM_ADMIN_PASS:string,

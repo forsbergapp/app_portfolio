@@ -181,7 +181,7 @@ const show_charts = async () => {
         }
         else{
             service = 'DB_API';
-            path = '/admin/app_log/stat/uniquevisitor';
+            path = '/admin/app_log-stat';
             query = `select_app_id=${app_id}&year=${year}&month=${month}`;
             authorization_type = 'APP_ACCESS';
         }
@@ -677,7 +677,7 @@ const count_users = async () => {
     if (admin_token_has_value()){
         AppDocument.querySelector('#list_user_stat').classList.add('common_icon', 'css_spinner');
         AppDocument.querySelector('#list_user_stat').innerHTML = '';
-        const user_stat = await common.FFB('DB_API', '/admin/user_account/count', null, 'GET', 'APP_ACCESS', null)
+        const user_stat = await common.FFB('DB_API', '/admin/user_account-stat', null, 'GET', 'APP_ACCESS', null)
         .then((/**@type{string}*/result)=>JSON.parse(result))
         .catch(()=>AppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner'));
         

@@ -11,8 +11,8 @@
 #profile_user_settings_month::before{						content:var(--common_app_icon_regional_month)}
 #profile_user_settings_year::before{						content:var(--common_app_icon_regional_year)}
 
-#profile_top_row2_1::before{								content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
-#profile_top_row2_2::before{								content:var(--common_app_icon_user_views) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
+#profile_stat_row2_1::before{								content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
+#profile_stat_row2_2::before{								content:var(--common_app_icon_user_views) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
 
 #profile_user_settings_info_likes::before{					content:var(--common_app_icon_user_like)}
 #profile_user_settings_info_views::before{					content:var(--common_app_icon_user_views)}
@@ -186,11 +186,11 @@
 	display:inline !important;
 }
 /*Profile top*/
-#profile_top_row2{
+#profile_stat_row2{
 	text-align: center;
 	width:100%;
 }
-#profile_top_row2 > div{
+#profile_stat_row2 > div{
 	margin-right:10px;
 	display: inline-block;
 }

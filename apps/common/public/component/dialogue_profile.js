@@ -136,30 +136,30 @@ const template = props =>
                                 `:''
                             }
                         </div>
-                        <div id='common_profile_top'>
+                        <div id='common_profile_stat'>
                             ${props.tab=='TOP'?
-                            `<div id='common_profile_top_row1'>
-                                <div id='common_profile_top_row1_1' class='common_link common_icon'></div>
-                                <div id='common_profile_top_row1_2' class='common_link common_icon'></div>
-                                <div id='common_profile_top_row1_3' class='common_link common_icon'></div>
+                            `<div id='common_profile_stat_row1'>
+                                <div id='common_profile_stat_row1_1' class='common_link common_icon'></div>
+                                <div id='common_profile_stat_row1_2' class='common_link common_icon'></div>
+                                <div id='common_profile_stat_row1_3' class='common_link common_icon'></div>
                                 </div>
-                                <div id='common_profile_top_row2'></div>
-                                <div id='common_profile_top_list' <SPINNER_CLASS/>>
+                                <div id='common_profile_stat_row2'></div>
+                                <div id='common_profile_stat_list' <SPINNER_CLASS/>>
                                     ${props.top_profile_records.map(row=>
-                                        `   <div data-user_account_id='${row.id}' class='common_profile_top_list_row common_row'>
-                                                <div class='common_profile_top_list_col'>
-                                                    <div class='common_profile_top_list_user_account_id'>${row.id}</div>
+                                        `   <div data-user_account_id='${row.id}' class='common_profile_stat_list_row common_row'>
+                                                <div class='common_profile_stat_list_col'>
+                                                    <div class='common_profile_stat_list_user_account_id'>${row.id}</div>
                                                 </div>
-                                                <div class='common_profile_top_list_col'>
-                                                    <img class='common_profile_top_list_avatar' ${props.top_function_list_image_format_src(row.avatar ?? row.provider_image)}>
+                                                <div class='common_profile_stat_list_col'>
+                                                    <img class='common_profile_stat_list_avatar' ${props.top_function_list_image_format_src(row.avatar ?? row.provider_image)}>
                                                 </div>
-                                                <div class='common_profile_top_list_col'>
-                                                    <div class='common_profile_top_list_username common_wide_list_column common_link'>
+                                                <div class='common_profile_stat_list_col'>
+                                                    <div class='common_profile_stat_list_username common_wide_list_column common_link'>
                                                         ${row.username}
                                                     </div>
                                                 </div>
-                                                <div class='common_profile_top_list_col'>
-                                                    <div class='common_profile_top_list_count'>${row.count}</div>
+                                                <div class='common_profile_stat_list_col'>
+                                                    <div class='common_profile_stat_list_count'>${row.count}</div>
                                                 </div>
                                             </div>`
                                     ).join('')
@@ -206,18 +206,18 @@ const component = async props => {
         let user_account_id_search;            
         if (props.info_user_account_id_other !== null) {
             user_account_id_search = props.info_user_account_id_other;
-            path = `/user_account/profile/id/${user_account_id_search ?? ''}`;
+            path = `/user_account-profile-id/${user_account_id_search ?? ''}`;
             query = `id=${props.info_user_account_id ?? ''}`;
         } 
         else
             if (props.info_username !== null) {
                 user_account_id_search = '';
-                path = '/user_account/profile/username';
+                path = '/user_account-profile-username';
                 query = `search=${props.info_username}&id=${props.info_user_account_id ?? ''}`;
             } 
             else {
                 user_account_id_search = props.info_user_account_id;
-                path = `/user_account/profile/id/${user_account_id_search ?? ''}`;
+                path = `/user_account-profile-id/${user_account_id_search ?? ''}`;
                 query = `id=${props.info_user_account_id ?? ''}`;
             }
         const json_data ={  
@@ -233,7 +233,7 @@ const component = async props => {
     /**
      * Profile show
      * profile_show(null, null)     from dropdown menu in apps or choosing logged in users profile
-     * profile_show(userid, null) 	from choosing profile in profile_top, profile_detail and search_profile
+     * profile_show(userid, null) 	from choosing profile in profile_stat, profile_detail and search_profile
      * profile_show(null, username) from init startup when user enters url
      * 
      * @param {number|null} user_account_id_other 
@@ -303,26 +303,26 @@ const component = async props => {
     * @param {function|null} function_user_click
     * @returns {Promise.<void>}
     */
-    const profile_top = async (statchoice, app_rest_url = null, function_user_click=null) => {
+    const profile_stat = async (statchoice, app_rest_url = null, function_user_click=null) => {
             let path;
             if (statchoice ==1 || statchoice ==2 || statchoice ==3){
                 /*statschoice 1,2,3: user_account*/
-                path = '/user_account/profile/top';
+                path = '/user_account-profile-stat';
             }
             else{
                 /*other statschoice, apps can use >3 and return same columns*/
                 path = app_rest_url;
             }
-            const profile_top_records = await props.function_FFB('DB_API', path, `statchoice=${statchoice}`, 'GET', 'APP_DATA', null)
+            const profile_stat_records = await props.function_FFB('DB_API', path, `statchoice=${statchoice}`, 'GET', 'APP_DATA', null)
                                             .then((/**@type{string}*/result)=>JSON.parse(result))
                                             .catch((/**@type{Error}*/error)=>{throw error});
             spinner = '';
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
-                render_template(profile_empty, profile_top_records);
-            props.common_document.querySelector('#common_profile_top_list')['data-function'] = function_user_click;
+                render_template(profile_empty, profile_stat_records);
+            props.common_document.querySelector('#common_profile_stat_list')['data-function'] = function_user_click;
     };
     /**
-     * div common_profile_main_stat_row2 and common_profile_top_row2 used for app components
+     * div common_profile_main_stat_row2 and common_profile_stat_row2 used for app components
      * @param {profile_user} profile
      * @param {top_profile_records[]|[]} top_profile_records
      * @returns {string}
@@ -341,7 +341,7 @@ const component = async props => {
         if (props.tab=='INFO')
             profile_show(props.info_user_account_id_other, props.info_username);
         else
-            await profile_top(props.top_statchoice, props.top_app_rest_url, props.top_function_user_click)
+            await profile_stat(props.top_statchoice, props.top_app_rest_url, props.top_function_user_click)
     }
     return {
         props:  {function_post:post_component},
