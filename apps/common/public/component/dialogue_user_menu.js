@@ -133,13 +133,8 @@ const component = async props => {
     }
     const post_component = async () =>{                                                                                             
         if ((props.system_admin_only == 1)==false){
-            let path = '';
-            if (props.app_id == props.common_app_id)
-                path = '/locale/admin';
-            else
-                path = '/locale';
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({
-                locales:await props.function_FFB('DB_API', path, `lang_code=${props.current_locale}`, 'GET', 'APP_DATA', null)
+                locales:await props.function_FFB('DB_API', '/locale', `lang_code=${props.current_locale}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error}),
                 settings: await props.function_FFB('DB_API', '/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')

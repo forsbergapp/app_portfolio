@@ -131,7 +131,7 @@ const COMMON = {
     
     //REST API 
     //URI syntax implemented:
-    //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
+    //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource subcollection]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
     app.route('/bff/app_data/v1*').all      (iam.AuthenticateDataToken, BFF_app_data);
     app.route('/bff/app_signup/v1*').post   (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
@@ -408,7 +408,7 @@ const COMMON = {
                         resolve(socket.ConnectedListAdmin(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/admin/v1/server/config/admin`, 'GET'):{
+                    case route(`/bff/admin/v1/server/config-admin`, 'GET'):{
                         resolve(config.ConfigGet(app_query));
                         break;
                     }
@@ -416,7 +416,7 @@ const COMMON = {
                         resolve(config.ConfigGetApp(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/admin/v1/config/app/parameter/${resource_id_string}`, 'PUT'):{
+                    case route(`/bff/admin/v1/config/app-parameter/${resource_id_string}`, 'PUT'):{
                         resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
@@ -480,27 +480,27 @@ const COMMON = {
                         resolve(socket.ConnectedUpdate(resource_id_get(), routesparameters.res.req.query.iam, routesparameters.body));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/config/systemadmin`, 'PUT'):{
+                    case route(`/bff/systemadmin/v1/server/config-systemadmin`, 'PUT'):{
                         resolve(config.ConfigSave(routesparameters.body));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/config/systemadmin`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/server/config-systemadmin`, 'GET'):{
                         resolve(config.ConfigGet(app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/config/systemadmin/apps`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/server/config-systemadmin-apps`, 'GET'):{
                         resolve(config.ConfigGetApps());
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/config/systemadmin/saved`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/server/config-systemadmin-saved`, 'GET'):{
                         resolve(config.ConfigGetSaved(app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/config/systemadmin/maintenance`, 'GET'):{
+                    case route(`/bff/systemadmin/v1/server/config-systemadmin-maintenance`, 'GET'):{
                         resolve(config.ConfigMaintenanceGet());
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/config/systemadmin/maintenance`, 'PATCH'):{
+                    case route(`/bff/systemadmin/v1/server/config-systemadmin-maintenance`, 'PATCH'):{
                         resolve(config.ConfigMaintenanceSet(routesparameters.body));
                         break;
                     }
