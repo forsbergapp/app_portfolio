@@ -596,42 +596,61 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
  */
 const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileUser(app_id, resource_id, resource_id==null?query.get('search'):null, getNumberValue(query.get('id')))
+        //resource id can be number, string or empty if searching
+        service.getProfileUser(app_id, resource_id, query.get('search'), getNumberValue(query.get('id')))
         .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
-            if (result_getProfileUser[0]){
-                //always save stat who is viewing, same user, none or someone else
-                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`).then(({ insertUserAccountView }) => {
-                    const data_body = { user_account_id:        getNumberValue(query.get('id')),    //who views
-                                        user_account_id_view:   getNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
-                                        client_ip:              ip,
-                                        client_user_agent:      user_agent,
-                                        client_longitude:       data.client_longitude,
-                                        client_latitude:        data.client_latitude};
-                    insertUserAccountView(app_id, data_body)
+            if (resource_id==null){
+                //searching, return result
+                import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search.service.js`).then(({ insertProfileSearch }) => {
+                    /**@type{Types.db_parameter_profile_search_insertProfileSearch} */
+                    const data_insert = {   user_account_id:    data.user_account_id,
+                                            search:             query.get('search'),
+                                            client_ip:          ip,
+                                            client_user_agent:  user_agent,
+                                            client_longitude:   query.get('client_longitude'),
+                                            client_latitude:    query.get('client_latitude')};
+                    insertProfileSearch(app_id, data_insert)
                     .then(()=>{
-                        if (result_getProfileUser[0].private==1 && result_getProfileUser[0].friends==null){
-                            //private and not friends or anonymous visit, remove stats
-                            result_getProfileUser[0].count_following = null;
-                            result_getProfileUser[0].count_followed = null;
-                            result_getProfileUser[0].count_likes = null;
-                            result_getProfileUser[0].count_liked = null;
-                        }
-                        else
-                            if (result_getProfileUser[0].private==1 && result_getProfileUser[0].friends==1){
-                                //private and friends, remove private
-                                result_getProfileUser[0].private = null;
-                            }
-                        //send without {} so the variablename is not sent
-                        resolve(result_getProfileUser[0]);
+                        resolve(result_getProfileUser);
                     })
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 });
             }
-            else{
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                });
-            }
+            else
+                if (result_getProfileUser[0]){
+                    //always save stat who is viewing, same user, none or someone else
+                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`).then(({ insertUserAccountView }) => {
+                        const data_body = { user_account_id:        getNumberValue(query.get('id')),    //who views
+                                            user_account_id_view:   getNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
+                                            client_ip:              ip,
+                                            client_user_agent:      user_agent,
+                                            client_longitude:       query.get('client_longitude'),
+                                            client_latitude:        query.get('client_latitude')};
+                        insertUserAccountView(app_id, data_body)
+                        .then(()=>{
+                            if (result_getProfileUser[0].private==1 && result_getProfileUser[0].friends==null){
+                                //private and not friends or anonymous visit, remove stats
+                                result_getProfileUser[0].count_following = null;
+                                result_getProfileUser[0].count_followed = null;
+                                result_getProfileUser[0].count_likes = null;
+                                result_getProfileUser[0].count_liked = null;
+                            }
+                            else
+                                if (result_getProfileUser[0].private==1 && result_getProfileUser[0].friends==1){
+                                    //private and friends, remove private
+                                    result_getProfileUser[0].private = null;
+                                }
+                            //send without {} so the variablename is not sent
+                            resolve(result_getProfileUser[0]);
+                        })
+                        .catch((/**@type{Types.error}*/error)=>reject(error));
+                    });
+                }
+                else{
+                    import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                        record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                    });
+                }
         })
         .catch((/**@type{Types.error}*/error)=>reject(error));
     });
@@ -657,37 +676,7 @@ const getProfileTop = (app_id, query, res) =>{
         .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
-/**
- * 
- * @param {number} app_id 
- * @param {string} ip 
- * @param {string} user_agent 
- * @param {*} query 
- * @param {*} data 
- * @returns 
- */
-const searchProfile = (app_id, ip, user_agent, query, data) =>{
-    return new Promise((resolve, reject)=>{
-        service.searchProfileUser(app_id, query.get('search'))
-        .then((/**@type{Types.db_result_user_account_searchProfileUser[]}*/result_search)=>{
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search.service.js`).then(({ insertProfileSearch }) => {
-                /**@type{Types.db_parameter_profile_search_insertProfileSearch} */
-                const data_insert = {   user_account_id:    data.user_account_id,
-                                        search:             query.get('search'),
-                                        client_ip:          ip,
-                                        client_user_agent:  user_agent,
-                                        client_longitude:   data.client_longitude,
-                                        client_latitude:    data.client_latitude};
-                insertProfileSearch(app_id, data_insert)
-                .then(()=>{
-                    resolve(result_search);
-                })
-                .catch((/**@type{Types.error}*/error)=>reject(error));
-            });
-        })
-        .catch((/**@type{Types.error}*/error)=>reject(error));
-    });
-};
+
 /**
  * 
  * @param {number} app_id 
@@ -1162,8 +1151,6 @@ export {/*DATA_LOGIN*/
         signup, 
         /*DATA*/
         activate, forgot, getProfile, getProfileTop, 
-        /*DATA + ACCESS*/
-        searchProfile, 
         /*ADMIN*/
         updateAdmin, getUsersAdmin, getStatCountAdmin, getLogonAdmin,
         /*ACCESS*/

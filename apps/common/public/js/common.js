@@ -1482,13 +1482,11 @@ const profile_close = () => {
 const profile_update_stat = async () => {
     return new Promise((resolve, reject) => {
         const profile_id = AppDocument.querySelector('#common_profile_id');
-        const json_data ={  
-                            client_latitude:    COMMON_GLOBAL.client_latitude,
-                            client_longitude:   COMMON_GLOBAL.client_longitude
-                        };
         //get updated stat for given user
-        //to avoid update in stat set searched by same user
-        FFB('DB_API', `/user_account-profile-id/${profile_id.innerHTML}`, `id=${profile_id.innerHTML}`, 'POST', 'APP_DATA', json_data)
+        FFB('DB_API', `/user_account-profile/${profile_id.innerHTML}`, 
+            `id=${profile_id.innerHTML}&client_latitude=${COMMON_GLOBAL.client_latitude}&client_longitude=${COMMON_GLOBAL.client_longitude}`, 
+            'GET', 
+            'APP_DATA', null)
         .then(result=>{
             const user_stat = JSON.parse(result);
             AppDocument.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
@@ -3454,12 +3452,15 @@ const common_event = async (event_type,event) =>{
                         }
                         //search list
                         case 'common_profile_search_list':{
+                            
                             if (event.target.classList.contains('common_profile_search_list_username')){
                                 if (AppDocument.querySelector('#common_profile_search_list')['data-function']){
                                     AppDocument.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                                 }
                                 else
                                     await profile_show(Number(element_row(event.target).getAttribute('data-user_account_id')),null);
+                                ComponentRemove('common_profile_search_list_wrap');
+                                AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
                             }
                             break;
                         }

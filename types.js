@@ -1320,14 +1320,6 @@
  *              count_views:number,
  *              followed:number,
  *              liked:number}} db_result_user_account_getProfileUser
- * @typedef {{  id:number,
- *              username:string,
- *              avatar:string,
- *              identity_provider_id:number|null,
- *              provider_id:string|null,
- *              provider_first_name:string|null,
- *              provider_image:string|null,
- *              provider_image_url:string|null}} db_result_user_account_searchProfileUser
  * @typedef {{  detail:string,
  *              id:number,
  *              provider_id:string,
