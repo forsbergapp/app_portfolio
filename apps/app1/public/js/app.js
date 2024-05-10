@@ -124,28 +124,28 @@ const app_event_click = event => {
                     }
                     //profile button
                     case 'common_profile_btn_top':{
-                        common.profile_top(1);
+                        common.profile_stat(1);
                         break;
                     }
                     //common with app specific settings
                     case 'common_profile_home':{
-                        common.profile_top(1);
+                        common.profile_stat(1);
                         break;
                     }
                     case 'common_profile_close':{
                         common.profile_close();
                         break;
                     }
-                    case 'common_profile_top_row1_1':{
-                        common.profile_top(1);
+                    case 'common_profile_stat_row1_1':{
+                        common.profile_stat(1);
                         break;
                     }
-                    case 'common_profile_top_row1_2':{
-                        common.profile_top(2);
+                    case 'common_profile_stat_row1_2':{
+                        common.profile_stat(2);
                         break;
                     }
-                    case 'common_profile_top_row1_3':{
-                        common.profile_top(3);
+                    case 'common_profile_stat_row1_3':{
+                        common.profile_stat(3);
                         break;
                     }
                     case 'common_profile_follow':{

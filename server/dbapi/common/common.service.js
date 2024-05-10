@@ -162,7 +162,7 @@ const db_schema = () => ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'US
 /**
  * Limit SQL rows
  * limit_type 1		Env limit LIMIT_LIST_SEARCH
- * limit_type 2 	Env limit LIMIT_LIST_PROFILE_TOP
+ * limit_type 2 	Env limit LIMIT_LIST_PROFILE_STAT
  * limit_type null 	App function limit
  * @param {string} sql 
  * @param {1|2|null} limit_type 
@@ -176,7 +176,7 @@ const db_limit_rows = (sql, limit_type = null) => {
 				return sql + ` LIMIT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))} `;
 			}
 			case 2:{
-				return sql + ` LIMIT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP'))} `;
+				return sql + ` LIMIT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_STAT'))} `;
 			}
 			default:{
 				return sql + ' LIMIT :limit OFFSET :offset';	
@@ -191,7 +191,7 @@ const db_limit_rows = (sql, limit_type = null) => {
 				}
 				case 2:{
 					//use env limit
-					return sql + ` FETCH NEXT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP'))} ROWS ONLY`;
+					return sql + ` FETCH NEXT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_STAT'))} ROWS ONLY`;
 				}
 				default:{
 					//use app function limit
