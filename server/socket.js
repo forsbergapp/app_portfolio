@@ -15,7 +15,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  * @returns 
  */
 const ConnectedUpdate = (resource_id, iam, query) => service.ConnectedUpdate( resource_id, 
-                                                            getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')), 
+                                                            getNumberValue(iam_decode(iam).get('user_id')), 
                                                             query.get('system_admin'), 
                                                             getNumberValue(query.get('identity_provider_id')), 
                                                             query.get('latitude'), 
@@ -114,7 +114,7 @@ const ConnectedCount = (query) => service.ConnectedCount(   getNumberValue(query
  */
 const SocketConnect = (app_id, iam, ip, user_agent, query, res) => service.SocketConnect(app_id, 
                                                                                     getNumberValue(query.get('identity_provider_id')),
-                                                                                    getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')),
+                                                                                    getNumberValue(iam_decode(iam).get('user_id')),
                                                                                     query.get('system_admin'),
                                                                                     query.get('latitude'),
                                                                                     query.get('longitude'),

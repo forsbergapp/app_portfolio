@@ -144,11 +144,11 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
  * @param {string} authorization
  * @param {string} ip
  * @param {string|null} system_admin
- * @param {number|null} user_account_logon_user_account_id
+ * @param {number|null} user_id
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateTokenCommon = (app_id, token_type, authorization, ip, system_admin, user_account_logon_user_account_id, res, next) => {
+ const AuthenticateTokenCommon = (app_id, token_type, authorization, ip, system_admin, user_id, res, next) => {
     if (authorization){
         const token = authorization.substring(authorization.lastIndexOf(' ')+1);
         switch (token_type){
@@ -160,7 +160,7 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
                         //check access token belongs to user_account.id, app_id and ip saved when logged in
                         //and if app_id=0 then check user is admin
                         import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`).then(({checkLogin}) => {
-                            checkLogin(app_id, user_account_logon_user_account_id, authorization.replace('Bearer ',''), ip)
+                            checkLogin(app_id, user_id, authorization.replace('Bearer ',''), ip)
                             .then((/**@type{Types.db_result_user_account_logon_Checklogin[]}*/result)=>{
                                 if (result.filter(row=>
                                     JSON.parse(row.json_data).result==1 && 
@@ -243,10 +243,10 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
 const AuthenticateAccessTokenSuperAdmin = (iam, authorization, ip, res, next) => {
     if (getNumberValue(iam_decode(iam).get('app_id'))==0)
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getUserAppRoleAdmin}) => {
-            getUserAppRoleAdmin(getNumberValue(iam_decode(iam).get('app_id')), getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')))
+            getUserAppRoleAdmin(getNumberValue(iam_decode(iam).get('app_id')), getNumberValue(iam_decode(iam).get('user_id')))
             .then((/**@type{Types.db_result_user_account_getUserRoleAdmin[]}*/result)=>{
                 if (result[0].app_role_id == 0){
-                    AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')), res, next);
+                    AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_id')), res, next);
                 }
                 else
                     not_authorized(res, 401, 'AuthenticateAccessTokenSuperAdmin, not superadmin');
@@ -270,7 +270,7 @@ const AuthenticateAccessTokenSuperAdmin = (iam, authorization, ip, res, next) =>
  */
 const AuthenticateAccessTokenAdmin = (iam, authorization, ip, res, next) => {
     if (getNumberValue(iam_decode(iam).get('app_id'))==0){
-        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')), res, next);
+        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_id')), res, next);
     }
     else
         not_authorized(res, 401, 'AuthenticateAccessTokenAdmin, not admin app');
@@ -287,7 +287,7 @@ const AuthenticateAccessToken = (iam, authorization, ip, res, next)  => {
     //if user login is disabled then check also current logged in user
     //so they can't modify anything anymore with current accesstoken
     if (ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN')=='1'){
-        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_account_logon_user_account_id')), res, next);
+        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_id')), res, next);
     }
     else
         not_authorized(res, 401, 'AuthenticateAccessToken, user login disabled');

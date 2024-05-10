@@ -280,7 +280,7 @@ const ClientAdd = (newClient) => {
  * Used by EventSource and leaves connection open
  * @param {number} app_id
  * @param {number} identity_provider_id
- * @param {number} user_account_logon_user_account_id
+ * @param {number} user_account_id
  * @param {number} system_admin
  * @param {string} latitude
  * @param {string} longitude
@@ -290,7 +290,7 @@ const ClientAdd = (newClient) => {
  */
  const SocketConnect = async (  app_id, 
                                 identity_provider_id, 
-                                user_account_logon_user_account_id, 
+                                user_account_id, 
                                 system_admin,
                                 latitude, 
                                 longitude, 
@@ -304,7 +304,7 @@ const ClientAdd = (newClient) => {
     const newClient = {
                         id:                     client_id,
                         app_id:                 app_id,
-                        user_account_id:        user_account_logon_user_account_id,
+                        user_account_id:        user_account_id,
                         identity_provider_id:   identity_provider_id,
                         system_admin:           system_admin,
                         connection_date:        new Date().toISOString(),
