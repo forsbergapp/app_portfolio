@@ -413,7 +413,7 @@ const get_apps_div = async () =>{
         let service;
         if (common.COMMON_GLOBAL.system_admin!=null){
             service = 'SERVER';
-            path = '/config/systemadmin/apps';
+            path = '/config-systemadmin-apps';
             authorization_type = 'SYSTEMADMIN';
         }
         else{
@@ -456,7 +456,7 @@ const get_apps = async () => {
         let service;
         if (common.COMMON_GLOBAL.system_admin!=null){
             service = 'SERVER';
-            path = '/config/systemadmin/apps';
+            path = '/config-systemadmin-apps';
             authorization_type = 'SYSTEMADMIN';
         }
         else{
@@ -619,7 +619,7 @@ const set_broadcast_type = () => {
  */
 const check_maintenance = async () => {
     if (admin_token_has_value()){
-        await common.FFB('SERVER', '/config/systemadmin/maintenance', null, 'GET', 'SYSTEMADMIN', null)
+        await common.FFB('SERVER', '/config-systemadmin-maintenance', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             if (JSON.parse(result).value==1)
                 AppDocument.querySelector('#menu_1_checkbox_maintenance').classList.add('checked');
@@ -641,7 +641,7 @@ const set_maintenance = () => {
         else
             check_value = 0;
         const json_data = {value: check_value};
-        common.FFB('SERVER', '/config/systemadmin/maintenance', null, 'PATCH', 'SYSTEMADMIN', json_data).catch(()=>null);
+        common.FFB('SERVER', '/config-systemadmin-maintenance', null, 'PATCH', 'SYSTEMADMIN', json_data).catch(()=>null);
     }
 };
 /**
@@ -1192,7 +1192,7 @@ const button_save = async (item) => {
                                                 ['MICROSERVICE_SERVICES',   file=='MICROSERVICE_SERVICES'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null]
                                                 ]};
             AppDocument.querySelector('#' + item).classList.add('css_spinner');
-            common.FFB('SERVER', '/config/systemadmin', null, 'PUT', 'SYSTEMADMIN', json_data)
+            common.FFB('SERVER', '/config-systemadmin', null, 'PUT', 'SYSTEMADMIN', json_data)
             .then(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'))
             .catch(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'));
             break;
@@ -1267,7 +1267,7 @@ const update_record = async (table,
                 json_data = {   app_id:             parameters.app_parameter.app_id,
                                 parameter_value:    parameters.app_parameter.parameter_value,
                                 parameter_comment:  parameters.app_parameter.parameter_comment};
-                path = `/app/parameter/${parameters.app_parameter.parameter_name}`;
+                path = `/app-parameter/${parameters.app_parameter.parameter_name}`;
                 token_type = 'APP_ACCESS';
                 service = 'CONFIG';
                 method = 'PUT';
@@ -1366,11 +1366,11 @@ const show_monitor = async (yearvalues) =>{
     let path;
     let token_type = '';
     if (common.COMMON_GLOBAL.system_admin!=null){
-        path  = '/config/systemadmin';
+        path  = '/config-systemadmin';
         token_type = 'SYSTEMADMIN';
     }
     else{
-        path  = '/config/admin';
+        path  = '/config-admin';
         token_type = 'APP_ACCESS';
     }
     const query = 'config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
@@ -2474,7 +2474,7 @@ const show_config = async file => {
         AppDocument.querySelector('#list_config').style.display = 'none';
     }
 
-    await common.FFB('SERVER', '/config/systemadmin/saved', `file=${file}`, 'GET', 'SYSTEMADMIN', null)
+    await common.FFB('SERVER', '/config-systemadmin-saved', `file=${file}`, 'GET', 'SYSTEMADMIN', null)
     .then((/**@type{string}*/result)=>{
         const config = JSON.parse(result);
         let i = 0;
