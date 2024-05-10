@@ -1815,12 +1815,16 @@ const user_logoff = async () => {
         AppDocument.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
         AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
         AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-        user_preferences_set_default_globals('LOCALE');
-        user_preferences_set_default_globals('TIMEZONE');
-        user_preferences_set_default_globals('DIRECTION');
-        user_preferences_set_default_globals('ARABIC_SCRIPT');
-        //update body class with app theme, direction and arabic script usage classes
-        common_preferences_update_body_class_from_preferences();
+        await updateOnlineStatus()
+        .then(()=>{
+            user_preferences_set_default_globals('LOCALE');
+            user_preferences_set_default_globals('TIMEZONE');
+            user_preferences_set_default_globals('DIRECTION');
+            user_preferences_set_default_globals('ARABIC_SCRIPT');
+            //update body class with app theme, direction and arabic script usage classes
+            common_preferences_update_body_class_from_preferences();
+        })
+        .catch((error)=>{throw error;});
     }
     else{
         //remove access token
@@ -2920,22 +2924,13 @@ const reconnect = () => {
  */
 const updateOnlineStatus = async () => {
     return await new Promise((resolve, reject)=>{
-        let token_type='';
-        let path='';
-        let query;
-        if (COMMON_GLOBAL.system_admin!=null){
-            path =  `/socket/${COMMON_GLOBAL.service_socket_client_ID??''}`;
-            query = `identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id ??''}` +
-                    `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
-            token_type='SYSTEMADMIN';
-        }
-        else{
-            path =  `/socket/${COMMON_GLOBAL.service_socket_client_ID??''}`;
-            query = `identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
-                    `&system_admin=&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
-            token_type='APP_DATA';
-        }
-        FFB('SERVER', path, query, 'PATCH', token_type, null)
+        const json_data = { identity_provider_id: COMMON_GLOBAL.user_identity_provider_id ??'',
+                            system_admin : COMMON_GLOBAL.system_admin ?? '',
+                            latitude:COMMON_GLOBAL.client_latitude,
+                            longitude:COMMON_GLOBAL.client_longitude
+                        };
+        const token_type = COMMON_GLOBAL.system_admin?'SYSTEMADMIN':'APP_DATA';
+        FFB('SERVER', `/socket/${COMMON_GLOBAL.service_socket_client_ID??''}`, null, 'PATCH', token_type, json_data)
         .then(()=>resolve())
         .catch((error)=>reject(error));
     })
