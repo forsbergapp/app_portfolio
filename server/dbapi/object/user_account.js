@@ -661,10 +661,10 @@ const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
  * @param {*} query 
  * @param {Types.res} res
  */
-const getProfileTop = (app_id, query, res) =>{
+const getProfileStat = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileTop(app_id, getNumberValue(query.get('statchoice')))
-        .then((/**@type{Types.db_result_user_account_getProfileTop[]}*/result)=>{
+        service.getProfileStat(app_id, getNumberValue(query.get('statchoice')))
+        .then((/**@type{Types.db_result_user_account_getProfileStat[]}*/result)=>{
             if (result)
                 resolve(result);
             else {
@@ -1150,7 +1150,7 @@ export {/*DATA_LOGIN*/
         /*DATA_SIGNUP*/
         signup, 
         /*DATA*/
-        activate, forgot, getProfile, getProfileTop, 
+        activate, forgot, getProfile, getProfileStat, 
         /*ADMIN*/
         updateAdmin, getUsersAdmin, getStatCountAdmin, getLogonAdmin,
         /*ACCESS*/
