@@ -1320,6 +1320,7 @@ const profile_detail = (detailchoice, fetch_detail, click_function) => {
         case 7:{
             /*detailchoice 0, 6, 7: app specific */
             path = '/user_account_app_data_post-profile-detail';
+            break;
         }
         case 1:
         case 2:
@@ -1327,10 +1328,12 @@ const profile_detail = (detailchoice, fetch_detail, click_function) => {
         case 4:{
             /*detailchoice 1,2,3, 4: user_account*/
             path = '/user_account-profile-detail';
+            break;
         }
         case 5:{
             /* detailchoice 5, apps, returns same columns*/
             path = '/user_account_app-apps';
+            break;
         }
     }
     //DETAIL
