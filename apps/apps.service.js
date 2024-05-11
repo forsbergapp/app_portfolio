@@ -513,7 +513,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
 
     if (use_message_queue && query_parameters_obj.format.toUpperCase() == 'PDF' && messagequeue == null ){
         //PDF
-        const url = `${host}/reports?ps=${ps}&hf=${hf}&reportid=${reportid}&messagequeue=1`;
+        const url = `${host}/app-reports?ps=${ps}&hf=${hf}&reportid=${reportid}&messagequeue=1`;
         //call message queue
         
         return {type:'PDF',
@@ -532,17 +532,17 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
             delete query_parameters_obj.hf;
             const { BFF_microservices } = await import(`file://${process.cwd()}/server/bff.service.js`);
             const url = host + 
-                        '/reports?reportid=' +
-                        new Buffer(Object.entries(query_parameters_obj).reduce((/**@type{*}*/total, current)=>total += (total==''?'':'&') + current[0] + '=' + current[1],''),'utf-8').toString('base64');
+                        '/app-reports?reportid=' +
+                        Buffer.from(Object.entries(query_parameters_obj).reduce((/**@type{*}*/total, current)=>total += (total==''?'':'&') + current[0] + '=' + current[1],''),'utf-8').toString('base64');
             /**@type{Types.bff_parameters_microservices}*/
             const parameters = {service:'PDF', 
                                 path:'/pdf',
-                                ip:ip, 
+                                body:null,
+                                query: `url=${Buffer.from(url,'utf-8').toString('base64')}&ps=${ps}&hf=${hf}`, 
                                 method:'GET', 
+                                ip:ip, 
                                 user_agent:user_agent, 
-                                accept_language:accept_language,
-                                query: `url=${new Buffer(url,'utf-8').toString('base64')}&ps=${ps}&hf=${hf}`, 
-                                body:null};
+                                accept_language:accept_language};
             const pdf = await BFF_microservices(app_id, parameters).catch((/**@type{Types.error}*/error)=>error);
             return {    type:'PDF',
                         report:pdf
@@ -580,12 +580,12 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
     /**@type{Types.bff_parameters_microservices}*/
     const parameters = {service:'GEOLOCATION', 
                         path:'/geolocation/ip',
-                        ip:ip, 
-                        method:'GET', 
-                        user_agent:user_agent, 
-                        accept_language:accept_language,
+                        body:null,
                         query:`ip=${ip}`,
-                        body:null};
+                        method:'GET', 
+                        ip:ip, 
+                        user_agent:user_agent, 
+                        accept_language:accept_language};
     //ignore error in this case and fetch randcom geolocation using WORLDCITIES service instead if GEOLOCATION is not available
     const result_gps = await BFF_microservices(app_id, parameters)
     .catch((/**@type{Types.error}*/error)=>null);
@@ -602,12 +602,12 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
         /**@type{Types.bff_parameters_microservices}*/
         const parameters = {service:'WORLDCITIES', 
                             path:'/worldcities/city/random',
-                            ip:ip, 
-                            method:'GET', 
-                            user_agent:user_agent, 
-                            accept_language:accept_language,
+                            body:null,
                             query:'', 
-                            body:null};
+                            method:'GET', 
+                            ip:ip, 
+                            user_agent:user_agent, 
+                            accept_language:accept_language};
         const result_city = await BFF_microservices(app_id, parameters).catch((/**@type{Types.error}*/error)=>{throw error});
         result_geodata.latitude =   JSON.parse(result_city).lat;
         result_geodata.longitude=   JSON.parse(result_city).lng;
@@ -912,7 +912,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                 }
                             }
                         else
-                            if (url.toLowerCase().startsWith('/report'))
+                            if (url.toLowerCase().startsWith('/app-reports'))
                                 getReport(app_id, ip, user_agent, accept_language, reportid, messagequeue)
                                 .then((report_result)=>{
                                     if (report_result.type=='PDF')
