@@ -3452,15 +3452,12 @@ const common_event = async (event_type,event) =>{
                         }
                         //search list
                         case 'common_profile_search_list':{
-                            
                             if (event.target.classList.contains('common_profile_search_list_username')){
                                 if (AppDocument.querySelector('#common_profile_search_list')['data-function']){
                                     AppDocument.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                                 }
                                 else
                                     await profile_show(Number(element_row(event.target).getAttribute('data-user_account_id')),null);
-                                ComponentRemove('common_profile_search_list_wrap');
-                                AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
                             }
                             break;
                         }

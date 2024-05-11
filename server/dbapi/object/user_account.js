@@ -598,12 +598,13 @@ const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         /**
          * Clear private data if private
+         * @param {number|string|null} resource_id
          * @param {Types.db_result_user_account_getProfileUser[]} result_getProfileUser 
          * @returns {Types.db_result_user_account_getProfileUser[]}
          */
-        const clear_private = result_getProfileUser =>
+        const clear_private = (resource_id, result_getProfileUser) =>
             result_getProfileUser.map(row=>{
-                if ((row.private==1 && row.friends==null) || result_getProfileUser.length>1){
+                if ((row.private==1 && row.friends==null) || resource_id==null){
                     //private and not friends or anonymous visit, remove stats
                     row.count_following = null;
                     row.count_followed = null;
@@ -634,7 +635,7 @@ const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
                                             client_latitude:    query.get('client_latitude')};
                     insertProfileSearch(app_id, data_insert)
                     .then(()=>{
-                        resolve(clear_private(result_getProfileUser));
+                        resolve(clear_private(resource_id, result_getProfileUser));
                     })
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 });
@@ -651,7 +652,7 @@ const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
                                             client_latitude:        query.get('client_latitude')};
                         insertUserAccountView(app_id, data_body)
                         .then(()=>{
-                            resolve(clear_private(result_getProfileUser)[0]);
+                            resolve(clear_private(resource_id, result_getProfileUser)[0]);
                         })
                         .catch((/**@type{Types.error}*/error)=>reject(error));
                     });
