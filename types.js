@@ -17,24 +17,24 @@
  * 
  * @typedef {{  service: string,
  *              path:string,
- *              ip: string,
+ *              body:object|null, 
+ *              query: string, 
  *              method: string,
+ *              ip: string,
  *              user_agent:string,
- *              accept_language:string,
- *              query: string,
- *              body:object|null}} bff_parameters_microservices
+ *              accept_language:string}} bff_parameters_microservices
  * 
  * @typedef {{  endpoint: string,
  *              service: string,
- *              ip: string,
- *              host:string, 
- *              method: string,
- *              authorization:string,
- *              user_agent:string,
- *              accept_language:string,
+ *              host:string,
  *              url:string,
+ *              method: string,
  *              parameters: string
  *              body:object|null,
+ *              authorization:string,
+ *              ip: string,
+ *              user_agent:string,
+ *              accept_language:string,
  *              res: res}} bff_parameters_server
  * 
  * Routes paramaters

@@ -153,17 +153,14 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
             //app control
             service: bff_parameters.service, 
             //request
-            //  no host
             path:bff_parameters.route_path,
-            method: bff_parameters.method,
-            query: decodedquery, 
             body: bff_parameters.body,
-            //  no authorization
+            query: decodedquery, 
+            method: bff_parameters.method,
             //metadata
             ip: bff_parameters.ip, 
             user_agent: bff_parameters.user_agent, 
             accept_language: bff_parameters.accept_language
-            //  no response
         };
         BFF_microservices(app_id, parameters)
         .then((/**@type{*}*/result_service) => {

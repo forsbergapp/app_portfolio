@@ -49,13 +49,13 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
         
     /**@type{Types.bff_parameters_microservices}*/
     const data = {  service:'MAIL', 
-                    path:'',
-                    ip:ip,
+                    path:'/mail/sendemail',
+                    body:email_rendered,
+                    query:'',
                     method:'POST', 
+                    ip:ip,
                     user_agent:user_agent,
-                    accept_language:accept_language,
-                    query:new Buffer('/sendemail?').toString('base64'),
-                    body:email_rendered};
+                    accept_language:accept_language};
     return await BFF_microservices(app_id, data);    
 };
 /**

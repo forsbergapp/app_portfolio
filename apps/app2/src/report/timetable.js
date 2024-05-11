@@ -1967,11 +1967,11 @@ const timetable = async (timetable_parameters) => {
 		const port = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE'))==1?(port_https==443?'':`:${port_https}`):(port_https==80?'':`:${port_http}`);
 		if (uid_view){
 			const param_modified = decodedReportparameters.replace(`&uid_view=${uid_view}`, '');
-			const report_id_no_uid_view = new Buffer(param_modified).toString('base64');
-			return `${protocol}://${ConfigGetApp(timetable_parameters.app_id,timetable_parameters.app_id, 'SUBDOMAIN')}.${ConfigGet('SERVER', 'HOST')}${port}/reports?reportid=${report_id_no_uid_view}`;
+			const report_id_no_uid_view = Buffer.from(param_modified).toString('base64');
+			return `${protocol}://${ConfigGetApp(timetable_parameters.app_id,timetable_parameters.app_id, 'SUBDOMAIN')}.${ConfigGet('SERVER', 'HOST')}${port}/app-reports?reportid=${report_id_no_uid_view}`;
 		}
 		else
-			return `${protocol}://${ConfigGetApp(timetable_parameters.app_id,timetable_parameters.app_id, 'SUBDOMAIN')}.${ConfigGet('SERVER', 'HOST')}${port}/reports?reportid=${timetable_parameters.reportid}`;
+			return `${protocol}://${ConfigGetApp(timetable_parameters.app_id,timetable_parameters.app_id, 'SUBDOMAIN')}.${ConfigGet('SERVER', 'HOST')}${port}/app-reports?reportid=${timetable_parameters.reportid}`;
 	};
 	const result_parameters = ConfigGetApp(timetable_parameters.app_id, timetable_parameters.app_id, 'PARAMETERS');
 	return await new Promise((resolve) => {
