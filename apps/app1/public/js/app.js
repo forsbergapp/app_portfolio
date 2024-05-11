@@ -244,7 +244,7 @@ const app_event_keyup = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'common_profile_search_input':{
-                    common.list_key_event(event, 'profile', null);
+                    common.list_key_event(event, 'profile', profile_show_app);
                     break;
                 }
                 case 'common_user_start_login_username':

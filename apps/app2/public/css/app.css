@@ -148,7 +148,10 @@
 #toolbar_bottom .common_toolbar_button{
 	font-size: 48px !important;
 }
-
+#app_profile_search{
+	z-index: 50;
+    position: absolute;
+}
 /*profile user setting*/
 #profile_user_settings_row{
 	width:100%;
