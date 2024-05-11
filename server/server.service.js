@@ -210,7 +210,7 @@ const COMMON = {
         try {
             if (routesparameters.endpoint == 'APP' && routesparameters.service =='APP' && routesparameters.method == 'GET'){
                 //App route for app asset, common asset, app info page, app report (using query) and app
-                const URI_query = routesparameters.route_path.startsWith('/report')?routesparameters.route_path.substring(routesparameters.route_path.indexOf('?')):null;
+                const URI_query = routesparameters.route_path.startsWith('/app-reports')?routesparameters.route_path.substring(routesparameters.route_path.indexOf('?')):null;
                 const app_query = URI_query?new URLSearchParams(URI_query):null;
                 resolve(app.getAppMain(routesparameters.ip, routesparameters.host, routesparameters.user_agent, routesparameters.accept_language, routesparameters.route_path, app_query, routesparameters.res));
             }

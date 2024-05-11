@@ -454,7 +454,7 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
                                         language_parameter +
                                         service_parameter);
     //url query parameters are decoded in report module and in report service
-    return common.getHostname() + `/reports?reportid=${encodedurl}`;
+    return common.getHostname() + `/app-reports?reportid=${encodedurl}`;
 };
 
 /**
