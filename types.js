@@ -1423,7 +1423,7 @@
  *              user_account_app_user_account_id:number, 
  *              user_account_app_app_id:number}} db_result_user_account_app_data_post_getUserPostsByUserId
  * @typedef {{  count_user_account_app_data_post_likes:number,
- *              count_user_account_app_data_post_liked:number}} db_result_user_account_app_data_post_getProfileUserPost
+ *              count_user_account_app_data_post_liked:number}} db_result_user_account_data_post_getProfileStatLike
  * @typedef {{  id:number,
  *              description:string,
  *              user_account_app_user_account_id:number,
