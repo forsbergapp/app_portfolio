@@ -1822,7 +1822,7 @@ const settings_update = setting_tab => {
  * @returns {void}
  */
 const profile_user_setting_stat = id => {
-    common.FFB('DB_API', `/user_account_app_data_post-profile/${id}`, null, 'GET', 'APP_DATA', null)
+    common.FFB('DB_API', `/user_account_app_data_post-profile-stat-like/${id}`, null, 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
         AppDocument.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
         AppDocument.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
@@ -1886,7 +1886,7 @@ const profile_show_user_setting = () => {
     AppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
 
     common.FFB( 'DB_API', 
-                `/user_account_app_data_post-profile-all/${AppDocument.querySelector('#common_profile_id').innerHTML}`, 
+                `/user_account_app_data_post-profile/${AppDocument.querySelector('#common_profile_id').innerHTML}`, 
                 `id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
                 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
@@ -1921,7 +1921,7 @@ const profile_show_user_setting = () => {
 const profile_user_setting_update_stat = () => {
     const profile_id = AppDocument.querySelector('#common_profile_id').innerHTML;
     common.FFB( 'DB_API', 
-                `/user_account_app_data_post-profile-all/${profile_id}`,
+                `/user_account_app_data_post-profile/${profile_id}`,
                 `id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
                 'GET', 'APP_DATA', null)
     .then((/**@type{string}*/result)=>{
