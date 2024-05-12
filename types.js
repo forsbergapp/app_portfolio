@@ -700,24 +700,27 @@
  * @property {string} connection_date
  * @property {string} gps_latitude
  * @property {string} gps_longitude
+ * @property {string} place
+ * @property {string} timezone
  * @property {string} ip
  * @property {string} user_agent
  * @property {res}    response
- */
-/**
- * Server - Socket client
- * @typedef {{  'id':number,
- *              'app_id':number,
- *              'app_role_icon':number|string,
- *              'app_role_id':number|string,
- *              'user_account_id':number,
- *              'identity_provider_id':number,
- *              'system_admin':number,
- *              'connection_date':string,
- *              'gps_latitude':string,
- *              'gps_longitude':string,
- *              'ip':string,
- *              'user_agent':string}} socket_connect_list_no_res
+ * 
+ * Server - Socket client no res
+ * @typedef {{  id:number,
+ *              app_id:number,
+ *              app_role_icon:number|string,
+ *              app_role_id:number|string,
+ *              user_account_id:number,
+ *              identity_provider_id:number,
+ *              system_admin:number,
+ *              connection_date:string,
+ *              gps_latitude:string,
+ *              gps_longitude:string,
+ *              place:string,
+ *              timezone:string,
+ *              ip:string,
+ *              user_agent:string}} socket_connect_list_no_res
  */
 
 /**

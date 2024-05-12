@@ -9,17 +9,21 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 /**
+ * @param {number} app_id
  * @param {number} resource_id
  * @param {string} iam
- * @param {*} data 
+ * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} accept_language
  * @returns 
  */
-const ConnectedUpdate = (resource_id, iam, data) => service.ConnectedUpdate(resource_id, 
-                                                                            getNumberValue(iam_decode(iam).get('user_id')), 
-                                                                            data.system_admin, 
-                                                                            getNumberValue(data.identity_provider_id), 
-                                                                            data.latitude, 
-                                                                            data.longitude);
+const ConnectedUpdate = (app_id, resource_id, iam, ip, user_agent, accept_language) => service.ConnectedUpdate( app_id, 
+                                                                                                                resource_id, 
+                                                                                                                getNumberValue(iam_decode(iam).get('user_id')), 
+                                                                                                                iam_decode(iam).get('system_admin'),
+                                                                                                                ip,
+                                                                                                                user_agent,
+                                                                                                                accept_language);
 /**
  * 
  * @param {number} resource_id 
@@ -109,17 +113,15 @@ const ConnectedCount = (query) => service.ConnectedCount(   getNumberValue(query
  * @param {string} iam
  * @param {string} ip  
  * @param {string} user_agent 
- * @param {*} query
+ * @param {string} accept_language 
  * @param {Types.res} res
  */
-const SocketConnect = (app_id, iam, ip, user_agent, query, res) => service.SocketConnect(app_id, 
-                                                                                    getNumberValue(query.get('identity_provider_id')),
-                                                                                    getNumberValue(iam_decode(iam).get('user_id')),
-                                                                                    query.get('system_admin'),
-                                                                                    query.get('latitude'),
-                                                                                    query.get('longitude'),
-                                                                                    user_agent,
-                                                                                    ip,
-                                                                                    res); 
+const SocketConnect = (app_id, iam, ip, user_agent, accept_language, res) => service.SocketConnect( app_id, 
+                                                                                                    getNumberValue(iam_decode(iam).get('user_id')),
+                                                                                                    iam_decode(iam).get('system_admin'),
+                                                                                                    user_agent,
+                                                                                                    accept_language,
+                                                                                                    ip,
+                                                                                                    res); 
 
 export{ConnectedUpdate, CheckOnline, SocketSendSystemAdmin, ConnectedListSystemadmin, SocketSendAdmin, ConnectedListAdmin, ConnectedCount, SocketConnect};

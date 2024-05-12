@@ -2838,13 +2838,6 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
     }        
 };
 /**
- * Broadcast init
- * @returns {void}
- */
-const broadcast_init = () => {
-    connectOnline();
-};
-/**
  * Show broadcast message
  * @param {string} broadcast_message 
  * @returns {void}
@@ -2859,19 +2852,23 @@ const show_broadcast = (broadcast_message) => {
                 location.href = '/';
             else
                 if (message)
-                    show_maintenance(message);
+                    show_maintenance(window.atob(message));
             break;
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL.service_socket_client_ID = JSON.parse(message).client_id;
+            COMMON_GLOBAL.service_socket_client_ID =    JSON.parse(window.atob(message)).client_id;
+            COMMON_GLOBAL.client_latitude =             JSON.parse(window.atob(message)).latitude;
+            COMMON_GLOBAL.client_longitude =            JSON.parse(window.atob(message)).longitude;
+            COMMON_GLOBAL.client_place =                JSON.parse(window.atob(message)).place;
+            COMMON_GLOBAL.client_timezone =             JSON.parse(window.atob(message)).timezone;
             break;
         }
         case 'CHAT':
         case 'ALERT':{
             if (AppDocument.querySelector('#common_dialogue_maintenance'))
-                ComponentRender('common_broadcast', {message:message}, '/maintenance/component/broadcast.js');
+                ComponentRender('common_broadcast', {message:window.atob(message)}, '/maintenance/component/broadcast.js');
             else
-                ComponentRender('common_broadcast', {message:message}, '/common/component/broadcast.js');
+                ComponentRender('common_broadcast', {message:window.atob(message)}, '/common/component/broadcast.js');
             break;
         }
 		case 'PROGRESS':{
@@ -2901,13 +2898,7 @@ const show_maintenance = (message, init=null) => {
  * @returns {void}
  */
 const reconnect = () => {
-    setTimeout(()=>{
-                    if (checkconnected())
-                        get_gps_from_ip().then(()=>{
-                            connectOnline();});
-                    else
-                        connectOnline();
-                   }, 5000);
+    setTimeout(()=>{connectOnline();}, 5000);
 };
 /**
  * Socket update online status
@@ -2915,13 +2906,8 @@ const reconnect = () => {
  */
 const updateOnlineStatus = async () => {
     return await new Promise((resolve, reject)=>{
-        const json_data = { identity_provider_id: COMMON_GLOBAL.user_identity_provider_id ??'',
-                            system_admin : COMMON_GLOBAL.system_admin ?? '',
-                            latitude:COMMON_GLOBAL.client_latitude,
-                            longitude:COMMON_GLOBAL.client_longitude
-                        };
         const token_type = COMMON_GLOBAL.system_admin?'SYSTEMADMIN':'APP_DATA';
-        FFB('SERVER', `/socket/${COMMON_GLOBAL.service_socket_client_ID??''}`, null, 'PATCH', token_type, json_data)
+        FFB('SERVER', `/socket/${COMMON_GLOBAL.service_socket_client_ID??''}`, null, 'PATCH', token_type, null)
         .then(()=>resolve())
         .catch((error)=>reject(error));
     })
@@ -2931,11 +2917,7 @@ const updateOnlineStatus = async () => {
  * @returns {Promise.<void>}
  */
 const connectOnline = async () => {
-    FFB('SERVER',
-        '/socket',
-        `identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id??''}` +
-        `&system_admin=${COMMON_GLOBAL.system_admin ?? ''}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
-        'GET', 'SOCKET', null)
+    FFB('SERVER', '/socket', null, 'GET', 'SOCKET', null)
     .then((result_eventsource)=>{
         COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
         if (COMMON_GLOBAL.service_socket_eventsource){
@@ -4172,7 +4154,7 @@ const init_common = async (parameters) => {
             AppDocument.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
         }
             
-        broadcast_init();
+        connectOnline();
         if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.system_admin_only==1){
             resolve(decoded_parameters);
         }
