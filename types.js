@@ -694,6 +694,7 @@
  * @typedef {object} socket_connect_list
  * @property {number} id
  * @property {number} app_id
+ * @property {string} authorization_bearer
  * @property {number} user_account_id
  * @property {number} identity_provider_id
  * @property {number} system_admin
@@ -709,6 +710,7 @@
  * Server - Socket client no res
  * @typedef {{  id:number,
  *              app_id:number,
+ *              authorization_bearer:string,
  *              app_role_icon:number|string,
  *              app_role_id:number|string,
  *              user_account_id:number,
