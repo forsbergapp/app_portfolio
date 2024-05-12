@@ -214,7 +214,7 @@ const component = async props => {
      */
     const user_get = async () => {
         //get user from REST API
-        props.function_FFB('DB_API', `/user_account/${props.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
+        props.function_FFB('DB', `/user_account/${props.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
         .then((/**@type{string}*/result)=>{
             const user = JSON.parse(result);
             if (props.user_account_id == parseInt(user.id)) {

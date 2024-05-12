@@ -99,7 +99,7 @@ const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     const is_provider_user = async () =>{
-        const user = await props.function_FFB('DB_API', `/user_account/${props.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
+        const user = await props.function_FFB('DB', `/user_account/${props.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error});
         if (props.user_account_id == parseInt(user.id))
@@ -134,10 +134,10 @@ const component = async props => {
     const post_component = async () =>{                                                                                             
         if ((props.system_admin_only == 1)==false){
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({
-                locales:await props.function_FFB('DB_API', '/locale', `lang_code=${props.current_locale}`, 'GET', 'APP_DATA', null)
+                locales:await props.function_FFB('DB', '/locale', `lang_code=${props.current_locale}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error}),
-                settings: await props.function_FFB('DB_API', '/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
+                settings: await props.function_FFB('DB', '/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error}),
                 username:props.username ?? props.system_admin ?? '',

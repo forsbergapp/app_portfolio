@@ -390,7 +390,7 @@ const fromBase64 = (str) => {
  */
 const common_translate_ui = async lang_code => {
     //translate objects
-    const app_objects_json = await FFB('DB_API', '/app_object', `data_lang_code=${lang_code}&object_name=APP`, 'GET', 'APP_DATA', null);
+    const app_objects_json = await FFB('DB', '/app_object', `data_lang_code=${lang_code}&object_name=APP`, 'GET', 'APP_DATA', null);
     /**
      * @typedef {   'USERNAME'|'EMAIL'|'NEW_EMAIL'|'BIO'|'PASSWORD'|'PASSWORD_CONFIRM'|'PASSWORD_REMINDER'|'NEW_PASSWORD_CONFIRM'|'NEW_PASSWORD'|'CONFIRM_QUESTION'} translation_key
      */
@@ -422,7 +422,7 @@ const common_translate_ui = async lang_code => {
  * @returns {Promise<string>}
  */
 const get_locales_options = async () =>{
-    const locales = await FFB('DB_API', '/locale', `lang_code=${COMMON_GLOBAL.user_locale}`, 'GET', 'APP_DATA', null)
+    const locales = await FFB('DB', '/locale', `lang_code=${COMMON_GLOBAL.user_locale}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error});
     return locales.map((/**@type{*}*/row, /**@type{number}*/index)=>
@@ -1346,7 +1346,7 @@ const profile_detail = (detailchoice, fetch_detail, click_function) => {
         else
             AppDocument.querySelector('#common_profile_detail').style.display = 'block';
         if (fetch_detail){
-            FFB('DB_API', `${path}/${AppDocument.querySelector('#common_profile_id').innerHTML}`, `detailchoice=${detailchoice}`, 
+            FFB('DB', `${path}/${AppDocument.querySelector('#common_profile_id').innerHTML}`, `detailchoice=${detailchoice}`, 
                 'GET', 'APP_ACCESS', null)
             .then(result=>{
                 let html = '';
@@ -1486,7 +1486,7 @@ const profile_update_stat = async () => {
     return new Promise((resolve, reject) => {
         const profile_id = AppDocument.querySelector('#common_profile_id');
         //get updated stat for given user
-        FFB('DB_API', `/user_account-profile/${profile_id.innerHTML}`, 
+        FFB('DB', `/user_account-profile/${profile_id.innerHTML}`, 
             `id=${profile_id.innerHTML}&client_latitude=${COMMON_GLOBAL.client_latitude}&client_longitude=${COMMON_GLOBAL.client_longitude}`, 
             'GET', 
             'APP_DATA', null)
@@ -1913,7 +1913,7 @@ const user_update = async () => {
         }
         AppDocument.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
         //update user using REST API
-        FFB('DB_API', path, null, 'PATCH', 'APP_ACCESS', json_data)
+        FFB('DB', path, null, 'PATCH', 'APP_ACCESS', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             const user_update = JSON.parse(result);
@@ -1952,7 +1952,7 @@ const user_signup = () => {
         
         AppDocument.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
     
-        FFB('DB_API', '/user_account-signup', null, 'POST', 'APP_SIGNUP', json_data)
+        FFB('DB', '/user_account-signup', null, 'POST', 'APP_SIGNUP', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
             const signup = JSON.parse(result);
@@ -2006,7 +2006,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                                 verification_type:  verification_type,
                                 ...get_uservariables()
                             };
-                FFB('DB_API', `/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PUT', 'APP_DATA', json_data)
+                FFB('DB', `/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PUT', 'APP_DATA', json_data)
                 .then(result=>{
                     AppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     const user_activate = JSON.parse(result).items[0];
@@ -2105,7 +2105,7 @@ const user_delete = async (choice=null, function_delete_event ) => {
                 AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
                 const json_data = { password: password};
     
-                FFB('DB_API', `/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'DELETE', 'APP_ACCESS', json_data)
+                FFB('DB', `/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'DELETE', 'APP_ACCESS', json_data)
                 .then(()=>{
                     AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
                     resolve({deleted: 1});
@@ -2143,7 +2143,7 @@ const user_function = function_name => {
         if (COMMON_GLOBAL.user_account_id == null)
             show_common_dialogue('LOGIN');
         else {
-            FFB('DB_API', path, null, method, 'APP_ACCESS', json_data)
+            FFB('DB', path, null, method, 'APP_ACCESS', json_data)
             .then(()=> {
                 if (AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
                     //follow/like
@@ -2176,7 +2176,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
         }
         case 1:{
             ComponentRemove('common_dialogue_message');
-            FFB('DB_API', `/user_account_app/${user_account_id}`, `delete_app_id=${app_id}`, 'DELETE', 'APP_ACCESS', null)
+            FFB('DB', `/user_account_app/${user_account_id}`, `delete_app_id=${app_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
                 //execute event and refresh app list
                 AppDocument.querySelector('#common_profile_main_btn_cloud').click();
@@ -2202,7 +2202,7 @@ const user_forgot = async () => {
                     email: AppDocument.querySelector('#common_user_start_forgot_email')
                     })==true){
         AppDocument.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
-        FFB('DB_API', '/user_account-forgot', null, 'POST', 'APP_DATA', json_data)
+        FFB('DB', '/user_account-forgot', null, 'POST', 'APP_DATA', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
             const forgot = JSON.parse(result);
@@ -2232,7 +2232,7 @@ const updatePassword = () => {
                      
                      })==true){
         AppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
-        FFB('DB_API', `/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data)
+        FFB('DB', `/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data)
         .then(()=>{
             AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
             dialogue_password_new_clear();
@@ -2258,7 +2258,7 @@ const user_preference_save = async () => {
                 app_setting_preference_direction_id:    select_direction.selectedIndex==-1?null:select_direction.options[select_direction.selectedIndex].id,
                 app_setting_preference_arabic_script_id:select_arabic_script.selectedIndex==-1?null:select_arabic_script.options[select_arabic_script.selectedIndex].id
             };
-        await FFB('DB_API', `/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data);
+        await FFB('DB', `/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data);
     }
 };
 /**
@@ -2267,7 +2267,7 @@ const user_preference_save = async () => {
  */
 const user_preference_get = async () => {
     return new Promise((resolve,reject)=>{
-        FFB('DB_API', `/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
+        FFB('DB', `/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
         .then(result=>{
             const user_account_app = JSON.parse(result)[0];
             //locale
@@ -2371,7 +2371,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
     COMMON_GLOBAL.module_leaflet_session_map = null;
     
     /** @type {type_map_layer[]}*/
-    const map_layers = await FFB('DB_API', '/app_settings_display', `data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
+    const map_layers = await FFB('DB', '/app_settings_display', `data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
     .then((/**@type{string}*/result)=>JSON.parse(result))
     .catch((/**@type{Error}*/error)=>error);
     
@@ -2443,7 +2443,7 @@ const map_country = lang_code =>{
     return new Promise ((resolve, reject)=>{
         let current_group_name = '';
         //country
-        FFB('DB_API', '/country', `lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
+        FFB('DB', '/country', `lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
         .then(result=>{resolve(
             `<option value='' id='' label='…'>…</option>`
             +
