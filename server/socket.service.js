@@ -97,37 +97,43 @@ const ClientAdd = (newClient) => {
 
 /**
  * Socket connected update
- * @param {number} app_id, 
+ * @param {number} app_id,
  * @param {number} client_id
  * @param {number} user_account_id
  * @param {number} system_admin
+ * @param {string} authorization_bearer
  * @param {string} ip
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
+ * @param {Types.res} res
+ * @returns {Promise.<void>}
  */
- const ConnectedUpdate = async (app_id, client_id, user_account_id, system_admin, ip, headers_user_agent, headers_accept_language) => {
-    for (const connected of CONNECTED_CLIENTS){
-        if (connected.id==client_id){
-            const connectUserData =  await getConnectedUserData(app_id, user_account_id, ip, headers_user_agent, headers_accept_language);
-            connected.user_account_id = user_account_id;
-            connected.system_admin = system_admin;
-            connected.connection_date = new Date().toISOString();
-            connected.identity_provider_id = connectUserData.identity_provider_id;
-            connected.gps_latitude = connectUserData.latitude;
-            connected.gps_longitude = connectUserData.longitude;
-            connected.place = connectUserData.place;
-            connected.timezone = connectUserData.timezone;
-            //send message to client with updated data
-            ClientSend( connected.response, 
-                        btoa(JSON.stringify({   client_id: client_id, 
-                                                latitude: connectUserData.latitude,
-                                                longitude: connectUserData.longitude,
-                                                place: connectUserData.place,
-                                                timezone: connectUserData.timezone})), 'CONNECTINFO');
-            return null;
-        }
+ const ConnectedUpdate = async (app_id, client_id, user_account_id, system_admin, authorization_bearer, ip, headers_user_agent, headers_accept_language, res) => {
+    if (CONNECTED_CLIENTS.filter(row=>row.id==client_id && row.authorization_bearer == authorization_bearer).length==0){
+        const {not_authorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        throw not_authorized(res, 401, 'ConnectedUpdate, authorization', true);
     }
-    return null;
+    else
+        for (const connected of CONNECTED_CLIENTS){
+            if (connected.id==client_id && connected.authorization_bearer == authorization_bearer){
+                const connectUserData =  await getConnectedUserData(app_id, user_account_id, ip, headers_user_agent, headers_accept_language);
+                connected.user_account_id = user_account_id;
+                connected.system_admin = system_admin;
+                connected.connection_date = new Date().toISOString();
+                connected.identity_provider_id = connectUserData.identity_provider_id;
+                connected.gps_latitude = connectUserData.latitude;
+                connected.gps_longitude = connectUserData.longitude;
+                connected.place = connectUserData.place;
+                connected.timezone = connectUserData.timezone;
+                //send message to client with updated data
+                ClientSend( connected.response, 
+                            btoa(JSON.stringify({   client_id: client_id, 
+                                                    latitude: connectUserData.latitude,
+                                                    longitude: connectUserData.longitude,
+                                                    place: connectUserData.place,
+                                                    timezone: connectUserData.timezone})), 'CONNECTINFO');
+            }
+        }
 };
 /**
  * Socket check connected
@@ -195,6 +201,7 @@ const ClientAdd = (newClient) => {
         //return keys without response
         connected_clients_no_res.push({ id: client.id,
                                         app_id: client.app_id, 
+                                        authorization_bearer:client.authorization_bearer,
                                         app_role_icon:'',
                                         app_role_id:'',
                                         user_account_id: client.user_account_id,
@@ -336,6 +343,7 @@ const ClientAdd = (newClient) => {
  * @param {number} app_id
  * @param {number} user_account_id
  * @param {number} system_admin
+ * @param {string} authorization_bearer
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
  * @param {string} ip
@@ -344,6 +352,7 @@ const ClientAdd = (newClient) => {
  const SocketConnect = async (  app_id, 
                                 user_account_id, 
                                 system_admin,
+                                authorization_bearer,
                                 headers_user_agent, 
                                 headers_accept_language,
                                 ip, 
@@ -357,6 +366,7 @@ const ClientAdd = (newClient) => {
     const newClient = {
                         id:                     client_id,
                         app_id:                 app_id,
+                        authorization_bearer:   authorization_bearer,
                         user_account_id:        user_account_id,
                         identity_provider_id:   connectUserData.identity_provider_id,
                         system_admin:           system_admin,

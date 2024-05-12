@@ -6,6 +6,8 @@ import * as Types from './../types.js';
 const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 const {send_iso_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
+
 const {default:jwt} = await import('jsonwebtoken');
 /**
  * 
@@ -35,8 +37,11 @@ const {default:jwt} = await import('jsonwebtoken');
 /**
  * Middleware authenticates system admin login
  * @param {number} app_id
+ * @param {string} iam
  * @param {string} authorization
  * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} accept_language
  * @param {Types.res} res 
  * @return {Promise.<{
  *                  username:string,
@@ -45,7 +50,7 @@ const {default:jwt} = await import('jsonwebtoken');
  *                  iat:number,
  *                  tokentimestamp:number}>}
  */
-const AuthenticateSystemadmin = async (app_id, authorization, ip,res)=>{
+const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agent, accept_language, res)=>{
     return new Promise((resolve, reject)=>{
         const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
             const { default: {compare} } = await import('bcrypt');
@@ -69,12 +74,17 @@ const AuthenticateSystemadmin = async (app_id, authorization, ip,res)=>{
                                     date_created:       new Date().toISOString()};
             await file_append_log('IAM_SYSTEMADMIN_LOGIN', file_content, 'YYYYMMDD')
             .then(()=>{
-                if (result == 1)
-                    resolve({   username:username,
-                                token_at: jwt_data.token,
-                                exp:jwt_data.exp,
-                                iat:jwt_data.iat,
-                                tokentimestamp:jwt_data.tokentimestamp});
+                if (result == 1){
+                    ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), '', username, iam_decode(iam).get('authorization_bearer'), ip, user_agent, accept_language, res)
+                    .then(()=>{
+                        resolve({   username:username,
+                                    token_at: jwt_data.token,
+                                    exp:jwt_data.exp,
+                                    iat:jwt_data.iat,
+                                    tokentimestamp:jwt_data.tokentimestamp});
+                                })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                }
                 else
                     reject (not_authorized(res, 401, 'AuthenticateSystemadmin, file_append_log', true));
             });
@@ -568,6 +578,7 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
 };
 
 export{ iam_decode,
+        not_authorized,
         AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
         AuthenticateDataToken, AuthenticateDataTokenRegistration,
         AuthenticateAccessToken, AuthenticateAccessTokenSuperAdmin, AuthenticateAccessTokenAdmin,
