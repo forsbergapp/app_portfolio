@@ -24,7 +24,7 @@ const ConnectedUpdate = (resource_id, iam, data) => service.ConnectedUpdate(reso
  * 
  * @param {number} resource_id 
  */
-const ConnectedGet = resource_id =>service.ConnectedGet(resource_id);
+const CheckOnline = resource_id =>service.ConnectedGet(resource_id).length>0?{online:1}:{online:0};
 
 /**
  * 
@@ -122,4 +122,4 @@ const SocketConnect = (app_id, iam, ip, user_agent, query, res) => service.Socke
                                                                                     ip,
                                                                                     res); 
 
-export{ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedListSystemadmin, SocketSendAdmin, ConnectedListAdmin, ConnectedCount, SocketConnect};
+export{ConnectedUpdate, CheckOnline, SocketSendSystemAdmin, ConnectedListSystemadmin, SocketSendAdmin, ConnectedListAdmin, ConnectedCount, SocketConnect};
