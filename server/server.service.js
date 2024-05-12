@@ -103,13 +103,6 @@ const COMMON = {
             return true;
         };
     app.set('trust proxy', true);
-    /* Ignore compression typescript error:
-        Type '(req: Types.req) => boolean' is not assignable to type 'CompressionFilter'.
-        Types of parameters 'req' and 'req' are incompatible.
-        Type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>' is not assignable to type 'req'.
-        Types of property 'params' are incompatible.
-        Type 'ParamsDictionary' is missing the following properties from type '{ sub: string; info: string; }': sub, info
-    */
     /**@ts-ignore */
     app.use(compression({ filter: shouldCompress }));
     // set JSON maximum size
