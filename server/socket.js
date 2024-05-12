@@ -15,15 +15,18 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  * @param {string} ip
  * @param {string} user_agent
  * @param {string} accept_language
+ * @param {Types.res} res
  * @returns 
  */
-const ConnectedUpdate = (app_id, resource_id, iam, ip, user_agent, accept_language) => service.ConnectedUpdate( app_id, 
+const ConnectedUpdate = (app_id, resource_id, iam, ip, user_agent, accept_language, res) => service.ConnectedUpdate( app_id, 
                                                                                                                 resource_id, 
                                                                                                                 getNumberValue(iam_decode(iam).get('user_id')), 
                                                                                                                 iam_decode(iam).get('system_admin'),
+                                                                                                                iam_decode(iam).get('authorization_bearer'),
                                                                                                                 ip,
                                                                                                                 user_agent,
-                                                                                                                accept_language);
+                                                                                                                accept_language,
+                                                                                                                res);
 /**
  * 
  * @param {number} resource_id 
@@ -119,6 +122,7 @@ const ConnectedCount = (query) => service.ConnectedCount(   getNumberValue(query
 const SocketConnect = (app_id, iam, ip, user_agent, accept_language, res) => service.SocketConnect( app_id, 
                                                                                                     getNumberValue(iam_decode(iam).get('user_id')),
                                                                                                     iam_decode(iam).get('system_admin'),
+                                                                                                    iam_decode(iam).get('authorization_bearer'),
                                                                                                     user_agent,
                                                                                                     accept_language,
                                                                                                     ip,

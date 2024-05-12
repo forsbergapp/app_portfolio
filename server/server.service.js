@@ -160,6 +160,7 @@ const COMMON = {
  */
  const serverRoutes = async (routesparameters) =>{
     
+    const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js`);
     //server iam object
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
 
@@ -241,10 +242,6 @@ const COMMON = {
                 switch (true){
                     case route(`/bff/app_data/v1/app/apps/${resource_id_string}`, 'GET'):{
                         resolve(app.getApps(routesparameters.app_id, resource_id_get(), app_query));
-                        break;
-                    }
-                    case route(`/bff/app_data/v1/server/socket/${resource_id_string}`, 'PATCH'):{
-                        resolve(socket.ConnectedUpdate(routesparameters.app_id, resource_id_get(), routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language));
                         break;
                     }
                     case route(`/bff/app_data/v1/server/socket-status/${resource_id_string}`, 'GET'):{
@@ -476,10 +473,6 @@ const COMMON = {
                         resolve(socket.ConnectedListSystemadmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/socket/${resource_id_string}`, 'PATCH'):{
-                        resolve(socket.ConnectedUpdate(routesparameters.app_id, resource_id_get(), routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language));
-                        break;
-                    }
                     case route(`/bff/systemadmin/v1/server/config-systemadmin`, 'PUT'):{
                         resolve(config.ConfigSave(routesparameters.body));
                         break;
@@ -562,15 +555,26 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/iam/v1/iam/systemadmin`, 'POST'):{
-                        resolve(iam.AuthenticateSystemadmin(routesparameters.app_id, routesparameters.ip, routesparameters.authorization, routesparameters.res));
+                        resolve(iam.AuthenticateSystemadmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
                     case route(`/bff/iam/v1/iam/user`, 'POST'):{
-                        resolve(db_user_account.login(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                        resolve(db_user_account.login(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route(`/bff/admin/v1/iam/user/logoff`, 'POST'):
+                    case route(`/bff/systemadmin/v1/iam/user/logoff`, 'POST'):
+                    case route(`/bff/app_access/v1/iam/user/logoff`, 'POST'):{
+                        resolve(socket.ConnectedUpdate(routesparameters.app_id, 
+                                                        iam_decode(routesparameters.res.req.query.iam).get('client_id'), 
+                                                        null, 
+                                                        '', 
+                                                        iam_decode(routesparameters.res.req.query.iam).get('authorization_bearer'), 
+                                                        routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
                     case route(`/bff/iam/v1/iam/provider/${resource_id_string}`, 'POST'):{
-                        resolve(db_user_account.login_provider(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
+                        resolve(db_user_account.login_provider(routesparameters.app_id, routesparameters.res.req.query.iam, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     default:{

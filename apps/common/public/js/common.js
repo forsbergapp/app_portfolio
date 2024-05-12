@@ -1746,7 +1746,6 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
         COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
         COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
-        await updateOnlineStatus().catch((error)=>{throw error});
         AppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
         AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
         AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
@@ -1780,8 +1779,6 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             set_avatar(provider_id?login_data.provider_image:login_data.avatar ?? null, AppDocument.querySelector('#common_user_menu_avatar_img'));
             AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
             AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
-
-            await updateOnlineStatus().catch((error)=>{throw error});
             
             AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
             ComponentRemove(current_dialogue, true);
@@ -1806,7 +1803,8 @@ const user_logoff = async () => {
         AppDocument.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
         AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
         AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-        await updateOnlineStatus()
+        
+        FFB('IAM', `/user/logoff`, null, 'POST', 'SYSTEMADMIN', null)
         .then(()=>{
             user_preferences_set_default_globals('LOCALE');
             user_preferences_set_default_globals('TIMEZONE');
@@ -1815,7 +1813,10 @@ const user_logoff = async () => {
             //update body class with app theme, direction and arabic script usage classes
             common_preferences_update_body_class_from_preferences();
         })
-        .catch((error)=>{throw error;});
+        .catch((error)=>{
+            COMMON_GLOBAL.service_socket_eventsource?COMMON_GLOBAL.service_socket_eventsource.close():null;
+            reconnect();
+            throw error;});
     }
     else{
         //remove access token
@@ -1830,7 +1831,7 @@ const user_logoff = async () => {
         AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
         AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
 
-        await updateOnlineStatus()
+        FFB('IAM', `/user/logoff`, null, 'POST', COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id?'ADMIN':'APP_ACCESS', null)
         .then(()=>{
             ComponentRemove('common_dialogue_user_edit');
             dialogue_password_new_clear();
@@ -1844,7 +1845,10 @@ const user_logoff = async () => {
             common_preferences_update_body_class_from_preferences();
             common_translate_ui(COMMON_GLOBAL.user_locale);
         })
-        .catch((error)=>{throw error;});
+        .catch((error)=>{
+            COMMON_GLOBAL.service_socket_eventsource?COMMON_GLOBAL.service_socket_eventsource.close():null;
+            reconnect();
+            throw error;});
     }
 };
 
@@ -2763,7 +2767,8 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
     //encode query parameters
     const encodedparameters = query?toBase64(query):'';
     //add and encode IAM parameters
-    const iam =  toBase64(  `authorization_bearer=${authorization_bearer}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
+    const iam =  toBase64(  `&authorization_bearer=${authorization_bearer}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
+                            `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                             `&service=${service}&app_id=${COMMON_GLOBAL.app_id??''}`);
 
     let url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}/${service.toLowerCase()}${path}?parameters=${encodedparameters}&iam=${iam}`;
@@ -2899,18 +2904,6 @@ const show_maintenance = (message, init=null) => {
  */
 const reconnect = () => {
     setTimeout(()=>{connectOnline();}, 5000);
-};
-/**
- * Socket update online status
- * @returns {Promise.<void>}
- */
-const updateOnlineStatus = async () => {
-    return await new Promise((resolve, reject)=>{
-        const token_type = COMMON_GLOBAL.system_admin?'SYSTEMADMIN':'APP_DATA';
-        FFB('SERVER', `/socket/${COMMON_GLOBAL.service_socket_client_ID??''}`, null, 'PATCH', token_type, null)
-        .then(()=>resolve())
-        .catch((error)=>reject(error));
-    })
 };
 /**
  * Socket connect online
@@ -4194,8 +4187,7 @@ export{/* GLOBALS*/
        /*FFB */
        FFB,
        /* SERVICE BROADCAST */
-       show_broadcast, show_maintenance,
-       updateOnlineStatus, connectOnline,
+       show_broadcast, show_maintenance, connectOnline,
        /* SERVICE GEOLOCATION */
        get_place_from_gps, get_gps_from_ip,
        /* SERVICE WORLDCITIES */

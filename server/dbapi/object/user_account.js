@@ -9,7 +9,8 @@ const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio
 const { default: {compare} } = await import('bcrypt');
 const { ConfigGet, ConfigGetApp } = await import(`file://${process.cwd()}/server/config.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+const { iam_decode, AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
 
 const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
 const { createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
@@ -74,10 +75,10 @@ const login_error = async (app_id) =>{
 /**
  * 
  * @param {number} app_id
+ * @param {string} iam
  * @param {string} ip
  * @param {string} user_agent
  * @param {string} accept_language
- * @param {*} query
  * @param {*} data
  * @param {Types.res} res
  * @return {Promise.<{
@@ -87,7 +88,7 @@ const login_error = async (app_id) =>{
  *                  tokentimestamp:number,
  *                  login:Types.db_result_user_account_userLogin[]}>}
  */
-const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
+const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
     return new Promise((resolve, reject)=>{        
         
         /**@type{Types.db_parameter_user_account_userLogin} */
@@ -129,25 +130,33 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                                                             new_code, 
                                                             result_login[0].email)
                                             .then(()=>{
-                                                resolve({
-                                                    accessToken: data_body.access_token,
-                                                    exp:jwt_data.exp,
-                                                    iat:jwt_data.iat,
-                                                    tokentimestamp:jwt_data.tokentimestamp,
-                                                    login: Array(result_login[0])
-                                                });
+                                                ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), ip, user_agent, accept_language, res)
+                                                .then(()=>{
+                                                    resolve({
+                                                        accessToken: data_body.access_token,
+                                                        exp:jwt_data.exp,
+                                                        iat:jwt_data.iat,
+                                                        tokentimestamp:jwt_data.tokentimestamp,
+                                                        login: Array(result_login[0])
+                                                    });
+                                                })
+                                                .catch((/**@type{Types.error}*/error)=>reject(error));
                                             })
                                             .catch((/**@type{Types.error}*/error)=>reject(error));
                                         });
                                     }
                                     else{
-                                        resolve({
-                                            accessToken: data_body.access_token,
-                                            exp:jwt_data.exp,
-                                            iat:jwt_data.iat,
-                                            tokentimestamp:jwt_data.tokentimestamp,
-                                            login: Array(result_login[0])
-                                        });
+                                        ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), ip, user_agent, accept_language, res)
+                                        .then(()=>{
+                                            resolve({
+                                                accessToken: data_body.access_token,
+                                                exp:jwt_data.exp,
+                                                iat:jwt_data.iat,
+                                                tokentimestamp:jwt_data.tokentimestamp,
+                                                login: Array(result_login[0])
+                                            });
+                                        })
+                                        .catch((/**@type{Types.error}*/error)=>reject(error));
                                     }
                                 })
                                 .catch((/**@type{Types.error}*/error)=>reject(error));
@@ -191,9 +200,11 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
 /**
  * 
  * @param {number} app_id 
+ * @param {string} iam
  * @param {number} resource_id
  * @param {string} ip 
  * @param {string} user_agent 
+ * @param {string} accept_language
  * @param {*} query 
  * @param {*} data 
  * @param {Types.res} res
@@ -205,7 +216,7 @@ const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
  *                  items:Types.db_result_user_account_providerSignIn[],
  *                  userCreated:0|1}>}
  */
-const login_provider = (app_id, resource_id, ip, user_agent, query, data, res) =>{
+const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_language, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
         .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin)=>{
@@ -250,14 +261,18 @@ const login_provider = (app_id, resource_id, ip, user_agent, query, data, res) =
                         .then(()=>{
                             createUserAccountApp(app_id, result_signin[0].id)
                             .then(()=>{
-                                resolve({
-                                    accessToken: data_login.access_token,
-                                    exp:jwt_data.exp,
-                                    iat:jwt_data.iat,
-                                    tokentimestamp:jwt_data.tokentimestamp,
-                                    items: result_signin,
-                                    userCreated: 0
-                                });    
+                                ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), ip, user_agent, accept_language, res)
+                                .then(()=>{
+                                    resolve({
+                                        accessToken: data_login.access_token,
+                                        exp:jwt_data.exp,
+                                        iat:jwt_data.iat,
+                                        tokentimestamp:jwt_data.tokentimestamp,
+                                        items: result_signin,
+                                        userCreated: 0
+                                    });
+                                })
+                                .catch((/**@type{Types.error}*/error)=>reject(error));
                             })
                             .catch((/**@type{Types.error}*/error)=>reject(error));
                         })
@@ -280,14 +295,18 @@ const login_provider = (app_id, resource_id, ip, user_agent, query, data, res) =
                             .then(()=>{
                                 service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
                                 .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
-                                    resolve({
-                                        accessToken: data_login.access_token,
-                                        exp:jwt_data.exp,
-                                        iat:jwt_data.iat,
-                                        tokentimestamp:jwt_data.tokentimestamp,
-                                        items: result_signin2,
-                                        userCreated: 1
-                                    });        
+                                    ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), ip, user_agent, accept_language, res)
+                                    .then(()=>{
+                                        resolve({
+                                            accessToken: data_login.access_token,
+                                            exp:jwt_data.exp,
+                                            iat:jwt_data.iat,
+                                            tokentimestamp:jwt_data.tokentimestamp,
+                                            items: result_signin2,
+                                            userCreated: 1
+                                        });
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=>reject(error));
                                 })
                                 .catch((/**@type{Types.error}*/error)=>reject(error));
                             })

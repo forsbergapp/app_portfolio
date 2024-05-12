@@ -8,11 +8,14 @@ const service = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**
  * Middleware authenticates system admin login
  * @param {number} app_id 
- * @param {string} ip 
+ * @param {string} iam
  * @param {string} authorization 
+ * @param {string} ip 
+ * @param {string} user_agent
+ * @param {string} accept_language
  * @param {Types.res} res 
  */
-const AuthenticateSystemadmin = (app_id, ip, authorization, res) => service.AuthenticateSystemadmin(app_id, authorization, ip, res);
+const AuthenticateSystemadmin = (app_id, iam, authorization, ip, user_agent, accept_language, res) => service.AuthenticateSystemadmin(app_id, iam, authorization, ip, user_agent, accept_language, res);
 
 /**
  * Middleware authenticates system admin token
