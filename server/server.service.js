@@ -247,8 +247,8 @@ const COMMON = {
                         resolve(socket.ConnectedUpdate(resource_id_get(), routesparameters.res.req.query.iam, routesparameters.body));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server/socket/${resource_id_string}`, 'GET'):{
-                        resolve(socket.ConnectedGet(resource_id_get(), app_query));
+                    case route(`/bff/app_data/v1/server/socket-status/${resource_id_string}`, 'GET'):{
+                        resolve(socket.CheckOnline(resource_id_get(), app_query));
                         break;
                     }
                     case route(`/bff/app_data/v1/db_api/app_object`, 'GET'):{
