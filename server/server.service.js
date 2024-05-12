@@ -295,11 +295,11 @@ const COMMON = {
                         resolve(db_user_account_app_data_post.getUserPostsByUserId(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account_app_data_post-profile/${resource_id_string}`, 'GET'):{
-                        resolve(db_user_account_app_data_post.getProfileUserPost(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
+                    case route(`/bff/app_data/v1/db_api/user_account_app_data_post-profile-stat-like/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account_app_data_post.getProfileStatLike(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_data/v1/db_api/user_account_app_data_post-profile-all/${resource_id_string}`, 'GET'):{
+                    case route(`/bff/app_data/v1/db_api/user_account_app_data_post-profile/${resource_id_string}`, 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileUserPosts(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }

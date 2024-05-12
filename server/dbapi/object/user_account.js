@@ -1161,7 +1161,7 @@ export {/*DATA_LOGIN*/
         /*DATA_SIGNUP*/
         signup, 
         /*DATA*/
-        activate, forgot, getProfile, getProfileStat, 
+        activate, forgot, getProfile, getProfileStat,
         /*ADMIN*/
         updateAdmin, getUsersAdmin, getStatCountAdmin, getLogonAdmin,
         /*ACCESS*/

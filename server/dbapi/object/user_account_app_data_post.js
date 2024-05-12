@@ -35,26 +35,6 @@ const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
  * @param {*} query
  * @param {Types.res} res
  */
-const getProfileUserPost = (app_id, resource_id, query, res) =>{
-    return new Promise((resolve, reject)=>{
-        service.getProfileUserPost(app_id, resource_id)
-        .then((/**@type{Types.db_result_user_account_app_data_post_getProfileUserPost[]}*/result)=>{
-            if (result[0])
-                resolve(result);
-            else
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                });
-        });
-    });
-};
-/**
- * 
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*} query
- * @param {Types.res} res
- */
 const getProfileUserPosts =(app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getProfileUserPosts(app_id, resource_id, getNumberValue(query.get('id_current_user')))
@@ -69,7 +49,26 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
         .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
-
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {*} query
+ * @param {Types.res} res
+ */
+ const getProfileStatLike = (app_id, resource_id, query, res) =>{
+    return new Promise((resolve, reject)=>{
+        service.getProfileStatLike(app_id, resource_id)
+        .then((/**@type{Types.db_result_user_account_data_post_getProfileStatLike[]}*/result)=>{
+            if (result[0])
+                resolve(result);
+            else
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+        });
+    });
+};
 /**
  * 
  * @param {number} app_id 
@@ -220,6 +219,6 @@ const like = (app_id, resource_id, data) => user_account_app_data_post_like_serv
 const unlike = (app_id, resource_id, data) => user_account_app_data_post_like_service.unlike(app_id, resource_id, getNumberValue(data.user_account_app_data_post_id))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
 
-export{ getUserPostsByUserId, getProfileUserPost, getProfileUserPosts, getProfileStatPost,
+export{ getUserPostsByUserId, getProfileUserPosts, getProfileStatLike, getProfileStatPost,
         /*ACCESS */
         getProfileUserPostDetail, createUserPost, updateUserPost, deleteUserPost, like, unlike};
