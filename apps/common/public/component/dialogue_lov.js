@@ -62,16 +62,16 @@ const component = async props => {
             case 'APP_CATEGORY':{
                 props.common_document.querySelector('#common_lov_title').classList.add('app_category');
                 lov_column_value = 'app_category_text';
-                path = '/admin/app_category';
-                service = 'DB_API';
+                path = '/app_category';
+                service = 'DB-ADMIN';
                 token_type = 'APP_ACCESS';
                 break;
             }
             case 'APP_ROLE':{
                 props.common_document.querySelector('#common_lov_title').classList.add('app_role');
                 lov_column_value = 'icon';
-                path = '/admin/app_role';
-                service = 'DB_API';
+                path = '/app_role';
+                service = 'DB-ADMIN';
                 token_type = 'APP_ACCESS';
                 break;
             }
