@@ -943,7 +943,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 .app_role_superadmin, .app_role_admin, .app_role_user, .app_role_system_admin{
 	transform: translate(5px,-1px) scale(1.5);
 }
-.list_connected_col:nth-child(1){
+.list_connected_col{
 	width:70px;
 }
 .list_connected_col:nth-child(2){
@@ -955,23 +955,12 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 .list_connected_col:nth-child(4){
 	width:30px;
 }
-.list_connected_col:nth-child(5){
-	width:70px;
-}
-.list_connected_col:nth-child(6){
-	width:70px;
-}
-.list_connected_col:nth-child(7){
-	width:70px;
-}
-.list_connected_col:nth-child(8){
-	width:70px;
-}
-.list_connected_col:nth-child(9){
-	width:70px;
+.list_connected_col:nth-child(10){
+	width:175px;
+	overflow-x: auto;
 }
 .list_connected_col:nth-child(10){
-	width:70px;
+	width:140px;
 }
 /*APP LOG*/
 #list_app_log, #list_connected{

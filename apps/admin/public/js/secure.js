@@ -510,7 +510,7 @@ const sendBroadcast = () => {
                             client_id:          client_id==''?null:client_id,
                             client_id_current:  common.COMMON_GLOBAL.service_socket_client_ID,
                             broadcast_type:     broadcast_type, 
-                            broadcast_message:  broadcast_message};
+                            broadcast_message:  window.btoa(broadcast_message)};
         let path='';
         let token_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
@@ -1605,6 +1605,12 @@ const show_list = async (list_div, query, sort, order_by) => {
                                 <div data-column='gps_longitude' class='list_connected_col list_sort_click list_title'>
                                     GPS LONG
                                 </div>
+                                <div data-column='place' class='list_connected_col list_sort_click list_title'>
+                                    PLACE
+                                </div>
+                                <div data-column='timezone' class='list_connected_col list_sort_click list_title'>
+                                    TIMEZONE
+                                </div>
                                 <div data-column='user_agent' class='list_connected_col list_sort_click list_title'>
                                     USER AGENT
                                 </div>
@@ -1873,6 +1879,12 @@ const show_list = async (list_div, query, sort, order_by) => {
                                             data-latitude='${log.gps_latitude ?? ''}'
                                             data-longitude='${log.gps_longitude ?? ''}'>
                                             ${log.gps_longitude ?? ''}
+                                        </div>
+                                        <div class='list_connected_col'>
+                                            ${log.place}
+                                        </div>
+                                        <div class='list_connected_col'>
+                                            ${log.timezone}
                                         </div>
                                         <div class='list_connected_col common_wide_list_column'>
                                             ${common.getUserAgentPlatform(log.user_agent) ?? ''}

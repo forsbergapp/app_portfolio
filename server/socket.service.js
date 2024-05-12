@@ -11,7 +11,49 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**@type{Types.socket_connect_list[]} */
 let CONNECTED_CLIENTS = [];
 
-
+/**
+     * 
+     * @param {number} app_id 
+     * @param {number|null} user_account_id 
+     * @param {string} ip
+     * @param {string} headers_user_agent 
+     * @param {string} headers_accept_language 
+     * @returns {Promise.<{  latitude:string,
+ *              longitude:string,
+ *               place:string,
+ *               timezone:string,
+ *               identity_provider_id:number}>}
+ */
+const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
+    const { BFF_microservices } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    //get GPS from IP
+    /**@type{Types.bff_parameters_microservices}*/
+    const parameters = {service:'GEOLOCATION', 
+                        path:'/geolocation/ip',
+                        body:null,
+                        query:`ip=${ip}`,
+                        method:'GET', 
+                        ip:ip, 
+                        user_agent:headers_user_agent, 
+                        accept_language:headers_accept_language};
+    
+    const result_geodata = await BFF_microservices(app_id, parameters)
+                                    .then((/**@type{*}*/result_gps)=>JSON.parse(result_gps))
+                                    .catch((/**@type{Types.error}*/error)=>null);
+    const place = result_geodata?
+                    (result_geodata.geoplugin_city + ', ' +
+                    result_geodata.geoplugin_regionName + ', ' +
+                    result_geodata.geoplugin_countryName):'';
+    const {getUserByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
+    const identity_provider_id = user_account_id?await getUserByUserId(app_id, user_account_id)
+                                                    .then((/**@type{string}*/result)=>JSON.parse(result)[0].identity_provider_id)
+                                                    .catch((/**@type{Types.error}*/error)=>null):'';
+    return {latitude:result_geodata.geoplugin_latitude ?? '',
+            longitude:result_geodata.geoplugin_longitude ?? '',
+            place:place,
+            timezone:result_geodata.geoplugin_timezone ?? '',
+            identity_provider_id:identity_provider_id}
+}
 /**
  * Socket client send
  * Used by EventSource and closes connection
@@ -55,22 +97,33 @@ const ClientAdd = (newClient) => {
 
 /**
  * Socket connected update
+ * @param {number} app_id, 
  * @param {number} client_id
  * @param {number} user_account_id
  * @param {number} system_admin
- * @param {number} identity_provider_id
- * @param {string} latitude
- * @param {string} longitude
+ * @param {string} ip
+ * @param {string} headers_user_agent
+ * @param {string} headers_accept_language
  */
- const ConnectedUpdate = (client_id, user_account_id, system_admin, identity_provider_id, latitude, longitude) => {
+ const ConnectedUpdate = async (app_id, client_id, user_account_id, system_admin, ip, headers_user_agent, headers_accept_language) => {
     for (const connected of CONNECTED_CLIENTS){
         if (connected.id==client_id){
+            const connectUserData =  await getConnectedUserData(app_id, user_account_id, ip, headers_user_agent, headers_accept_language);
             connected.user_account_id = user_account_id;
             connected.system_admin = system_admin;
             connected.connection_date = new Date().toISOString();
-            connected.identity_provider_id = identity_provider_id;
-            connected.gps_latitude = latitude;
-            connected.gps_longitude = longitude;
+            connected.identity_provider_id = connectUserData.identity_provider_id;
+            connected.gps_latitude = connectUserData.latitude;
+            connected.gps_longitude = connectUserData.longitude;
+            connected.place = connectUserData.place;
+            connected.timezone = connectUserData.timezone;
+            //send message to client with updated data
+            ClientSend( connected.response, 
+                        btoa(JSON.stringify({   client_id: client_id, 
+                                                latitude: connectUserData.latitude,
+                                                longitude: connectUserData.longitude,
+                                                place: connectUserData.place,
+                                                timezone: connectUserData.timezone})), 'CONNECTINFO');
             return null;
         }
     }
@@ -150,6 +203,8 @@ const ClientAdd = (newClient) => {
                                         connection_date: client.connection_date,
                                         gps_latitude: client.gps_latitude ?? '',
                                         gps_longitude: client.gps_longitude ?? '',
+                                        place: client.place ?? '',
+                                        timezone: client.timezone ?? '',
                                         ip: client.ip,
                                         user_agent: client.user_agent});
     //return rows controlling limit, app_id, year and month
@@ -279,43 +334,50 @@ const ClientAdd = (newClient) => {
  * Socket connect
  * Used by EventSource and leaves connection open
  * @param {number} app_id
- * @param {number} identity_provider_id
  * @param {number} user_account_id
  * @param {number} system_admin
- * @param {string} latitude
- * @param {string} longitude
  * @param {string} headers_user_agent
+ * @param {string} headers_accept_language
  * @param {string} ip
  * @param {Types.res} response
  */
  const SocketConnect = async (  app_id, 
-                                identity_provider_id, 
                                 user_account_id, 
                                 system_admin,
-                                latitude, 
-                                longitude, 
                                 headers_user_agent, 
+                                headers_accept_language,
                                 ip, 
                                 response) =>{
     const client_id = Date.now();
     ClientConnect(response);
     ClientOnClose(response, client_id);
+
+    const connectUserData =  await getConnectedUserData(app_id, user_account_id, ip, headers_user_agent, headers_accept_language);
     /**@type{Types.socket_connect_list} */
     const newClient = {
                         id:                     client_id,
                         app_id:                 app_id,
                         user_account_id:        user_account_id,
-                        identity_provider_id:   identity_provider_id,
+                        identity_provider_id:   connectUserData.identity_provider_id,
                         system_admin:           system_admin,
                         connection_date:        new Date().toISOString(),
-                        gps_latitude:           latitude,
-                        gps_longitude:          longitude,
+                        gps_latitude:           connectUserData.latitude,
+                        gps_longitude:          connectUserData.longitude,
+                        place:                  connectUserData.place,
+                        timezone:               connectUserData.timezone,
                         ip:                     ip,
                         user_agent:             headers_user_agent,
                         response:               response
                     };
+
     ClientAdd(newClient);
-    ClientSend(response, `{\\"client_id\\": ${client_id}}`, 'CONNECTINFO');
+    //send message to client with data
+    
+    ClientSend(response, btoa(JSON.stringify({  client_id: client_id, 
+                                                latitude: connectUserData.latitude,
+                                                longitude: connectUserData.longitude,
+                                                place: connectUserData.place,
+                                                timezone: connectUserData.timezone})), 'CONNECTINFO');
 };
 
 /**
