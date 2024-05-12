@@ -244,7 +244,7 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/app_data/v1/server/socket/${resource_id_string}`, 'PATCH'):{
-                        resolve(socket.ConnectedUpdate(resource_id_get(), routesparameters.res.req.query.iam, routesparameters.body));
+                        resolve(socket.ConnectedUpdate(routesparameters.app_id, resource_id_get(), routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language));
                         break;
                     }
                     case route(`/bff/app_data/v1/server/socket-status/${resource_id_string}`, 'GET'):{
@@ -477,7 +477,7 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/systemadmin/v1/server/socket/${resource_id_string}`, 'PATCH'):{
-                        resolve(socket.ConnectedUpdate(resource_id_get(), routesparameters.res.req.query.iam, routesparameters.body));
+                        resolve(socket.ConnectedUpdate(routesparameters.app_id, resource_id_get(), routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language));
                         break;
                     }
                     case route(`/bff/systemadmin/v1/server/config-systemadmin`, 'PUT'):{
@@ -554,7 +554,7 @@ const COMMON = {
                     }
                     case route(`/bff/socket/v1/server/socket`, 'GET'):{
                         //EventSource uses GET method, should otherwise be POST
-                        resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.res));
+                        resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
                     case route(`/bff/app_signup/v1/db_api/user_account-signup`, 'POST'):{
