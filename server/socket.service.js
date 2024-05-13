@@ -398,7 +398,7 @@ const ClientAdd = (newClient) => {
     const app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
     if (ConfigGetApp(app_id, app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START =='1'){
         setInterval(() => {
-            if (getNumberValue(file_get_cached('CONFIG').MAINTENANCE)==1){
+            if (getNumberValue(file_get_cached('SERVER').METADATA.MAINTENANCE)==1){
                 CONNECTED_CLIENTS.forEach(client=>{
                     if (client.app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
                         ClientSend(client.response, '', 'MAINTENANCE');
