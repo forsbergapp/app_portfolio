@@ -559,12 +559,7 @@ const COMMON = {
                     case route(`/bff/admin/v1/iam/user/logoff`, 'POST'):
                     case route(`/bff/systemadmin/v1/iam/user/logoff`, 'POST'):
                     case route(`/bff/app_access/v1/iam/user/logoff`, 'POST'):{
-                        resolve(socket.ConnectedUpdate(routesparameters.app_id, 
-                                                        iam_decode(routesparameters.res.req.query.iam).get('client_id'), 
-                                                        null, 
-                                                        '', 
-                                                        iam_decode(routesparameters.res.req.query.iam).get('authorization_bearer'), 
-                                                        routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
+                        resolve(socket.ConnectedUpdate(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip,routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
                     case route(`/bff/iam/v1/iam/provider/${resource_id_string}`, 'POST'):{

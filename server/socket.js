@@ -10,7 +10,6 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
 
 /**
  * @param {number} app_id
- * @param {number} resource_id
  * @param {string} iam
  * @param {string} ip
  * @param {string} user_agent
@@ -18,15 +17,15 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  * @param {Types.res} res
  * @returns 
  */
-const ConnectedUpdate = (app_id, resource_id, iam, ip, user_agent, accept_language, res) => service.ConnectedUpdate( app_id, 
-                                                                                                                resource_id, 
-                                                                                                                getNumberValue(iam_decode(iam).get('user_id')), 
-                                                                                                                iam_decode(iam).get('system_admin'),
-                                                                                                                iam_decode(iam).get('authorization_bearer'),
-                                                                                                                ip,
-                                                                                                                user_agent,
-                                                                                                                accept_language,
-                                                                                                                res);
+const ConnectedUpdate = (app_id, iam, ip, user_agent, accept_language, res) => service.ConnectedUpdate( app_id, 
+                                                                                                        getNumberValue(iam_decode(iam).get('client_id')), 
+                                                                                                        getNumberValue(iam_decode(iam).get('user_id')), 
+                                                                                                        iam_decode(iam).get('system_admin'),
+                                                                                                        iam_decode(iam).get('authorization_bearer'),
+                                                                                                        ip,
+                                                                                                        user_agent,
+                                                                                                        accept_language,
+                                                                                                        res);
 /**
  * 
  * @param {number} resource_id 
