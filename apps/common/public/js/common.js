@@ -1793,63 +1793,51 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
  */
 const user_logoff = async () => {
     ComponentRemove('common_dialogue_user_menu');
+    AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
+    AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+    let token_type = '';
     countdown_token_remove();
-    if (COMMON_GLOBAL.system_admin != null){
-        COMMON_GLOBAL.token_admin_at = '';
-        COMMON_GLOBAL.token_exp = null;
-        COMMON_GLOBAL.token_iat = null;
-        COMMON_GLOBAL.token_timestamp = null;
-        COMMON_GLOBAL.system_admin = null;
-        AppDocument.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
-        AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
-        AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-        
-        FFB('IAM', `/user/logoff`, null, 'POST', 'SYSTEMADMIN', null)
-        .then(()=>{
-            user_preferences_set_default_globals('LOCALE');
-            user_preferences_set_default_globals('TIMEZONE');
-            user_preferences_set_default_globals('DIRECTION');
-            user_preferences_set_default_globals('ARABIC_SCRIPT');
-            //update body class with app theme, direction and arabic script usage classes
-            common_preferences_update_body_class_from_preferences();
-        })
-        .catch((error)=>{
-            COMMON_GLOBAL.service_socket_eventsource?COMMON_GLOBAL.service_socket_eventsource.close():null;
-            reconnect();
-            throw error;});
-    }
-    else{
-        //remove access token
-        COMMON_GLOBAL.token_at ='';
-        COMMON_GLOBAL.token_exp = null;
-        COMMON_GLOBAL.token_iat = null;
-        COMMON_GLOBAL.token_timestamp = null;
-        COMMON_GLOBAL.user_account_id = null;
-        COMMON_GLOBAL.user_account_username = null;
-
-        set_avatar(null, AppDocument.querySelector('#common_user_menu_avatar_img')); 
-        AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
-        AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-
-        FFB('IAM', `/user/logoff`, null, 'POST', COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id?'ADMIN':'APP_ACCESS', null)
-        .then(()=>{
+    if (COMMON_GLOBAL.system_admin != null)
+        token_type = 'SYSTEMADMIN';
+    else
+        token_type = COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id?'ADMIN':'APP_ACCESS';
+    FFB('IAM', `/user/logoff`, null, 'POST', token_type, null)
+    .then(()=>{
+        if (COMMON_GLOBAL.system_admin == null){
+            set_avatar(null, AppDocument.querySelector('#common_user_menu_avatar_img')); 
             ComponentRemove('common_dialogue_user_edit');
             dialogue_password_new_clear();
             ComponentRemove('common_dialogue_user_start');
             ComponentRemove('common_dialogue_profile', true);
-            user_preferences_set_default_globals('LOCALE');
-            user_preferences_set_default_globals('TIMEZONE');
-            user_preferences_set_default_globals('DIRECTION');
-            user_preferences_set_default_globals('ARABIC_SCRIPT');
-            //update body class with app theme, direction and arabic script usage classes
-            common_preferences_update_body_class_from_preferences();
+        }
+        else
+            AppDocument.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
+        user_preferences_set_default_globals('LOCALE');
+        user_preferences_set_default_globals('TIMEZONE');
+        user_preferences_set_default_globals('DIRECTION');
+        user_preferences_set_default_globals('ARABIC_SCRIPT');
+        //update body class with app theme, direction and arabic script usage classes
+        common_preferences_update_body_class_from_preferences();
+        if (COMMON_GLOBAL.system_admin == null)
             common_translate_ui(COMMON_GLOBAL.user_locale);
-        })
-        .catch((error)=>{
-            COMMON_GLOBAL.service_socket_eventsource?COMMON_GLOBAL.service_socket_eventsource.close():null;
-            reconnect();
-            throw error;});
-    }
+    })
+    .catch((error)=>{
+        COMMON_GLOBAL.service_socket_eventsource?COMMON_GLOBAL.service_socket_eventsource.close():null;
+        reconnect();
+        throw error;})
+    .finally(()=>{
+        COMMON_GLOBAL.token_admin_at = '';
+        COMMON_GLOBAL.system_admin = null;
+
+        COMMON_GLOBAL.token_at ='';
+        COMMON_GLOBAL.user_account_id = null;
+        COMMON_GLOBAL.user_account_username = null;
+
+        COMMON_GLOBAL.token_exp = null;
+        COMMON_GLOBAL.token_iat = null;
+        COMMON_GLOBAL.token_timestamp = null;
+        
+    });
 };
 
 /**
@@ -2766,8 +2754,9 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
     query += `&lang_code=${COMMON_GLOBAL.user_locale}`;
     //encode query parameters
     const encodedparameters = query?toBase64(query):'';
-    //add and encode IAM parameters
-    const iam =  toBase64(  `&authorization_bearer=${authorization_bearer}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
+    //add and encode IAM parameters, always use Bearer data token in iam to validate EventSource connections
+    const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
+    const iam =  toBase64(  `&authorization_bearer=${authorization_iam}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
                             `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                             `&service=${service}&app_id=${COMMON_GLOBAL.app_id??''}`);
 
