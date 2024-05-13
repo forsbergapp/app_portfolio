@@ -30,11 +30,14 @@ const app_portfolio_title = 'App Portfolio';
  };
 /**
  * Config get apps
+ * @param {number|null} app_id
  * @returns {Types.config_apps_record[]}
  */
- const ConfigGetApps = () => {
-    //return apps array in the object without secret keys
-    const apps = Object.entries(file_get_cached('APPS'))[0][1].reduce(( /**@type{Types.config_apps_record} */app, 
+ const ConfigGetApps = (app_id=null) => {
+    //return apps array in the object without SECRETS, PARAMETERS, RENDER_CONFIG and RENDER_FILES
+    return Object.entries(file_get_cached('APPS'))[0][1]
+                    .filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
+                    .reduce(( /**@type{Types.config_apps_record} */app, 
                                                             /**@type {Types.config_apps_record}*/current)=> 
                                                                 app.concat({APP_ID:current.APP_ID,
                                                                             NAME:current.NAME,
@@ -49,8 +52,7 @@ const app_portfolio_title = 'App Portfolio';
                                                                             FAVICON_32x32:current.FAVICON_32x32,
                                                                             FAVICON_192x192:current.FAVICON_192x192,
                                                                             SHOWPARAM:current.SHOWPARAM,
-                                                                            STATUS:current.STATUS}) , []);
-    return apps;                                                            
+                                                                            STATUS:current.STATUS}), []);
  };
  /**
   * 
@@ -84,28 +86,10 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {object|null}
  */
  const ConfigGetApp = (app_id, data_app_id, parameter) => {
-    switch(parameter){
-        case 'NAME':
-        case 'SUBDOMAIN':
-        case 'PATH':
-        case 'LOGO':
-        case 'JS':
-        case 'JS_SECURE':
-        case 'JS_REPORT':
-        case 'CSS':
-        case 'CSS_REPORT':
-        case 'FAVICON_32x32':
-        case 'FAVICON_192x192':
-        case 'SHOWPARAM':
-        case 'SECRETS':
-        case 'PARAMETERS':
-        case 'RENDER_CONFIG':
-        case 'RENDER_FILES':
-        case 'STATUS':{
-            if (parameter=='PARAMETERS'){
-                const parameters = Object.entries(file_get_cached('APPS'))[0][1].filter(
-                    (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
-                return parameters.sort((/**@type{{}}*/a, /**@type{{}}*/b) => {
+    if (parameter == 'PARAMETERS')
+        return Object.entries(file_get_cached('APPS'))[0][1].filter(
+                (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter]
+                .sort((/**@type{{}}*/a, /**@type{{}}*/b) => {
                     const x = Object.keys(a)[0].toLowerCase();
                     const y = Object.keys(b)[0].toLowerCase();
                     if (x < y) {
@@ -116,15 +100,9 @@ const app_portfolio_title = 'App Portfolio';
                     }
                     return 0;
                 });
-            }
-            else
-                return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                    (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
-        }
-        default:{
-            return null;
-        }
-    }
+    else
+        return Object.entries(file_get_cached('APPS'))[0][1].filter(
+                (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
  };
 /**
  * Config app secret reset db username and passwords
@@ -172,8 +150,7 @@ const app_portfolio_title = 'App Portfolio';
  * Config app parameter update
  * @param {number} app_id
  * @param {number} resource_id
- * @param {{app_id:             number,
- *          parameter_name:     string,
+ * @param {{parameter_name:     string,
  *          parameter_value:    string,
  *          parameter_comment:  string|null}} data
  * @returns {Promise.<void>}
@@ -182,9 +159,9 @@ const app_portfolio_title = 'App Portfolio';
     const file = await file_get('APPS', true);
     
     for (const app of file.file_content.APPS){
-        if (app.APP_ID == data.app_id)
+        if (app.APP_ID == resource_id)
             for (const parameter of app.PARAMETERS){
-                if (resource_id in parameter){
+                if (data.parameter_name in parameter){
                     parameter[data.parameter_name] = data.parameter_value;
                     if (parameter.COMMENT)
                         parameter.COMMENT = data.parameter_comment;
@@ -202,15 +179,19 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {string|null}
  */
 const ConfigGet = (config_group, parameter) => {
-    for (const config_parameter_row of file_get_cached('CONFIG')[config_group]){
-        for (const key of Object.keys(config_parameter_row)){
-            if (key==parameter){
-                /**@ts-ignore */
-                return config_parameter_row[key];
+    if (config_group=='METADATA')
+        return parameter?file_get_cached('SERVER')[config_group][parameter]:file_get_cached('SERVER')[config_group];
+    else{
+        for (const config_parameter_row of file_get_cached('SERVER')[config_group]){
+            for (const key of Object.keys(config_parameter_row)){
+                if (key==parameter){
+                    /**@ts-ignore */
+                    return config_parameter_row[key];
+                }
             }
-        }
-    }                
-    return null;
+        }                
+        return null;
+    }
 };
 /**
  * Config exists
@@ -218,7 +199,7 @@ const ConfigGet = (config_group, parameter) => {
  */
 const ConfigExists = async () => {
     try {
-        await file_get('CONFIG');    
+        await file_get('SERVER');    
         return true;
     } catch (error) {
         return false;
@@ -249,12 +230,12 @@ const DefaultConfig = async () => {
                 [Types.db_file_db_name, Types.microservice_config_service]]} 
     */
     const config_obj = [
-                            ['CONFIG',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APPS',                        await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_apps.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IAM_BLOCKIP',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_iam_blockip.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IAM_POLICY',                  await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IAM_USERAGENT',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_iam_useragent.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IAM_USER',                    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_iam_user.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['SERVER',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['APPS',                        await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_apps.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IAM_BLOCKIP',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_iam_blockip.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IAM_POLICY',                  await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IAM_USERAGENT',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_iam_useragent.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IAM_USER',                    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_iam_user.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['MICROSERVICE_CONFIG',         await fs.promises.readFile(process.cwd() + `${SLASH}microservice${SLASH}default_microservice_config.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['MICROSERVICE_SERVICES',       await fs.promises.readFile(process.cwd() + `${SLASH}microservice${SLASH}default_microservices.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
                         ]; 
@@ -275,9 +256,9 @@ const DefaultConfig = async () => {
             }
     });
     //set server metadata
-    config_obj[0][1].CONFIGURATION    = app_portfolio_title;
-    config_obj[0][1].CREATED          = `${new Date().toISOString()}`;
-    config_obj[0][1].MODIFIED         = '';
+    config_obj[0][1].METADATA.CONFIGURATION = app_portfolio_title;
+    config_obj[0][1].METADATA.CREATED       = `${new Date().toISOString()}`;
+    config_obj[0][1].METADATA.MODIFIED      = '';
 
     //generate hash for apps
     config_obj[1][1].APPS.map((/**@type{Types.config_apps_record}*/row)=>{
@@ -334,53 +315,62 @@ const InitConfig = async () => {
     });
 };
 /**
- * Config maintenance set
- * @param {string} value
- */
- const ConfigMaintenanceSet = async (value) => {
-    const file = await file_get('CONFIG', true);
-    file.file_content.MAINTENANCE = value;
-    file.file_content.MODIFIED = new Date().toISOString();
-    await file_update('CONFIG', file.transaction_id, file.file_content);
-    return null;
-};
-
-/**
- * Config maintenance get
- */
-const ConfigMaintenanceGet = async () => {
-    const file = await file_get('CONFIG');
-    return {value:file.file_content.MAINTENANCE};
-};
-/**
  * Config get saved
  * @param {Types.db_file_db_name} file
- * @returns {object}
+ * @param {boolean} cached
+ * @param {Types.config_group|null} config_group
+ * @param {string|null} parameter
+ * @returns {Promise.<object>}
  */
-const ConfigGetSaved = file => file_get_cached(file);
-
+const ConfigFileGet = async (file, cached=true, config_group=null, parameter=null) => {
+    const config = cached?file_get_cached(file):await file_get(file).then((/**@type{*}*/config)=>config.file_content);
+    return await new Promise((resolve) => {
+        if (config_group)
+            if (config_group =='METADATA')
+                resolve(parameter?config[config_group][parameter]:config[config_group]);
+            else
+                resolve(parameter?config[config_group].filter((/**@type{*}*/row)=>row[parameter])[0][parameter]:config[config_group]);
+        else{
+            //no filters, return whole config
+            resolve(config);
+        }
+    });
+}
 /**
  * Config save
- * only one row should have second column not null
- * @param {[  ['CONFIG', Types.config_server],
- *            ['APPS', Types.config_apps],
- *            ['IAM_BLOCKIP', Types.config_iam_blockip],
- *            ['IAM_POLICY', Types.config_iam_policy],
- *            ['IAM_USERAGENT', Types.config_iam_useragent],
- *            ['IAM_USER', Types.config_iam_user],
- *            ['MICROSERVICE_CONFIG', Types.microservice_config],
- *            ['MICROSERVICE_SERVICES', Types.microservice_config_service]]} file_content
+ * @param {string} resource_id
+ * @param { Types.config_server|
+ *          Types.config_apps|
+ *          Types.config_iam_blockip|
+ *          Types.config_iam_policy|
+ *          Types.config_iam_useragent|
+ *          Types.microservice_config|
+ *          Types.microservice_config_service|null} config
+ * @param {number|null} maintenance
+ * @param {string|null} configuration
+ * @param {string|null} comment
  */
-const ConfigSave = async (file_content) => {
-    const file_config = await file_get(file_content.filter(file=>(file[1]))[0][0], true);
-    if (file_content[0][1]){
-        file_content[0][1].MAINTENANCE = file_config.file_content.MAINTENANCE;
-        file_content[0][1].CONFIGURATION = file_config.file_content.CONFIGURATION;
-        file_content[0][1].COMMENT = file_config.file_content.COMMENT;
-        file_content[0][1].CREATED = file_config.file_content.CREATED;
-        file_content[0][1].MODIFIED = new Date().toISOString();
+const ConfigFileSave = async (resource_id, config, maintenance, configuration, comment) => {
+
+    const file_config = await file_get(resource_id, true);
+    if (config){
+        //file updated
+        if (resource_id=='SERVER'){
+            const metadata = file_config.file_content.METADATA;
+            file_config.file_content = config;
+            file_config.file_content.METADATA = metadata;
+        }
+        else
+            file_config.file_content = config;
     }
-    await file_update(file_content.filter(file=>(file[1]))[0][0], file_config.transaction_id, file_content.filter(file=>(file[1]))[0][1]);
+    if (resource_id=='SERVER'){
+        file_config.file_content.METADATA.MAINTENANCE = maintenance ?? file_config.file_content.METADATA.MAINTENANCE;
+        file_config.file_content.METADATA.CONFIGURATION = configuration ?? file_config.file_content.METADATA.CONFIGURATION;
+        file_config.file_content.METADATA.COMMENT = comment ?? file_config.file_content.METADATA.COMMENT;
+        file_config.file_content.METADATA.CREATED = file_config.file_content.METADATA.CREATED;
+        file_config.file_content.METADATA.MODIFIED = new Date().toISOString();
+    }
+    await file_update(resource_id, file_config.transaction_id, file_config.file_content);
 };
 /**
  * Check first time
@@ -410,6 +400,6 @@ const CreateSystemAdmin = async (admin_name, admin_password) => {
 };
 
 export{ CreateRandomString,
-        ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
+        ConfigFileGet, ConfigFileSave, CheckFirstTime,
         CreateSystemAdmin, 
         ConfigGet, ConfigGetUser, ConfigGetApps, ConfigGetAppHost, ConfigGetApp, ConfigAppSecretDBReset, ConfigAppSecretUpdate, ConfigAppParameterUpdate, InitConfig};

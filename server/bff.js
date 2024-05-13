@@ -9,7 +9,7 @@ const {responsetime} = await import(`file://${process.cwd()}/server/server.servi
 const {LogRequestI} = await import(`file://${process.cwd()}/server/log.service.js`);
 const {iam_decode, AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
 const {randomUUID, createHash} = await import('node:crypto');
-const {CheckFirstTime, ConfigGet, ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) init for all methods
@@ -51,7 +51,7 @@ const fs = await import('node:fs');
         res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
         if (ConfigGet('SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1')
-            res.setHeader('content-security-policy', ConfigGetSaved('IAM_POLICY')['content-security-policy']);
+            res.setHeader('content-security-policy', await ConfigFileGet('IAM_POLICY', false).then((/**@type{*}*/row)=>row['content-security-policy']));
         res.setHeader('cross-origin-opener-policy','same-origin');
         res.setHeader('cross-origin-resource-policy',	'same-origin');
         res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
