@@ -1338,18 +1338,18 @@ const show_monitor = async (yearvalues) =>{
     const monitor_month = list_generate(12);
     const monitor_day = common.COMMON_GLOBAL.system_admin!=null?list_generate(31):'';
     
-    const monitor_log_data = common.COMMON_GLOBAL.system_admin !=null?await get_log_parameters():{parameters:{SERVICE_LOG_SCOPE_REQUEST:'',
-                                                                                                            SERVICE_LOG_SCOPE_SERVER:'', 
-                                                                                                            SERVICE_LOG_SCOPE_SERVICE:'',
-                                                                                                            SERVICE_LOG_SCOPE_APP:'',
-                                                                                                            SERVICE_LOG_SCOPE_DB:'',
-                                                                                                            SERVICE_LOG_REQUEST_LEVEL:0,
-                                                                                                            SERVICE_LOG_SERVICE_LEVEL:0,
-                                                                                                            SERVICE_LOG_DB_LEVEL:0,
-                                                                                                            SERVICE_LOG_LEVEL_VERBOSE:'',
-                                                                                                            SERVICE_LOG_LEVEL_ERROR:'',
-                                                                                                            SERVICE_LOG_LEVEL_INFO:'',
-                                                                                                            SERVICE_LOG_FILE_INTERVAL:''},
+    const monitor_log_data = common.COMMON_GLOBAL.system_admin !=null?await get_log_parameters():{parameters:{SCOPE_REQUEST:'',
+                                                                                                            SCOPE_SERVER:'', 
+                                                                                                            SCOPE_SERVICE:'',
+                                                                                                            SCOPE_APP:'',
+                                                                                                            SCOPE_DB:'',
+                                                                                                            REQUEST_LEVEL:0,
+                                                                                                            SERVICE_LEVEL:0,
+                                                                                                            DB_LEVEL:0,
+                                                                                                            LEVEL_VERBOSE:'',
+                                                                                                            LEVEL_ERROR:'',
+                                                                                                            LEVEL_INFO:'',
+                                                                                                            FILE_INTERVAL:''},
                                                                                                 logscope_level_options:''};
 
     //fetch geolocation once
@@ -1388,15 +1388,15 @@ const show_monitor = async (yearvalues) =>{
         AppDocument.querySelector('#menu5_row_parameters_col2_0').style.display = 'none';
         AppDocument.querySelector('#menu5_row_parameters_col3_1').style.display = 'none';
         AppDocument.querySelector('#menu5_row_parameters_col3_0').style.display = 'none';
-        if (monitor_log_data.parameters.SERVICE_LOG_REQUEST_LEVEL==1 ||monitor_log_data.parameters.SERVICE_LOG_REQUEST_LEVEL==2)
+        if (monitor_log_data.parameters.REQUEST_LEVEL==1 ||monitor_log_data.parameters.REQUEST_LEVEL==2)
                 AppDocument.querySelector('#menu5_row_parameters_col1_1').style.display = 'inline-block';
             else
                 AppDocument.querySelector('#menu5_row_parameters_col1_0').style.display = 'inline-block';
-            if (monitor_log_data.parameters.SERVICE_LOG_SERVICE_LEVEL==1 || monitor_log_data.parameters.SERVICE_LOG_SERVICE_LEVEL==2)
+            if (monitor_log_data.parameters.SERVICE_LEVEL==1 || monitor_log_data.parameters.SERVICE_LEVEL==2)
                 AppDocument.querySelector('#menu5_row_parameters_col2_1').style.display = 'inline-block';
             else
                 AppDocument.querySelector('#menu5_row_parameters_col2_0').style.display = 'inline-block';
-            if (monitor_log_data.parameters.SERVICE_LOG_DB_LEVEL==1 || monitor_log_data.parameters.SERVICE_LOG_DB_LEVEL==2)
+            if (monitor_log_data.parameters.DB_LEVEL==1 || monitor_log_data.parameters.DB_LEVEL==2)
                 AppDocument.querySelector('#menu5_row_parameters_col3_1').style.display = 'inline-block';
             else
                 AppDocument.querySelector('#menu5_row_parameters_col3_0').style.display = 'inline-block';
@@ -2295,49 +2295,65 @@ const list_item_click = (item_type, data) => {
 };
 /**
  * Get log parameters
- * @returns {Promise.<{parameters:{ SERVICE_LOG_SCOPE_REQUEST:string,
- *                                  SERVICE_LOG_SCOPE_SERVER:string, 
- *                                  SERVICE_LOG_SCOPE_SERVICE:string,
- *                                  SERVICE_LOG_SCOPE_APP:string,
- *                                  SERVICE_LOG_SCOPE_DB:string,
- *                                  SERVICE_LOG_REQUEST_LEVEL:number,
- *                                  SERVICE_LOG_SERVICE_LEVEL:number,
- *                                  SERVICE_LOG_DB_LEVEL:number,
- *                                  SERVICE_LOG_LEVEL_VERBOSE:string 
- *                                  SERVICE_LOG_LEVEL_ERROR:string
- *                                  SERVICE_LOG_LEVEL_INFO:string,
- *                                  SERVICE_LOG_FILE_INTERVAL:string},
+ * @returns {Promise.<{parameters:{ SCOPE_REQUEST:string,
+ *                                  SCOPE_SERVER:string, 
+ *                                  SCOPE_SERVICE:string,
+ *                                  SCOPE_APP:string,
+ *                                  SCOPE_DB:string,
+ *                                  REQUEST_LEVEL:number,
+ *                                  SERVICE_LEVEL:number,
+ *                                  DB_LEVEL:number,
+ *                                  APP_LEVEL:number,
+ *                                  LEVEL_VERBOSE:string 
+ *                                  LEVEL_ERROR:string
+ *                                  LEVEL_INFO:string,
+ *                                  FILE_INTERVAL:string},
  *                     logscope_level_options:string}>}
  */
 const get_log_parameters = async () => {
     return new Promise((resolve)=>{
-        common.FFB('SERVER', '/config/SERVER', null, 'GET', 'SYSTEMADMIN', null)
+        common.FFB('SERVER', '/config/SERVER', 'config_group=SERVICE_LOG', 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
-            const log_parameters = JSON.parse(result).data.SERVICE_LOG;
+            const log_parameters = {
+                SCOPE_REQUEST : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],
+                SCOPE_SERVER :  JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_SERVER' in row)[0]['SCOPE_SERVER'],
+                SCOPE_SERVICE : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_SERVICE' in row)[0]['SCOPE_SERVICE'],
+                SCOPE_APP :     JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_APP' in row)[0]['SCOPE_APP'],
+                SCOPE_DB :      JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_DB' in row)[0]['SCOPE_DB'],
+                REQUEST_LEVEL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
+                SERVICE_LEVEL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SERVICE_LEVEL' in row)[0]['SERVICE_LEVEL'],
+                DB_LEVEL :      JSON.parse(result).data.filter((/**@type{*}*/row)=>'DB_LEVEL' in row)[0]['DB_LEVEL'],
+                APP_LEVEL :     JSON.parse(result).data.filter((/**@type{*}*/row)=>'APP_LEVEL' in row)[0]['APP_LEVEL'],
+                LEVEL_INFO :    JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_INFO' in row)[0]['LEVEL_INFO'],
+                LEVEL_ERROR :   JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_ERROR' in row)[0]['LEVEL_ERROR'],
+                LEVEL_VERBOSE : JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_VERBOSE' in row)[0]['LEVEL_VERBOSE'],
+                FILE_INTERVAL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'FILE_INTERVAL' in row)[0]['FILE_INTERVAL']
+               };
             const logscope_level_options = 
-                    `   <option value=0 log_scope='${log_parameters.SERVICE_LOG_SCOPE_REQUEST}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_REQUEST} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
+                        
+                    `   <option value=0 log_scope='${log_parameters.SCOPE_REQUEST}'  log_level='${log_parameters.LEVEL_INFO}'>${log_parameters.SCOPE_REQUEST} - ${log_parameters.LEVEL_INFO}
                         </option>
-                        <option value=1 log_scope='${log_parameters.SERVICE_LOG_SCOPE_REQUEST}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_ERROR}'>${log_parameters.SERVICE_LOG_SCOPE_REQUEST} - ${log_parameters.SERVICE_LOG_LEVEL_ERROR}
+                        <option value=1 log_scope='${log_parameters.SCOPE_REQUEST}'  log_level='${log_parameters.LEVEL_ERROR}'>${log_parameters.SCOPE_REQUEST} - ${log_parameters.LEVEL_ERROR}
                         </option>
-                        <option value=2 log_scope='${log_parameters.SERVICE_LOG_SCOPE_REQUEST}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_VERBOSE}'>${log_parameters.SERVICE_LOG_SCOPE_REQUEST} - ${log_parameters.SERVICE_LOG_LEVEL_VERBOSE}
+                        <option value=2 log_scope='${log_parameters.SCOPE_REQUEST}'  log_level='${log_parameters.LEVEL_VERBOSE}'>${log_parameters.SCOPE_REQUEST} - ${log_parameters.LEVEL_VERBOSE}
                         </option>
-                        <option value=3 log_scope='${log_parameters.SERVICE_LOG_SCOPE_SERVER}'   log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_SERVER} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
+                        <option value=3 log_scope='${log_parameters.SCOPE_SERVER}'   log_level='${log_parameters.LEVEL_INFO}'>${log_parameters.SCOPE_SERVER} - ${log_parameters.LEVEL_INFO}
                         </option>
-                        <option value=4 log_scope='${log_parameters.SERVICE_LOG_SCOPE_SERVER}'   log_level='${log_parameters.SERVICE_LOG_LEVEL_ERROR}'>${log_parameters.SERVICE_LOG_SCOPE_SERVER} - ${log_parameters.SERVICE_LOG_LEVEL_ERROR}
+                        <option value=4 log_scope='${log_parameters.SCOPE_SERVER}'   log_level='${log_parameters.LEVEL_ERROR}'>${log_parameters.SCOPE_SERVER} - ${log_parameters.LEVEL_ERROR}
                         </option>
-                        <option value=5 log_scope='${log_parameters.SERVICE_LOG_SCOPE_APP}'      log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_APP} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
+                        <option value=5 log_scope='${log_parameters.SCOPE_APP}'      log_level='${log_parameters.LEVEL_INFO}'>${log_parameters.SCOPE_APP} - ${log_parameters.LEVEL_INFO}
                         </option>
-                        <option value=6 log_scope='${log_parameters.SERVICE_LOG_SCOPE_APP}'      log_level='${log_parameters.SERVICE_LOG_LEVEL_ERROR}'>${log_parameters.SERVICE_LOG_SCOPE_APP} - ${log_parameters.SERVICE_LOG_LEVEL_ERROR}
+                        <option value=6 log_scope='${log_parameters.SCOPE_APP}'      log_level='${log_parameters.LEVEL_ERROR}'>${log_parameters.SCOPE_APP} - ${log_parameters.LEVEL_ERROR}
                         </option>
-                        <option value=7 log_scope='${log_parameters.SERVICE_LOG_SCOPE_SERVICE}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_SERVICE} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
+                        <option value=7 log_scope='${log_parameters.SCOPE_SERVICE}'  log_level='${log_parameters.LEVEL_INFO}'>${log_parameters.SCOPE_SERVICE} - ${log_parameters.LEVEL_INFO}
                         </option>
-                        <option value=8 log_scope='${log_parameters.SERVICE_LOG_SCOPE_SERVICE}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_ERROR}'>${log_parameters.SERVICE_LOG_SCOPE_SERVICE} - ${log_parameters.SERVICE_LOG_LEVEL_ERROR}
+                        <option value=8 log_scope='${log_parameters.SCOPE_SERVICE}'  log_level='${log_parameters.LEVEL_ERROR}'>${log_parameters.SCOPE_SERVICE} - ${log_parameters.LEVEL_ERROR}
                         </option>
-                        <option value=9 log_scope='${log_parameters.SERVICE_LOG_SCOPE_DB}'       log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_DB} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
+                        <option value=9 log_scope='${log_parameters.SCOPE_DB}'       log_level='${log_parameters.LEVEL_INFO}'>${log_parameters.SCOPE_DB} - ${log_parameters.LEVEL_INFO}
                         </option>
-                        <option value=10 log_scope='${log_parameters.SERVICE_LOG_SCOPE_DB}'      log_level='${log_parameters.SERVICE_LOG_LEVEL_ERROR}'>${log_parameters.SERVICE_LOG_SCOPE_DB} - ${log_parameters.SERVICE_LOG_LEVEL_ERROR}
+                        <option value=10 log_scope='${log_parameters.SCOPE_DB}'      log_level='${log_parameters.LEVEL_ERROR}'>${log_parameters.SCOPE_DB} - ${log_parameters.LEVEL_ERROR}
                         </option>`;
-            APP_GLOBAL.service_log_file_interval = log_parameters.SERVICE_LOG_FILE_INTERVAL;
+            APP_GLOBAL.service_log_file_interval = log_parameters.FILE_INTERVAL;
             resolve({   parameters:log_parameters,
                         logscope_level_options:logscope_level_options});
         });
