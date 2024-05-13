@@ -382,8 +382,8 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
      */
     const block_ip_control = async (ip_v4) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
-            const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
-            const ranges = ConfigGetSaved('IAM_BLOCKIP');
+            const {ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+            const ranges = await ConfigFileGet('IAM_BLOCKIP');
             //check if IP is blocked
             if ((ip_v4.match(/\./g)||[]).length==3){
                 for (const element of ranges) {
@@ -407,8 +407,8 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
      */
     const safe_user_agents = async (client_user_agent) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
-            const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
-            const {user_agents} = ConfigGetSaved('IAM_USERAGENT');
+            const {ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+            const {user_agents} = await ConfigFileGet('IAM_USERAGENT');
             for (const user_agent of user_agents){
                 if (user_agent.user_agent == client_user_agent)
                     return true;

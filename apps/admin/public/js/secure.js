@@ -413,7 +413,7 @@ const get_apps_div = async () =>{
         let service;
         if (common.COMMON_GLOBAL.system_admin!=null){
             service = 'SERVER';
-            path = '/config-systemadmin-apps';
+            path = '/config/APPS';
             authorization_type = 'SYSTEMADMIN';
         }
         else{
@@ -456,7 +456,7 @@ const get_apps = async () => {
         let service;
         if (common.COMMON_GLOBAL.system_admin!=null){
             service = 'SERVER';
-            path = '/config-systemadmin-apps';
+            path = '/config/APPS';
             authorization_type = 'SYSTEMADMIN';
         }
         else{
@@ -619,9 +619,9 @@ const set_broadcast_type = () => {
  */
 const check_maintenance = async () => {
     if (admin_token_has_value()){
-        await common.FFB('SERVER', '/config-systemadmin-maintenance', null, 'GET', 'SYSTEMADMIN', null)
+        await common.FFB('SERVER', '/config/SERVER', 'config_group=METADATA&parameter=MAINTENANCE', 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
-            if (JSON.parse(result).value==1)
+            if (JSON.parse(result).data==1)
                 AppDocument.querySelector('#menu_1_checkbox_maintenance').classList.add('checked');
             else
                 AppDocument.querySelector('#menu_1_checkbox_maintenance').classList.remove('checked');
@@ -640,8 +640,8 @@ const set_maintenance = () => {
             check_value = 1;
         else
             check_value = 0;
-        const json_data = {value: check_value};
-        common.FFB('SERVER', '/config-systemadmin-maintenance', null, 'PATCH', 'SYSTEMADMIN', json_data).catch(()=>null);
+        const json_data = {maintenance:check_value};
+        common.FFB('SERVER', '/config/SERVER', null, 'PUT', 'SYSTEMADMIN', json_data).catch(()=>null);
     }
 };
 /**
@@ -1029,7 +1029,7 @@ const show_app_parameter = (app_id) => {
     AppDocument.querySelector('#apps_save').style.display = 'none';
     AppDocument.querySelector('#list_app_parameter').innerHTML = '';
 
-    common.FFB('CONFIG', '/app', `data_app_id=${app_id}&key=PARAMETERS`, 'GET', 'APP_ACCESS', null)
+    common.FFB('SERVER', `/config-apps/${app_id}`, `key=PARAMETERS`, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div id='list_app_parameter_row_title' class='list_app_parameter_row'>
                         <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>APP ID</div>
@@ -1179,20 +1179,12 @@ const button_save = async (item) => {
                             SERVICE_LOG:        config_json[4]
                         };
             };
-            //the filename is fetched from end of item name list_config_nav_X that is a li element
             const file = AppDocument.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16).toUpperCase();
-            const json_data = { config_json:    [
-                                                ['CONFIG',                  file=='CONFIG'?config_create_server_json():null],
-                                                ['APPS',                    file=='APPS'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                ['IAM_BLOCKIP',             file=='IAM_BLOCKIP'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                ['IAM_POLICY',              file=='IAM_POLICY'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                ['IAM_USERAGENT',           file=='IAM_USERAGENT'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                ['IAM_USER',                file=='IAM_USER'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                ['MICROSERVICE_CONFIG',     file=='MICROSERVICE_CONFIG'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null],
-                                                ['MICROSERVICE_SERVICES',   file=='MICROSERVICE_SERVICES'?JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML):null]
-                                                ]};
+            //file:'SERVER', 'APPS', 'IAM_BLOCKIP', 'IAM_POLICY', 'IAM_USERAGENT', 'IAM_USER', 'MICROSERVICE_CONFIG', 'MICROSERVICE_SERVICES'
+            const json_data = { config:    file=='SERVER'?config_create_server_json():JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML)};
+
             AppDocument.querySelector('#' + item).classList.add('css_spinner');
-            common.FFB('SERVER', '/config-systemadmin', null, 'PUT', 'SYSTEMADMIN', json_data)
+            common.FFB('SERVER', `/config/${file}`, null, 'PUT', 'SYSTEMADMIN', json_data)
             .then(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'))
             .catch(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'));
             break;
@@ -1247,7 +1239,7 @@ const update_record = async (table,
                                 password_new:       parameters.user_account.password,
                                 password_reminder:  parameters.user_account.password_reminder,
                                 verification_code:  parameters.user_account.verification_code};
-                path = `/user_account/${parameters.user_account.id}?`;
+                path = `/user_account/${parameters.user_account.id}`;
                 token_type = 'SUPERADMIN';
                 service = 'DB-ADMIN';
                 method = 'PATCH';
@@ -1264,17 +1256,17 @@ const update_record = async (table,
                 break;
             }
             case 'app_parameter':{
-                json_data = {   app_id:             parameters.app_parameter.app_id,
+                json_data = {   parameter_name:     parameters.app_parameter.parameter_name,
                                 parameter_value:    parameters.app_parameter.parameter_value,
                                 parameter_comment:  parameters.app_parameter.parameter_comment};
-                path = `/app-parameter/${parameters.app_parameter.parameter_name}`;
+                path = `/config-apps-parameter/${parameters.app_parameter.app_id}`;
                 token_type = 'APP_ACCESS';
-                service = 'CONFIG';
-                method = 'PUT';
+                service = 'SERVER';
+                method = 'PATCH';
                 break;
             }
         }
-        await common.FFB(service, path, null, 'PUT', token_type, json_data)
+        await common.FFB(service, path, null, method, token_type, json_data)
         .then(()=>{ row_element.setAttribute('data-changed-record', '0');
                     AppDocument.querySelector('#' + button).classList.remove('css_spinner');})
         .catch(()=>AppDocument.querySelector('#' + button).classList.remove('css_spinner'));
@@ -1366,11 +1358,11 @@ const show_monitor = async (yearvalues) =>{
     let path;
     let token_type = '';
     if (common.COMMON_GLOBAL.system_admin!=null){
-        path  = '/config-systemadmin';
+        path  = '/config/SERVER';
         token_type = 'SYSTEMADMIN';
     }
     else{
-        path  = '/config-admin';
+        path  = '/config/SERVER';
         token_type = 'APP_ACCESS';
     }
     const query = 'config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
@@ -1459,7 +1451,7 @@ const nav_click = (item_id) => {
         AppDocument.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_selected_tab');
     };
     const reset_config = () => {
-        AppDocument.querySelector('#list_config_nav_config').classList.remove('list_nav_selected_tab');
+        AppDocument.querySelector('#list_config_nav_server').classList.remove('list_nav_selected_tab');
         AppDocument.querySelector('#list_config_nav_iam_blockip').classList.remove('list_nav_selected_tab');
         AppDocument.querySelector('#list_config_nav_iam_useragent').classList.remove('list_nav_selected_tab');
         AppDocument.querySelector('#list_config_nav_iam_policy').classList.remove('list_nav_selected_tab');
@@ -1496,10 +1488,10 @@ const nav_click = (item_id) => {
             break;
         }
         //SERVER CONFIG
-        case 'list_config_nav_config':{
+        case 'list_config_nav_server':{
             reset_config();
-            AppDocument.querySelector('#list_config_nav_config').classList.add('list_nav_selected_tab');
-            show_config('CONFIG');
+            AppDocument.querySelector('#list_config_nav_server').classList.add('list_nav_selected_tab');
+            show_config('SERVER');
             break;
         }
         case 'list_config_nav_iam_blockip':{
@@ -2319,9 +2311,9 @@ const list_item_click = (item_type, data) => {
  */
 const get_log_parameters = async () => {
     return new Promise((resolve)=>{
-        common.FFB('SERVER', '/log-parameters', null, 'GET', 'SYSTEMADMIN', null)
+        common.FFB('SERVER', '/config/SERVER', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
-            const log_parameters = JSON.parse(result);
+            const log_parameters = JSON.parse(result).data.SERVICE_LOG;
             const logscope_level_options = 
                     `   <option value=0 log_scope='${log_parameters.SERVICE_LOG_SCOPE_REQUEST}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_REQUEST} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
                         </option>
@@ -2454,7 +2446,7 @@ const show_server_config = () =>{
     AppDocument.querySelector('#menu_6_content').innerHTML = 
         `<div id='menu_6_content_widget1' class='widget'>
             <div id='list_config_nav' class='list_nav'>
-                <div id='list_config_nav_config'        class='list_nav_list list_button common_icon'></div>
+                <div id='list_config_nav_server'        class='list_nav_list list_button common_icon'></div>
                 <div id='list_config_nav_iam_blockip'   class='list_nav_list list_button common_icon'></div>
                 <div id='list_config_nav_iam_useragent' class='list_nav_list list_button common_icon'></div>
                 <div id='list_config_nav_iam_policy'    class='list_nav_list list_button common_icon'></div>
@@ -2465,7 +2457,7 @@ const show_server_config = () =>{
                 <div id='config_save' class='common_dialogue_button button_save common_icon' ></div>
             </div>
         </div>`;
-    nav_click('list_config_nav_config');
+    nav_click('list_config_nav_server');
 };
 /**
  * Show config
@@ -2475,7 +2467,7 @@ const show_server_config = () =>{
 const show_config = async file => {
     AppDocument.querySelector('#list_config').innerHTML = '';
     AppDocument.querySelector('#list_config_edit').innerHTML = '';
-    if (file=='CONFIG'){
+    if (file=='SERVER'){
         AppDocument.querySelector('#list_config').classList.add('common_icon','css_spinner');
         AppDocument.querySelector('#list_config').style.display = 'flex';
         AppDocument.querySelector('#list_config_edit').style.display = 'none';
@@ -2486,13 +2478,13 @@ const show_config = async file => {
         AppDocument.querySelector('#list_config').style.display = 'none';
     }
 
-    await common.FFB('SERVER', '/config-systemadmin-saved', `file=${file}`, 'GET', 'SYSTEMADMIN', null)
+    await common.FFB('SERVER', `/config/${file}`, `saved=1`, 'GET', 'SYSTEMADMIN', null)
     .then((/**@type{string}*/result)=>{
-        const config = JSON.parse(result);
+        const config = JSON.parse(result).data;
         let i = 0;
         AppDocument.querySelector('#list_config_edit').contentEditable = 'true';
         switch (file){
-            case 'CONFIG':{
+            case 'SERVER':{
                 let html = `<div id='list_config_row_title' class='list_config_row'>
                                 <div id='list_config_col_title1' class='list_config_col list_title'>PARAMETER NAME</div>
                                 <div id='list_config_col_title2' class='list_config_col list_title'>PARAMETER VALUE</div>
@@ -2876,7 +2868,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     button_save('config_save');
                     break;
                 }
-                case 'list_config_nav_config' :
+                case 'list_config_nav_server' :
                 case 'list_config_nav_iam_blockip':
                 case 'list_config_nav_iam_useragent':
                 case 'list_config_nav_iam_policy':{

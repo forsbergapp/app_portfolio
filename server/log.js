@@ -9,13 +9,6 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**
  * 
  * @param {number} app_id 
- * @returns 
- */
-const getLogParameters = (app_id) => service.getLogParameters(app_id);
-
-/**
- * 
- * @param {number} app_id 
  * @param {*} query
  */
 const getLogs = (app_id, query) => {
@@ -82,4 +75,4 @@ const getFiles = () =>{
         });
     });
 };
-export {getLogParameters, getLogs, getStatusCodes, getLogStats, getFiles};
+export {getLogs, getStatusCodes, getLogStats, getFiles};

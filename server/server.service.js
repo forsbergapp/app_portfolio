@@ -130,7 +130,7 @@ const COMMON = {
     app.route('/bff/app_signup/v1*').post   (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
     app.route('/bff/app_access/v1*').all    (iam.AuthenticateAccessToken, BFF_app_access);
     app.route('/bff/admin/v1*').all         (iam.AuthenticateAccessTokenAdmin, BFF_admin);    
-    app.route('/bff/superadmin/v1*').put    (iam.AuthenticateAccessTokenSuperAdmin, BFF_superadmin);
+    app.route('/bff/superadmin/v1*').all    (iam.AuthenticateAccessTokenSuperAdmin, BFF_superadmin);
     app.route('/bff/systemadmin/v1*').all   (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
     app.route('/bff/socket/v1*').get        (iam.AuthenticateSocket, BFF_socket);
     app.route('/bff/iam/v1*').post          (iam.AuthenticateIAM, BFF_iam);
@@ -217,9 +217,12 @@ const COMMON = {
                 /**
                  * Returns resource id from URI path
                  * if resource id not requested for a route using resource id and last part of path is string then return null
-                 * @returns {number|null}
+                 * @param {boolean} is_string
+                 * @returns {number|string|null}
                  */
-                const resource_id_get = () => getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                const resource_id_get = (is_string=false) => is_string?
+                                                                URI_path.substring(URI_path.lastIndexOf('/') + 1):
+                                                                    getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
                 
                 /**
                  * 
@@ -231,6 +234,12 @@ const COMMON = {
                                 (url.endsWith('/' + resource_id_string)?url.replace('/' + resource_id_string, URI_path.substring(URI_path.lastIndexOf('/'))):url) == URI_path && 
                                 method == routesparameters.method;
                 
+                /**
+                 * 
+                 * @param {string|number|null} id 
+                 * @returns 
+                 */
+                    const invalid_resource_id = id =>`invalid resourceid : ${id}, route: ${routesparameters.endpoint} ${routesparameters.service} ${URI_path} ${routesparameters.method}`;
                 //using switch (true) pattern
                 switch (true){
                     case route(`/bff/app_data/v1/app/apps/${resource_id_string}`, 'GET'):{
@@ -278,7 +287,7 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/app_data/v1/db/user_account-profile/${resource_id_string}`, 'GET'):{
-                        resolve(db_user_account.getProfile(routesparameters.app_id, URI_path.substring(URI_path.lastIndexOf('/') + 1), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
+                        resolve(db_user_account.getProfile(routesparameters.app_id, resource_id_get(true), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route(`/bff/app_data/v1/db/user_account_app_data_post/${resource_id_string}`, 'GET'):{
@@ -398,18 +407,6 @@ const COMMON = {
                         resolve(socket.ConnectedListAdmin(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/admin/v1/server/config-admin`, 'GET'):{
-                        resolve(config.ConfigGet(app_query));
-                        break;
-                    }
-                    case route(`/bff/admin/v1/config/app`, 'GET'):{
-                        resolve(config.ConfigGetApp(routesparameters.app_id, app_query));
-                        break;
-                    }
-                    case route(`/bff/admin/v1/config/app-parameter/${resource_id_string}`, 'PUT'):{
-                        resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, resource_id_get(), routesparameters.body));
-                        break;
-                    }
                     case route(`/bff/admin/v1/db-admin/database-demo`, 'POST'):{
                         resolve(db_database.DemoInstall(routesparameters.app_id, app_query, routesparameters.body));
                         break;
@@ -466,29 +463,37 @@ const COMMON = {
                         resolve(socket.ConnectedListSystemadmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/config-systemadmin`, 'PUT'):{
-                        resolve(config.ConfigSave(routesparameters.body));
+                    case route(`/bff/admin/v1/server/config-apps/${resource_id_string}`, 'GET'):{
+                        resolve(config.ConfigGetApp(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/config-systemadmin`, 'GET'):{
-                        resolve(config.ConfigGet(app_query));
+                    case route(`/bff/admin/v1/server/config-apps-parameter/${resource_id_string}`, 'PATCH'):{
+                        resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/config-systemadmin-apps`, 'GET'):{
-                        resolve(config.ConfigGetApps());
-                        break;
-                    }
-                    case route(`/bff/systemadmin/v1/server/config-systemadmin-saved`, 'GET'):{
-                        resolve(config.ConfigGetSaved(app_query));
-                        break;
-                    }
-                    case route(`/bff/systemadmin/v1/server/config-systemadmin-maintenance`, 'GET'):{
-                        resolve(config.ConfigMaintenanceGet());
-                        break;
-                    }
-                    case route(`/bff/systemadmin/v1/server/config-systemadmin-maintenance`, 'PATCH'):{
-                        resolve(config.ConfigMaintenanceSet(routesparameters.body));
-                        break;
+                    case route(`/bff/admin/v1/server/config/${resource_id_string}`, 'GET'):
+                    case route(`/bff/systemadmin/v1/server/config/${resource_id_string}`, 'PUT'):
+                    case route(`/bff/systemadmin/v1/server/config/${resource_id_string}`, 'GET'):{
+                        switch (true){
+                            case resource_id_get(true)=='APPS' && routesparameters.method=='GET':{
+                                resolve(config.ConfigGetApps(app_query));
+                                break;
+                            }
+                            case routesparameters.method == 'GET':{
+                                resolve(config.ConfigFileGet(resource_id_get(true), app_query));
+                                break;
+                            }
+                            case routesparameters.method == 'PUT':{
+                                resolve(config.ConfigFileSave(resource_id_get(true), routesparameters.body));
+                                break;
+                            }
+                            default:{
+                                routesparameters.res.statusMessage = invalid_resource_id(resource_id_string);
+                                routesparameters.res.statusCode =404;
+                                reject('⛔');
+                                break;
+                            }
+                        }
                     }
                     case route(`/bff/systemadmin/v1/server/info`, 'GET'):{
                         resolve(info.Info());
@@ -516,10 +521,6 @@ const COMMON = {
                     }
                     case route(`/bff/systemadmin/v1/db-admin/database`, 'DELETE'):{
                         resolve(db_database.Uninstall(routesparameters.app_id, app_query));
-                        break;
-                    }
-                    case route(`/bff/systemadmin/v1/server/log-parameters`, 'GET'):{
-                        resolve(log.getLogParameters());
                         break;
                     }
                     case route(`/bff/systemadmin/v1/server/log`, 'GET'):{
@@ -571,7 +572,7 @@ const COMMON = {
                         break;
                     }
                     default:{
-                        routesparameters.res.statusMessage = 'invalid route :' + routesparameters.endpoint + '_' + routesparameters.service + '_' + URI_path + '_' + routesparameters.method;
+                        routesparameters.res.statusMessage = `invalid route : ${routesparameters.endpoint} ${routesparameters.service} ${URI_path} ${routesparameters.method}`;
                         routesparameters.res.statusCode =400;
                         reject('⛔');
                         break;

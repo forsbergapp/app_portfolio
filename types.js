@@ -451,7 +451,7 @@
 /**
  * 
  * Server - Config group
- * @typedef {'SERVER'|'SERVICE_IAM'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'} config_group
+ * @typedef {'SERVER'|'SERVICE_IAM'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'|'METADATA'} config_group
  * 
  * Server - Config
  * @typedef {{   HTTPS_KEY:string,
@@ -537,16 +537,17 @@
  *              LEVEL_ERROR:string,
  *              LEVEL_INFO:string,
  *              FILE_INTERVAL:string}} config_server_service_log
+ * @typedef  {{ MAINTENANCE:number,
+ *              CONFIGURATION:string,
+ *              COMMENT:string,
+ *              CREATED:string,
+ *              MODIFIED:string}} config_server_metadata
  * @typedef  {{ ['SERVER']:[config_server_server], 
  *              ['SERVICE_IAM']:[config_server_service_iam],
  *              ['SERVICE_SOCKET']:[config_server_socket],
  *              ['SERVICE_DB']:[config_server_service_db],
  *              ['SERVICE_LOG']:[config_server_service_log],
- *              ['CONFIGURATION']:string,
- *              ['MAINTENANCE']:number,
- *              ['COMMENT']:number,
- *              ['CREATED']:string,
- *              ['MODIFIED']:string}} config_server
+ *              ['METADATA']:config_server_metadata}} config_server
  * 
  * @typedef {   config_apps|
  *              config_server|
@@ -812,7 +813,7 @@
  * Server - db file
  * 
  * @typedef {   'APPS'|
- *              'CONFIG'|
+ *              'SERVER'|
  *              'IAM_BLOCKIP'|
  *              'IAM_POLICY'|
  *              'IAM_USER'|

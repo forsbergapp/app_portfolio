@@ -8,26 +8,6 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.
 const {file_get_log_dir, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 /**
- * Get log parameters
- */
- const getLogParameters = () => {
-    /**@type{Types.admin_log_parameters} */
-    const result = {};
-    result.SERVICE_LOG_SCOPE_REQUEST = ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST');
-    result.SERVICE_LOG_SCOPE_SERVER = ConfigGet('SERVICE_LOG', 'SCOPE_SERVER');
-    result.SERVICE_LOG_SCOPE_SERVICE = ConfigGet('SERVICE_LOG', 'SCOPE_SERVICE');
-    result.SERVICE_LOG_SCOPE_APP = ConfigGet('SERVICE_LOG', 'SCOPE_APP');
-    result.SERVICE_LOG_SCOPE_DB = ConfigGet('SERVICE_LOG', 'SCOPE_DB');
-    result.SERVICE_LOG_REQUEST_LEVEL = ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL');
-    result.SERVICE_LOG_SERVICE_LEVEL = ConfigGet('SERVICE_LOG', 'SERVICE_LEVEL');
-    result.SERVICE_LOG_DB_LEVEL = ConfigGet('SERVICE_LOG', 'DB_LEVEL');
-    result.SERVICE_LOG_LEVEL_VERBOSE = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
-    result.SERVICE_LOG_LEVEL_ERROR = ConfigGet('SERVICE_LOG', 'LEVEL_ERROR');
-    result.SERVICE_LOG_LEVEL_INFO = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');  
-    result.SERVICE_LOG_FILE_INTERVAL = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
-    return result;
-};
-/**
  * Send log
  * @param {string} logscope 
  * @param {string} loglevel 
@@ -643,4 +623,4 @@ const getFiles = async () => {
     return logfiles;
 };
 
-export {getLogParameters, LogRequestE, LogRequestI, LogServerI, LogServerE, LogDBI, LogDBE, LogServiceI, LogServiceE, LogAppI, LogAppE, getLogs, getStatusCodes, getLogsStats, getFiles};
+export {LogRequestE, LogRequestI, LogServerI, LogServerE, LogDBI, LogDBE, LogServiceI, LogServiceE, LogAppI, LogAppE, getLogs, getStatusCodes, getLogsStats, getFiles};

@@ -6,44 +6,37 @@ import * as Types from './../types.js';
 const service = await import(`file://${process.cwd()}/server/config.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**
- * Config save
+ * Config file save
+ * @param {string} resource_id
  * @param {*} data
  */
-const ConfigSave =  data => service.ConfigSave(data.config_json);
+const ConfigFileSave =  (resource_id, data) => service.ConfigFileSave(resource_id, data.config, getNumberValue(data.maintenance), data.configuration, data.comment);
 /**
- * Config get
+ * Config file get
+ * @param {Types.db_file_db_name} resource_id
  * @param {*} query
  */
-const ConfigGet = query => {return {data: service.ConfigGet(query.get('config_group'), query.get('parameter'))};};
+ const ConfigFileGet = async (resource_id, query) => {
+    return {data:await service.ConfigFileGet(resource_id, getNumberValue(query.get('cached')), query.get('config_group'), query.get('parameter'))}
+ }
 /**
  * Config get app
  * @param {number} app_id
+ * @param {number} resource_id
  * @param {*} query
  */
- const ConfigGetApp = (app_id, query) => service.ConfigGetApp(app_id, getNumberValue(query.get('data_app_id')), query.get('key'));
+ const ConfigGetApp = (app_id, resource_id, query) => service.ConfigGetApp(app_id, resource_id, query.get('key'));
  /**
  * Config app update
  * @param {number} app_id
+ * @param {number} resource_id
  * @param {*} data
  */
-  const ConfigAppParameterUpdate = (app_id, data) => service.ConfigAppParameterUpdate(app_id, data);
+  const ConfigAppParameterUpdate = (app_id, resource_id, data) => service.ConfigAppParameterUpdate(app_id, resource_id, data);
 /**
  * Config get apps 
- */
-const ConfigGetApps = () => service.ConfigGetApps();
-/**
- * Config get saved
  * @param {*} query
  */
-const ConfigGetSaved = query => service.ConfigGetSaved(query.get('file'));
-/**
- * Config get maintenance value
- */
-const ConfigMaintenanceGet = () => service.ConfigMaintenanceGet();
-/**
- * Config set maintenance value
- * @param {*} data
- */
-const ConfigMaintenanceSet = data => service.ConfigMaintenanceSet(getNumberValue(data.value));
-        
-export {ConfigSave, ConfigGet, ConfigGetApp, ConfigAppParameterUpdate, ConfigGetApps, ConfigGetSaved, ConfigMaintenanceGet, ConfigMaintenanceSet};
+const ConfigGetApps = query => service.ConfigGetApps(getNumberValue(query.get('app_id')));
+
+export {ConfigFileSave, ConfigFileGet, ConfigGetApp, ConfigAppParameterUpdate, ConfigGetApps};

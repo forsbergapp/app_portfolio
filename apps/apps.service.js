@@ -16,7 +16,7 @@ const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/se
  * @returns {boolean}
  */
  const app_start = (app_id=null)=>{
-    if (getNumberValue(file_get_cached('CONFIG').MAINTENANCE)==0 && ConfigGet('SERVICE_DB', 'START')=='1' && 
+    if (file_get_cached('SERVER').METADATA.MAINTENANCE==0 && ConfigGet('SERVICE_DB', 'START')=='1' && 
         ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START=='1' &&
         ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`] )
         if (app_id == null)
