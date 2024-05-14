@@ -535,7 +535,8 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
                         '/app-reports?reportid=' +
                         Buffer.from(Object.entries(query_parameters_obj).reduce((/**@type{*}*/total, current)=>total += (total==''?'':'&') + current[0] + '=' + current[1],''),'utf-8').toString('base64');
             /**@type{Types.bff_parameters_microservices}*/
-            const parameters = {path:'/pdf',
+            const parameters = {service:'PDF', 
+                                path:'/pdf',
                                 body:null,
                                 query: `url=${Buffer.from(url,'utf-8').toString('base64')}&ps=${ps}&hf=${hf}`, 
                                 method:'GET', 
@@ -577,7 +578,8 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
     const { BFF_microservices } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
     /**@type{Types.bff_parameters_microservices}*/
-    const parameters = {path:'/geolocation/ip',
+    const parameters = {service:'GEOLOCATION', 
+                        path:'/geolocation/ip',
                         body:null,
                         query:`ip=${ip}`,
                         method:'GET', 
@@ -598,7 +600,8 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
     }
     else{
         /**@type{Types.bff_parameters_microservices}*/
-        const parameters = {path:'/worldcities/city/random',
+        const parameters = {service:'WORLDCITIES', 
+                            path:'/worldcities/city/random',
                             body:null,
                             query:'', 
                             method:'GET', 
@@ -935,21 +938,15 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                                 resolve(app_result);
                                             })
                                             .catch((/**@type{Types.error}*/err)=>{
-                                                LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF() and LogAppI()', COMMON.app_line(), err)
-                                                .then(()=>{
-                                                    res.statusCode = 500;
-                                                    res.statusMessage = 'SERVER ERROR';
-                                                    reject(err);
-                                                })
+                                                res.statusCode = 500;
+                                                res.statusMessage = err;
+                                                reject(err);
                                             });
                                         })
                                         .catch((/**@type{Types.error}*/err)=>{
-                                            LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF()', COMMON.app_line(), err)
-                                            .then(()=>{
-                                                res.statusCode = 500;
-                                                res.statusMessage = 'SERVER ERROR';
-                                                reject('SERVER ERROR');
-                                            })
+                                            res.statusCode = 500;
+                                            res.statusMessage = 'SERVER ERROR';
+                                            reject('SERVER ERROR');
                                         });
                                     });
                                 else{
