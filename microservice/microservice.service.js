@@ -57,7 +57,7 @@ class CircuitBreaker {
      * 
      * @param {boolean} admin 
      * @param {string} path 
-     * @param {string} service 
+     * @param {string} query
      * @param {string} method 
      * @param {string} client_ip 
      * @param {string} authorization 
@@ -66,7 +66,8 @@ class CircuitBreaker {
      * @param {object} body 
      * @returns {Promise.<string>}
      */
-    async MicroServiceCall(admin, path, service, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
+    async MicroServiceCall(admin, path, query, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
+        const service = (path?path.split('/')[1]:'').toUpperCase();
         if (!this.canRequest(service))
             return '';
         try {
@@ -75,7 +76,7 @@ class CircuitBreaker {
                 timeout = 60 * 1000 * (CONFIG?CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES:60);
             else
                 timeout = this.requestTimetout * 1000;
-            const response = await httpRequest (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);
+            const response = await httpRequest (service, path, query, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);
             this.onSuccess(service);
             return response;    
         } catch (error) {
@@ -85,7 +86,7 @@ class CircuitBreaker {
     }
     /**
      * 
-     * @param {string} service 
+     * @param {string} service
      */
     onSuccess(service){
         this.initState(service);
@@ -104,7 +105,7 @@ class CircuitBreaker {
     }
     /**
      * 
-     * @param {string} service 
+     * @param {string} service
      * @returns 
      */
     canRequest (service){
@@ -136,7 +137,7 @@ const microservice_circuitbreak = new CircuitBreaker();
  * 
  * @param {boolean} admin 
  * @param {string} path 
- * @param {string} service 
+ * @param {string} query
  * @param {string} method 
  * @param {string} client_ip 
  * @param {string} authorization 
@@ -144,8 +145,8 @@ const microservice_circuitbreak = new CircuitBreaker();
  * @param {string} headers_accept_language 
  * @param {object} data 
  */
-const microserviceRequest = async (admin, path,service, method,client_ip,authorization, headers_user_agent, headers_accept_language, data) =>{
-    return microservice_circuitbreak.MicroServiceCall(admin, path,service, method,client_ip,authorization, headers_user_agent, headers_accept_language, data);
+const microserviceRequest = async (admin, path, query, method,client_ip,authorization, headers_user_agent, headers_accept_language, data) =>{
+    return microservice_circuitbreak.MicroServiceCall(admin, path, query, method,client_ip,authorization, headers_user_agent, headers_accept_language, data);
 }; 
 
 /**
@@ -229,8 +230,9 @@ const MicroServiceServer = async (service) =>{
 
 /**
  * 
- * @param {string} service 
- * @param {string|undefined} path 
+ * @param {string} service
+ * @param {string|undefined} path
+ * @param {string} query
  * @param {string} method 
  * @param {number} timeout 
  * @param {string} client_ip 
@@ -240,9 +242,10 @@ const MicroServiceServer = async (service) =>{
  * @param {object} body 
  * @returns {Promise.<string>}
  */                    
-const httpRequest = async (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
-    const request_protocol = ConfigServices(service.toUpperCase()).HTTPS_ENABLE ==1?https:http;
-    const port = ConfigServices(service.toUpperCase()).HTTPS_ENABLE ==1?ConfigServices(service.toUpperCase()).HTTPS_PORT:ConfigServices(service.toUpperCase()).PORT;
+const httpRequest = async (service, path, query, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
+
+    const request_protocol = ConfigServices(service).HTTPS_ENABLE ==1?https:http;
+    const port = ConfigServices(service).HTTPS_ENABLE ==1?ConfigServices(service).HTTPS_PORT:ConfigServices(service).PORT;
     
     return new Promise ((resolve, reject)=>{
         let headers;
@@ -262,7 +265,7 @@ const httpRequest = async (service, path, method, timeout, client_ip, authorizat
                 timeout: timeout,
                 headers : headers,
                 port: port,
-                path: path,
+                path: `${path}?${query}`,
                 rejectUnauthorized: false
             };
         }
@@ -289,7 +292,7 @@ const httpRequest = async (service, path, method, timeout, client_ip, authorizat
                 headers : headers,
                 host: hostname,
                 port: port,
-                path: path,
+                path: `${path}?${query}`,
                 rejectUnauthorized: false
             };
         }

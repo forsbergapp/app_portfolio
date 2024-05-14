@@ -1,7 +1,6 @@
 /** BFF
  * @typedef {{
  *          endpoint: string,
- *          service: string,
  *          host:string,
  *          url:string,
  *          route_path:string,
@@ -15,8 +14,7 @@
  *          accept_language:string,
  *          res: res}} bff_parameters
  * 
- * @typedef {{  service: string,
- *              path:string,
+ * @typedef {{  path:string,
  *              body:object|null, 
  *              query: string, 
  *              method: string,
@@ -25,7 +23,6 @@
  *              accept_language:string}} bff_parameters_microservices
  * 
  * @typedef {{  endpoint: string,
- *              service: string,
  *              host:string,
  *              url:string,
  *              method: string,

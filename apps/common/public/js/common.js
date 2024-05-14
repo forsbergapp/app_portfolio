@@ -390,7 +390,7 @@ const fromBase64 = (str) => {
  */
 const common_translate_ui = async lang_code => {
     //translate objects
-    const app_objects_json = await FFB('DB', '/app_object', `data_lang_code=${lang_code}&object_name=APP`, 'GET', 'APP_DATA', null);
+    const app_objects_json = await FFB('/server-db/app_object', `data_lang_code=${lang_code}&object_name=APP`, 'GET', 'APP_DATA', null);
     /**
      * @typedef {   'USERNAME'|'EMAIL'|'NEW_EMAIL'|'BIO'|'PASSWORD'|'PASSWORD_CONFIRM'|'PASSWORD_REMINDER'|'NEW_PASSWORD_CONFIRM'|'NEW_PASSWORD'|'CONFIRM_QUESTION'} translation_key
      */
@@ -422,7 +422,7 @@ const common_translate_ui = async lang_code => {
  * @returns {Promise<string>}
  */
 const get_locales_options = async () =>{
-    const locales = await FFB('DB', '/locale', `lang_code=${COMMON_GLOBAL.user_locale}`, 'GET', 'APP_DATA', null)
+    const locales = await FFB('/server-db/locale', `lang_code=${COMMON_GLOBAL.user_locale}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error});
     return locales.map((/**@type{*}*/row, /**@type{number}*/index)=>
@@ -1319,7 +1319,7 @@ const profile_detail = (detailchoice, fetch_detail, click_function) => {
         case 6:
         case 7:{
             /*detailchoice 0, 6, 7: app specific */
-            path = '/user_account_app_data_post-profile-detail';
+            path = '/server-db/user_account_app_data_post-profile-detail';
             break;
         }
         case 1:
@@ -1327,12 +1327,12 @@ const profile_detail = (detailchoice, fetch_detail, click_function) => {
         case 3:
         case 4:{
             /*detailchoice 1,2,3, 4: user_account*/
-            path = '/user_account-profile-detail';
+            path = '/server-db/user_account-profile-detail';
             break;
         }
         case 5:{
             /* detailchoice 5, apps, returns same columns*/
-            path = '/user_account_app-apps';
+            path = '/server-db/user_account_app-apps';
             break;
         }
     }
@@ -1346,7 +1346,7 @@ const profile_detail = (detailchoice, fetch_detail, click_function) => {
         else
             AppDocument.querySelector('#common_profile_detail').style.display = 'block';
         if (fetch_detail){
-            FFB('DB', `${path}/${AppDocument.querySelector('#common_profile_id').innerHTML}`, `detailchoice=${detailchoice}`, 
+            FFB(`${path}/${AppDocument.querySelector('#common_profile_id').innerHTML}`, `detailchoice=${detailchoice}`, 
                 'GET', 'APP_ACCESS', null)
             .then(result=>{
                 let html = '';
@@ -1486,7 +1486,7 @@ const profile_update_stat = async () => {
     return new Promise((resolve, reject) => {
         const profile_id = AppDocument.querySelector('#common_profile_id');
         //get updated stat for given user
-        FFB('DB', `/user_account-profile/${profile_id.innerHTML}`, 
+        FFB(`/server-db/user_account-profile/${profile_id.innerHTML}`, 
             `id=${profile_id.innerHTML}&client_latitude=${COMMON_GLOBAL.client_latitude}&client_longitude=${COMMON_GLOBAL.client_longitude}`, 
             'GET', 
             'APP_DATA', null)
@@ -1673,7 +1673,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                         password:  encodeURI(AppDocument.querySelector('#common_user_start_login_system_admin_password').innerHTML),
                         ...get_uservariables()
         };
-        path = '/systemadmin';
+        path = '/server-iam/systemadmin';
         if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
                         {
                         username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
@@ -1708,7 +1708,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                             provider_email:         provider_data.profile_email,
                             ...get_uservariables()
                         };
-            path = `/provider/${provider_data.profile_id}`;
+            path = `/server-iam/provider/${provider_data.profile_id}`;
         }
         else{
             // ES6 object spread operator for user variables
@@ -1720,7 +1720,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                                                 AppDocument.querySelector('#common_user_start_login_password').innerHTML),
                             ...get_uservariables()
             };
-            path = '/user';
+            path = '/server-iam/user';
             if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
                             {
                             username: username_verify?
@@ -1735,7 +1735,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         }            
     }
     
-    const result = await FFB('IAM', path, null, 'POST', 'IAM', json_data)
+    const result = await FFB(path, null, 'POST', 'IAM', json_data)
                     .catch(err=>{
                         AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
                         throw err;
@@ -1801,7 +1801,7 @@ const user_logoff = async () => {
         token_type = 'SYSTEMADMIN';
     else
         token_type = COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id?'ADMIN':'APP_ACCESS';
-    FFB('IAM', `/user/logoff`, null, 'POST', token_type, null)
+    FFB(`/server-iam/user/logoff`, null, 'POST', token_type, null)
     .then(()=>{
         if (COMMON_GLOBAL.system_admin == null){
             set_avatar(null, AppDocument.querySelector('#common_user_menu_avatar_img')); 
@@ -1885,7 +1885,7 @@ const user_update = async () => {
                             avatar:             avatar,
                             ...get_uservariables()
                         };
-            path = `/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
         } else {
             if (input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
                             {
@@ -1897,11 +1897,11 @@ const user_update = async () => {
                             bio:            bio,
                             private:        Number(AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
                         };
-            path = `/user_account-common/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/server-db/user_account-common/${COMMON_GLOBAL.user_account_id ?? ''}`;
         }
         AppDocument.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
         //update user using REST API
-        FFB('DB', path, null, 'PATCH', 'APP_ACCESS', json_data)
+        FFB(path, null, 'PATCH', 'APP_ACCESS', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             const user_update = JSON.parse(result);
@@ -1940,7 +1940,7 @@ const user_signup = () => {
         
         AppDocument.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
     
-        FFB('DB', '/user_account-signup', null, 'POST', 'APP_SIGNUP', json_data)
+        FFB('/server-db/user_account-signup', null, 'POST', 'APP_SIGNUP', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
             const signup = JSON.parse(result);
@@ -1994,7 +1994,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                                 verification_type:  verification_type,
                                 ...get_uservariables()
                             };
-                FFB('DB', `/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PUT', 'APP_DATA', json_data)
+                FFB(`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PUT', 'APP_DATA', json_data)
                 .then(result=>{
                     AppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     const user_activate = JSON.parse(result).items[0];
@@ -2093,7 +2093,7 @@ const user_delete = async (choice=null, function_delete_event ) => {
                 AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
                 const json_data = { password: password};
     
-                FFB('DB', `/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'DELETE', 'APP_ACCESS', json_data)
+                FFB(`/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'DELETE', 'APP_ACCESS', json_data)
                 .then(()=>{
                     AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
                     resolve({deleted: 1});
@@ -2122,16 +2122,16 @@ const user_function = function_name => {
         const json_data = { user_account_id: user_id_profile};
         const check_div = AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`);
         if (check_div.children[0].style.display == 'block') {
-            path = `/user_account_${function_name.toLowerCase()}/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/server-db/user_account_${function_name.toLowerCase()}/${COMMON_GLOBAL.user_account_id ?? ''}`;
             method = 'POST';
         } else {
-            path = `/user_account_${function_name.toLowerCase()}/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/server-db/user_account_${function_name.toLowerCase()}/${COMMON_GLOBAL.user_account_id ?? ''}`;
             method = 'DELETE';
         }
         if (COMMON_GLOBAL.user_account_id == null)
             show_common_dialogue('LOGIN');
         else {
-            FFB('DB', path, null, method, 'APP_ACCESS', json_data)
+            FFB(path, null, method, 'APP_ACCESS', json_data)
             .then(()=> {
                 if (AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
                     //follow/like
@@ -2164,7 +2164,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
         }
         case 1:{
             ComponentRemove('common_dialogue_message');
-            FFB('DB', `/user_account_app/${user_account_id}`, `delete_app_id=${app_id}`, 'DELETE', 'APP_ACCESS', null)
+            FFB(`/server-db/user_account_app/${user_account_id}`, `delete_app_id=${app_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
                 //execute event and refresh app list
                 AppDocument.querySelector('#common_profile_main_btn_cloud').click();
@@ -2190,7 +2190,7 @@ const user_forgot = async () => {
                     email: AppDocument.querySelector('#common_user_start_forgot_email')
                     })==true){
         AppDocument.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
-        FFB('DB', '/user_account-forgot', null, 'POST', 'APP_DATA', json_data)
+        FFB('/server-db/user_account-forgot', null, 'POST', 'APP_DATA', json_data)
         .then(result=>{
             AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
             const forgot = JSON.parse(result);
@@ -2220,7 +2220,7 @@ const updatePassword = () => {
                      
                      })==true){
         AppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
-        FFB('DB', `/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data)
+        FFB(`/server-db/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data)
         .then(()=>{
             AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
             dialogue_password_new_clear();
@@ -2246,7 +2246,7 @@ const user_preference_save = async () => {
                 app_setting_preference_direction_id:    select_direction.selectedIndex==-1?null:select_direction.options[select_direction.selectedIndex].id,
                 app_setting_preference_arabic_script_id:select_arabic_script.selectedIndex==-1?null:select_arabic_script.options[select_arabic_script.selectedIndex].id
             };
-        await FFB('DB', `/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data);
+        await FFB(`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data);
     }
 };
 /**
@@ -2255,7 +2255,7 @@ const user_preference_save = async () => {
  */
 const user_preference_get = async () => {
     return new Promise((resolve,reject)=>{
-        FFB('DB', `/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
+        FFB(`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
         .then(result=>{
             const user_account_app = JSON.parse(result)[0];
             //locale
@@ -2359,7 +2359,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
     COMMON_GLOBAL.module_leaflet_session_map = null;
     
     /** @type {type_map_layer[]}*/
-    const map_layers = await FFB('DB', '/app_settings_display', `data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
+    const map_layers = await FFB('/server-db/app_settings_display', `data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
     .then((/**@type{string}*/result)=>JSON.parse(result))
     .catch((/**@type{Error}*/error)=>error);
     
@@ -2431,7 +2431,7 @@ const map_country = lang_code =>{
     return new Promise ((resolve, reject)=>{
         let current_group_name = '';
         //country
-        FFB('DB', '/country', `lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
+        FFB('/server-db/country', `lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
         .then(result=>{resolve(
             `<option value='' id='' label='…'>…</option>`
             +
@@ -2684,7 +2684,6 @@ const map_update = async (parameters) => {
 };
 /**
  * Frontend for Backend (FFB)
- * @param {string} service 
  * @param {string} path 
  * @param {string|null} query
  * @param {string} method 
@@ -2692,7 +2691,7 @@ const map_update = async (parameters) => {
  * @param {*} json_data 
  * @returns {Promise.<*>} 
  */
-const FFB = async (service, path, query, method, authorization_type, json_data=null) => {
+const FFB = async (path, query, method, authorization_type, json_data=null) => {
     /**@type{number} */
     let status;
     let authorization_bearer = null;
@@ -2758,11 +2757,11 @@ const FFB = async (service, path, query, method, authorization_type, json_data=n
     const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
     const iam =  toBase64(  `&authorization_bearer=${authorization_iam}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
                             `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
-                            `&service=${service}&app_id=${COMMON_GLOBAL.app_id??''}`);
+                            `&app_id=${COMMON_GLOBAL.app_id??''}`);
 
-    let url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}/${service.toLowerCase()}${path}?parameters=${encodedparameters}&iam=${iam}`;
+    let url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${path}?parameters=${encodedparameters}&iam=${iam}`;
 
-    if (service=='SERVER' && authorization_type=='SOCKET'){
+    if (authorization_type=='SOCKET'){
         return new EventSource(url);
     }
     else{
@@ -2899,7 +2898,7 @@ const reconnect = () => {
  * @returns {Promise.<void>}
  */
 const connectOnline = async () => {
-    FFB('SERVER', '/socket', null, 'GET', 'SOCKET', null)
+    FFB('/server-socket/socket', null, 'GET', 'SOCKET', null)
     .then((result_eventsource)=>{
         COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
         if (COMMON_GLOBAL.service_socket_eventsource){
@@ -2922,7 +2921,7 @@ const connectOnline = async () => {
  * @returns {void}
  */
 const checkOnline = (div_icon_online, user_account_id) => {
-    FFB('SERVER', `/socket-status/${user_account_id}`, null, 'GET', 'APP_DATA', null)
+    FFB(`/server-socket/socket-status/${user_account_id}`, null, 'GET', 'APP_DATA', null)
     .then(result=>AppDocument.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
 };
 /**
@@ -2946,7 +2945,7 @@ const get_place_from_gps = async (longitude, latitude) => {
                 //not logged in or a user
                 tokentype = 'APP_DATA';
             }
-        FFB('GEOLOCATION', '/place', `longitude=${longitude}&latitude=${latitude}`, 'GET', tokentype, null)
+        FFB('/geolocation/place', `longitude=${longitude}&latitude=${latitude}`, 'GET', tokentype, null)
         .then(result=>{
             const json = JSON.parse(result);
             if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
@@ -2979,7 +2978,7 @@ const get_gps_from_ip = async () => {
                 //not logged in or a user
                 tokentype = 'APP_DATA';
             }
-        FFB('GEOLOCATION', '/ip', null, 'GET', tokentype, null)
+        FFB('/geolocation/ip', null, 'GET', tokentype, null)
         .then(result=>{
             const geodata = JSON.parse(result);
             COMMON_GLOBAL.client_latitude  = geodata.geoplugin_latitude;
@@ -3003,7 +3002,7 @@ const get_gps_from_ip = async () => {
  */
 const get_cities = async countrycode => {
     return new Promise((resolve, reject)=>{
-        FFB('WORLDCITIES', `/country/${countrycode}`, null, 'GET', 'APP_DATA', null)
+        FFB(`/worldcities/country/${countrycode}`, null, 'GET', 'APP_DATA', null)
         .then(result=>{
             /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
             const cities = JSON.parse(result);

@@ -311,7 +311,7 @@ const AuthenticateAccessToken = (iam, authorization, ip, res, next)  => {
  * @param {function} next
  */
 const AuthenticateSocket = (iam, path, ip, res, next) =>{
-    if (path.startsWith('/server/socket')){
+    if (path.startsWith('/server-socket')){
         //validate Bearer autorization
         AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, null, null, res, next);
     }
@@ -328,7 +328,7 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
  */
  const AuthenticateIAM = (iam, authorization, ip, res, next) =>{
     //check inparameters and Basic authorization
-    if ((iam_decode(iam).get('service')??'').toUpperCase()=='IAM' && authorization.toUpperCase().startsWith('BASIC'))
+    if (authorization.toUpperCase().startsWith('BASIC'))
         if (getNumberValue(iam_decode(iam).get('app_id'))==getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'))){
             //validate Bearer authorization
             AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, null, null, res, next);

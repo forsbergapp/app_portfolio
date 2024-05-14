@@ -65,7 +65,7 @@ const component = async props => {
      * @returns {Promise<void>}
      */
     const post_component = async () =>{
-        const apps = await props.function_FFB('APP', '/apps/', null, 'GET', 'APP_DATA', null)
+        const apps = await props.function_FFB('/app/apps/', null, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error});
         class_spinner = '';
