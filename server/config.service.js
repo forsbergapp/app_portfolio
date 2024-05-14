@@ -34,7 +34,7 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {Types.config_apps_record[]}
  */
  const ConfigGetApps = (app_id=null) => {
-    //return apps array in the object without SECRETS, PARAMETERS, RENDER_CONFIG and RENDER_FILES
+    //return apps array in the object without SECRETS, PARAMETERS and RENDER_CONFIG
     return Object.entries(file_get_cached('APPS'))[0][1]
                     .filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
                     .reduce(( /**@type{Types.config_apps_record} */app, 
@@ -44,13 +44,6 @@ const app_portfolio_title = 'App Portfolio';
                                                                             SUBDOMAIN:current.SUBDOMAIN,
                                                                             PATH:current.PATH,
                                                                             LOGO:current.LOGO,
-                                                                            JS:current.JS,
-                                                                            JS_SECURE:current.JS_SECURE,
-                                                                            JS_REPORT:current.JS_REPORT,
-                                                                            CSS:current.CSS,
-                                                                            CSS_REPORT:current.CSS_REPORT,
-                                                                            FAVICON_32x32:current.FAVICON_32x32,
-                                                                            FAVICON_192x192:current.FAVICON_192x192,
                                                                             SHOWPARAM:current.SHOWPARAM,
                                                                             STATUS:current.STATUS}), []);
  };
@@ -113,14 +106,14 @@ const app_portfolio_title = 'App Portfolio';
     const file = await file_get('APPS', true);
     
     for (const app of file.file_content.APPS){
-        app.SECRETS.SERVICE_DB_DB1_APP_USER = null;
-        app.SECRETS.SERVICE_DB_DB1_APP_PASSWORD = null;
-        app.SECRETS.SERVICE_DB_DB2_APP_USER = null;
-        app.SECRETS.SERVICE_DB_DB2_APP_PASSWORD = null;
-        app.SECRETS.SERVICE_DB_DB3_APP_USER = null;
-        app.SECRETS.SERVICE_DB_DB3_APP_PASSWORD = null;
-        app.SECRETS.SERVICE_DB_DB4_APP_USER = null;
-        app.SECRETS.SERVICE_DB_DB4_APP_PASSWORD = null;
+        app.SECRETS.SERVICE_DB_DB1_APP_USER = '';
+        app.SECRETS.SERVICE_DB_DB1_APP_PASSWORD = '';
+        app.SECRETS.SERVICE_DB_DB2_APP_USER = '';
+        app.SECRETS.SERVICE_DB_DB2_APP_PASSWORD = '';
+        app.SECRETS.SERVICE_DB_DB3_APP_USER = '';
+        app.SECRETS.SERVICE_DB_DB3_APP_PASSWORD = '';
+        app.SECRETS.SERVICE_DB_DB4_APP_USER = '';
+        app.SECRETS.SERVICE_DB_DB4_APP_PASSWORD = '';
     }
     await file_update('APPS', file.transaction_id, file.file_content);
     await file_set_cache_all();
