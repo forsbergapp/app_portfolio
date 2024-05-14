@@ -49,8 +49,7 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
                                     .catch((/**@type{Types.error}*/error)=>{throw error;});
         
     /**@type{Types.bff_parameters_microservices}*/
-    const data = {  service:'MAIL', 
-                    path:'/mail/sendemail',
+    const data = {  path:'/mail/sendemail',
                     body:email_rendered,
                     query:'',
                     method:'POST', 

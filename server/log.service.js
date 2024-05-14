@@ -399,7 +399,7 @@ const getLogs = async (data) => {
         .then(log_rows_array_obj=>{
             data.search = data.search=='null'?'':data.search;
             data.search = data.search==null?'':data.search;
-            if (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')
+            if (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='SERVER-DB')
                 data.select_app_id = null;
             //filter records
             log_rows_array_obj = log_rows_array_obj.filter((/**@type{*}*/record) => {

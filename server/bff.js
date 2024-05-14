@@ -7,7 +7,7 @@ const service = await import('./bff.service.js');
 
 const {responsetime} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {LogRequestI} = await import(`file://${process.cwd()}/server/log.service.js`);
-const {iam_decode, AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
+const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
 const {randomUUID, createHash} = await import('node:crypto');
 const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 const fs = await import('node:fs');
@@ -134,7 +134,7 @@ const fs = await import('node:fs');
         //request
         host: req.headers.host, 
         url:req.originalUrl,
-        route_path: req.originalUrl.substring(req.route.path.indexOf('*')),
+        route_path: req.originalUrl.substring(req.route.path.indexOf('*'), req.originalUrl.indexOf('?')>-1?req.originalUrl.indexOf('?'):req.originalUrl.length),
         method: req.method,
         iam: req.query.iam,
         query: req.query.parameters,
@@ -157,7 +157,6 @@ const fs = await import('node:fs');
  const BFF_app = (req, res) =>{
     /**@type{Types.bff_parameters} */
     const bff_parameters = {endpoint:'APP', 
-                            service: 'APP', 
                             ...BFF_common(req, res)
                             };
     service.BFF(bff_parameters);
@@ -171,7 +170,6 @@ const fs = await import('node:fs');
  const BFF_app_data = (req, res) =>{
     /**@type{Types.bff_parameters} */
     const bff_parameters = {endpoint:'APP_DATA', 
-                            service: iam_decode(req.query.iam).get('service'), 
                             ...BFF_common(req, res)
                             };
     service.BFF(bff_parameters);
@@ -185,7 +183,6 @@ const fs = await import('node:fs');
  const BFF_app_signup = (req, res) =>{
     /**@type{Types.bff_parameters} */
     const bff_parameters = {endpoint:'APP_SIGNUP', 
-                            service: iam_decode(req.query.iam).get('service'), 
                             ...BFF_common(req, res)
                             };
     service.BFF(bff_parameters);
@@ -199,7 +196,6 @@ const fs = await import('node:fs');
  const BFF_app_access = (req, res) =>{
     /**@type{Types.bff_parameters} */
     const bff_parameters = {endpoint:'APP_ACCESS', 
-                            service: iam_decode(req.query.iam).get('service'), 
                             ...BFF_common(req, res)
                             };
     service.BFF(bff_parameters);
@@ -213,7 +209,6 @@ const fs = await import('node:fs');
  const BFF_admin = (req, res) =>{
     /**@type{Types.bff_parameters} */
     const bff_parameters = {endpoint:'ADMIN', 
-                            service: iam_decode(req.query.iam).get('service'), 
                             ...BFF_common(req, res)
                             };
     service.BFF(bff_parameters);
@@ -227,7 +222,6 @@ const fs = await import('node:fs');
  const BFF_superadmin = (req, res) =>{
     /**@type{Types.bff_parameters} */
     const bff_parameters = {endpoint:'SUPERADMIN', 
-                            service: iam_decode(req.query.iam).get('service'), 
                             ...BFF_common(req, res)
                             };
     service.BFF(bff_parameters);
@@ -242,7 +236,6 @@ const fs = await import('node:fs');
  const BFF_systemadmin = (req, res) =>{
     /**@type{Types.bff_parameters} */
     const bff_parameters = {endpoint:'SYSTEMADMIN', 
-                            service: iam_decode(req.query.iam).get('service'), 
                             ...BFF_common(req, res)
                             };
     service.BFF(bff_parameters);
@@ -257,7 +250,6 @@ const fs = await import('node:fs');
 const BFF_socket = (req, res) =>{
     /**@type{Types.bff_parameters} */
     const bff_parameters = {endpoint:'SOCKET', 
-                            service: iam_decode(req.query.iam).get('service'), 
                             ...BFF_common(req, res)
                             };
     service.BFF(bff_parameters);
@@ -271,7 +263,6 @@ const BFF_socket = (req, res) =>{
 const BFF_iam = (req, res) =>{
     /**@type{Types.bff_parameters} */
     const bff_parameters = {endpoint:'IAM', 
-                            service: iam_decode(req.query.iam).get('service'), 
                             ...BFF_common(req, res)
                             };
     service.BFF(bff_parameters);

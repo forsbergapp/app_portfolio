@@ -16,20 +16,20 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  */
  const BFF_microservices = async (app_id, microservice_parameters) => {
     return new Promise((resolve, reject) => {
-        if (app_id !=null && microservice_parameters.service && microservice_parameters.path){
+        if (app_id !=null && microservice_parameters.path){
             let microservice_path = '';
-            const call_microservice = async (/**@type{string}*/microservice_path, /**@type{string}*/service) => {
+            const call_microservice = async (/**@type{string}*/microservice_path, /**@type{string}*/microservice_query) => {
                 //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
                 const authorization = `Basic ${Buffer.from(ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_ID + ':' + ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_SECRET,'utf-8').toString('base64')}`;
                 microserviceRequest(app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then send true
-                                    microservice_path,service, microservice_parameters.method,microservice_parameters.ip, authorization, microservice_parameters.user_agent, microservice_parameters.accept_language, microservice_parameters.body?microservice_parameters.body:null)
+                                    microservice_path, microservice_query, microservice_parameters.method,microservice_parameters.ip, authorization, microservice_parameters.user_agent, microservice_parameters.accept_language, microservice_parameters.body?microservice_parameters.body:null)
                 .then((/**@type{string}*/result)=>resolve(result))
                 .catch((/**@type{Types.error}*/error)=>reject(error));
             };
             
             
-            switch (microservice_parameters.service){
-                case 'GEOLOCATION':{
+            switch (true){
+                case (microservice_parameters.path.startsWith('/geolocation')):{
                     //ENABLE_GEOLOCATION control is for ip to geodata service /place and /timezone should be allowed
                     if ((ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION')=='1' || microservice_parameters.query.startsWith('/ip')==false)){
                         //set ip from client in case ip query parameter is missing
@@ -45,26 +45,26 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
                             }
                             microservice_parameters.query = `${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
                         }
-                        microservice_path = `/geolocation/v${microservice_api_version('GEOLOCATION')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                        microservice_path = `/geolocation/v${microservice_api_version('GEOLOCATION')}${microservice_parameters.path}`;
                         
                     }
                     else
                         return resolve('');
                     break;
                 }
-                case 'WORLDCITIES':{
+                case (microservice_parameters.path.startsWith('/worldcities')):{
                     //limit records here in server for this service:
                     if (microservice_parameters.path.startsWith('/worldcities/city/search'))
                         microservice_parameters.query = microservice_parameters.query + `&limit=${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
-                    microservice_path = `/worldcities/v${microservice_api_version('WORLDCITIES')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                    microservice_path = `/worldcities/v${microservice_api_version('WORLDCITIES')}${microservice_parameters.path}`;
                     break;
                 }
-                case 'MAIL':{
-                    microservice_path = `/mail/v${microservice_api_version('MAIL')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                case (microservice_parameters.path.startsWith('/mail')):{
+                    microservice_path = `/mail/v${microservice_api_version('MAIL')}${microservice_parameters.path}`;
                     break;
                 }
-                case 'PDF':{
-                    microservice_path = `/pdf/v${microservice_api_version('PDF')}${microservice_parameters.path}?${microservice_parameters.query}`;
+                case (microservice_parameters.path.startsWith('/pdf')):{
+                    microservice_path = `/pdf/v${microservice_api_version('PDF')}${microservice_parameters.path}`;
                     break;
                 }
                 default:{
@@ -72,7 +72,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
                 }
             }
             //Microservice URI : [protocol]://[subdomain.][domain]:[port]/[service]/v[version]/[resource (servicename lowercase)]/[path]?[query]
-            return call_microservice(`${microservice_path}&app_id=${app_id}`, microservice_parameters.service);
+            return call_microservice(microservice_path, `${microservice_parameters.query}&app_id=${app_id}`);
         }
         else
             return reject ('⛔');
@@ -87,10 +87,9 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  */
  const BFF_server = async (app_id, bff_parameters, app_query) => {
     return new Promise((resolve, reject) => {
-        if ((bff_parameters.endpoint=='APP' && bff_parameters.service=='APP') ||
-            (app_id !=null && bff_parameters.endpoint && bff_parameters.service)){
+        if ((bff_parameters.endpoint=='APP') ||
+            (app_id !=null && bff_parameters.endpoint)){
             serverRoutes({  app_id:app_id, 
-                            service:bff_parameters.service, 
                             endpoint:bff_parameters.endpoint,
                             method:bff_parameters.method.toUpperCase(), 
                             ip:bff_parameters.ip, 
@@ -126,7 +125,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
      * @param {Types.error} error 
      */
     const log_error = (app_id, error) =>{
-        LogServiceE(app_id ?? null, bff_parameters.service ?? null, bff_parameters.query ?? null, error).then(() => {
+        LogServiceE(app_id ?? null, bff_parameters.route_path, bff_parameters.query ?? null, error).then(() => {
             const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
             send_iso_error( bff_parameters.res, 
                             statusCode, 
@@ -139,19 +138,17 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
     }
     const app_id = bff_parameters.iam?getNumberValue(iam_decode(bff_parameters.iam).get('app_id')):null;
     let decodedquery = '';
-    if ((bff_parameters.endpoint=='APP' && bff_parameters.service=='APP'))
+    if ((bff_parameters.endpoint=='APP'))
         decodedquery = bff_parameters.route_path;
     else
         decodedquery = bff_parameters.query?Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString():'';
     
-    if (bff_parameters.service == 'GEOLOCATION' || 
-        bff_parameters.service == 'MAIL' || 
-        bff_parameters.service == 'PDF' || 
-        bff_parameters.service == 'WORLDCITIES'){
+    if (bff_parameters.route_path.startsWith('/geolocation') || 
+        bff_parameters.route_path.startsWith('/mail') || 
+        bff_parameters.route_path.startsWith('/pdf') || 
+        bff_parameters.route_path.startsWith('/worldcities')){
         /**@type {Types.bff_parameters_microservices} */
         const parameters = {
-            //app control
-            service: bff_parameters.service, 
             //request
             path:bff_parameters.route_path,
             body: bff_parameters.body,
@@ -165,7 +162,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
         BFF_microservices(app_id, parameters)
         .then((/**@type{*}*/result_service) => {
             const log_result = getNumberValue(ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
-            LogServiceI(app_id, bff_parameters.service, bff_parameters.query, log_result).then(()=>{
+            LogServiceI(app_id, bff_parameters.route_path, bff_parameters.query, log_result).then(()=>{
                 bff_parameters.res.status(200).send(result_service);
             });
         })
@@ -177,7 +174,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
     else{
         BFF_server(app_id, bff_parameters, decodedquery)
         .then((/**@type{*}*/result_service) => {
-            if (bff_parameters.endpoint=='APP' && bff_parameters.service=='APP' && result_service!=null && result_service.STATIC){
+            if (bff_parameters.endpoint=='APP' && result_service!=null && result_service.STATIC){
                 if (result_service.SENDFILE){
                     bff_parameters.res.sendFile(result_service.SENDFILE);
                     bff_parameters.res.status(200);
@@ -187,17 +184,17 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
             }
             else{
                 const log_result = getNumberValue(ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
-                LogServiceI(app_id, bff_parameters.service, bff_parameters.query, log_result).then(()=>{
+                LogServiceI(app_id, bff_parameters.route_path, bff_parameters.query, log_result).then(()=>{
                     if (bff_parameters.endpoint=='SOCKET'){
                         //This endpoint only allowed for EventSource so no more update of response
                         null;
                     }
                     else{
                         //result from APP can request to redirect
-                        if (bff_parameters.service=='APP' && bff_parameters.res.statusCode==301)
+                        if (bff_parameters.endpoint=='APP' && bff_parameters.res.statusCode==301)
                             bff_parameters.res.redirect('/');
                         else 
-                            if (bff_parameters.service=='APP' && bff_parameters.res.statusCode==404){
+                            if (bff_parameters.endpoint=='APP' && bff_parameters.res.statusCode==404){
                                 if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
                                     bff_parameters.res.redirect(`https://${ConfigGet('SERVER', 'HOST')}`);
                                 else

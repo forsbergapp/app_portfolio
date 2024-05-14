@@ -165,13 +165,11 @@ const show_charts = async () => {
 
         AppDocument.querySelector('#graphBox').classList.add('common_icon','css_spinner');
         AppDocument.querySelector('#graphBox').innerHTML='';
-        let service;
         let path;
         let query;
         let authorization_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
-            service = 'SERVER';
-            path = '/log-stat';
+            path = '/server-log/log-stat';
             if (system_admin_statGroup=='REQUEST'){
                 query = `select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`
             }
@@ -180,13 +178,12 @@ const show_charts = async () => {
             authorization_type = 'SYSTEMADMIN';
         }
         else{
-            service = 'DB-ADMIN';
-            path = '/app_log-stat';
+            path = '/server-db_admin/app_log-stat';
             query = `select_app_id=${app_id}&year=${year}&month=${month}`;
             authorization_type = 'APP_ACCESS';
         }
         //return result for both charts
-        common.FFB(service, path, query, 'GET', authorization_type, null)
+        common.FFB(path, query, 'GET', authorization_type, null)
         .then((/**@type{string}*/result)=>{
             let html = '';
             /**@type{{  chart:number,
@@ -335,7 +332,7 @@ const show_start = async (yearvalues) =>{
      */
     const get_system_admin_stat = async () =>{
         return new Promise((resolve)=>{
-            common.FFB('SERVER', '/statuscode', null, 'GET', 'SYSTEMADMIN', null)
+            common.FFB('/server/info-statuscode', null, 'GET', 'SYSTEMADMIN', null)
             .then((/**@type{string}*/result)=>{
                 let html = `<optgroup label='REQUEST'>
                                 <option value='ip_total' unique=0 statGroup='ip'>IP TOTAL</option>
@@ -410,18 +407,15 @@ const get_apps_div = async () =>{
         let options = '';
         let path;
         let authorization_type;
-        let service;
         if (common.COMMON_GLOBAL.system_admin!=null){
-            service = 'SERVER';
-            path = '/config/APPS';
+            path = '/server-config/config/APPS';
             authorization_type = 'SYSTEMADMIN';
         }
         else{
-            service = 'APP-ADMIN';
-            path = '/apps';
+            path = '/app_admin/apps';
             authorization_type = 'APP_ACCESS';
         }
-        common.FFB(service, path, null, 'GET', authorization_type, null)
+        common.FFB(path, null, 'GET', authorization_type, null)
         .then((/**@type{string}*/result)=>{
             const apps = JSON.parse(result);
             if (common.COMMON_GLOBAL.system_admin!=null)
@@ -453,18 +447,15 @@ const get_apps = async () => {
         let html = `<option value=''>${'∞'}</option>`;
         let path;
         let authorization_type;
-        let service;
         if (common.COMMON_GLOBAL.system_admin!=null){
-            service = 'SERVER';
-            path = '/config/APPS';
+            path = '/server-config/config/APPS';
             authorization_type = 'SYSTEMADMIN';
         }
         else{
-            service = 'APP-ADMIN';
-            path = '/apps';
+            path = '/app_admin/apps';
             authorization_type = 'APP_ACCESS';
         }
-        common.FFB(service, path, null, 'GET', authorization_type, null)
+        common.FFB(path, null, 'GET', authorization_type, null)
         .then((/**@type{string}*/result)=>{
             const apps = JSON.parse(result);
             if (common.COMMON_GLOBAL.system_admin!=null)
@@ -514,14 +505,14 @@ const sendBroadcast = () => {
         let path='';
         let token_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
-            path = '/socket-message';
+            path = '/server-socket/socket-message';
             token_type = 'SYSTEMADMIN';
         }
         else{
-            path = '/socket-message';
+            path = '/server-socket/socket-message';
             token_type = 'APP_ACCESS';
         }
-        common.FFB('SERVER', path, null, 'POST', token_type, json_data)
+        common.FFB(path, null, 'POST', token_type, json_data)
         .then((/**@type{string}*/result)=>{
             if (Number(JSON.parse(result).sent) > 0)
                 common.show_message('INFO', null, null, 'message_success', `(${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
@@ -619,7 +610,7 @@ const set_broadcast_type = () => {
  */
 const check_maintenance = async () => {
     if (admin_token_has_value()){
-        await common.FFB('SERVER', '/config/SERVER', 'config_group=METADATA&parameter=MAINTENANCE', 'GET', 'SYSTEMADMIN', null)
+        await common.FFB('/server-config/config/SERVER', 'config_group=METADATA&parameter=MAINTENANCE', 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             if (JSON.parse(result).data==1)
                 AppDocument.querySelector('#menu_1_checkbox_maintenance').classList.add('checked');
@@ -641,7 +632,7 @@ const set_maintenance = () => {
         else
             check_value = 0;
         const json_data = {maintenance:check_value};
-        common.FFB('SERVER', '/config/SERVER', null, 'PUT', 'SYSTEMADMIN', json_data).catch(()=>null);
+        common.FFB('/server-config/config/SERVER', null, 'PUT', 'SYSTEMADMIN', json_data).catch(()=>null);
     }
 };
 /**
@@ -668,8 +659,7 @@ const count_users = async () => {
      * @returns{Promise.<{count_connected:number}>}
      */
     const get_count = async (identity_provider_id, logged_in) => {
-        return await common.FFB('SERVER', 
-                                '/socket-stat', 
+        return await common.FFB('/server-socket/socket-stat', 
                                 `identity_provider_id=${identity_provider_id}&logged_in=${logged_in}`, 'GET', 'APP_ACCESS', null)
         .then((/**@type{string}*/result)=>JSON.parse(result))
         .catch((/**@type{Error}*/err)=>{throw err;});
@@ -677,7 +667,7 @@ const count_users = async () => {
     if (admin_token_has_value()){
         AppDocument.querySelector('#list_user_stat').classList.add('common_icon', 'css_spinner');
         AppDocument.querySelector('#list_user_stat').innerHTML = '';
-        const user_stat = await common.FFB('DB-ADMIN', '/user_account-stat', null, 'GET', 'APP_ACCESS', null)
+        const user_stat = await common.FFB('/server-db_admin/user_account-stat', null, 'GET', 'APP_ACCESS', null)
         .then((/**@type{string}*/result)=>JSON.parse(result))
         .catch(()=>AppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner'));
         
@@ -748,7 +738,7 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
     //show all records if no search criteria
     if (AppDocument.querySelector('#list_user_account_search_input').innerText!='')
         search_user = encodeURI(AppDocument.querySelector('#list_user_account_search_input').innerText);
-    common.FFB('DB-ADMIN', '/user_account', `search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'APP_ACCESS', null)
+    common.FFB('/server-db_admin/user_account', `search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div class='list_user_account_row'>
                         <div data-column='avatar' class='list_user_account_col list_title common_icon'></div>
@@ -906,7 +896,7 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
 const show_user_account_logon = async (user_account_id) => {
     AppDocument.querySelector('#list_user_account_logon').classList.add('common_icon', 'css_spinner');
     AppDocument.querySelector('#list_user_account_logon').innerHTML = '';
-    common.FFB('DB-ADMIN', '/user_account_logon', `data_user_account_id=${user_account_id}&data_app_id=''`, 'GET', 'APP_ACCESS', null)
+    common.FFB('/server-db_admin/user_account_logon', `data_user_account_id=${user_account_id}&data_app_id=''`, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div id='list_user_account_logon_row_title' class='list_user_account_logon_row'>
                         <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>USER ACCOUNT ID</div>
@@ -973,7 +963,7 @@ const show_apps = async () => {
              <div id='apps_save' class='common_dialogue_button button_save common_icon'></div>
          </div>
      </div>`;
-    await common.FFB('APP-ADMIN', '/apps', null, 'GET', 'APP_ACCESS', null)
+    await common.FFB('/app_admin/apps', null, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div id='list_apps_row_title' class='list_apps_row'>
                         <div id='list_apps_col_title1' class='list_apps_col list_title'>ID</div>
@@ -1029,7 +1019,7 @@ const show_app_parameter = (app_id) => {
     AppDocument.querySelector('#apps_save').style.display = 'none';
     AppDocument.querySelector('#list_app_parameter').innerHTML = '';
 
-    common.FFB('SERVER', `/config-apps/${app_id}`, `key=PARAMETERS`, 'GET', 'APP_ACCESS', null)
+    common.FFB(`/server-config/config-apps/${app_id}`, `key=PARAMETERS`, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div id='list_app_parameter_row_title' class='list_app_parameter_row'>
                         <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>APP ID</div>
@@ -1184,7 +1174,7 @@ const button_save = async (item) => {
             const json_data = { config:    file=='SERVER'?config_create_server_json():JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML)};
 
             AppDocument.querySelector('#' + item).classList.add('css_spinner');
-            common.FFB('SERVER', `/config/${file}`, null, 'PUT', 'SYSTEMADMIN', json_data)
+            common.FFB(`/server-config/config/${file}`, null, 'PUT', 'SYSTEMADMIN', json_data)
             .then(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'))
             .catch(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'));
             break;
@@ -1223,7 +1213,6 @@ const update_record = async (table,
         let path;
         let json_data;
         let token_type;
-        let service;
         let method;
         AppDocument.querySelector('#' + button).classList.add('css_spinner');
         switch (table){
@@ -1239,9 +1228,8 @@ const update_record = async (table,
                                 password_new:       parameters.user_account.password,
                                 password_reminder:  parameters.user_account.password_reminder,
                                 verification_code:  parameters.user_account.verification_code};
-                path = `/user_account/${parameters.user_account.id}`;
+                path = `/server-db_admin/user_account/${parameters.user_account.id}`;
                 token_type = 'SUPERADMIN';
-                service = 'DB-ADMIN';
                 method = 'PATCH';
                 break;
             }
@@ -1249,9 +1237,8 @@ const update_record = async (table,
                 json_data = {   
                                 app_category_id:parameters.app.app_category_id
                             };
-                path = `/apps/${parameters.app.id}`;
+                path = `/server-db_admin/apps/${parameters.app.id}`;
                 token_type = 'APP_ACCESS';
-                service = 'DB-ADMIN';
                 method = 'PUT';
                 break;
             }
@@ -1259,14 +1246,13 @@ const update_record = async (table,
                 json_data = {   parameter_name:     parameters.app_parameter.parameter_name,
                                 parameter_value:    parameters.app_parameter.parameter_value,
                                 parameter_comment:  parameters.app_parameter.parameter_comment};
-                path = `/config-apps-parameter/${parameters.app_parameter.app_id}`;
+                path = `/server/config/config-apps-parameter/${parameters.app_parameter.app_id}`;
                 token_type = 'APP_ACCESS';
-                service = 'SERVER';
                 method = 'PATCH';
                 break;
             }
         }
-        await common.FFB(service, path, null, method, token_type, json_data)
+        await common.FFB(path, null, method, token_type, json_data)
         .then(()=>{ row_element.setAttribute('data-changed-record', '0');
                     AppDocument.querySelector('#' + button).classList.remove('css_spinner');})
         .catch(()=>AppDocument.querySelector('#' + button).classList.remove('css_spinner'));
@@ -1358,16 +1344,16 @@ const show_monitor = async (yearvalues) =>{
     let path;
     let token_type = '';
     if (common.COMMON_GLOBAL.system_admin!=null){
-        path  = '/config/SERVER';
+        path  = '/server-config/config/SERVER';
         token_type = 'SYSTEMADMIN';
     }
     else{
-        path  = '/config/SERVER';
+        path  = '/server-config/config/SERVER';
         token_type = 'APP_ACCESS';
     }
     const query = 'config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
 
-    const result_limit = await common.FFB('SERVER', path, query, 'GET', token_type, null).catch(()=> null);
+    const result_limit = await common.FFB(path, query, 'GET', token_type, null).catch(()=> null);
     APP_GLOBAL.limit = parseInt(JSON.parse(result_limit).data);
 
     AppDocument.querySelector('#list_row_sample').classList.remove('common_icon','css_spinner');
@@ -1528,38 +1514,33 @@ const show_list = async (list_div, query, sort, order_by) => {
         let logs;
         let token_type;
         let path;
-        let service;
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL.system_admin!=null){
-                    path = '/socket';
-                    service = 'SERVER';
+                    path = '/server-socket/socket';
                     token_type = 'SYSTEMADMIN';
                 }
                 else{
-                    path = '/socket';
-                    service = 'SERVER';
+                    path = '/server-socket/socket';
                     token_type = 'APP_ACCESS';
                 }
                 break;
             }
             case 'list_app_log':{
-                path = '/app_log';
-                service = 'DB-ADMIN';
+                path = '/server-db_admin/app_log';
                 token_type = 'APP_ACCESS';
                 break;
             }
             case 'list_server_log':{
                 logscope = AppDocument.querySelector('#select_logscope5')[AppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
-                path = '/log';
-                service = 'SERVER';
+                path = '/server-log/log';
                 token_type = 'SYSTEMADMIN';
                 break;
             }
         }
         AppDocument.querySelector('#' + list_div).classList.add('css_spinner');
         AppDocument.querySelector('#' + list_div).innerHTML = '';
-        common.FFB(service, path, query, 'GET', token_type, null)
+        common.FFB(path, query, 'GET', token_type, null)
         .then((/**@type{string}*/result)=>{
             logs = JSON.parse(result);
             let html = '';
@@ -1784,7 +1765,7 @@ const show_list = async (list_div, query, sort, order_by) => {
                                     </div>`;
                             break;
                         }
-                        case 'DB':{
+                        case 'SERVER-DB':{
                             html = `<div class='list_server_log_row'>
                                         <div data-column='logdate' class='list_db_log_col list_sort_click list_title'>
                                             LOGDATE
@@ -1792,7 +1773,7 @@ const show_list = async (list_div, query, sort, order_by) => {
                                         <div data-column='app_id' class='list_db_log_col list_sort_click list_title'>
                                             APP ID
                                         </div>
-                                        <div data-column='db' class='list_db_log_col list_sort_click list_title'>
+                                        <div data-column='SERVER-DB' class='list_db_log_col list_sort_click list_title'>
                                             DB
                                         </div>
                                         <div data-column='sql' class='list_db_log_col list_sort_click list_title'>
@@ -2067,7 +2048,7 @@ const show_list = async (list_div, query, sort, order_by) => {
                                             </div>`;
                                     break;
                                 }
-                                case 'DB':{
+                                case 'SERVER-DB':{
                                     html += 
                                             `<div class='list_server_log_row'>
                                                 <div class='list_db_log_col'>
@@ -2243,7 +2224,7 @@ const list_item_click = (item_type, data) => {
                 tokentype = 'SYSTEMADMIN';
             else
                 tokentype = 'APP_ACCESS';
-            common.FFB('GEOLOCATION', '/ip', data['ip'] != '::1'?`ip=${data['ip']}`:null, 'GET', tokentype, null)
+            common.FFB('/geolocation/ip', data['ip'] != '::1'?`ip=${data['ip']}`:null, 'GET', tokentype, null)
             .then((/**@type{string}*/result)=>{
                 const geodata = JSON.parse(result);
                 common.map_update({ longitude:geodata.geoplugin_longitude,
@@ -2267,7 +2248,7 @@ const list_item_click = (item_type, data) => {
                 tokentype = 'SYSTEMADMIN';
             else
                 tokentype = 'APP_ACCESS';
-            common.FFB('GEOLOCATION', '/place', `latitude=${data['latitude']}&longitude=${data['longitude']}`, 'GET', tokentype, null)
+            common.FFB('/geolocation/place', `latitude=${data['latitude']}&longitude=${data['longitude']}`, 'GET', tokentype, null)
             .then((/**@type{string}*/result)=>{
                 /**@type{{geoplugin_place:string, geoplugin_region:string, geoplugin_countryCode:string}} */
                 const geodata = JSON.parse(result);
@@ -2312,7 +2293,7 @@ const list_item_click = (item_type, data) => {
  */
 const get_log_parameters = async () => {
     return new Promise((resolve)=>{
-        common.FFB('SERVER', '/config/SERVER', 'config_group=SERVICE_LOG', 'GET', 'SYSTEMADMIN', null)
+        common.FFB('/server-config/config/SERVER', 'config_group=SERVICE_LOG', 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             const log_parameters = {
                 SCOPE_REQUEST : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],
@@ -2378,7 +2359,7 @@ const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
     const month= AppDocument.querySelector('#select_month_menu5').value;
     const day  = AppDocument.querySelector('#select_day_menu5').value;
     let app_id_filter='';
-    if (logscope=='APP' || logscope=='SERVICE' || logscope=='DB'){
+    if (logscope=='APP' || logscope=='SERVICE' || logscope=='SERVER-DB'){
         //show app filter and use it
         AppDocument.querySelector('#select_app_menu5').style.display = 'inline-block';
         app_id_filter = `select_app_id=${AppDocument.querySelector('#select_app_menu5').options[AppDocument.querySelector('#select_app_menu5').selectedIndex].value}&`;
@@ -2494,7 +2475,7 @@ const show_config = async file => {
         AppDocument.querySelector('#list_config').style.display = 'none';
     }
 
-    await common.FFB('SERVER', `/config/${file}`, `saved=1`, 'GET', 'SYSTEMADMIN', null)
+    await common.FFB(`/server-config/config/${file}`, `saved=1`, 'GET', 'SYSTEMADMIN', null)
     .then((/**@type{string}*/result)=>{
         const config = JSON.parse(result).data;
         let i = 0;
@@ -2564,7 +2545,7 @@ const show_config = async file => {
  */
 const installation_function = (id, db_icon, path, query, method, tokentype, data) => {
     AppDocument.querySelector(`#${id}`).classList.add('css_spinner');
-    common.FFB('DB-ADMIN', path, query, method, tokentype, data)
+    common.FFB(path, query, method, tokentype, data)
     .then((/**@type{string}*/result)=>{
         AppDocument.querySelector(`#${id}`).classList.remove('css_spinner');
         if (db_icon!=null)
@@ -2584,7 +2565,7 @@ const db_install = () =>{
     common.ComponentRemove('common_dialogue_message');
     const optional = Number(AppDocument.querySelector('#install_db_country_language_translations').classList.contains('checked'));
     installation_function(  'install_db_button_install', true, 
-                            '/database', 
+                            '/server-db_admin/database', 
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}&optional=${optional}`, 
                             'POST', 'SYSTEMADMIN', null);
 };
@@ -2595,7 +2576,7 @@ const db_install = () =>{
 const db_uninstall = () =>{
     common.ComponentRemove('common_dialogue_message');
     installation_function(  'install_db_button_uninstall', false, 
-                            '/database', 
+                            '/server-db_admin/database', 
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 'DELETE', 'SYSTEMADMIN', null);
 };
 /**
@@ -2609,7 +2590,7 @@ const demo_install = () =>{
                         })==true){
         const json_data = {demo_password: AppDocument.querySelector('#install_demo_password').innerHTML};
         installation_function(  'install_demo_button_install', null, 
-                                '/database-demo', 
+                                '/server-db_admin/database-demo', 
                                 `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
                                 'POST', 'APP_ACCESS', json_data);
     }
@@ -2620,7 +2601,7 @@ const demo_install = () =>{
  */
 const demo_uninstall = () =>{
     installation_function(  'install_demo_button_uninstall', null, 
-                            '/database-demo', 
+                            '/server-db_admin/database-demo', 
                             `?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
                             'DELETE', 'APP_ACCESS', null);
 };
@@ -2645,7 +2626,7 @@ const show_installation = () =>{
                 </div>
             </div>`;
         AppDocument.querySelector('#install_db_icon').classList.add('css_spinner');
-        common.FFB('DB-ADMIN', '/database-installation', null, 'GET', 'SYSTEMADMIN', null)
+        common.FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             AppDocument.querySelector('#install_db_icon').classList.remove('css_spinner');
             AppDocument.querySelector('#install_db_icon').classList.remove('installed');
@@ -2690,7 +2671,7 @@ const show_db_info = () => {
                     <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                 </div>`;
         AppDocument.querySelector('#menu_8_db_info1').classList.add('css_spinner');
-        common.FFB('DB-ADMIN', '/database', null, 'GET', 'SYSTEMADMIN', null)
+        common.FFB('/server-db_admin/database', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             const database = JSON.parse(result)[0];
             AppDocument.querySelector('#menu_8_db_info1').classList.remove('css_spinner');
@@ -2703,7 +2684,7 @@ const show_db_info = () => {
                         <div id='menu_8_db_info_connections_title' class='common_icon'></div>       <div id='menu_8_db_info_connections_data'>${database.connections}</div>
                         <div id='menu_8_db_info_started_title' class='common_icon'></div>           <div id='menu_8_db_info_started_data'>${database.started}</div>`;
             AppDocument.querySelector('#menu_8_db_info_space_detail').classList.add('css_spinner');
-            common.FFB('DB-ADMIN', '/database-space', null, 'GET', 'SYSTEMADMIN', null)
+            common.FFB('/server-db_admin/database-space', null, 'GET', 'SYSTEMADMIN', null)
             .then((/**@type{string}*/result)=>{
                 let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
                                 <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>TABLE NAME</div>
@@ -2724,7 +2705,7 @@ const show_db_info = () => {
                 }
                 AppDocument.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner');
                 AppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
-                common.FFB('DB-ADMIN', '/database-spacesum', null, 'GET', 'SYSTEMADMIN', null)
+                common.FFB('/server-db_admin/database-spacesum', null, 'GET', 'SYSTEMADMIN', null)
                 .then((/**@type{string}*/result)=>{
                     const databaseInfoSpaceSum = JSON.parse(result)[0];
                     AppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML += 
@@ -2759,7 +2740,7 @@ const show_server_info = () => {
                 </div>`;
         AppDocument.querySelector('#menu_10_os_info').classList.add('css_spinner');
         AppDocument.querySelector('#menu_10_process_info').classList.add('css_spinner');
-        common.FFB('SERVER', '/info', null, 'GET', 'SYSTEMADMIN', null)
+        common.FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             /**
              * Seconds to time string
@@ -3070,7 +3051,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     if (event.target.innerHTML=='')
                         event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').innerHTML = '';
                     else{
-                        common.FFB('DB-ADMIN', '/app_category', `id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null)
+                        common.FFB('/server-db_admin/app_category', `id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null)
                         .then((/**@type{string}*/result)=>lov_action(null, result, event))
                         .catch((/**@type{Error}*/err)=>lov_action(err, null, event));
                     }
@@ -3083,7 +3064,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         app_role_id_lookup='2';
                     else
                         app_role_id_lookup=event.target.innerHTML;
-                    common.FFB('DB-ADMIN', '/app_role', `id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null)
+                    common.FFB('/server-db_admin/app_role', `id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null)
                     .then((/**@type{string}*/result)=>{
                         lov_action(null, result, event);
                         //if wrong value then field is empty again, fetch default value for empty app_role

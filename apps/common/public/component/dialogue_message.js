@@ -106,8 +106,8 @@ const component = async props => {
             case 'INFO':
             case 'EXCEPTION':
             case 'LOG':{
-                const display_message = props.message_type=='ERROR'?await props.function_FFB(  'DB', 
-                                                    '/app_settings_display', 
+                const display_message = props.message_type=='ERROR'?await props.function_FFB(
+                                                    '/server-db/app_settings_display', 
                                                     `data_app_id=${props.data_app_id}&setting_type=MESSAGE&value=${props.code}`, 
                                                     'GET', 'APP_DATA')
                                     .then((/**@type{string}*/result)=>JSON.parse(result)[0].display_data)

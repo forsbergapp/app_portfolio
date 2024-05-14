@@ -56,7 +56,7 @@ const component = async props => {
                 .replace('<SPINNER_CLASS/>', spinner);
     }
     const post_component = async () =>{
-        const records = props.search==''?[]:await props.function_FFB('WORLDCITIES', '/city/search', `search=${encodeURI(props.search)}`, 'GET', 'APP_DATA', null)
+        const records = props.search==''?[]:await props.function_FFB('/worldcites/city/search', `search=${encodeURI(props.search)}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
                             .catch((/**@type{Error}*/error)=>{throw error});
         spinner = '';

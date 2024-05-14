@@ -58,8 +58,7 @@ const component = async props => {
                 .replace('<SPINNER_CLASS/>', spinner);
     }
     const post_component = async () =>{
-        const records = await props.function_FFB(   'DB', 
-                                                    '/user_account-profile/', 
+        const records = await props.function_FFB(   '/server-db/user_account-profile/', 
                                                     `id=${props.user_account_id ?? ''}&search=${encodeURI(props.searched_username)}` +
                                                     `&client_latitude=${props.client_latitude}&client_longitude=${props.client_longitude}`, 
                                                     'GET', 'APP_DATA', null)

@@ -203,14 +203,13 @@ const component = async props => {
     if (props.tab=='INFO'){
         let path;
         if (props.info_user_account_id_other !== null)
-            path = `/user_account-profile/${props.info_user_account_id_other ?? ''}`;
+            path = `/server-db/user_account-profile/${props.info_user_account_id_other ?? ''}`;
         else
             if (props.info_username !== null)
-                path = `/user_account-profile/${props.info_username}`;
+                path = `/server-db/user_account-profile/${props.info_username}`;
             else
-                path = `/user_account-profile/${props.info_user_account_id ?? ''}`;
+                path = `/server-db/user_account-profile/${props.info_user_account_id ?? ''}`;
         profile = await props.function_FFB(
-                            'DB', 
                             path, 
                             `id=${props.info_user_account_id ?? ''}&client_latitude=${props.info_client_latitude}&client_longitude=${props.info_client_longitude}`, 
                             'GET', 'APP_DATA', null)
@@ -295,13 +294,13 @@ const component = async props => {
             let path;
             if (statchoice ==1 || statchoice ==2 || statchoice ==3){
                 /*statschoice 1,2,3: user_account*/
-                path = '/user_account-profile-stat';
+                path = '/server-db/user_account-profile-stat';
             }
             else{
                 /*other statschoice, apps can use >3 and return same columns*/
                 path = app_rest_url;
             }
-            const profile_stat_records = await props.function_FFB('DB', path, `statchoice=${statchoice}`, 'GET', 'APP_DATA', null)
+            const profile_stat_records = await props.function_FFB(path, `statchoice=${statchoice}`, 'GET', 'APP_DATA', null)
                                             .then((/**@type{string}*/result)=>JSON.parse(result))
                                             .catch((/**@type{Error}*/error)=>{throw error});
             spinner = '';
