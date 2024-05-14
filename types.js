@@ -56,8 +56,7 @@
 /**
  * Server/Apps - Request verbose
  * @typedef {*} req_verbose
- */
-/**
+ * 
  * Server/apps - Request
  * @typedef {Object} req
  * @property {string} baseUrl
@@ -202,8 +201,7 @@
  * @property {object} socket
  * @property {string} socket.bytesRead
  * @property {string} socket.bytesWritten
- */
-/**
+ * 
  * Server/Apps - Response
  * @typedef {Object} res
  * @property {function} status
@@ -257,10 +255,7 @@
  * @property {object} socket
  * @property {string} socket.bytesRead
  * @property {string} socket.bytesWritten
- */
-
-
-/**
+ * 
  * Server - Express
  * @typedef {object} express
  * @property {function} use
@@ -268,12 +263,10 @@
  * @property {function} set
  * @property {function} route
  * @property {function} listen
- */
-/**
+ * 
  * Server - Error stack
  * @typedef {string} error_stack
- */
-/**
+ * 
  * Server/Apps/Service - Error 
  * @typedef {Object.<Error | null , undefined>} error
  */
@@ -286,9 +279,7 @@
  * @property {string} app_user_id       
  * @property {string} verificationCode  
  * @property {string} to                - to email
- */
-
-/**
+ * 
  * Apps - Email return data
  * @typedef {object} email_return_data
  * @property {string} email_host
@@ -300,8 +291,7 @@
  * @property {string} to
  * @property {string} subject
  * @property {string} html
- */
-/**
+ * 
  * @typedef {{  USERNAME:string,
  *              EMAIL:string,
  *              NEW_EMAIL:string,
@@ -324,8 +314,7 @@
  * @property {string} timezone              - geodata timezone
  * @property {translate_items} translate_items - items to be translated
  * @property {string|null} module                - HTML
- */
-/**
+ * 
  * Apps - App module config info
  * 
  * @typedef {object} module_config
@@ -340,17 +329,14 @@
  * @property {string} user_agent        - request user agent
  * @property {string} accept_language   - request accept language
  * @property {string} host              - request host
- */
-/**
+ * 
  * Apps - App render common info settings
  * @typedef {object} render_common_settings
  * @property {db_result_app_setting_getSettings[]} settings - db result
  * @property {string} user_timezones        - HTML option format
  * @property {string} user_directions       - HTML option format
  * @property {string} user_arabic_scripts   - HTML option format
- */
-
-/**
+ * 
  * Apps - App common parameters
  * @typedef {object}        app_service_parameters
  * @property {number}       app_id
@@ -374,10 +360,7 @@
  * @property {number|null}  common_app_id
  * @property {string}       rest_resource_bff
  * @property {number}       first_time
- */
-
-
-/**
+ * 
  * Apps - Report query parameters
  * @typedef {object} report_query_parameters
  * @property {string} module
@@ -386,10 +369,7 @@
  * @property {string} [ps]
  * @property {number} [hf]
  * @property {string} format
- 
- */
-
-/**
+ * 
  * Apps - Report create parameters
  * @typedef {object}        report_create_parameters
  * @property {number}       app_id
@@ -402,6 +382,7 @@
  * @property {string}       longitude
  * @property {string|null}  report
  */
+
 /**
  * Server - authenticate request
  * @typedef {{statusCode:number,
@@ -446,9 +427,6 @@
  *                          start_arg_1 : string
  *                  }}} server_info
  * 
- */
-
-/**
  * 
  * Server - Config group
  * @typedef {'SERVER'|'SERVICE_IAM'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'|'METADATA'} config_group
@@ -561,18 +539,10 @@
  *              'SUBDOMAIN'|
  *              'PATH'|
  *              'LOGO'|
- *              'JS'|
- *              'JS_SECURE'|
- *              'JS_REPORT'|
- *              'CSS'|
- *              'CSS_REPORT'|
- *              'FAVICON_32x32'|
- *              'FAVICON_192x192'|
  *              'SHOWPARAM'|
  *              'SECRETS'|
  *              'PARAMETERS'|
  *              'RENDER_CONFIG'|
- *              'RENDER_FILES'|
  *              'STATUS'} config_apps_keys
  * @typedef {{  SERVICE_DB_DB1_APP_USER: string,
  *              SERVICE_DB_DB1_APP_PASSWORD: string,
@@ -602,7 +572,15 @@
  *              APP_ACCESS_SECRET:string, 
  *              APP_ACCESS_EXPIRE:string
  *          }} config_apps_secrets
- * @typedef {{  MANIFEST:boolean}} config_apps_render_config
+ * @typedef {{  MANIFEST:boolean,
+ *              JS:string,
+ *              JS_SECURE:string,
+ *              JS_REPORT:string,
+ *              CSS:string,
+ *              CSS_REPORT:string,
+ *              FAVICON_32x32:string,
+ *              FAVICON_192x192:string,
+ *              RENDER_FILES:config_apps_render_files[]}} config_apps_render_config
  * @typedef {[{}]} config_apps_parameters
  * @typedef {'ONLINE'|'OFFLINE'} config_apps_status
  * @typedef  {[string,string|null,string|null,string, string|null]} config_apps_render_files
@@ -615,32 +593,17 @@
  * @property {string} SUBDOMAIN
  * @property {string} PATH
  * @property {string} LOGO
- * @property {string} JS
- * @property {string} JS_SECURE
- * @property {string} JS_REPORT
- * @property {string} CSS
- * @property {string} CSS_REPORT 
- * @property {string} FAVICON_32x32
- * @property {string} FAVICON_192x192
  * @property {string} SHOWPARAM
  * @property {config_apps_secrets} SECRETS
  * @property {config_apps_parameters} [PARAMETERS]
  * @property {config_apps_render_config} [RENDER_CONFIG]
- * @property {config_apps_render_files[]} [RENDER_FILES]
  * @property {config_apps_status} STATUS
- * 
  * @typedef  {object} config_apps_with_db_columns
  * @property {number} APP_ID
  * @property {string} NAME
  * @property {string} SUBDOMAIN
  * @property {string} PATH
  * @property {string} LOGO
- * @property {string} JS
- * @property {string} JS_REPORT
- * @property {string} CSS
- * @property {string} CSS_REPORT 
- * @property {string} FAVICON_32x32
- * @property {string} FAVICON_192x192
  * @property {string} SHOWPARAM
  * @property {string} CLIENT_ID
  * @property {config_apps_status} STATUS
@@ -657,12 +620,6 @@
  * @property {string} SUBDOMAIN
  * @property {string} PATH
  * @property {string} LOGO
- * @property {string} JS
- * @property {string} JS_REPORT
- * @property {string} CSS
- * @property {string} CSS_REPORT 
- * @property {string} FAVICON_32x32
- * @property {string} FAVICON_192x192
  * @property {string} SHOWPARAM
  * @property {string} CLIENT_ID
  * @property {config_apps_status} STATUS
@@ -724,9 +681,7 @@
  *              timezone:string,
  *              ip:string,
  *              user_agent:string}} socket_connect_list_no_res
- */
-
-/**
+ * 
  * Server Socket sort
  * @typedef {   'id'|
  *              'app_id'|
@@ -870,18 +825,15 @@
 /**
  * Server - admin install result
  * @typedef {[object]}  admin_db_install_result - Log variable with object with any key
- */
-/**
+ * 
  * Server - admin install db check
  * @typedef {object}  admin_db_install_db_check
  * @property {1|0}    installed
- */
-/**
+ * 
  * Server - admin install delete result
  * @typedef {object}  admin_db_install_delete_result
  * @property {[{count:number}, {count_fail:number}]}    info
- */
-/**
+ * 
  * Server - admin demo user
  * @typedef {object}    demo_user
  * @property {number}   [id]
@@ -940,46 +892,37 @@
  *              prayer_column_fast_start_end:       string
  *              }]}   settings
  * 
- */
-/**
  * Server - admin install script files
  * @typedef {   [number|null,
  *              string, 
  *              number|null][]} database_script_files
- */
-/**
+ * 
  * Server - admin Install JSON
  * @typedef {object}        install_database_script
  * @property {number|null}  db                  -if null then execute in all databases
  * @property {string}       script
  * @property {number}       [optional]          -installs if optional=1
- */
-/**
+ * 
  * Server - admin Uninstall JSON
  * @typedef {object}        uninstall_database_script
  * @property {number|null}  db
  * @property {string}       sql
- */
-/**
+ * 
  * Server - admin Install JSON app
  * @typedef {object}        install_database_app_script
  * @property {number|null}  db
  * @property {string}       sql
- */
-/**
+ * 
  * Server - admin Install JSON app user
  * @typedef {object}        install_database_app_user_script
  * @property {number}       db
  * @property {string}       sql
- */
-/**
+ * 
  * Server - admin Uninstall JSON app
  * @typedef {object}        uninstall_database_app_script
  * @property {number|null}  db
  * @property {string}       sql
- */
-
-/**
+ * 
  * Server - Log parameters
  * @typedef{object}         admin_log_parameters
  * @property{string}        SERVICE_LOG_SCOPE_REQUEST
@@ -994,8 +937,7 @@
  * @property{string}        SERVICE_LOG_LEVEL_ERROR
  * @property{string}        SERVICE_LOG_LEVEL_INFO
  * @property{string}        SERVICE_LOG_FILE_INTERVAL
- */
-/**
+ * 
  * Server - Log data parameter 
  * @typedef{object}         admin_log_data_parameters
  * @property {number}       app_id
@@ -1053,9 +995,6 @@
  * @property {number}               year
  * @property {number}               month
  * 
- 
- */
-/**
  * Server - Log stats data
  * @typedef {object}                admin_log_stats_data
  * @property {number|null}          chart
@@ -1064,11 +1003,11 @@
  * @property {number}               month
  * @property {number|null}          day
  * @property {number|null}          amount
- */
-/**
+ * 
  * Server - Log files
  * @typedef {{id:number, filename:string}} admin_log_files
  */
+
 /**
  * Server - DATABASE
  * DB query result
