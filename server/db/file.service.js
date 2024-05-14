@@ -207,7 +207,7 @@ const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}
     }
     /**@ts-ignore */
     for (const app of fileDB('APPS').CACHE_CONTENT.APPS){
-        for (const renderfile of app.RENDER_FILES){
+        for (const renderfile of app.RENDER_CONFIG.RENDER_FILES){
             //save file content (html) in new arrayindex so apps can read files faster
             renderfile.push(await fs.promises.readFile(process.cwd() + renderfile[3], 'utf8').then(filebuffer=>filebuffer.toString()));
         }

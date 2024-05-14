@@ -65,7 +65,7 @@ const client_locale = (accept_language) =>{
  */ 
 const render_files = (app_id, type, component=null) => {
     /**@type{Types.config_apps_render_files[]} */
-    const files = ConfigGetApp(app_id, app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]==type && (filetype[1] == component || component == null));
+    const files = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]==type && (filetype[1] == component || component == null));
     let app ='';
     files.forEach(file => {
         if (app=='')
@@ -86,7 +86,7 @@ const render_report_html = (app_id, reportname) => {
     const report = render_files(app_id, 'REPORT', reportname);
     //list config files and return only tag and file content
     /**@type {[string,string][]} */
-    const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='REPORT_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];});
+    const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='REPORT_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];});
     const report_with_common = render_app_with_data(report, common_files);
     /** @type {[string, string][]} */
     const render_variables = [];
@@ -131,41 +131,41 @@ const render_app_html = async (app_id, locale) =>{
     return new Promise((resolve)=>{
         //list config files and return only tag and file content
         /**@type {[string, string][]} */
-        const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];} );        
+        const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];} );        
         
         const app = render_app_with_data(render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'APP_COMMON'), common_files);
         
         //render app parameters from apps.json
-        if (ConfigGetApp(app_id, app_id, 'JS') != '')
-            render_variables.push(['APP_JS',`"app" 			: "${ConfigGetApp(app_id, app_id, 'JS')}",`]);
+        if (ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').JS != '')
+            render_variables.push(['APP_JS',`"app" 			: "${ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').JS}",`]);
         else
             render_variables.push(['APP_JS','']);
-        if (ConfigGetApp(app_id, app_id, 'JS_SECURE') != '')
-            render_variables.push(['APP_JS_SECURE',`"app_secure" 			: "${ConfigGetApp(app_id, app_id, 'JS_SECURE')}",`]);
+        if (ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').JS_SECURE != '')
+            render_variables.push(['APP_JS_SECURE',`"app_secure" 			: "${ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').JS_SECURE}",`]);
         else
             render_variables.push(['APP_JS_SECURE','']);
-        if (ConfigGetApp(app_id, app_id, 'JS_REPORT') != '')
-            render_variables.push(['APP_JS_REPORT',`"app_report" 			: "${ConfigGetApp(app_id, app_id, 'JS_REPORT')}",`]);
+        if (ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').JS_REPORT != '')
+            render_variables.push(['APP_JS_REPORT',`"app_report" 			: "${ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').JS_REPORT}",`]);
         else
             render_variables.push(['APP_JS_REPORT','']);
-        if (ConfigGetApp(app_id, app_id, 'CSS') != '')
-            render_variables.push(['APP_CSS',`<link id='app_link_app_css' rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'CSS')}'/>`]);
+        if (ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').CSS != '')
+            render_variables.push(['APP_CSS',`<link id='app_link_app_css' rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').CSS}'/>`]);
         else
             render_variables.push(['APP_CSS','']);
-        if (ConfigGetApp(app_id, app_id, 'CSS_REPORT') != '')
-            render_variables.push(['APP_CSS_REPORT',`<link id='app_link_app_report_css' rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'CSS_REPORT')}'/>`]);
+        if (ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').CSS_REPORT != '')
+            render_variables.push(['APP_CSS_REPORT',`<link id='app_link_app_report_css' rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').CSS_REPORT}'/>`]);
         else
             render_variables.push(['APP_CSS_REPORT','']);
         if (app_config.MANIFEST == true)
             render_variables.push(['APP_MANIFEST','<link rel=\'manifest\' href=\'/manifest.json\'/>']);
         else
             render_variables.push(['APP_MANIFEST','']);
-        if (ConfigGetApp(app_id, app_id, 'FAVICON_32x32') != '')
-            render_variables.push(['APP_FAVICON_32x32',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, app_id, 'FAVICON_32x32')}' sizes='32x32'/>`]);
+        if (ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').FAVICON_32x32 != '')
+            render_variables.push(['APP_FAVICON_32x32',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').FAVICON_32x32}' sizes='32x32'/>`]);
         else
             render_variables.push(['APP_FAVICON_32x32','']);
-        if (ConfigGetApp(app_id, app_id, 'FAVICON_1922x192') != '')
-            render_variables.push(['APP_FAVICON_192x192',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, app_id, 'FAVICON_192x192')}' sizes='192x192'/>`]);
+        if (ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').FAVICON_192x192 != '')
+            render_variables.push(['APP_FAVICON_192x192',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').FAVICON_192x192}' sizes='192x192'/>`]);
         else
             render_variables.push(['APP_FAVICON_192x192','']);
 
