@@ -90,8 +90,8 @@ const render_report_html = (app_id, reportname) => {
     const report_with_common = render_app_with_data(report, common_files);
     /** @type {[string, string][]} */
     const render_variables = [];
-    if (ConfigGetApp(app_id, app_id, 'CSS_REPORT') != '')
-        render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'CSS_REPORT')}'/>`]);
+    if (ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').CSS_REPORT != '')
+        render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').CSS_REPORT}'/>`]);
     else
         render_variables.push(['APP_CSS_REPORT','']);
     return render_app_with_data(report_with_common, render_variables);
@@ -535,8 +535,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
                         '/app-reports?reportid=' +
                         Buffer.from(Object.entries(query_parameters_obj).reduce((/**@type{*}*/total, current)=>total += (total==''?'':'&') + current[0] + '=' + current[1],''),'utf-8').toString('base64');
             /**@type{Types.bff_parameters_microservices}*/
-            const parameters = {service:'PDF', 
-                                path:'/pdf',
+            const parameters = {path:'/pdf',
                                 body:null,
                                 query: `url=${Buffer.from(url,'utf-8').toString('base64')}&ps=${ps}&hf=${hf}`, 
                                 method:'GET', 
@@ -578,8 +577,7 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
     const { BFF_microservices } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
     /**@type{Types.bff_parameters_microservices}*/
-    const parameters = {service:'GEOLOCATION', 
-                        path:'/geolocation/ip',
+    const parameters = {path:'/geolocation/ip',
                         body:null,
                         query:`ip=${ip}`,
                         method:'GET', 
@@ -600,8 +598,7 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
     }
     else{
         /**@type{Types.bff_parameters_microservices}*/
-        const parameters = {service:'WORLDCITIES', 
-                            path:'/worldcities/city/random',
+        const parameters = {path:'/worldcities/city/random',
                             body:null,
                             query:'', 
                             method:'GET', 
@@ -938,15 +935,21 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                                 resolve(app_result);
                                             })
                                             .catch((/**@type{Types.error}*/err)=>{
-                                                res.statusCode = 500;
-                                                res.statusMessage = err;
-                                                reject(err);
+                                                LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF() and LogAppI()', COMMON.app_line(), err)
+                                                .then(()=>{
+                                                    res.statusCode = 500;
+                                                    res.statusMessage = 'SERVER ERROR';
+                                                    reject(err);
+                                                })
                                             });
                                         })
                                         .catch((/**@type{Types.error}*/err)=>{
-                                            res.statusCode = 500;
-                                            res.statusMessage = 'SERVER ERROR';
-                                            reject('SERVER ERROR');
+                                            LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF()', COMMON.app_line(), err)
+                                            .then(()=>{
+                                                res.statusCode = 500;
+                                                res.statusMessage = 'SERVER ERROR';
+                                                reject('SERVER ERROR');
+                                            })
                                         });
                                     });
                                 else{
