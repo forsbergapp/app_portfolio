@@ -54,29 +54,27 @@ const component = async props => {
             case 'SERVER_LOG_FILES':{
                 props.common_document.querySelector('#common_lov_title').classList.add('server_log_file');
                 lov_column_value = 'filename';
-                path = '/log-files';
-                service = 'SERVER';
+                path = '/server-log/log-files';
                 token_type = 'SYSTEMADMIN';
                 break;
             }
             case 'APP_CATEGORY':{
                 props.common_document.querySelector('#common_lov_title').classList.add('app_category');
                 lov_column_value = 'app_category_text';
-                path = '/app_category';
-                service = 'DB-ADMIN';
+                path = '/server-db_admin/app_category';
                 token_type = 'APP_ACCESS';
                 break;
             }
             case 'APP_ROLE':{
                 props.common_document.querySelector('#common_lov_title').classList.add('app_role');
                 lov_column_value = 'icon';
-                path = '/app_role';
-                service = 'DB-ADMIN';
+                path = '/server-db_admin/app_role';
+                service = 'SERVER-DB_ADMIN';
                 token_type = 'APP_ACCESS';
                 break;
             }
         }
-        props.function_FFB(service, path, null, 'GET', token_type, null)
+        props.function_FFB(path, null, 'GET', token_type, null)
         .then((/**@type{string}*/result)=>{
                 spinner = '';
                 props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({list:JSON.parse(result), lov_column_value:lov_column_value});

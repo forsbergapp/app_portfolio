@@ -28,8 +28,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
     const { BFF_microservices } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
     /**@type{Types.bff_parameters_microservices}*/
-    const parameters = {service:'GEOLOCATION', 
-                        path:'/geolocation/ip',
+    const parameters = {path:'/geolocation/ip',
                         body:null,
                         query:`ip=${ip}`,
                         method:'GET', 
