@@ -2048,7 +2048,7 @@ const show_list = async (list_div, query, sort, order_by) => {
                                             </div>`;
                                     break;
                                 }
-                                case 'SERVER-DB':{
+                                case 'DB':{
                                     html += 
                                             `<div class='list_server_log_row'>
                                                 <div class='list_db_log_col'>

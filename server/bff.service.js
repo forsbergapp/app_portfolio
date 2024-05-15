@@ -119,13 +119,13 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  * @param {Types.bff_parameters} bff_parameters
  */
  const BFF = (bff_parameters) =>{
-    
+    const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
     /**
      * @param {number} app_id
      * @param {Types.error} error 
      */
     const log_error = (app_id, error) =>{
-        LogServiceE(app_id ?? null, bff_parameters.route_path, bff_parameters.query ?? null, error).then(() => {
+        LogServiceE(app_id ?? null, service, bff_parameters.query ?? null, error).then(() => {
             const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
             send_iso_error( bff_parameters.res, 
                             statusCode, 
@@ -162,7 +162,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
         BFF_microservices(app_id, parameters)
         .then((/**@type{*}*/result_service) => {
             const log_result = getNumberValue(ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
-            LogServiceI(app_id, bff_parameters.route_path, bff_parameters.query, log_result).then(()=>{
+            LogServiceI(app_id, service, bff_parameters.query, log_result).then(()=>{
                 bff_parameters.res.status(200).send(result_service);
             });
         })
@@ -184,7 +184,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
             }
             else{
                 const log_result = getNumberValue(ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
-                LogServiceI(app_id, bff_parameters.route_path, bff_parameters.query, log_result).then(()=>{
+                LogServiceI(app_id, service, bff_parameters.query, log_result).then(()=>{
                     if (bff_parameters.endpoint=='SOCKET'){
                         //This endpoint only allowed for EventSource so no more update of response
                         null;
