@@ -1765,7 +1765,7 @@ const show_list = async (list_div, query, sort, order_by) => {
                                     </div>`;
                             break;
                         }
-                        case 'SERVER-DB':{
+                        case 'DB':{
                             html = `<div class='list_server_log_row'>
                                         <div data-column='logdate' class='list_db_log_col list_sort_click list_title'>
                                             LOGDATE
@@ -1773,7 +1773,7 @@ const show_list = async (list_div, query, sort, order_by) => {
                                         <div data-column='app_id' class='list_db_log_col list_sort_click list_title'>
                                             APP ID
                                         </div>
-                                        <div data-column='SERVER-DB' class='list_db_log_col list_sort_click list_title'>
+                                        <div data-column='db' class='list_db_log_col list_sort_click list_title'>
                                             DB
                                         </div>
                                         <div data-column='sql' class='list_db_log_col list_sort_click list_title'>
