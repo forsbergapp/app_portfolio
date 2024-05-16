@@ -7,6 +7,7 @@ const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/c
 const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {expired_token} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 /**@type{Types.socket_connect_list[]} */
 let CONNECTED_CLIENTS = [];
@@ -58,7 +59,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
  * Used by EventSource and closes connection
  * @param {Types.res} res
  * @param {string} message
- * @param {string} message_type
+ * @param {Types.socket_broadcast_type_all} message_type
  */
  const ClientSend = (res, message, message_type) => {
     res.write (`data: ${btoa(`{"broadcast_type"   : "${message_type}", 
@@ -101,13 +102,15 @@ const ClientAdd = (newClient) => {
  * @param {number} user_account_id
  * @param {number} system_admin
  * @param {string} authorization_bearer
+ * @param {string} token_access
+ * @param {string} token_systemadmin
  * @param {string} ip
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
  * @param {Types.res} res
  * @returns {Promise.<void>}
  */
- const ConnectedUpdate = async (app_id, client_id, user_account_id, system_admin, authorization_bearer, ip, headers_user_agent, headers_accept_language, res) => {
+ const ConnectedUpdate = async (app_id, client_id, user_account_id, system_admin, authorization_bearer, token_access, token_systemadmin, ip, headers_user_agent, headers_accept_language, res) => {
     if (CONNECTED_CLIENTS.filter(row=>row.id==client_id && row.authorization_bearer == authorization_bearer).length==0){
         const {not_authorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
         throw not_authorized(res, 401, 'ConnectedUpdate, authorization', true);
@@ -116,10 +119,12 @@ const ClientAdd = (newClient) => {
         for (const connected of CONNECTED_CLIENTS){
             if (connected.id==client_id && connected.authorization_bearer == authorization_bearer){
                 const connectUserData =  await getConnectedUserData(app_id, user_account_id, ip, headers_user_agent, headers_accept_language);
-                connected.user_account_id = user_account_id;
-                connected.system_admin = system_admin;
                 connected.connection_date = new Date().toISOString();
+                connected.user_account_id = user_account_id;
+                connected.token_access = token_access;
                 connected.identity_provider_id = connectUserData.identity_provider_id;
+                connected.system_admin = system_admin ?? '';
+                connected.token_systemadmin = token_systemadmin;
                 connected.gps_latitude = connectUserData.latitude;
                 connected.gps_longitude = connectUserData.longitude;
                 connected.place = connectUserData.place;
@@ -144,10 +149,10 @@ const ClientAdd = (newClient) => {
 
 /**
  * Socket client send as system admin
- * @param {number} app_id
- * @param {number} client_id
- * @param {number} client_id_current
- * @param {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'} broadcast_type
+ * @param {number|null} app_id
+ * @param {number|null} client_id
+ * @param {number|null} client_id_current
+ * @param {Types.socket_broadcast_type_all} broadcast_type
  * @param {string} broadcast_message
  */
  const SocketSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
@@ -157,7 +162,7 @@ const ClientAdd = (newClient) => {
         let sent = 0;
         for (const client of CONNECTED_CLIENTS){
             if (client.id != client_id_current)
-                if (broadcast_type=='MAINTENANCE' && client.app_id ==0)
+                if (broadcast_type=='MAINTENANCE' && client.app_id ==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
                     null;
                 else
                     if (client.app_id == app_id || app_id == null){
@@ -288,7 +293,7 @@ const ClientAdd = (newClient) => {
  * @param {number} client_id
  * @param {number} client_id_current
  * @param {string} broadcast_type
- * @param {'ALERT'|'CHAT'|'PROGRESS'} broadcast_message
+ * @param {Types.socket_broadcast_type_admin} broadcast_message
  */
  const SocketSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
     if (broadcast_type=='ALERT' || broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
@@ -367,8 +372,10 @@ const ClientAdd = (newClient) => {
                         app_id:                 app_id,
                         authorization_bearer:   authorization_bearer,
                         user_account_id:        user_account_id,
+                        token_access:           null,
                         identity_provider_id:   connectUserData.identity_provider_id,
                         system_admin:           system_admin,
+                        token_systemadmin:      null,
                         connection_date:        new Date().toISOString(),
                         gps_latitude:           connectUserData.latitude,
                         gps_longitude:          connectUserData.longitude,
@@ -390,22 +397,26 @@ const ClientAdd = (newClient) => {
 };
 
 /**
- * Socket check maintenance
+ * Socket check interval
  */
- const SocketCheckMaintenance = () => {
+ const SocketCheckInterval = () => {
     //start interval if apps are started
     const app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
     if (ConfigGetApp(app_id, app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START =='1'){
         setInterval(() => {
             if (getNumberValue(file_get_cached('SERVER').METADATA.MAINTENANCE)==1){
-                CONNECTED_CLIENTS.forEach(client=>{
-                    if (client.app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
-                        ClientSend(client.response, '', 'MAINTENANCE');
-                    }
-                });
+                SocketSendSystemAdmin(null, null, null, 'MAINTENANCE', '');
             }
+            SocketUpdateExpiredTokens();
         }, ConfigGet('SERVICE_SOCKET', 'CHECK_INTERVAL'));
     }
 };
+const SocketUpdateExpiredTokens = () =>{
+    for (const client of CONNECTED_CLIENTS){
+        if (client.token_access && expired_token(client.app_id, 'APP_ACCESS', client.token_access)||
+            client.token_systemadmin && expired_token(null, 'SYSTEMADMIN', client.token_systemadmin))
+            ClientSend(client.response, '', 'SESSION_EXPIRED');
+    }
+}
 
-export {ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedList, SocketSendAdmin, ConnectedCount, SocketConnect, SocketCheckMaintenance};
+export {ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedList, SocketSendAdmin, ConnectedCount, SocketConnect, SocketCheckInterval};

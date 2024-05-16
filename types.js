@@ -90,7 +90,7 @@
  * @property {number} body.app_id
  * @property {number} body.client_id                                - Socket parameter
  * @property {number} body.client_id_current                        - Socket parameter
- * @property {string} body.broadcast_type                           - Socket parameter
+ * @property {socket_broadcast_type_all} body.broadcast_type        - Socket parameter
  * @property {string} body.broadcast_message                        - Socket parameter
  * @property {string} body.demo_password                            - Admin parameter
  * @property {string} body.app_name                                 - app portfolio parameter
@@ -648,12 +648,14 @@
  * Server - Socket client
  * @typedef {object} socket_connect_list
  * @property {number} id
+ * @property {string} connection_date
  * @property {number} app_id
  * @property {string} authorization_bearer
  * @property {number} user_account_id
+ * @property {string|null} token_access
  * @property {number} identity_provider_id
  * @property {number} system_admin
- * @property {string} connection_date
+ * @property {string|null} token_systemadmin
  * @property {string} gps_latitude
  * @property {string} gps_longitude
  * @property {string} place
@@ -679,6 +681,8 @@
  *              ip:string,
  *              user_agent:string}} socket_connect_list_no_res
  * 
+ * @typedef {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'} socket_broadcast_type_all
+ * @typedef {'ALERT'|'CHAT'|'PROGRESS'} socket_broadcast_type_admin
  * Server Socket sort
  * @typedef {   'id'|
  *              'app_id'|
