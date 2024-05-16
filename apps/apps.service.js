@@ -618,18 +618,23 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
  * Gets module maintenance
  * 
  * @param {number} app_id
- * @returns {string}
+ * @param {string} ip
+ * @returns {Promise.<string>}
  */
-const getMaintenance = (app_id) => {
+const getMaintenance = async (app_id, ip) => {
+    const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const datatoken = await AuthorizeTokenApp(app_id, ip);
     //maintenance can be used from all app_id
-    const parameters = {   
+    const json_parameters = JSON.stringify({   
         app_id: app_id,
         common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+        app_datatoken: datatoken,
         rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF')
-    };
+    });
     /** @type {[string, string][]} */
     const render_variables = [];
-    render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify(parameters)]);
+    const encoded = Buffer.from(json_parameters).toString('base64');
+    render_variables.push(['ITEM_COMMON_PARAMETERS',`'${encoded}'`]);
     return render_app_with_data(render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'MAINTENANCE'), render_variables);
 };
 
@@ -958,7 +963,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                 }
                 });
             else
-                return getMaintenance(app_id);
+                return getMaintenance(app_id, ip);
     
 };
 export {/*APP functions */
