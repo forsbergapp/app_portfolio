@@ -324,7 +324,7 @@
    
 	PM2 and NodeJS:
 
-    	PM2 cluster mode and native nodejs cluster functionality are not supported at the momment since configuration 
+    	PM2 cluster mode and native nodejs cluster functionality are not supported at the moment since configuration 
 		functions use module variables for performance and socket uses in memory module variable for connected clients 
 		and no replication method still implemented.
 

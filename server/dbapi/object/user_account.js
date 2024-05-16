@@ -129,7 +129,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                                             new_code, 
                                                             result_login[0].email)
                                             .then(()=>{
-                                                ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), ip, user_agent, accept_language, res)
+                                                ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.access_token, null, ip, user_agent, accept_language, res)
                                                 .then(()=>{
                                                     resolve({
                                                         accessToken: data_body.access_token,
@@ -145,7 +145,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                         });
                                     }
                                     else{
-                                        ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), ip, user_agent, accept_language, res)
+                                        ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.access_token, null, ip, user_agent, accept_language, res)
                                         .then(()=>{
                                             resolve({
                                                 accessToken: data_body.access_token,
@@ -260,7 +260,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                         .then(()=>{
                             createUserAccountApp(app_id, result_signin[0].id)
                             .then(()=>{
-                                ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), ip, user_agent, accept_language, res)
+                                ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), data_login.access_token, null, ip, user_agent, accept_language, res)
                                 .then(()=>{
                                     resolve({
                                         accessToken: data_login.access_token,
@@ -294,7 +294,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                             .then(()=>{
                                 service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
                                 .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
-                                    ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), ip, user_agent, accept_language, res)
+                                    ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), data_login.access_token, null, ip, user_agent, accept_language, res)
                                     .then(()=>{
                                         resolve({
                                             accessToken: data_login.access_token,

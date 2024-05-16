@@ -556,14 +556,12 @@ const COMMON = {
                         resolve(db_user_account.login(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-iam/user/logoff`, 'POST'):
-                    case route(`/bff/systemadmin/v1/server-iam/user/logoff`, 'POST'):
-                    case route(`/bff/app_access/v1/server-iam/user/logoff`, 'POST'):{
-                        resolve(socket.ConnectedUpdate(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip,routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
-                        break;
-                    }
                     case route(`/bff/iam/v1/server-iam/provider/${resource_id_string}`, 'POST'):{
                         resolve(db_user_account.login_provider(routesparameters.app_id, routesparameters.res.req.query.iam, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route(`/bff/app_data/v1/server-iam/user/logoff`, 'POST'):{
+                        resolve(socket.ConnectedUpdate(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip,routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
                     default:{
@@ -587,7 +585,7 @@ const COMMON = {
 const serverStart = async () =>{
     const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
     const {InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
-    const {SocketCheckMaintenance} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    const {SocketCheckInterval} = await import(`file://${process.cwd()}/server/socket.service.js`);
     const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log.service.js`);
     const fs = await import('node:fs');
     const http = await import('node:http');
@@ -608,7 +606,7 @@ const serverStart = async () =>{
         //Get express app with all configurations
         /**@type{Types.express}*/
         const app = await serverExpress();
-        SocketCheckMaintenance();
+        SocketCheckInterval();
         //START HTTP SERVER
         /**@ts-ignore*/
         http.createServer(app).listen(ConfigGet('SERVER', 'HTTP_PORT'), () => {
