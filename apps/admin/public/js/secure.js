@@ -505,11 +505,11 @@ const sendBroadcast = () => {
         let path='';
         let token_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
-            path = '/server-socket/socket-message';
+            path = '/server-socket/message';
             token_type = 'SYSTEMADMIN';
         }
         else{
-            path = '/server-socket/socket-message';
+            path = '/server-socket/message';
             token_type = 'APP_ACCESS';
         }
         common.FFB(path, null, 'POST', token_type, json_data)
