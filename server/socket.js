@@ -9,6 +9,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 /**
+ * Updates socket connection info removing user_id, systemadmin, token_access and token_systemadmin
  * @param {number} app_id
  * @param {string} iam
  * @param {string} ip
@@ -17,11 +18,13 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  * @param {Types.res} res
  * @returns 
  */
-const ConnectedUpdate = (app_id, iam, ip, user_agent, accept_language, res) => service.ConnectedUpdate( app_id, 
+ const ConnectedUpdate = (app_id, iam, ip, user_agent, accept_language, res) => service.ConnectedUpdate(app_id, 
                                                                                                         getNumberValue(iam_decode(iam).get('client_id')), 
-                                                                                                        getNumberValue(iam_decode(iam).get('user_id')), 
-                                                                                                        iam_decode(iam).get('system_admin'),
+                                                                                                        null, 
+                                                                                                        null,
                                                                                                         iam_decode(iam).get('authorization_bearer'),
+                                                                                                        null,
+                                                                                                        null,
                                                                                                         ip,
                                                                                                         user_agent,
                                                                                                         accept_language,

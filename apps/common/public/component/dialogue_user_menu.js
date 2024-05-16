@@ -89,8 +89,9 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
  *          current_timezone:string,
  *          current_direction:string,
  *          current_arabic_script:string,
- *          function_show_message:function,
- *          function_FFB:function}} props 
+ *          function_FFB:function,
+ *          function_user_session_countdown:function,
+ *          function_show_message:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
@@ -155,30 +156,8 @@ const component = async props => {
         }
         await adjust_logged_out_logged_in();
         if (props.token_exp && props.token_iat){
-            /**
-             * Countdown function to monitor token expire time
-             * Uses event listener on element instead of setInterval since component will be closed and then event listener will automatically be removed
-             */
-            const countdown = async () => {
-                const time_left = ((props.token_exp ?? 0) * 1000) - (Date.now());
-                if (time_left < 0)
-                    props.common_document.querySelector('#common_dialogue_user_menu_token_countdown_time').innerHTML = 'Session expired';
-                else{
-                    const days = Math.floor(time_left / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((time_left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((time_left % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((time_left % (1000 * 60)) / 1000);
-                    props.common_document.querySelector('#common_dialogue_user_menu_token_countdown_time').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-                    //wait 1 second
-                    await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 1000);});
-                    if (props.common_document.querySelector('#common_dialogue_user_menu_token_countdown_time'))
-                        props.common_document.querySelector('#common_dialogue_user_menu_token_countdown_time').dispatchEvent(new Event('change'));
-                }
-            }
-            props.common_document.querySelector('#common_dialogue_user_menu_token_countdown_time').addEventListener('change', (/**@type{AppEvent}*/event) => {
-                countdown();
-            });
-            countdown();
+            const element_id = 'common_dialogue_user_menu_token_countdown_time';
+            props.function_user_session_countdown(props.common_document.querySelector(`#${element_id}`), props.token_exp, true);
         }   
     }
     /**

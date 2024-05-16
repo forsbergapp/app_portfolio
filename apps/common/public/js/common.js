@@ -65,6 +65,8 @@
             app_div:string,
             app_console:{warn:function, info:function, error:function},
             app_eventListeners:{original:function, LEAFLET:[*]|[], REACT:[*]|[], VUE:[*]|[], OTHER:[*]|[]},
+            app_function_exception:function|null,
+            app_function_session_expired:function|null,
             info_link_policy_name:string|null,
             info_link_disclaimer_name:string|null,
             info_link_terms_name:string|null,
@@ -73,7 +75,6 @@
             info_link_disclaimer_url:string|null,
             info_link_terms_url:string|null,
             info_link_about_url:string|null,
-            exception_app_function:function|null,
             user_app_role_id:number|null,
             system_admin:string|null,
             system_admin_first_time:number|null,
@@ -91,7 +92,6 @@
             token_exp:number|null,
             token_iat:number|null,
             token_timestamp:number|null,
-            tokenCountdownTimeoutId:number|null
             rest_resource_bff:string|null,
             image_file_allowed_type1:string|null,
             image_file_allowed_type2:string|null,
@@ -161,6 +161,8 @@ const COMMON_GLOBAL = {
     app_div:'app',
     app_console:{warn:window.console.warn, info:window.console.info, error:window.console.error},
     app_eventListeners:{original: HTMLElement.prototype.addEventListener, LEAFLET:[], REACT:[], VUE:[], OTHER:[]},
+    app_function_exception:null,
+    app_function_session_expired:null,
     info_link_policy_name:null,
     info_link_disclaimer_name:null,
     info_link_terms_name:null,
@@ -169,7 +171,6 @@ const COMMON_GLOBAL = {
     info_link_disclaimer_url:null,
     info_link_terms_url:null,
     info_link_about_url:null,
-    exception_app_function:null,
     user_app_role_id:null,
     system_admin:null,
     system_admin_first_time:null,
@@ -187,7 +188,6 @@ const COMMON_GLOBAL = {
     token_exp:null,
     token_iat:null,
     token_timestamp:null,
-    tokenCountdownTimeoutId:null,
     rest_resource_bff:null,
     image_file_allowed_type1:null,
     image_file_allowed_type2:null,
@@ -843,7 +843,7 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
             }
         }    
     } catch (/**@type{*}*/error) {
-        exception(COMMON_GLOBAL.exception_app_function, error);
+        exception(COMMON_GLOBAL.app_function_exception, error);
     }
 };
 /**
@@ -973,7 +973,7 @@ const ComponentRender = async (div,props, component_path) => {
                                                 common_mountdiv:div}})
                                                 .catch((/**@type{Error}*/error)=>{
                                                     div?ComponentRemove(div, true):null;
-                                                    exception(COMMON_GLOBAL.exception_app_function, error);
+                                                    exception(COMMON_GLOBAL.app_function_exception, error);
                                                     return null;
                                                 });
     if (component){
@@ -1274,6 +1274,16 @@ const show_hide_window_info_toolbar = () => {
     else
         AppDocument.querySelector('#common_window_info_toolbar').style.display='flex';
 };
+/**
+ * Close window info
+ */
+const close_window = () =>{
+    ComponentRemove('common_window_info');
+    AppDocument.querySelector('#common_window_info').style.visibility = 'hidden'; 
+    if (AppDocument.fullscreenElement)
+        AppDocument.exitFullscreen();
+}
+
 /**
  * Profile follow or like and then update stat
  * @param {string} function_name 
@@ -1752,7 +1762,6 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
 
         ComponentRemove(current_dialogue, true);
-        countdown_token_set();
         return {avatar: null};
     }
     else{
@@ -1782,36 +1791,68 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             
             AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
             ComponentRemove(current_dialogue, true);
-            countdown_token_set();
             return {avatar: provider_id?login_data.provider_image:login_data.avatar};
         }
     }
 };
+/**
+ * Countdown function to monitor token expire time
+ * Uses event listener on element instead of setInterval since element can removed 
+ * and then event listener will automatically be removed
+ * @param {HTMLElement} element
+ * @param {number} token_exp
+ * @param {boolean} add_event
+ * @returns {Promise.<void>}
+ */
+ const user_session_countdown = async (element, token_exp, add_event=false) => {
+    /**
+     * 
+     * @returns {void}
+     */
+    const event_function = () => {user_session_countdown(element, token_exp);};
+    if (add_event){
+        element.addEventListener('change', event_function, false);
+    }
+    const time_left = ((token_exp ?? 0) * 1000) - (Date.now());
+    if (time_left < 0){
+        element.innerHTML ='';
+        element.classList.add('common_user_session_expired');
+        element.removeEventListener('change', event_function);
+    }
+    else{
+        const days = Math.floor(time_left / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((time_left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((time_left % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((time_left % (1000 * 60)) / 1000);
+        element.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        //wait 1 second
+        await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 1000);});
+        try {
+            element.dispatchEvent(new Event('change'));
+        } catch (error) {
+            //element removed
+            null;
+        }
+    }
+}
 /**
  * User logoff
  * @returns {Promise.<void>}
  */
 const user_logoff = async () => {
     ComponentRemove('common_dialogue_user_menu');
-    AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
-    AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-    let token_type = '';
-    countdown_token_remove();
-    if (COMMON_GLOBAL.system_admin != null)
-        token_type = 'SYSTEMADMIN';
-    else
-        token_type = COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id?'ADMIN':'APP_ACCESS';
-    FFB(`/server-iam/user/logoff`, null, 'POST', token_type, null)
+    FFB(`/server-iam/user/logoff`, null, 'POST', 'APP_DATA', null)
     .then(()=>{
-        if (COMMON_GLOBAL.system_admin == null){
+        if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
+            AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
+            AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
             set_avatar(null, AppDocument.querySelector('#common_user_menu_avatar_img')); 
+            close_window();
             ComponentRemove('common_dialogue_user_edit');
             dialogue_password_new_clear();
             ComponentRemove('common_dialogue_user_start');
             ComponentRemove('common_dialogue_profile', true);
         }
-        else
-            AppDocument.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
         user_preferences_set_default_globals('LOCALE');
         user_preferences_set_default_globals('TIMEZONE');
         user_preferences_set_default_globals('DIRECTION');
@@ -1824,7 +1865,8 @@ const user_logoff = async () => {
     .catch((error)=>{
         COMMON_GLOBAL.service_socket_eventsource?COMMON_GLOBAL.service_socket_eventsource.close():null;
         reconnect();
-        throw error;})
+        throw error;
+    })
     .finally(()=>{
         COMMON_GLOBAL.token_admin_at = '';
         COMMON_GLOBAL.system_admin = null;
@@ -1836,7 +1878,6 @@ const user_logoff = async () => {
         COMMON_GLOBAL.token_exp = null;
         COMMON_GLOBAL.token_iat = null;
         COMMON_GLOBAL.token_timestamp = null;
-        
     });
 };
 
@@ -2002,7 +2043,6 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                         const resolve_function = () => {
                             ComponentRemove('common_dialogue_user_verify');
                             ComponentRemove('common_dialogue_user_edit', true);
-                            countdown_token_set();
                             resolve({   actived: 1, 
                                         verification_type : verification_type});
                         }
@@ -2308,21 +2348,6 @@ const user_preferences_set_default_globals = (preference) => {
         }
     }
 };
-
-
-/**
- * Countdown token set
- */
-const countdown_token_set = () => {
-    COMMON_GLOBAL.tokenCountdownTimeoutId = window.setTimeout(() => {user_logoff()}, ((COMMON_GLOBAL.token_exp ?? 0) * 1000) - (Date.now()));
-}
-/**
- * Countdown token remove
- */
-const countdown_token_remove = () => {
-    /**@ts-ignore */
-    window.clearTimeout(COMMON_GLOBAL.tokenCountdownTimeoutId);    
-}
 
 /**
  * Create QR code
@@ -2817,7 +2842,7 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
                         }
                         case 500:{
                             //Unknown error
-                            exception(COMMON_GLOBAL.exception_app_function, result);
+                            exception(COMMON_GLOBAL.app_function_exception, result);
                             throw result;
                         }
                         case 503:{
@@ -2846,6 +2871,10 @@ const show_broadcast = (broadcast_message) => {
             else
                 if (message)
                     show_maintenance(window.atob(message));
+            break;
+        }
+        case 'SESSION_EXPIRED':{
+            COMMON_GLOBAL.app_function_session_expired?COMMON_GLOBAL.app_function_session_expired():null;
             break;
         }
         case 'CONNECTINFO':{
@@ -3320,10 +3349,7 @@ const common_event = async (event_type,event) =>{
                         }
                         //window info
                         case 'common_window_info_btn_close':{
-                            ComponentRemove('common_window_info');
-                            AppDocument.querySelector('#common_window_info').style.visibility = 'hidden'; 
-                            if (AppDocument.fullscreenElement)
-                                AppDocument.exitFullscreen();
+                            close_window();
                             break;
                         }
                         case 'common_window_info_info':{
@@ -4165,7 +4191,7 @@ export{/* GLOBALS*/
        profile_follow_like, profile_stat, profile_detail, profile_show,
        profile_close, profile_update_stat, list_key_event,
        /* USER  */
-       user_login, user_logoff, user_update, user_signup, user_verify_check_input, user_delete, user_function,
+       user_login, user_session_countdown, user_logoff, user_update, user_signup, user_verify_check_input, user_delete, user_function,
        updatePassword,
        /* MODULE LEAFLET  */
        map_init, map_country, map_show_search_on_map, map_resize, map_line_removeall, map_line_create,

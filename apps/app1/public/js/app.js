@@ -106,6 +106,7 @@ const app_event_click = event => {
                                 current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
                                 //functions
                                 function_FFB:common.FFB,
+                                function_user_session_countdown:common.user_session_countdown,
                                 function_show_message:common.show_message},
                                                     '/common/component/dialogue_user_menu.js')
                             .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
@@ -466,7 +467,8 @@ const init_app = async (parameters) => {
  */
 const init = parameters => {
     AppDocument.body.className = 'app_theme_sun';
-    common.COMMON_GLOBAL.exception_app_function = app_exception;
+    common.COMMON_GLOBAL.app_function_exception = app_exception;
+    common.COMMON_GLOBAL.app_function_session_expired = user_logoff_app;
     common.init_common(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
         init_app(decodedparameters);
     });

@@ -6,7 +6,6 @@ import * as Types from './../types.js';
 const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 const {send_iso_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
 
 const {default:jwt} = await import('jsonwebtoken');
 /**
@@ -16,6 +15,37 @@ const {default:jwt} = await import('jsonwebtoken');
  */
  const iam_decode = query =>{
     return new URLSearchParams(atob(query))
+}
+/**
+ * @param {number|null}  app_id
+ * @param {'APP_ACCESS'|'APP_DATA'|'SYSTEMADMIN'} token_type 
+ * @param {string} token 
+ * @returns {boolean}
+ */
+const expired_token = (app_id, token_type, token) =>{
+    switch (token_type){
+        case 'APP_ACCESS':{
+            //exp, iat, tokentimestamp on token
+            try {
+                /**@ts-ignore*/
+                return ((jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET).exp ?? 0) * 1000) - Date.now()<0;    
+            } catch (error) {
+                return true;
+            }
+            
+        }
+        case 'SYSTEMADMIN':{
+            //exp, iat, tokentimestamp on token
+            try {
+                /**@ts-ignore*/
+                return ((jwt.verify(token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET')).exp ?? 0) * 1000) - Date.now()<0;    
+            } catch (error) {
+                return true;
+            }
+        }
+        default:
+            return false;
+    }
 }
 /**
  * @param {Types.res} res
@@ -51,6 +81,7 @@ const {default:jwt} = await import('jsonwebtoken');
  *                  tokentimestamp:number}>}
  */
 const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agent, accept_language, res)=>{
+    const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
     return new Promise((resolve, reject)=>{
         const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
             const { default: {compare} } = await import('bcrypt');
@@ -75,7 +106,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
             await file_append_log('IAM_SYSTEMADMIN_LOGIN', file_content, 'YYYYMMDD')
             .then(()=>{
                 if (result == 1){
-                    ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), '', username, iam_decode(iam).get('authorization_bearer'), ip, user_agent, accept_language, res)
+                    ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), '', username, iam_decode(iam).get('authorization_bearer'), null, jwt_data.token, ip, user_agent, accept_language, res)
                     .then(()=>{
                         resolve({   username:username,
                                     token_at: jwt_data.token,
@@ -578,6 +609,7 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
 };
 
 export{ iam_decode,
+        expired_token,
         not_authorized,
         AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
         AuthenticateDataToken, AuthenticateDataTokenRegistration,
