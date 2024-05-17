@@ -171,12 +171,12 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
     if (error){
         console.log(error);
         //ISO20022 error format
-        const message = {"error":{
+        const message = JSON.stringify({"error":{
                             "http":code, 
                             "code":'MICROSERVICE',
                             "text":error, 
                             "developer_text":null, 
-                            "more_info":null}};
+                            "more_info":null}});
         res.write(message, 'utf8');
     }
     else{

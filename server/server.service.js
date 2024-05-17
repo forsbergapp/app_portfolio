@@ -153,7 +153,8 @@ const COMMON = {
  */
  const serverRoutes = async (routesparameters) =>{
     
-    const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const {microservice_api_version, microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+
     //server iam object
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
 
@@ -162,9 +163,12 @@ const COMMON = {
 
     //server config object
     const config = await import(`file://${process.cwd()}/server/config.js`);
+    //server config service
+    const config_service = await import(`file://${process.cwd()}/server/config.service.js`);
 
     //server info object
     const info = await import(`file://${process.cwd()}/server/info.js`);
+    
 
     //server log object
     const log = await import(`file://${process.cwd()}/server/log.js`);
@@ -239,9 +243,32 @@ const COMMON = {
                  * @param {string|number|null} id 
                  * @returns 
                  */
-                    const invalid_resource_id = id =>`invalid resourceid : ${id}, route: ${routesparameters.endpoint} ${routesparameters.service} ${URI_path} ${routesparameters.method}`;
+                const invalid_resource_id = id =>`invalid resourceid : ${id}, route: ${routesparameters.endpoint} ${routesparameters.service} ${URI_path} ${routesparameters.method}`;
+
+                /**
+                 * @param {Types.req_id_number} app_id
+                 * @param {string} microservice_path 
+                 * @param {string} microservice_query 
+                 */
+                const call_microservice = async (app_id, microservice_path, microservice_query) => {
+                    //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
+                    const authorization = `Basic ${Buffer.from(     config_service.ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_ID + ':' + 
+                                                                        config_service.ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_SECRET,'utf-8').toString('base64')}`;
+                    return microserviceRequest(app_id == getNumberValue(config_service.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
+                                                microservice_path, 
+                                                Buffer.from(microservice_query + `&app_id=${app_id}`).toString('base64'), 
+                                                routesparameters.method,
+                                                routesparameters.ip, 
+                                                authorization, 
+                                                routesparameters.user_agent, 
+                                                routesparameters.accept_language, 
+                                                routesparameters.body?routesparameters.body:null)
+                            .catch((/**@type{Types.error}*/error)=>{throw error});
+                };
+
                 //using switch (true) pattern
                 switch (true){
+                    //server routes
                     case route(`/bff/app_data/v1/app/apps/${resource_id_string}`, 'GET'):{
                         resolve(app.getApps(routesparameters.app_id, resource_id_get(), app_query));
                         break;
@@ -562,6 +589,55 @@ const COMMON = {
                     }
                     case route(`/bff/app_data/v1/server-iam/user/logoff`, 'POST'):{
                         resolve(socket.ConnectedUpdate(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip,routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
+                        break;
+                    }
+                    //microservice routes
+                    //changes URI to call microservices, syntax:
+                    //[microservice protocol]://[microservice host]:[microservice port]/[service]/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query];
+                    case route(`/bff/app_data/v1/geolocation/ip`, 'GET') ||
+                        (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/geolocation/ip'):{
+                        if (config_service.ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION')=='1')
+                            return resolve('');
+                        else{
+                            const params = URI_query.split('&');
+                            //set ip from client in case ip query parameter is missing
+                            //if ip parameter does not exist
+                            if (params.filter(parm=>parm.includes('ip=')).length==0 )
+                                params.push(`ip=${routesparameters.ip}`);
+                            else{
+                                //if empty ip parameter
+                                if (params.filter(parm=>parm == 'ip=').length==1)
+                                    params.map(parm=>parm = parm.replace('ip=', `ip=${routesparameters.ip}`));
+                            }
+                            resolve(call_microservice(  routesparameters.app_id,
+                                                `/geolocation/v${microservice_api_version('GEOLOCATION')}${routesparameters.route_path}`, 
+                                                `${params.reduce((param_sum,param)=>param_sum += '&' + param)}`));
+                        }
+                    }
+                    case route(`/bff/app_data/v1/geolocation/place`, 'GET'):{
+                        resolve(call_microservice(  routesparameters.app_id,`/geolocation/v${microservice_api_version('GEOLOCATION')}${routesparameters.route_path}`, URI_query));
+                        break;
+                    }
+                    case route(`/bff/app_data/v1/worldcities/city`, 'GET'):{
+                        resolve(call_microservice(  routesparameters.app_id,
+                                                    `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, 
+                                                    URI_query + `&limit=${config_service.ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`));
+                    }
+                    case route(`/bff/app_data/v1/worldcities/city-random`, 'GET')||
+                        (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/worldcities/city-random'):{
+                        resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, URI_query));
+                        break;
+                    }
+                    case route(`/bff/app_data/v1/worldcities/country/${resource_id_string}`, 'GET'):{
+                        resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, URI_query));
+                    }
+                    case routesparameters.route_path=='/mail/sendemail' && routesparameters.endpoint.startsWith('SERVER'):{
+                        //mail can only be sent from server
+                        resolve(call_microservice(  routesparameters.app_id, `/mail/v${microservice_api_version('MAIL')}${routesparameters.route_path}`, URI_query));
+                        break;
+                    }
+                    case route(`/bff/app_data/v1/pdf`, 'GET'):{
+                        resolve(call_microservice(  routesparameters.app_id, `/pdf/v${microservice_api_version('PDF')}${routesparameters.route_path}`, URI_query));
                         break;
                     }
                     default:{

@@ -2,94 +2,123 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const {microservice_api_version, microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.service.js`);
-const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {send_iso_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/log.service.js`);
-const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 /**
- * Backend for frontend BFF microservice
- * @param {number} app_id
- * @param {Types.bff_parameters_microservices} microservice_parameters
- * @returns {Promise<(*)>}
- */
- const BFF_microservices = async (app_id, microservice_parameters) => {
-    return new Promise((resolve, reject) => {
-        if (app_id !=null && microservice_parameters.path){
-            let microservice_path = '';
-            const call_microservice = async (/**@type{string}*/microservice_path, /**@type{string}*/microservice_query) => {
-                //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                const authorization = `Basic ${Buffer.from(ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_ID + ':' + ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_SECRET,'utf-8').toString('base64')}`;
-                microserviceRequest(app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then send true
-                                    microservice_path, microservice_query, microservice_parameters.method,microservice_parameters.ip, authorization, microservice_parameters.user_agent, microservice_parameters.accept_language, microservice_parameters.body?microservice_parameters.body:null)
-                .then((/**@type{string}*/result)=>resolve(result))
-                .catch((/**@type{Types.error}*/error)=>reject(error));
-            };
-            
-            
-            switch (true){
-                case (microservice_parameters.path.startsWith('/geolocation')):{
-                    //ENABLE_GEOLOCATION control is for ip to geodata service /place and /timezone should be allowed
-                    if ((ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION')=='1' || microservice_parameters.query.startsWith('/ip')==false)){
-                        //set ip from client in case ip query parameter is missing
-                        if (microservice_parameters.path.startsWith('/geolocation/ip')){    
-                            const params = microservice_parameters.query.split('&');
-                            //if ip parameter does not exist
-                            if (params.filter(parm=>parm.includes('ip=')).length==0 )
-                                params.push(`ip=${microservice_parameters.ip}`);
-                            else{
-                                //if empty ip parameter
-                                if (params.filter(parm=>parm == 'ip=').length==1)
-                                    params.map(parm=>parm = parm.replace('ip=', `ip=${microservice_parameters.ip}`));
-                            }
-                            microservice_parameters.query = `${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
-                        }
-                        microservice_path = `/geolocation/v${microservice_api_version('GEOLOCATION')}${microservice_parameters.path}`;
-                        
-                    }
-                    else
-                        return resolve('');
-                    break;
-                }
-                case (microservice_parameters.path.startsWith('/worldcities')):{
-                    //limit records here in server for this service:
-                    if (microservice_parameters.path.startsWith('/worldcities/city/search'))
-                        microservice_parameters.query = microservice_parameters.query + `&limit=${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
-                    microservice_path = `/worldcities/v${microservice_api_version('WORLDCITIES')}${microservice_parameters.path}`;
-                    break;
-                }
-                case (microservice_parameters.path.startsWith('/mail')):{
-                    microservice_path = `/mail/v${microservice_api_version('MAIL')}${microservice_parameters.path}`;
-                    break;
-                }
-                case (microservice_parameters.path.startsWith('/pdf')):{
-                    microservice_path = `/pdf/v${microservice_api_version('PDF')}${microservice_parameters.path}`;
-                    break;
-                }
-                default:{
-                    return reject ('⛔');
-                }
-            }
-            //Microservice URI : [protocol]://[subdomain.][domain]:[port]/[service]/v[version]/[resource (servicename lowercase)]/[path]?[query]
-            return call_microservice(microservice_path, `${microservice_parameters.query}&app_id=${app_id}`);
-        }
-        else
-            return reject ('⛔');
-    });
- };
-/**
- * Backend for frontend BFF server
- * @param {number} app_id
+ * 
+ * @param {Types.req_id_number} app_id 
  * @param {Types.bff_parameters} bff_parameters
- * @param {string} app_query
+ * @param {string} service
+ * @param {Types.error} error 
+ */
+const BFF_log_error = (app_id, bff_parameters, service, error) =>{
+    LogServiceE(app_id ?? null, service, bff_parameters.query ?? null, error).then(() => {
+        if (bff_parameters.res){
+            const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
+            send_iso_error( bff_parameters.res, 
+                            statusCode, 
+                            null, 
+                            (typeof error === 'string' && error.startsWith('MICROSERVICE ERROR'))?'MICROSERVICE ERROR':error, 
+                            null, 
+                            null);
+        }
+    });
+}
+
+/**
+ * Backend for frontend (BFF) called from client
+ * 
+ * @param {Types.bff_parameters} bff_parameters
+ */
+ const BFF = (bff_parameters) =>{
+    const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
+    /**
+     * @param {number|null} app_id
+     * @param {Types.error} error 
+     */
+    let decodedquery = '';
+    if ((bff_parameters.endpoint=='APP')){
+        //App route for app asset, common asset, app info page, app report (using query) and app
+        decodedquery = bff_parameters.route_path;
+    }
+    else{
+        //REST API requests from client are encoded
+        decodedquery = bff_parameters.query?Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString():'';
+    }
+    if ((bff_parameters.endpoint=='APP') ||
+        (bff_parameters.app_id !=null && bff_parameters.endpoint))
+        serverRoutes({  app_id:bff_parameters.app_id, 
+            endpoint:bff_parameters.endpoint,
+            method:bff_parameters.method.toUpperCase(), 
+            ip:bff_parameters.ip, 
+            host:bff_parameters.host, 
+            url:bff_parameters.url,
+            route_path:bff_parameters.route_path,
+            user_agent:bff_parameters.user_agent, 
+            accept_language:bff_parameters.accept_language, 
+            authorization:bff_parameters.authorization, 
+            parameters:decodedquery, 
+            body:bff_parameters.body, 
+            res:bff_parameters.res})
+        .then((/**@type{*}*/result_service) => {
+            if (bff_parameters.endpoint=='APP' && result_service!=null && result_service.STATIC){
+                if (result_service.SENDFILE){
+                    bff_parameters.res?bff_parameters.res.sendFile(result_service.SENDFILE):null;
+                    bff_parameters.res?bff_parameters.res.status(200):null;
+                }
+                else
+                    bff_parameters.res?bff_parameters.res.status(200).send(result_service.SENDCONTENT):null;
+            }
+            else{
+                const log_result = getNumberValue(ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
+                LogServiceI(bff_parameters.app_id, service, bff_parameters.query, log_result).then(()=>{
+                    if (bff_parameters.endpoint=='SOCKET'){
+                        //This endpoint only allowed for EventSource so no more update of response
+                        null;
+                    }
+                    else{
+                        if (bff_parameters.res){
+                            //result from APP can request to redirect
+                            if (bff_parameters.endpoint=='APP' && bff_parameters.res.statusCode==301)
+                                bff_parameters.res.redirect('/');
+                            else 
+                                if (bff_parameters.endpoint=='APP' && bff_parameters.res.statusCode==404){
+                                    if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
+                                        bff_parameters.res.redirect(`https://${ConfigGet('SERVER', 'HOST')}`);
+                                    else
+                                        bff_parameters.res.redirect(`http://${ConfigGet('SERVER', 'HOST')}`);
+                                }
+                                else
+                                    bff_parameters.res.status(200).send(result_service);
+                        }
+                        else{
+                            //function called from server return result
+                            return result_service;
+                        }
+                    }  
+                })
+            }
+        })
+        .catch((/**@type{Types.error}*/error) => {
+            BFF_log_error(bff_parameters.app_id, bff_parameters, service, error);
+        });
+    else{
+        //required parameters not provided
+        BFF_log_error(bff_parameters.app_id, bff_parameters, service, '⛔');
+    }
+};
+/**
+ * BFF called from server
+ * @param {Types.bff_parameters} bff_parameters
  * @returns {Promise<(*)>}
  */
- const BFF_server = async (app_id, bff_parameters, app_query) => {
+ const BFF_server = async (bff_parameters) => {
     return new Promise((resolve, reject) => {
-        if ((bff_parameters.endpoint=='APP') ||
-            (app_id !=null && bff_parameters.endpoint)){
-            serverRoutes({  app_id:app_id, 
+        const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
+        if (bff_parameters.app_id !=null && bff_parameters.endpoint){
+            serverRoutes({  app_id:bff_parameters.app_id, 
                             endpoint:bff_parameters.endpoint,
                             method:bff_parameters.method.toUpperCase(), 
                             ip:bff_parameters.ip, 
@@ -99,11 +128,15 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
                             user_agent:bff_parameters.user_agent, 
                             accept_language:bff_parameters.accept_language, 
                             authorization:bff_parameters.authorization, 
-                            parameters:app_query, 
+                            parameters:bff_parameters.query, 
                             body:bff_parameters.body, 
                             res:bff_parameters.res})
             .then((/**@type{string}*/result)=>resolve(result))
-            .catch((/**@type{Types.error}*/error)=>reject(error));
+            .catch((/**@type{Types.error}*/error)=>{
+                LogServiceE(bff_parameters.app_id ?? null, service, bff_parameters.query ?? null, error).then(() => {
+                    reject(error);
+                });
+            });
         }
         else{
             //required parameters not provided
@@ -113,102 +146,4 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
         }
     });
 };
-/**
- * Backend for frontend (BFF) common
- * 
- * @param {Types.bff_parameters} bff_parameters
- */
- const BFF = (bff_parameters) =>{
-    const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
-    /**
-     * @param {number} app_id
-     * @param {Types.error} error 
-     */
-    const log_error = (app_id, error) =>{
-        LogServiceE(app_id ?? null, service, bff_parameters.query ?? null, error).then(() => {
-            const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
-            send_iso_error( bff_parameters.res, 
-                            statusCode, 
-                            null, 
-                            (typeof error === 'string' && error.startsWith('MICROSERVICE ERROR'))?'MICROSERVICE ERROR':error, 
-                            null, 
-                            null);
-            
-        });
-    }
-    const app_id = bff_parameters.iam?getNumberValue(iam_decode(bff_parameters.iam).get('app_id')):null;
-    let decodedquery = '';
-    if ((bff_parameters.endpoint=='APP'))
-        decodedquery = bff_parameters.route_path;
-    else
-        decodedquery = bff_parameters.query?Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString():'';
-    
-    if (bff_parameters.route_path.startsWith('/geolocation') || 
-        bff_parameters.route_path.startsWith('/mail') || 
-        bff_parameters.route_path.startsWith('/pdf') || 
-        bff_parameters.route_path.startsWith('/worldcities')){
-        /**@type {Types.bff_parameters_microservices} */
-        const parameters = {
-            //request
-            path:bff_parameters.route_path,
-            body: bff_parameters.body,
-            query: decodedquery, 
-            method: bff_parameters.method,
-            //metadata
-            ip: bff_parameters.ip, 
-            user_agent: bff_parameters.user_agent, 
-            accept_language: bff_parameters.accept_language
-        };
-        BFF_microservices(app_id, parameters)
-        .then((/**@type{*}*/result_service) => {
-            const log_result = getNumberValue(ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
-            LogServiceI(app_id, service, bff_parameters.query, log_result).then(()=>{
-                bff_parameters.res.status(200).send(result_service);
-            });
-        })
-        .catch((/**@type{Types.error}*/error) => {
-            log_error(app_id, error);
-            
-        });
-    }        
-    else{
-        BFF_server(app_id, bff_parameters, decodedquery)
-        .then((/**@type{*}*/result_service) => {
-            if (bff_parameters.endpoint=='APP' && result_service!=null && result_service.STATIC){
-                if (result_service.SENDFILE){
-                    bff_parameters.res.sendFile(result_service.SENDFILE);
-                    bff_parameters.res.status(200);
-                }
-                else
-                    bff_parameters.res.status(200).send(result_service.SENDCONTENT);
-            }
-            else{
-                const log_result = getNumberValue(ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
-                LogServiceI(app_id, service, bff_parameters.query, log_result).then(()=>{
-                    if (bff_parameters.endpoint=='SOCKET'){
-                        //This endpoint only allowed for EventSource so no more update of response
-                        null;
-                    }
-                    else{
-                        //result from APP can request to redirect
-                        if (bff_parameters.endpoint=='APP' && bff_parameters.res.statusCode==301)
-                            bff_parameters.res.redirect('/');
-                        else 
-                            if (bff_parameters.endpoint=='APP' && bff_parameters.res.statusCode==404){
-                                if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
-                                    bff_parameters.res.redirect(`https://${ConfigGet('SERVER', 'HOST')}`);
-                                else
-                                    bff_parameters.res.redirect(`http://${ConfigGet('SERVER', 'HOST')}`);
-                            }
-                            else
-                                bff_parameters.res.status(200).send(result_service);
-                    }  
-                })
-            }
-        })
-        .catch((/**@type{Types.error}*/error) => {
-            log_error(app_id, error);
-        });
-    }
-};
-export{send_iso_error, BFF, BFF_microservices};
+export{send_iso_error, BFF, BFF_server};

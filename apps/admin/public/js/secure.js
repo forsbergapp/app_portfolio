@@ -2215,16 +2215,10 @@ const page_navigation = (item) => {
  *          id:number}} data 
  */
 const list_item_click = (item_type, data) => {
-    let tokentype;
     //check if gps_click and if not system admin only when map is not loaded
     if (item_type=='GPS' && common.COMMON_GLOBAL.system_admin_only != 1){
         if (data['ip']){
-            //clicking on IP, get GPS, show on map
-            if (common.COMMON_GLOBAL.system_admin!=null)
-                tokentype = 'SYSTEMADMIN';
-            else
-                tokentype = 'APP_ACCESS';
-            common.FFB('/geolocation/ip', data['ip'] != '::1'?`ip=${data['ip']}`:null, 'GET', tokentype, null)
+            common.FFB('/geolocation/ip', data['ip'] != '::1'?`ip=${data['ip']}`:null, 'GET', 'APP_DATA', null)
             .then((/**@type{string}*/result)=>{
                 const geodata = JSON.parse(result);
                 common.map_update({ longitude:geodata.geoplugin_longitude,
@@ -2243,12 +2237,7 @@ const list_item_click = (item_type, data) => {
             .catch(()=>null);
         }
         else{
-            //clicking on GPS, show on map
-            if (common.COMMON_GLOBAL.system_admin!=null)
-                tokentype = 'SYSTEMADMIN';
-            else
-                tokentype = 'APP_ACCESS';
-            common.FFB('/geolocation/place', `latitude=${data['latitude']}&longitude=${data['longitude']}`, 'GET', tokentype, null)
+            common.FFB('/geolocation/place', `latitude=${data['latitude']}&longitude=${data['longitude']}`, 'GET', 'APP_DATA', null)
             .then((/**@type{string}*/result)=>{
                 /**@type{{geoplugin_place:string, geoplugin_region:string, geoplugin_countryCode:string}} */
                 const geodata = JSON.parse(result);

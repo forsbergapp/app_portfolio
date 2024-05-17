@@ -14,8 +14,7 @@ const startserver = async () =>{
 	request.server.createServer(request.options, (/**@type{Types.req_microservice}*/req, /**@type{Types.res_microservice}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'GET');
 		res.setHeader('Access-Control-Allow-Origin', '*');
-		
-		const URI_query = req.url.substring(req.url.indexOf('?'));
+		const URI_query = Buffer.from(req.url.substring(req.url.indexOf('?')), 'base64').toString('utf-8');
 		const URI_path = req.url.substring(0, req.url.indexOf('?'));
 		const app_query = new URLSearchParams(URI_query);
 		req.query = {	app_id:getNumberValue(app_query.get('app_id')),
@@ -25,13 +24,13 @@ const startserver = async () =>{
 		AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 			if (authenticate){
 				switch (true){
-					case route('/worldcities/v1/worldcities/city/search' , 'GET', URI_path, req.method):{
+					case route('/worldcities/v1/worldcities/city' , 'GET', URI_path, req.method):{
 						service.getCitySearch(decodeURI(req.query.data.search), req.query.data.limit)
 						.then((result)=>return_result(200, null, result, null, res))
 						.catch((error) =>return_result(500, error, null, null, res));
 						break;
 					}
-					case route('/worldcities/v1/worldcities/city/random' , 'GET', URI_path, req.method):{
+					case route('/worldcities/v1/worldcities/city-random' , 'GET', URI_path, req.method):{
 						service.getCityRandom()
 						.then((result)=>return_result(200, null, result, null, res))
 						.catch((error) =>return_result(500, error, null, null, res));

@@ -35,7 +35,7 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
  */
  const sendUserEmail = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
     const { createMail} = await import(`file://${process.cwd()}/apps/apps.service.js`);
-    const {BFF_microservices} = await import(`file://${process.cwd()}/server/bff.service.js`);
+    const {BFF_server} = await import(`file://${process.cwd()}/server/bff.service.js`);
     
     /**@type{Types.email_return_data}*/
     const email_rendered = await createMail( app_id, 
@@ -48,15 +48,21 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
                                     })
                                     .catch((/**@type{Types.error}*/error)=>{throw error;});
         
-    /**@type{Types.bff_parameters_microservices}*/
-    const data = {  path:'/mail/sendemail',
-                    body:email_rendered,
-                    query:'',
-                    method:'POST', 
-                    ip:ip,
-                    user_agent:user_agent,
-                    accept_language:accept_language};
-    return await BFF_microservices(app_id, data);    
+    /**@type{Types.bff_parameters}*/
+    const parameters = {endpoint:'SERVER_MAIL',
+                        host:null,
+                        url:'/mail/sendemail',
+                        route_path:'/mail/sendemail',
+                        method:'POST', 
+                        app_id:app_id,
+                        query:'',
+                        body:email_rendered,
+                        authorization:null,
+                        ip:ip, 
+                        user_agent:user_agent, 
+                        accept_language:accept_language,
+                        res:null};
+    return await BFF_server(parameters);
 };
 /**
  * 
