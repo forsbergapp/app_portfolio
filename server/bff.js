@@ -5,9 +5,9 @@ import * as Types from './../types.js';
 
 const service = await import('./bff.service.js');
 
-const {responsetime} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {getNumberValue, responsetime} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {LogRequestI} = await import(`file://${process.cwd()}/server/log.service.js`);
-const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
+const {iam_decode, AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
 const {randomUUID, createHash} = await import('node:crypto');
 const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 const fs = await import('node:fs');
@@ -136,7 +136,7 @@ const fs = await import('node:fs');
         url:req.originalUrl,
         route_path: req.originalUrl.substring(req.route.path.indexOf('*'), req.originalUrl.indexOf('?')>-1?req.originalUrl.indexOf('?'):req.originalUrl.length),
         method: req.method,
-        iam: req.query.iam,
+        app_id: req.query.iam?getNumberValue(iam_decode(req.query.iam).get('app_id')):null,
         query: req.query.parameters,
         body: req.body, 
         authorization:  req.headers.authorization, 

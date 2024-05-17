@@ -26,18 +26,24 @@ let CONNECTED_CLIENTS = [];
  *               identity_provider_id:number}>}
  */
 const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
-    const { BFF_microservices } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    const { BFF_server } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
-    /**@type{Types.bff_parameters_microservices}*/
-    const parameters = {path:'/geolocation/ip',
-                        body:null,
-                        query:`ip=${ip}`,
+    /**@type{Types.bff_parameters}*/
+    const parameters = {endpoint:'SERVER_SOCKET',
+                        host:null,
+                        url:'/geolocation/ip',
+                        route_path:'/geolocation/ip',
                         method:'GET', 
+                        app_id:app_id,
+                        query:`ip=${ip}`,
+                        body:{},
+                        authorization:null,
                         ip:ip, 
                         user_agent:headers_user_agent, 
-                        accept_language:headers_accept_language};
+                        accept_language:headers_accept_language,
+                        res:null};
     
-    const result_geodata = await BFF_microservices(app_id, parameters)
+    const result_geodata = await BFF_server(parameters)
                                     .then((/**@type{*}*/result_gps)=>JSON.parse(result_gps))
                                     .catch((/**@type{Types.error}*/error)=>null);
     const place = result_geodata?
@@ -48,10 +54,10 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
     const identity_provider_id = user_account_id?await getUserByUserId(app_id, user_account_id)
                                                     .then((/**@type{string}*/result)=>JSON.parse(result)[0].identity_provider_id)
                                                     .catch((/**@type{Types.error}*/error)=>null):'';
-    return {latitude:result_geodata.geoplugin_latitude ?? '',
-            longitude:result_geodata.geoplugin_longitude ?? '',
+    return {latitude:result_geodata?result_geodata.geoplugin_latitude ?? '':'',
+            longitude:result_geodata?result_geodata.geoplugin_longitude ?? '':'',
             place:place,
-            timezone:result_geodata.geoplugin_timezone ?? '',
+            timezone:result_geodata?result_geodata.geoplugin_timezone ?? '':'',
             identity_provider_id:identity_provider_id}
 }
 /**

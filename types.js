@@ -1,38 +1,20 @@
 /** BFF
+ * @typedef {'APP'|'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'ADMIN'|'SUPERADMIN'|'SYSTEMADMIN'|'SOCKET'|'IAM'|
+ *           'SERVER_APP'|'SERVER_REPORT'|'SERVER_SOCKET'|'SERVER_MAIL'} endpoint_type
  * @typedef {{
- *          endpoint: string,
- *          host:string,
- *          url:string,
+ *          endpoint: endpoint_type,
+ *          host:string|null,
+ *          url:string|null,
  *          route_path:string,
  *          method: string,
- *          iam: string,
+ *          app_id: number|null,
  *          query: string,
  *          body:object,
- *          authorization:string,
+ *          authorization:string|null,
  *          ip: string,
  *          user_agent:string,
  *          accept_language:string,
- *          res: res}} bff_parameters
- * 
- * @typedef {{  path:string,
- *              body:object|null, 
- *              query: string, 
- *              method: string,
- *              ip: string,
- *              user_agent:string,
- *              accept_language:string}} bff_parameters_microservices
- * 
- * @typedef {{  endpoint: string,
- *              host:string,
- *              url:string,
- *              method: string,
- *              parameters: string
- *              body:object|null,
- *              authorization:string,
- *              ip: string,
- *              user_agent:string,
- *              accept_language:string,
- *              res: res}} bff_parameters_server
+ *          res: res|null}} bff_parameters
  * 
  * Routes paramaters
  * @typedef {{  app_id: req_id_number,
