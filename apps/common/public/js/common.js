@@ -2879,10 +2879,10 @@ const show_broadcast = (broadcast_message) => {
         }
         case 'CONNECTINFO':{
             COMMON_GLOBAL.service_socket_client_ID =    JSON.parse(window.atob(message)).client_id;
-            COMMON_GLOBAL.client_latitude =             JSON.parse(window.atob(message)).latitude;
-            COMMON_GLOBAL.client_longitude =            JSON.parse(window.atob(message)).longitude;
-            COMMON_GLOBAL.client_place =                JSON.parse(window.atob(message)).place;
-            COMMON_GLOBAL.client_timezone =             JSON.parse(window.atob(message)).timezone;
+            COMMON_GLOBAL.client_latitude =             JSON.parse(window.atob(message)).latitude==''?COMMON_GLOBAL.client_latitude:JSON.parse(window.atob(message)).latitude;
+            COMMON_GLOBAL.client_longitude =            JSON.parse(window.atob(message)).longitude==''?COMMON_GLOBAL.client_longitude:JSON.parse(window.atob(message)).longitude;
+            COMMON_GLOBAL.client_place =                JSON.parse(window.atob(message)).place==''?COMMON_GLOBAL.client_place:JSON.parse(window.atob(message)).place;
+            COMMON_GLOBAL.client_timezone =             JSON.parse(window.atob(message)).timezone==''?COMMON_GLOBAL.client_timezone:JSON.parse(window.atob(message)).timezone;
             break;
         }
         case 'CHAT':
@@ -2961,20 +2961,7 @@ const checkOnline = (div_icon_online, user_account_id) => {
  */
 const get_place_from_gps = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
-        let tokentype;
-
-        if (COMMON_GLOBAL.system_admin!=null)
-            tokentype = 'SYSTEMADMIN';
-        else 
-            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id){
-                //admin
-                tokentype = 'APP_ACCESS';
-            }
-            else{
-                //not logged in or a user
-                tokentype = 'APP_DATA';
-            }
-        FFB('/geolocation/place', `longitude=${longitude}&latitude=${latitude}`, 'GET', tokentype, null)
+        FFB('/geolocation/place', `longitude=${longitude}&latitude=${latitude}`, 'GET', 'APP_DATA', null)
         .then(result=>{
             const json = JSON.parse(result);
             if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
@@ -2992,22 +2979,8 @@ const get_place_from_gps = async (longitude, latitude) => {
  * @returns {Promise.<null>}
  */
 const get_gps_from_ip = async () => {
-
     return new Promise((resolve)=>{
-        let tokentype;
-        
-        if (COMMON_GLOBAL.system_admin!=null && COMMON_GLOBAL.token_admin_at)
-            tokentype = 'SYSTEMADMIN';
-        else
-            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.token_at){
-                //admin
-                tokentype = 'APP_ACCESS';
-            }
-            else{
-                //not logged in or a user
-                tokentype = 'APP_DATA';
-            }
-        FFB('/geolocation/ip', null, 'GET', tokentype, null)
+        FFB('/geolocation/ip', null, 'GET', 'APP_DATA', null)
         .then(result=>{
             const geodata = JSON.parse(result);
             COMMON_GLOBAL.client_latitude  = geodata.geoplugin_latitude;

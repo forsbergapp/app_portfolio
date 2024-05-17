@@ -14,7 +14,7 @@ const startserver = async () =>{
 	request.server.createServer(request.options, (/**@type{Types.req_microservice}*/req, /**@type{Types.res_microservice}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'POST');
 		res.setHeader('Access-Control-Allow-Origin', '*');
-		const URI_query = req.url.substring(req.url.indexOf('?'));
+		const URI_query = Buffer.from(req.url.substring(req.url.indexOf('?')), 'base64').toString('utf-8');
 		const URI_path = req.url.substring(0, req.url.indexOf('?'));
 		const app_query = new URLSearchParams(URI_query);
 		/**@type{Types.microservice_data_mail} */

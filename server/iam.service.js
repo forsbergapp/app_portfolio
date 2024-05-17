@@ -540,14 +540,18 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
  const AuthenticateApp = async (app_id, authorization) =>{
     const {file_get} = await import(`file://${process.cwd()}/server/db/file.service.js`);
     const file = await file_get('APPS');
-    const CLIENT_ID = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_ID;
-    const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_SECRET;
-
-    const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
-    if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
-        return true;
+    if (app_id != null){
+        const CLIENT_ID = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_ID;
+        const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_SECRET;
+        const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+        if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
+            return true;
+        else
+            return false;
+    }
     else
         return false;
+    
 };
 
 /**
@@ -607,7 +611,6 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
             /**@ts-ignore */
             tokentimestamp:jwt.decode(token, { complete: true }).payload.tokentimestamp};
 };
-
 export{ iam_decode,
         expired_token,
         not_authorized,
