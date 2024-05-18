@@ -478,12 +478,13 @@ const getUserByUserId = async (app_id, id) => {
 /**
  * 
  * @param {number} app_id 
- * @param {number|string} resource_id 
+ * @param {number|null} resource_id_number 
+ * @param {string|null} resource_id_name 
  * @param {string|null} search
  * @param {number} id_current_user
  * @returns {Promise.<Types.db_result_user_account_getProfileUser[]>}
  */
-const getProfileUser = async (app_id, resource_id, search, id_current_user) => {
+const getProfileUser = async (app_id, resource_id_number, resource_id_name, search, id_current_user) => {
 	const sql = `SELECT	u.id "id",
 						u.bio "bio",
 						u.private "private",
@@ -535,9 +536,9 @@ const getProfileUser = async (app_id, resource_id, search, id_current_user) => {
 							WHERE u_liked_current_user.user_account_id_like = u.id
 							AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
 				 FROM ${db_schema()}.user_account u
-				WHERE ((u.id = :resource_id OR :resource_id IS NULL)
+				WHERE ((u.id = :resource_id_number OR :resource_id_number IS NULL)
 					   OR 
-					   (u.username = :resource_id OR :resource_id IS NULL)
+					   (u.username = :resource_id_name OR :resource_id_name IS NULL)
 					   OR
 					   u.username LIKE :search
 					   OR
@@ -549,7 +550,8 @@ const getProfileUser = async (app_id, resource_id, search, id_current_user) => {
 								AND uap.app_id = :app_id)`;
 	const parameters ={
 						user_accound_id_current_user: id_current_user,
-						resource_id: resource_id,
+						resource_id_number: resource_id_number,
+						resource_id_name: resource_id_name,
 						search: search,
 						app_id: app_id
 					}; 
