@@ -485,6 +485,38 @@ const getUserByUserId = async (app_id, id) => {
  * @returns {Promise.<Types.db_result_user_account_getProfileUser[]>}
  */
 const getProfileUser = async (app_id, resource_id_number, resource_id_name, search, id_current_user) => {
+	const user_where = () =>{
+		switch (true){
+			case (search!='' && search != null):{
+				return 'u.username LIKE :user_value OR u.provider_first_name LIKE :user_value';
+			}
+			case (resource_id_name!='' && resource_id_name != null):{
+				return 'u.username = :user_value';
+			}
+			case (resource_id_number != null):{
+				return 'u.id = :user_value';
+			}
+			default:{
+				return '1=2';
+			}
+		}
+	}
+	const user_where_value = () =>{
+		switch (true){
+			case (search!='' && search != null):{
+				return `${search}%`;
+			}
+			case (resource_id_name!='' && resource_id_name != null):{
+				return resource_id_name;
+			}
+			case (resource_id_number != null):{
+				return resource_id_number;
+			}
+			default:{
+				return null;
+			}
+		}
+	}
 	const sql = `SELECT	u.id "id",
 						u.bio "bio",
 						u.private "private",
@@ -536,13 +568,7 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
 							WHERE u_liked_current_user.user_account_id_like = u.id
 							AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
 				 FROM ${db_schema()}.user_account u
-				WHERE ((u.id = :resource_id_number OR :resource_id_number IS NULL)
-					   OR 
-					   (u.username = :resource_id_name OR :resource_id_name IS NULL)
-					   OR
-					   u.username LIKE :search
-					   OR
-					   u.provider_first_name LIKE :search)
+				WHERE ${user_where()}
 				  AND u.active = 1
 				  AND EXISTS(SELECT NULL
 							   FROM ${db_schema()}.user_account_app uap
@@ -550,9 +576,7 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
 								AND uap.app_id = :app_id)`;
 	const parameters ={
 						user_accound_id_current_user: id_current_user,
-						resource_id_number: resource_id_number,
-						resource_id_name: resource_id_name,
-						search: search,
+						user_value: user_where_value(),
 						app_id: app_id
 					}; 
 	return await db_execute(app_id, sql, parameters, null);

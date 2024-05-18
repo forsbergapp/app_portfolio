@@ -629,7 +629,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
          */
         const clear_private = (resource_id_number, result_getProfileUser) =>
             result_getProfileUser.map(row=>{
-                if ((row.private==1 && row.friends==null) || resource_id_number==-1){
+                if ((row.private==1 && row.friends==null) || query.get('search')!=null){
                     //private and not friends or anonymous visit, remove stats
                     row.count_following = null;
                     row.count_followed = null;
@@ -675,7 +675,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                                             client_latitude:        query.get('client_latitude')};
                         insertUserAccountView(app_id, data_body)
                         .then(()=>{
-                            resolve(clear_private(resource_id_number, result_getProfileUser)[0]);
+                            resolve(clear_private(resource_id_number, result_getProfileUser));
                         })
                         .catch((/**@type{Types.error}*/error)=>reject(error));
                     });
