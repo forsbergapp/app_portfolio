@@ -29,10 +29,10 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
                                         `<div id='common_message_info_list'>
                                             <div class='common_message_info_list_row'>
                                                 <div class='common_message_info_list_col'>
-                                                    <div>${props.message.length?Object.keys(list_row[1])[0]:list_row[0]}</div>
+                                                    <div>${props.message.constructor===Array?Object.keys(list_row[1])[0]:list_row[0]}</div>
                                                 </div>
                                                 <div class='common_message_info_list_col'>
-                                                    <div>${props.message.length?Object.values(list_row[1])[0]:list_row[1]}</div>
+                                                    <div>${props.message.constructor===Array?Object.values(list_row[1])[0]:list_row[1]}</div>
                                                 </div>
                                             </div>
                                         </div>`).join(''):
