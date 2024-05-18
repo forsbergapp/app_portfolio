@@ -610,7 +610,8 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
 /**
  * 
  * @param {number} app_id 
- * @param {number|string|null} resource_id
+ * @param {number|null} resource_id_number
+ * @param {string|null} resource_id_name
  * @param {string} ip 
  * @param {string} user_agent 
  * @param {*} query 
@@ -618,17 +619,17 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
  * @param {Types.res} res
  * @returns 
  */
-const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
+const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         /**
          * Clear private data if private
-         * @param {number|string|null} resource_id
+         * @param {number|null} resource_id_number
          * @param {Types.db_result_user_account_getProfileUser[]} result_getProfileUser 
          * @returns {Types.db_result_user_account_getProfileUser[]}
          */
-        const clear_private = (resource_id, result_getProfileUser) =>
+        const clear_private = (resource_id_number, result_getProfileUser) =>
             result_getProfileUser.map(row=>{
-                if ((row.private==1 && row.friends==null) || resource_id==null){
+                if ((row.private==1 && row.friends==null) || resource_id_number==-1){
                     //private and not friends or anonymous visit, remove stats
                     row.count_following = null;
                     row.count_followed = null;
@@ -642,24 +643,22 @@ const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
                     }
                 return row;
             });
-        if (resource_id=='')
-            resource_id = null;
         //resource id can be number, string or empty if searching
-        service.getProfileUser(app_id, resource_id, query.get('search'), getNumberValue(query.get('id')))
+        service.getProfileUser(app_id, resource_id_number==-1?null:resource_id_number, resource_id_name, query.get('search'), getNumberValue(query.get('id')))
         .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
-            if (resource_id==null){
+            if (resource_id_number==-1){
                 //searching, return result
                 import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search.service.js`).then(({ insertProfileSearch }) => {
                     /**@type{Types.db_parameter_profile_search_insertProfileSearch} */
                     const data_insert = {   user_account_id:    data.user_account_id,
-                                            search:             query.get('search'),
+                                            search:             query.get('search') ?? resource_id_name,
                                             client_ip:          ip,
                                             client_user_agent:  user_agent,
                                             client_longitude:   query.get('client_longitude'),
                                             client_latitude:    query.get('client_latitude')};
                     insertProfileSearch(app_id, data_insert)
                     .then(()=>{
-                        resolve(clear_private(resource_id, result_getProfileUser));
+                        resolve(clear_private(resource_id_number, result_getProfileUser));
                     })
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 });
@@ -676,7 +675,7 @@ const getProfile = (app_id, resource_id, ip, user_agent, query, data, res) =>{
                                             client_latitude:        query.get('client_latitude')};
                         insertUserAccountView(app_id, data_body)
                         .then(()=>{
-                            resolve(clear_private(resource_id, result_getProfileUser)[0]);
+                            resolve(clear_private(resource_id_number, result_getProfileUser)[0]);
                         })
                         .catch((/**@type{Types.error}*/error)=>reject(error));
                     });
