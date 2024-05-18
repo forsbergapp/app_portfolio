@@ -98,22 +98,17 @@ const app_portfolio_title = 'App Portfolio';
                 (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
  };
 /**
- * Config app secret reset db username and passwords
+ * Config app secret reset db username and passwords for database in use
  * @param {number} app_id
  * @returns {Promise.<void>}
  */
   const ConfigAppSecretDBReset = async (app_id) => {
+    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
     const file = await file_get('APPS', true);
-    
+    const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
     for (const app of file.file_content.APPS){
-        app.SECRETS.SERVICE_DB_DB1_APP_USER = '';
-        app.SECRETS.SERVICE_DB_DB1_APP_PASSWORD = '';
-        app.SECRETS.SERVICE_DB_DB2_APP_USER = '';
-        app.SECRETS.SERVICE_DB_DB2_APP_PASSWORD = '';
-        app.SECRETS.SERVICE_DB_DB3_APP_USER = '';
-        app.SECRETS.SERVICE_DB_DB3_APP_PASSWORD = '';
-        app.SECRETS.SERVICE_DB_DB4_APP_USER = '';
-        app.SECRETS.SERVICE_DB_DB4_APP_PASSWORD = '';
+        app.SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`] = '';
+        app.SECRETS[`SERVICE_DB_DB${db_use}_APP_PASSWORD`] = '';
     }
     await file_update('APPS', file.transaction_id, file.file_content);
     await file_set_cache_all();
@@ -129,13 +124,7 @@ const app_portfolio_title = 'App Portfolio';
    */
     const ConfigAppSecretUpdate = async (app_id, data) => {
       const file = await file_get('APPS', true);
-      
-      for (const app of file.file_content.APPS){
-          if (app.APP_ID == data.app_id){
-            app.SECRETS[data.parameter_name] = data.parameter_value
-            break;
-          }
-      }
+      file.file_content.APPS.filter((/**@type{*}*/row)=> row.APP_ID==data.app_id)[0].SECRETS[data.parameter_name] = data.parameter_value;
       await file_update('APPS', file.transaction_id, file.file_content);
       await file_set_cache_all();
    };
