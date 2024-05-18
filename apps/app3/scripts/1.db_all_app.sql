@@ -2,4 +2,4 @@
 --
 -- app
 --
-INSERT INTO app_portfolio.app (id, app_category_id) VALUES (<APP_ID/>, 1);
+INSERT INTO <DB_SCHEMA/>.app (id, app_category_id) VALUES (<APP_ID/>, 1);

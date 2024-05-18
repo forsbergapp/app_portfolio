@@ -57,7 +57,7 @@ const install_db_get_files = async (json_type) =>{
  * @param {*}           query
  */
  const Install = async (app_id, query)=> {
-    const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+    const {db_schema, db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
     const {CreateRandomString, ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
@@ -105,6 +105,7 @@ const install_db_get_files = async (json_type) =>{
        return [sql, password];
     };
     const files = await install_db_get_files('install');
+    const DB_SCHEMA = db_schema();
     let install_count = 0;
     for (const file of files){
         SocketSendSystemAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]})));
@@ -154,13 +155,14 @@ const install_db_get_files = async (json_type) =>{
                             sql = sql_and_pw[0];
                         }
                         sql = sql.replaceAll('<APP_ID/>', file[2]?file[2].toString():'0');
+                        sql = sql.replaceAll('<DB_SCHEMA/>', DB_SCHEMA);
                             
                         //if ; must be in wrong place then set tag in import script and convert it
                         if (sql.includes('<SEMICOLON/>'))
                             sql = sql.replace('<SEMICOLON/>', ';');
                         //close and start pool when creating database, some modules dont like database name when creating database
-                        //exclude db 4
-                        if (db_use != 4)
+                        //exclude db 4 and db 5
+                        if (db_use != 4 && db_use != 5)
                             if (sql.toUpperCase().includes('CREATE DATABASE')){
                                 //remove database name in dba pool
                                 await pool_close(null, db_use, DBA);
@@ -185,7 +187,9 @@ const install_db_get_files = async (json_type) =>{
                                         connectString:             null,
                                         poolMin:                   null,
                                         poolMax:                   null,
-                                        poolIncrement:             null
+                                        poolIncrement:             null,
+                                        //db 5 not used here
+                                        fileName:                  null
                                     };
                                 await pool_start(json_data);
                             }
@@ -214,7 +218,9 @@ const install_db_get_files = async (json_type) =>{
                                     connectString:             null,
                                     poolMin:                   null,
                                     poolMax:                   null,
-                                    poolIncrement:             null
+                                    poolIncrement:             null,
+                                    //db 5 not used here
+                                    fileName:                  null
                                 };
                                 await pool_start(json_data);
                                 //change to database value for the rest of the function
@@ -336,7 +342,9 @@ const install_db_get_files = async (json_type) =>{
                     connectString:             null,
                     poolMin:                   null,
                     poolMax:                   null,
-                    poolIncrement:             null
+                    poolIncrement:             null,
+                    //db 5 not used here
+                    fileName:                  null
                 };
                 await pool_start(json_data);
             }
@@ -790,9 +798,9 @@ const DemoUninstall = async (app_id, query)=> {
 /**
  * Starts pool with parameters
  * @param {number} db_use 
- * @param {number} dba 
- * @param {string} user 
- * @param {string} password 
+ * @param {number|null} dba 
+ * @param {string|null} user 
+ * @param {string|null} password 
  * @param {number|null} pool_id 
  * @returns {Promise.<null>}
  */
@@ -821,7 +829,9 @@ const DemoUninstall = async (app_id, query)=> {
           connectString:             ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
           poolMin:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
           poolMax:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
-          poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
+          poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)),
+          // db 5 parameters
+          fileName:                  ConfigGet('SERVICE_DB', `DB${db_use}_FILENAME`)
        };
        pool_start(dbparameters)
        .then((/**@type{null}*/result)=>{
@@ -837,31 +847,35 @@ const DemoUninstall = async (app_id, query)=> {
  /**
   * Start pools for database used
   */
- const Start = async () => {
+const Start = async () => {
     if (ConfigGet('SERVICE_DB', 'START')=='1'){    
-       let user;
-       let password;
-       let dba = 0;
-       const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+        let user;
+        let password;
+        let dba = 0;
+        const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
        
-       if (ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)){
-          user = `${ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}`;
-          password = `${ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}`;
-          dba = 1;
-          await pool_db(db_use, dba, user, password, null);
+        if (db_use == 5)
+            await pool_db(db_use, dba, null, null, null);
+        else{
+            if (ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)){
+                user = `${ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}`;
+                password = `${ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}`;
+                dba = 1;
+                await pool_db(db_use, dba, user, password, null);
+                }
+                dba = 0;
+                for (const app  of ConfigGetApps()){
+                    if (ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                        app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`])
+                        await pool_db(   db_use, 
+                                        dba, 
+                                        ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                        app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`], 
+                                        ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                        app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_PASSWORD`], 
+                                        app.APP_ID);
+            }  
         }
-        dba = 0;
-        for (const app  of ConfigGetApps()){
-            if (ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`])
-               await pool_db(   db_use, 
-                                dba, 
-                                ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`], 
-                                ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_PASSWORD`], 
-                                app.APP_ID);
-       }  
     }
  };
 export{Info, InfoSpace, InfoSpaceSum, Install, InstalledCheck, Uninstall, DemoInstall, DemoUninstall, Start};

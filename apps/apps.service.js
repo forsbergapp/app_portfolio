@@ -16,9 +16,11 @@ const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/se
  * @returns {boolean}
  */
  const app_start = (app_id=null)=>{
+    const common_app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
+    const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
     if (file_get_cached('SERVER').METADATA.MAINTENANCE==0 && ConfigGet('SERVICE_DB', 'START')=='1' && 
-        ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START=='1' &&
-        ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`] )
+        ConfigGetApp(app_id, common_app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START=='1' &&
+        (db_use==5 || ConfigGetApp(app_id, common_app_id, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`] ))
         if (app_id == null)
             return true;
         else{
@@ -362,7 +364,7 @@ const getInfo = async (app_id, info) => {
         };
         if (param!=null && ConfigGetApp(app_id, app_id, 'SHOWPARAM') == 1){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getProfileUser}) => {
-                getProfileUser(app_id, param, null, null)
+                getProfileUser(app_id, null, param, null, null)
                 .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result)=>{
                     if (result[0])
                         main(app_id);
@@ -450,7 +452,8 @@ const getAppBFF = async (app_id, app_parameters) =>{
                                                             translate_items:    translate_items,
                                                             module:             app});
     //if app admin then log, system does not log in database
-    if (ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`]){
+    if (ConfigGet('SERVICE_DB', 'START')=='1' && 
+         (getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5||ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`])){
         const {createLog} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`);
         await createLog(app_id,
                         app_id,

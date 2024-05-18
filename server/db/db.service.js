@@ -4,11 +4,15 @@
 import * as Types from './../../types.js';
 
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`)
+const {SLASH} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+
 //mysql module used for both MariaDB and MySQL
 const MYSQL               = await import('mysql');
 const {default: PG}       = await import('pg');
 const {default: ORACLEDB} = await import('oracledb');
-
+const {default:sqlite3}   = await import('sqlite3');
+const sqlite              = await import('sqlite');
 /**
  * POOL_DB
  * All database pool connections are saved here
@@ -16,13 +20,14 @@ const {default: ORACLEDB} = await import('oracledb');
  * @type{Types.db_pool[]}
  */
 const POOL_DB =[ 
-                  [1, null, null], //MySQL pools        [db number, dba pool object, apps pool object]
-                  [2, null, null], //MariaDB pools      [db number, dba pool object, apps pool object]
-                  [3, null, null], //PostgreSQL pools   [db number, dba pool object, apps pool object]
-                  [4, null, null]  //Oracle pools       [db number, dba pool object {pool_id_dba: 0}, apps pool object {pool_id_app: 0}]
+                  [1, null, null], //MySQL pools      [db number, dba pool object, apps pool object]
+                  [2, null, null], //MariaDB pools    [db number, dba pool object, apps pool object]
+                  [3, null, null], //PostgreSQL pools [db number, dba pool object, apps pool object]
+                  [4, null, null], //Oracle pools     [db number, dba pool object {pool_id_dba: 0}, apps pool object {pool_id_app: 0}]
+                  [5, null, null]  //SQLite           [db number, db object, null]
                ];                     
 
-if (ConfigGet('SERVICE_DB', 'USE')=='4'){
+if (getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==4){
    ORACLEDB.autoCommit = true;
    ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
    ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
@@ -83,8 +88,8 @@ const pool_start = async (dbparameters) =>{
             const mysql_pool = MYSQL.createPool({
                                  host: dbparameters.host,
                                  port: dbparameters.port,
-                                 user: dbparameters.user,
-                                 password: dbparameters.password,
+                                 user: dbparameters.user ?? '',
+                                 password: dbparameters.password ?? '',
                                  database: dbparameters.database==null?'':dbparameters.database,
                                  charset: dbparameters.charset==null?'':dbparameters.charset,
                                  connectionLimit: dbparameters.connectionLimit==null?0:dbparameters.connectionLimit
@@ -106,8 +111,8 @@ const pool_start = async (dbparameters) =>{
             const createpoolPostgreSQL = () =>{
                return new Promise(resolve=>{
                   resolve(new PG.Pool({
-                     user: dbparameters.user,
-                     password: dbparameters.password,
+                     user: dbparameters.user ?? '',
+                     password: dbparameters.password ?? '',
                      host: dbparameters.host,
                      port: dbparameters.port,
                      database: dbparameters.database==null?'':dbparameters.database,
@@ -145,8 +150,8 @@ const pool_start = async (dbparameters) =>{
              */
             const createpoolOracle= poolAlias=>{
                ORACLEDB.createPool({	
-                  user: dbparameters.user,
-                  password: dbparameters.password,
+                  user: dbparameters.user ?? '',
+                  password: dbparameters.password ?? '',
                   connectString: dbparameters.connectString==null?'':dbparameters.connectString,
                   poolMin: dbparameters.poolMin==null?0:dbparameters.poolMin,
                   poolMax: dbparameters.poolMax==null?0:dbparameters.poolMax,
@@ -176,6 +181,21 @@ const pool_start = async (dbparameters) =>{
                if (dbparameters.pool_id!=null)
                   createpoolOracle(dbparameters.pool_id.toString());
             }
+            break;
+         }
+         case 5:{
+            POOL_DB.map(db=>{
+               if (db[0]==dbparameters.use)
+                  sqlite.open({
+                     filename: process.cwd() + `${SLASH}data${SLASH}${dbparameters.fileName ?? ''}`,
+                     driver: sqlite3.Database
+                  })
+                  .then((sqlite_db)=>{
+                     db[1]=sqlite_db;
+                     resolve(null);
+                  })
+                  .catch((error)=>reject(error));
+            });
             break;
          }
       }
@@ -217,25 +237,28 @@ const pool_close = async (pool_id, db_use, dba) =>{
 const pool_get = (pool_id, db_use, dba) => {
    let pool;
    try {
-      if (dba==1)
-         if (db_use==4){
-            /**@ts-ignore */
-            return POOL_DB.filter(db=>db[0]==db_use)[0][1].pool_id_dba;
-         }
-         else
-            return POOL_DB.filter(db=>db[0]==db_use)[0][1];
-      else{
-         pool = POOL_DB.filter(db=>db[0]==db_use)[0];
-         if (pool[2])
+      if (db_use==5)
+         return POOL_DB.filter(db=>db[0]==db_use)[0][1];
+      else
+         if (dba==1)
             if (db_use==4){
                /**@ts-ignore */
-               return pool[2][pool_id].pool_id_app;
+               return POOL_DB.filter(db=>db[0]==db_use)[0][1].pool_id_dba;
             }
             else
-               return pool[2][pool_id];
-         else
-            return null;
-      }
+               return POOL_DB.filter(db=>db[0]==db_use)[0][1];
+         else{
+            pool = POOL_DB.filter(db=>db[0]==db_use)[0];
+            if (pool[2])
+               if (db_use==4){
+                  /**@ts-ignore */
+                  return pool[2][pool_id].pool_id_app;
+               }
+               else
+                  return pool[2][pool_id];
+            else
+               return null;
+         }
    } catch (err) {
       return null;
    }  
@@ -269,9 +292,9 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                   if (err)
                      return reject (err);
                   else{
-                     //change json parameters to [] syntax with bind variable names
-                     //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
-                     //mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
+                     //change parameters to [] syntax with bind variable names
+                     //common syntax:  ... ("UPDATE [table] SET [column] = :title", { title: "value" });
+                     //mysql syntax:   ... ("UPDATE [table] SET [column] = ?", ["value"];
                      conn.config.queryFormat = (/**@type{string}*/sql, /**@type{[]}*/parameters) => {
                         if (!parameters) return sql;
                         return sql.replace(/:(\w+)/g, (txt, key) => {
@@ -318,16 +341,16 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             if ('DB_CLOB' in parameters)
                   delete parameters.DB_CLOB;
             /**
+             * change parameters to $ syntax
+             * use unique index with $1, $2 etc, parameter can be used several times
+             * example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
+             * use indexorder received from parameters
+             * common syntax:     ... ("UPDATE [table] SET [column] = :title", { title: "value" });
+             * postgresql syntax: ... ("UPDATE [table] SET [column] = $1", [0, "value"];
              * @param {string} parameterizedSql
              * @param {object} params
              */
             const queryConvert = (parameterizedSql, params) => {
-               //change json parameters to $ syntax
-               //use unique index with $1, $2 etc, parameter can be used several times
-               //example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
-               //use indexorder received from parameters
-               //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
-               //postgresql syntax: connection.query("UPDATE [table] SET [column] = $1", [0, "value"];
                 const [text, values] = Object.entries(params).reduce(
                /**@ts-ignore */
                     ([sql, array, index], param) => [sql.replace(/:(\w+)/g, (txt, key) => {
@@ -427,6 +450,56 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                return reject(err);
             }
             break;
+         }
+         case 5:{
+            //DB_RETURN_ID not used here
+            if ('DB_RETURN_ID' in parameters)
+                  delete parameters.DB_RETURN_ID;
+            //DB_CLOB not used here
+            if ('DB_CLOB' in parameters)
+               delete parameters.DB_CLOB;
+            /**
+             * change parameters to $[parameter name] syntax
+             * common syntax: ... "UPDATE [table] SET [column] = :title", { title: "value" });
+             * SQLite syntax: ... "UPDATE [table] SET [column] = $title", [$title, "value"];
+             * @param {string} parameterizedSql
+             * @param {*} params
+             */
+            const queryConvert = (parameterizedSql, params) => {
+                const [text] = Object.entries(params).reduce(
+               /**@ts-ignore */
+                    ([sql, array, index], param) => [sql.replace(/:(\w+)/g, (txt, key) => {
+                                                               if (key in params){
+                                                                  return `$${key}`;
+                                                               }
+                                                               else
+                                                                  return txt;
+                                                               }),
+                                                      [...array, param[1]], 
+                                                      index + 1
+                                                    ],
+                                                    [parameterizedSql, [], 1]
+                );
+                return text;
+            };	
+            // change parameter key names to $[parameter name] syntax
+            const parameters_convert = {};
+            Object.entries(parameters).map(parameter=>{
+               parameter[0]= `$${parameter[0]}`;
+               /**@ts-ignore*/
+               parameters_convert[parameter[0]] = parameter[1];
+            });
+            const sql_convert = queryConvert(sql, parameters);
+            const db = pool_get(pool_id, db_use, dba);
+            /**@ts-ignore */
+            return resolve(sql.trimStart().toUpperCase().startsWith('SELECT')?db.all(sql_convert, parameters_convert):db.run(sql_convert, parameters_convert)
+            .then((/**@type{*}*/result)=>{
+               if (result.lastID)
+                  result.insertId = result.lastID;
+               if (result.changes)
+                     result.affectedRows = result.changes;
+               return result;
+            }));
          }
          default:{
             return reject();

@@ -683,7 +683,7 @@
 
 /**
  * Server - db pool
- * @typedef {[number, object|null, [object|db_pool_4|null]|null]} db_pool
+ * @typedef {[1|2|3|4|5, object|null, [object|db_pool_4|null]|null]} db_pool
  * 
  * Server - db pool parameters
  * @typedef {object}        db_pool_parameters
@@ -691,9 +691,9 @@
  * @property {number|null}  pool_id
  * @property {number}       port
  * @property {string}       host
- * @property {number}       dba
- * @property {string}       user
- * @property {string}       password
+ * @property {number|null}  dba
+ * @property {string|null}  user
+ * @property {string|null}  password
  * @property {string|null}  database
  * @property {string|null}  charset                 - DB 1+2 MariaDB/MySQL
  * @property {number|null}  connectionLimit         - DB 1+2 MariaDB/MySQL
@@ -704,6 +704,7 @@
  * @property {number|null}  poolMin                 - DB 4 Oracle
  * @property {number|null}  poolMax                 - DB 4 Oracle
  * @property {number|null}  poolIncrement           - DB 4 Oracle
+ * @property {string|null}  fileName                - DB 5 SQLite
  * 
  * Server - db pool connection 1 + 2
  * @typedef {object}    db_pool_connection_1_2
@@ -994,8 +995,8 @@
 /**
  * Server - DATABASE
  * DB query result
- * @typedef {   db_result_insert|db_result_delete|db_result_update|db_result_select}   db_query_result
- * @typedef {   object}                    db_query_result_error
+ * @typedef {   db_result_insert|db_result_delete|db_result_update|db_result_select}                db_query_result
+ * @typedef {   {code:  string, errorNum:number, errno:number, message:string, db_message:string, stack:string, sqlMessage:string}}     db_query_result_error
  * DB result INSERT
  * @typedef {{  insertId:number, 
  *              rows:[], 

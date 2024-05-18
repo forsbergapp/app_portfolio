@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "server.js",
   "dependencies": {
-    "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",
     "compression": "^1.7.4",
     "easyqrcodejs-nodejs": "^4.5.2",
@@ -14,7 +13,9 @@
     "oracledb": "^6.2.0",
     "pg": "^8.10.0",
     "praytimes": "^0.0.5",
-    "puppeteer": "^21.4.0"
+    "puppeteer": "^21.4.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   },
   "scripts": {
     "test": "jasmine --config=test/jasmine.json",
@@ -26,6 +27,7 @@
   "type": "module",
   "description": "",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/compression": "^1.7.3",
     "@types/express": "^4.17.18",
     "@types/jasmine": "^5.1.0",
@@ -34,6 +36,7 @@
     "@types/nodemailer": "^6.4.11",
     "@types/oracledb": "^6.0.1",
     "@types/pg": "^8.10.3",
+    "@types/sqlite3": "^3.1.11",
     "eslint": "^8.49.0",
     "jasmine": "^5.1.0",
     "jsdoc": "^4.0.2",

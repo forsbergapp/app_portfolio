@@ -19,11 +19,7 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.servic
  const checked_error = async (app_id, lang_code, err, res) =>{
 	const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
     return new Promise((resolve)=>{
-		const app_code = get_app_code(  err.errorNum, 
-										err.message, 
-										err.code, 
-										err.errno, 
-										err.sqlMessage);
+		const app_code = get_app_code(err);
 		if (app_code != null){
 			getSettingDisplayData( 	app_id,
 									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
@@ -55,45 +51,35 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.servic
  *	Oracle message:
  *	'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
  *
- * @param {number} errorNum 
- * @param {object} message 
- * @param {string} code 
- * @param {string} errno 
- * @param {object} sqlMessage 
+ * @param {Types.db_query_result_error} error
  * @returns (string|null)
  * 
  */
-const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
-	const app_error_code = getNumberValue(JSON.stringify(errno) ?? JSON.stringify(errorNum));
-    //check if user defined exception
-    if (app_error_code >= 20000){
-        return app_error_code.toString();
-    } 
-    else{
-		const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
-		if ((db_use ==1 && code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
-			(db_use ==2 && errorNum ==1) ||  		  //Oracle
-			(db_use ==3 && code=='23505')){ 		  //PostgreSQL
-			let text_check;
-			if (sqlMessage)
-				text_check = JSON.stringify(sqlMessage);	//MariaDB/MySQL
-			else
-				text_check = JSON.stringify(message);		//Oracle/PostgreSQL
-			let app_message_code = null;
-			//check constraints errors, must be same name in mySQL and Oracle
-			if (text_check.toUpperCase().includes('USER_ACCOUNT_EMAIL_UN'))
-				app_message_code = '20200';
-			if (text_check.toUpperCase().includes('USER_ACCOUNT_PROVIDER_ID_UN'))
-				app_message_code = '20201';
-			if (text_check.toUpperCase().includes('USER_ACCOUNT_USERNAME_UN'))
-				app_message_code = '20203';
-			if (app_message_code != null)
-				return app_message_code;
-			else
-				return null;	
-		}
+const get_app_code = error => {
+	const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+	if (
+		((db_use ==1 ||db_use ==2)&& error.code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
+		(db_use ==3 && error.code=='23505')|| //PostgreSQL
+		(db_use ==4 && error.errorNum ==1)||  //Oracle
+		(db_use ==5 && error.code == 'ER_DUP_ENTRY')   	//SQLite
+		){ 		  
+		let text_check;
+		if (error.sqlMessage)
+			text_check = JSON.stringify(error.sqlMessage);	//MariaDB/MySQL
 		else
-			return null;
+			text_check = JSON.stringify(error.message);		//Oracle/PostgreSQL/SQLite
+		let app_message_code = null;
+		//check constraints errors, must be same name in mySQL and Oracle
+		if (text_check.toUpperCase().includes('USER_ACCOUNT_EMAIL_UN'))
+			app_message_code = '20200';
+		if (text_check.toUpperCase().includes('USER_ACCOUNT_PROVIDER_ID_UN'))
+			app_message_code = '20201';
+		if (text_check.toUpperCase().includes('USER_ACCOUNT_USERNAME_UN'))
+			app_message_code = '20203';
+		if (app_message_code != null)
+			return app_message_code;
+		else
+			return null;	
 	}
 };
 /**
@@ -170,7 +156,22 @@ const db_schema = () => ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'US
  */
 const db_limit_rows = (sql, limit_type = null) => {
 	const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
-	if (db_use == 1 || db_use == 2 || db_use == 3)
+	if (db_use == 4)
+		switch (limit_type){
+			case 1:{
+				//use env limit
+				return sql + ` FETCH NEXT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))} ROWS ONLY`;
+			}
+			case 2:{
+				//use env limit
+				return sql + ` FETCH NEXT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_STAT'))} ROWS ONLY`;
+			}
+			default:{
+				//use app function limit
+				return sql + ' OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
+			}
+		}
+	else
 		switch (limit_type){
 			case 1:{
 				return sql + ` LIMIT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))} `;
@@ -182,26 +183,24 @@ const db_limit_rows = (sql, limit_type = null) => {
 				return sql + ' LIMIT :limit OFFSET :offset';	
 			}
 		}
-	else 
-		if (db_use == 4)
-			switch (limit_type){
-				case 1:{
-					//use env limit
-					return sql + ` FETCH NEXT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))} ROWS ONLY`;
-				}
-				case 2:{
-					//use env limit
-					return sql + ` FETCH NEXT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_STAT'))} ROWS ONLY`;
-				}
-				default:{
-					//use app function limit
-					return sql + ' OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
-				}
-			}
-		else
-			return sql;
 };
 
+/**
+ * Compare date using EXTRACT or STRFTIME depending database
+ * Database 1,2,3,4:
+ * 	EXTRACT(year from date_created)
+ * 	EXTRACT(month from date_created)
+ * Database 5:
+ * 	STRFTIME('%Y', date_created)
+ * 	STRFTIME('%m', date_created)
+ *  STRFTIME('%d', date_created)
+ * 
+ * @param {'YEAR'|'MONTH'|'DAY'} period
+ */
+const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?
+								` CAST(STRFTIME('%${period=='YEAR'?'Y':period=='MONTH'?'m':period=='DAY'?'d':''}', date_created) AS INT) `:
+								` EXTRACT(${period} from date_created)`;
+														
 /**
  * 
  * @param {number} app_id 
@@ -221,19 +220,22 @@ const db_limit_rows = (sql, limit_type = null) => {
 		})
 		.catch((/**@type{Types.error}*/error)=>{
 			const database_error = 'DATABASE ERROR';
+			//add db_message key since message is not saved for SQLite
+			if (error.message)
+            	error.db_message = error.message;
 			LogDBE(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, error)
 			.then(()=>{
-				const app_code = get_app_code(error.errorNum, 
-					error.message, 
-					error.code, 
-					error.errno, 
-					error.sqlMessage);
+				const app_code = get_app_code(error);
 				if (app_code != null)
 					return reject(error);
 				else{
 					//return full error to admin
-					if (app_id==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
+					if (app_id==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
+						//SQLite does not display sql in error
+						if (!error.sql)
+							error.sql = sql;
 						reject(error);
+					}
 					else
 						reject(database_error);
 				}
@@ -244,5 +246,5 @@ const db_limit_rows = (sql, limit_type = null) => {
 
 export{
 		checked_error, get_app_code, record_not_found, get_locale,
-		db_schema,  db_limit_rows, db_execute
+		db_schema,  db_limit_rows, db_date_period, db_execute
 };

@@ -19,7 +19,7 @@
 	and regional functions. 
 
 	Oracle SQL Developer Data model designed data model.
-	Databases supported are MariaDB, MySQL, Oracle and PostgreSQL.
+	Databases supported are MariaDB, MySQL, Oracle, PostgreSQL and SQLite.
 	Centralized data model error handling of database errors, constraints errors and 
 	application errors and showed in users language.
 
@@ -48,7 +48,7 @@
 
 	How
 	Aquiring latest certifications, studying latest technologies trying out pros and cons.
-	Finding common factors in MariaDB, Mysql, PostgreSQL and Oracle databases to implement easier maintainable REST API 
+	Finding common factors in MariaDB, Mysql, PostgreSQL, Oracle and SQLite databases to implement easier maintainable REST API 
 	and datamodel.
 	Consolidate ideas from Angular, Vue, React, jQuery, Oracle Forms, Oracle Reports and Oracle APEX, existing log and 
 	monitor solutions, javascript frameworks to optimal structure and implementation.
@@ -75,7 +75,7 @@
 	- apps created using server side rendering
 	- database and file logging
 	- microservice arquitecture
-	- MariaDB, MySQL, PostgreSQL and Oracle databases supported deployed on Oracle Cloud with dynamic pool arquitecture
+	- MariaDB, MySQL, PostgreSQL, Oracle and SQLite databases supported with dynamic pool arquitecture
 	  and sql logging stratified per app
 	- MariaDB, MySQL and PostgreSQL installed as local installations and Docker as alternative
 	- database should support transactions with rollback and commit and be able to save images in the database
@@ -138,6 +138,8 @@
 	www.postgresql.org
 	Oracle Database
 	www.oracle.com/database
+	SQLite
+	www.sqlite.org
 	Node.js
 	www.nodejs.org
 	Express
