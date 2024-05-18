@@ -213,7 +213,7 @@ const component = async props => {
                             path, 
                             `id=${props.info_user_account_id ?? ''}&client_latitude=${props.info_client_latitude}&client_longitude=${props.info_client_longitude}`, 
                             'GET', 'APP_DATA', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .then((/**@type{string}*/result)=>JSON.parse(result)[0])
                             .catch((/**@type{Error}*/error)=>{throw error});
     }
         
