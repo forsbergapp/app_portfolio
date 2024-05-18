@@ -5,7 +5,7 @@ import * as Types from './../../../types.js';
 
 const { getNumberValue } = await import(`file://${process.cwd()}/server/server.service.js`);
 const { ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
-const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_date_period, db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -16,7 +16,7 @@ const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cw
  */
 const createLog = async (app_id, data_app_id, json_data) => {
 		
-	if (ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').APP_LOG=='1'){
+	if (ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LOG' in parameter)[0].APP_LOG=='1'){
 		const sql = `INSERT INTO ${db_schema()}.app_log(
 					app_id,
 					json_data,
@@ -54,8 +54,8 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 					  count(*) over() "total_rows"
 				 FROM ${db_schema()}.app_log
 				WHERE ((app_id = :app_id) OR :app_id IS NULL)
-				  AND EXTRACT(year from date_created) = :year
-				  AND EXTRACT(month from date_created) = :month
+				  AND ${db_date_period('YEAR')} = :year
+				  AND ${db_date_period('MONTH')} = :month
 				ORDER BY ${sort} ${order_by} `;
 		sql = db_limit_rows(sql, null);
 		const parameters = {app_id:data_app_id,
@@ -86,17 +86,17 @@ const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 					          NULL 									day_log,
 					          json_data
 						 FROM ${db_schema()}.app_log
-						 WHERE EXTRACT(YEAR FROM date_created) = :year_log
-						  AND EXTRACT(MONTH FROM date_created) = :month_log
+						WHERE ${db_date_period('YEAR')} = :year_log
+						  AND ${db_date_period('MONTH')} = :month_log
 						UNION ALL
 					   SELECT 2										chart,
 					   		  NULL 									app_id,
-							  EXTRACT(DAY FROM date_created) 		day_log,
+							  ${db_date_period('DAY')} 			day_log,
 							  json_data
 						 FROM ${db_schema()}.app_log
-						 WHERE ((app_id = :app_id_log) OR :app_id_log IS NULL)
-						  AND EXTRACT(YEAR FROM date_created) = :year_log
-						  AND EXTRACT(MONTH FROM date_created) = :month_log) t
+						WHERE ((app_id = :app_id_log) OR :app_id_log IS NULL)
+						  AND ${db_date_period('YEAR')} = :year_log
+						  AND ${db_date_period('MONTH')} = :month_log) t
 				ORDER BY 1, 2`;
 		const parameters = {app_id_log: data_app_id,
 							year_log: year,

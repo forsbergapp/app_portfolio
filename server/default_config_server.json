@@ -32,7 +32,7 @@
     ],
     "SERVICE_DB":[
         {"START": "0", "COMMENT": "0=NO, 1=YES, when 0 then only system admin can login in admin"},
-        {"USE": "1", "COMMENT": "1=MariaDB(mysql module), 2=MySQL(mysql module), 3=PostgreSQL(pg module), 4=Oracle(oracledb module)"},
+        {"USE": "1", "COMMENT": "1=MariaDB(mysql module), 2=MySQL(mysql module), 3=PostgreSQL(pg module), 4=Oracle(oracledb module), 5=SQLite"},
         {"LIMIT_LIST_SEARCH": "100", "COMMENT": ""},
         {"LIMIT_LIST_PROFILE_STAT": "100", "COMMENT": ""},
         {"DB1_SYSTEM_ADMIN_USER": "", "COMMENT": ""},
@@ -63,7 +63,9 @@
         {"DB4_CONNECTSTRING": "", "COMMENT": ""},
         {"DB4_POOL_MIN": "1", "COMMENT": ""},
         {"DB4_POOL_MAX": "1", "COMMENT": ""},
-        {"DB4_POOL_INCREMENT": "0", "COMMENT": ""}
+        {"DB4_POOL_INCREMENT": "0", "COMMENT": ""},
+        {"DB5_FILENAME": "app_portfolio.db", "COMMENT": "Saved in /data"},
+        {"DB5_NAME": "MAIN", "COMMENT": ""}
     ],
     "SERVICE_LOG":[
         {"SCOPE_REQUEST": "REQUEST", "COMMENT": ""},

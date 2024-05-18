@@ -521,11 +521,11 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
 						u.bio "bio",
 						u.private "private",
 						(SELECT 1 
-							FROM app_portfolio.user_account ua_current
+							FROM ${db_schema()}.user_account ua_current
 						   WHERE ua_current.id = :user_accound_id_current_user
 								AND EXISTS 
 							(SELECT NULL
-							   FROM app_portfolio.user_account_follow  uaf 
+							   FROM ${db_schema()}.user_account_follow  uaf 
 							  WHERE (uaf.user_account_id = u.id
 									 AND uaf.user_account_id_follow = ua_current.id)
 								or  (
