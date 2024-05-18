@@ -12,7 +12,7 @@
         {"db": 2, "sql": "drop role app_portfolio_role_app_common"},
         {"db": 2, "sql": "drop role app_portfolio_role_app_dba"},
 
-        {"db": 3, "sql": "drop database app_portfolio"},
+        {"db": 3, "sql": "drop database app_portfolio with (force)"},
         {"db": 3, "sql": "drop user app_portfolio"},
         {"db": 3, "sql": "drop role app_portfolio_role_app_admin"},
         {"db": 3, "sql": "drop role app_portfolio_role_app_common"},

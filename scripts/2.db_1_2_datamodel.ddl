@@ -635,6 +635,90 @@ ALTER TABLE app_portfolio.app
     ADD CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
         REFERENCES app_portfolio.app_category ( id );
 
+ALTER TABLE app_portfolio.app_data_entity
+    ADD CONSTRAINT app_data_entity_app_fk FOREIGN KEY ( app_id )
+        REFERENCES app_portfolio.app ( id );
+
+ALTER TABLE app_portfolio.app_data_entity_resource
+    ADD CONSTRAINT app_data_entity_resource_app_data_entity_fk FOREIGN KEY ( app_data_entity_app_id,
+                                                                             app_data_entity_id )
+        REFERENCES app_portfolio.app_data_entity ( app_id,
+                                                   id );
+
+ALTER TABLE app_portfolio.app_data_entity_resource
+    ADD CONSTRAINT app_data_entity_resource_app_setting_fk FOREIGN KEY ( app_setting_id )
+        REFERENCES app_portfolio.app_setting ( id );
+
+ALTER TABLE app_portfolio.app_data_resource_detail
+    ADD CONSTRAINT app_data_resource_detail_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id
+    ,
+                                                                                      app_data_entity_resource_app_data_entity_id,
+                                                                                      app_data_entity_resource_id )
+        REFERENCES app_portfolio.app_data_entity_resource ( app_data_entity_app_id,
+                                                            app_data_entity_id,
+                                                            id );
+
+ALTER TABLE app_portfolio.app_data_resource_detail
+    ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
+        REFERENCES app_portfolio.app_data_resource_master ( id );
+
+ALTER TABLE app_portfolio.app_data_resource_detail
+    ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_fkv2 FOREIGN KEY ( app_data_resource_master_attribute_id )
+        REFERENCES app_portfolio.app_data_resource_master ( id );
+
+ALTER TABLE app_portfolio.app_data_resource_detail_data
+    ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_detail_fk FOREIGN KEY ( app_data_resource_detail_id )
+        REFERENCES app_portfolio.app_data_resource_detail ( id );
+
+ALTER TABLE app_portfolio.app_data_resource_detail_data
+    ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_attribute_id )
+        REFERENCES app_portfolio.app_data_resource_master ( id );
+
+ALTER TABLE app_portfolio.app_data_resource_master
+    ADD CONSTRAINT app_data_resource_master_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id
+    ,
+                                                                                      app_data_entity_resource_app_data_entity_id,
+                                                                                      app_data_entity_resource_id )
+        REFERENCES app_portfolio.app_data_entity_resource ( app_data_entity_app_id,
+                                                            app_data_entity_id,
+                                                            id );
+
+ALTER TABLE app_portfolio.app_data_resource_master
+    ADD CONSTRAINT app_data_resource_master_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
+                                                                              user_account_app_app_id )
+        REFERENCES app_portfolio.user_account_app ( user_account_id,
+                                                    app_id );
+
+ALTER TABLE app_portfolio.app_data_stat
+    ADD CONSTRAINT app_data_stat_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id,
+                                                                           app_data_entity_resource_app_data_entity_id,
+                                                                           app_data_entity_resource_id )
+        REFERENCES app_portfolio.app_data_entity_resource ( app_data_entity_app_id,
+                                                            app_data_entity_id,
+                                                            id );
+
+ALTER TABLE app_portfolio.app_data_stat
+    ADD CONSTRAINT app_data_stat_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
+        REFERENCES app_portfolio.app_data_resource_master ( id );
+
+ALTER TABLE app_portfolio.app_data_stat
+    ADD CONSTRAINT app_data_stat_app_fk FOREIGN KEY ( app_id )
+        REFERENCES app_portfolio.app ( id );
+
+ALTER TABLE app_portfolio.app_data_stat
+    ADD CONSTRAINT app_data_stat_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
+                                                                   user_account_app_app_id )
+        REFERENCES app_portfolio.user_account_app ( user_account_id,
+                                                    app_id );
+
+ALTER TABLE app_portfolio.app_data_translation
+    ADD CONSTRAINT app_data_translation_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
+        REFERENCES app_portfolio.app_data_resource_master ( id );
+
+ALTER TABLE app_portfolio.app_data_translation
+    ADD CONSTRAINT app_data_translation_language_fk FOREIGN KEY ( language_id )
+        REFERENCES app_portfolio.language ( id );
+
 ALTER TABLE app_portfolio.app_device
     ADD CONSTRAINT app_device_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
