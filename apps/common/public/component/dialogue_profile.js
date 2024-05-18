@@ -206,7 +206,7 @@ const component = async props => {
             path = `/server-db/user_account-profile/${props.info_user_account_id_other ?? ''}`;
         else
             if (props.info_username !== null)
-                path = `/server-db/user_account-profile/${props.info_username}`;
+                path = `/server-db/user_account-profile-name/${props.info_username}`;
             else
                 path = `/server-db/user_account-profile/${props.info_user_account_id ?? ''}`;
         profile = await props.function_FFB(

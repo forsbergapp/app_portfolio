@@ -313,8 +313,12 @@ const COMMON = {
                         resolve(db_user_account.getProfileStat(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
+                    case route(`/bff/app_data/v1/server-db/user_account-profile-name/${resource_id_string}`, 'GET'):{
+                        resolve(db_user_account.getProfile(routesparameters.app_id, -1, resource_id_get(true), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
                     case route(`/bff/app_data/v1/server-db/user_account-profile/${resource_id_string}`, 'GET'):{
-                        resolve(db_user_account.getProfile(routesparameters.app_id, resource_id_get(true), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
+                        resolve(db_user_account.getProfile(routesparameters.app_id, resource_id_get(), null, routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route(`/bff/app_data/v1/server-db/user_account_app_data_post/${resource_id_string}`, 'GET'):{
