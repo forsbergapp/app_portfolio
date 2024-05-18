@@ -1501,7 +1501,7 @@ const profile_update_stat = async () => {
             'GET', 
             'APP_DATA', null)
         .then(result=>{
-            const user_stat = JSON.parse(result);
+            const user_stat = JSON.parse(result)[0];
             AppDocument.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
             AppDocument.querySelector('#common_profile_info_following_count').innerHTML = user_stat.count_following;
             AppDocument.querySelector('#common_profile_info_followers_count').innerHTML = user_stat.count_followed;
