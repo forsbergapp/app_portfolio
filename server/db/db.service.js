@@ -52,30 +52,35 @@ const pool_delete_all = (db)=>{
 /**
  * Pool start
  * 
- * dbparameters in JSON format:
- *      "use":                     1-4
- *      "pool_id":                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
- *      "port":                    port,
- *      "host":                    host,
- *      "dba":                     1/0,
- *      "user":                    username,
- *      "password":                password,
- *      "database":                database,
+ *    parameters:
+ * 
+ *    use:                     1-5
+ *    pool_id:                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
+ *    port:                    port,
+ *    host:                    host,
+ *    dba:                     1/0,
+ *    user:                    username,
+ *    password:                password,
+ *    database:                database,
  *
- *      //db 1 + 2 parameters      see MariaDB/MySQL documentation
- *      "charset":                 character set,
- *      "connnectionLimit":        connection limit
+ *    db 1 + 2 parameters      see MariaDB/MySQL documentation
+ *    charset:                 character set,
+ *    connnectionLimit:        connection limit
  *
- *      // db 3 parameters         see PostgreSQL documentation
- *      "connectionTimeoutMillis": connection timout milliseconds
- *      "idleTimeoutMillis":       idle timeout milliseconds
- *      "max":                     max
+ *    db 3 parameters          see PostgreSQL documentation
+ *    connectionTimeoutMillis: connection timout milliseconds
+ *    idleTimeoutMillis:       idle timeout milliseconds
+ *    max:                     max
  *
- *      //db 4 parameters          see Oracle documentation
- *      "connectString":           connectstring
- *      "poolMin":                 pool min
- *      "poolMax":                 pool max
- *      "poolIncrement":           pool increment
+ *    db 4 parameters          see Oracle documentation
+ *    connectString:           connectstring
+ *    poolMin:                 pool min
+ *    poolMax:                 pool max
+ *    poolIncrement:           pool increment
+ * 
+ *    db 5 parameter
+ *    fileName                 default app_portfolio.db saved in /data
+ *    
  * @param {Types.db_pool_parameters} dbparameters 
  * @returns {Promise.<null>}
  */
