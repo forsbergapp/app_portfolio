@@ -1566,10 +1566,11 @@ const user_settings_function = async (function_name, initial_user_setting) => {
                     //update user settings select with saved data
                     //save current settings to new option with 
                     //returned user_setting_id + common.COMMON_GLOBAL.user_account_id (then call set_settings_select)
+                    APP_GLOBAL.user_settings.push(JSON.parse(JSON.stringify(APP_GLOBAL.user_settings[select_user_setting.selectedIndex])));
+                    APP_GLOBAL.user_settings[APP_GLOBAL.user_settings.length - 1].id = JSON.parse(result).id;
                     select_user_setting.innerHTML += `<option id=${JSON.parse(result).id}>${APP_GLOBAL.user_settings[select_user_setting.selectedIndex].description}</option>`;
                     select_user_setting.selectedIndex = select_user_setting.options[select_user_setting.options.length - 1].index;
                     select_user_setting.options[select_user_setting.options.length - 1].value = select_user_setting.selectedIndex;
-                    settings_update('USER');
                     AppDocument.querySelector('#setting_btn_user_add').classList.remove('css_spinner');
                     break;
                 }
@@ -1612,6 +1613,8 @@ const user_settings_delete = (choice=null) => {
             .then(()=>{
                 common.ComponentRemove('common_dialogue_message', true);
                 const select = AppDocument.querySelector('#setting_select_user_setting');
+                //remove current element from array
+                APP_GLOBAL.user_settings.splice(select.selectedIndex,1);
                 //delete current option
                 select.remove(select.selectedIndex);
                 if (select_user_setting.length == 0) {
