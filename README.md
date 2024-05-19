@@ -277,52 +277,39 @@
 
 # Installation instructions
 
-1. Start
+1. Installation server
 
-	[docs/1.start.md](docs/1.start.md)
+	[docs/1.installation_server.md](docs/1.installation_server.md)
 
-2. Update DNS records, install Node.js and modules on server and create SSL
+2. Installation database
 
-	[docs/2.update_dns_install_nodejs_ssl.md](docs/2.update_dns_install_nodejs_ssl.md)
+	[docs/2.installation_database.md](docs/2.installation_database.md)
 
-3. Install MariaDB/MySQL/Oracle/PostgreSQL on same server or other server
-   and run db scripts
-
-	[docs/3.install_database.md](docs/3.install_database.md)
-
-4. Start Node.js on supported Node.js platform including process monitor
+3. Start Node.js
 	
-	[docs/4.start_nodejs.md](docs/4.start_nodejs.md)
+	[docs/3.start_nodejs.md](docs/3.start_nodejs.md)
 
-5. Enter application at http://admin.localhost or http://admin.[DOMAIN] and configure server
+4. Server configuration
 
-	[docs/5.server_configuration.md](docs/5.server_configuration.md)
+	[docs/4.server_configuration.md](docs/4.server_configuration.md)
 
-6. Set database parameters
+5. Apps
 
-	[docs/6.database_parameters.md](docs/6.database_parameters.md)
+	[docs/5.apps.md](docs/5.apps.md)
 
-7. About sign in provider management:
-   
-	[docs/7.sign_in_provider.md](docs/7.sign_in_provider.md)
-
-8. Apps
-
-	[docs/8.apps.md](docs/8.apps.md)
-
-9. Install development environment
+6. Configure development environment
 	
-	[docs/9.development.md](docs/9.development.md)
+	[docs/6.development.md](docs/6.development.md)
 
-10. Test
+7. Test
 	
-	[docs/10.test.md](docs/10.test.md)
+	[docs/7.test.md](docs/7.test.md)
 
-11. Typescript
+8. Typescript
 	
-	[docs/11.typescript.md](docs/11.typescript.md)
+	[docs/8.typescript.md](docs/8.typescript.md)
 
-12. Issues
+9. Issues
    
 	PM2 and NodeJS:
 
