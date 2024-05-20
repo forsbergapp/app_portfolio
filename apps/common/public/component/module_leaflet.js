@@ -1,13 +1,6 @@
-/**@type{{querySelector:function, querySelectorAll:function}} */
+/**@type{import('../../../types.js').AppDocument}} */
 const AppDocument = document;
 /**
- * @typedef {object} AppEvent
- * @property {{ id:                 string
- *            }}  target
- * @typedef {{  originalEvent:AppEvent,
- *              latlng:{lat:string, 
- *                      lng:string}}} AppEventLeaflet 
- *
  * @typedef {{  doubleClickZoom:function,
  *              invalidateSize:function,
  *              removeLayer:function,
@@ -68,7 +61,7 @@ const component = async props => {
             }
             else{
                 /**
-                 * @param{AppEventLeaflet} e
+                 * @param{import('../../../types.js').AppEventLeaflet} e
                  */
                 const default_dbl_click_event = e => {
                     if (e.originalEvent.target.id == LEAFLET_CONTAINER){

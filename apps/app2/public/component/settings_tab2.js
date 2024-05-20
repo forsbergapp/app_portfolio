@@ -1,4 +1,4 @@
-/**@type{{querySelector:function}} */
+/**@type{import('../../../types.js').AppDocument}} */
 const AppDocument = document;
 const template =`   <div id='mapid'></div>
                     <div class='setting_horizontal_row'>

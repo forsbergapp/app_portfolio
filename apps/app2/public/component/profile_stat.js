@@ -1,4 +1,4 @@
-/**@type{{querySelector:function}} */
+/**@type{import('../../../types.js').AppDocument}} */
 const AppDocument = document;
 const template =`   <div id='profile_stat_app2'>
                     <div id='profile_stat_row2'>

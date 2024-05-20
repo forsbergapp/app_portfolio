@@ -1,11 +1,6 @@
-/**@type{{body:{className:string, classList:{add:function}},
- *        querySelector:function,
- *        title: string}} */
- const AppDocument = document;
-/**
- * @typedef {object} AppEvent
- * @property {{}}  target
- */
+/**@type{import('../../../types.js').AppDocument}} */
+const AppDocument = document;
+
 /**@ts-ignore */
 const common = await import('common');
 /**
@@ -24,7 +19,7 @@ const app_exception = () => {
  */
 const init = (parameters) => {
     AppDocument.title = '⚒';
-    AppDocument.querySelector('#common_broadcast').addEventListener('click', (/**@type{AppEvent}*/event) => {
+    AppDocument.querySelector('#common_broadcast').addEventListener('click', (/**@type{import('../../../types.js').AppEvent}*/event) => {
         const event_target_id = common.element_id(event.target);
         if (event_target_id=='common_broadcast_close')
             common.ComponentRemove('common_broadcast');

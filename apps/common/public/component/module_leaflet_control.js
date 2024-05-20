@@ -1,3 +1,6 @@
+/**@type{import('../../../types.js').AppDocument}} */
+const AppDocument = document;
+
 /**
  * @typedef {{  id:number,
  *              display_data:string,
@@ -9,8 +12,6 @@
  *              session_map_layer:*}} type_map_layer_array
  * @typedef {{id:number, value:string, display_data:string}} countries_type
  */
-/**@type{{querySelector:function, querySelectorAll:function}} */
-const AppDocument = document;
 
 /**
  * 
