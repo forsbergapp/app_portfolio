@@ -1,16 +1,5 @@
-/**@type{{body:{className:string},
- *        querySelector:function,
- *        querySelectorAll:function}} 
- */
+/**@type{import('../../../types.js').AppDocument}} */
  const AppDocument = document;
-/**
- * @typedef {object} AppEvent
- * @property {string} code
- * @property {function} preventDefault
- * @property {object} target
- * @property {string} target.id
- * @property {string} target.value
- */
 
 /**@ts-ignore */
 const common = await import('common');
@@ -45,12 +34,12 @@ const admin_login = async () => {
 };
 /**
  * Event click
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @returns {void}
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{import('../../../types.js').AppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
@@ -206,12 +195,12 @@ const app_event_click = event => {
 };
 /**
  * Event change
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @returns {void}
  */
 const app_event_change = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../types.js').AppEvent}*/event) => {
             app_event_change(event);
         });
     }
@@ -221,7 +210,7 @@ const app_event_change = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'common_dialogue_user_menu_user_locale_select':{
-                    common.common_translate_ui((/**@type{AppEvent}*/event.target.value), ()=>{});
+                    common.common_translate_ui((/**@type{import('../../../types.js').AppEvent}*/event.target.value), ()=>{});
                     break;
                 }
                 case 'common_dialogue_user_menu_user_arabic_script_select':
@@ -240,12 +229,12 @@ const app_event_change = event => {
 };
 /**
  * Event keyup
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @returns {void}
  */
 const app_event_keyup = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../types.js').AppEvent}*/event) => {
             app_event_keyup(event);
         });
     }
@@ -274,12 +263,12 @@ const app_event_keyup = event => {
 };
 /**
  * Event keydown
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @returns {void}
  */
 const app_event_keydown = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keydown',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keydown',(/**@type{import('../../../types.js').AppEvent}*/event) => {
             app_event_keydown(event);
         });
     }
@@ -293,12 +282,12 @@ const app_event_keydown = event => {
 };
 /**
  * Event input
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @returns {void}
  */
 const app_event_input = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('input',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('input',(/**@type{import('../../../types.js').AppEvent}*/event) => {
             app_event_input(event);
         }, true);
     }
@@ -312,12 +301,12 @@ const app_event_input = event => {
 };
 /**
  * Event focus
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @returns {void}
  */
 const app_event_focus = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('focus',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('focus',(/**@type{import('../../../types.js').AppEvent}*/event) => {
             app_event_focus(event);
         }, true);
     }

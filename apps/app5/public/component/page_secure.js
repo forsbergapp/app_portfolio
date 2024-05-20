@@ -1,5 +1,6 @@
-/**@type{{querySelector:function}} */
+/**@type{import('../../../types.js').AppDocument}} */
 const AppDocument = document;
+
 /**
  * @typedef {{  date:string,
  *              time:string,

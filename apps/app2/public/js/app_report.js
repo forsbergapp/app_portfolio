@@ -98,17 +98,9 @@
  * @property {string}	prayer_high_latitude_adjustment
  * @property {string}	prayer_time_format
  * @property {string}	prayer_hijri_date_adjustment
- */
-
-/**@type{{body:{className:string},
- *        querySelector:function,
- *        querySelectorAll:function}} */
- const AppDocument = document;
-
-/**@ts-ignore */
-const common = await import('common');
-
-/**@type{{	app_copyright:string,
+ * 
+ * @typedef {{	
+ * 			app_copyright:string,
  * 			session_currentDate:Date,
  * 			session_currentHijriDate:[number, number, number],
  * 			module_praytimes_methods:{[index:string]:{	name:string,
@@ -186,7 +178,13 @@ const common = await import('common');
  *								coltitle_isha_iqamat: string,
  *								coltitle_midnight: string,
  *								coltitle_notes: string}
- * 			}} */
+ * 			}} type_REPORT_GLOBAL
+ */
+
+/**@ts-ignore */
+const common = await import('common');
+
+/**@type{type_REPORT_GLOBAL} */
 const REPORT_GLOBAL = {
 	app_copyright:'',
 	session_currentDate:new Date(),

@@ -1,37 +1,6 @@
-/**@type{{body:{className:string},
- *        querySelector:function,
- *        querySelectorAll:function}} */
- const AppDocument = document;
+/**@type{import('../../../types.js').AppDocument} */
+const AppDocument = document;
 
-/**
- * @typedef {object}        AppEvent
- * @property {string}       code
- * @property {function}     preventDefault
- * @property {function}     stopPropagation
- * @property {{ id:                 string,
- *              innerHTML:          string,
- *              value:              string,
- *              focus:              function,
- *              dispatchEvent:      function,
- *              parentNode:         HTMLElement,
- *              options:            HTMLOptionsCollection,
- *              selectedIndex:      number,
- *              classList:          {contains:function}
- *              className:          string
- *            }}  target
- * @typedef {{  originalEvent:AppEvent,
- *              latlng:{lat:string, 
- *                      lng:string}}} AppEventLeaflet
- */
- 
-/**@ts-ignore */
-const common = await import('common');
-/**@ts-ignore */
-const app_report = await import('app_report');
-/**@ts-ignore */
-const {default:prayTimes} = await import('PrayTimes');
-/**@ts-ignore */
-const {getTimezone} = await import('regional');
 /**
  * @typedef {{
  *          id:number,
@@ -84,63 +53,9 @@ const {getTimezone} = await import('regional');
  *          prayer_column_fast_start_end: number
  *      }} json_data_user_setting
  * 
- * @typedef {{id:string|null, app_id:number|null, app_setting_type_name:string, value:string, data2:string, data3:string, data4:string, data5:string, text:string}} place_type
- */
-/**@type{json_data_user_setting} */
-const user_settings_empty = {   id:0,
-                                description: '',
-                                regional_language_locale: '',
-                                regional_timezone: '',
-                                regional_number_system: '',
-                                regional_layout_direction: '',
-                                regional_second_language_locale: '',
-                                regional_column_title: '0',
-                                regional_arabic_script: '',
-                                regional_calendar_type: '',
-                                regional_calendar_hijri_type: '',
-                                gps_popular_place_id: null,
-                                gps_lat_text: null,
-                                gps_long_text: null,
-
-                                design_theme_day_id: '',
-                                design_theme_month_id: '',
-                                design_theme_year_id: '',
-                                design_paper_size: '',
-                                design_row_highlight: '0',
-                                design_column_weekday_checked: 0,
-                                design_column_calendartype_checked: 0,
-                                design_column_notes_checked: 0,
-                                design_column_gps_checked: 0,
-                                design_column_timezone_checked: 0,
-
-                                image_header_image_img: '',
-                                image_footer_image_img: '',
-
-                                text_header_1_text: '',
-                                text_header_2_text: '',
-                                text_header_3_text: '',
-                                text_header_align: null,
-                                text_footer_1_text: '',
-                                text_footer_2_text: '',
-                                text_footer_3_text: '',
-                                text_footer_align: null,
-
-                                prayer_method: '',
-                                prayer_asr_method: '',
-                                prayer_high_latitude_adjustment: '',
-                                prayer_time_format: '',
-                                prayer_hijri_date_adjustment: 0,
-                                prayer_fajr_iqamat: '',
-                                prayer_dhuhr_iqamat: '',
-                                prayer_asr_iqamat: '',
-                                prayer_maghrib_iqamat: '',
-                                prayer_isha_iqamat: '',
-                                prayer_column_imsak_checked: 0,
-                                prayer_column_sunset_checked: 0,
-                                prayer_column_midnight_checked: 0,
-                                prayer_column_fast_start_end: 0};
-/**
- * @type {{
+ * @typedef {{id:string|null, app_id:number|null, app_setting_type_name:string, value:string, data2:string, data3:string, data4:string, data5:string, text:string}} type_place
+ * 
+ * @typedef {{
  *          app_default_startup_page:number,
  *          app_report_timetable:string,
  *          regional_default_direction:string,
@@ -200,11 +115,75 @@ const user_settings_empty = {   id:0,
  *          prayer_default_show_midnight:boolean,
  *          prayer_default_show_fast_start_end:number,
  *          timetable_type:number,
- *          places:place_type[]|null,
+ *          places:type_place[]|null,
  *          user_settings:json_data_user_setting[],
  *          SettingsTimesIntervalId:number|null
- *          }}
+ *          }} type_APP_GLOBAL
  */
+/**@ts-ignore */
+const common = await import('common');
+/**@ts-ignore */
+const app_report = await import('app_report');
+/**@ts-ignore */
+const {default:prayTimes} = await import('PrayTimes');
+/**@ts-ignore */
+const {getTimezone} = await import('regional');
+
+/**@type{json_data_user_setting} */
+const user_settings_empty = {   id:0,
+                                description: '',
+                                regional_language_locale: '',
+                                regional_timezone: '',
+                                regional_number_system: '',
+                                regional_layout_direction: '',
+                                regional_second_language_locale: '',
+                                regional_column_title: '0',
+                                regional_arabic_script: '',
+                                regional_calendar_type: '',
+                                regional_calendar_hijri_type: '',
+                                gps_popular_place_id: null,
+                                gps_lat_text: null,
+                                gps_long_text: null,
+
+                                design_theme_day_id: '',
+                                design_theme_month_id: '',
+                                design_theme_year_id: '',
+                                design_paper_size: '',
+                                design_row_highlight: '0',
+                                design_column_weekday_checked: 0,
+                                design_column_calendartype_checked: 0,
+                                design_column_notes_checked: 0,
+                                design_column_gps_checked: 0,
+                                design_column_timezone_checked: 0,
+
+                                image_header_image_img: '',
+                                image_footer_image_img: '',
+
+                                text_header_1_text: '',
+                                text_header_2_text: '',
+                                text_header_3_text: '',
+                                text_header_align: null,
+                                text_footer_1_text: '',
+                                text_footer_2_text: '',
+                                text_footer_3_text: '',
+                                text_footer_align: null,
+
+                                prayer_method: '',
+                                prayer_asr_method: '',
+                                prayer_high_latitude_adjustment: '',
+                                prayer_time_format: '',
+                                prayer_hijri_date_adjustment: 0,
+                                prayer_fajr_iqamat: '',
+                                prayer_dhuhr_iqamat: '',
+                                prayer_asr_iqamat: '',
+                                prayer_maghrib_iqamat: '',
+                                prayer_isha_iqamat: '',
+                                prayer_column_imsak_checked: 0,
+                                prayer_column_sunset_checked: 0,
+                                prayer_column_midnight_checked: 0,
+                                prayer_column_fast_start_end: 0};
+
+/**@type{type_APP_GLOBAL} */
 const APP_GLOBAL = {
     app_default_startup_page:0,
     app_report_timetable:'',
@@ -1967,11 +1946,11 @@ const user_settings_like = user_account_app_data_post_id => {
 };
 /**
  * App event click
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../types.js').AppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
@@ -2414,12 +2393,12 @@ const app_event_click = event => {
 };
 /**
  * App event change
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @returns {void}
  */
 const app_event_change = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../types.js').AppEvent}*/event) => {
             app_event_change(event);
         }, true);
     }
@@ -2550,12 +2529,12 @@ const app_event_change = event => {
 };
 /**
  * App event keyup
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @returns {void}
  */
 const app_event_keyup = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../types.js').AppEvent}*/event) => {
             app_event_keyup(event);
         }, true);
     }
@@ -3027,7 +3006,7 @@ const settings_load = async (tab_selected) => {
             AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).outerHTML = `<div id='${APP_GLOBAL.gps_module_leaflet_container}'></div>`;
             //init map thirdparty module
             /**
-             * @param{AppEventLeaflet} event
+             * @param{import('../../../types.js').AppEventLeaflet} event
              */
             const dbl_click_event = event => {
                 if (event.originalEvent.target.parentNode.id == APP_GLOBAL.gps_module_leaflet_container){
