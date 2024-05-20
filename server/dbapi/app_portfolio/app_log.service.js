@@ -4,7 +4,7 @@
 import * as Types from './../../../types.js';
 
 const { getNumberValue } = await import(`file://${process.cwd()}/server/server.service.js`);
-const { ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+const { ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {db_date_period, db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
@@ -16,22 +16,18 @@ const {db_date_period, db_execute, db_schema, db_limit_rows} = await import(`fil
  */
 const createLog = async (app_id, data_app_id, json_data) => {
 		
-	if (ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LOG' in parameter)[0].APP_LOG=='1'){
-		const sql = `INSERT INTO ${db_schema()}.app_log(
-					app_id,
-					json_data,
-					date_created)
-				VALUES(	:app_id,
-					   	:json_data,
-						CURRENT_TIMESTAMP)`;
-		const parameters = {
-								app_id: data_app_id,
-								json_data: JSON.stringify(json_data)
-							};
-		return await db_execute(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), sql, parameters, null);
-	}
-	else
-		return (null);
+	const sql = `INSERT INTO ${db_schema()}.app_log(
+				app_id,
+				json_data,
+				date_created)
+			VALUES(	:app_id,
+					:json_data,
+					CURRENT_TIMESTAMP)`;
+	const parameters = {
+							app_id: data_app_id,
+							json_data: JSON.stringify(json_data)
+						};
+	return await db_execute(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), sql, parameters, null);
 };
 /**
  * 

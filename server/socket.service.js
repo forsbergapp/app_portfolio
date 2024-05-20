@@ -274,7 +274,7 @@ const ClientAdd = (newClient) => {
         const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
         for (const client of connected_clients_no_res){
             if (client.system_admin==0)
-                if (app_start()==true){    
+                if (await app_start()==true){    
                     await getUserRoleAdmin(app_id, client.user_account_id, dba)
                     .then((/**@type{Types.db_result_user_account_getUserRoleAdmin[]}*/result_app_role)=>{
                         if (result_app_role[0]){
