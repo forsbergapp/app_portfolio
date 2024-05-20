@@ -145,7 +145,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
  * @param {function} next
  */
  const AuthenticateAccessTokenSystemAdmin = (iam, token, ip, res, next) => {
-    AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'SYSTEMADMIN', token, ip, iam_decode(iam).get('system_admin'), null, res, next);
+    AuthenticateTokenCommon(iam, 'SYSTEMADMIN', token, ip, res, next);
 };
 /**
  * Middleware authenticates data token
@@ -156,7 +156,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
  * @param {function} next
  */
  const AuthenticateDataToken = async (iam, token, ip, res, next) =>{
-    AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', token, ip, null, null, res, next);
+    AuthenticateTokenCommon(iam, 'APP_DATA', token, ip, res, next);
 };
 
 /**
@@ -168,8 +168,8 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
  * @param {function} next 
  */
 const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
-    if (ConfigGet('SERVICE_IAM', 'ENABLE_USER_REGISTRATION')=='1')
-        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', token, ip, null, null, res, next);
+    if (iam && token && ConfigGet('SERVICE_IAM', 'ENABLE_USER_REGISTRATION')=='1')
+        AuthenticateTokenCommon(iam, 'APP_DATA', token, ip, res, next);
     else
         not_authorized(res, 403, 'AuthenticateDataTokenRegistration');
 };
@@ -180,20 +180,20 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
  * APP_DATA     : token is valid for given app id and ip
  * SYSTEM_ADMIN : token is valid for admin app, given system admin username and ip
  * 
- * @param {number} app_id
+ * @param {string} iam
  * @param {'APP_ACCESS'|'APP_DATA'|'SYSTEMADMIN'} token_type
  * @param {string} authorization
  * @param {string} ip
- * @param {string|null} system_admin
- * @param {number|null} user_id
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateTokenCommon = (app_id, token_type, authorization, ip, system_admin, user_id, res, next) => {
-    if (authorization){
+ const AuthenticateTokenCommon = (iam, token_type, authorization, ip, res, next) => {
+    if (iam && authorization){
+        const app_id = getNumberValue(iam_decode(iam).get('app_id'));
         const token = authorization.substring(authorization.lastIndexOf(' ')+1);
         switch (token_type){
             case 'APP_ACCESS':{
+                const user_id = iam_decode(iam).get('user_id');
                 jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET, (/**@type{Types.error}*/err) => {
                     if (err)
                         not_authorized(res, 401, 'AuthenticateTokenCommon, jwt APP_ACCESS');
@@ -243,6 +243,7 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
                 break;
             }
             case 'SYSTEMADMIN':{
+                const system_admin = iam_decode(iam).get('system_admin');
                 jwt.verify(token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET'), (/**@type{Types.error}*/err) => {
                     if (err)
                         not_authorized(res, 401, 'AuthenticateTokenCommon, jwt SYSTEM_ADMIN');
@@ -271,7 +272,7 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
         }
     }
     else
-        not_authorized(res, 401, 'AuthenticateTokenCommon, no authorization header');
+        not_authorized(res, 401, 'AuthenticateTokenCommon, no iam or authorization');
 };
 /**
  * Middleware authenticates access token superadmin
@@ -282,12 +283,12 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
  * @param {function} next
  */
 const AuthenticateAccessTokenSuperAdmin = (iam, authorization, ip, res, next) => {
-    if (getNumberValue(iam_decode(iam).get('app_id'))==0)
+    if (iam && authorization && getNumberValue(iam_decode(iam).get('app_id'))==0)
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getUserAppRoleAdmin}) => {
             getUserAppRoleAdmin(getNumberValue(iam_decode(iam).get('app_id')), getNumberValue(iam_decode(iam).get('user_id')))
             .then((/**@type{Types.db_result_user_account_getUserRoleAdmin[]}*/result)=>{
                 if (result[0].app_role_id == 0){
-                    AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_id')), res, next);
+                    AuthenticateTokenCommon(iam, 'APP_ACCESS', authorization, ip, res, next);
                 }
                 else
                     not_authorized(res, 401, 'AuthenticateAccessTokenSuperAdmin, not superadmin');
@@ -299,7 +300,7 @@ const AuthenticateAccessTokenSuperAdmin = (iam, authorization, ip, res, next) =>
             });
         });
     else
-        not_authorized(res, 401, 'AuthenticateAccessTokenSuperAdmin, not using admin app');
+        not_authorized(res, 401, 'AuthenticateAccessTokenSuperAdmin');
 };
 /**
  * Middleware authenticates access token admin
@@ -310,11 +311,11 @@ const AuthenticateAccessTokenSuperAdmin = (iam, authorization, ip, res, next) =>
  * @param {function} next
  */
 const AuthenticateAccessTokenAdmin = (iam, authorization, ip, res, next) => {
-    if (getNumberValue(iam_decode(iam).get('app_id'))==0){
-        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_id')), res, next);
+    if (iam && authorization && getNumberValue(iam_decode(iam).get('app_id'))==0){
+        AuthenticateTokenCommon(iam, 'APP_ACCESS', authorization, ip, res, next);
     }
     else
-        not_authorized(res, 401, 'AuthenticateAccessTokenAdmin, not admin app');
+        not_authorized(res, 401, 'AuthenticateAccessTokenAdmin');
 };
 /**
  * Middleware authenticates access token
@@ -327,11 +328,11 @@ const AuthenticateAccessTokenAdmin = (iam, authorization, ip, res, next) => {
 const AuthenticateAccessToken = (iam, authorization, ip, res, next)  => {
     //if user login is disabled then check also current logged in user
     //so they can't modify anything anymore with current accesstoken
-    if (ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN')=='1'){
-        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_ACCESS', authorization, ip, null, getNumberValue(iam_decode(iam).get('user_id')), res, next);
+    if (iam && authorization && ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN')=='1'){
+        AuthenticateTokenCommon(iam, 'APP_ACCESS', authorization, ip, res, next);
     }
     else
-        not_authorized(res, 401, 'AuthenticateAccessToken, user login disabled');
+        not_authorized(res, 401, 'AuthenticateAccessToken');
 };
 /**
  * Middleware authenticate socket used for EventSource
@@ -342,9 +343,9 @@ const AuthenticateAccessToken = (iam, authorization, ip, res, next)  => {
  * @param {function} next
  */
 const AuthenticateSocket = (iam, path, ip, res, next) =>{
-    if (path.startsWith('/server-socket')){
+    if (iam && iam_decode(iam).get('authorization_bearer') && path.startsWith('/server-socket')){
         //validate Bearer autorization
-        AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, null, null, res, next);
+        AuthenticateTokenCommon(iam, 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, res, next);
     }
     else
         not_authorized(res, 401, 'AuthenticateSocket');
@@ -359,15 +360,15 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
  */
  const AuthenticateIAM = (iam, authorization, ip, res, next) =>{
     //check inparameters and Basic authorization
-    if (authorization.toUpperCase().startsWith('BASIC'))
+    if (iam && authorization && authorization.toUpperCase().startsWith('BASIC'))
         if (getNumberValue(iam_decode(iam).get('app_id'))==getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'))){
             //validate Bearer authorization
-            AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, null, null, res, next);
+            AuthenticateTokenCommon(iam, 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, res, next);
         }
         else
             if (getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1){
                 //validate Bearer authorization
-                AuthenticateTokenCommon(getNumberValue(iam_decode(iam).get('app_id')), 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, null, null, res, next);
+                AuthenticateTokenCommon(iam, 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, res, next);
             }
             else
                 not_authorized(res, 403, 'AuthenticateIAM, user login disabled');
@@ -555,6 +556,15 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
 };
 
 /**
+ * Authenticate resource
+ * @param { {iam:string,
+ *           resource_id:number|null,
+ *           resource_type:string}} parameters
+ */
+const AuthenticateResource = parameters =>  parameters.resource_id && 
+                                            getNumberValue(iam_decode(parameters.iam).get(parameters.resource_type)) == parameters.resource_id;
+                                            
+/**
  * Authorize token app
  * 
  * @param {number} app_id
@@ -611,6 +621,7 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
             /**@ts-ignore */
             tokentimestamp:jwt.decode(token, { complete: true }).payload.tokentimestamp};
 };
+
 export{ iam_decode,
         expired_token,
         not_authorized,
@@ -621,5 +632,6 @@ export{ iam_decode,
         AuthenticateIAM,
         AuthenticateRequest,
         AuthenticateApp,
+        AuthenticateResource,
         AuthorizeTokenApp,
         AuthorizeToken}; 
