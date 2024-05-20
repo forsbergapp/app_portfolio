@@ -1,4 +1,4 @@
-/**@type{{querySelector:function}} */
+/**@type{import('../../../types.js').AppDocument}} */
 const AppDocument = document;
 const template =`   <div id='common_profile_input_row'>
                         <div id='common_profile_search_input' contentEditable='true' class='common_input '/></div>

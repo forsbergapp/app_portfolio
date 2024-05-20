@@ -817,6 +817,10 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                         })
                         break;
                     }
+                    case '/apps/types.js':{
+                        //in development another path is used, return correct path in app
+                        resolve({STATIC:true, SENDFILE:`${process.cwd()}/apps/types.js`});
+                    }
                     default:
                         resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
                 }
@@ -906,6 +910,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                         url.toLowerCase().startsWith('/images')||
                         url.toLowerCase().startsWith('/js')||
                         url.toLowerCase().startsWith('/common')||
+                        url == '/apps/types.js'||
                         url == '/manifest.json'||
                         url == '/sw.js')
                         if (url.toLowerCase().startsWith('/common'))

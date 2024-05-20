@@ -1,4 +1,4 @@
-/**@type{{querySelector:function}} */
+/**@type{import('../../../types.js').AppDocument}} */
 const AppDocument = document;
 const template =`   <div id='common_profile_info_cloud'>
                     <div id='common_profile_main_btn_cloud' class='common_link common_icon'></div>

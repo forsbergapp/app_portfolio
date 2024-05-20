@@ -1,4 +1,4 @@
-/**@type{{querySelector:function}} */
+/**@type{import('../../../types.js').AppDocument}} */
 const AppDocument = document;
 const template =`   <select id='common_dialogue_user_menu_app_select_theme'>
                         <option value='1'>Light</option>

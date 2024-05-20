@@ -1,25 +1,5 @@
-/**@type{{body:{className:string},
- *        querySelector:function,
- *        querySelectorAll:function}} */
+/**@type{import('../../../types.js').AppDocument} */
  const AppDocument = document;
-
-/**
- * @typedef {object}        AppEvent
- * @property {string}       code
- * @property {function}     preventDefault
- * @property {function}     stopPropagation
- * @property {{ id:                 string,
- *              innerHTML:          string,
- *              value:              string,
- *              parentNode:         {nextElementSibling:{querySelector:function}},
- *              nextElementSibling: {dispatchEvent:function},
- *              focus:              function,
- *              getAttribute:       function,
- *              setAttribute:       function,
- *              dispatchEvent:      function,
- *              classList:          {contains:function}
- *            }}  target
- */
  
 /**@ts-ignore */
 const common = await import('common');
@@ -73,7 +53,7 @@ const list_generate = amount =>{
 /**
  * Show given menu
  * @param {number} menu 
- * @returbs {void}
+ * @returns {void}
  */
 const show_menu = menu => {
     AppDocument.querySelectorAll('.menuitem').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('menuitem_selected'));
@@ -2377,7 +2357,7 @@ const show_existing_logfiles = () => {
     if (admin_token_has_value()){
         /**
          * Event for LOV
-         * @param {AppEvent} event 
+         * @param {import('../../../types.js').AppEvent} event 
          */
         const function_event = event => {
                                 //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
@@ -2794,7 +2774,7 @@ const admin_token_has_value = () => !(common.COMMON_GLOBAL.token_at=='' && commo
 /**
  * App events
  * @param {string} event_type 
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @param {string} event_target_id 
  * @param {HTMLElement|null} event_list_title 
  * @returns {void}
@@ -2906,7 +2886,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 case 'list_user_account':{
                     /**
                      * LOV event
-                     * @param {AppEvent} event_lov 
+                     * @param {import('../../../types.js').AppEvent} event_lov 
                      */
                     const lov_event = event_lov => {
                         //setting values from LOV
@@ -3004,7 +2984,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                  * 
                  * @param {Error|null} err 
                  * @param {string|null} result 
-                 * @param {AppEvent} event 
+                 * @param {import('../../../types.js').AppEvent} event 
                  */
                 const lov_action = (err, result, event) => {
                     if (err){

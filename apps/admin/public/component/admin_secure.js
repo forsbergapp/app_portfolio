@@ -1,4 +1,4 @@
-/**@type{{querySelector:function}} */
+/**@type{import('../../../types.js').AppDocument}} */
 const AppDocument = document;
 const template =`       <div id='dialogues'>
                             <div id='dialogue_send_broadcast' class='common_dialogue common_dialogue_content'></div>

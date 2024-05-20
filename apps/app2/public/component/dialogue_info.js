@@ -1,4 +1,4 @@
-/**@type{{querySelector:function}} */
+/**@type{import('../../../types.js').AppDocument}} */
 const AppDocument = document;
 const template =`   <div id='about_logo'></div>
                     <div id='app_copyright'><APP_COPYRIGHT/></div>

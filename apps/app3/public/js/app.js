@@ -1,25 +1,5 @@
-/**@type{{body:{className:string, classList:{add:function}},
- *        querySelector:function}} */
- const AppDocument = document;
-
- /**
- * @typedef {object}        AppEvent
- * @property {string}       code
- * @property {function}     preventDefault
- * @property {function}     stopPropagation
- * @property {{ id:                 string,
-  *              innerHTML:          string,
-  *              value:              string,
-  *              parentNode:         {nextElementSibling:{querySelector:function}},
-  *              nextElementSibling: {dispatchEvent:function},
-  *              focus:              function,
-  *              getAttribute:       function,
-  *              setAttribute:       function,
-  *              dispatchEvent:      function,
-  *              classList:          {contains:function}
-  *              className:          string
-  *            }}  target
-  */
+/**@type{import('../../../types.js').AppDocument} */
+const AppDocument = document;
 
 /**@ts-ignore */
 const common = await import('common');
@@ -69,12 +49,12 @@ const getdocs = (docid = null) => {
 };
 /**
  * App event click
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @returns {void}
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../types.js').AppEvent}*/event) => {
             app_event_click(event);
         });
     }

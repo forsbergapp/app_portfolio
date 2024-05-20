@@ -1,150 +1,7 @@
-/**@type{{body:{className:string, requestFullscreen:function, classList:{add:function, remove:function}},
- *        createElement:function,
- *        addEventListener:function,
- *        removeEventListener:function,
- *        fullscreenElement:Element|null,
- *        exitFullscreen:function,
- *        querySelector:function,
- *        querySelectorAll:function}} */
+/**@type{import('../../../types.js').AppDocument}} */
  const AppDocument = document;
-
- /**
- * @typedef {object} AppEvent
- * @property {string} type
- * @property {object} clipboardData
- * @property {function} clipboardData.getData
- * @property {string} code
- * @property {function} preventDefault
- * @property {string} key
- * @property {boolean} altKey
- * @property {boolean} ctrlKey
- * @property {boolean} shiftKey
- * @property {{ id:                 string,
- *              innerHTML:          string,
- *              value:              string,
- *              parentNode:         {nextElementSibling:{querySelector:function}, style:{display:string}, classList: {contains:function}},
- *              nextElementSibling: {dispatchEvent:function},
- *              focus:              function,
- *              blur:               function,
- *              getAttribute:       function,
- *              setAttribute:       function,
- *              selectedIndex:      number,
- *              innerText:          string,
- *              nodeName:           string,
- *              dispatchEvent:      function,
- *              options:            HTMLOptionsCollection,
- *              'data-function':    function,
- *              classList:          {contains:function, remove:function, add:function}
- *              className:          string
- *            }}  target
- * 
- * @typedef {{  originalEvent:AppEvent,
- *              latlng:{lat:string, 
- *                      lng:string}}} AppEventLeaflet 
- * @typedef {{  id:number|null,
- *              display_data: string|null, 
- *              value?:string|null, 
- *              data2:string|null, 
- *              data3:string|null, 
- *              data4:string|null,
- *              session_map_layer:string|null}}  type_map_layer
- * @typedef {{data:string}} AppEventEventSource
- */
-/**@type{{  common_app_id:number,
-            app_id:number|null,
-            app_logo:string|null,
-            app_email:string|null,
-            app_copyright:string|null,
-            app_link_url:string|null,
-            app_link_title:string|null,
-            app_text_edit:string|null,
-            app_framework:number|null,
-            app_framework_messages:number|null,
-            app_rest_api_version:number|null,
-            app_root:string,
-            app_div:string,
-            app_console:{warn:function, info:function, error:function},
-            app_eventListeners:{original:function, LEAFLET:[*]|[], REACT:[*]|[], VUE:[*]|[], OTHER:[*]|[]},
-            app_function_exception:function|null,
-            app_function_session_expired:function|null,
-            info_link_policy_name:string|null,
-            info_link_disclaimer_name:string|null,
-            info_link_terms_name:string|null,
-            info_link_about_name:string|null,
-            info_link_policy_url:string|null,
-            info_link_disclaimer_url:string|null,
-            info_link_terms_url:string|null,
-            info_link_about_url:string|null,
-            user_app_role_id:number|null,
-            system_admin:string|null,
-            system_admin_first_time:number|null,
-            system_admin_only:number|null,
-            user_identity_provider_id:number|null,
-            user_account_id:number|null,
-            user_account_username:string|null,
-            client_latitude:string,
-            client_longitude:string,
-            client_place:string,
-            client_timezone:string,
-            token_at:string|null,
-            token_dt:string|null,
-            token_admin_at:string|null,
-            token_exp:number|null,
-            token_iat:number|null,
-            token_timestamp:number|null,
-            rest_resource_bff:string|null,
-            image_file_allowed_type1:string|null,
-            image_file_allowed_type2:string|null,
-            image_file_allowed_type3:string|null,
-            image_file_allowed_type4:string|null,
-            image_file_allowed_type5:string|null,
-            image_file_mime_type:string|null,
-            image_file_max_size:number,
-            image_avatar_width:number,
-            image_avatar_height:number,
-            user_locale:string,
-            user_timezone:string,
-            user_direction:string,
-            user_arabic_script:string,
-            translate_items: {	USERNAME:string,
-											EMAIL:string,
-											NEW_EMAIL:string,
-											BIO:string,
-											PASSWORD:string,
-											PASSWORD_CONFIRM:string,
-											PASSWORD_REMINDER:string,
-											NEW_PASSWORD_CONFIRM:string,
-											NEW_PASSWORD:string,
-											CONFIRM_QUESTION:string},
-            module_leaflet:*,
-            module_leaflet_flyto:number,
-            module_leaflet_jumpto:number,
-            module_leaflet_popup_offset:number,
-            module_leaflet_style:string,
-            module_leaflet_session_map:{doubleClickZoom:function|null,
-                                        invalidateSize:function|null,
-                                        removeLayer:function|null,
-                                        setView:function|null,
-                                        flyTo:function|null,
-                                        setZoom:function|null,
-                                        getZoom:function|null},
-            module_leaflet_session_map_layer:[],
-            module_leaflet_zoom:number, 
-            module_leaflet_zoom_city:number,
-            module_leaflet_zoom_pp:number,
-            module_leaflet_marker_div_gps:string,
-            module_leaflet_marker_div_city:string,
-            module_leaflet_marker_div_pp:string,
-            module_leaflet_map_styles:type_map_layer[],
-            'module_easy.qrcode_width':number|null,
-            'module_easy.qrcode_height':number|null,
-            'module_easy.qrcode_color_dark':string|null,
-            'module_easy.qrcode_color_light':string|null,
-            'module_easy.qrcode_background_color':string|null,
-            service_socket_client_ID:number|null,
-            service_socket_eventsource:{onmessage:function,
-                                        onerror:function,
-                                        close:function}|null}} */
+ 
+/**@type{import('../../../types.js').type_COMMON_GLOBAL} */
 const COMMON_GLOBAL = {
     common_app_id:0,
     app_id:null,
@@ -607,7 +464,7 @@ const show_image = async (item_img, item_input, image_width, image_height) => {
                 resolve(null);
             }
             else {
-                reader.onloadend = /**@type{AppEvent}*/event => {
+                reader.onloadend = /**@type{import('../../../types.js').AppEvent}*/event => {
                     if (event.target)
                         convert_image(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
                             item_img.src = srcEncoded;
@@ -1514,7 +1371,7 @@ const profile_update_stat = async () => {
 };
 /**
  * List key event
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @param {string} module 
  * @param {function|null} event_function 
  * @returns {void}
@@ -2383,7 +2240,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
     /**@ts-ignore */
     COMMON_GLOBAL.module_leaflet_session_map = null;
     
-    /** @type {type_map_layer[]}*/
+    /** @type {import('../../../types.js').type_map_layer[]}*/
     const map_layers = await FFB('/server-db/app_settings_display', `data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
     .then((/**@type{string}*/result)=>JSON.parse(result))
     .catch((/**@type{Error}*/error)=>error);
@@ -2931,7 +2788,7 @@ const connectOnline = async () => {
     .then((result_eventsource)=>{
         COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
         if (COMMON_GLOBAL.service_socket_eventsource){
-            COMMON_GLOBAL.service_socket_eventsource.onmessage = (/**@type{AppEventEventSource}*/event) => {
+            COMMON_GLOBAL.service_socket_eventsource.onmessage = (/**@type{import('../../../types.js').AppEventEventSource}*/event) => {
                 show_broadcast(event.data);
             };
             COMMON_GLOBAL.service_socket_eventsource.onerror = () => {
@@ -3141,12 +2998,12 @@ const disable_textediting = () =>COMMON_GLOBAL.app_text_edit=='0';
 /**
  * Common events
  * @param {string} event_type 
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  * @returns {Promise.<void>}
  */
 const common_event = async (event_type,event) =>{
     if (event==null){
-        AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{AppEvent}*/event) => {
+        AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{import('../../../types.js').AppEvent}*/event) => {
             common_event(event_type, event);
         });
     }
@@ -3712,7 +3569,7 @@ const common_event = async (event_type,event) =>{
 };
 /**
  * Disable copy cut paste
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  */
  const disable_copy_paste_cut = event => {
     if (disable_textediting()){
@@ -3730,7 +3587,7 @@ const common_event = async (event_type,event) =>{
 };
 /**
  * Disable common input textediting
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  */
 const disable_common_input = event => {
     if (disable_textediting())
@@ -3741,7 +3598,7 @@ const disable_common_input = event => {
 };
 /**
  * Hide user menu and search
- * @param {AppEvent} event 
+ * @param {import('../../../types.js').AppEvent} event 
  */
  const hide_user_menu_and_search = event => {
     if (event.key === 'Escape') {
@@ -3905,12 +3762,12 @@ const framework_set = async (framework, events) => {
     framework_clean();
 
     //set default function if anyone missing
-    events.Change?null:events.Change = ((/**@type{AppEvent}*/event)=>common_event('change', event));
-    events.Click?null:events.Click = ((/**@type{AppEvent}*/event)=>common_event('click', event));
-    events.Focus?null:events.Focus = ((/**@type{AppEvent}*/event)=>common_event('focus', event));
-    events.Input?null:events.Input = ((/**@type{AppEvent}*/event)=>common_event('input', event));
-    events.KeyDown?null:events.KeyDown = ((/**@type{AppEvent}*/event)=>common_event('keydown', event));
-    events.KeyUp?null:events.KeyUp = ((/**@type{AppEvent}*/event)=>common_event('keyup', event));
+    events.Change?null:events.Change = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('change', event));
+    events.Click?null:events.Click = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('click', event));
+    events.Focus?null:events.Focus = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('focus', event));
+    events.Input?null:events.Input = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('input', event));
+    events.KeyDown?null:events.KeyDown = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('keydown', event));
+    events.KeyUp?null:events.KeyUp = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('keyup', event));
     //app can override framework or use default javascript if Vue or React is not set
     if (framework ?? COMMON_GLOBAL.app_framework !=COMMON_GLOBAL.app_framework)
         COMMON_GLOBAL.app_framework = framework;
@@ -3934,22 +3791,22 @@ const framework_set = async (framework, events) => {
                                         ${common_app_element.outerHTML}
                                     </div>`,
                         methods:{
-                            AppEventChange: (/**@type{AppEvent}*/event) => {
+                            AppEventChange: (/**@type{import('../../../types.js').AppEvent}*/event) => {
                                 events.Change(event);
                             },
-                            AppEventClick: (/**@type{AppEvent}*/event) => {
+                            AppEventClick: (/**@type{import('../../../types.js').AppEvent}*/event) => {
                                 events.Click(event);
                             },
-                            AppEventInput: (/**@type{AppEvent}*/event) => {
+                            AppEventInput: (/**@type{import('../../../types.js').AppEvent}*/event) => {
                                 events.Input(event);
                             },
-                            AppEventFocus: (/**@type{AppEvent}*/event) => {
+                            AppEventFocus: (/**@type{import('../../../types.js').AppEvent}*/event) => {
                                 events.Focus(event);
                             },
-                            AppEventKeyDown: (/**@type{AppEvent}*/event) => {
+                            AppEventKeyDown: (/**@type{import('../../../types.js').AppEvent}*/event) => {
                                 events.KeyDown(event);
                             },
-                            AppEventKeyUp: (/**@type{AppEvent}*/event) => {
+                            AppEventKeyUp: (/**@type{import('../../../types.js').AppEvent}*/event) => {
                                 events.KeyUp(event);
                             }
                         }
