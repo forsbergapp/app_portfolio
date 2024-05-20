@@ -419,7 +419,7 @@ const get_apps_div = async () =>{
         .then((/**@type{string}*/result)=>{
             const apps = JSON.parse(result);
             if (common.COMMON_GLOBAL.system_admin!=null)
-                for (const app of apps) {
+                for (const app of apps.data.APPS) {
                     options += `<div class='common_select_option' data-value='${app.APP_ID}'>${app.APP_ID} - ${' '}</div>`;
                 }
             else
@@ -459,7 +459,7 @@ const get_apps = async () => {
         .then((/**@type{string}*/result)=>{
             const apps = JSON.parse(result);
             if (common.COMMON_GLOBAL.system_admin!=null)
-                for (const app of apps) {
+                for (const app of apps.data.APPS) {
                     html += `<option value='${app.APP_ID}'>${app.APP_ID} - ${' '}</option>`;
                 }
             else
