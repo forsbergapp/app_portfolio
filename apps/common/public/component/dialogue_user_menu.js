@@ -20,7 +20,8 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
                                 </div>`:''
                             }
                             <div id='common_dialogue_user_menu_app_theme'></div>
-                            <div id='common_dialogue_user_menu_preferences'>
+                            ${props.locales.length>0?
+                            `<div id='common_dialogue_user_menu_preferences'>
                                 <div id='common_dialogue_user_menu_preference_locale' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
                                 <div class='common_dialogue_user_menu_preference_col2'>
                                     <select id='common_dialogue_user_menu_user_locale_select' >
@@ -62,7 +63,8 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
                                         }
                                     </select>
                                 </div>
-                            </div>
+                            </div>`:''
+                            }
                             <div id='common_dialogue_user_menu_logged_in'>
                                 <div id='common_dialogue_user_menu_edit' class='common_icon'></div>
                                 <div id='common_dialogue_user_menu_log_out' class='common_icon'></div>
@@ -133,17 +135,17 @@ const component = async props => {
             }
     }
     const post_component = async () =>{                                                                                             
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({
+            locales:props.system_admin_only == 1?[]:await props.function_FFB('/server-db/locale', `lang_code=${props.current_locale}`, 'GET', 'APP_DATA', null)
+                        .then((/**@type{string}*/result)=>JSON.parse(result))
+                        .catch((/**@type{Error}*/error)=>{throw error}),
+            settings: props.system_admin_only == 1?[]:await props.function_FFB('/server-db/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
+                        .then((/**@type{string}*/result)=>JSON.parse(result))
+                        .catch((/**@type{Error}*/error)=>{throw error}),
+            username:props.username ?? props.system_admin ?? '',
+            countdown:(props.token_exp && props.token_iat)?1:0
+        });
         if ((props.system_admin_only == 1)==false){
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({
-                locales:await props.function_FFB('/server-db/locale', `lang_code=${props.current_locale}`, 'GET', 'APP_DATA', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result))
-                            .catch((/**@type{Error}*/error)=>{throw error}),
-                settings: await props.function_FFB('/server-db/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
-                            .then((/**@type{string}*/result)=>JSON.parse(result))
-                            .catch((/**@type{Error}*/error)=>{throw error}),
-                username:props.username ?? props.system_admin ?? '',
-                countdown:(props.token_exp && props.token_iat)?1:0
-            });
             //set current value on all the selects
             const common_dialogue_user_menu_user_locale_select =           props.common_document.querySelector('#common_dialogue_user_menu_user_locale_select');
             common_dialogue_user_menu_user_locale_select.value =           props.current_locale;
