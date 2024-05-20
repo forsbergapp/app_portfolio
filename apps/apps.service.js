@@ -9,18 +9,21 @@ const { LogAppI, LogAppE } = await import(`file://${process.cwd()}/server/log.se
 const fs = await import('node:fs');
 
 const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-
+const {InstalledCheck} = await await import(`file://${process.cwd()}/server/dbapi/app_portfolio/database.service.js`);
 /**
  * Checks if ok to start app
  * @param {number|null} app_id
- * @returns {boolean}
+ * @returns {Promise.<boolean>}
  */
- const app_start = (app_id=null)=>{
+ const app_start = async (app_id=null)=>{
     const common_app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
     if (file_get_cached('SERVER').METADATA.MAINTENANCE==0 && ConfigGet('SERVICE_DB', 'START')=='1' && 
         ConfigGetApp(app_id, common_app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START=='1' &&
-        (db_use==5 || ConfigGetApp(app_id, common_app_id, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`] ))
+        ((db_use==5 && await InstalledCheck(app_id, 1)
+                                .then((/**@type{{installed:boolean}[]}*/result)=>app_id?result[0].installed:true)
+                                .catch(()=>false)) || 
+         ConfigGetApp(app_id, common_app_id, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`] ))
         if (app_id == null)
             return true;
         else{
@@ -409,7 +412,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
     if (app_id == 0){
         //get app admin
         app = await createApp(app_id, null, client_locale(app_parameters.accept_language));
-        if (app_start()==true){
+        if (await app_start()==true){
             system_admin_only = 0;
         }
         else{
@@ -452,8 +455,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
                                                             translate_items:    translate_items,
                                                             module:             app});
     //if app admin then log, system does not log in database
-    if (ConfigGet('SERVICE_DB', 'START')=='1' && 
-         (getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5||ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS')[`SERVICE_DB_DB${ConfigGet('SERVICE_DB', 'USE')}_APP_USER`])){
+    if (await app_start() && getNumberValue(ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LOG' in parameter)[0].APP_LOG) == 1){
         const {createLog} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`);
         await createLog(app_id,
                         app_id,
@@ -897,7 +899,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
             return getAssetFile(app_id, url.substring('/maintenance'.length), '/apps/common/public', res)
                     .catch(()=>null);
         else
-            if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || app_start(app_id) ==true)
+            if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || await app_start(app_id) ==true)
                 return new Promise((resolve, reject)=>{
                     if (url.toLowerCase().startsWith('/css')||
                         url.toLowerCase().startsWith('/component')||
