@@ -1,15 +1,13 @@
 /** @module server/dbapi/app_portfolio/user_account_event */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../dbapi/common/common.service.js')} */
 const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
  * @param {number} app_id 
- * @param {Types.db_parameter_user_account_event_insertUserEvent} data 
- * @returns {Promise.<Types.db_result_user_account_event_insertUserEvent[]>}
+ * @param {import('../../../types.js').db_parameter_user_account_event_insertUserEvent} data 
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_event_insertUserEvent[]>}
  */
 const insertUserEvent = async (app_id, data) => {
 		const sql = `INSERT INTO ${db_schema()}.user_account_event(
@@ -49,7 +47,7 @@ const insertUserEvent = async (app_id, data) => {
  * @param {number} app_id 
  * @param {number} user_account_id 
  * @param {string} event 
- * @returns {Promise.<Types.db_result_user_account_event_getLastUserEvent[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_event_getLastUserEvent[]>}
  */
 const getLastUserEvent = async (app_id, user_account_id, event) => {
 		const sql = `SELECT uae.user_account_id "user_account_id",

@@ -1,21 +1,23 @@
 /** @module apps */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
-
+/**@type{import('./bff.service.js')} */
 const service = await import('./bff.service.js');
-
+/**@type{import('./server.service.js')} */
 const {getNumberValue, responsetime} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./log.service.js')} */
 const {LogRequestI} = await import(`file://${process.cwd()}/server/log.service.js`);
+/**@type{import('./iam.service.js')} */
 const {iam_decode, AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
-const {randomUUID, createHash} = await import('node:crypto');
+/**@type{import('./config.service.js')} */
 const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+
+const {randomUUID, createHash} = await import('node:crypto');
 const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) init for all methods
  * 
- * @param {Types.req} req
- * @param {Types.res} res
+ * @param {import('../types.js').req} req
+ * @param {import('../types.js').res} res
  * @param {function} next
  */
  const BFF_init = async (req, res, next) =>{
@@ -30,9 +32,9 @@ const fs = await import('node:fs');
         });
     });
     //access control that stops request if not passing controls
-    /**@type{Types.authenticate_request}*/
+    /**@type{import('../types.js').authenticate_request}*/
     const result = await AuthenticateRequest(req.ip, req.headers.host, req.method, req.headers['user-agent'], req.headers['accept-language'], req.path)
-                        .catch((/**@type{Types.error}*/error)=>{return { statusCode: 500, statusMessage: error};});
+                        .catch((/**@type{import('../types.js').error}*/error)=>{return { statusCode: 500, statusMessage: error};});
     if (result != null){                                        
         res.statusCode = result.statusCode;
         res.statusMessage = 'access control: ' + result.statusMessage;
@@ -82,8 +84,8 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) start for get method
  * 
- * @param {Types.req} req
- * @param {Types.res} res
+ * @param {import('../types.js').req} req
+ * @param {import('../types.js').res} res
  * @param {function} next
  */
  const BFF_start = async (req, res, next) =>{
@@ -124,8 +126,8 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) common
  * 
- * @param {Types.req} req
- * @param {Types.res} res
+ * @param {import('../types.js').req} req
+ * @param {import('../types.js').res} res
  * returns {{}}
  */
  const BFF_common = (req, res) =>{
@@ -151,11 +153,11 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) APP including assets, report and info pages
  * 
- * @param {Types.req} req
- * @param {Types.res} res
+ * @param {import('../types.js').req} req
+ * @param {import('../types.js').res} res
  */
  const BFF_app = (req, res) =>{
-    /**@type{Types.bff_parameters} */
+    /**@type{import('../types.js').bff_parameters} */
     const bff_parameters = {endpoint:'APP', 
                             ...BFF_common(req, res)
                             };
@@ -164,11 +166,11 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) APP_DATA
  * 
- * @param {Types.req} req - Request
- * @param {Types.res} res
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
  */
  const BFF_app_data = (req, res) =>{
-    /**@type{Types.bff_parameters} */
+    /**@type{import('../types.js').bff_parameters} */
     const bff_parameters = {endpoint:'APP_DATA', 
                             ...BFF_common(req, res)
                             };
@@ -177,11 +179,11 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) APP_SIGNUP
  * 
- * @param {Types.req} req - Request
- * @param {Types.res} res
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
  */
  const BFF_app_signup = (req, res) =>{
-    /**@type{Types.bff_parameters} */
+    /**@type{import('../types.js').bff_parameters} */
     const bff_parameters = {endpoint:'APP_SIGNUP', 
                             ...BFF_common(req, res)
                             };
@@ -190,11 +192,11 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) APP_ACCESS
  * 
- * @param {Types.req} req - Request
- * @param {Types.res} res
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
  */
  const BFF_app_access = (req, res) =>{
-    /**@type{Types.bff_parameters} */
+    /**@type{import('../types.js').bff_parameters} */
     const bff_parameters = {endpoint:'APP_ACCESS', 
                             ...BFF_common(req, res)
                             };
@@ -203,11 +205,11 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) ADMIN
  * 
- * @param {Types.req} req - Request
- * @param {Types.res} res
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
  */
  const BFF_admin = (req, res) =>{
-    /**@type{Types.bff_parameters} */
+    /**@type{import('../types.js').bff_parameters} */
     const bff_parameters = {endpoint:'ADMIN', 
                             ...BFF_common(req, res)
                             };
@@ -216,11 +218,11 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) SUPERADMIN
  * 
- * @param {Types.req} req - Request
- * @param {Types.res} res
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
  */
  const BFF_superadmin = (req, res) =>{
-    /**@type{Types.bff_parameters} */
+    /**@type{import('../types.js').bff_parameters} */
     const bff_parameters = {endpoint:'SUPERADMIN', 
                             ...BFF_common(req, res)
                             };
@@ -230,11 +232,11 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) SYSTEMADMIN
  * 
- * @param {Types.req} req - Request
- * @param {Types.res} res
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
  */
  const BFF_systemadmin = (req, res) =>{
-    /**@type{Types.bff_parameters} */
+    /**@type{import('../types.js').bff_parameters} */
     const bff_parameters = {endpoint:'SYSTEMADMIN', 
                             ...BFF_common(req, res)
                             };
@@ -244,11 +246,11 @@ const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) socket
  * 
- * @param {Types.req} req - Request
- * @param {Types.res} res
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
  */
 const BFF_socket = (req, res) =>{
-    /**@type{Types.bff_parameters} */
+    /**@type{import('../types.js').bff_parameters} */
     const bff_parameters = {endpoint:'SOCKET', 
                             ...BFF_common(req, res)
                             };
@@ -257,11 +259,11 @@ const BFF_socket = (req, res) =>{
 /**
  * Backend for frontend (BFF) IAM
  * 
- * @param {Types.req} req - Request
- * @param {Types.res} res
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
  */
 const BFF_iam = (req, res) =>{
-    /**@type{Types.bff_parameters} */
+    /**@type{import('../types.js').bff_parameters} */
     const bff_parameters = {endpoint:'IAM', 
                             ...BFF_common(req, res)
                             };

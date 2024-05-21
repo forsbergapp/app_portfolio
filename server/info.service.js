@@ -1,12 +1,9 @@
 /** @module server/info */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
-
 /**
  * 
  * Info about operating system and process
- * @returns {Promise.<Types.server_info>}
+ * @returns {Promise.<import('../types.js').server_info>}
  */
  const Info = async () => {
     const os = await import('node:os');

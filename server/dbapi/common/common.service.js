@@ -1,22 +1,23 @@
 /** @module server/dbapi/common */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../config.service.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
-
+/**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+/**@type{import('../../log.service.js')} */
 const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.service.js`);
+/**@type{import('../../db/db.service.js')} */
+const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js`);
 
 /**
  * 
  * @param {number} app_id 
  * @param {string} lang_code 
- * @param {Types.error} err 
- * @param {Types.res} res
+ * @param {import('../../../types.js').error} err 
+ * @param {import('../../../types.js').res} res
  */
  const checked_error = async (app_id, lang_code, err, res) =>{
+	/**@type{import('../../dbapi/app_portfolio/app_setting.service.js')} */
 	const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
     return new Promise((resolve)=>{
 		const app_code = get_app_code(err);
@@ -25,7 +26,7 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.servic
 									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 									'MESSAGE',
 									app_code)
-			.then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+			.then((/**@type{import('../../../types.js').db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
 				res.statusCode = 400;
 				res.statusMessage = result_message[0].display_data;
 				resolve(result_message[0].display_data);
@@ -51,7 +52,7 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.servic
  *	Oracle message:
  *	'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
  *
- * @param {Types.db_query_result_error} error
+ * @param {import('../../../types.js').db_query_result_error} error
  * @returns (string|null)
  * 
  */
@@ -86,23 +87,21 @@ const get_app_code = error => {
  * Get message for record not found
  * @param {number} app_id 
  * @param {string} lang_code
- * @param {Types.res} res
+ * @param {import('../../../types.js').res} res
  */
 const record_not_found = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
-		import(`file://${process.cwd()}/server/config.service.js`).then(({ConfigGet}) => {
-			import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`).then(({ getSettingDisplayData }) => {
-				getSettingDisplayData( 	app_id,
-										getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-										'MESSAGE',
-										'20400')
-				.then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
-					res.statusCode = 404;
-					res.statusMessage = result_message[0].display_data;
-					resolve(result_message[0].display_data);
-				});
+		import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`).then(({ getSettingDisplayData }) => {
+			getSettingDisplayData( 	app_id,
+									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+									'MESSAGE',
+									'20400')
+			.then((/**@type{import('../../../types.js').db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+				res.statusCode = 404;
+				res.statusMessage = result_message[0].display_data;
+				resolve(result_message[0].display_data);
 			});
-		});	
+		});
 	});
 	
 };
@@ -206,19 +205,19 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
  * @param {number} app_id 
  * @param {string} sql 
  * @param {object} parameters 
- * @param {number} dba 
- * @returns {Promise.<Types.error|{}>}
+ * @param {number|null} dba 
+ * @returns {Promise.<import('../../../types.js').error|{}>}
  */
- const db_execute = async (app_id, sql, parameters, dba) =>{
+ const db_execute = async (app_id, sql, parameters, dba = null) =>{
 	return new Promise ((resolve, reject)=>{
 		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
-		.then((/**@type{Types.db_query_result}*/result)=> {
+		.then((/**@type{import('../../../types.js').db_query_result}*/result)=> {
 			LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
 			.then(()=>{
 				resolve(result);
 			});
 		})
-		.catch((/**@type{Types.error}*/error)=>{
+		.catch((/**@type{import('../../../types.js').error}*/error)=>{
 			const database_error = 'DATABASE ERROR';
 			//add db_message key since message is not saved for SQLite
 			if (error.message)

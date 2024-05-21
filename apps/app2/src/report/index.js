@@ -1,15 +1,13 @@
 /** @module apps/app2 */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../../types.js';
-
+/**@type{import('../../../../apps/apps.service')} */
 const { render_report_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const { timetable } = await import(`file://${process.cwd()}/apps/app2/src/report/timetable.js`);
 
 /**
  * Creates report
  * @param {number} app_id
- * @param {Types.report_create_parameters} report_parameters
+ * @param {import('../../../../types.js').report_create_parameters} report_parameters
  * @returns {Promise.<string>}
  */
 const createReport= async (app_id, report_parameters) => {

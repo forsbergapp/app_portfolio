@@ -1,8 +1,6 @@
 /** @module server/dbapi/app_portfolio/user_account_follow */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../dbapi/common/common.service.js')} */
 const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
@@ -10,7 +8,7 @@ const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dba
  * @param {number} app_id 
  * @param {number} id 
  * @param {number} id_follow 
- * @returns {Promise.<Types.db_result_user_account_follow_follow>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_follow_follow>}
  */
 const follow = async (app_id, id, id_follow) => {
 		const sql = `INSERT INTO ${db_schema()}.user_account_follow(
@@ -27,7 +25,7 @@ const follow = async (app_id, id, id_follow) => {
  * @param {number} app_id 
  * @param {number} id 
  * @param {number} id_unfollow 
- * @returns {Promise.<Types.db_result_user_account_follow_unfollow>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_follow_unfollow>}
  */
 const unfollow = async (app_id, id, id_unfollow) => {
 		const sql = `DELETE FROM ${db_schema()}.user_account_follow

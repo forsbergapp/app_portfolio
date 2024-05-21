@@ -1,10 +1,8 @@
 /** @module microservice/pdf */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../types.js';
-
-const puppeteer = await import('puppeteer');
+/**@type{import('../../microservice/microservice.service.js')} */
 const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const puppeteer = await import('puppeteer');
 
 /**@type{*} */
 let BROWSER;
@@ -14,7 +12,7 @@ let BROWSER;
  * @returns {Promise.<string|null>}
  */
 const ConfigServiceGet = async (parameter)=>{
-    /**@type{Types.microservice_config_service_record}*/
+    /**@type{import('../../types.js').microservice_config_service_record}*/
     const config = ConfigServices('PDF');
     for (const row of config.CONFIG){
         for (const key in row)
@@ -81,7 +79,7 @@ const initPDFService = async () => {
 };
 /**
  * 
- * @param {Types.microservice_data_pdf} url_info
+ * @param {import('../../types.js').microservice_data_pdf} url_info
  * @returns 
  */
 const getPDF = async (url_info) => {

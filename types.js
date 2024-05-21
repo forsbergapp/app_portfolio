@@ -352,14 +352,14 @@
  * Apps - Report create parameters
  * @typedef {object}        report_create_parameters
  * @property {number}       app_id
- * @property {string|null}  reportid
- * @property {string|null}  reportname
+ * @property {string}       reportid
+ * @property {string}       reportname
  * @property {string}       ip
  * @property {string}       user_agent
  * @property {string}       accept_language
  * @property {string}       latitude
  * @property {string}       longitude
- * @property {string|null}  report
+ * @property {string}       report
  */
 
 /**

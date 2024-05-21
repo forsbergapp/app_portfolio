@@ -1,8 +1,5 @@
 /** @module server/db */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../types.js';
-
 const fs = await import('node:fs');
 
 /**@type{string} */
@@ -12,7 +9,7 @@ if (process.platform == 'win32')
 else
     SLASH = '/';
 
-/**@type{Types.db_file_db_record[]} */
+/**@type{import('../../types.js').db_file_db_record[]} */
 const FILE_DB = [   {NAME:'APPS',                   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}apps.json`, CACHE_CONTENT:null},
                     {NAME:'SERVER',                 LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}server.json`, CACHE_CONTENT:null},
                     {NAME:'IAM_BLOCKIP',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_blockip.json`, CACHE_CONTENT:null},
@@ -41,14 +38,14 @@ Object.seal(FILE_DB);
 
 /**
  * 
- * @param {Types.db_file_db_name} filename 
- * @returns {Types.db_file_db_record}
+ * @param {import('../../types.js').db_file_db_name} filename 
+ * @returns {import('../../types.js').db_file_db_record}
  */
 const fileDB = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
 
 /**
  * 
- * @param {Types.db_file_db_name} file 
+ * @param {import('../../types.js').db_file_db_name} file 
  * @param {object|string} filecontent
  * @returns {Promise.<number>}
  */
@@ -84,7 +81,7 @@ const transaction_start = async (file, filecontent)=>{
 };
 /**
  * 
- * @param {Types.db_file_db_name} file 
+ * @param {import('../../types.js').db_file_db_name} file 
  * @param {number} transaction_id 
  * @returns {boolean}
  */
@@ -101,7 +98,7 @@ const transaction_commit = (file, transaction_id)=>{
 };
 /**
  * 
- * @param {Types.db_file_db_name} file 
+ * @param {import('../../types.js').db_file_db_name} file 
  * @param {number} transaction_id 
  * @returns {boolean}
  */
@@ -151,7 +148,7 @@ const transaction_rollback = (file, transaction_id)=>{
 /**
  * Get log file with given suffix or none or use sample to get specific suffix
  * for statistics
- * @param {Types.db_file_db_name} file 
+ * @param {import('../../types.js').db_file_db_name} file 
  * @param {string|null} filesuffix 
  * @param {string|null} sample
  * @returns {Promise.<*>}
@@ -164,9 +161,9 @@ const transaction_rollback = (file, transaction_id)=>{
 };
 /**
  * 
- * @param {Types.db_file_db_name} file 
+ * @param {import('../../types.js').db_file_db_name} file 
  * @param {boolean} lock
- * @returns {Promise.<Types.db_file_result_file_get>}
+ * @returns {Promise.<import('../../types.js').db_file_result_file_get>}
  */
 const file_get = async (file, lock=false) =>{
     const filepath = fileDB(file).PATH;
@@ -190,7 +187,7 @@ const file_get = async (file, lock=false) =>{
 const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH}logs`);
 /**
  * 
- * @param {Types.db_file_db_name} file
+ * @param {import('../../types.js').db_file_db_name} file
  * @returns {*}
  */
  const file_get_cached = file => fileDB(file).CACHE_CONTENT ?? null;
@@ -215,7 +212,7 @@ const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}
  };
 /**
  * 
- * @param {Types.db_file_db_name} file 
+ * @param {import('../../types.js').db_file_db_name} file 
  * @param {number} transaction_id 
  * @param {object} file_content 
  * @returns 
@@ -250,7 +247,7 @@ const file_update = async (file, transaction_id, file_content) =>{
 };
 /**
  * 
- * @param {Types.db_file_db_name} file 
+ * @param {import('../../types.js').db_file_db_name} file 
  * @param {object} file_content 
  */
 const file_create = async (file, file_content) =>{
@@ -266,7 +263,7 @@ const file_create = async (file, file_content) =>{
 
 /**
  * 
- * @param {Types.db_file_db_name} file
+ * @param {import('../../types.js').db_file_db_name} file
  * @param {object} file_content 
  * @param {string|null} filesuffix
  */

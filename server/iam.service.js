@@ -1,13 +1,14 @@
 /** @module server/iam */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
-
-const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
-const {file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('./server.service.js')} */
 const {send_iso_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./config.service.js')} */
+const {ConfigGet, ConfigFileGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./db/file.service.js')} */
+const {file_get, file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const {default:jwt} = await import('jsonwebtoken');
+
 /**
  * 
  * @param {string} query 
@@ -48,7 +49,7 @@ const expired_token = (app_id, token_type, token) =>{
     }
 }
 /**
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {number} status
  * @param {string} reason
  * @param {boolean} bff
@@ -72,7 +73,7 @@ const expired_token = (app_id, token_type, token) =>{
  * @param {string} ip
  * @param {string} user_agent
  * @param {string} accept_language
- * @param {Types.res} res 
+ * @param {import('../types.js').res} res 
  * @return {Promise.<{
  *                  username:string,
  *                  token_at:string,
@@ -81,6 +82,7 @@ const expired_token = (app_id, token_type, token) =>{
  *                  tokentimestamp:number}>}
  */
 const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agent, accept_language, res)=>{
+    /**@type{import('./socket.service.js')} */
     const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
     return new Promise((resolve, reject)=>{
         const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
@@ -93,7 +95,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
             else
                 result = 0;
             const jwt_data = AuthorizeToken(app_id, 'SYSTEMADMIN');
-            /**@type{Types.iam_systemadmin_login_record} */
+            /**@type{import('../types.js').iam_systemadmin_login_record} */
             const file_content = {	app_id:             app_id,
                                     username:		    username,
                                     result:				1,
@@ -114,7 +116,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
                                     iat:jwt_data.iat,
                                     tokentimestamp:jwt_data.tokentimestamp});
                                 })
-                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                    .catch((/**@type{import('../types.js').error}*/error)=>reject(error));
                 }
                 else
                     reject (not_authorized(res, 401, 'AuthenticateSystemadmin, file_append_log', true));
@@ -141,7 +143,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
  * @param {string} iam
  * @param {string} ip
  * @param {string} token
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {function} next
  */
  const AuthenticateAccessTokenSystemAdmin = (iam, token, ip, res, next) => {
@@ -152,7 +154,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
  * @param {string} iam
  * @param {string} token
  * @param {string} ip
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {function} next
  */
  const AuthenticateDataToken = async (iam, token, ip, res, next) =>{
@@ -164,7 +166,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
  * @param {string} iam
  * @param {string} token 
  * @param {string} ip 
- * @param {Types.res} res 
+ * @param {import('../types.js').res} res 
  * @param {function} next 
  */
 const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
@@ -184,7 +186,7 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
  * @param {'APP_ACCESS'|'APP_DATA'|'SYSTEMADMIN'} token_type
  * @param {string} authorization
  * @param {string} ip
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {function} next
  */
  const AuthenticateTokenCommon = (iam, token_type, authorization, ip, res, next) => {
@@ -194,15 +196,16 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
         switch (token_type){
             case 'APP_ACCESS':{
                 const user_id = iam_decode(iam).get('user_id');
-                jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET, (/**@type{Types.error}*/err) => {
+                jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET, (/**@type{import('../types.js').error}*/err) => {
                     if (err)
                         not_authorized(res, 401, 'AuthenticateTokenCommon, jwt APP_ACCESS');
                     else {
                         //check access token belongs to user_account.id, app_id and ip saved when logged in
                         //and if app_id=0 then check user is admin
-                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`).then(({checkLogin}) => {
+                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`)
+                        .then((/**@type{import('./dbapi/app_portfolio/user_account_logon.service.js')} */{checkLogin}) => {
                             checkLogin(app_id, user_id, authorization.replace('Bearer ',''), ip)
-                            .then((/**@type{Types.db_result_user_account_logon_Checklogin[]}*/result)=>{
+                            .then((/**@type{import('../types.js').db_result_user_account_logon_Checklogin[]}*/result)=>{
                                 if (result.filter(row=>
                                     JSON.parse(row.json_data).result==1 && 
                                     JSON.parse(row.json_data).access_token == token && 
@@ -211,24 +214,25 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
                                 else
                                     not_authorized(res, 401, 'AuthenticateTokenCommon, no record APP_ACCESS');
                             })
-                            .catch((/**@type{Types.error}*/error)=>{
+                            .catch((/**@type{import('../types.js').error}*/error)=>{
                                 res.status(500).send(
                                     error
                                 );
                             });
-                        });
+                        })
+                        
                     }
                 });
                 break;
             }
             case 'APP_DATA':{
-				jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET, (/**@type{Types.error}*/err) => {
+				jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET, (/**@type{import('../types.js').error}*/err) => {
                     if (err)
                         not_authorized(res, 401, 'AuthenticateTokenCommon, jwt APP_DATA');
                     else{
                         file_get_log('IAM_APP_TOKEN', 'YYYYMMDD')
-                        .then((/**@type{Types.iam_app_token_record[]}*/file)=>{
-                            if (file.filter((/**@type{Types.iam_app_token_record}*/row)=> 
+                        .then((/**@type{import('../types.js').iam_app_token_record[]}*/file)=>{
+                            if (file.filter((/**@type{import('../types.js').iam_app_token_record}*/row)=> 
                                     row.app_id == app_id
                                     &&
                                     row.client_ip == ip
@@ -244,13 +248,13 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
             }
             case 'SYSTEMADMIN':{
                 const system_admin = iam_decode(iam).get('system_admin');
-                jwt.verify(token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET'), (/**@type{Types.error}*/err) => {
+                jwt.verify(token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET'), (/**@type{import('../types.js').error}*/err) => {
                     if (err)
                         not_authorized(res, 401, 'AuthenticateTokenCommon, jwt SYSTEM_ADMIN');
                     else{
                         file_get_log('IAM_SYSTEMADMIN_LOGIN', 'YYYYMMDD')
-                        .then((/**@type{Types.iam_systemadmin_login_record[]}*/file)=>{
-                            if (file.filter((/**@type{Types.iam_systemadmin_login_record}*/row)=> 
+                        .then((/**@type{import('../types.js').iam_systemadmin_login_record[]}*/file)=>{
+                            if (file.filter((/**@type{import('../types.js').iam_systemadmin_login_record}*/row)=> 
                                     row.app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'))
                                     &&
                                     row.username == system_admin
@@ -279,26 +283,27 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
  * @param {string} iam
  * @param {string} authorization
  * @param {string} ip
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {function} next
  */
 const AuthenticateAccessTokenSuperAdmin = (iam, authorization, ip, res, next) => {
     if (iam && authorization && getNumberValue(iam_decode(iam).get('app_id'))==0)
-        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getUserAppRoleAdmin}) => {
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`)
+        .then((/**@type{import('./dbapi/app_portfolio/user_account.service.js')} */{getUserAppRoleAdmin}) => {
             getUserAppRoleAdmin(getNumberValue(iam_decode(iam).get('app_id')), getNumberValue(iam_decode(iam).get('user_id')))
-            .then((/**@type{Types.db_result_user_account_getUserRoleAdmin[]}*/result)=>{
+            .then((/**@type{import('../types.js').db_result_user_account_getUserRoleAdmin[]}*/result)=>{
                 if (result[0].app_role_id == 0){
                     AuthenticateTokenCommon(iam, 'APP_ACCESS', authorization, ip, res, next);
                 }
                 else
                     not_authorized(res, 401, 'AuthenticateAccessTokenSuperAdmin, not superadmin');
             })
-            .catch((/**@type{Types.error}*/error)=>{
+            .catch((/**@type{import('../types.js').error}*/error)=>{
                 res.status(500).send(
                     error
                 );
             });
-        });
+        })
     else
         not_authorized(res, 401, 'AuthenticateAccessTokenSuperAdmin');
 };
@@ -307,7 +312,7 @@ const AuthenticateAccessTokenSuperAdmin = (iam, authorization, ip, res, next) =>
  * @param {string} iam
  * @param {string} authorization
  * @param {string} ip
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {function} next
  */
 const AuthenticateAccessTokenAdmin = (iam, authorization, ip, res, next) => {
@@ -322,7 +327,7 @@ const AuthenticateAccessTokenAdmin = (iam, authorization, ip, res, next) => {
  * @param {string} iam
  * @param {string} authorization
  * @param {string} ip
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {function} next
  */
 const AuthenticateAccessToken = (iam, authorization, ip, res, next)  => {
@@ -339,7 +344,7 @@ const AuthenticateAccessToken = (iam, authorization, ip, res, next)  => {
  * @param {string} path
  * @param {string} iam
  * @param {string} ip
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {function} next
  */
 const AuthenticateSocket = (iam, path, ip, res, next) =>{
@@ -355,7 +360,7 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
  * @param {string} iam
  * @param {string} authorization
  * @param {string} ip
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {function} next
  */
  const AuthenticateIAM = (iam, authorization, ip, res, next) =>{
@@ -410,11 +415,10 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
      * Controls if ip is blocked
      *  if ip is blocked return 403
      * @param {string} ip_v4
-     * @returns {Promise.<Types.authenticate_request|null>}
+     * @returns {Promise.<import('../../../types.js').authenticate_request|null>}
      */
     const block_ip_control = async (ip_v4) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
-            const {ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
             const ranges = await ConfigFileGet('IAM_BLOCKIP');
             //check if IP is blocked
             if ((ip_v4.match(/\./g)||[]).length==3){
@@ -439,7 +443,6 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
      */
     const safe_user_agents = async (client_user_agent) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
-            const {ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
             const {user_agents} = await ConfigFileGet('IAM_USERAGENT');
             for (const user_agent of user_agents){
                 if (user_agent.user_agent == client_user_agent)
@@ -453,7 +456,7 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
     return new Promise((resolve)=>{
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
             const ip_v4 = ip.replace('::ffff:','');
-            block_ip_control(ip_v4).then((/**@type{Types.authenticate_request}*/result_range)=>{
+            block_ip_control(ip_v4).then((/**@type{import('../types.js').authenticate_request}*/result_range)=>{
                 if (result_range){
                     resolve({   statusCode:result_range.statusCode,
                                 statusMessage: `ip ${ip_v4} blocked, range: ${result_range.statusMessage}`});
@@ -539,11 +542,10 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
  * @returns {Promise.<boolean>}
  */
  const AuthenticateApp = async (app_id, authorization) =>{
-    const {file_get} = await import(`file://${process.cwd()}/server/db/file.service.js`);
     const file = await file_get('APPS');
     if (app_id != null){
-        const CLIENT_ID = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_ID;
-        const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_SECRET;
+        const CLIENT_ID = file.file_content.APPS.filter((/**@type{import('../types.js').config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_ID;
+        const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{import('../types.js').config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_SECRET;
         const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
         if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
             return true;
@@ -575,7 +577,7 @@ const AuthenticateResource = parameters =>  parameters.resource_id &&
     const secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET;
     const expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_EXPIRE;
     const jsontoken_at = jwt.sign ({tokentimestamp: Date.now()}, secret, {expiresIn: expiresin});
-    /**@type{Types.iam_app_token_record} */
+    /**@type{import('../types.js').iam_app_token_record} */
     const file_content = {	app_id:             app_id,
                             result:				1,
                             app_token:   	    jsontoken_at,

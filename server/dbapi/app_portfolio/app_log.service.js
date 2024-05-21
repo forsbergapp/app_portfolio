@@ -1,18 +1,18 @@
 /** @module server/dbapi/app_portfolio/app_log */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../server.service.js')} */
 const { getNumberValue } = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../config.service.js')} */
 const { ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../common/common.service.js')} */
 const {db_date_period, db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
  * @param {number} app_id 
  * @param {number} data_app_id 
- * @param {Types.db_parameter_app_log_createLog} json_data
- * @returns {Promise.<Types.db_result_app_log_createLog[]|null>}
+ * @param {import('../../../types.js').db_parameter_app_log_createLog} json_data
+ * @returns {Promise.<import('../../../types.js').db_result_app_log_createLog[]|null>}
  */
 const createLog = async (app_id, data_app_id, json_data) => {
 		
@@ -39,7 +39,7 @@ const createLog = async (app_id, data_app_id, json_data) => {
  * @param {string} order_by 
  * @param {number} offset 
  * @param {number} limit 
- * @returns {Promise.<Types.db_result_app_log_getLogsAdmin[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_log_getLogsAdmin[]>}
  */
 const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, offset, limit) => {
 		let sql;
@@ -67,7 +67,7 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
  * @param {number} data_app_id 
  * @param {number} year 
  * @param {number} month 
- * @returns {Promise.<Types.db_result_app_log_getStatUniqueVisitorAdmin[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_log_getStatUniqueVisitorAdmin[]>}
  */
 const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 		

@@ -1,17 +1,18 @@
 /** @module apps */
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
 
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./server.service.js')} */
 const {send_iso_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./config.service.js')} */
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./log.service.js')} */
 const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/log.service.js`);
 
 /**
  * 
- * @param {Types.req_id_number} app_id 
- * @param {Types.bff_parameters} bff_parameters
+ * @param {import('../types.js').req_id_number} app_id 
+ * @param {import('../types.js').bff_parameters} bff_parameters
  * @param {string} service
- * @param {Types.error} error 
+ * @param {import('../types.js').error} error 
  */
 const BFF_log_error = (app_id, bff_parameters, service, error) =>{
     LogServiceE(app_id ?? null, service, bff_parameters.query ?? null, error).then(() => {
@@ -30,13 +31,13 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
 /**
  * Backend for frontend (BFF) called from client
  * 
- * @param {Types.bff_parameters} bff_parameters
+ * @param {import('../types.js').bff_parameters} bff_parameters
  */
  const BFF = (bff_parameters) =>{
     const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
     /**
      * @param {number|null} app_id
-     * @param {Types.error} error 
+     * @param {import('../types.js').error} error 
      */
     let decodedquery = '';
     if ((bff_parameters.endpoint=='APP')){
@@ -101,7 +102,7 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
                 })
             }
         })
-        .catch((/**@type{Types.error}*/error) => {
+        .catch((/**@type{import('../types.js').error}*/error) => {
             BFF_log_error(bff_parameters.app_id, bff_parameters, service, error);
         });
     else{
@@ -111,7 +112,7 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
 };
 /**
  * BFF called from server
- * @param {Types.bff_parameters} bff_parameters
+ * @param {import('../types.js').bff_parameters} bff_parameters
  * @returns {Promise<(*)>}
  */
  const BFF_server = async (bff_parameters) => {
@@ -132,7 +133,7 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
                             body:bff_parameters.body, 
                             res:bff_parameters.res})
             .then((/**@type{string}*/result)=>resolve(result))
-            .catch((/**@type{Types.error}*/error)=>{
+            .catch((/**@type{import('../types.js').error}*/error)=>{
                 LogServiceE(bff_parameters.app_id ?? null, service, bff_parameters.query ?? null, error).then(() => {
                     reject(error);
                 });

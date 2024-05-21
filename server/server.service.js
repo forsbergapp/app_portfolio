@@ -1,11 +1,8 @@
 /** @module server */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
-
 /**
  * Sends ISO 20022 error format
- * @param {Types.res} res 
+ * @param {import('../types.js').res} res 
  * @param {number} http 
  * @param {string|null} code 
  * @param {string|number|object|null} text 
@@ -28,7 +25,7 @@ import * as Types from './../types.js';
  * Get number value from request key
  * returns number or null for numbers
  * so undefined and '' are avoided sending arguement to service functions
- * @param {Types.req_id_number} param
+ * @param {import('../types.js').req_id_number} param
  * @returns {number|null}
  */
  const getNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
@@ -36,7 +33,7 @@ import * as Types from './../types.js';
 
 /**
  * Calculate responsetime
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @returns {number}
  */
 const responsetime = (res) => {
@@ -52,7 +49,7 @@ const COMMON = {
         const from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
         return module.substring(from_app_root);
     },
-    app_function(/**@type{Types.error_stack}*/stack){
+    app_function(/**@type{import('../types.js').error_stack}*/stack){
         const e = stack.split('at ');
         let functionName;
         //loop from last to first
@@ -71,7 +68,7 @@ const COMMON = {
         return functionName;
     },
     app_line(){
-        /**@type {Types.error} */
+        /**@type {import('../types.js').error} */
         const e = new Error() || '';
         const frame = e.stack.split('\n')[2];
         const lineNumber = frame.split(':').reverse()[1];
@@ -82,20 +79,24 @@ const COMMON = {
 /**
  * server Express
  * @async
- * @returns {Promise<Types.express>} app
+ * @returns {Promise<import('../types.js').express>} app
  */
  const serverExpress = async () => {
-    const {default:express} = await import('express');
+    /**@type{import('./config.service.js')} */
     const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
-    const {default:compression} = await import('compression');
+    /**@type{import('./log.service.js')} */
     const {LogRequestE} = await import(`file://${process.cwd()}/server/log.service.js`);
-    /**@type{Types.express} */
+
+    const {default:express} = await import('express');
+    const {default:compression} = await import('compression');
+    
+    /**@type{import('../types.js').express} */
     const app = express();
     //
     //MIDDLEWARES
     //
     //use compression for better performance
-    const shouldCompress = (/**@type{Types.req}*/req) => {
+    const shouldCompress = (/**@type{import('../types.js').req}*/req) => {
         //exclude broadcast messages using socket
         if (req.headers.accept == 'text/event-stream')
             return false;
@@ -110,8 +111,10 @@ const COMMON = {
     
     //ROUTES MIDDLEWARE
     //apps
+    /**@type{import('./bff.js')} */
     const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam} = await import(`file://${process.cwd()}/server/bff.js`);
     //auth
+    /**@type{import('./iam.js')} */
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
     
     //ROUTES 
@@ -139,7 +142,7 @@ const COMMON = {
     app.route('*').get                      (BFF_app);
     
     //ERROR LOGGING
-    app.use((/**@type{Types.error}*/err,/**@type{Types.req}*/req,/**@type{Types.res}*/res, /**@type{function}*/next) => {
+    app.use((/**@type{import('../types.js').error}*/err,/**@type{import('../types.js').req}*/req,/**@type{import('../types.js').res}*/res, /**@type{function}*/next) => {
         LogRequestE(req, res.statusCode, res.statusMessage, responsetime(res), err).then(() => {
             next();
         });
@@ -148,62 +151,83 @@ const COMMON = {
 };
 /**
  * server routes
- * @param {Types.routesparameters} routesparameters
+ * @param {import('../types.js').routesparameters} routesparameters
  * @async
  */
  const serverRoutes = async (routesparameters) =>{
-    
+    /**@type{import('../microservice/microservice.service.js')} */
     const {microservice_api_version, microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 
-    //server iam object
-    const iam = await import(`file://${process.cwd()}/server/iam.js`);
-    //server iam service
-    const iam_service = await import(`file://${process.cwd()}/server/iam.service.js`);
-
     //server app object
+    /**@type{import('../apps/apps.js')} */
     const app = await import(`file://${process.cwd()}/apps/apps.js`);
 
+    //server iam object
+    /**@type{import('./iam.js')} */
+    const iam = await import(`file://${process.cwd()}/server/iam.js`);
+
+    //server iam service
+    /**@type{import('./iam.service.js')} */
+    const iam_service = await import(`file://${process.cwd()}/server/iam.service.js`);
+
     //server config object
+    /**@type{import('./config.js')} */
     const config = await import(`file://${process.cwd()}/server/config.js`);
     //server config service
+    /**@type{import('./config.service.js')} */
     const config_service = await import(`file://${process.cwd()}/server/config.service.js`);
 
     //server info object
+    /**@type{import('./info.js')} */
     const info = await import(`file://${process.cwd()}/server/info.js`);
     
-
     //server log object
+    /**@type{import('./log.js')} */
     const log = await import(`file://${process.cwd()}/server/log.js`);
 
     //server socket object
+    /**@type{import('./socket.js')} */
     const socket = await import(`file://${process.cwd()}/server/socket.js`);
 
     //server db api object database
+    /**@type{import('./dbapi/object/database.js')} */
     const db_database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
     //server db api object app
+    /**@type{import('./dbapi/object/app.js')} */
     const db_app = await import(`file://${process.cwd()}/server/dbapi/object/app.js`);
     //server db api object app_category
+    /**@type{import('./dbapi/object/app_category.js')} */
     const db_app_category = await import(`file://${process.cwd()}/server/dbapi/object/app_category.js`);
     //server db api  object app_log
+    /**@type{import('./dbapi/object/app_log.js')} */
     const db_app_log = await import(`file://${process.cwd()}/server/dbapi/object/app_log.js`);
     //server db api object app_object
+    /**@type{import('./dbapi/object/app_object.js')} */
     const db_app_object = await import(`file://${process.cwd()}/server/dbapi/object/app_object.js`);
     //server db api object app_role
+    /**@type{import('./dbapi/object/app_role.js')} */
     const db_app_role = await import(`file://${process.cwd()}/server/dbapi/object/app_role.js`);
     //server db api object app_setting
+    /**@type{import('./dbapi/object/app_setting.js')} */
     const db_app_setting = await import(`file://${process.cwd()}/server/dbapi/object/app_setting.js`);
     //server db api object country
+    /**@type{import('./dbapi/object/country.js')} */
     const db_country = await import(`file://${process.cwd()}/server/dbapi/object/country.js`);
     //server db api object identity provider
+    /**@type{import('./dbapi/object/identity_provider.js')} */
     const db_identity_provider = await import(`file://${process.cwd()}/server/dbapi/object/identity_provider.js`);
     //server db api object locale
+    /**@type{import('./dbapi/object/locale.js')} */
     const db_locale = await import(`file://${process.cwd()}/server/dbapi/object/locale.js`);
     
     //server db api object user account
+    /**@type{import('./dbapi/object/user_account.js')} */
     const db_user_account = await import(`file://${process.cwd()}/server/dbapi/object/user_account.js`);
     //server db api object user account app
+    /**@type{import('./dbapi/object/user_account_app.js')} */
     const db_user_account_app = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.js`);
     //server db api object user account app data post
+    /**@type{import('./dbapi/object/user_account_app_data_post.js')} */
     const db_user_account_app_data_post = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_data_post.js`);
     
     return new Promise((resolve, reject)=>{
@@ -256,7 +280,7 @@ const COMMON = {
                 }
                                 
                 /**
-                 * @param {Types.req_id_number} app_id
+                 * @param {import('../types.js').req_id_number} app_id
                  * @param {string} microservice_path 
                  * @param {string} microservice_query 
                  */
@@ -273,7 +297,7 @@ const COMMON = {
                                                 routesparameters.user_agent, 
                                                 routesparameters.accept_language, 
                                                 routesparameters.body?routesparameters.body:null)
-                            .catch((/**@type{Types.error}*/error)=>{throw error});
+                            .catch((/**@type{import('../types.js').error}*/error)=>{throw error});
                 };
 
                 //using switch (true) pattern
@@ -668,10 +692,15 @@ const COMMON = {
  * @async
  */
 const serverStart = async () =>{
+    /**@type{import('./dbapi/object/database.js')} */
     const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
+    /**@type{import('./config.service.js')} */
     const {InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('./socket.service.js')} */
     const {SocketCheckInterval} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    /**@type{import('./log.service.js')} */
     const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log.service.js`);
+
     const fs = await import('node:fs');
     const http = await import('node:http');
     const https = await import('node:https');
@@ -689,7 +718,7 @@ const serverStart = async () =>{
         await InitConfig();
         await database.Start();
         //Get express app with all configurations
-        /**@type{Types.express}*/
+        /**@type{import('../types.js').express}*/
         const app = await serverExpress();
         SocketCheckInterval();
         //START HTTP SERVER
@@ -715,7 +744,7 @@ const serverStart = async () =>{
                 });
             });            
         }
-    } catch (/**@type{Types.error}*/error) {
+    } catch (/**@type{import('../types.js').error}*/error) {
         LogServerE('serverStart: ' + error.stack);
     }
     

@@ -1,15 +1,15 @@
 /** @module server/socket */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
-
-const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
-const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.service.js`);
-
+/**@type{import('./server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./config.service.js')} */
+const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./db/file.service.js')} */
+const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('./iam.service.js')} */
 const {expired_token} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-/**@type{Types.socket_connect_list[]} */
+/**@type{import('../types.js').socket_connect_list[]} */
 let CONNECTED_CLIENTS = [];
 
 /**
@@ -26,9 +26,10 @@ let CONNECTED_CLIENTS = [];
  *               identity_provider_id:number}>}
  */
 const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
+    /**@type{import('./bff.service.js')} */
     const { BFF_server } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
-    /**@type{Types.bff_parameters}*/
+    /**@type{import('../types.js').bff_parameters}*/
     const parameters = {endpoint:'SERVER_SOCKET',
                         host:null,
                         url:'/geolocation/ip',
@@ -45,15 +46,16 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
     
     const result_geodata = await BFF_server(parameters)
                                     .then((/**@type{*}*/result_gps)=>JSON.parse(result_gps))
-                                    .catch((/**@type{Types.error}*/error)=>null);
+                                    .catch((/**@type{import('../types.js').error}*/error)=>null);
     const place = result_geodata?
                     (result_geodata.geoplugin_city + ', ' +
                     result_geodata.geoplugin_regionName + ', ' +
                     result_geodata.geoplugin_countryName):'';
+    /**@type{import('./dbapi/app_portfolio/user_account.service.js')} */
     const {getUserByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
     const identity_provider_id = user_account_id?await getUserByUserId(app_id, user_account_id)
                                                     .then((/**@type{string}*/result)=>JSON.parse(result)[0].identity_provider_id)
-                                                    .catch((/**@type{Types.error}*/error)=>null):'';
+                                                    .catch((/**@type{import('../types.js').error}*/error)=>null):'';
     return {latitude:result_geodata?result_geodata.geoplugin_latitude ?? '':'',
             longitude:result_geodata?result_geodata.geoplugin_longitude ?? '':'',
             place:place,
@@ -63,9 +65,9 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
 /**
  * Socket client send
  * Used by EventSource and closes connection
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {string} message
- * @param {Types.socket_broadcast_type_all} message_type
+ * @param {import('../types.js').socket_broadcast_type_all} message_type
  */
  const ClientSend = (res, message, message_type) => {
     res.write (`data: ${btoa(`{"broadcast_type"   : "${message_type}", 
@@ -75,7 +77,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
 /**
  * Socket client connect
  * Used by EventSource and leaves connection open
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  */
  const ClientConnect = (res) => {
     res.setHeader('Content-Type', 'text/event-stream');
@@ -84,7 +86,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
 /**
  * Socket client close
  * Used by EventSource and closes connection
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @param {number} client_id
  */
 const ClientOnClose = (res, client_id) => {
@@ -95,7 +97,7 @@ const ClientOnClose = (res, client_id) => {
 };
 /**
  * Socket client add
- * @param {Types.socket_connect_list} newClient
+ * @param {import('../types.js').socket_connect_list} newClient
  */
 const ClientAdd = (newClient) => {
     CONNECTED_CLIENTS.push(newClient);
@@ -113,11 +115,12 @@ const ClientAdd = (newClient) => {
  * @param {string} ip
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @returns {Promise.<void>}
  */
  const ConnectedUpdate = async (app_id, client_id, user_account_id, system_admin, authorization_bearer, token_access, token_systemadmin, ip, headers_user_agent, headers_accept_language, res) => {
     if (CONNECTED_CLIENTS.filter(row=>row.id==client_id && row.authorization_bearer == authorization_bearer).length==0){
+        /**@type{import('./iam.service.js')} */
         const {not_authorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
         throw not_authorized(res, 401, 'ConnectedUpdate, authorization', true);
     }
@@ -158,7 +161,7 @@ const ClientAdd = (newClient) => {
  * @param {number|null} app_id
  * @param {number|null} client_id
  * @param {number|null} client_id_current
- * @param {Types.socket_broadcast_type_all} broadcast_type
+ * @param {import('../types.js').socket_broadcast_type_all} broadcast_type
  * @param {string} broadcast_message
  */
  const SocketSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
@@ -198,14 +201,15 @@ const ClientAdd = (newClient) => {
  * @param {number} year
  * @param {number} month
  * @param {string} order_by
- * @param {Types.sort_socket} sort
+ * @param {import('../types.js').sort_socket} sort
  * @param {number} dba
  */
  const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba) => {
     limit = Number(limit ?? 0);
+    /**@type{import('../apps/apps.service.js')} */
     const { app_start } = await import(`file://${process.cwd()}/apps/apps.service.js`);
     //filter    
-    /**@type{Types.socket_connect_list_no_res[]} */
+    /**@type{import('../types.js').socket_connect_list_no_res[]} */
     let connected_clients_no_res =[];
     for (const client of CONNECTED_CLIENTS)
         //return keys without response
@@ -233,7 +237,7 @@ const ClientAdd = (newClient) => {
     });
     /**
      * Sort
-     * @param {Types.sort_socket} sort
+     * @param {import('../types.js').sort_socket} sort
      */
     const sort_and_return = (sort) =>{
         let order_by_num = 0;
@@ -271,12 +275,13 @@ const ClientAdd = (newClient) => {
     };
     if (connected_clients_no_res.length>0){
         //update with user role
+        /**@type{import('./dbapi/app_portfolio/user_account.service.js')} */
         const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
         for (const client of connected_clients_no_res){
             if (client.system_admin==0)
                 if (await app_start()==true){    
                     await getUserRoleAdmin(app_id, client.user_account_id, dba)
-                    .then((/**@type{Types.db_result_user_account_getUserRoleAdmin[]}*/result_app_role)=>{
+                    .then((/**@type{import('../types.js').db_result_user_account_getUserRoleAdmin[]}*/result_app_role)=>{
                         if (result_app_role[0]){
                             client.app_role_id = result_app_role[0].app_role_id;
                             client.app_role_icon = result_app_role[0].icon;
@@ -299,7 +304,7 @@ const ClientAdd = (newClient) => {
  * @param {number} client_id
  * @param {number} client_id_current
  * @param {string} broadcast_type
- * @param {Types.socket_broadcast_type_admin} broadcast_message
+ * @param {import('../types.js').socket_broadcast_type_admin} broadcast_message
  */
  const SocketSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
     if (broadcast_type=='ALERT' || broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
@@ -357,7 +362,7 @@ const ClientAdd = (newClient) => {
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
  * @param {string} ip
- * @param {Types.res} response
+ * @param {import('../types.js').res} response
  */
  const SocketConnect = async (  app_id, 
                                 user_account_id, 
@@ -372,7 +377,7 @@ const ClientAdd = (newClient) => {
     ClientOnClose(response, client_id);
 
     const connectUserData =  await getConnectedUserData(app_id, user_account_id, ip, headers_user_agent, headers_accept_language);
-    /**@type{Types.socket_connect_list} */
+    /**@type{import('../types.js').socket_connect_list} */
     const newClient = {
                         id:                     client_id,
                         app_id:                 app_id,

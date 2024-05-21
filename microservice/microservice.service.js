@@ -1,16 +1,14 @@
 /** @module microservice */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
+/**@type{import('../server/db/file.service.js')} */
+const {file_get, file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const http = await import('node:http');
 const https = await import('node:https');
 const fs = await import('node:fs');
 
-const {file_get, file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
-
-const CONFIG = await file_get('MICROSERVICE_CONFIG').then((/**@type{Types.db_file_result_file_get}*/file)=>file.file_content);
-const CONFIG_SERVICES = await file_get('MICROSERVICE_SERVICES').then((/**@type{Types.db_file_result_file_get}*/file)=>file.file_content?file.file_content.SERVICES:null);
+const CONFIG = await file_get('MICROSERVICE_CONFIG').then((/**@type{import('../types.js').db_file_result_file_get}*/file)=>file.file_content);
+const CONFIG_SERVICES = await file_get('MICROSERVICE_SERVICES').then((/**@type{import('../types.js').db_file_result_file_get}*/file)=>file.file_content?file.file_content.SERVICES:null);
 
 const timeout_message = '🗺⛔?';
 const resource_id_string = ':RESOURCE_ID';
@@ -41,7 +39,7 @@ const route = (route_path, route_method, request_path , request_method) =>
  * @returns {number}
  */
  const microservice_api_version = service =>{
-    /**@type{Types.microservice_config_service_record} */
+    /**@type{import('../types.js').microservice_config_service_record} */
     const config_service = ConfigServices(service)
     return config_service.CONFIG.filter((/**@type{*}*/row)=>'APP_REST_API_VERSION' in row)[0].APP_REST_API_VERSION;
 } 
@@ -153,7 +151,7 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  * Get number value from request key
  * returns number or null for numbers
  * so undefined and '' are avoided sending arguement to service functions
- * @param {Types.req_id_number} param
+ * @param {import('../types.js').req_id_number} param
  * @returns {number|null}
  */
  const getNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
@@ -164,7 +162,7 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  * @param {string|null} error 
  * @param {*} result 
  * @param {*} pdf
- * @param {Types.res_microservice} res
+ * @param {import('../types.js').res_microservice} res
  */
  const return_result = (code, error, result, pdf, res)=>{
     res.statusCode = code;
@@ -195,10 +193,10 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
 /**
  * Reads config services
  * @param {string} servicename
- * @returns {Types.microservice_config_service_record}
+ * @returns {import('../types.js').microservice_config_service_record}
  */
 const ConfigServices = (servicename) =>{
-    return CONFIG_SERVICES.filter((/**@type{Types.microservice_config_service_record}*/service)=>service.NAME == servicename)[0];        
+    return CONFIG_SERVICES.filter((/**@type{import('../types.js').microservice_config_service_record}*/service)=>service.NAME == servicename)[0];        
 };
 
 /**
@@ -330,6 +328,10 @@ const httpRequest = async (service, path, query, method, timeout, client_ip, aut
  * @returns 
  */
 const MessageQueue = async (service, message_type, message, message_id) => {
+    /**@type{import('../microservice/mail/service.js')} */
+    const {sendEmail} = await import(`file://${process.cwd()}/microservice/mail/service.js`);
+    /**@type{import('../microservice/pdf/service.js')} */
+    const {getPDF} = await import(`file://${process.cwd()}/microservice/pdf/service.js`);
     return new Promise((resolve, reject) =>{
         /**
          * 
@@ -362,7 +364,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 }
                 file_append_log(filename, json_message)
                 .then(()=>resolve(null))
-                .catch((/**@type{Types.error}*/error)=>reject(error));
+                .catch((/**@type{import('../types.js').error}*/error)=>reject(error));
             });
         };
         try {
@@ -370,13 +372,13 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 case 'PUBLISH': {
                     //message PUBLISH message in message_queue_publish.json
                     const new_message_id = new Date().toISOString();
-                    /**@type{Types.microservice_message_queue_publish} */
+                    /**@type{import('../types.js').microservice_message_queue_publish} */
                     const message_queue = {message_id: new_message_id, service: service, message:   message};
                     write_file(1, message_queue, null)
                     .then(()=>{
                         resolve (MessageQueue(service, 'CONSUME', null, new_message_id));
                     })
-                    .catch((/**@type{Types.error}*/error)=>{
+                    .catch((/**@type{import('../types.js').error}*/error)=>{
                         reject(error);
                     });
                     break;
@@ -385,8 +387,8 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                     //message CONSUME
                     //direct microservice call
                     file_get_log('MESSAGE_QUEUE_PUBLISH')
-                    .then((/**@type{Types.microservice_message_queue_publish[]}*/message_queue)=>{
-                        /**@type{Types.microservice_message_queue_consume} */
+                    .then((/**@type{import('../types.js').microservice_message_queue_publish[]}*/message_queue)=>{
+                        /**@type{import('../types.js').microservice_message_queue_consume} */
                         let message_consume = { message_id: null,
                                                 service:    null,
                                                 message:    null,
@@ -407,75 +409,71 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                         switch (service){
                             case 'MAIL':{
                                 message_consume.start = new Date().toISOString();
-                                import(`file://${process.cwd()}/microservice/mail/service.js`).then(({sendEmail})=>{
-                                    sendEmail(message_consume.message)
-                                    .then((/**@type{object}*/result_sendEmail)=>{
-                                        message_consume.finished = new Date().toISOString();
-                                        message_consume.result = result_sendEmail;
-                                        //write to message_queue_consume.json
-                                        write_file(2, message_consume, result_sendEmail)
-                                        .then(()=>{
-                                            resolve (null);
-                                        })
-                                        .catch((/**@type{Types.error}*/error)=>{
-                                            write_file(0, message_consume, error)
-                                            .then(()=>{
-                                                reject (error);
-                                            })
-                                            .catch(error=>{
-                                                reject(error);
-                                            });
-                                        });
+                                sendEmail(message_consume.message)
+                                .then((/**@type{object}*/result_sendEmail)=>{
+                                    message_consume.finished = new Date().toISOString();
+                                    message_consume.result = result_sendEmail;
+                                    //write to message_queue_consume.json
+                                    write_file(2, message_consume, result_sendEmail)
+                                    .then(()=>{
+                                        resolve (null);
                                     })
-                                    .catch((/**@type{Types.error}*/error)=>{
+                                    .catch((/**@type{import('../types.js').error}*/error)=>{
                                         write_file(0, message_consume, error)
                                         .then(()=>{
                                             reject (error);
                                         })
-                                        .catch((/**@type{Types.error}*/error)=>{
+                                        .catch(error=>{
                                             reject(error);
                                         });
+                                    });
+                                })
+                                .catch((/**@type{import('../types.js').error}*/error)=>{
+                                    write_file(0, message_consume, error)
+                                    .then(()=>{
+                                        reject (error);
+                                    })
+                                    .catch((/**@type{import('../types.js').error}*/error)=>{
+                                        reject(error);
                                     });
                                 });
                                 break;
                             }
                             case 'PDF':{
                                 message_consume.start = new Date().toISOString();
-                                import(`file://${process.cwd()}/microservice/pdf/service.js`).then(({getPDF})=>{
-                                    getPDF(message_consume.message).then((/**@type{string}*/pdf)=>{
-                                        message_consume.finished = new Date().toISOString();
-                                        message_consume.result = 'PDF';
-                                        //write to message_queue_consume.json
-                                        write_file(2, message_consume, 'PDF')
-                                        .then(()=>{
-                                            resolve(pdf);
-                                        })
-                                        .catch((/**@type{Types.error}*/error)=>{
-                                            write_file(0, message_consume, error)
-                                            .then(()=>{
-                                                reject (error);
-                                            })
-                                            .catch((/**@type{Types.error}*/error)=>{
-                                                reject(error);
-                                            });
-                                        });
-                                        
+                                getPDF(message_consume.message).then((/**@type{string}*/pdf)=>{
+                                    message_consume.finished = new Date().toISOString();
+                                    message_consume.result = 'PDF';
+                                    //write to message_queue_consume.json
+                                    write_file(2, message_consume, 'PDF')
+                                    .then(()=>{
+                                        resolve(pdf);
                                     })
-                                    .catch((/**@type{Types.error}*/error)=>{
+                                    .catch((/**@type{import('../types.js').error}*/error)=>{
                                         write_file(0, message_consume, error)
                                         .then(()=>{
                                             reject (error);
                                         })
-                                        .catch((/**@type{Types.error}*/error)=>{
+                                        .catch((/**@type{import('../types.js').error}*/error)=>{
                                             reject(error);
                                         });
+                                    });
+                                    
+                                })
+                                .catch((/**@type{import('../types.js').error}*/error)=>{
+                                    write_file(0, message_consume, error)
+                                    .then(()=>{
+                                        reject (error);
+                                    })
+                                    .catch((/**@type{import('../types.js').error}*/error)=>{
+                                        reject(error);
                                     });
                                 });
                                 break;
                             }
                         }
                     })
-                    .catch((/**@type{Types.error}*/error)=>{
+                    .catch((/**@type{import('../types.js').error}*/error)=>{
                         write_file(0, message, error).then(()=>{
                             reject(message);
                         });
@@ -489,7 +487,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                     });
                 }
             }
-        } catch (/**@type{Types.error}*/error){
+        } catch (/**@type{import('../types.js').error}*/error){
             write_file(0, message, error).then(()=>{
                 reject(message);
             });

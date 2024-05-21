@@ -1,10 +1,10 @@
 /** @module server/dbapi/app_portfolio/app_object */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../config.service.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../../dbapi/common/common.service.js')} */
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
@@ -13,7 +13,7 @@ const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()
  * @param {string} lang_code 
  * @param {string} object_name 
  * @param {string|null} object_item_name
- * @returns {Promise.<Types.db_result_app_object_getObjects[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_object_getObjects[]>}
  */
 const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 	const sql = ` SELECT 	object_name "object_name", 

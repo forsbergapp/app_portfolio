@@ -1,11 +1,10 @@
 /** @module server/socket */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
-
-const service = await import(`file://${process.cwd()}/server/socket.service.js`);
-
+/**@type{import('./server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./socket.service.js')} */
+const service = await import(`file://${process.cwd()}/server/socket.service.js`);
+/**@type{import('./iam.service.js')} */
 const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 /**
@@ -15,7 +14,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  * @param {string} ip
  * @param {string} user_agent
  * @param {string} accept_language
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @returns 
  */
  const ConnectedUpdate = (app_id, iam, ip, user_agent, accept_language, res) => service.ConnectedUpdate(app_id, 
@@ -60,7 +59,7 @@ const ConnectedListSystemadmin = (app_id, query) =>{
                                         query.get('order_by'), 
                                         query.get('sort'),  
                                         1)
-        .then ((/**@type{Types.socket_connect_list_no_res[]} */result)=>{
+        .then ((/**@type{import('../types.js').socket_connect_list_no_res[]} */result)=>{
             if (result && result.length>0)
                 resolve(result);
             else
@@ -83,7 +82,7 @@ const SocketSendAdmin = (data) => service.SocketSendAdmin(  getNumberValue(data.
  * 
  * @param {number} app_id 
  * @param {*} query 
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  * @returns 
  */
 const ConnectedListAdmin = (app_id, query, res) =>{
@@ -94,7 +93,7 @@ const ConnectedListAdmin = (app_id, query, res) =>{
                                         getNumberValue(query.get('month')), 
                                         query.get('order_by'), 
                                         query.get('sort'), 0)
-        .then ((/**@type{Types.socket_connect_list_no_res[]} */result)=>{
+        .then ((/**@type{import('../types.js').socket_connect_list_no_res[]} */result)=>{
             if (result && result.length>0)
                 resolve(result);
             else
@@ -119,7 +118,7 @@ const ConnectedCount = (query) => service.ConnectedCount(   getNumberValue(query
  * @param {string} ip  
  * @param {string} user_agent 
  * @param {string} accept_language 
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  */
 const SocketConnect = (app_id, iam, ip, user_agent, accept_language, res) => service.SocketConnect( app_id, 
                                                                                                     getNumberValue(iam_decode(iam).get('user_id')),

@@ -1,10 +1,10 @@
 /** @module server/config */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
-
-const service = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./config.service.js')} */
+const service = await import(`file://${process.cwd()}/server/config.service.js`);
+
 /**
  * Config file save
  * @param {string} resource_id
@@ -13,7 +13,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const ConfigFileSave =  (resource_id, data) => service.ConfigFileSave(resource_id, data.config, getNumberValue(data.maintenance), data.configuration, data.comment);
 /**
  * Config file get
- * @param {Types.db_file_db_name} resource_id
+ * @param {import('../types.js').db_file_db_name} resource_id
  * @param {*} query
  */
  const ConfigFileGet = async (resource_id, query) => {

@@ -1,15 +1,13 @@
 /** @module server/dbapi/app_portfolio/user_account_app_data_post_view */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../dbapi/common/common.service.js')} */
 const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
  * @param {number} app_id 
- * @param {Types.db_parameter_user_account_app_data_post_view_insertUserPostView} data 
- * @returns {Promise.<Types.db_result_user_account_app_data_post_view_insertUserPostView>}
+ * @param {import('../../../types.js').db_parameter_user_account_app_data_post_view_insertUserPostView} data 
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_view_insertUserPostView>}
  */
 const insertUserPostView = async (app_id, data) => {
 		const sql = `INSERT INTO ${db_schema()}.user_account_app_data_post_view(
