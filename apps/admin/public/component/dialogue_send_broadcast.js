@@ -1,4 +1,4 @@
-/**@type{import('../../../types.js').AppDocument}} */
+/**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 const template =`   <div id='send_broadcast_form'>
                         <div id='send_broadcast_title' class='common_icon'></div>

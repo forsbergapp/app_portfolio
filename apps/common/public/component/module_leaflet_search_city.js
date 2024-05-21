@@ -1,4 +1,4 @@
-/**@type{import('../../../types.js').AppDocument}} */
+/**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 /**
  * @typedef {{id:number, city:string, admin_name:string, country:string, lat:string, lng:string}} record_type
