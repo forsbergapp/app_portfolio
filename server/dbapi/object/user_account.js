@@ -65,7 +65,6 @@ const { default: {compare} } = await import('bcrypt');
                         url:'/mail/sendemail',
                         route_path:'/mail/sendemail',
                         method:'POST', 
-                        app_id:app_id,
                         query:'',
                         body:email_rendered,
                         authorization:null,
@@ -73,7 +72,7 @@ const { default: {compare} } = await import('bcrypt');
                         user_agent:user_agent, 
                         accept_language:accept_language,
                         res:null};
-    return await BFF_server(parameters);
+    return await BFF_server(app_id, parameters);
 };
 /**
  * 

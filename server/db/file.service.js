@@ -213,12 +213,12 @@ const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}
 /**
  * 
  * @param {import('../../types.js').db_file_db_name} file 
- * @param {number} transaction_id 
+ * @param {number|null} transaction_id 
  * @param {object} file_content 
  * @returns 
  */
 const file_update = async (file, transaction_id, file_content) =>{
-    if (fileDB(file).TRANSACTION_ID != transaction_id)
+    if (!transaction_id || fileDB(file).TRANSACTION_ID != transaction_id)
         return ('⛔');
     else{
         const filepath = fileDB(file).PATH;
@@ -248,7 +248,7 @@ const file_update = async (file, transaction_id, file_content) =>{
 /**
  * 
  * @param {import('../../types.js').db_file_db_name} file 
- * @param {object} file_content 
+ * @param {import('../../types.js').db_file_config_files} file_content 
  */
 const file_create = async (file, file_content) =>{
     const filepath = fileDB(file).PATH;

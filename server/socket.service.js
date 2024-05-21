@@ -35,7 +35,6 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
                         url:'/geolocation/ip',
                         route_path:'/geolocation/ip',
                         method:'GET', 
-                        app_id:app_id,
                         query:`ip=${ip}`,
                         body:{},
                         authorization:null,
@@ -44,7 +43,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
                         accept_language:headers_accept_language,
                         res:null};
     
-    const result_geodata = await BFF_server(parameters)
+    const result_geodata = await BFF_server(app_id, parameters)
                                     .then((/**@type{*}*/result_gps)=>JSON.parse(result_gps))
                                     .catch((/**@type{import('../types.js').error}*/error)=>null);
     const place = result_geodata?
