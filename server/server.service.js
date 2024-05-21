@@ -107,7 +107,7 @@ const COMMON = {
     /**@ts-ignore */
     app.use(compression({ filter: shouldCompress }));
     // set JSON maximum size
-    app.use(express.json({ limit: ConfigGet('SERVER', 'JSON_LIMIT') }));
+    app.use(express.json({ limit: ConfigGet('SERVER', 'JSON_LIMIT') ?? ''}));
     
     //ROUTES MIDDLEWARE
     //apps
@@ -673,7 +673,7 @@ const COMMON = {
                             routesparameters.res.statusCode =401;
                         }
                         else{
-                            routesparameters.res.statusMessage = `route not found: ${routesparameters.endpoint} ${routesparameters.service} ${URI_path} ${routesparameters.method}`;
+                            routesparameters.res.statusMessage = `route not found: ${routesparameters.endpoint} ${URI_path} ${routesparameters.method}`;
                             routesparameters.res.statusCode =404;
                         }
                         reject('⛔');

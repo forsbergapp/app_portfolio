@@ -253,7 +253,7 @@ const LogDBE = async (app_id, db, sql, parameters, result) => {
  * Log service Info
  * @param {number} app_id 
  * @param {string} service 
- * @param {object} parameters 
+ * @param {string} parameters 
  * @param {string} logtext 
  * @returns {Promise.<null>}
  */
@@ -294,7 +294,7 @@ const LogServiceI = async (app_id, service, parameters, logtext) => {
  * Log service Error
  * @param {number} app_id 
  * @param {string} service 
- * @param {object} parameters 
+ * @param {string} parameters 
  * @param {string} logtext 
  * @returns {Promise.<null>}
  */
