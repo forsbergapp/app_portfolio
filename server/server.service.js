@@ -24,7 +24,7 @@
 /**
  * Get number value from request key
  * returns number or null for numbers
- * so undefined and '' are avoided sending arguement to service functions
+ * so undefined and '' are avoided sending argument to service functions
  * @param {import('../types.js').req_id_number} param
  * @returns {number|null}
  */
@@ -308,7 +308,7 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/app_data/v1/server-socket/socket-status/${resource_id_string}`, 'GET', 'app_id', routesparameters.app_id):{
-                        resolve(socket.CheckOnline(resource_id_get(), app_query));
+                        resolve(socket.CheckOnline(resource_id_get()));
                         break;
                     }
                     case route(`/bff/app_data/v1/server-db/app_object`, 'GET'):{
@@ -440,7 +440,7 @@ const COMMON = {
                         resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post`, 'POST', 'user_id', resource_id_get()):{
+                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post`, 'POST', 'user_id', routesparameters.body.user_account_id):{
                         resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
