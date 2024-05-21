@@ -1,8 +1,6 @@
 /** @module microservice/worldcities */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../types.js';
-
+/**@type{import('../../microservice/microservice.service.js')} */
 const {ConfigServices} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 
 /**
@@ -38,7 +36,7 @@ const {ConfigServices} = await import(`file://${process.cwd()}/microservice/micr
  */
 const getService = async () => {
     const fs = await import('node:fs');
-    /**@type{Types.microservice_config_service_record}*/
+    /**@type{import('../../types.js').microservice_config_service_record}*/
     const config = ConfigServices('WORLDCITIES');
     const fileBuffer = await fs.promises.readFile(`${process.cwd()}${config.PATH}worldcities.json`, 'utf8')
     .catch(error=>{throw error;});

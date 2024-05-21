@@ -1,15 +1,13 @@
 /** @module server/dbapi/app_portfolio/country */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../dbapi/common/common.service.js')} */
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
  * @param {number} app_id 
  * @param {string} lang_code 
- * @returns {Promise.<Types.db_result_country_getCountries[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_country_getCountries[]>}
  */
 const getCountries = async (app_id, lang_code) => {
      const sql = `SELECT c.id "id",

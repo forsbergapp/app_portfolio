@@ -1,8 +1,6 @@
 /** @module server/config */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
-
+/**@type{import('./db/file.service.js')} */
 const {SLASH, file_get, file_update, file_get_cached, file_set_cache_all, file_create, create_config_and_logs_dir} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const app_portfolio_title = 'App Portfolio';
@@ -22,7 +20,7 @@ const app_portfolio_title = 'App Portfolio';
 
 /**
  * Config get user
- * @param {Types.config_user_parameter} parameter
+ * @param {import('../types.js').config_user_parameter} parameter
  * @returns {string}
  */
  const ConfigGetUser = (parameter) => {
@@ -31,14 +29,14 @@ const app_portfolio_title = 'App Portfolio';
 /**
  * Config get apps
  * @param {number|null} app_id
- * @returns {Types.config_apps_record[]}
+ * @returns {import('../types.js').config_apps_record[]}
  */
  const ConfigGetApps = (app_id=null) => {
     //return apps array in the object without SECRETS, PARAMETERS and RENDER_CONFIG
     return Object.entries(file_get_cached('APPS'))[0][1]
                     .filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
-                    .reduce(( /**@type{Types.config_apps_record} */app, 
-                                                            /**@type {Types.config_apps_record}*/current)=> 
+                    .reduce(( /**@type{import('../types.js').config_apps_record} */app, 
+                                                            /**@type {import('../types.js').config_apps_record}*/current)=> 
                                                                 app.concat({APP_ID:current.APP_ID,
                                                                             NAME:current.NAME,
                                                                             SUBDOMAIN:current.SUBDOMAIN,
@@ -58,12 +56,12 @@ const app_portfolio_title = 'App Portfolio';
         case 'www':{
             //localhost
             return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                (/**@type{Types.config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
+                (/**@type{import('../types.js').config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
         }
         default:{
             try {
                 return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                    (/**@type{Types.config_apps_record}*/app)=>{return host.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
+                    (/**@type{import('../types.js').config_apps_record}*/app)=>{return host.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
             } catch (error) {
                 //request can be called from unkown hosts
                 return null;
@@ -75,13 +73,13 @@ const app_portfolio_title = 'App Portfolio';
  * Config get app
  * @param {number} app_id
  * @param {number} data_app_id
- * @param {Types.config_apps_keys} parameter
+ * @param {import('../types.js').config_apps_keys} parameter
  * @returns {object|null}
  */
  const ConfigGetApp = (app_id, data_app_id, parameter) => {
     if (parameter == 'PARAMETERS')
         return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter]
+                (/**@type{import('../types.js').config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter]
                 .sort((/**@type{{}}*/a, /**@type{{}}*/b) => {
                     const x = Object.keys(a)[0].toLowerCase();
                     const y = Object.keys(b)[0].toLowerCase();
@@ -95,7 +93,7 @@ const app_portfolio_title = 'App Portfolio';
                 });
     else
         return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
+                (/**@type{import('../types.js').config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
  };
 /**
  * Config app secret reset db username and passwords for database in use
@@ -103,6 +101,7 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {Promise.<void>}
  */
   const ConfigAppSecretDBReset = async (app_id) => {
+    /**@type{import('./server.service.js')} */
     const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
     const file = await file_get('APPS', true);
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
@@ -156,7 +155,7 @@ const app_portfolio_title = 'App Portfolio';
  };
 /**
  * Config get
- * @param {Types.config_group} config_group
+ * @param {import('../types.js').config_group} config_group
  * @param {string} parameter
  * @returns {string|null}
  */
@@ -196,20 +195,20 @@ const DefaultConfig = async () => {
     const fs = await import('node:fs');
     const { createHash } = await import('node:crypto');
     await create_config_and_logs_dir()
-    .catch((/**@type{Types.error}*/err) => {
+    .catch((/**@type{import('../types.js').error}*/err) => {
         throw err;
     }); 
     const i = 0;
     //read all default files
 
-    /**@type{[  [Types.db_file_db_name, Types.config_server],
-                [Types.db_file_db_name, Types.config_apps],
-                [Types.db_file_db_name, Types.config_iam_blockip],
-                [Types.db_file_db_name, Types.config_iam_policy],
-                [Types.db_file_db_name, Types.config_iam_useragent],
-                [Types.db_file_db_name, Types.config_iam_user],
-                [Types.db_file_db_name, Types.microservice_config],
-                [Types.db_file_db_name, Types.microservice_config_service]]} 
+    /**@type{[  [import('../types.js').db_file_db_name, import('../types.js').config_server],
+                [import('../types.js').db_file_db_name, import('../types.js').config_apps],
+                [import('../types.js').db_file_db_name, import('../types.js').config_iam_blockip],
+                [import('../types.js').db_file_db_name, import('../types.js').config_iam_policy],
+                [import('../types.js').db_file_db_name, import('../types.js').config_iam_useragent],
+                [import('../types.js').db_file_db_name, import('../types.js').config_iam_user],
+                [import('../types.js').db_file_db_name, import('../types.js').microservice_config],
+                [import('../types.js').db_file_db_name, import('../types.js').microservice_config_service]]} 
     */
     const config_obj = [
                             ['SERVER',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
@@ -222,7 +221,7 @@ const DefaultConfig = async () => {
                             ['MICROSERVICE_SERVICES',       await fs.promises.readFile(process.cwd() + `${SLASH}microservice${SLASH}default_microservices.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
                         ]; 
     //set server parameters
-    config_obj[0][1].SERVER.map((/**@type{Types.config_server_server}*/row)=>{
+    config_obj[0][1].SERVER.map((/**@type{import('../types.js').config_server_server}*/row)=>{
         for (const key of Object.keys(row)){
             if (key=='HTTPS_KEY')
                 row.HTTPS_KEY = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
@@ -231,7 +230,7 @@ const DefaultConfig = async () => {
         } 
     });
     //generate hash
-    config_obj[0][1].SERVICE_IAM.map((/**@type{Types.config_server_service_iam}*/row)=>{
+    config_obj[0][1].SERVICE_IAM.map((/**@type{import('../types.js').config_server_service_iam}*/row)=>{
         for (const key of Object.keys(row))
             if (key== 'ADMIN_TOKEN_SECRET'){
                 row.ADMIN_TOKEN_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
@@ -243,7 +242,7 @@ const DefaultConfig = async () => {
     config_obj[0][1].METADATA.MODIFIED      = '';
 
     //generate hash for apps
-    config_obj[1][1].APPS.map((/**@type{Types.config_apps_record}*/row)=>{
+    config_obj[1][1].APPS.map((/**@type{import('../types.js').config_apps_record}*/row)=>{
         row.SECRETS.CLIENT_ID = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.SECRETS.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.SECRETS.APP_DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
@@ -253,12 +252,12 @@ const DefaultConfig = async () => {
     config_obj[5][1].created = new Date().toISOString();
     
     //set paths in microservice config
-    /**@type{Types.microservice_config} */
+    /**@type{import('../types.js').microservice_config} */
     const microservice_config = config_obj[6][1];
     microservice_config?microservice_config.PATH_DATA             = `${SLASH}microservice${SLASH}${microservice_config.PATH_DATA}${SLASH}`:'';
     microservice_config?microservice_config.PATH_TEMP             = `${SLASH}microservice${SLASH}${microservice_config.PATH_TEMP}${SLASH}`:'';
     //set paths in microservice services
-    config_obj[7][1].SERVICES.map((/**@type{Types.microservice_config_service_record}*/row)=>{
+    config_obj[7][1].SERVICES.map((/**@type{import('../types.js').microservice_config_service_record}*/row)=>{
         row.HTTPS_KEY             = `${SLASH}microservice${SLASH}config${SLASH}${row.HTTPS_KEY}`;
         row.HTTPS_CERT            = `${SLASH}microservice${SLASH}config${SLASH}${row.HTTPS_CERT}`;
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
@@ -280,7 +279,7 @@ const InitConfig = async () => {
                 file_set_cache_all().then(() => {
                     resolve(null);
                 })
-                .catch((/**@type{Types.error}*/error)=>{
+                .catch((/**@type{import('../types.js').error}*/error)=>{
                     reject (error);
                 });
             else{
@@ -288,7 +287,7 @@ const InitConfig = async () => {
                     file_set_cache_all().then(() => {
                         resolve(null);
                     })
-                    .catch((/**@type{Types.error}*/error)=>{
+                    .catch((/**@type{import('../types.js').error}*/error)=>{
                         reject (error);
                     });
                 });
@@ -298,9 +297,9 @@ const InitConfig = async () => {
 };
 /**
  * Config get saved
- * @param {Types.db_file_db_name} file
+ * @param {import('../types.js').db_file_db_name} file
  * @param {boolean} cached
- * @param {Types.config_group|null} config_group
+ * @param {import('../types.js').config_group|null} config_group
  * @param {string|null} parameter
  * @returns {Promise.<object>}
  */
@@ -321,13 +320,13 @@ const ConfigFileGet = async (file, cached=true, config_group=null, parameter=nul
 /**
  * Config save
  * @param {string} resource_id
- * @param { Types.config_server|
- *          Types.config_apps|
- *          Types.config_iam_blockip|
- *          Types.config_iam_policy|
- *          Types.config_iam_useragent|
- *          Types.microservice_config|
- *          Types.microservice_config_service|null} config
+ * @param { import('../types.js').config_server|
+ *          import('../types.js').config_apps|
+ *          import('../types.js').config_iam_blockip|
+ *          import('../types.js').config_iam_policy|
+ *          import('../types.js').config_iam_useragent|
+ *          import('../types.js').microservice_config|
+ *          import('../types.js').microservice_config_service|null} config
  * @param {number|null} maintenance
  * @param {string|null} configuration
  * @param {string|null} comment
@@ -378,7 +377,7 @@ const CreateSystemAdmin = async (admin_name, admin_password) => {
     file.file_content.password = await hash(admin_password, await genSalt(10));
     file.file_content.modified = new Date().toISOString();
     await file_update('IAM_USER', file.transaction_id, file.file_content)
-    .catch((/**@type{Types.error}*/error)=>{throw error;});
+    .catch((/**@type{import('../types.js').error}*/error)=>{throw error;});
 };
 
 export{ CreateRandomString,

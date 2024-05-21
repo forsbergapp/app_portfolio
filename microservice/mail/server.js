@@ -1,23 +1,23 @@
 /** @module microservice/mail */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../types.js';
-
+/**@type{import('./service.js')} */
 const service = await import('./service.js');
+/**@type{import('../../microservice/microservice.service.js')} */
 const { route, getNumberValue, return_result, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+/**@type{import('../../server/iam.service.js')} */
 const { AuthenticateApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**
  * Starts the server
  */
 const startserver = async () =>{
 	const request = await MicroServiceServer('MAIL');
-	request.server.createServer(request.options, (/**@type{Types.req_microservice}*/req, /**@type{Types.res_microservice}*/res) => {
+	request.server.createServer(request.options, (/**@type{import('../../types.js').req_microservice}*/req, /**@type{import('../../types.js').res_microservice}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'POST');
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		const URI_query = Buffer.from(req.url.substring(req.url.indexOf('?')), 'base64').toString('utf-8');
 		const URI_path = req.url.substring(0, req.url.indexOf('?'));
 		const app_query = new URLSearchParams(URI_query);
-		/**@type{Types.microservice_data_mail} */
+		/**@type{import('../../types.js').microservice_data_mail} */
 		const data = {
 						email_host:         app_query.get('email_host') ?? '',
 						email_port:         getNumberValue(app_query.get('email_port')),

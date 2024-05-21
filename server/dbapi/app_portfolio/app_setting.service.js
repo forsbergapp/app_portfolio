@@ -1,8 +1,6 @@
 /** @module server/dbapi/app_portfolio/setting */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../dbapi/common/common.service.js')} */
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
@@ -12,7 +10,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {number} app_id 
  * @param {string} lang_code 
  * @param {string|null} app_setting_type_name 
- * @returns {Promise.<Types.db_result_app_setting_getSettings[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_setting_getSettings[]>}
  */
 const getSettings = async (app_id, lang_code, app_setting_type_name) => {
      if (app_setting_type_name=='')
@@ -78,7 +76,7 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
  * @param {number} data_app_id 
  * @param {string} app_setting_type_name 
  * @param {*} value 
- * @returns {Promise.<Types.db_result_app_setting_getSettingDisplayData[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_setting_getSettingDisplayData[]>}
  */
 const getSettingDisplayData = async (app_id, data_app_id, app_setting_type_name, value) => {
      const sql = `SELECT s.id                                         "id", 

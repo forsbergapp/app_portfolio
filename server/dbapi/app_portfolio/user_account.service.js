@@ -1,9 +1,10 @@
 /** @module server/dbapi/app_portfolio/user_account */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../server.service.js')} */
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../config.service.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../../dbapi/common/common.service.js')} */
 const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
@@ -17,7 +18,7 @@ const set_password = async password =>{
 };
 /**
  * Checks password between 10 and 100 characters
- * @param {Types.db_parameter_user_account_updatePassword} data 
+ * @param {import('../../../types.js').db_parameter_user_account_updatePassword} data 
  * @returns {object|null}
  */
 const data_validation_password = (data) => {
@@ -37,7 +38,7 @@ const verification_code = () => {
 };
 /**
  * 
- * @param {	Types.db_parameter_user_account_updateUserCommon} data 
+ * @param {import('../../../types.js').db_parameter_user_account_updateUserCommon} data 
  * @returns {object|null}
  */
  const data_validation_common = data => {
@@ -63,9 +64,9 @@ const verification_code = () => {
  };
 /**
  * 
- * @param {	Types.db_parameter_user_account_create|
- * 			Types.db_parameter_user_account_updateUserLocal|
- *         	Types.db_parameter_user_account_updateUserSuperAdmin} data 
+ * @param {	import('../../../types.js').db_parameter_user_account_create|
+ * 			import('../../../types.js').db_parameter_user_account_updateUserLocal|
+ *         	import('../../../types.js').db_parameter_user_account_updateUserSuperAdmin} data 
  * @returns {object|null}
  */
 const data_validation = data => {
@@ -161,7 +162,7 @@ const data_validation = data => {
  * @param {string} order_by 
  * @param {number} offset 
  * @param {number} limit 
- * @returns {Promise.<Types.db_result_user_account_getUsersAdmin[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getUsersAdmin[]>}
  */
 const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 		let sql;
@@ -211,7 +212,7 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 			search = '%' + search + '%';
 		const parameters = {search: search,
 							offset: offset ?? 0,
-							limit: limit ?? parseInt(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))
+							limit: limit ?? getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))
 							};
 		return await db_execute(app_id, sql, parameters, null);
     };
@@ -219,7 +220,7 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<Types.db_result_user_account_getUserAppRoleAdmin[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getUserAppRoleAdmin[]>}
  */
 const getUserAppRoleAdmin = async (app_id, id) => {
 	const sql = `SELECT app_role_id "app_role_id"
@@ -231,7 +232,7 @@ const getUserAppRoleAdmin = async (app_id, id) => {
 /**
  * 
  * @param {number} app_id 
- * @returns {Promise.<Types.db_result_user_account_getStatCountAdmin[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getStatCountAdmin[]>}
  */
 const getStatCountAdmin = async app_id => {
 	const sql = `SELECT ua.identity_provider_id "identity_provider_id",
@@ -254,8 +255,8 @@ const getStatCountAdmin = async app_id => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {Types.db_parameter_user_account_updateUserSuperAdmin} data 
- * @returns {Promise.<Types.db_result_user_account_updateUserSuperAdmin>}
+ * @param {import('../../../types.js').db_parameter_user_account_updateUserSuperAdmin} data 
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_updateUserSuperAdmin>}
  */
 const updateUserSuperAdmin = async (app_id, id, data) => {
 	let sql;
@@ -308,8 +309,8 @@ const updateUserSuperAdmin = async (app_id, id, data) => {
 /**
  * 
  * @param {number} app_id 
- * @param {Types.db_parameter_user_account_create} data 
- * @returns {Promise.<Types.db_result_user_account_create>}
+ * @param {import('../../../types.js').db_parameter_user_account_create} data 
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_create>}
  */
 const create = async (app_id, data) => {
 	let sql;
@@ -394,7 +395,7 @@ const create = async (app_id, data) => {
  * @param {string} verification_type 
  * @param {string} verification_code 
  * @param {string|null} auth 
- * @returns {Promise.<Types.db_result_user_account_activateUser>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_activateUser>}
  */
 const activateUser = async (app_id, id, verification_type, verification_code, auth) => {
 	const sql = `UPDATE ${db_schema()}.user_account
@@ -428,7 +429,7 @@ const activateUser = async (app_id, id, verification_type, verification_code, au
  * @param {number} app_id 
  * @param {number} id 
  * @param {string} verification_code 
- * @returns {Promise.<Types.db_result_user_account_updateUserVerificationCode>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_updateUserVerificationCode>}
  */
 const updateUserVerificationCode = async (app_id, id, verification_code) => {
 	const sql = `UPDATE ${db_schema()}.user_account
@@ -446,7 +447,7 @@ const updateUserVerificationCode = async (app_id, id, verification_code) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<Types.db_result_user_account_getUserByUserId[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getUserByUserId[]>}
  */
 const getUserByUserId = async (app_id, id) => {
 	const sql = `SELECT	u.id "id",
@@ -482,7 +483,7 @@ const getUserByUserId = async (app_id, id) => {
  * @param {string|null} resource_id_name 
  * @param {string|null} search
  * @param {number} id_current_user
- * @returns {Promise.<Types.db_result_user_account_getProfileUser[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getProfileUser[]>}
  */
 const getProfileUser = async (app_id, resource_id_number, resource_id_name, search, id_current_user) => {
 	const user_where = () =>{
@@ -586,7 +587,7 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
  * @param {number} app_id 
  * @param {number} id 
  * @param {number} detailchoice
- * @returns {Promise.<Types.db_result_user_account_getProfileDetail[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getProfileDetail[]>}
  */
 const getProfileDetail = async (app_id, id, detailchoice) => {
 	let sql;
@@ -669,7 +670,7 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
  * 
  * @param {number} app_id 
  * @param {number} statchoice 
- * @returns {Promise.<Types.db_result_user_account_getProfileStat[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getProfileStat[]>}
  */
 const getProfileStat = async (app_id, statchoice) => {
 	let sql;
@@ -749,7 +750,7 @@ const getProfileStat = async (app_id, statchoice) => {
  * 
  * @param {number} app_id 
  * @param {number} id
- * @returns {Promise.<Types.db_result_user_account_checkPassword[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_checkPassword[]>}
  */
 const checkPassword = async (app_id, id) => {
 	const sql = `SELECT password "password"
@@ -762,8 +763,8 @@ const checkPassword = async (app_id, id) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {Types.db_parameter_user_account_updatePassword} data 
- * @returns {Promise.<Types.db_result_user_account_updatePassword>}
+ * @param {import('../../../types.js').db_parameter_user_account_updatePassword} data 
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_updatePassword>}
  */
 const updatePassword = async (app_id, id, data) => {
 	const error_code = data_validation_password(data);
@@ -787,9 +788,9 @@ const updatePassword = async (app_id, id, data) => {
 /**
  * 
  * @param {number} app_id 
- * @param {Types.db_parameter_user_account_updateUserLocal} data 
+ * @param {import('../../../types.js').db_parameter_user_account_updateUserLocal} data 
  * @param {number} search_id
- * @returns {Promise.<Types.db_result_user_account_updateUserLocal>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_updateUserLocal>}
  */
 const updateUserLocal = async (app_id, data, search_id) => {
 	let sql;
@@ -829,9 +830,9 @@ const updateUserLocal = async (app_id, data, search_id) => {
 /**
  * 
  * @param {number} app_id 
- * @param {Types.db_parameter_user_account_updateUserCommon} data 
+ * @param {import('../../../types.js').db_parameter_user_account_updateUserCommon} data 
  * @param {number} id 
- * @returns {Promise.<Types.db_result_user_account_updateUserCommon>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_updateUserCommon>}
  */
 const updateUserCommon = async (app_id, data, id) => {
 	let sql;
@@ -858,7 +859,7 @@ const updateUserCommon = async (app_id, data, id) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<Types.db_result_user_account_deleteUser>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_deleteUser>}
  */
 const deleteUser = async (app_id, id) => {
 	const sql = `DELETE FROM ${db_schema()}.user_account
@@ -869,8 +870,8 @@ const deleteUser = async (app_id, id) => {
 /**
  * 
  * @param {number} app_id 
- * @param {Types.db_parameter_user_account_userLogin} data
- * @returns {Promise.<Types.db_result_user_account_userLogin[]>}
+ * @param {import('../../../types.js').db_parameter_user_account_userLogin} data
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_userLogin[]>}
  */
 const userLogin = async (app_id, data) => {
 	const sql = `SELECT	id "id",
@@ -893,8 +894,8 @@ const userLogin = async (app_id, data) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {Types.db_parameter_user_account_create} data
- * @returns {Promise.<Types.db_result_user_account_updateSigninProvider>}
+ * @param {import('../../../types.js').db_parameter_user_account_create} data
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_updateSigninProvider>}
  */
 const updateSigninProvider = async (app_id, id, data) => {
 	let parameters;
@@ -932,7 +933,7 @@ const updateSigninProvider = async (app_id, id, data) => {
  * @param {number} app_id 
  * @param {number} identity_provider_id 
  * @param {number} search_id
- * @returns {Promise.<Types.db_result_user_account_providerSignIn[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_providerSignIn[]>}
  */
 const providerSignIn = async (app_id, identity_provider_id, search_id) => {
 	const sql = `SELECT	u.id "id",
@@ -959,7 +960,7 @@ const providerSignIn = async (app_id, identity_provider_id, search_id) => {
  * 
  * @param {number} app_id 
  * @param {string} email 
- * @returns {Promise.<Types.db_result_user_account_getEmailUser[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getEmailUser[]>}
  */
 const getEmailUser = async (app_id, email) => {
 	const sql = `SELECT id "id",
@@ -976,7 +977,7 @@ const getEmailUser = async (app_id, email) => {
  * @param {number} app_id 
  * @param {number} user_account_id 
  * @param {number} dba 
- * @returns {Promise.<Types.db_result_user_account_getUserRoleAdmin[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getUserRoleAdmin[]>}
  */
 const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
 	const sql = `SELECT app_role_id "app_role_id",
@@ -1004,7 +1005,7 @@ const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
 /**
  * 
  * @param {number} app_id
- * @returns {Promise.<Types.db_result_user_account_getDemousers[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getDemousers[]>}
  */
 const getDemousers = async app_id => {
 	const sql = `SELECT id "id",

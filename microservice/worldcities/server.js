@@ -1,17 +1,17 @@
 /** @module microservice/worldcities */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../types.js';
-
+/**@type{import('./service.js')} */
 const service = await import('./service.js');
+/**@type{import('../../microservice/microservice.service.js')} */
 const { resource_id_string, resource_id_get, route, getNumberValue, return_result, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+/**@type{import('../../server/iam.service.js')} */
 const { AuthenticateApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**
  * Starts the server
  */
 const startserver = async () =>{
 	const request = await MicroServiceServer('WORLDCITIES');
-	request.server.createServer(request.options, (/**@type{Types.req_microservice}*/req, /**@type{Types.res_microservice}*/res) => {
+	request.server.createServer(request.options, (/**@type{import('../../types.js').req_microservice}*/req, /**@type{import('../../types.js').res_microservice}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'GET');
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		const URI_query = Buffer.from(req.url.substring(req.url.indexOf('?')), 'base64').toString('utf-8');

@@ -1,9 +1,10 @@
 /** @module microservice/geolocation */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../types.js';
-
+/**@type{import('../../microservice/microservice.service.js')} */
 const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+
+const fs = await import('node:fs');
+const http = await import('node:http');
 
 /**
  * 
@@ -69,8 +70,7 @@ const getGeodataEmpty = (geotype) => {
  * @returns {Promise.<*>}
  */
 const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
-    const fs = await import('node:fs');
-    /**@type{Types.microservice_config_service_record}*/
+    /**@type{import('../../types.js').microservice_config_service_record}*/
     const config_service = ConfigServices('GEOLOCATION');
     let geodata_cache;
     try {
@@ -140,8 +140,7 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
  * @param {*} geodata 
  */
 const writeCacheGeodata = async (cachetype, geodata) =>{
-    const fs = await import('node:fs');
-    /**@type{Types.microservice_config_service_record}*/
+    /**@type{import('../../types.js').microservice_config_service_record}*/
     const config_service = ConfigServices('GEOLOCATION');
     switch (cachetype){
         case 'IP':{
@@ -166,7 +165,6 @@ const writeCacheGeodata = async (cachetype, geodata) =>{
  * @returns 
  */
 const getGeodata = async (url, language) => {
-    const http = await import('node:http');
     return new Promise((resolve) =>{
         //geolocation service using http 
 

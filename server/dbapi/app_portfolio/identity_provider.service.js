@@ -1,14 +1,12 @@
 /** @module server/dbapi/app_portfolio/identity_provider */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../dbapi/common/common.service.js')} */
 const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
  * @param {number} app_id 
- * @returns {Promise.<Types.db_result_identity_provider_getIdentityProviders[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_identity_provider_getIdentityProviders[]>}
  */
 const getIdentityProviders = async app_id => {
 		const sql = `SELECT id "id",
