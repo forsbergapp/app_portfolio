@@ -3,11 +3,11 @@
 /**@type{import('./bff.service.js')} */
 const service = await import('./bff.service.js');
 /**@type{import('./server.service.js')} */
-const {getNumberValue, responsetime} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {responsetime} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('./log.service.js')} */
 const {LogRequestI} = await import(`file://${process.cwd()}/server/log.service.js`);
 /**@type{import('./iam.service.js')} */
-const {iam_decode, AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
+const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**@type{import('./config.service.js')} */
 const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 
@@ -23,11 +23,11 @@ const fs = await import('node:fs');
  const BFF_init = async (req, res, next) =>{
     if (req.headers.accept == 'text/event-stream'){
         //Eventsource, log since response is open and log again when closing
-        LogRequestI(req, res.statusCode, res.statusMessage, responsetime(res));
+        LogRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', responsetime(res));
     }
     res.on('close',()=>{	
         //eventsource response time will be time connected until disconnected
-        LogRequestI(req, res.statusCode, res.statusMessage, responsetime(res)).then(() => {
+        LogRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', responsetime(res)).then(() => {
             res.end();
         });
     });
@@ -91,7 +91,7 @@ const fs = await import('node:fs');
  const BFF_start = async (req, res, next) =>{
     const check_redirect = () =>{
         //redirect naked domain to www except for localhost
-        if (req.headers.host.startsWith(ConfigGet('SERVER','HOST')) && req.headers.host.indexOf('localhost')==-1)
+        if (req.headers.host.startsWith(ConfigGet('SERVER','HOST') ?? '') && req.headers.host.indexOf('localhost')==-1)
             if (req.protocol=='http' && ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
                 res.redirect(`https://www.${req.headers.host}${req.originalUrl}`);
             else
@@ -110,8 +110,7 @@ const fs = await import('node:fs');
     else{
         //check if SSL verification using letsencrypt should be enabled when validating domains
         if (ConfigGet('SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
-            const ssl_verification_path = ConfigGet('SERVER', 'HTTPS_SSL_VERIFICATION_PATH');
-            if (req.originalUrl.startsWith(ssl_verification_path)){
+            if (req.originalUrl.startsWith(ConfigGet('SERVER', 'HTTPS_SSL_VERIFICATION_PATH') ?? '')){
                 res.type('text/plain');
                 res.send(await fs.promises.readFile(`${process.cwd()}${req.originalUrl}`, 'utf8'));
             }
@@ -138,8 +137,7 @@ const fs = await import('node:fs');
         url:req.originalUrl,
         route_path: req.originalUrl.substring(req.route.path.indexOf('*'), req.originalUrl.indexOf('?')>-1?req.originalUrl.indexOf('?'):req.originalUrl.length),
         method: req.method,
-        app_id: req.query.iam?getNumberValue(iam_decode(req.query.iam).get('app_id')):null,
-        query: req.query.parameters,
+        query: req.query.parameters ?? '',
         body: req.body, 
         authorization:  req.headers.authorization, 
         //metadata

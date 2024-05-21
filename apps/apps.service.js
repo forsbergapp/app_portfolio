@@ -553,7 +553,6 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
                                 url:'/pdf',
                                 route_path:'/pdf',
                                 method:'GET', 
-                                app_id:app_id,
                                 query:`url=${Buffer.from(url,'utf-8').toString('base64')}&ps=${ps}&hf=${hf}`,
                                 body:{},
                                 authorization:null,
@@ -561,7 +560,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
                                 user_agent:user_agent, 
                                 accept_language:accept_language,
                                 res:null};
-            const pdf = await BFF_server(parameters).catch((/**@type{import('../types.js').error}*/error)=>error);
+            const pdf = await BFF_server(app_id, parameters).catch((/**@type{import('../types.js').error}*/error)=>error);
             return {    type:'PDF',
                         report:pdf
                     };
@@ -603,7 +602,6 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                         url:'/geolocation/ip',
                         route_path:'/geolocation/ip',
                         method:'GET', 
-                        app_id:app_id,
                         query:`ip=${ip}`,
                         body:{},
                         authorization:null,
@@ -612,7 +610,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                         accept_language:accept_language,
                         res:null};
     //ignore error in this case and fetch randcom geolocation using WORLDCITIES service instead if GEOLOCATION is not available
-    const result_gps = await BFF_server(parameters)
+    const result_gps = await BFF_server(app_id, parameters)
     .catch((/**@type{import('../types.js').error}*/error)=>null);
     const result_geodata = {};
     if (result_gps){
@@ -630,7 +628,6 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                             url:'/worldcities/city-random',
                             route_path:'/worldcities/city-random',
                             method:'GET', 
-                            app_id:app_id,
                             query:'',
                             body:{},
                             authorization:null,
@@ -638,7 +635,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                             user_agent:user_agent, 
                             accept_language:accept_language,
                             res:null};
-        const result_city = await BFF_server(parameters).catch((/**@type{import('../types.js').error}*/error)=>{throw error});
+        const result_city = await BFF_server(app_id, parameters).catch((/**@type{import('../types.js').error}*/error)=>{throw error});
         result_geodata.latitude =   JSON.parse(result_city).lat;
         result_geodata.longitude=   JSON.parse(result_city).lng;
         result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
@@ -902,13 +899,15 @@ const getAssetFile = (app_id, url, basepath, res) =>{
  * @param {string} reportid
  * @param {number} messagequeue
  * @param {string} info
- * @param {import('../types.js').res} res
+ * @param {import('../types.js').res|null} res
  */
 const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, messagequeue, info, res) =>{
     const host_no_port = host.substring(0,host.indexOf(':')==-1?host.length:host.indexOf(':'));
-    const app_id = ConfigGetAppHost(host_no_port, 'SUBDOMAIN');
-    if (app_id==null){
-        res.statusCode = 404;
+    const app_id = ConfigGetAppHost(host_no_port);
+    if (app_id==null || res==null ){
+        //function not called from client or host not found
+        if (res)
+            res.statusCode = 404;
         return null;
     }
     else

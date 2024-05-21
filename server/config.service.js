@@ -298,13 +298,13 @@ const InitConfig = async () => {
 /**
  * Config get saved
  * @param {import('../types.js').db_file_db_name} file
- * @param {boolean} cached
+ * @param {boolean} saved
  * @param {import('../types.js').config_group|null} config_group
  * @param {string|null} parameter
  * @returns {Promise.<object>}
  */
-const ConfigFileGet = async (file, cached=true, config_group=null, parameter=null) => {
-    const config = cached?file_get_cached(file):await file_get(file).then((/**@type{*}*/config)=>config.file_content);
+const ConfigFileGet = async (file, saved, config_group=null, parameter=null) => {
+    const config = saved?await file_get(file).then((/**@type{*}*/config)=>config.file_content):file_get_cached(file);
     return await new Promise((resolve) => {
         if (config_group)
             if (config_group =='METADATA')
@@ -319,7 +319,7 @@ const ConfigFileGet = async (file, cached=true, config_group=null, parameter=nul
 }
 /**
  * Config save
- * @param {string} resource_id
+ * @param {import('../types.js').db_file_db_name} resource_id
  * @param { import('../types.js').config_server|
  *          import('../types.js').config_apps|
  *          import('../types.js').config_iam_blockip|

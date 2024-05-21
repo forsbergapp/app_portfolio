@@ -7,7 +7,6 @@
  *          url:string|null,
  *          route_path:string,
  *          method: string,
- *          app_id: number|null,
  *          query: string,
  *          body:object,
  *          authorization:string|null,
@@ -19,7 +18,6 @@
  * Routes paramaters
  * @typedef {{  app_id: req_id_number,
 *               endpoint: string,
-*               service: string,
 *               host:string,
 *               url:string,
 *               route_path:string,
@@ -30,7 +28,7 @@
 *               ip: string,
 *               user_agent:string,
 *               accept_language:string,
-*               res: res}} routesparameters
+*               res: res|null}} routesparameters
  */
 /**
  * Server/Apps - Request verbose
