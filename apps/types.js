@@ -151,6 +151,19 @@
  *           service_socket_eventsource:{onmessage:function,
  *                                       onerror:function,
  *                                       close:function}|null}} type_COMMON_GLOBAL
+ *
+ *  @typedef {{ app_maintenance:          string,
+ *              app_alert:                string,
+ *              infinite:                 string}} type_ICONS
+ *
+ * @typedef {import('./common/public/js/common.js')} module_common
+ * @typedef {{default:{adjust:function, getTimes:function, setMethod:function}}} module_prayTimes
+ * @typedef {import('./common/public/modules/regional/regional.js')} module_regional
+ * @typedef {{QRCode:*}} module_easy_qrcode
+ * @typedef {import('./common/public/modules/leaflet/leaflet-src.esm.js')} module_leaflet
+ * @typedef {import('./common/public/modules/react/react.development.js')} module_react
+ * @typedef {import('./common/public/modules/react/react-dom.development.js')} module_reactDOM
+ * @typedef {import('./common/public/modules/vue/vue.esm-browser.js')} module_vue
  */
 
  export {};

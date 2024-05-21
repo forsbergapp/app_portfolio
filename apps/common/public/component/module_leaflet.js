@@ -34,8 +34,9 @@ const template =`   <link media="all" rel="stylesheet" href="<CSS_URL/>" type="t
 *                      template:null}>}
 */
 const component = async props => {
-    /**@ts-ignore */
-    const Leaflet = await import('leaflet');
+    const path_leaflet ='leaflet';
+    /**@type {import('../../../types.js').module_leaflet} */
+    const Leaflet = await import(path_leaflet);
     const LEAFLET_CONTAINER = 'leaflet';
     
     /**
@@ -49,14 +50,12 @@ const component = async props => {
         return await new Promise((resolve)=>{
             const leaflet_map = Leaflet.map(LEAFLET_CONTAINER).setView([latitude, longitude], props.module_leaflet_zoom);
             //disable doubleclick in event dblclick since e.preventdefault() does not work
-            /**@ts-ignore */
             leaflet_map.doubleClickZoom.disable(); 
             //add scale
             //position values: 'topleft', 'topright', 'bottomleft' or 'bottomright'
             Leaflet.control.scale({position: 'topright'}).addTo(leaflet_map);
             
             if (doubleclick_event){
-                /**@ts-ignore */
                 leaflet_map.on('dblclick', doubleclick_event);
             }
             else{
@@ -84,7 +83,6 @@ const component = async props => {
                 };
                 //also creates event:
                 //Leaflet.DomEvent.addListener(leaflet_map, 'dblclick', default_dbl_click_event);
-                /**@ts-ignore */
                 leaflet_map.on('dblclick', default_dbl_click_event);
             }
             resolve(leaflet_map);
