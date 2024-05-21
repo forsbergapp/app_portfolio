@@ -1,8 +1,9 @@
 /**@type{import('../../../types.js').AppDocument} */
- const AppDocument = document;
+const AppDocument = document;
  
-/**@ts-ignore */
-const common = await import('common');
+const path_common ='common';
+ /**@type {import('../../../types.js').module_common} */
+const common = await import(path_common);
 
 /**
  * Show or hide dialogue
@@ -36,8 +37,9 @@ const app_event_click = event => {
         const event_target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
-            if (event.target.className == 'common_dialogue_apps_app_logo')
+            if (event.target.className == 'common_dialogue_apps_app_logo'){
                 window.open(common.element_row(event.target).querySelector('.common_dialogue_apps_app_url').innerHTML);
+            }
             else{
                 switch (event_target_id){
                     case 'theme_background':{
@@ -307,8 +309,8 @@ const app_theme_update = (toggle_theme=false) => {
  */
 const profile_show_app = async (user_account_id_other, username) =>{
     await common.profile_show(user_account_id_other, username)
-    .then((/**@type{{profile_id:number, private:number}}*/result)=>{
-        if (result.profile_id != null){
+    .then(result=>{
+        if (result && result.profile_id != null){
             if (result.private==1 && (common.COMMON_GLOBAL.user_account_id == result.profile_id)==false) {
                 //private
                 null;

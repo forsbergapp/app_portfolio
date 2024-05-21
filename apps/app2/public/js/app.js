@@ -120,14 +120,17 @@ const AppDocument = document;
  *          SettingsTimesIntervalId:number|null
  *          }} type_APP_GLOBAL
  */
-/**@ts-ignore */
-const common = await import('common');
-/**@ts-ignore */
-const app_report = await import('app_report');
-/**@ts-ignore */
-const {default:prayTimes} = await import('PrayTimes');
-/**@ts-ignore */
-const {getTimezone} = await import('regional');
+const path_common ='common';
+/**@type {import('../../../types.js').module_common} */
+const common = await import(path_common);
+
+const path_app_report ='app_report';
+/**@type {import('./app_report.js')}*/
+const app_report = await import(path_app_report);
+
+const path_regional ='regional';
+/**@type {import('../../../types.js').module_regional} */
+const {getTimezone} = await import(path_regional);
 
 /**@type{json_data_user_setting} */
 const user_settings_empty = {   id:0,
@@ -285,7 +288,7 @@ const printTimetable = async () => {
 };
 /**
  * Get report settings
- * @returns {object}
+ * @returns {import('./app_report.js').type_settings_report}
  */
 const getReportSettings = () => {
     const setting_global = APP_GLOBAL.user_settings[AppDocument.querySelector('#setting_select_user_setting').selectedIndex];
@@ -355,7 +358,7 @@ const getReportSettings = () => {
  * Timetable update
  * @param {number} timetable_type 
  * @param {string|null} item_id 
- * @param {object} settings 
+ * @param {import('./app_report.js').type_settings_report} settings 
  * @returns {Promise.<void>}
  */
 const update_timetable_report = async (timetable_type = 0, item_id = null, settings) => {
@@ -381,19 +384,19 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                 prayer_hijri_date_adjustment : setting.prayer_hijri_date_adjustment
                 });
             }
-            AppDocument.querySelector('#paper').innerHTML = app_report.displayDay(prayTimes, settings, item_id, current_user_settings);
+            AppDocument.querySelector('#paper').innerHTML = app_report.displayDay(settings, item_id, current_user_settings);
             await common.create_qr('timetable_qr_code', common.getHostname());
             break;
         }
         //1=create timetable month
         case 1:{
-            AppDocument.querySelector('#paper').innerHTML = app_report.displayMonth(prayTimes, settings, item_id);
+            AppDocument.querySelector('#paper').innerHTML = app_report.displayMonth(settings, item_id);
             await common.create_qr('timetable_qr_code', common.getHostname());
             break;
         }
         //2=create timetable year
         case 2:{
-            AppDocument.querySelector('#paper').innerHTML = app_report.displayYear(prayTimes, settings, item_id);
+            AppDocument.querySelector('#paper').innerHTML = app_report.displayYear(settings, item_id);
             await common.create_qr('timetable_qr_code', common.getHostname());
             break;
         }
@@ -404,7 +407,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
 };
 /**
  * Get report url
- * @param {number} id 
+ * @param {number|null} id 
  * @param {number} sid 
  * @param {string} papersize 
  * @param {string} item 
@@ -474,7 +477,6 @@ const get_theme_id = type => {
     if (AppDocument.querySelectorAll('.slider_active_' + type)[0])
         return AppDocument.querySelectorAll('.slider_active_' + type)[0].getAttribute('data-theme_id');
     else{
-        /**@ts-ignore */
         return APP_GLOBAL.user_settings[select_user_setting.selectedIndex]['design_theme_' + type + '_id'];
     }
         
@@ -643,13 +645,11 @@ const settingsTimesShow = () => {
         second: '2-digit',
         timeZoneName: 'long'
     };
-    /**@ts-ignore */
     AppDocument.querySelector('#setting_current_date_time_display').innerHTML = new Date().toLocaleTimeString(common.COMMON_GLOBAL.user_locale, options);    
     // timetable timezone
     const select = AppDocument.querySelector('#setting_select_report_timezone');
     if (select && select.selectedIndex>0){
         options.timeZone = select[select.selectedIndex].value;
-        /**@ts-ignore */
         AppDocument.querySelector('#setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(AppDocument.querySelector('#setting_select_locale').value, options);
     }
 }
@@ -1066,10 +1066,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
  */
 const user_login_app = async (system_admin=false, username_verify=null, password_verify=null) => {
     await common.user_login(system_admin, username_verify, password_verify)
-    .then((/**@type{{   user_id: number,
-                        username: string,
-                        bio: string, 
-                        avatar: string}}*/result)=>{
+    .then(result=>{
         //create intitial user setting if not exist, send initial=true
         login_common(result.avatar);
     })
@@ -1109,7 +1106,7 @@ const user_logoff_app = () => {
 };
 /**
  * Login common
- * @param {string} avatar 
+ * @param {string|null} avatar 
  */
 const login_common = (avatar) => {
     //create intitial user setting if not exist, send initial=true
@@ -1142,7 +1139,7 @@ const login_common = (avatar) => {
  */
 const ProviderSignIn_app = async (provider_id) => {
     common.user_login(null, null, null, provider_id)
-    .then((/**@type{{avatar: string}}*/result)=>{
+    .then(result=>{
         login_common(result.avatar);
     })
     .catch(()=>null);
@@ -1179,8 +1176,8 @@ const profile_update_stat_app = async () => {
 const profile_show_app = async (user_account_id_other = null, username = null) => {
     //using unary plus syntax if user account id has a value
     await common.profile_show(user_account_id_other?+user_account_id_other:null, username)
-    .then((/**@type{{profile_id:number, private:number}}*/result)=>{
-        if (result.profile_id != null){
+    .then(result=>{
+        if (result && result.profile_id != null){
             if (result.private==1 && (common.COMMON_GLOBAL.user_account_id == result.profile_id)==false) {
                 //private
                 null;
@@ -1365,7 +1362,7 @@ const user_settings_load = async (tab_selected) => {
         }
         case 2:{
             //GPS
-            common.SearchAndSetSelectedIndex(   APP_GLOBAL.user_settings[settings_index].gps_popular_place_id?.toString(),
+            common.SearchAndSetSelectedIndex(   APP_GLOBAL.user_settings[settings_index].gps_popular_place_id.toString(),
                                                 AppDocument.querySelector('#setting_select_popular_place'),0);
             AppDocument.querySelector('#setting_input_place').innerHTML = APP_GLOBAL.user_settings[settings_index].description;
             AppDocument.querySelector('#setting_input_lat').innerHTML = APP_GLOBAL.user_settings[settings_index].gps_lat_text;
@@ -1513,9 +1510,9 @@ const user_settings_function = async (function_name, initial_user_setting) => {
                             json_data:          APP_GLOBAL.user_settings[0],
                             user_account_id:    common.COMMON_GLOBAL.user_account_id
                         };
-        let method;
-        let path;
-        let query;
+        let method = '';
+        let path = '';
+        let query = null;
         switch (function_name){
             case 'ADD_LOGIN':
             case 'ADD':{
@@ -1531,7 +1528,6 @@ const user_settings_function = async (function_name, initial_user_setting) => {
                 method = 'PUT';
                 const user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
                 path = `/server-db/user_account_app_data_post/${user_setting_id}`;
-                query = null;
                 break;
             }
             default:{
@@ -2662,7 +2658,7 @@ const map_update_app = async (parameters) => {
                             timezone_text :parameters.timezone_text,
                             marker_id:parameters.marker_id,
                             to_method:parameters.to_method
-                        }).then((/**@type{string}*/timezonetext)=> {
+                        }).then(timezonetext=> {
             resolve(timezonetext);
         });
     });
@@ -2722,7 +2718,7 @@ const framework_set = async (framework=null) => {
 const settings_load = async (tab_selected) => {    
     /**
      * Get themes
-     * @param {number} app_id
+     * @param {number|null} app_id
      * @param {*} app_settings
      * @returns {{day:string, month:string,year:string}}
      */
@@ -2791,7 +2787,7 @@ const settings_load = async (tab_selected) => {
     };
     /**
      * Get places
-     * @param {number} app_id
+     * @param {number|null} app_id
      * @param {*} app_settings
      * @returns {string}
      */
@@ -2950,7 +2946,7 @@ const settings_load = async (tab_selected) => {
             AppDocument.querySelector('#setting_select_calendartype').innerHTML = APP_CALENDAR_TYPE;
             AppDocument.querySelector('#setting_select_calendar_hijri_type').innerHTML = APP_CALENDAR_HIJRI_TYPE;
             //set initial default language from clients locale
-            common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_local, AppDocument.querySelector('#setting_select_locale'),1);            
+            common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_locale, AppDocument.querySelector('#setting_select_locale'),1);            
             break;
         }
         case 2:{
@@ -3045,7 +3041,7 @@ const init_app = async parameters => {
     //set papersize
     zoom_paper();
     //set app and report globals
-    app_report.REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright;
+    app_report.REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright ?? '';
     for (const parameter of parameters.app) {
         if (parameter['APP_DEFAULT_STARTUP_PAGE'])
             APP_GLOBAL.app_default_startup_page = parseInt(parameter['APP_DEFAULT_STARTUP_PAGE']);

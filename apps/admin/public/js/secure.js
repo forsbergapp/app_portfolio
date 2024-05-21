@@ -1,8 +1,9 @@
 /**@type{import('../../../types.js').AppDocument} */
  const AppDocument = document;
  
-/**@ts-ignore */
-const common = await import('common');
+ const common_path ='common';
+ /**@type {import('../../../types.js').module_common} */
+const common = await import(common_path);
 
 /**
  * App globals
@@ -1190,10 +1191,10 @@ const update_record = async (table,
                              button,
                              parameters) => {
     if (admin_token_has_value()){
-        let path;
+        let path = '';
         let json_data;
-        let token_type;
-        let method;
+        let token_type = '';
+        let method = '';
         AppDocument.querySelector('#' + button).classList.add('css_spinner');
         switch (table){
             case 'user_account':{
@@ -1318,9 +1319,6 @@ const show_monitor = async (yearvalues) =>{
                                                                                                             FILE_INTERVAL:''},
                                                                                                 logscope_level_options:''};
 
-    //fetch geolocation once
-    if ((common.COMMON_GLOBAL.client_longitude && common.COMMON_GLOBAL.client_latitude)==false)
-        await common.get_gps_from_ip();
     let path;
     let token_type = '';
     if (common.COMMON_GLOBAL.system_admin!=null){
@@ -1492,8 +1490,8 @@ const show_list = async (list_div, query, sort, order_by) => {
         /**@type{string} */
         let logscope;
         let logs;
-        let token_type;
-        let path;
+        let token_type = '';
+        let path = '';
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL.system_admin!=null){
@@ -2362,8 +2360,7 @@ const show_existing_logfiles = () => {
         const function_event = event => {
                                 //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
                                 //logscope and loglevel
-                                let filename;
-                                filename = common.element_row(event.target).getAttribute('data-value');
+                                let filename = common.element_row(event.target).getAttribute('data-value') ?? '';
                                 const logscope = filename.substring(0,filename.indexOf('_'));
                                 filename = filename.substring(filename.indexOf('_')+1);
                                 const loglevel = filename.substring(0,filename.indexOf('_'));
@@ -3074,15 +3071,18 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     APP_GLOBAL.previous_row = common.element_row(event.target);
                     event.preventDefault();
                     //focus on first list_edit item in the row
-                    if (common.element_row(event.target).previousSibling && common.element_row(event.target).previousSibling.classList.contains('common_row'))
+                    if (common.element_row(event.target).previousSibling && common.element_row(event.target).previousSibling.classList.contains('common_row')){
                         common.element_row(event.target).previousSibling.querySelectorAll('.list_edit')[0].focus();
+                    }
+                        
                 }
                 if (event.code=='ArrowDown') {
                     APP_GLOBAL.previous_row = common.element_row(event.target);
                     event.preventDefault();
                     //focus on first list_edit item in the row
-                    if (common.element_row(event.target).nextSibling)
+                    if (common.element_row(event.target).nextSibling){
                         common.element_row(event.target).nextSibling.querySelectorAll('.list_edit')[0].focus();       
+                    }
                 }
             }
             break;
@@ -3103,8 +3103,8 @@ const init = () => {
 
     if (common.COMMON_GLOBAL.system_admin!=null){
         common.COMMON_GLOBAL.module_leaflet_style			            ='OpenStreetMap_Mapnik';
-        common.COMMON_GLOBAL.module_leaflet_jumpto		                ='0';
-        common.COMMON_GLOBAL.module_leaflet_popup_offset		        ='-25';
+        common.COMMON_GLOBAL.module_leaflet_jumpto		                =0;
+        common.COMMON_GLOBAL.module_leaflet_popup_offset		        =-25;
     }
     for (let i=1;i<=10;i++){
         AppDocument.querySelector(`#menu_${i}`).style.display='none';

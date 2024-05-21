@@ -1,8 +1,9 @@
 /**@type{import('../../../types.js').AppDocument}} */
 const AppDocument = document;
 
-/**@ts-ignore */
-const common = await import('common');
+const path_common ='common';
+/**@type {import('../../../types.js').module_common} */
+const common = await import(path_common);
 /**
  * App exception function
  * @returns {void}
@@ -12,12 +13,10 @@ const app_exception = () => {
 };
 /**
  * Init common
- * @param {{app_id:number,
- *          common_app_id:number,
- *          rest_resource_bff:string}} parameters 
+ * @param {string} parameters 
  * @returns {void}
  */
-const init = (parameters) => {
+const init = parameters => {
     AppDocument.title = '⚒';
     AppDocument.querySelector('#common_broadcast').addEventListener('click', (/**@type{import('../../../types.js').AppEvent}*/event) => {
         const event_target_id = common.element_id(event.target);

@@ -1,10 +1,17 @@
-/**@type{import('../../../types.js').AppDocument}} */
- const AppDocument = document;
+/**@type{import('../../../types.js').AppDocument} */
+const AppDocument = document;
 
-/**@ts-ignore */
-const common = await import('common');
-/**@ts-ignore */
-const app_secure = await import('app_secure');
+const path_common ='common';
+/**@type {import('../../../types.js').module_common} */
+const common = await import(path_common);
+const path_app_secure ='app_secure';
+/**
+ * @type {{ delete_globals:function, 
+ *          show_menu:function, 
+ *          app_events:function, 
+ *          init:function}} 
+ */
+const app_secure = await import(path_app_secure);
 
 /**
  * Admin log off
@@ -122,7 +129,7 @@ const app_event_click = event => {
                 /**Dialogue user start */
                 case 'common_user_start_identity_provider_login':{
                     const target_row = common.element_row(event.target);
-                    common.user_login(null, null, null, target_row.querySelector('.common_login_provider_id').innerHTML);
+                    common.user_login(null, null, null, parseInt(target_row.querySelector('.common_login_provider_id').innerHTML));
                     break;
                 }
                 case 'common_user_start_login_button':
@@ -210,7 +217,7 @@ const app_event_change = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'common_dialogue_user_menu_user_locale_select':{
-                    common.common_translate_ui((/**@type{import('../../../types.js').AppEvent}*/event.target.value), ()=>{});
+                    common.common_translate_ui((/**@type{import('../../../types.js').AppEvent}*/event.target.value));
                     break;
                 }
                 case 'common_dialogue_user_menu_user_arabic_script_select':

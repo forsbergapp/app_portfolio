@@ -10,8 +10,8 @@
  * @property {string}	calendartype
  * @property {string}	calendar_hijri_type
  * @property {string}	place
- * @property {number}	gps_lat
- * @property {number}	gps_long
+ * @property {string}	gps_lat
+ * @property {string}	gps_long
  * @property {string}	theme_day
  * @property {string}	theme_month
  * @property {string}	theme_year
@@ -27,11 +27,11 @@
  * @property {string}	header_txt1
  * @property {string}	header_txt2
  * @property {string}	header_txt3
- * @property {string}	header_align
+ * @property {string|null}	header_align
  * @property {string}	footer_txt1
  * @property {string}	footer_txt2
  * @property {string}	footer_txt3
- * @property {string}	footer_align
+ * @property {string|null}	footer_align
  * @property {string}	method
  * @property {string}	asr
  * @property {string}	highlat
@@ -181,8 +181,13 @@
  * 			}} type_REPORT_GLOBAL
  */
 
-/**@ts-ignore */
-const common = await import('common');
+const path_common ='common';
+/**@type {import('../../../types.js').module_common} */
+const common = await import(path_common);
+
+const path_prayTimes ='PrayTimes';
+/**@type {import('../../../types.js').module_prayTimes} */
+const {default:prayTimes} = await import(path_prayTimes);
 
 /**@type{type_REPORT_GLOBAL} */
 const REPORT_GLOBAL = {
@@ -566,7 +571,6 @@ const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri
 														calendar_hijri_type + 
 														REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 														REPORT_GLOBAL.regional_def_calendar_number_system, 
-														/**@ts-ignore */
 														options_calendartype);
 		return Number(ramadan_day) == 9;
 	}
@@ -575,12 +579,11 @@ const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri
 };
 /**
  * Set method praytimes
- * @param {*} prayTimes 
  * @param {string} settings_method
  * @param {string} settings_asr 
  * @param {string} settings_highlat 
  */
-const setMethod_praytimes = (prayTimes, settings_method, settings_asr, settings_highlat) => {
+const setMethod_praytimes = (settings_method, settings_asr, settings_highlat) => {
 	prayTimes.setMethod(settings_method);
 	//use methods without modifying original code
 	if (REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib && 
@@ -614,7 +617,7 @@ const setMethod_praytimes = (prayTimes, settings_method, settings_asr, settings_
 /**
  * Get style for header and footer
  * @param {string} img_src 
- * @param {string} align 
+ * @param {string|null} align 
  * @returns {string}
  */
 const getstyle = (img_src, align) => {
@@ -776,7 +779,7 @@ const localTime = (value, locale, format, hours=null, minutes=null) =>{
 	/* 	Intl.DateTimeFormat is about same speed than localtime.toLocaleTimeString
 		although result can vary within about halv second testing speed on year timetable
 
-		times from prayTimes.prototype.getTime are returned with 24 hours format and minutes in decimals using Float format
+		times from prayTimes.getTimes are returned with 24 hours format and minutes in decimals using Float format
 
 		using toLocaleString that is about 7 times faster than Intl.DateTimeFormat and toLocaleTimeString
 		however toLocaleTimeString is needed for format 12h since dayPeriod should be locale adjusted
@@ -946,17 +949,14 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										settings.calendar_hijri_type + 
 																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																										/**@ts-ignore */
 																										(settings.number_system=='hanidec'?'latn':settings.number_system), options_calendartype)}</div>`;
 				}
 				else{
-					/**@ts-ignore */
 					html += `<div class='timetable_month_data_col timetable_month_data_calendartype	'>${new Date(date[0],date[1]-1,date[2]).toLocaleDateString(settings.locale + 
 																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										REPORT_GLOBAL.regional_def_calendar_type_greg + 
 																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																										/**@ts-ignore */
 																										(settings.number_system=='hanidec'?'latn':settings.number_system), options_calendartype)}</div>`;							
 				}
 				break;
@@ -969,16 +969,13 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 					html += `<div class='timetable_month_data_col timetable_month_data_date'>${date_temp.toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
 																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
-																										/**@ts-ignore */
 																										settings.calendar_hijri_type, options_weekday)}</div>`;
 					}
 				else{
-					/**@ts-ignore */		
 					html += `<div class='timetable_month_data_col timetable_month_data_date'>${new Date(date[0],date[1]-1,date[2]).toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
 																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										REPORT_GLOBAL.regional_def_calendar_type_greg, 
-																										/**@ts-ignore */
 																										options_weekday)}</div>`;
 				}
 				break;
@@ -1059,13 +1056,12 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 };
 /**
  * Timetable month
- * @param {*} prayTimes 
  * @param {type_settings_report} settings 
  * @param {string|null} item_id
  * @param {string} year_class 
  * @returns {string}
  */
-const displayMonth = (prayTimes, settings, item_id, year_class='') => {
+const displayMonth = (settings, item_id, year_class='') => {
 	const timezone_offset = common.getTimezoneOffset(settings.timezone);
 	if (settings.calendartype=='GREGORIAN'){
 		//get previous or next Gregorian month using current Gregorian month
@@ -1122,7 +1118,6 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 										(settings.number_system=='hanidec'?'latn':settings.number_system), 
-										/**@ts-ignore */
 										options).toLocaleUpperCase(),
 					date:			new Date(year_greogrian, month_gregorian, 1),
 					endDate: 		new Date(year_greogrian, month_gregorian+ 1, 1),
@@ -1146,7 +1141,6 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 										settings.calendar_hijri_type + 
 										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 										(settings.number_system=='hanidec'?'latn':settings.number_system),
-										/**@ts-ignore */
 										options).toLocaleUpperCase(),
 					date:			new Date(dateGregorian[0], dateGregorian[1]-1, dateGregorian[2]),
 					endDate:		new Date(endDateGregorian[0], endDateGregorian[1]-1, endDateGregorian[2]),
@@ -1159,7 +1153,7 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 
 	// get start date and end date for both gregorian and hijri
 	const timetable_data = ()=>{
-		setMethod_praytimes(prayTimes, settings.method, settings.asr, settings.highlat);
+		setMethod_praytimes(settings.method, settings.asr, settings.highlat);
 
 		let month_html='';
 		//DATA
@@ -1326,13 +1320,12 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 };
 /**
  * Timetable day
- * @param {*} prayTimes 
  * @param {type_settings_report} settings 
- * @param {string} item_id
+ * @param {string|null} item_id
  * @param {type_day_user_account_app_data_posts[]} user_settings 
  * @returns {string}
  */
-const displayDay = (prayTimes, settings, item_id, user_settings) => {
+const displayDay = (settings, item_id, user_settings) => {
 	let times; 
 	const options = { timeZone: settings.timezone, 
 					weekday: 'long', 
@@ -1430,8 +1423,7 @@ const displayDay = (prayTimes, settings, item_id, user_settings) => {
 
 		let html = '';
 		for (const user_setting of user_settings){	
-			setMethod_praytimes(prayTimes, 
-								user_setting.prayer_method, 
+			setMethod_praytimes(user_setting.prayer_method, 
 								user_setting.prayer_asr_method, 
 								user_setting.prayer_high_latitude_adjustment);
 			
@@ -1490,12 +1482,11 @@ const displayDay = (prayTimes, settings, item_id, user_settings) => {
 };
 /**
  * Timetable month
- * @param {*} prayTimes 
  * @param {type_settings_report} settings 
- * @param {string} item_id
+ * @param {string|null} item_id
  * @returns {string}
  */
-const displayYear = (prayTimes, settings, item_id) => {
+const displayYear = (settings, item_id) => {
 	const startmonth            = REPORT_GLOBAL.session_currentDate.getMonth();
 	const starthijrimonth       = REPORT_GLOBAL.session_currentHijriDate[0];
 	
@@ -1631,7 +1622,7 @@ const displayYear = (prayTimes, settings, item_id) => {
 			REPORT_GLOBAL.session_currentDate.setMonth(monthindex -1);
 		else
 			REPORT_GLOBAL.session_currentHijriDate[0] = monthindex;
-		months[monthindex-1] = displayMonth(prayTimes, settings, null, settings.timetable_year_month);		
+		months[monthindex-1] = displayMonth(settings, null, settings.timetable_year_month);		
 	}
 	return year_timetable();
 };
