@@ -1,8 +1,9 @@
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 
-/**@ts-ignore */
-const common = await import('common');
+const path_common ='common';
+/**@type {import('../../../types.js').module_common} */
+const common = await import(path_common);
 
 const APP_GLOBAL = {
                     'docs':[{'id':1,
@@ -82,10 +83,10 @@ const app_event_click = event => {
                 case 'doc_list':
                 case event.target.classList.contains('doc_list_item_image')?event_target_id:'':{
                     const target_row = common.element_row(event.target);
-                    if (target_row.querySelector('.doc_list_item_image').getAttribute('full_size'))
+                    if (target_row.querySelector('.doc_list_item_image')?.getAttribute('full_size'))
                         common.ComponentRender('common_window_info',
                         {   info:0,
-                            url:target_row.querySelector('.doc_list_item_image').getAttribute('full_size'),
+                            url:target_row.querySelector('.doc_list_item_image')?.getAttribute('full_size'),
                             content_type:null, 
                             iframe_content:null}, '/common/component/window_info.js');
                     break;

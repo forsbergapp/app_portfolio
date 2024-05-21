@@ -1,8 +1,9 @@
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 
-/**@ts-ignore */
-const common = await import('common');
+const path_common ='common';
+/**@type {import('../../../types.js').module_common} */
+const common = await import(path_common);
 
 const APP_GLOBAL = {
     'module_leaflet_map_container':''
@@ -188,8 +189,7 @@ const init_app = async () =>{
 };
 /**
  * Init common
- * @param {{app:*[],
- *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @param {string} parameters 
  * @returns {void}
  */
 const init = parameters => {

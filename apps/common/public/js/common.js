@@ -99,10 +99,11 @@ const COMMON_GLOBAL = {
 };
 Object.seal(COMMON_GLOBAL);
 
+/**@type{import('../../../types.js').type_ICONS} */
 const ICONS = {
-    'app_maintenance':          '⚒',
-    'app_alert':                '🚨',
-    'infinite':                 '∞',
+    app_maintenance:          '⚒',
+    app_alert:                '🚨',
+    infinite:                 '∞',
 };
 Object.seal(ICONS);
 
@@ -138,16 +139,12 @@ const LengthWithoutDiacrites = (str) =>{
  * @returns {number}
  */
 const getTimezoneOffset = (local_timezone) =>{
-    /**@ts-ignore */
     const utc = new Date(	new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'}),
-                            /**@ts-ignore */
                             new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'})-1,
                             new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'}),
                             new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false}),
                             new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})).valueOf();
-    /**@ts-ignore */
     const local = new Date(	new Date().toLocaleString('en', {timeZone: local_timezone, year:'numeric'}),
-                            /**@ts-ignore */
                             new Date().toLocaleString('en', {timeZone: local_timezone, month:'numeric'})-1,
                             new Date().toLocaleString('en', {timeZone: local_timezone, day:'numeric'}),
                             new Date().toLocaleString('en', {timeZone: local_timezone, hour:'numeric', hour12:false}),
@@ -193,11 +190,6 @@ const getGregorian = (HijriDate, adjustment) =>{
             new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getMonth() + 1,
             new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getDate()];
 };
-/**
- * Checks if online
- * @returns {boolean}
- */
-const checkconnected = () => navigator.onLine;
 
 let timer = 0;
 /**
@@ -327,7 +319,6 @@ const format_json_date = (db_date, short) => {
             Number(db_date.substring(14, 16)), //min
             Number(db_date.substring(17, 19)) //sec
         ));
-        /**@ts-ignore */
         const format_date = utc_date.toLocaleDateString(COMMON_GLOBAL.user_locale, options);
         return format_date;
     }
@@ -434,7 +425,7 @@ const inIframe = () => {
 /**
  * Show image
  * @param {HTMLImageElement} item_img 
- * @param {string} item_input 
+ * @param {string|null} item_input 
  * @param {number} image_width 
  * @param {number} image_height 
  * @returns {Promise.<null>}
@@ -636,7 +627,6 @@ const input_control = (dialogue, validate_items) =>{
     if (validate_items.password_new && validate_items.password_new.innerText.length > 0 && (validate_items.password_new.innerText != validate_items.password_new_confirm.innerText)){
         set_error(validate_items.password_new, validate_items.password_new_confirm);
     }
-    /**@ts-ignore */
     if (result==false){
         show_message('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
         return false;
@@ -793,7 +783,6 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
                 //props.style contains string, convert to object
                 let style_object = {};
                 for (const style of subelement.style){
-                    /**@ts-ignore */
                     style_object[style] = subelement.style[style];
                 }
                 props.style = {style:{...style_object}};
@@ -839,8 +828,9 @@ const ComponentRender = async (div,props, component_path) => {
         switch (COMMON_GLOBAL.app_framework){
             case 2:{
                 //Vue
-                /**@ts-ignore */
-                const Vue = await import('Vue');
+                const path_vue = 'Vue';
+                /**@type {import('../../../types.js').module_vue} */
+                const Vue = await import(path_vue);
                 //Use tempmount div to be able to return pure HTML
                 AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
                 Vue.createApp({
@@ -853,10 +843,12 @@ const ComponentRender = async (div,props, component_path) => {
             }
             case 3:{
                 //React
-                /**@ts-ignore */
-                const {React} = await import('React');
-                /**@ts-ignore */
-                const {ReactDOM} = await import('ReactDOM');
+                const path_react = 'React';
+                /**@type {import('../../../types.js').module_react} */
+                const React = await import(path_react).then(module=>module.React);
+                const path_reactDOM = 'ReactDOM';
+                /**@type {import('../../../types.js').module_reactDOM} */
+                const ReactDOM = await import(path_reactDOM).then(module=>module.ReactDOM);
                 
                 //convert HTML template to React component
                 const div_template = AppDocument.createElement('div');
@@ -1173,10 +1165,10 @@ const profile_stat = async (statchoice, app_rest_url = null, function_user_click
  * Profile detail
  * @param {number} detailchoice 
  * @param {boolean} fetch_detail 
- * @param {function} click_function 
+ * @param {function|null} click_function 
  * @returns {void}
  */
-const profile_detail = (detailchoice, fetch_detail, click_function) => {
+const profile_detail = (detailchoice, fetch_detail, click_function=null) => {
     let path;
     const profile_detail_list = AppDocument.querySelector('#common_profile_detail_list');
     profile_detail_list.innerHTML = '';
@@ -1965,7 +1957,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
 /**
  * User delete
  * @param {number|null} choice 
- * @param {function} function_delete_event 
+ * @param {function|null} function_delete_event 
  * @returns {Promise.<{deleted:number}|null>}
  */
 const user_delete = async (choice=null, function_delete_event ) => {
@@ -2213,8 +2205,9 @@ const user_preferences_set_default_globals = (preference) => {
  * @returns {Promise.<void>}
  */
 const create_qr = async (div, url) => {
-    /**@ts-ignore */
-    const {QRCode} = await import('easy.qrcode');
+    const path_easy_qrcode = 'easy.qrcode';
+    /**@type {import('../../../types.js').module_easy_qrcode} */
+    const {QRCode} = await import(path_easy_qrcode);
     AppDocument.querySelector('#' + div).innerHTML='';
     new QRCode(AppDocument.querySelector('#' + div), {
         text: url,
@@ -2233,11 +2226,10 @@ const create_qr = async (div, url) => {
  * @param {string} longitude 
  * @param {string} latitude 
  * @param {function|null} doubleclick_event 
- * @param {function} search_event_function 
+ * @param {function|null} search_event_function 
  * @returns {Promise.<void>}
  */
 const map_init = async (mount_div, longitude, latitude, doubleclick_event, search_event_function) => {
-    /**@ts-ignore */
     COMMON_GLOBAL.module_leaflet_session_map = null;
     
     /** @type {import('../../../types.js').type_map_layer[]}*/
@@ -2421,7 +2413,6 @@ const map_control_toggle_expand = async item =>{
  */
 const map_resize = async () => {
     //fixes not rendering correct showing map div
-    /**@ts-ignore */
     COMMON_GLOBAL.module_leaflet_session_map.invalidateSize();
 };
 /**
@@ -2431,7 +2422,6 @@ const map_resize = async () => {
 const map_line_removeall = () => {
     if(COMMON_GLOBAL.module_leaflet_session_map_layer)
         for (let i=0;i<COMMON_GLOBAL.module_leaflet_session_map_layer.length;i++){
-            /**@ts-ignore */
             COMMON_GLOBAL.module_leaflet_session_map.removeLayer(COMMON_GLOBAL.module_leaflet_session_map_layer[i]);
         }
     COMMON_GLOBAL.module_leaflet_session_map_layer=[];
@@ -2473,7 +2463,6 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
     const layer = COMMON_GLOBAL.module_leaflet.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
     if(!COMMON_GLOBAL.module_leaflet_session_map_layer)
         COMMON_GLOBAL.module_leaflet_session_map_layer=[];
-    /**@ts-ignore */
     COMMON_GLOBAL.module_leaflet_session_map_layer.push(layer);
 };
 /**
@@ -2484,7 +2473,6 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
 const map_setstyle = mapstyle => {
     for (const module_leaflet_map_style of COMMON_GLOBAL.module_leaflet_map_styles){
         if (COMMON_GLOBAL.module_leaflet_session_map && module_leaflet_map_style.session_map_layer){
-            /**@ts-ignore */
             COMMON_GLOBAL.module_leaflet_session_map.removeLayer(module_leaflet_map_style.session_map_layer);
         }
     }
@@ -2514,8 +2502,9 @@ const map_setstyle = mapstyle => {
  * @returns {Promise.<string|null>}
  */
 const map_update = async (parameters) => {
-    /**@ts-ignore */
-    const {getTimezone} = await import('regional');
+    const path_regional ='regional';
+    /**@type {import('../../../types.js').module_regional} */
+    const {getTimezone} = await import(path_regional);
     return new Promise((resolve)=> {
         /**
          * Map update GPS
@@ -2528,17 +2517,14 @@ const map_update = async (parameters) => {
             switch (to_method){
                 case 0:{
                     if (zoomvalue == null){
-                        /**@ts-ignore */
                         COMMON_GLOBAL.module_leaflet_session_map.setView(new COMMON_GLOBAL.module_leaflet.LatLng(latitude, longitude));
                     }
                     else{
-                        /**@ts-ignore */
                         COMMON_GLOBAL.module_leaflet_session_map.setView(new COMMON_GLOBAL.module_leaflet.LatLng(latitude, longitude), zoomvalue);
                     }
                     break;
                 }
                 case 1:{
-                    /**@ts-ignore */
                     COMMON_GLOBAL.module_leaflet_session_map.flyTo([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
                     break;
                 }
@@ -2758,7 +2744,7 @@ const show_broadcast = (broadcast_message) => {
 };
 /**
  * Show maintenance
- * @param {string} message 
+ * @param {string|null} message 
  * @param {number|null} init 
  * @returns {void}
  */
@@ -2770,7 +2756,7 @@ const show_maintenance = (message, init=null) => {
                         '/maintenance/component/dialogue_maintenance.js');
     }
     else
-        AppDocument.querySelector('#common_maintenance_footer').innerHTML = message;
+        AppDocument.querySelector('#common_maintenance_footer').innerHTML = message ?? '';
 };
 /**
  * Socket reconnect
@@ -3403,11 +3389,9 @@ const common_event = async (event_type,event) =>{
                         }    
                         default:{
                             if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in')){
-                                /**@ts-ignore */
                                 COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() + 1);
                             }
                             if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out')){
-                                /**@ts-ignore */
                                 COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() - 1);
                             }
                             break;
@@ -3687,15 +3671,12 @@ const set_app_parameters = (common_parameters) => {
 };
 const framework_clean = () =>{
     //remove Reacts objects
-    /**@ts-ignore */
     delete window.ReactDOM;
-    /**@ts-ignore */
     delete window.React;
 
     //remove react key
     for (const key of Object.keys(AppDocument)){
         if (key.startsWith('_react')){
-            /**@ts-ignore */
             delete AppDocument[key];
         }
     }
@@ -3707,11 +3688,8 @@ const framework_clean = () =>{
     }
     //remove Vue objects
     COMMON_GLOBAL.app_eventListeners.VUE = []
-    /**@ts-ignore */
     delete window.__VUE_DEVTOOLS_HOOK_REPLAY__;
-    /**@ts-ignore */
     delete window.__VUE_HMR_RUNTIME__;
-    /**@ts-ignore */
     delete window.__VUE__;
     const app_root_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
     if (AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`))
@@ -3725,13 +3703,13 @@ const framework_clean = () =>{
 }
 /**
  * Sets framework and uses given list of event functions
- * @param {number} framework
- * @param {{Click:function,
- *          Change:function,
- *          KeyDown:function,
- *          KeyUp:function,
- *          Focus:function,
- *          Input:function}} events 
+ * @param {number|null} framework
+ * @param {{Click:function|null,
+ *          Change:function|null,
+ *          KeyDown:function|null,
+ *          KeyUp:function|null,
+ *          Focus:function|null,
+ *          Input:function|null}} events 
  * @returns {Promise.<void>}
  */
 const framework_set = async (framework, events) => {
@@ -3774,8 +3752,9 @@ const framework_set = async (framework, events) => {
     switch (framework ?? COMMON_GLOBAL.app_framework){
         case 2:{
             //Vue
-            /**@ts-ignore */
-            const Vue = await import('Vue');
+            const path_vue = 'Vue';
+            /**@type {import('../../../types.js').module_vue} */
+            const Vue = await import(path_vue);
             Vue.createApp({
                 data() {
                         return {};
@@ -3792,22 +3771,22 @@ const framework_set = async (framework, events) => {
                                     </div>`,
                         methods:{
                             AppEventChange: (/**@type{import('../../../types.js').AppEvent}*/event) => {
-                                events.Change(event);
+                                events.Change?events.Change(event):null;
                             },
                             AppEventClick: (/**@type{import('../../../types.js').AppEvent}*/event) => {
-                                events.Click(event);
+                                events.Click?events.Click(event):null;
                             },
                             AppEventInput: (/**@type{import('../../../types.js').AppEvent}*/event) => {
-                                events.Input(event);
+                                events.Input?events.Input(event):null;
                             },
                             AppEventFocus: (/**@type{import('../../../types.js').AppEvent}*/event) => {
-                                events.Focus(event);
+                                events.Focus?(event):events.Focus;
                             },
                             AppEventKeyDown: (/**@type{import('../../../types.js').AppEvent}*/event) => {
-                                events.KeyDown(event);
+                                events.KeyDown?events.KeyDown(event):null;
                             },
                             AppEventKeyUp: (/**@type{import('../../../types.js').AppEvent}*/event) => {
-                                events.KeyUp(event);
+                                events.KeyUp?events.KeyUp(event):null;
                             }
                         }
                     }).mount(`#${COMMON_GLOBAL.app_root}`);
@@ -3815,10 +3794,12 @@ const framework_set = async (framework, events) => {
         }
         case 3:{
             //React
-            /**@ts-ignore */
-            const {React} = await import('React');
-            /**@ts-ignore */
-            const {ReactDOM} = await import('ReactDOM');
+            const path_react = 'React';
+            /**@type {import('../../../types.js').module_react} */
+            const React = await import(path_react).then(module=>module.React);
+            const path_reactDOM = 'ReactDOM';
+            /**@type {import('../../../types.js').module_reactDOM} */
+            const ReactDOM = await import(path_reactDOM).then(module=>module.ReactDOM);
 
             const App = () => {
                 //JSX syntax
@@ -3895,15 +3876,12 @@ const custom_framework = () => {
      * @returns {string}
      */
     const module = (stack) => {
-        /**@ts-ignore */
         if (stack.toLowerCase().indexOf('leaflet')>-1)
             return 'LEAFLET';
         else {
-            /**@ts-ignore */
             if (stack.toLowerCase().indexOf('react')>-1)
                 return 'REACT';
             else {
-                /**@ts-ignore */
                 if (stack.toLowerCase().indexOf('vue')>-1)
                     return 'VUE';
                 else
@@ -3917,9 +3895,7 @@ const custom_framework = () => {
      * @returns 
      */
     function custom_event (...eventParameters) {   
-        /**@ts-ignore */
         COMMON_GLOBAL.app_eventListeners[module(Error().stack)].push([this, eventParameters[0], eventParameters[1], eventParameters[2]]);
-        /**@ts-ignore */
         return COMMON_GLOBAL.app_eventListeners.original.apply(this, arguments);
     };
 
@@ -3933,7 +3909,6 @@ const custom_framework = () => {
      * @param  {...any} parameters 
      */
     function console_warn (...parameters) {
-            /**@ts-ignore */
             COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.warn.apply(this, arguments):null;
     };
     /**
@@ -3941,7 +3916,6 @@ const custom_framework = () => {
      * @param  {...any} parameters 
      */
      function console_error (...parameters) {
-        /**@ts-ignore */
         COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.error.apply(this, arguments):null;
     };
     /**
@@ -3949,7 +3923,6 @@ const custom_framework = () => {
      * @param  {...any} parameters 
      */
      function console_info (...parameters) {
-        /**@ts-ignore */
         COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.info.apply(this, arguments):null;
     };
     //Vue uses console.warn, show or hide from any framework 
