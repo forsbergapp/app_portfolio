@@ -1,4 +1,4 @@
-/**@type{import('../../../types.js').AppDocument}} */
+/**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 const template =`   <div id='common_dialogue_maintenance_content' class='common_dialogue_content'>
                         <div id='common_maintenance_logo'></div>

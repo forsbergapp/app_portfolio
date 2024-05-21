@@ -6,7 +6,7 @@
  *               "developer_text":string|null,
  *               "more_info":string|null}}} error_message_ISO20022
  */
-/**@type{import('../../../types.js').AppDocument}} */
+/**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 /**
  * 

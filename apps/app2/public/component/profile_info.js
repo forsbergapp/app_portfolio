@@ -1,4 +1,4 @@
-/**@type{import('../../../types.js').AppDocument}} */
+/**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 const template =`   <div id='profile_info_user_settings'>
                         <div id='profile_main_btn_user_settings' class='common_link common_icon'></div>

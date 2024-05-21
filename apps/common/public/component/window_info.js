@@ -1,4 +1,4 @@
-/**@type{import('../../../types.js').AppDocument}} */
+/**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 const template =`   <div id='common_window_info_btn_close' class='common_toolbar_button common_icon'></div>
                     <div id='common_window_info_info'><INFO/></div>
