@@ -1,4 +1,4 @@
-/**@type{import('../../../types.js').AppDocument}} */
+/**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 const template =`   <div id='profile_info_apps'></div>`;
 /**
