@@ -1,8 +1,6 @@
 /** @module microservice/batch */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../types.js';
-
+/**@type{import('../../microservice/microservice.service.js')} */
 const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 /**@type{{  jobid:number,
             log_id: number, 
@@ -96,7 +94,7 @@ const get_batchlog_filename = () => {
  *          start:string|null,
  *          end:string|null,
  *          status:'PENDING'|'RUNNING'|'CANCELED'|'FAILED'|'FINISHED',
- *          result:string|Types.error|null
+ *          result:string|import('../../types.js').error|null
  *          }} joblog
  * @returns {Promise.<{log_id:number, filename:string}>}
  */

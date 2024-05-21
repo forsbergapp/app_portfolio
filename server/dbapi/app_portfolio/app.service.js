@@ -1,18 +1,18 @@
 /** @module server/dbapi/app_portfolio/app */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../config.service.js')} */
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../../dbapi/common/common.service.js')} */
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
  * @param {number} app_id 
  * @param {number} id 
  * @param {string} lang_code 
- * @returns {Promise.<Types.db_result_app_getApp[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_getApp[]>}
  */
 const getApp = async (app_id, id,lang_code) => {
 		const sql = `SELECT	id "id",
@@ -60,7 +60,7 @@ const getApp = async (app_id, id,lang_code) => {
  * 
  * @param {number} app_id 
  * @param {string} lang_code 
- * @returns {Promise.<Types.db_result_app_getAppsAdmin[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_getAppsAdmin[]>}
  */
 const getAppsAdmin = async (app_id, lang_code) => {
 		const sql = `SELECT	a.id "id",
@@ -89,7 +89,7 @@ const getAppsAdmin = async (app_id, lang_code) => {
 /**
  * 
  * @param {number} app_id 
- * @returns {Promise.<Types.db_result_app_getAppsAdminId[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_getAppsAdminId[]>}
  */
 const getAppsAdminId = async (app_id) => {
 	const sql = `SELECT a.id "id"
@@ -102,8 +102,8 @@ const getAppsAdminId = async (app_id) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {Types.db_parameter_app_updateAppAdmin} data
- * @returns {Promise.<Types.db_result_app_updateAppAdmin[]>}
+ * @param {import('../../../types.js').db_parameter_app_updateAppAdmin} data
+ * @returns {Promise.<import('../../../types.js').db_result_app_updateAppAdmin[]>}
  */
 const updateAppAdmin = async (app_id, id, data) => {
 		const sql = `UPDATE ${db_schema()}.app

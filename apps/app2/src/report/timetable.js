@@ -1,10 +1,10 @@
 /** @module apps/app2 */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../../types.js';
-
+/**@type{import('../../../../apps/apps.service')} */
 const {render_app_with_data} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+/**@type{import('../../../../server/server.service')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../../../server/dbapi/app_portfolio/user_account_app_data_post_view.service.js')} */
 const { insertUserPostView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post_view.service.js`);
 const {default: QRCode} = await import('easyqrcodejs-nodejs');
 /**
@@ -674,7 +674,7 @@ const set_prayer_method = async(app_id) => {
 					midnight: (midnight_data==null || midnight_data=='')?{}:{midnight: midnight_data}};
 		};
         getSettingDisplayData(app_id, app_id, 'METHOD')
-		.then((/**@type{Types.db_result_app_setting_getSettingDisplayData[]}*/result_settings)=>{
+		.then((/**@type{import('../../../../types.js').db_result_app_setting_getSettingDisplayData[]}*/result_settings)=>{
 			for (const setting of result_settings){
 				const prayer_value = set_prayer_value(setting.data2, setting.data3,setting.data4,setting.data5);
 				//ES6 object spread 
@@ -690,7 +690,7 @@ const set_prayer_method = async(app_id) => {
 			}
 			resolve(null);
 		})
-		.catch((/**@type{Types.error}*/error)=>{
+		.catch((/**@type{import('../../../../types.js').error}*/error)=>{
 			reject(error);
 		});
 	});
@@ -1223,7 +1223,7 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 const timetable_user_account_app_data_post_get = async (app_id, user_account_app_data_post_id) => {
     const { getUserPost} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post.service.js`);
 	return getUserPost(app_id, user_account_app_data_post_id)
-	.then((/**@type{Types.db_result_user_account_app_data_post_getUserPost[]}*/result_user_account_app_data_post)=>{
+	.then((/**@type{import('../../../../types.js').db_result_user_account_app_data_post_getUserPost[]}*/result_user_account_app_data_post)=>{
 		const user_account_app_data_post = JSON.parse(result_user_account_app_data_post[0].json_data);
 		return  {  	locale              	: user_account_app_data_post.regional_language_locale,  
 					timezone            	: user_account_app_data_post.regional_timezone,
@@ -1283,7 +1283,7 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
 					reporttype_year_month  	: 'MONTH'
 				};
 	})
-	.catch((/**@type{Types.error}*/error)=>{
+	.catch((/**@type{import('../../../../types.js').error}*/error)=>{
 		throw error;
 	});
 };
@@ -1303,7 +1303,7 @@ const timetable_translate_settings = async (app_id, locale, locale_second) => {
 	 */
 	const fetch_translation = async (locale, first) => {
 		//show translation using first or second language
-		/**@type{Types.db_result_app_object_getObjects[]} */
+		/**@type{import('../../../../types.js').db_result_app_object_getObjects[]} */
 		const result_app_object_items = await getObjects(app_id, locale, 'REPORT', null);	
 		for (const app_object_item of result_app_object_items){
 			if (first == true)
@@ -1351,7 +1351,7 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
 
     const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post.service.js`);
     return getUserPostsByUserId(app_id, user_account_id)
-	.then((/**@type{Types.db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_user_account_app_data_posts)=>{
+	.then((/**@type{import('../../../../types.js').db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_user_account_app_data_posts)=>{
 		for (const user_account_app_data_post of result_user_account_app_data_posts) {
 			//use settings that can be used on a day timetable showing different user settings
 			//would be difficult to consider all settings on same page using
@@ -1377,7 +1377,7 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
 		}
 		return user_account_app_data_posts;
 	})
-	.catch((/**@type{Types.error}*/error)=>{
+	.catch((/**@type{import('../../../../types.js').error}*/error)=>{
 		throw error;
 	});
 };
@@ -1943,7 +1943,7 @@ const getQRCode = async (url) =>{
 };
 /**
  * Create timetable day, month or year
- * @param {Types.report_create_parameters} timetable_parameters
+ * @param {import('../../../../types.js').report_create_parameters} timetable_parameters
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
@@ -2066,7 +2066,7 @@ const timetable = async (timetable_parameters) => {
 			}) 
 			.catch(()=>resolve(''));
 		})
-		.catch((/**@type{Types.error}*/error)=>{
+		.catch((/**@type{import('../../../../types.js').error}*/error)=>{
 			resolve(error);
 		});
 	});

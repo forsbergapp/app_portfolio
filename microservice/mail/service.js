@@ -1,8 +1,6 @@
 /** @module microservice/mail */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../types.js';
-
+/**@type{import('../../microservice/microservice.service.js')} */
 const { getNumberValue, ConfigServices } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 
 const nodemailer = await import('nodemailer');
@@ -22,7 +20,7 @@ const nodemailer = await import('nodemailer');
  * @returns {Promise.<object>}
  */
 const sendEmail = async (data) => {
-    /**@type{Types.microservice_config_service_record}*/
+    /**@type{import('../../types.js').microservice_config_service_record}*/
 
     if (getNumberValue(ConfigServices('MAIL').CONFIG.filter((/**@type{*}*/row)=>'MAIL_TEST' in row)[0].MAIL_TEST) == 1)
         return {test: 'ok'};

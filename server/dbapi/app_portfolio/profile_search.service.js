@@ -1,15 +1,13 @@
 /** @module server/dbapi/app_portfolio/profile_search */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../dbapi/common/common.service.js')} */
 const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
  * @param {number} app_id 
- * @param {Types.db_parameter_profile_search_insertProfileSearch} data 
- * @returns {Promise.<Types.db_result_profile_search_insertProfileSearch[]>}
+ * @param {import('../../../types.js').db_parameter_profile_search_insertProfileSearch} data 
+ * @returns {Promise.<import('../../../types.js').db_result_profile_search_insertProfileSearch[]>}
  */
 const insertProfileSearch = async (app_id, data) => {
 		const sql = `INSERT INTO ${db_schema()}.profile_search(

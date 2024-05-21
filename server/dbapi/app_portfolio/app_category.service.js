@@ -1,7 +1,7 @@
 /** @module server/dbapi/app_portfolio/app_category */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
+
+/**@type{import('../common/common.service.js')} */
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
@@ -9,7 +9,7 @@ const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()
  * @param {number} app_id 
  * @param {number} id 
  * @param {string} lang_code 
- * @returns {Promise.<Types.db_result_app_category_getAppCategoryAdmin[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_category_getAppCategoryAdmin[]>}
  */
 const getAppCategoryAdmin = async (app_id, id, lang_code) => {
 		const sql = `SELECT ac.id "id",

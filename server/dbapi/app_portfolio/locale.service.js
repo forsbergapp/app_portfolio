@@ -1,15 +1,13 @@
 /** @module server/dbapi/app_portfolio/language/locale */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../../../types.js';
-
+/**@type{import('../../dbapi/common/common.service.js')} */
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
  * @param {number} app_id 
  * @param {string} lang_code 
- * @returns {Promise.<Types.db_result_locale_getLocales[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_locale_getLocales[]>}
  */
 const getLocales = async (app_id, lang_code) => {
     const sql = `SELECT CONCAT(l2.lang_code, CASE 

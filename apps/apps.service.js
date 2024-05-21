@@ -1,15 +1,17 @@
 /** @module apps */
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
 
-
+/**@type{import('../server/config.service.js')} */
 const {CheckFirstTime, ConfigGet, ConfigGetAppHost, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
-const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('../server/log.service.js')} */
 const { LogAppI, LogAppE } = await import(`file://${process.cwd()}/server/log.service.js`);
-const fs = await import('node:fs');
-
+/**@type{import('../server/server.service.js')} */
 const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../server/dbapi/app_portfolio/database.service.js')} */
 const {InstalledCheck} = await await import(`file://${process.cwd()}/server/dbapi/app_portfolio/database.service.js`);
+/**@type{import('../server/db/file.service.js')} */
+const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+
+const fs = await import('node:fs');
 /**
  * Checks if ok to start app
  * @param {number|null} app_id
@@ -69,8 +71,8 @@ const client_locale = (accept_language) =>{
  * @param {string|null} component
  */ 
 const render_files = (app_id, type, component=null) => {
-    /**@type{Types.config_apps_render_files[]} */
-    const files = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]==type && (filetype[1] == component || component == null));
+    /**@type{import('../types.js').config_apps_render_files[]} */
+    const files = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{import('../types.js').config_apps_render_files}*/filetype)=>filetype[0]==type && (filetype[1] == component || component == null));
     let app ='';
     files.forEach(file => {
         if (app=='')
@@ -91,7 +93,7 @@ const render_report_html = (app_id, reportname) => {
     const report = render_files(app_id, 'REPORT', reportname);
     //list config files and return only tag and file content
     /**@type {[string,string][]} */
-    const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='REPORT_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];});
+    const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{import('../types.js').config_apps_render_files}*/filetype)=>filetype[0]=='REPORT_COMMON').map((/**@type{import('../types.js').config_apps_render_files}*/row)=> {return [row[2],row[4]];});
     const report_with_common = render_app_with_data(report, common_files);
     /** @type {[string, string][]} */
     const render_variables = [];
@@ -128,7 +130,7 @@ const render_app_with_data = (app, data)=>{
  * @returns {Promise<string>}
  */
 const render_app_html = async (app_id, locale) =>{
-    /**@type{Types.config_apps_render_config} */
+    /**@type{import('../types.js').config_apps_render_config} */
     const app_config = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG');
     /** @type {[string, string][]} */
     const render_variables = [];
@@ -136,7 +138,7 @@ const render_app_html = async (app_id, locale) =>{
     return new Promise((resolve)=>{
         //list config files and return only tag and file content
         /**@type {[string, string][]} */
-        const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];} );        
+        const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{import('../types.js').config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{import('../types.js').config_apps_render_files}*/row)=> {return [row[2],row[4]];} );        
         
         const app = render_app_with_data(render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'APP_COMMON'), common_files);
         
@@ -181,7 +183,7 @@ const render_app_html = async (app_id, locale) =>{
  * Gets module with application name, app service parameters
  * 
  * @async
- * @param {Types.app_info} app_info - app info configuration
+ * @param {import('../types.js').app_info} app_info - app info configuration
  * @returns {Promise.<string|null>}
  */
 const get_module_with_initBFF = async (app_info) => {
@@ -196,7 +198,7 @@ const get_module_with_initBFF = async (app_info) => {
      */
     const return_with_parameters = (module, app_parameters, first_time)=>{
         if (module){
-            /**@type{Types.app_service_parameters} */
+            /**@type{import('../types.js').app_service_parameters} */
             const app_service_parameters = {   
                 app_id: app_info.app_id,
                 app_logo:ConfigGetApp(app_info.app_id, app_info.app_id, 'LOGO'),
@@ -255,8 +257,8 @@ const get_module_with_initBFF = async (app_info) => {
  * Creates email
  * @async
  * @param {number} app_id                       - Application id
- * @param {Types.email_param_data} data         - Email param data
- * @returns {Promise<Types.email_return_data>}  - Email return data
+ * @param {import('../types.js').email_param_data} data         - Email param data
+ * @returns {Promise<import('../types.js').email_return_data>}  - Email return data
  */
 const createMail = async (app_id, data) =>{
     return new Promise((resolve, reject) => {
@@ -328,7 +330,6 @@ const getInfo = async (app_id, info) => {
                       </html>`;
     /** @type {[string, string][]} */
     const render_variables = [];
-    const fs = await import('node:fs');
     if (info=='privacy_policy'||info=='disclaimer'||info=='terms'||info=='about' )
         if (info=='about'){
             //returns about page or empty if the app has none
@@ -363,12 +364,12 @@ const getInfo = async (app_id, info) => {
                 resolve(app);
                 
             })
-            .catch((/**@type{Types.error}*/err)=>reject(err));
+            .catch((/**@type{import('../types.js').error}*/err)=>reject(err));
         };
         if (param!=null && ConfigGetApp(app_id, app_id, 'SHOWPARAM') == 1){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getProfileUser}) => {
                 getProfileUser(app_id, null, param, null, null)
-                .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result)=>{
+                .then((/**@type{import('../types.js').db_result_user_account_getProfileUser[]}*/result)=>{
                     if (result[0])
                         main(app_id);
                     else{
@@ -376,7 +377,7 @@ const getInfo = async (app_id, info) => {
                         resolve (null);
                     }
                 })
-                .catch((/**@type{Types.error}*/error)=>{
+                .catch((/**@type{import('../types.js').error}*/error)=>{
                     reject(error);
                 });
             });
@@ -397,6 +398,7 @@ const getInfo = async (app_id, info) => {
  */
 const getAppBFF = async (app_id, app_parameters) =>{
     //Data token
+    /**@type{import('../server/iam.service.js')} */
     const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
     const datatoken = await AuthorizeTokenApp(app_id, app_parameters.ip);
     const result_geodata = await getAppGeodata(app_id, 'SERVER_APP', app_parameters.ip, app_parameters.user_agent, app_parameters.accept_language);
@@ -438,6 +440,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
             return null;
         app_module_type = 'APP';
         //get translation data
+        /**@type{import('../server/dbapi/app_portfolio/app_object.service.js')} */
         const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
         const result_objects = await getObjects(app_id, client_locale(app_parameters.accept_language), 'APP', null);
         for (const row of result_objects){
@@ -456,6 +459,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
                                                             module:             app});
     //if app admin then log, system does not log in database
     if (await app_start() && getNumberValue(ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LOG' in parameter)[0].APP_LOG) == 1){
+        /**@type{import('../server/dbapi/app_portfolio/app_log.service.js')} */
         const {createLog} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`);
         await createLog(app_id,
                         app_id,
@@ -490,8 +494,11 @@ const getAppBFF = async (app_id, app_parameters) =>{
  * @returns {Promise.<{type: string, report:string}>}
  */
 const getReport = async (app_id, ip, user_agent, accept_language, reportid, messagequeue) => {
+    /**@type{import('../apps/app2/src/report/index.js')} */
     const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
+    /**@type{import('../microservice/microservice.service.js')} */
     const { MessageQueue } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+    /**@type{import('../server/iam.service.js')} */
     const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
     await AuthorizeTokenApp(app_id, ip);
     const result_geodata = await getAppGeodata(app_id, 'SERVER_REPORT', ip, user_agent, accept_language);
@@ -504,7 +511,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
             query_parameters += ',';
     });
     query_parameters += '}';
-    /** @type {Types.report_query_parameters}*/
+    /** @type {import('../types.js')report_query_parameters}*/
     const query_parameters_obj = JSON.parse(query_parameters);
     const ps = query_parameters_obj.ps; //papersize     A4/Letter
     const hf = (query_parameters_obj.hf==1); //header/footer 1/0    1= true
@@ -523,7 +530,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
         
         return {type:'PDF',
                 report:await MessageQueue('PDF', 'PUBLISH', {url:url, ps:ps, hf:hf}, null)
-                .catch((/**@type{Types.error}*/error)=>{
+                .catch((/**@type{import('../types.js').error}*/error)=>{
                         throw error;
                 })};
     }
@@ -535,11 +542,12 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
             const hf = getNumberValue(query_parameters_obj.hf); //header/footer 1/0    1= true
             delete query_parameters_obj.ps;
             delete query_parameters_obj.hf;
+            /**@type{import('../server/bff.service.js')} */
             const { BFF_server } = await import(`file://${process.cwd()}/server/bff.service.js`);
             const url = host + 
                         '/app-reports?reportid=' +
                         Buffer.from(Object.entries(query_parameters_obj).reduce((/**@type{*}*/total, current)=>total += (total==''?'':'&') + current[0] + '=' + current[1],''),'utf-8').toString('base64');
-            /**@type{Types.bff_parameters}*/
+            /**@type{import('../types.js').bff_parameters}*/
             const parameters = {endpoint:'SERVER_REPORT',
                                 host:null,
                                 url:'/pdf',
@@ -553,14 +561,14 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
                                 user_agent:user_agent, 
                                 accept_language:accept_language,
                                 res:null};
-            const pdf = await BFF_server(parameters).catch((/**@type{Types.error}*/error)=>error);
+            const pdf = await BFF_server(parameters).catch((/**@type{import('../types.js').error}*/error)=>error);
             return {    type:'PDF',
                         report:pdf
                     };
         }
         else{
             
-            /**@type{Types.report_create_parameters} */
+            /**@type{import('../types.js').report_create_parameters} */
             const data = {  app_id:         app_id,
                             reportid:       reportid,
                             reportname:     query_parameters_obj.module,
@@ -569,7 +577,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
                             accept_language:accept_language,
                             latitude:       result_geodata.latitude,
                             longitude:      result_geodata.longitude,
-                            report:         null};
+                            report:         ''};
             const report_html = await createReport(app_id, data);
             return {    type:'HTML',
                         report:report_html
@@ -579,16 +587,17 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
 /**
  * 
  * @param {number} app_id 
- * @param {Types.endpoint_type} endpoint
+ * @param {import('../types.js').endpoint_type} endpoint
  * @param {string} ip 
  * @param {string} user_agent 
  * @param {string} accept_language
  * @returns 
  */
 const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) =>{
+    /**@type{import('../server/bff.service.js')} */
     const { BFF_server } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
-    /**@type{Types.bff_parameters}*/
+    /**@type{import('../types.js').bff_parameters}*/
     const parameters = {endpoint:endpoint,
                         host:null,
                         url:'/geolocation/ip',
@@ -604,7 +613,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                         res:null};
     //ignore error in this case and fetch randcom geolocation using WORLDCITIES service instead if GEOLOCATION is not available
     const result_gps = await BFF_server(parameters)
-    .catch((/**@type{Types.error}*/error)=>null);
+    .catch((/**@type{import('../types.js').error}*/error)=>null);
     const result_geodata = {};
     if (result_gps){
         result_geodata.latitude =   JSON.parse(result_gps).geoplugin_latitude;
@@ -615,7 +624,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
         result_geodata.timezone =   JSON.parse(result_gps).geoplugin_timezone;
     }
     else{
-        /**@type{Types.bff_parameters}*/
+        /**@type{import('../types.js').bff_parameters}*/
         const parameters = {endpoint:endpoint,
                             host:null,
                             url:'/worldcities/city-random',
@@ -629,7 +638,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                             user_agent:user_agent, 
                             accept_language:accept_language,
                             res:null};
-        const result_city = await BFF_server(parameters).catch((/**@type{Types.error}*/error)=>{throw error});
+        const result_city = await BFF_server(parameters).catch((/**@type{import('../types.js').error}*/error)=>{throw error});
         result_geodata.latitude =   JSON.parse(result_city).lat;
         result_geodata.longitude=   JSON.parse(result_city).lng;
         result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
@@ -646,6 +655,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
  * @returns {Promise.<string>}
  */
 const getMaintenance = async (app_id, ip) => {
+    /**@type{import('../server/iam.service.js')} */
     const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
     const datatoken = await AuthorizeTokenApp(app_id, ip);
     //maintenance can be used from all app_id
@@ -669,15 +679,16 @@ const getMaintenance = async (app_id, ip) => {
  * @param {string} lang_code 
  */
 const getApps = async (app_id, resource_id, lang_code) =>{
+    /**@type{import('../server/dbapi/app_portfolio/app.service.js')} */
     const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
+    /**@type{import('../server/config.service.js')} */
     const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
-    const fs = await import('node:fs');
 
-    /**@type{Types.db_result_app_getApp[]}*/
+    /**@type{import('../types.js').db_result_app_getApp[]}*/
     const apps_db =  await getApp(app_id, resource_id, lang_code);
-    const apps_registry = ConfigGetApps().filter((/**@type{Types.config_apps_record}*/app)=>app.APP_ID==resource_id || resource_id == null);
-    /**@type{Types.config_apps_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=>
+    const apps_registry = ConfigGetApps().filter((/**@type{import('../types.js').config_apps_record}*/app)=>app.APP_ID==resource_id || resource_id == null);
+    /**@type{import('../types.js').config_apps_with_db_columns[]}*/
+    const apps = apps_registry.reduce(( /**@type{import('../types.js').config_apps_record} */app, /**@type {import('../types.js').config_apps_record}*/current)=>
                                         app.concat({APP_ID:current.APP_ID,
                                                     NAME:current.NAME,
                                                     SUBDOMAIN:current.SUBDOMAIN,
@@ -705,14 +716,16 @@ const getApps = async (app_id, resource_id, lang_code) =>{
  * @param {string} lang_code 
  */
  const getAppsAdmin = async (app_id, lang_code) =>{
+    /**@type{import('../server/dbapi/app_portfolio/app.service.js')} */
     const {getAppsAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
+    /**@type{import('../server/config.service.js')} */
     const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
 
-    /**@type{Types.db_result_app_getAppsAdmin[]}*/
+    /**@type{import('../types.js').db_result_app_getAppsAdmin[]}*/
     const apps_db =  await getAppsAdmin(app_id, lang_code);
     const apps_registry = ConfigGetApps();
-    /**@type{Types.config_apps_admin_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=> 
+    /**@type{import('../types.js').config_apps_admin_with_db_columns[]}*/
+    const apps = apps_registry.reduce(( /**@type{import('../types.js').config_apps_record} */app, /**@type {import('../types.js').config_apps_record}*/current)=> 
                                         app.concat({ID:current.APP_ID,
                                                     NAME:current.NAME,
                                                     SUBDOMAIN:current.SUBDOMAIN,
@@ -734,7 +747,7 @@ const getApps = async (app_id, resource_id, lang_code) =>{
  * @param {number} app_id
  * @param {string} url 
  * @param {string} basepath 
- * @param {Types.res} res 
+ * @param {import('../types.js').res} res 
  */
 const getAssetFile = (app_id, url, basepath, res) =>{
     return new Promise((resolve, reject)=>{
@@ -889,7 +902,7 @@ const getAssetFile = (app_id, url, basepath, res) =>{
  * @param {string} reportid
  * @param {number} messagequeue
  * @param {string} info
- * @param {Types.res} res
+ * @param {import('../types.js').res} res
  */
 const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, messagequeue, info, res) =>{
     const host_no_port = host.substring(0,host.indexOf(':')==-1?host.length:host.indexOf(':'));
@@ -968,7 +981,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                                     res.statusCode = 301;
                                                 resolve(app_result);
                                             })
-                                            .catch((/**@type{Types.error}*/err)=>{
+                                            .catch((/**@type{import('../types.js').error}*/err)=>{
                                                 LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF() and LogAppI()', COMMON.app_line(), err)
                                                 .then(()=>{
                                                     res.statusCode = 500;
@@ -977,7 +990,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                                 })
                                             });
                                         })
-                                        .catch((/**@type{Types.error}*/err)=>{
+                                        .catch((/**@type{import('../types.js').error}*/err)=>{
                                             LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF()', COMMON.app_line(), err)
                                             .then(()=>{
                                                 res.statusCode = 500;

@@ -1,9 +1,8 @@
 /** @module server/log */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
-
+/**@type{import('./log.service.js')} */
 const service = await import(`file://${process.cwd()}/server/log.service.js`);
+/**@type{import('./server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
@@ -13,7 +12,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  */
 const getLogs = (app_id, query) => {
     return new Promise((resolve, reject)=>{
-        /**@type{Types.admin_log_data_parameters} */
+        /**@type{import('../types.js').admin_log_data_parameters} */
         const data = {  app_id:			app_id,
             select_app_id:	getNumberValue(query.get('select_app_id')),
             logscope:		query.get('logscope'),
@@ -39,7 +38,7 @@ const getLogs = (app_id, query) => {
  */
 const getLogStats = (query) =>{
     return new Promise((resolve, reject)=>{
-        /**@type{Types.log_parameter_getLogStats} */
+        /**@type{import('../types.js').log_parameter_getLogStats} */
         const data = {	app_id:			getNumberValue(query.get('select_app_id')),
                         statGroup:		query.get('statGroup')==''?null:query.get('statGroup'),
                         unique:		    getNumberValue(query.get('unique')),
@@ -47,13 +46,13 @@ const getLogStats = (query) =>{
                         year: 			getNumberValue(query.get('year')) ?? new Date().getFullYear(),
                         month:			getNumberValue(query.get('month')) ?? new Date().getMonth() +1
                         };
-        service.getLogsStats(data).then ((/**@type{Types.log_parameter_getLogStats[]} */result)=>{
+        service.getLogsStats(data).then ((/**@type{import('../types.js').admin_log_stats_data[]} */result)=>{
             if (result.length>0)
                 resolve(result);
             else
                 reject('Record not found');
         })
-        .catch((/**@type{Types.error}*/error)=>reject(error));
+        .catch((/**@type{import('../types.js').error}*/error)=>reject(error));
     });
 };
 /**
@@ -66,7 +65,7 @@ const getStatusCodes =() => service.getStatusCodes();
  */
 const getFiles = () =>{
     return new Promise((resolve, reject)=>{
-        service.getFiles().then((/**@type{Types.admin_log_files[]}*/result) =>{
+        service.getFiles().then((/**@type{import('../types.js').admin_log_files[]}*/result) =>{
             if (result.length>0)
                 resolve(result);
             else{

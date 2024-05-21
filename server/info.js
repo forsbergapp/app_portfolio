@@ -1,8 +1,6 @@
 /** @module server/info */
 
-// eslint-disable-next-line no-unused-vars
-import * as Types from './../types.js';
-
+/**@type{import('./info.service.js')} */
 const service = await import(`file://${process.cwd()}/server/info.service.js`);
 
 const Info = () => service.Info();
