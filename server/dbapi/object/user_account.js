@@ -124,7 +124,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                     if (result_password) {
                         if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
                                 app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
-                            const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
+                            const jwt_data = AuthorizeToken(app_id, {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
                             data_body.access_token = jwt_data.token;
                             insertUserAccountLogon(app_id, user_account_id, data_body)
                             .then(()=>{
@@ -266,7 +266,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                 access_token:           null};
             if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && result_signin[0] && (result_signin[0].app_role_id == 0 || result_signin[0].app_role_id == 1))||
                     app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
-                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
+                const jwt_data = AuthorizeToken(app_id, {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
                 data_login.access_token = jwt_data.token;
                 data_login.result = 1;
                 if (result_signin.length > 0) {        
