@@ -3,7 +3,7 @@
 /**@type{import('./server.service.js')} */
 const {send_iso_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('./config.service.js')} */
-const {ConfigGet, ConfigFileGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet, ConfigFileGet, ConfigGetApp, ConfigGetAppHost, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('./db/file.service.js')} */
 const {file_get, file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
@@ -94,7 +94,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
                 result = 1;
             else
                 result = 0;
-            const jwt_data = AuthorizeToken(app_id, 'SYSTEMADMIN');
+            const jwt_data = AuthorizeToken(app_id, {id:null, name:username, ip:ip, scope:'USER', endpoint:'SYSTEMADMIN'});
             /**@type{import('../types.js').iam_systemadmin_login_record} */
             const file_content = {	app_id:             app_id,
                                     username:		    username,
@@ -138,247 +138,168 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
     });
     
 };
-/**
- * Middleware authenticates system admin access token
- * @param {string} iam
- * @param {string} ip
- * @param {string} token
- * @param {import('../types.js').res} res
- * @param {function} next
- */
- const AuthenticateAccessTokenSystemAdmin = (iam, token, ip, res, next) => {
-    AuthenticateTokenCommon(iam, 'SYSTEMADMIN', token, ip, res, next);
-};
-/**
- * Middleware authenticates data token
- * @param {string} iam
- * @param {string} token
- * @param {string} ip
- * @param {import('../types.js').res} res
- * @param {function} next
- */
- const AuthenticateDataToken = async (iam, token, ip, res, next) =>{
-    AuthenticateTokenCommon(iam, 'APP_DATA', token, ip, res, next);
-};
 
-/**
- * Middleware authenticates data token registration
- * @param {string} iam
- * @param {string} token 
- * @param {string} ip 
- * @param {import('../types.js').res} res 
- * @param {function} next 
- */
-const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
-    if (iam && token && ConfigGet('SERVICE_IAM', 'ENABLE_USER_REGISTRATION')=='1')
-        AuthenticateTokenCommon(iam, 'APP_DATA', token, ip, res, next);
-    else
-        not_authorized(res, 403, 'AuthenticateDataTokenRegistration');
-};
-/**
- * Middleware authenticates access token common
- * 
- * APP_ACCESS   : token is valid for giver user account id and ip
- * APP_DATA     : token is valid for given app id and ip
- * SYSTEM_ADMIN : token is valid for admin app, given system admin username and ip
- * 
- * @param {string} iam
- * @param {'APP_ACCESS'|'APP_DATA'|'SYSTEMADMIN'} token_type
- * @param {string} authorization
- * @param {string} ip
- * @param {import('../types.js').res} res
- * @param {function} next
- */
- const AuthenticateTokenCommon = (iam, token_type, authorization, ip, res, next) => {
-    if (iam && authorization){
-        const app_id = getNumberValue(iam_decode(iam).get('app_id'));
-        const token = authorization.substring(authorization.lastIndexOf(' ')+1);
-        switch (token_type){
-            case 'APP_ACCESS':{
-                const user_id = getNumberValue(iam_decode(iam).get('user_id'));
-                jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET, (/**@type{import('../types.js').error}*/err) => {
-                    if (err)
-                        not_authorized(res, 401, 'AuthenticateTokenCommon, jwt APP_ACCESS');
-                    else {
-                        //check access token belongs to user_account.id, app_id and ip saved when logged in
-                        //and if app_id=0 then check user is admin
-                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`)
-                        .then((/**@type{import('./dbapi/app_portfolio/user_account_logon.service.js')} */{checkLogin}) => {
-                            checkLogin(app_id, user_id)
-                            .then((/**@type{import('../types.js').db_result_user_account_logon_Checklogin[]}*/result)=>{
-                                if (result.filter(row=>
-                                    JSON.parse(row.json_data).result==1 && 
-                                    JSON.parse(row.json_data).access_token == token && 
-                                    JSON.parse(row.json_data).client_ip == ip).length==1)
-                                    next();
-                                else
-                                    not_authorized(res, 401, 'AuthenticateTokenCommon, no record APP_ACCESS');
-                            })
-                            .catch((/**@type{import('../types.js').error}*/error)=>{
-                                res.status(500).send(
-                                    error
-                                );
-                            });
-                        })
-                        
-                    }
-                });
-                break;
-            }
-            case 'APP_DATA':{
-				jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET, (/**@type{import('../types.js').error}*/err) => {
-                    if (err)
-                        not_authorized(res, 401, 'AuthenticateTokenCommon, jwt APP_DATA');
-                    else{
-                        file_get_log('IAM_APP_TOKEN', 'YYYYMMDD')
-                        .then((/**@type{import('../types.js').iam_app_token_record[]}*/file)=>{
-                            if (file.filter((/**@type{import('../types.js').iam_app_token_record}*/row)=> 
-                                    row.app_id == app_id
-                                    &&
-                                    row.client_ip == ip
-                                    &&
-                                    row.app_token == token).length==1)
-                                next();
-                            else
-                                not_authorized(res, 401, 'AuthenticateTokenCommon, no record APP_DATA');
-                        });
-                    }
-                });
-                break;
-            }
-            case 'SYSTEMADMIN':{
-                const system_admin = iam_decode(iam).get('system_admin');
-                jwt.verify(token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET'), (/**@type{import('../types.js').error}*/err) => {
-                    if (err)
-                        not_authorized(res, 401, 'AuthenticateTokenCommon, jwt SYSTEM_ADMIN');
-                    else{
-                        file_get_log('IAM_SYSTEMADMIN_LOGIN', 'YYYYMMDD')
-                        .then((/**@type{import('../types.js').iam_systemadmin_login_record[]}*/file)=>{
-                            if (file.filter((/**@type{import('../types.js').iam_systemadmin_login_record}*/row)=> 
-                                    row.app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'))
-                                    &&
-                                    row.username == system_admin
-                                    &&
-                                    row.client_ip == ip
-                                    &&
-                                    row.systemadmin_token == token).length==1)
-                                next();
-                            else
-                                not_authorized(res, 401, 'AuthenticateTokenCommon, no record SYSTEM_ADMIN');
-                        });
-                    }
-                });
-                break;
-            }
-            default:{
-                not_authorized(res, 401, 'AuthenticateTokenCommon, unknown token type:' + token_type);
-            }
-        }
-    }
-    else
-        not_authorized(res, 401, 'AuthenticateTokenCommon, no iam or authorization');
-};
-/**
- * Middleware authenticates access token superadmin
- * @param {string} iam
- * @param {string} authorization
- * @param {string} ip
- * @param {import('../types.js').res} res
- * @param {function} next
- */
-const AuthenticateAccessTokenSuperAdmin = (iam, authorization, ip, res, next) => {
-    if (iam && authorization && getNumberValue(iam_decode(iam).get('app_id'))==0)
-        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`)
-        .then((/**@type{import('./dbapi/app_portfolio/user_account.service.js')} */{getUserAppRoleAdmin}) => {
-            getUserAppRoleAdmin(getNumberValue(iam_decode(iam).get('app_id')), getNumberValue(iam_decode(iam).get('user_id')))
-            .then((/**@type{import('../types.js').db_result_user_account_getUserRoleAdmin[]}*/result)=>{
-                if (result[0].app_role_id == 0){
-                    AuthenticateTokenCommon(iam, 'APP_ACCESS', authorization, ip, res, next);
-                }
-                else
-                    not_authorized(res, 401, 'AuthenticateAccessTokenSuperAdmin, not superadmin');
-            })
-            .catch((/**@type{import('../types.js').error}*/error)=>{
-                res.status(500).send(
-                    error
-                );
-            });
-        })
-    else
-        not_authorized(res, 401, 'AuthenticateAccessTokenSuperAdmin');
-};
-/**
- * Middleware authenticates access token admin
- * @param {string} iam
- * @param {string} authorization
- * @param {string} ip
- * @param {import('../types.js').res} res
- * @param {function} next
- */
-const AuthenticateAccessTokenAdmin = (iam, authorization, ip, res, next) => {
-    if (iam && authorization && getNumberValue(iam_decode(iam).get('app_id'))==0){
-        AuthenticateTokenCommon(iam, 'APP_ACCESS', authorization, ip, res, next);
-    }
-    else
-        not_authorized(res, 401, 'AuthenticateAccessTokenAdmin');
-};
-/**
- * Middleware authenticates access token
- * @param {string} iam
- * @param {string} authorization
- * @param {string} ip
- * @param {import('../types.js').res} res
- * @param {function} next
- */
-const AuthenticateAccessToken = (iam, authorization, ip, res, next)  => {
-    //if user login is disabled then check also current logged in user
-    //so they can't modify anything anymore with current accesstoken
-    if (iam && authorization && ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN')=='1'){
-        AuthenticateTokenCommon(iam, 'APP_ACCESS', authorization, ip, res, next);
-    }
-    else
-        not_authorized(res, 401, 'AuthenticateAccessToken');
-};
 /**
  * Middleware authenticate socket used for EventSource
  * @param {string} path
+ * @param {string} host
  * @param {string} iam
  * @param {string} ip
  * @param {import('../types.js').res} res
  * @param {function} next
  */
-const AuthenticateSocket = (iam, path, ip, res, next) =>{
+const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
     if (iam && iam_decode(iam).get('authorization_bearer') && path.startsWith('/server-socket')){
-        //validate Bearer autorization
-        AuthenticateTokenCommon(iam, 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, res, next);
+        AuthenticateUserCommon(iam, 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', host, ip, res, next);
     }
     else
         not_authorized(res, 401, 'AuthenticateSocket');
 };
 /**
- * Middleware authenticate IAM
+ * Middleware authenticate IAM users
  * @param {string} iam
+ * @param {'SYSTEMADMIN'|'ADMIN'|'USER'|'PROVIDER'|'APP_SYSTEMADMIN'|'APP_ACCESS'|'APP_ACCESS_ADMIN'|'APP_ACCESS_SUPERADMIN'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
  * @param {string} authorization
+ * @param {string} host
  * @param {string} ip
  * @param {import('../types.js').res} res
  * @param {function} next
  */
- const AuthenticateIAM = (iam, authorization, ip, res, next) =>{
-    //check inparameters and Basic authorization
-    if (iam && authorization && authorization.toUpperCase().startsWith('BASIC'))
-        if (getNumberValue(iam_decode(iam).get('app_id'))==getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'))){
-            //validate Bearer authorization
-            AuthenticateTokenCommon(iam, 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, res, next);
-        }
-        else
-            if (getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1){
-                //validate Bearer authorization
-                AuthenticateTokenCommon(iam, 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', ip, res, next);
+ const AuthenticateUserCommon = async (iam, scope, authorization, host, ip, res, next) =>{
+    const app_id_host = getNumberValue(ConfigGetAppHost(host));
+    //iam required for SOCKET update using iam.client_id that can be changed any moment and not validated here
+    if (iam && scope && authorization && app_id_host !=null){
+        const app_id_admin = getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'));
+        // APP_DATA uses req.headers.authorization ID token except for SOCKET where ID token is in iam.authorization_bearer
+        // other requests uses BASIC or BEARER access token in req.headers.authorization and ID token in iam.authorization_bearer
+        const id_token = scope=='APP_DATA'?authorization?.split(' ')[1] ?? '':iam_decode(iam).get('authorization_bearer')?.split(' ')[1] ?? '';
+        try {
+            //authenticate id token
+            /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
+            const id_token_decoded = jwt.verify(id_token, ConfigGetApp(app_id_host, app_id_host, 'SECRETS').APP_DATA_SECRET);
+            /**@type{import('../types.js').iam_app_token_record[]}*/
+            const log_id_token = await file_get_log('IAM_APP_TOKEN', 'YYYYMMDD');
+            if (id_token_decoded.app_id == app_id_host && 
+                id_token_decoded.scope == 'APP' && 
+                id_token_decoded.ip == ip &&
+                log_id_token.filter((/**@type{import('../types.js').iam_app_token_record}*/row)=> 
+                                    row.app_id == app_id_host && row.client_ip == ip && row.app_token == id_token).length==1){
+                if (scope=='APP_DATA')
+                    next();
+                else{
+                    /**
+                     * 
+                     * @param {number|null} user_id 
+                     * @returns {Promise.<boolean>}
+                     */
+                    const superadmin = async (user_id) => {
+                        if (user_id){
+                            /**@type{import('./dbapi/app_portfolio/user_account.service.js')} */
+                            const {getUserAppRoleAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`)
+                            /**@type{import('../types.js').db_result_user_account_getUserAppRoleAdmin[]}*/
+                            const result = await getUserAppRoleAdmin(app_id_host, user_id)
+                                                    .catch((/**@type{import('../types.js').error}*/error)=>{
+                                                        not_authorized(res, 500, error);
+                                                        return [];
+                                                    });
+                            return result[0].app_role_id == 0;
+                        }
+                        else
+                            return false;
+                    }
+                    //validate scope, app_id and authorization
+                    switch (true){
+                        case (scope=='SYSTEMADMIN' || scope=='ADMIN') && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BASIC'):{
+                            next();
+                            break;
+                        }
+                        case (scope=='USER' || scope=='PROVIDER') && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BASIC'):{
+                            if (getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1){
+                                next();
+                            }
+                            else
+                                not_authorized(res, 403, 'AuthenticateUserCommon, user login disabled');
+                            break;
+                        }
+                        case scope=='APP_SYSTEMADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
+                            //authenticate access token
+                            const access_token = authorization?.split(' ')[1] ?? '';
+                            /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
+                            const access_token_decoded = jwt.verify(access_token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '');
+                            /**@type{import('../types.js').iam_systemadmin_login_record[]}*/
+                            const log_access_token = await file_get_log('IAM_SYSTEMADMIN_LOGIN', 'YYYYMMDD');
+
+                            if (access_token_decoded.app_id == app_id_host && 
+                                access_token_decoded.scope == 'USER' && 
+                                access_token_decoded.ip == ip &&
+                                access_token_decoded.name == iam_decode(iam).get('system_admin') &&
+                                log_access_token.filter((/**@type{import('../types.js').iam_systemadmin_login_record}*/row)=>
+                                    row.app_id == app_id_host && 
+                                    row.username == access_token_decoded.name && 
+                                    row.client_ip == ip && 
+                                    row.systemadmin_token == access_token).length==1)
+                                next();
+                            else
+                                not_authorized(res, 401, 'AuthenticateUserCommon');
+                            break;
+                        }
+                        case scope=='APP_DATA_REGISTRATION' && getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
+                            next();
+                            break;
+                        }
+                        
+                        case scope=='APP_ACCESS_SUPERADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):
+                        case scope=='APP_ACCESS_ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):
+                        case scope=='APP_ACCESS' && getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
+                            //authenticate access token
+                            const access_token = authorization?.split(' ')[1] ?? '';
+                            /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
+                            const access_token_decoded = jwt.verify(access_token, ConfigGetApp(app_id_host, app_id_host, 'SECRETS').APP_ACCESS_SECRET ?? '');
+                            const user_id = getNumberValue(iam_decode(iam).get('user_id'));
+                            if (access_token_decoded.app_id == app_id_host && 
+                                access_token_decoded.scope == 'USER' && 
+                                access_token_decoded.ip == ip &&
+                                access_token_decoded.id == user_id &&
+                                ((scope=='APP_ACCESS_SUPERADMIN' && superadmin(user_id))|| scope!='APP_ACCESS_SUPERADMIN'))
+                                //check access token belongs to user_account.id, app_id and ip saved when logged in
+                                //and if app_id=0 then check user is admin
+                                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`)
+                                .then((/**@type{import('./dbapi/app_portfolio/user_account_logon.service.js')} */{checkLogin}) => {
+                                    checkLogin(app_id_host, user_id)
+                                    .then((/**@type{import('../types.js').db_result_user_account_logon_Checklogin[]}*/result)=>{
+                                        if (result.filter(row=>
+                                            JSON.parse(row.json_data).result==1 && 
+                                            JSON.parse(row.json_data).access_token == access_token && 
+                                            JSON.parse(row.json_data).client_ip == ip).length==1)
+                                            next();
+                                        else
+                                            not_authorized(res, 401, 'AuthenticateUserCommon, no record APP_ACCESS');
+                                    })
+                                    .catch((/**@type{import('../types.js').error}*/error)=>{
+                                        res.status(500).send(
+                                            error
+                                        );
+                                    });
+                                })
+                            else
+                                not_authorized(res, 401, 'AuthenticateUserCommon, token claim error');
+                            break;
+                        }
+                        default:{
+                            not_authorized(res, 401, 'AuthenticateUserCommon, scope error or wrong app or wrong header authorization');
+                            break;
+                        }
+                    }
+                }
             }
             else
-                not_authorized(res, 403, 'AuthenticateIAM, user login disabled');
+                not_authorized(res, 401, 'AuthenticateUserCommon, not IAM or no authorization');
+        } catch (error) {
+            not_authorized(res, 401, 'AuthenticateUserCommon, token error');
+        }
+    }
     else
-        not_authorized(res, 401, 'AuthenticateIAM, not IAM or no authorization');
+        not_authorized(res, 401, 'AuthenticateUserCommon, not IAM or no authorization');
 };
 
 /**
@@ -576,7 +497,10 @@ const AuthenticateResource = parameters =>  parameters.resource_id &&
  const AuthorizeTokenApp = async (app_id, ip)=>{
     const secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET;
     const expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_EXPIRE;
-    const jsontoken_at = jwt.sign ({tokentimestamp: Date.now()}, secret, {expiresIn: expiresin});
+    const jsontoken_at = jwt.sign ({scope:'APP',
+                                    app_id:app_id,
+                                    ip:ip,
+                                    tokentimestamp: Date.now()}, secret, {expiresIn: expiresin});
     /**@type{import('../types.js').iam_app_token_record} */
     const file_content = {	app_id:             app_id,
                             result:				1,
@@ -592,17 +516,21 @@ const AuthenticateResource = parameters =>  parameters.resource_id &&
  * Authorize token
  * 
  * @param {number} app_id
- * @param {'APP_ACCESS'|'SYSTEMADMIN'} tokentype
+ * @param {{id:number|null, 
+ *          name:string, 
+ *          ip:string, 
+ *          scope:'USER', 
+ *          endpoint:'APP_ACCESS'|'SYSTEMADMIN'}} claim
  * @returns {{
  *              token:string, 
  *              exp:number,             //expires at
  *              iat:number,             //issued at
  *              tokentimestamp:number}}
  */
- const AuthorizeToken = (app_id, tokentype)=>{
+ const AuthorizeToken = (app_id, claim)=>{
     let secret = '';
     let expiresin = '';
-    switch (tokentype){
+    switch (claim.endpoint){
         case 'APP_ACCESS':{
             secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET;
             expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_EXPIRE;
@@ -614,7 +542,12 @@ const AuthenticateResource = parameters =>  parameters.resource_id &&
             break;
         }
     }
-    const token = jwt.sign ({tokentimestamp: Date.now()}, secret, {expiresIn: expiresin});
+    const token = jwt.sign ({   app_id:         app_id,
+                                id:             claim.id,
+                                name:           claim.name,
+                                ip:             claim.ip,
+                                scope:          claim.scope,
+                                tokentimestamp: Date.now()}, secret, {expiresIn: expiresin});
     return {token:token,
             /**@ts-ignore */
             exp:jwt.decode(token, { complete: true }).payload.exp,
@@ -627,11 +560,9 @@ const AuthenticateResource = parameters =>  parameters.resource_id &&
 export{ iam_decode,
         expired_token,
         not_authorized,
-        AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
-        AuthenticateDataToken, AuthenticateDataTokenRegistration,
-        AuthenticateAccessToken, AuthenticateAccessTokenSuperAdmin, AuthenticateAccessTokenAdmin,
+        AuthenticateSystemadmin,
         AuthenticateSocket,
-        AuthenticateIAM,
+        AuthenticateUserCommon,
         AuthenticateRequest,
         AuthenticateApp,
         AuthenticateResource,

@@ -124,8 +124,8 @@ const component = async props => {
     }
     const post_component = async () =>{
         props.common_document.querySelector(`#${props.user_click}`).click();
-        //fetch providers if not system admin only when database is available
-        const providers = props.system_admin_only == 1?[]:
+        //fetch providers if not admin app
+        const providers = props.app_id == props.common_app_id?[]:
                             await props.function_FFB('/server-db/identity_provider', null, 'GET', 'APP_DATA', null)
                                         .then((/**@type{string}*/result)=>JSON.parse(result))
                                         .catch((/**@type{Error}*/error)=>{

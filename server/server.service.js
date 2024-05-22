@@ -137,10 +137,10 @@ const COMMON = {
     app.route('/bff/superadmin/v1*').all        (iam.AuthenticateAccessTokenSuperAdmin,     BFF_superadmin);
     app.route('/bff/systemadmin/v1*').all       (iam.AuthenticateAccessTokenSystemAdmin,    BFF_systemadmin);
     app.route('/bff/socket/v1*').get            (iam.AuthenticateSocket,                    BFF_socket);
-    app.route('/bff/iam_systemadmin/v1*').post  (iam.AuthenticateIAM,                       BFF_iam_systemadmin);
-    app.route('/bff/iam_admin/v1*').post        (iam.AuthenticateIAM,                       BFF_iam_admin);
-    app.route('/bff/iam_user/v1*').post         (iam.AuthenticateIAM,                       BFF_iam_user);
-    app.route('/bff/iam_provider/v1*').post     (iam.AuthenticateIAM,                       BFF_iam_provider);
+    app.route('/bff/iam_systemadmin/v1*').post  (iam.AuthenticateIAMSystemAdmin,            BFF_iam_systemadmin);
+    app.route('/bff/iam_admin/v1*').post        (iam.AuthenticateIAMAdmin,                  BFF_iam_admin);
+    app.route('/bff/iam_user/v1*').post         (iam.AuthenticateIAMUser,                   BFF_iam_user);
+    app.route('/bff/iam_provider/v1*').post     (iam.AuthenticateIAMProvider,               BFF_iam_provider);
     
     //app asset, common asset, info page, report and app
     app.route('*').get                          (BFF_app);
