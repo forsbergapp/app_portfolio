@@ -195,7 +195,7 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
         const token = authorization.substring(authorization.lastIndexOf(' ')+1);
         switch (token_type){
             case 'APP_ACCESS':{
-                const user_id = iam_decode(iam).get('user_id');
+                const user_id = getNumberValue(iam_decode(iam).get('user_id'));
                 jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET, (/**@type{import('../types.js').error}*/err) => {
                     if (err)
                         not_authorized(res, 401, 'AuthenticateTokenCommon, jwt APP_ACCESS');
@@ -204,7 +204,7 @@ const AuthenticateDataTokenRegistration = (iam, token, ip, res, next) =>{
                         //and if app_id=0 then check user is admin
                         import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`)
                         .then((/**@type{import('./dbapi/app_portfolio/user_account_logon.service.js')} */{checkLogin}) => {
-                            checkLogin(app_id, user_id, authorization.replace('Bearer ',''), ip)
+                            checkLogin(app_id, user_id)
                             .then((/**@type{import('../types.js').db_result_user_account_logon_Checklogin[]}*/result)=>{
                                 if (result.filter(row=>
                                     JSON.parse(row.json_data).result==1 && 
@@ -415,7 +415,7 @@ const AuthenticateSocket = (iam, path, ip, res, next) =>{
      * Controls if ip is blocked
      *  if ip is blocked return 403
      * @param {string} ip_v4
-     * @returns {Promise.<import('../../../types.js').authenticate_request|null>}
+     * @returns {Promise.<import('../types.js').authenticate_request|null>}
      */
     const block_ip_control = async (ip_v4) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){

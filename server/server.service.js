@@ -112,7 +112,8 @@ const COMMON = {
     //ROUTES MIDDLEWARE
     //apps
     /**@type{import('./bff.js')} */
-    const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam} = await import(`file://${process.cwd()}/server/bff.js`);
+    const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, 
+            BFF_iam_systemadmin, BFF_iam_admin, BFF_iam_user, BFF_iam_provider} = await import(`file://${process.cwd()}/server/bff.js`);
     //auth
     /**@type{import('./iam.js')} */
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
@@ -120,26 +121,29 @@ const COMMON = {
     //ROUTES 
     //logs EventSource and response when closed, authenticates request and will end request if not passing controls, 
     //sets headers, returns disallow for robots.txt and empty favicon.ico
-    app.route('*').all                      (BFF_init);
+    app.route('*').all                          (BFF_init);
     
     //redirects naked domain, http to https if enabled and to admin subdomain if first time, responds to SSL verification if enabled
-    app.route('*').get                      (BFF_start);
+    app.route('*').get                          (BFF_start);
     
     //REST API 
     //URI syntax implemented:
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app_data/v1*').all      (iam.AuthenticateDataToken, BFF_app_data);
-    app.route('/bff/app_signup/v1*').post   (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
-    app.route('/bff/app_access/v1*').all    (iam.AuthenticateAccessToken, BFF_app_access);
-    app.route('/bff/admin/v1*').all         (iam.AuthenticateAccessTokenAdmin, BFF_admin);    
-    app.route('/bff/superadmin/v1*').all    (iam.AuthenticateAccessTokenSuperAdmin, BFF_superadmin);
-    app.route('/bff/systemadmin/v1*').all   (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
-    app.route('/bff/socket/v1*').get        (iam.AuthenticateSocket, BFF_socket);
-    app.route('/bff/iam/v1*').post          (iam.AuthenticateIAM, BFF_iam);
+    app.route('/bff/app_data/v1*').all          (iam.AuthenticateDataToken,                 BFF_app_data);
+    app.route('/bff/app_signup/v1*').post       (iam.AuthenticateDataTokenRegistration,     BFF_app_signup);
+    app.route('/bff/app_access/v1*').all        (iam.AuthenticateAccessToken,               BFF_app_access);
+    app.route('/bff/admin/v1*').all             (iam.AuthenticateAccessTokenAdmin,          BFF_admin);    
+    app.route('/bff/superadmin/v1*').all        (iam.AuthenticateAccessTokenSuperAdmin,     BFF_superadmin);
+    app.route('/bff/systemadmin/v1*').all       (iam.AuthenticateAccessTokenSystemAdmin,    BFF_systemadmin);
+    app.route('/bff/socket/v1*').get            (iam.AuthenticateSocket,                    BFF_socket);
+    app.route('/bff/iam_systemadmin/v1*').post  (iam.AuthenticateIAM,                       BFF_iam_systemadmin);
+    app.route('/bff/iam_admin/v1*').post        (iam.AuthenticateIAM,                       BFF_iam_admin);
+    app.route('/bff/iam_user/v1*').post         (iam.AuthenticateIAM,                       BFF_iam_user);
+    app.route('/bff/iam_provider/v1*').post     (iam.AuthenticateIAM,                       BFF_iam_provider);
     
     //app asset, common asset, info page, report and app
-    app.route('*').get                      (BFF_app);
+    app.route('*').get                          (BFF_app);
     
     //ERROR LOGGING
     app.use((/**@type{import('../types.js').error}*/err,/**@type{import('../types.js').req}*/req,/**@type{import('../types.js').res}*/res, /**@type{function}*/next) => {
@@ -601,15 +605,16 @@ const COMMON = {
                         resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/iam/v1/server-iam/systemadmin`, 'POST'):{
+                    case route(`/bff/iam_systemadmin/v1/server-iam/login`, 'POST'):{
                         resolve(iam.AuthenticateSystemadmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/iam/v1/server-iam/user`, 'POST'):{
+                    case route(`/bff/iam_admin/v1/server-iam/login`, 'POST'):
+                    case route(`/bff/iam_user/v1/server-iam/login`, 'POST'):{
                         resolve(db_user_account.login(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/iam/v1/server-iam/provider/${resource_id_string}`, 'POST'):{
+                    case route(`/bff/iam_provider/v1/server-iam/login${resource_id_string}`, 'POST'):{
                         resolve(db_user_account.login_provider(routesparameters.app_id, routesparameters.res.req.query.iam, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }

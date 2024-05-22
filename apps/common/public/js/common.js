@@ -1331,13 +1331,6 @@ const profile_show = async (user_account_id_other = null, username = null) => {
     
 };
 /**
- * Profile close
- * @returns {void}
- */
-const profile_close = () => {
-    ComponentRemove('common_dialogue_profile', true);
-};
-/**
  * Profile update stat
  * @returns {Promise.<{id:number}>}
  */
@@ -1507,13 +1500,31 @@ const list_key_event = (event, module, event_function=null) => {
  * @returns {Promise. <{    avatar: string|null}>}
  */
 const user_login = async (system_admin=false, username_verify=null, password_verify=null, provider_id=null) => {
+    let tokentype = '';
     let path = '';
     let json_data = {};
     let spinner_item = '';
     let current_dialogue = '';
-    if (system_admin){
+    if (system_admin) {
         spinner_item = 'common_user_start_login_system_admin_button';
         current_dialogue = 'common_dialogue_user_start';
+        // ES6 object spread operator for user variables
+        json_data = {   username:  encodeURI(AppDocument.querySelector('#common_user_start_login_system_admin_username').innerHTML),
+                        password:  encodeURI(AppDocument.querySelector('#common_user_start_login_system_admin_password').innerHTML),
+                        ...get_uservariables()
+        };
+        path = '/server-iam/login';
+        tokentype = 'IAM_SYSTEMADMIN'
+        if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
+                        {
+                        username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
+                        password: AppDocument.querySelector('#common_user_start_login_system_admin_password'),
+                        password_confirm: AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm')?
+                                            AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm'):
+                                                null
+                        })==false)
+            throw 'ERROR';
+        
     }
     else{
         if (username_verify){
@@ -1524,27 +1535,6 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             spinner_item = 'common_user_start_login_button';
             current_dialogue = 'common_dialogue_user_start';
         }
-        AppDocument.querySelector(`#${spinner_item}`).classList.add('css_spinner');
-    }
-    if (system_admin) {
-        // ES6 object spread operator for user variables
-        json_data = {   username:  encodeURI(AppDocument.querySelector('#common_user_start_login_system_admin_username').innerHTML),
-                        password:  encodeURI(AppDocument.querySelector('#common_user_start_login_system_admin_password').innerHTML),
-                        ...get_uservariables()
-        };
-        path = '/server-iam/systemadmin';
-        if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
-                        {
-                        username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
-                        password: AppDocument.querySelector('#common_user_start_login_system_admin_password'),
-                        password_confirm: AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm')?
-                                            AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm'):
-                                                null
-                        })==false)
-        throw 'ERROR';
-        
-    }
-    else{
         if (provider_id){
             const provider_data = { identity_provider_id:   provider_id,
                                     profile_id:             provider_id,
@@ -1567,7 +1557,8 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                             provider_email:         provider_data.profile_email,
                             ...get_uservariables()
                         };
-            path = `/server-iam/provider/${provider_data.profile_id}`;
+            path = `/server-iam/login/${provider_data.profile_id}`;
+            tokentype = 'IAM_PROVIDER'
         }
         else{
             // ES6 object spread operator for user variables
@@ -1579,7 +1570,8 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                                                 AppDocument.querySelector('#common_user_start_login_password').innerHTML),
                             ...get_uservariables()
             };
-            path = '/server-iam/user';
+            path = '/server-iam/login';
+            tokentype = 'IAM_USER';
             if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
                             {
                             username: username_verify?
@@ -1593,53 +1585,75 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             
         }            
     }
-    
-    const result = await FFB(path, null, 'POST', 'IAM', json_data)
-                    .catch(err=>{
+    AppDocument.querySelector(`#${spinner_item}`).classList.add('css_spinner');
+    const result_iam = await FFB(path, null, 'POST', tokentype, json_data).catch(err=>{
                         AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
                         throw err;
                     });
     if (system_admin){
-        COMMON_GLOBAL.system_admin = JSON.parse(result).username==''?null:JSON.parse(result).username;
-        COMMON_GLOBAL.token_admin_at = JSON.parse(result).token_at;
-        COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
-        COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
-        COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
-        AppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
+        COMMON_GLOBAL.system_admin = JSON.parse(result_iam).username==''?null:JSON.parse(result_iam).username;
+        COMMON_GLOBAL.token_admin_at = JSON.parse(result_iam).token_at;
+        COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
+        COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
+        COMMON_GLOBAL.token_timestamp = JSON.parse(result_iam).tokentimestamp;
         AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
-        AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
-        AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-
         ComponentRemove(current_dialogue, true);
+        
         return {avatar: null};
     }
     else{
-        const login_data = provider_id?JSON.parse(result).items[0]:JSON.parse(result).login[0];
+        const login_data = provider_id?JSON.parse(result_iam).items[0]:JSON.parse(result_iam).login[0];
         COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
-        COMMON_GLOBAL.token_at	= JSON.parse(result).accessToken;
-        COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
-        COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
-        COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
-        await user_preference_get().catch((error)=>{throw error});
+        COMMON_GLOBAL.token_at	= JSON.parse(result_iam).accessToken;
+        COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
+        COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
+        COMMON_GLOBAL.token_timestamp = JSON.parse(result_iam).tokentimestamp;
+
+        COMMON_GLOBAL.user_account_username = login_data.username;
+        COMMON_GLOBAL.user_identity_provider_id = provider_id?login_data.identity_provider_id:null;
+        COMMON_GLOBAL.user_app_role_id = login_data.app_role_id;
+
+        if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
+            //set avatar or emptyif not in admin app
+            set_avatar(provider_id?login_data.provider_image:login_data.avatar ?? null, AppDocument.querySelector('#common_user_menu_avatar_img'));
+            AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+            AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
+        }
+
+        const result = await FFB(`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
+                        .catch(err=>{
+                            AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+                            throw err;
+                        });
+        const user_account_app = JSON.parse(result)[0];
+
+        //locale
+        if (user_account_app.preference_locale==null)
+            user_preferences_set_default_globals('LOCALE');
+        else
+            COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
+        //timezone
+        if (user_account_app.app_setting_preference_timezone_id==null)
+            user_preferences_set_default_globals('TIMEZONE');
+        else
+            COMMON_GLOBAL.user_timezone = user_account_app.app_setting_preference_timezone_value;
+
+        //direction
+        COMMON_GLOBAL.user_direction = user_account_app.app_setting_preference_direction_value;
+        //arabic script
+        COMMON_GLOBAL.user_arabic_script = user_account_app.app_setting_preference_arabic_script_value;
+        //update body class with app theme, direction and arabic script usage classes
+        common_preferences_update_body_class_from_preferences();
+        //
         await common_translate_ui(COMMON_GLOBAL.user_locale);
         if (login_data.active==0){
             show_common_dialogue('VERIFY', 'LOGIN', login_data.email, null);
             throw 'ERROR';
         }
         else{
-            profile_close();
-            COMMON_GLOBAL.user_account_username = login_data.username;
-            COMMON_GLOBAL.user_identity_provider_id = provider_id?login_data.identity_provider_id:null;
-            
-            COMMON_GLOBAL.user_app_role_id = login_data.app_role_id;
-            
-            //set avatar or empty
-            set_avatar(provider_id?login_data.provider_image:login_data.avatar ?? null, AppDocument.querySelector('#common_user_menu_avatar_img'));
-            AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-            AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
-            
             AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
             ComponentRemove(current_dialogue, true);
+            ComponentRemove('common_dialogue_profile', true);
             return {avatar: provider_id?login_data.provider_image:login_data.avatar};
         }
     }
@@ -2139,40 +2153,6 @@ const user_preference_save = async () => {
     }
 };
 /**
- * User preference get
- * @returns {Promise.<null>}
- */
-const user_preference_get = async () => {
-    return new Promise((resolve,reject)=>{
-        FFB(`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
-        .then(result=>{
-            const user_account_app = JSON.parse(result)[0];
-            //locale
-            if (user_account_app.preference_locale==null){
-                user_preferences_set_default_globals('LOCALE');
-            }
-            else{
-                COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
-            }
-            //timezone
-            if (user_account_app.app_setting_preference_timezone_id==null){
-                user_preferences_set_default_globals('TIMEZONE');
-            }
-            else{
-                COMMON_GLOBAL.user_timezone = user_account_app.app_setting_preference_timezone_value;
-            }
-            //direction
-            COMMON_GLOBAL.user_direction = user_account_app.app_setting_preference_direction_value;
-            //arabic script
-            COMMON_GLOBAL.user_arabic_script = user_account_app.app_setting_preference_arabic_script_value;
-            //update body class with app theme, direction and arabic script usage classes
-            common_preferences_update_body_class_from_preferences();
-            resolve(null);
-        })
-        .catch(err=>reject(err));
-    });
-};
-/**
  * User prefernce set default globals
  * @param {*} preference 
  * @returns {void}
@@ -2608,11 +2588,16 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/socket`;
             break;
         }
-        case 'IAM':{
+        case 'IAM_SYSTEMADMIN':
+        case 'IAM_PROVIDER':
+        case 'IAM_USER':{
             //user,admin or system admin login
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
             authorization_basic = `Basic ${window.btoa(json_data.username + ':' + json_data.password)}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/iam`;
+            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && authorization_type == 'IAM_USER')
+                service_path = `${COMMON_GLOBAL.rest_resource_bff}/iam_admin`;
+            else
+                service_path = `${COMMON_GLOBAL.rest_resource_bff}/${authorization_type.toLowerCase()}`;
             break;
         }
     }
@@ -3270,6 +3255,10 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         //dialogue profile and profile top
+                        case 'common_profile_close':{
+                            ComponentRemove('common_dialogue_profile', true);
+                            break;
+                        }
                         case 'common_profile_stat_list':
                         case 'common_profile_detail_list':{
                             if (event.target.classList.contains('common_profile_stat_list_username')||
@@ -3992,7 +3981,7 @@ export{/* GLOBALS*/
        lov_close, lov_show,
        /* PROFILE */
        profile_follow_like, profile_stat, profile_detail, profile_show,
-       profile_close, profile_update_stat, list_key_event,
+       profile_update_stat, list_key_event,
        /* USER  */
        user_login, user_session_countdown, user_logoff, user_update, user_signup, user_verify_check_input, user_delete, user_function,
        updatePassword,

@@ -114,10 +114,6 @@ const app_event_click = event => {
                         common.profile_stat(1);
                         break;
                     }
-                    case 'common_profile_close':{
-                        common.profile_close();
-                        break;
-                    }
                     case 'common_profile_stat_row1_1':{
                         common.profile_stat(1);
                         break;
