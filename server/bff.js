@@ -255,17 +255,57 @@ const BFF_socket = (req, res) =>{
     service.BFF(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) IAM
+ * Backend for frontend (BFF) IAM_SYSTEMADMIN
  * 
  * @param {import('../types.js').req} req - Request
  * @param {import('../types.js').res} res
  */
-const BFF_iam = (req, res) =>{
+const BFF_iam_systemadmin = (req, res) =>{
     /**@type{import('../types.js').bff_parameters} */
-    const bff_parameters = {endpoint:'IAM', 
+    const bff_parameters = {endpoint:'IAM_SYSTEMADMIN', 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
+};
+/**
+ * Backend for frontend (BFF) IAM_ADMIN
+ * 
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
+ */
+ const BFF_iam_admin = (req, res) =>{
+    /**@type{import('../types.js').bff_parameters} */
+    const bff_parameters = {endpoint:'IAM_ADMIN', 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
+};
+/**
+ * Backend for frontend (BFF) IAM_USER
+ * 
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
+ */
+ const BFF_iam_user = (req, res) =>{
+    /**@type{import('../types.js').bff_parameters} */
+    const bff_parameters = {endpoint:'IAM_USER', 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
+};
+/**
+ * Backend for frontend (BFF) IAM_PROVIDER
+ * 
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
+ */
+ const BFF_iam_provider = (req, res) =>{
+    /**@type{import('../types.js').bff_parameters} */
+    const bff_parameters = {endpoint:'IAM_PROVIDER', 
                             ...BFF_common(req, res)
                             };
     service.BFF(bff_parameters);
 };
 
-export{BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam};
+export{ BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, 
+        BFF_iam_systemadmin, BFF_iam_admin, BFF_iam_user, BFF_iam_provider};
