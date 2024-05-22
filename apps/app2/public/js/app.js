@@ -2365,10 +2365,6 @@ const app_event_click = event => {
                     toolbar_button(7);
                     break;
                 }
-                case 'common_profile_close':{
-                    common.ComponentRemove('common_dialogue_profile', true);
-                    break;
-                }    
                 //module leaflet
                 case 'common_module_leaflet_control_my_location_id':{
                     AppDocument.querySelector('#setting_select_popular_place').selectedIndex = 0;

@@ -71,10 +71,10 @@ const app_portfolio_title = 'App Portfolio';
  };
 /**
  * Config get app
- * @param {number} app_id
- * @param {number} data_app_id
+ * @param {number|null} app_id
+ * @param {number|null} data_app_id
  * @param {import('../types.js').config_apps_keys} parameter
- * @returns {object|null}
+ * @returns {*|null}
  */
  const ConfigGetApp = (app_id, data_app_id, parameter) => {
     if (parameter == 'PARAMETERS')
@@ -303,7 +303,7 @@ const InitConfig = async () => {
  * @param {string|null} parameter
  * @returns {Promise.<object>}
  */
-const ConfigFileGet = async (file, saved, config_group=null, parameter=null) => {
+const ConfigFileGet = async (file, saved=false, config_group=null, parameter=null) => {
     const config = saved?await file_get(file).then((/**@type{*}*/config)=>config.file_content):file_get_cached(file);
     return await new Promise((resolve) => {
         if (config_group)

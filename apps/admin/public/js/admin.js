@@ -31,11 +31,27 @@ const admin_login = async () => {
     let system_admin = false;
     if (AppDocument.querySelector('#common_user_start_nav .common_user_start_selected').id == 'common_user_start_login_system_admin')
         system_admin = true;
-    await common.ComponentRender('admin_secure', {}, '/component/admin_secure.js')
-    .then(()=>common.ComponentRender('app_user_account', {},'/common/component/user_account.js'));
+    
     await common.user_login(system_admin)
-    .then(()=>{
-        app_secure.init();
+    .then((result)=>{
+        common.ComponentRender('admin_secure', {}, '/component/admin_secure.js')
+        .then(()=>{
+            common.ComponentRender('app_user_account', {},'/common/component/user_account.js')
+            .then(()=>{
+                if (system_admin){
+                    AppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
+                    AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
+                    AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+                }
+                else{
+                    //set avatar or empty
+                    common.set_avatar(result.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
+                    AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+                    AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
+                }
+                app_secure.init();
+            })
+        })
     })
     .catch(()=>common.ComponentRemove('admin_secure'));
 };
@@ -148,10 +164,6 @@ const app_event_click = event => {
                 /**Dialogue profile */
                 case 'common_profile_home':{
                     common.profile_stat(1);
-                    break;
-                }
-                case 'common_profile_close':{
-                    common.profile_close();
                     break;
                 }
                 case 'common_profile_stat_row1_1':{

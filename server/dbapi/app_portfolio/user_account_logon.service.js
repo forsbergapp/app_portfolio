@@ -29,8 +29,8 @@ const getUserAccountLogon = async (app_id, user_account_id, app_id_select) => {
 };
 /**
  * 
- * @param {number} app_id 
- * @param {number} user_account_id 
+ * @param {number|null} app_id 
+ * @param {number|null} user_account_id 
  * @returns {Promise.<import('../../../types.js').db_result_user_account_logon_Checklogin[]>}
  */
 const checkLogin = async (app_id, user_account_id) => {
