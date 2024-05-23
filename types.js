@@ -16,7 +16,7 @@
  *          res: res|null}} bff_parameters
  * 
  * Routes paramaters
- * @typedef {{  app_id: req_id_number,
+ * @typedef {{  app_id: number,
 *               endpoint: string,
 *               host:string,
 *               url:string,
@@ -250,6 +250,13 @@
  */
 
 /**
+ * JWT token
+ * @typedef {{  app_id:         number,
+ *              id:             number|null,
+ *              name:           string,
+ *              ip:             string,
+ *              scope:          'USER'|'APP',
+ *              tokentimestamp: number}} access_token_claim_type
  * Apps - Email param data
  * @typedef {object} email_param_data
  * @property {string} emailtype         - [1-4], 1=SIGNUP, 2=UNVERIFIED, 3=PASSWORD RESET (FORGOT), 4=CHANGE EMAIL
