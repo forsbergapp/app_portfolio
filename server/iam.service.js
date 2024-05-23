@@ -158,7 +158,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
 /**
  * Middleware authenticate IAM users
  * @param {string} iam
- * @param {'SYSTEMADMIN'|'ADMIN'|'USER'|'PROVIDER'|'APP_SYSTEMADMIN'|'APP_ACCESS'|'APP_ACCESS_ADMIN'|'APP_ACCESS_SUPERADMIN'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
+ * @param {'AUTH_SYSTEMADMIN'|'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'APP_SYSTEMADMIN'|'APP_ACCESS'|'APP_ACCESS_ADMIN'|'APP_ACCESS_SUPERADMIN'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
  * @param {string} authorization
  * @param {string} host
  * @param {string} ip
@@ -176,7 +176,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
         try {
             //authenticate id token
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const id_token_decoded = jwt.verify(id_token, ConfigGetApp(app_id_host, app_id_host, 'SECRETS').APP_DATA_SECRET);
+            const id_token_decoded = jwt.verify(id_token, ConfigGetApp(app_id_host, app_id_host, 'SECRETS').APP_ID_SECRET);
             /**@type{import('../types.js').iam_app_token_record[]}*/
             const log_id_token = await file_get_log('IAM_APP_TOKEN', 'YYYYMMDD');
             if (id_token_decoded.app_id == app_id_host && 
@@ -209,11 +209,11 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                     }
                     //validate scope, app_id and authorization
                     switch (true){
-                        case (scope=='SYSTEMADMIN' || scope=='ADMIN') && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BASIC'):{
+                        case (scope=='AUTH_SYSTEMADMIN' || scope=='AUTH_ADMIN') && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BASIC'):{
                             next();
                             break;
                         }
-                        case (scope=='USER' || scope=='PROVIDER') && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BASIC'):{
+                        case (scope=='AUTH_USER' || scope=='AUTH_PROVIDER') && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BASIC'):{
                             if (getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1){
                                 next();
                             }
@@ -495,8 +495,8 @@ const AuthenticateResource = parameters =>  parameters.resource_id &&
  * @returns {Promise.<string>}
  */
  const AuthorizeTokenApp = async (app_id, ip)=>{
-    const secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_SECRET;
-    const expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_DATA_EXPIRE;
+    const secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_SECRET;
+    const expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_EXPIRE;
     const jsontoken_at = jwt.sign ({scope:'APP',
                                     app_id:app_id,
                                     ip:ip,

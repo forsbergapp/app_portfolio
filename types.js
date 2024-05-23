@@ -284,7 +284,7 @@
  * @property {number} app_id                - app id
  * @property {string} locale                - locale
  * @property {number} system_admin_only     - 0/1
- * @property {string} datatoken             - JW token
+ * @property {string} idtoken             - JW token
  * @property {string} latitude              - geodata latitude
  * @property {string} longitude             - geodata longitude
  * @property {string} place                 - geodata place
@@ -326,7 +326,7 @@
  * @property {number}       app_framework
  * @property {number}       app_framework_messages
  * @property {number}       app_rest_api_version
- * @property {string}       app_datatoken
+ * @property {string}       app_idtoken
  * @property {string}       locale
  * @property {translate_items}  translate_items
  * @property {number}       system_admin_only
@@ -544,8 +544,8 @@
  *              SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME: string,
  *              CLIENT_ID: string, 
  *              CLIENT_SECRET:string, 
- *              APP_DATA_SECRET:string, 
- *              APP_DATA_EXPIRE:string, 
+ *              APP_ID_SECRET:string, 
+ *              APP_ID_EXPIRE:string, 
  *              APP_ACCESS_SECRET:string, 
  *              APP_ACCESS_EXPIRE:string
  *          }} config_apps_secrets

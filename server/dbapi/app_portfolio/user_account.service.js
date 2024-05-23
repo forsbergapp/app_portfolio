@@ -315,12 +315,7 @@ const updateUserSuperAdmin = async (app_id, id, data) => {
 const create = async (app_id, data) => {
 	let sql;
 	let parameters;
-	if (typeof data.provider_id != 'undefined' && 
-		data.provider_id != '' && 
-		data.provider_id){
-		//generate local username for provider 1
-		data.username = `${data.provider_first_name}${Date.now()}`;
-	}
+	
 	const error_code = data_validation(data);
 	if (error_code==null){
 		sql = `INSERT INTO ${db_schema()}.user_account(

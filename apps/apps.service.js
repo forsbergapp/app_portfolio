@@ -210,7 +210,7 @@ const get_module_with_initBFF = async (app_info) => {
                 app_framework : getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK),
                 app_framework_messages:getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES),
                 app_rest_api_version:getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_REST_API_VERSION' in parameter)[0].APP_REST_API_VERSION),
-                app_datatoken: app_info.datatoken,
+                app_idtoken: app_info.idtoken,
                 locale: app_info.locale,
                 translate_items:app_info.translate_items,
                 system_admin_only: app_info.system_admin_only,
@@ -397,10 +397,10 @@ const getInfo = async (app_id, info) => {
  * @returns {Promise.<string|null>}
  */
 const getAppBFF = async (app_id, app_parameters) =>{
-    //Data token
+    //id token
     /**@type{import('../server/iam.service.js')} */
     const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
-    const datatoken = await AuthorizeTokenApp(app_id, app_parameters.ip);
+    const idtoken = await AuthorizeTokenApp(app_id, app_parameters.ip);
     const result_geodata = await getAppGeodata(app_id, 'SERVER_APP', app_parameters.ip, app_parameters.user_agent, app_parameters.accept_language);
     /** @type {number} */
     let system_admin_only;
@@ -450,7 +450,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
     const app_with_init = await get_module_with_initBFF({   app_id:             app_id, 
                                                             locale:             client_locale(app_parameters.accept_language),
                                                             system_admin_only:  system_admin_only,
-                                                            datatoken:          datatoken,
+                                                            idtoken:          idtoken,
                                                             latitude:           result_geodata.latitude,
                                                             longitude:          result_geodata.longitude,
                                                             place:              result_geodata.place,
@@ -654,12 +654,12 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
 const getMaintenance = async (app_id, ip) => {
     /**@type{import('../server/iam.service.js')} */
     const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
-    const datatoken = await AuthorizeTokenApp(app_id, ip);
+    const idtoken = await AuthorizeTokenApp(app_id, ip);
     //maintenance can be used from all app_id
     const json_parameters = JSON.stringify({   
         app_id: app_id,
         common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
-        app_datatoken: datatoken,
+        app_idtoken: idtoken,
         rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF')
     });
     /** @type {[string, string][]} */

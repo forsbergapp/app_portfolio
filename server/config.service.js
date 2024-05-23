@@ -245,7 +245,7 @@ const DefaultConfig = async () => {
     config_obj[1][1].APPS.map((/**@type{import('../types.js').config_apps_record}*/row)=>{
         row.SECRETS.CLIENT_ID = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.SECRETS.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
-        row.SECRETS.APP_DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+        row.SECRETS.APP_ID_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.SECRETS.APP_ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
     });
     //set created for user
