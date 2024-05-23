@@ -97,7 +97,7 @@ const ConnectedListAdmin = (app_id, query, res) =>{
             if (result && result.length>0)
                 resolve(result);
             else
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                import(`file://${process.cwd()}/server/db/common.service.js`).then(({record_not_found}) => {
                     record_not_found( app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         });

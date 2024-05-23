@@ -4,8 +4,8 @@
 const {render_app_with_data} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 /**@type{import('../../../../server/server.service')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-/**@type{import('../../../../server/dbapi/sql/user_account_app_data_post_view.service.js')} */
-const { insertUserPostView} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_app_data_post_view.service.js`);
+/**@type{import('../../../../server/db/sql/user_account_app_data_post_view.service.js')} */
+const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
 const {default: QRCode} = await import('easyqrcodejs-nodejs');
 /**
  * App types
@@ -563,7 +563,7 @@ const isToday = checkdate => {
  * @returns {Promise.<null>}
  */
 const set_prayer_method = async(app_id) => {
-    const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/sql/app_setting.service.js`);
+    const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`);
 	return new Promise( (resolve, reject) => {
 		/* see more in PrayTimes module
 		original
@@ -1221,7 +1221,7 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
  * @returns {Promise.<type_settings_report>}
  */
 const timetable_user_account_app_data_post_get = async (app_id, user_account_app_data_post_id) => {
-    const { getUserPost} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_app_data_post.service.js`);
+    const { getUserPost} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post.service.js`);
 	return getUserPost(app_id, user_account_app_data_post_id)
 	.then((/**@type{import('../../../../types.js').db_result_user_account_app_data_post_getUserPost[]}*/result_user_account_app_data_post)=>{
 		const user_account_app_data_post = JSON.parse(result_user_account_app_data_post[0].json_data);
@@ -1294,7 +1294,7 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
  * @param {string} locale_second 
  */
 const timetable_translate_settings = async (app_id, locale, locale_second) => {
-    const { getObjects } = await import(`file://${process.cwd()}/server/dbapi/sql/app_object.service.js`);
+    const { getObjects } = await import(`file://${process.cwd()}/server/db/sql/app_object.service.js`);
 	/**
 	 * 
 	 * @param {string} locale 
@@ -1349,7 +1349,7 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
 	/**@type{type_day_user_account_app_data_posts[]} */
 	const user_account_app_data_posts = [];
 
-    const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_app_data_post.service.js`);
+    const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post.service.js`);
     return getUserPostsByUserId(app_id, user_account_id)
 	.then((/**@type{import('../../../../types.js').db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_user_account_app_data_posts)=>{
 		for (const user_account_app_data_post of result_user_account_app_data_posts) {
