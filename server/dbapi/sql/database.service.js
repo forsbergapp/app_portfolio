@@ -1,4 +1,4 @@
-/** @module server/dbapi/app_portfolio/app_category */
+/** @module server/dbapi/sql/app_category */
 
 /**
  * 
@@ -12,7 +12,7 @@
    /**@type{import('../../config.service.js')} */
    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
    /**@type{import('../../dbapi/common/common.service.js')} */
-   const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+   const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    
    let sql = '';
    const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
@@ -132,7 +132,7 @@
     }
     const parameters = {	
                    database: db_use,
-                   database_schema: db_schema()
+                   database_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)
                    };
     return await db_execute(app_id, sql, parameters, DBA);
  };
@@ -148,7 +148,7 @@ const InfoSpace = async (app_id, DBA) => {
    /**@type{import('../../config.service.js')} */
    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
    /**@type{import('../../dbapi/common/common.service.js')} */
-   const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+   const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
    let sql = '';
    switch (getNumberValue(ConfigGet('SERVICE_DB', 'USE'))){
@@ -210,7 +210,7 @@ const InfoSpace = async (app_id, DBA) => {
       break;
       }
     }
-    const parameters = getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: db_schema()};
+    const parameters = getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)};
     return await db_execute(app_id, sql, parameters, DBA);
  };
  /**
@@ -225,7 +225,7 @@ const InfoSpaceSum = async (app_id, DBA) => {
    /**@type{import('../../config.service.js')} */
    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
    /**@type{import('../../dbapi/common/common.service.js')} */
-   const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+   const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
     
    let sql = '';
    switch (getNumberValue(ConfigGet('SERVICE_DB', 'USE'))){
@@ -275,7 +275,7 @@ const InfoSpaceSum = async (app_id, DBA) => {
          break;
       }
    }
-   const parameters = getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: db_schema()};
+   const parameters = getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)};
    return await db_execute(app_id, sql, parameters, DBA);
  };
  
@@ -287,9 +287,9 @@ const InfoSpaceSum = async (app_id, DBA) => {
   */
  const InstalledCheck = async (app_id, DBA) =>{
    /**@type{import('../../dbapi/common/common.service.js')} */
-   const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+   const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    const sql = `SELECT 1 "installed"
-                  FROM ${db_schema()}.app
+                  FROM <DB_SCHEMA/>.app
                   WHERE id = :app_id`;
    const parameters = {app_id: app_id};
    return await db_execute(app_id, sql, parameters, DBA);

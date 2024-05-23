@@ -1,11 +1,11 @@
-/** @module server/dbapi/app_portfolio/user_account */
+/** @module server/dbapi/sql/user_account */
 
 /**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../../config.service.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -170,7 +170,7 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 					  ua.avatar "avatar",
 					  ua.app_role_id "app_role_id",
 					  (SELECT ap_user.icon
-						 FROM ${db_schema()}.app_role ap_user
+						 FROM <DB_SCHEMA/>.app_role ap_user
 						WHERE ap_user.id = COALESCE(ua.app_role_id,2)) "app_role_icon",
 					  ua.active "active",
 					  ua.user_level "user_level",
@@ -192,10 +192,10 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 					  ua.provider_email "provider_email",
 					  ua.date_created "date_created",
 					  ua.date_modified "date_modified"
-				 FROM ${db_schema()}.user_account ua
-					  LEFT OUTER JOIN ${db_schema()}.identity_provider ip
+				 FROM <DB_SCHEMA/>.user_account ua
+					  LEFT OUTER JOIN <DB_SCHEMA/>.identity_provider ip
 						ON ip.id = ua.identity_provider_id
-					  LEFT OUTER JOIN ${db_schema()}.app_role ap
+					  LEFT OUTER JOIN <DB_SCHEMA/>.app_role ap
 						ON ap.id = ua.app_role_id
 				WHERE (ua.username LIKE :search
 				   OR ua.bio LIKE :search
@@ -224,7 +224,7 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
  */
 const getUserAppRoleAdmin = async (app_id, id) => {
 	const sql = `SELECT app_role_id "app_role_id"
-				   FROM ${db_schema()}.user_account
+				   FROM <DB_SCHEMA/>.user_account
 				  WHERE id = :id`;
 	const parameters = {id: id};
 	return await db_execute(app_id, sql, parameters, null);
@@ -243,8 +243,8 @@ const getStatCountAdmin = async app_id => {
 							ip.provider_name 
 						END "provider_name",
 						COUNT(*) "count_users"
-				   FROM ${db_schema()}.user_account ua
-						LEFT OUTER JOIN ${db_schema()}.identity_provider ip
+				   FROM <DB_SCHEMA/>.user_account ua
+						LEFT OUTER JOIN <DB_SCHEMA/>.identity_provider ip
 						ON ip.id = ua.identity_provider_id
 				  GROUP BY ua.identity_provider_id, ip.provider_name
 				  ORDER BY ua.identity_provider_id`;
@@ -271,7 +271,7 @@ const updateUserSuperAdmin = async (app_id, id, data) => {
 		data.verification_code = null;
 	const error_code = data_validation(data);
 	if (error_code==null){
-		sql = `UPDATE ${db_schema()}.user_account
+		sql = `UPDATE <DB_SCHEMA/>.user_account
 				SET app_role_id = :app_role_id,
 					active = :active,
 					user_level = :user_level,
@@ -318,7 +318,7 @@ const create = async (app_id, data) => {
 	
 	const error_code = data_validation(data);
 	if (error_code==null){
-		sql = `INSERT INTO ${db_schema()}.user_account(
+		sql = `INSERT INTO <DB_SCHEMA/>.user_account(
 					bio,
 					private,
 					user_level,
@@ -393,7 +393,7 @@ const create = async (app_id, data) => {
  * @returns {Promise.<import('../../../types.js').db_result_user_account_activateUser>}
  */
 const activateUser = async (app_id, id, verification_type, verification_code, auth) => {
-	const sql = `UPDATE ${db_schema()}.user_account
+	const sql = `UPDATE <DB_SCHEMA/>.user_account
 					SET active = 1,
 						verification_code = :auth,
 						email = CASE 
@@ -427,7 +427,7 @@ const activateUser = async (app_id, id, verification_type, verification_code, au
  * @returns {Promise.<import('../../../types.js').db_result_user_account_updateUserVerificationCode>}
  */
 const updateUserVerificationCode = async (app_id, id, verification_code) => {
-	const sql = `UPDATE ${db_schema()}.user_account
+	const sql = `UPDATE <DB_SCHEMA/>.user_account
 					SET verification_code = :verification_code,
 						active = 0,
 						date_modified = CURRENT_TIMESTAMP
@@ -466,7 +466,7 @@ const getUserByUserId = async (app_id, id) => {
 						u.provider_email "provider_email",
 						u.date_created "date_created",
 						u.date_modified "date_modified"
-				FROM   ${db_schema()}.user_account u
+				FROM   <DB_SCHEMA/>.user_account u
 			WHERE   u.id = :id `;
 	const parameters = {id: id};
 	return await db_execute(app_id, sql, parameters, null);
@@ -517,11 +517,11 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
 						u.bio "bio",
 						u.private "private",
 						(SELECT 1 
-							FROM ${db_schema()}.user_account ua_current
+							FROM <DB_SCHEMA/>.user_account ua_current
 						   WHERE ua_current.id = :user_accound_id_current_user
 								AND EXISTS 
 							(SELECT NULL
-							   FROM ${db_schema()}.user_account_follow  uaf 
+							   FROM <DB_SCHEMA/>.user_account_follow  uaf 
 							  WHERE (uaf.user_account_id = u.id
 									 AND uaf.user_account_id_follow = ua_current.id)
 								or  (
@@ -541,33 +541,33 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
 						u.provider_image "provider_image",
 						u.provider_image_url "provider_image_url",
 						(SELECT COUNT(u_following.user_account_id)   
-							FROM ${db_schema()}.user_account_follow  u_following
+							FROM <DB_SCHEMA/>.user_account_follow  u_following
 							WHERE u_following.user_account_id = u.id) 					"count_following",
 						(SELECT COUNT(u_followed.user_account_id_follow) 
-							FROM ${db_schema()}.user_account_follow  u_followed
+							FROM <DB_SCHEMA/>.user_account_follow  u_followed
 							WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
 						(SELECT COUNT(u_likes.user_account_id)
-							FROM ${db_schema()}.user_account_like    u_likes
+							FROM <DB_SCHEMA/>.user_account_like    u_likes
 							WHERE u_likes.user_account_id = u.id ) 						"count_likes",
 						(SELECT COUNT(u_likes.user_account_id_like)
-							FROM ${db_schema()}.user_account_like    u_likes
+							FROM <DB_SCHEMA/>.user_account_like    u_likes
 							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
 						(SELECT COUNT(u_views.user_account_id_view)
-							FROM ${db_schema()}.user_account_view    u_views
+							FROM <DB_SCHEMA/>.user_account_view    u_views
 							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
 						(SELECT COUNT(u_followed_current_user.user_account_id)
-							FROM ${db_schema()}.user_account_follow  u_followed_current_user 
+							FROM <DB_SCHEMA/>.user_account_follow  u_followed_current_user 
 							WHERE u_followed_current_user.user_account_id_follow = u.id
 							AND u_followed_current_user.user_account_id = :user_accound_id_current_user) 	"followed",
 						(SELECT COUNT(u_liked_current_user.user_account_id)  
-							FROM ${db_schema()}.user_account_like    u_liked_current_user
+							FROM <DB_SCHEMA/>.user_account_like    u_liked_current_user
 							WHERE u_liked_current_user.user_account_id_like = u.id
 							AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
-				 FROM ${db_schema()}.user_account u
+				 FROM <DB_SCHEMA/>.user_account u
 				WHERE ${user_where()}
 				  AND u.active = 1
 				  AND EXISTS(SELECT NULL
-							   FROM ${db_schema()}.user_account_app uap
+							   FROM <DB_SCHEMA/>.user_account_app uap
 							  WHERE uap.user_account_id = u.id
 								AND uap.app_id = :app_id)`;
 	const parameters ={
@@ -602,8 +602,8 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
 							u.provider_image_url,
 							u.username,
 							u.provider_first_name
-					 FROM ${db_schema()}.user_account_follow u_follow,
-						  ${db_schema()}.user_account u
+					 FROM <DB_SCHEMA/>.user_account_follow u_follow,
+						  <DB_SCHEMA/>.user_account u
 				    WHERE u_follow.user_account_id = :user_account_id
  					  AND u.id = u_follow.user_account_id_follow
 					  AND u.active = 1
@@ -617,8 +617,8 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
 							u.provider_image_url,
 							u.username,
 							u.provider_first_name
-					 FROM ${db_schema()}.user_account_follow u_followed,
-						  ${db_schema()}.user_account u
+					 FROM <DB_SCHEMA/>.user_account_follow u_followed,
+						  <DB_SCHEMA/>.user_account u
 					WHERE u_followed.user_account_id_follow = :user_account_id
  					  AND u.id = u_followed.user_account_id
 					  AND u.active = 1
@@ -632,8 +632,8 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
 							u.provider_image_url,
 							u.username,
 							u.provider_first_name
-					 FROM ${db_schema()}.user_account_like u_like,
-						  ${db_schema()}.user_account u
+					 FROM <DB_SCHEMA/>.user_account_like u_like,
+						  <DB_SCHEMA/>.user_account u
 				    WHERE u_like.user_account_id = :user_account_id
  					  AND u.id = u_like.user_account_id_like
 					  AND u.active = 1
@@ -647,8 +647,8 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
 							u.provider_image_url,
 							u.username,
 							u.provider_first_name
-					 FROM ${db_schema()}.user_account_like u_liked,
-						  ${db_schema()}.user_account u
+					 FROM <DB_SCHEMA/>.user_account_like u_liked,
+						  <DB_SCHEMA/>.user_account u
 				    WHERE u_liked.user_account_id_like = :user_account_id
   					  AND u.id = u_liked.user_account_id
 					  AND u.active = 1
@@ -689,9 +689,9 @@ const getProfileStat = async (app_id, statchoice) => {
 							u.username,
 							u.provider_first_name,
 							(SELECT COUNT(u_visited.user_account_id_view)
-							   FROM ${db_schema()}.user_account_view u_visited
+							   FROM <DB_SCHEMA/>.user_account_view u_visited
 							  WHERE u_visited.user_account_id_view = u.id) count
-				     FROM ${db_schema()}.user_account u
+				     FROM <DB_SCHEMA/>.user_account u
 				    WHERE u.active = 1
 					  AND u.private <> 1
 					  AND 1 = :statchoice
@@ -706,9 +706,9 @@ const getProfileStat = async (app_id, statchoice) => {
 							u.username,
 							u.provider_first_name,
 							(SELECT COUNT(u_follow.user_account_id_follow)
-							   FROM ${db_schema()}.user_account_follow u_follow
+							   FROM <DB_SCHEMA/>.user_account_follow u_follow
 							  WHERE u_follow.user_account_id_follow = u.id) count
-					 FROM ${db_schema()}.user_account u
+					 FROM <DB_SCHEMA/>.user_account u
 				    WHERE u.active = 1
   					  AND u.private <> 1
 					  AND 2 = :statchoice
@@ -723,14 +723,14 @@ const getProfileStat = async (app_id, statchoice) => {
 							u.username,
 							u.provider_first_name,
 							(SELECT COUNT(u_like.user_account_id_like)
-							   FROM ${db_schema()}.user_account_like u_like
+							   FROM <DB_SCHEMA/>.user_account_like u_like
 						      WHERE u_like.user_account_id_like = u.id) count
-					 FROM ${db_schema()}.user_account u
+					 FROM <DB_SCHEMA/>.user_account u
 					WHERE  u.active = 1
  					  AND  u.private <> 1
 					  AND  3 = :statchoice) t
 			WHERE EXISTS(SELECT NULL
-						   FROM ${db_schema()}.user_account_app uap
+						   FROM <DB_SCHEMA/>.user_account_app uap
 						  WHERE uap.user_account_id = t.id
 						    AND uap.app_id = :app_id)
 		    ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
@@ -749,7 +749,7 @@ const getProfileStat = async (app_id, statchoice) => {
  */
 const checkPassword = async (app_id, id) => {
 	const sql = `SELECT password "password"
-				   FROM ${db_schema()}.user_account
+				   FROM <DB_SCHEMA/>.user_account
 				  WHERE id = :id `;
 	const parameters = {id: id};
 	return await db_execute(app_id, sql, parameters, null);
@@ -764,7 +764,7 @@ const checkPassword = async (app_id, id) => {
 const updatePassword = async (app_id, id, data) => {
 	const error_code = data_validation_password(data);
 	if (error_code==null){
-		const sql = `UPDATE ${db_schema()}.user_account
+		const sql = `UPDATE <DB_SCHEMA/>.user_account
 						SET password = :password_new,
 							verification_code = null
 						WHERE id = :id  
@@ -792,7 +792,7 @@ const updateUserLocal = async (app_id, data, search_id) => {
 	let parameters;
 	const error_code = data_validation(data);
 	if (error_code==null){
-		sql = `UPDATE ${db_schema()}.user_account
+		sql = `UPDATE <DB_SCHEMA/>.user_account
 					SET bio = :bio,
 						private = :private,
 						username = :username,
@@ -834,7 +834,7 @@ const updateUserCommon = async (app_id, data, id) => {
 	let parameters;
 	const error_code = data_validation_common(data);
 	if (error_code==null){
-		sql = `UPDATE ${db_schema()}.user_account
+		sql = `UPDATE <DB_SCHEMA/>.user_account
 					SET username = :username,
 						bio = :bio,
 						private = :private,
@@ -857,7 +857,7 @@ const updateUserCommon = async (app_id, data, id) => {
  * @returns {Promise.<import('../../../types.js').db_result_user_account_deleteUser>}
  */
 const deleteUser = async (app_id, id) => {
-	const sql = `DELETE FROM ${db_schema()}.user_account
+	const sql = `DELETE FROM <DB_SCHEMA/>.user_account
 				  WHERE id = :id `;
 	const parameters = {id: id};
 	return await db_execute(app_id, sql, parameters, null);
@@ -877,7 +877,7 @@ const userLogin = async (app_id, data) => {
 						active "active",
 						avatar "avatar",
 						app_role_id "app_role_id"
-				   FROM ${db_schema()}.user_account
+				   FROM <DB_SCHEMA/>.user_account
 				  WHERE username = :username 
 					AND provider_id IS NULL`;
 	const parameters ={
@@ -896,7 +896,7 @@ const updateSigninProvider = async (app_id, id, data) => {
 	let parameters;
 	const error_code = data_validation(data);
 	if (error_code==null){
-		const sql = `UPDATE ${db_schema()}.user_account
+		const sql = `UPDATE <DB_SCHEMA/>.user_account
 						SET identity_provider_id = :identity_provider_id,
 							provider_id = :provider_id,
 							provider_first_name = :provider_first_name,
@@ -942,7 +942,7 @@ const providerSignIn = async (app_id, identity_provider_id, search_id) => {
 						u.provider_image_url "provider_image_url",
 						u.provider_email "provider_email",
 						u.app_role_id "app_role_id"
-				FROM ${db_schema()}.user_account u
+				FROM <DB_SCHEMA/>.user_account u
 				WHERE u.provider_id = :provider_id
 				AND u.identity_provider_id = :identity_provider_id`;
 	const parameters = {
@@ -960,7 +960,7 @@ const providerSignIn = async (app_id, identity_provider_id, search_id) => {
 const getEmailUser = async (app_id, email) => {
 	const sql = `SELECT id "id",
 						email "email"
-				   FROM ${db_schema()}.user_account
+				   FROM <DB_SCHEMA/>.user_account
 				  WHERE email = :email `;
 	const parameters ={
 					email: email
@@ -977,17 +977,17 @@ const getEmailUser = async (app_id, email) => {
 const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
 	const sql = `SELECT app_role_id "app_role_id",
 						COALESCE(ar.icon,ar_user.icon) "icon"
-				   FROM ${db_schema()}.user_account ua
-						LEFT OUTER JOIN ${db_schema()}.app_role ar
+				   FROM <DB_SCHEMA/>.user_account ua
+						LEFT OUTER JOIN <DB_SCHEMA/>.app_role ar
 						ON ar.id = ua.app_role_id,
-						${db_schema()}.app_role ar_user
+						<DB_SCHEMA/>.app_role ar_user
 				  WHERE ua.id = :id 
 					AND ar_user.id = :id_user_icon
 					AND :id IS NOT NULL
 				UNION ALL
 				 SELECT	NULL "app_role_id",
 						ar.icon "icon"
-				   FROM ${db_schema()}.app_role ar
+				   FROM <DB_SCHEMA/>.app_role ar
 				  WHERE ar.id = :id_user_icon
 					AND :id IS NULL`;
 	const parameters ={
@@ -1005,7 +1005,7 @@ const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
 const getDemousers = async app_id => {
 	const sql = `SELECT id "id",
 						username "username"	
-					FROM ${db_schema()}.user_account
+					FROM <DB_SCHEMA/>.user_account
 				WHERE user_level = :demo_level`;
 	const parameters ={
 					demo_level: 2

@@ -1,11 +1,11 @@
-/** @module server/dbapi/app_portfolio/app_object */
+/** @module server/dbapi/sql/app_object */
 
 /**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../../config.service.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -28,13 +28,13 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 									l.lang_code					lang_code, 
 									null 						id, 
 									aot.text					text
-							FROM ${db_schema()}.app_translation aot,
-								${db_schema()}.language l
+							FROM <DB_SCHEMA/>.app_translation aot,
+								<DB_SCHEMA/>.language l
 							WHERE l.id = aot.language_id
 							AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-												FROM ${db_schema()}.language l1,
-														${db_schema()}.app_translation aot1
+												FROM <DB_SCHEMA/>.language l1,
+														<DB_SCHEMA/>.app_translation aot1
 												WHERE aot1.language_id = l1.id
 													AND aot1.app_object_app_id = aot.app_object_app_id
 													AND aot1.app_object_object_name = aot.app_object_object_name
@@ -49,11 +49,11 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 									l.lang_code, 
 									s.id, 
 									str.text
-							FROM ${db_schema()}.app_object_item aoi,
-								${db_schema()}.app_setting_type st,
-								${db_schema()}.app_setting s,
-								${db_schema()}.app_translation str,
-								${db_schema()}.language l
+							FROM <DB_SCHEMA/>.app_object_item aoi,
+								<DB_SCHEMA/>.app_setting_type st,
+								<DB_SCHEMA/>.app_setting s,
+								<DB_SCHEMA/>.app_translation str,
+								<DB_SCHEMA/>.language l
 							WHERE aoi.app_setting_type_app_setting_type_name = st.app_setting_type_name
 							AND aoi.app_setting_type_app_id = st.app_id
 							AND s.app_setting_type_app_setting_type_name = st.app_setting_type_name
@@ -62,8 +62,8 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 							AND str.app_setting_id = s.id
 							AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-												FROM ${db_schema()}.language l1,
-														${db_schema()}.app_translation str1
+												FROM <DB_SCHEMA/>.language l1,
+														<DB_SCHEMA/>.app_translation str1
 												WHERE str1.language_id = l1.id
 													AND str1.app_setting_id = s.id
 													AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -80,13 +80,13 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 								l.lang_code, 
 								null id, 
 								aoit.text
-							FROM ${db_schema()}.app_translation aoit,
-								${db_schema()}.language l
+							FROM <DB_SCHEMA/>.app_translation aoit,
+								<DB_SCHEMA/>.language l
 							WHERE l.id = aoit.language_id
 							AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-												FROM ${db_schema()}.language l1,
-														${db_schema()}.app_translation aoit1
+												FROM <DB_SCHEMA/>.language l1,
+														<DB_SCHEMA/>.app_translation aoit1
 												WHERE aoit1.language_id = l1.id
 													AND aoit1.app_object_item_app_object_app_id = aoit.app_object_item_app_object_app_id
 													AND aoit1.app_object_item_app_object_object_name = aoit.app_object_item_app_object_object_name

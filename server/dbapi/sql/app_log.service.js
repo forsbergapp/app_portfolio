@@ -1,11 +1,11 @@
-/** @module server/dbapi/app_portfolio/app_log */
+/** @module server/dbapi/sql/app_log */
 
 /**@type{import('../../server.service.js')} */
 const { getNumberValue } = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../../config.service.js')} */
 const { ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../common/common.service.js')} */
-const {db_date_period, db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_date_period, db_execute, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -16,7 +16,7 @@ const {db_date_period, db_execute, db_schema, db_limit_rows} = await import(`fil
  */
 const createLog = async (app_id, data_app_id, json_data) => {
 		
-	const sql = `INSERT INTO ${db_schema()}.app_log(
+	const sql = `INSERT INTO <DB_SCHEMA/>.app_log(
 				app_id,
 				json_data,
 				date_created)
@@ -48,7 +48,7 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 					  json_data "json_data",
 					  date_created "date_created",
 					  count(*) over() "total_rows"
-				 FROM ${db_schema()}.app_log
+				 FROM <DB_SCHEMA/>.app_log
 				WHERE ((app_id = :app_id) OR :app_id IS NULL)
 				  AND ${db_date_period('YEAR')} = :year
 				  AND ${db_date_period('MONTH')} = :month
@@ -81,7 +81,7 @@ const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 							  app_id,
 					          NULL 									day_log,
 					          json_data
-						 FROM ${db_schema()}.app_log
+						 FROM <DB_SCHEMA/>.app_log
 						WHERE ${db_date_period('YEAR')} = :year_log
 						  AND ${db_date_period('MONTH')} = :month_log
 						UNION ALL
@@ -89,7 +89,7 @@ const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 					   		  NULL 									app_id,
 							  ${db_date_period('DAY')} 			day_log,
 							  json_data
-						 FROM ${db_schema()}.app_log
+						 FROM <DB_SCHEMA/>.app_log
 						WHERE ((app_id = :app_id_log) OR :app_id_log IS NULL)
 						  AND ${db_date_period('YEAR')} = :year_log
 						  AND ${db_date_period('MONTH')} = :month_log) t

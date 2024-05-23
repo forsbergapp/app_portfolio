@@ -183,8 +183,8 @@ const LogServerE = async (logtext)=>{
 };
 /**
  * Log DB Info
- * @param {number} app_id 
- * @param {number} db 
+ * @param {number|null} app_id 
+ * @param {number|null} db 
  * @param {string} sql 
  * @param {object} parameters 
  * @param {import('../types.js').db_query_result} result 
@@ -229,8 +229,8 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
 };
 /**
  * Log DB Error
- * @param {number} app_id 
- * @param {number} db 
+ * @param {number|null} app_id 
+ * @param {number|null} db 
  * @param {string} sql 
  * @param {object} parameters 
  * @param {import('../types.js').db_query_result_error} result 

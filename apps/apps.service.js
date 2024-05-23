@@ -6,8 +6,8 @@ const {CheckFirstTime, ConfigGet, ConfigGetAppHost, ConfigGetApp} = await import
 const { LogAppI, LogAppE } = await import(`file://${process.cwd()}/server/log.service.js`);
 /**@type{import('../server/server.service.js')} */
 const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-/**@type{import('../server/dbapi/app_portfolio/database.service.js')} */
-const {InstalledCheck} = await await import(`file://${process.cwd()}/server/dbapi/app_portfolio/database.service.js`);
+/**@type{import('../server/dbapi/sql/database.service.js')} */
+const {InstalledCheck} = await await import(`file://${process.cwd()}/server/dbapi/sql/database.service.js`);
 /**@type{import('../server/db/file.service.js')} */
 const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
@@ -367,7 +367,7 @@ const getInfo = async (app_id, info) => {
             .catch((/**@type{import('../types.js').error}*/err)=>reject(err));
         };
         if (param!=null && ConfigGetApp(app_id, app_id, 'SHOWPARAM') == 1){
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getProfileUser}) => {
+            import(`file://${process.cwd()}/server/dbapi/sql/user_account.service.js`).then(({getProfileUser}) => {
                 getProfileUser(app_id, null, param, null, null)
                 .then((/**@type{import('../types.js').db_result_user_account_getProfileUser[]}*/result)=>{
                     if (result[0])
@@ -440,8 +440,8 @@ const getAppBFF = async (app_id, app_parameters) =>{
             return null;
         app_module_type = 'APP';
         //get translation data
-        /**@type{import('../server/dbapi/app_portfolio/app_object.service.js')} */
-        const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
+        /**@type{import('../server/dbapi/sql/app_object.service.js')} */
+        const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/sql/app_object.service.js`);
         const result_objects = await getObjects(app_id, client_locale(app_parameters.accept_language), 'APP', null);
         for (const row of result_objects){
             translate_items[row.object_item_name.toUpperCase()] = row.text;
@@ -459,8 +459,8 @@ const getAppBFF = async (app_id, app_parameters) =>{
                                                             module:             app});
     //if app admin then log, system does not log in database
     if (await app_start() && getNumberValue(ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LOG' in parameter)[0].APP_LOG) == 1){
-        /**@type{import('../server/dbapi/app_portfolio/app_log.service.js')} */
-        const {createLog} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`);
+        /**@type{import('../server/dbapi/sql/app_log.service.js')} */
+        const {createLog} = await import(`file://${process.cwd()}/server/dbapi/sql/app_log.service.js`);
         await createLog(app_id,
                         app_id,
                         {   
@@ -676,8 +676,8 @@ const getMaintenance = async (app_id, ip) => {
  * @param {string} lang_code 
  */
 const getApps = async (app_id, resource_id, lang_code) =>{
-    /**@type{import('../server/dbapi/app_portfolio/app.service.js')} */
-    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
+    /**@type{import('../server/dbapi/sql/app.service.js')} */
+    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/sql/app.service.js`);
     /**@type{import('../server/config.service.js')} */
     const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
 
@@ -713,8 +713,8 @@ const getApps = async (app_id, resource_id, lang_code) =>{
  * @param {string} lang_code 
  */
  const getAppsAdmin = async (app_id, lang_code) =>{
-    /**@type{import('../server/dbapi/app_portfolio/app.service.js')} */
-    const {getAppsAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
+    /**@type{import('../server/dbapi/sql/app.service.js')} */
+    const {getAppsAdmin} = await import(`file://${process.cwd()}/server/dbapi/sql/app.service.js`);
     /**@type{import('../server/config.service.js')} */
     const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
 

@@ -1,7 +1,7 @@
-/** @module server/dbapi/app_portfolio/app_role */
+/** @module server/dbapi/sql/app_role */
 
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -13,7 +13,7 @@ const getAppRoleAdmin = async (app_id, id) => {
         const sql = `SELECT ar.id "id",
 							ar.role_name "role_name",
 							ar.icon "icon"
-					   FROM ${db_schema()}.app_role ar
+					   FROM <DB_SCHEMA/>.app_role ar
 					  WHERE ((ar.id = :id) OR :id IS NULL)
 					 ORDER BY 1`;
         

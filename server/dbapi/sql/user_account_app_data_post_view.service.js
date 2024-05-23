@@ -1,7 +1,7 @@
-/** @module server/dbapi/app_portfolio/user_account_app_data_post_view */
+/** @module server/dbapi/sql/user_account_app_data_post_view */
 
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -10,7 +10,7 @@ const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dba
  * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_view_insertUserPostView>}
  */
 const insertUserPostView = async (app_id, data) => {
-		const sql = `INSERT INTO ${db_schema()}.user_account_app_data_post_view(
+		const sql = `INSERT INTO <DB_SCHEMA/>.user_account_app_data_post_view(
 							client_ip,
 							client_user_agent,
 							client_longitude, 

@@ -1,7 +1,7 @@
 /** @module server/dbapi/object/user_account */
 
-/**@type{import('../../dbapi/app_portfolio/user_account.service.js')} */
-const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
+/**@type{import('../../dbapi/sql/user_account.service.js')} */
+const service = await import(`file://${process.cwd()}/server/dbapi/sql/user_account.service.js`);
 
 /**@type{import('../../config.service.js')} */
 const { ConfigGet, ConfigGetApp } = await import(`file://${process.cwd()}/server/config.service.js`);
@@ -15,18 +15,18 @@ const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.se
 /**@type{import('../../dbapi/common/common.service.js')} */
 const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
-/**@type{import('../../dbapi/app_portfolio/app_setting.service.js')} */
-const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
-/**@type{import('../../dbapi/app_portfolio/user_account_app.service.js')} */
-const { createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
-/**@type{import('../../dbapi/app_portfolio/user_account_logon.service.js')} */
-const { insertUserAccountLogon, getUserAccountLogon } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);
-/**@type{import('../../dbapi/app_portfolio/user_account_event.service.js')} */
-const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_event.service.js`);
-/**@type{import('../../dbapi/app_portfolio/user_account_follow.service.js')} */
-const user_account_follow_service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow.service.js`);
-/**@type{import('../../dbapi/app_portfolio/user_account_like.service.js')} */
-const user_account_like_service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like.service.js`);
+/**@type{import('../../dbapi/sql/app_setting.service.js')} */
+const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/sql/app_setting.service.js`);
+/**@type{import('../../dbapi/sql/user_account_app.service.js')} */
+const { createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_app.service.js`);
+/**@type{import('../../dbapi/sql/user_account_logon.service.js')} */
+const { insertUserAccountLogon, getUserAccountLogon } = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_logon.service.js`);
+/**@type{import('../../dbapi/sql/user_account_event.service.js')} */
+const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_event.service.js`);
+/**@type{import('../../dbapi/sql/user_account_follow.service.js')} */
+const user_account_follow_service = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_follow.service.js`);
+/**@type{import('../../dbapi/sql/user_account_like.service.js')} */
+const user_account_like_service = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_like.service.js`);
 
 
 const { default: {compare} } = await import('bcrypt');
@@ -665,7 +665,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
         .then((/**@type{import('../../../types.js').db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
             if (resource_id_number==-1){
                 //searching, return result
-                import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search.service.js`)
+                import(`file://${process.cwd()}/server/dbapi/sql/profile_search.service.js`)
                 .then((/**@type{import('../app_portfolio/profile_search.service.js')} */{ insertProfileSearch }) => {
                     /**@type{import('../../../types.js').db_parameter_profile_search_insertProfileSearch} */
                     const data_insert = {   user_account_id:    data.user_account_id,
@@ -684,8 +684,8 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
             else
                 if (result_getProfileUser[0]){
                     //always save stat who is viewing, same user, none or someone else
-                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`)
-                    .then((/**@type{import('../../dbapi/app_portfolio/user_account_view.service.js')} */{ insertUserAccountView }) => {
+                    import(`file://${process.cwd()}/server/dbapi/sql/user_account_view.service.js`)
+                    .then((/**@type{import('../../dbapi/sql/user_account_view.service.js')} */{ insertUserAccountView }) => {
                         const data_body = { user_account_id:        getNumberValue(query.get('id')),    //who views
                                             user_account_id_view:   getNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
                                             client_ip:              ip,
@@ -766,8 +766,8 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
                 .then((/**@type{import('../../../types.js').db_result_user_account_updateUserSuperAdmin}*/result_update)=>{
                     if (data.app_role_id!=0 && data.app_role_id!=1){
                         //delete admin app from user if user is not an admin anymore
-                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`)
-                        .then((/**@type{import('../../dbapi/app_portfolio/user_account_app.service.js')} */{ deleteUserAccountApp }) => {
+                        import(`file://${process.cwd()}/server/dbapi/sql/user_account_app.service.js`)
+                        .then((/**@type{import('../../dbapi/sql/user_account_app.service.js')} */{ deleteUserAccountApp }) => {
                             deleteUserAccountApp(app_id, resource_id, app_id)
                             .then(()=>{
                                 resolve(result_update);

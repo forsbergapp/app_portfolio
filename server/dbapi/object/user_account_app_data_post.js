@@ -1,10 +1,10 @@
 /** @module server/dbapi/object/user_account_app_data_post */
 
-/**@type{import('../../dbapi/app_portfolio/user_account_app_data_post.service.js')} */
-const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post.service.js`);
+/**@type{import('../../dbapi/sql/user_account_app_data_post.service.js')} */
+const service = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_app_data_post.service.js`);
 
-/**@type{import('../../dbapi/app_portfolio/user_account_app_data_post_like.service.js')} */
-const user_account_app_data_post_like_service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post_like.service.js`);
+/**@type{import('../../dbapi/sql/user_account_app_data_post_like.service.js')} */
+const user_account_app_data_post_like_service = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_app_data_post_like.service.js`);
 /**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 

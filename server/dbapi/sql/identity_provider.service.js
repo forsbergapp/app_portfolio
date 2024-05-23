@@ -1,7 +1,7 @@
-/** @module server/dbapi/app_portfolio/identity_provider */
+/** @module server/dbapi/sql/identity_provider */
 
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -15,7 +15,7 @@ const getIdentityProviders = async app_id => {
 							api_src2 "api_src2",
 							api_version "api_version",
 							api_id "api_id"
-					   FROM ${db_schema()}.identity_provider
+					   FROM <DB_SCHEMA/>.identity_provider
 					  WHERE enabled = 1
 					 ORDER BY identity_provider_order ASC`;
 		const parameters = {};

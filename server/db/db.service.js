@@ -91,8 +91,8 @@ const pool_start = async (dbparameters) =>{
          case 2:{            
             /**@type{object} */
             const mysql_pool = MYSQL.createPool({
-                                 host: dbparameters.host,
-                                 port: dbparameters.port,
+                                 host: dbparameters.host ?? '',
+                                 port: dbparameters.port ?? undefined,
                                  user: dbparameters.user ?? '',
                                  password: dbparameters.password ?? '',
                                  database: dbparameters.database==null?'':dbparameters.database,
@@ -118,12 +118,12 @@ const pool_start = async (dbparameters) =>{
                   resolve(new PG.Pool({
                      user: dbparameters.user ?? '',
                      password: dbparameters.password ?? '',
-                     host: dbparameters.host,
-                     port: dbparameters.port,
+                     host: dbparameters.host ?? '',
+                     port: dbparameters.port ?? undefined,
                      database: dbparameters.database==null?'':dbparameters.database,
-                     connectionTimeoutMillis: dbparameters.connectionTimeoutMillis,
-                     idleTimeoutMillis: dbparameters.idleTimeoutMillis,
-                     max: dbparameters.max
+                     connectionTimeoutMillis: dbparameters.connectionTimeoutMillis ?? undefined,
+                     idleTimeoutMillis: dbparameters.idleTimeoutMillis ?? undefined,
+                     max: dbparameters.max ?? undefined
                   }));
                });
             };
@@ -208,8 +208,8 @@ const pool_start = async (dbparameters) =>{
 };
 /**
  * Delete pool for given database
- * @param {number} pool_id 
- * @param {number} db_use 
+ * @param {number|null} pool_id 
+ * @param {number|null} db_use 
  * @param {number} dba 
  * @returns 
  */
@@ -221,20 +221,23 @@ const pool_close = async (pool_id, db_use, dba) =>{
                               db[1] = null;
          });
       else
-         POOL_DB.map(db=>{
-            if (db[0]==db_use)
-               if (db[2])
-                  db[2][pool_id] = null;
-         });
+         if (pool_id)
+            POOL_DB.map(db=>{
+               if (db[0]==db_use)
+                  if (db[2])
+                     db[2][pool_id] = null;
+            });
+         else
+            return null;   
    } catch (err) {
-      return null;   
+      return null;
    }
    return null;
 
 };
 /**
  * Get pool for database
- * @param {number} pool_id 
+ * @param {number|null} pool_id 
  * @param {number} db_use 
  * @param {number|null} dba 
  * @returns {object|string|null}
@@ -245,25 +248,28 @@ const pool_get = (pool_id, db_use, dba) => {
       if (db_use==5)
          return POOL_DB.filter(db=>db[0]==db_use)[0][1];
       else
-         if (dba==1)
-            if (db_use==4){
-               /**@ts-ignore */
-               return POOL_DB.filter(db=>db[0]==db_use)[0][1].pool_id_dba;
-            }
-            else
-               return POOL_DB.filter(db=>db[0]==db_use)[0][1];
-         else{
-            pool = POOL_DB.filter(db=>db[0]==db_use)[0];
-            if (pool[2])
+         if (pool_id)
+            if (dba==1)
                if (db_use==4){
                   /**@ts-ignore */
-                  return pool[2][pool_id].pool_id_app;
+                  return POOL_DB.filter(db=>db[0]==db_use)[0][1].pool_id_dba;
                }
                else
-                  return pool[2][pool_id];
-            else
-               return null;
-         }
+                  return POOL_DB.filter(db=>db[0]==db_use)[0][1];
+            else{
+               pool = POOL_DB.filter(db=>db[0]==db_use)[0];
+               if (pool[2])
+                  if (db_use==4){
+                     /**@ts-ignore */
+                     return pool[2][pool_id].pool_id_app;
+                  }
+                  else
+                     return pool[2][pool_id];
+               else
+                  return null;
+            }
+         else
+            return null;
    } catch (err) {
       return null;
    }  
@@ -271,14 +277,16 @@ const pool_get = (pool_id, db_use, dba) => {
 
 /**
  * Execute query for given database
- * @param {number} pool_id 
- * @param {number} db_use     - 1/2 MariaDB + MySQL use MySQL npm module
- *                            - 3 PostgreSQL
- *                            - 4 Oracle
+ * @param {number|null} pool_id 
+ * @param {number|null} db_use   - 1 MariaDB 
+ *                               - 2 MySQL
+ *                               - 3 PostgreSQL
+ *                               - 4 Oracle
+ *                               - 5 SQLite
  * @param {string} sql
  * @param {*} parameters      - can have an extra DB_RETURN_ID and DB_CLOB key
  * @param {number|null} dba 
- * @returns 
+ * @returns {Promise.<*>}
  */
 const db_query = async (pool_id, db_use, sql, parameters, dba) => {
    return new Promise((resolve,reject)=>{
