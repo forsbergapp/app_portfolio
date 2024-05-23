@@ -1362,7 +1362,7 @@ const user_settings_load = async (tab_selected) => {
         }
         case 2:{
             //GPS
-            common.SearchAndSetSelectedIndex(   APP_GLOBAL.user_settings[settings_index].gps_popular_place_id.toString(),
+            common.SearchAndSetSelectedIndex(   APP_GLOBAL.user_settings[settings_index].gps_popular_place_id?APP_GLOBAL.user_settings[settings_index].gps_popular_place_id.toString():'',
                                                 AppDocument.querySelector('#setting_select_popular_place'),0);
             AppDocument.querySelector('#setting_input_place').innerHTML = APP_GLOBAL.user_settings[settings_index].description;
             AppDocument.querySelector('#setting_input_lat').innerHTML = APP_GLOBAL.user_settings[settings_index].gps_lat_text;
