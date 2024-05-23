@@ -194,8 +194,8 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                      */
                     const superadmin = async (user_id) => {
                         if (user_id){
-                            /**@type{import('./dbapi/sql/user_account.service.js')} */
-                            const {getUserAppRoleAdmin} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account.service.js`)
+                            /**@type{import('./db/sql/user_account.service.js')} */
+                            const {getUserAppRoleAdmin} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`)
                             /**@type{import('../types.js').db_result_user_account_getUserAppRoleAdmin[]}*/
                             const result = await getUserAppRoleAdmin(app_id_host, user_id)
                                                     .catch((/**@type{import('../types.js').error}*/error)=>{
@@ -263,8 +263,8 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                 ((scope=='APP_ACCESS_SUPERADMIN' && superadmin(user_id))|| scope!='APP_ACCESS_SUPERADMIN'))
                                 //check access token belongs to user_account.id, app_id and ip saved when logged in
                                 //and if app_id=0 then check user is admin
-                                import(`file://${process.cwd()}/server/dbapi/sql/user_account_logon.service.js`)
-                                .then((/**@type{import('./dbapi/sql/user_account_logon.service.js')} */{checkLogin}) => {
+                                import(`file://${process.cwd()}/server/db/sql/user_account_logon.service.js`)
+                                .then((/**@type{import('./db/sql/user_account_logon.service.js')} */{checkLogin}) => {
                                     checkLogin(app_id_host, user_id)
                                     .then((/**@type{import('../types.js').db_result_user_account_logon_Checklogin[]}*/result)=>{
                                         if (result.filter(row=>

@@ -1326,15 +1326,15 @@
  *              app_setting_preference_arabic_script_id:number,
  *              date_created:string}} db_result_user_account_app_getUserAccountApp
  * @typedef {{  preference_locale:string,
- *              app_setting_preference_timezone_id:number,
- *              app_setting_preference_direction_id:number,
- *              app_setting_preference_arabic_script_id:number}} db_parameter_user_account_app_updateUserAccountApp
+ *              app_setting_preference_timezone_id:number|null,
+ *              app_setting_preference_direction_id:number|null,
+ *              app_setting_preference_arabic_script_id:number|null}} db_parameter_user_account_app_updateUserAccountApp
  * @typedef {   db_result_update} db_result_user_account_app_updateUserAccountApp
  * @typedef {   db_result_delete} db_result_user_account_app_deleteUserAccountApp
  * USER ACCOUNT APP DATA POST
  * @typedef {{  description:string,
  *              json_data:object,
- *              user_account_id:number}} db_parameter_user_account_app_data_post_createUserPost
+ *              user_account_id:number|null}} db_parameter_user_account_app_data_post_createUserPost
  * @typedef {   db_result_insert} db_result_user_account_app_data_post_createUserPost
  * @typedef {{  id:number,
  *              description:string,
@@ -1380,7 +1380,7 @@
  *              count:number}} db_result_user_account_app_data_post_getProfileStatPost
  * @typedef {{  description:string,
  *              json_data:object,
- *              user_account_id:number}} db_parameter_user_account_app_data_post_updateUserPost
+ *              user_account_id:number|null}} db_parameter_user_account_app_data_post_updateUserPost
  * @typedef {   db_result_update} db_result_user_account_app_data_post_updateUserPost
  * @typedef {   db_result_delete} db_result_user_account_app_data_post_deleteUserPost
  * USER ACCOUNT APP DATA POST LIKE
