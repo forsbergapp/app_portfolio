@@ -317,7 +317,7 @@ const COMMON = {
                         resolve(app.getApps(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-socket/socket-status/${resource_id_string}`, 'GET', 'app_id', routesparameters.app_id):{
+                    case route(`/bff/app_data/v1/server-socket/socket-status/${resource_id_string}`, 'GET'):{
                         resolve(socket.CheckOnline(resource_id_get()));
                         break;
                     }
