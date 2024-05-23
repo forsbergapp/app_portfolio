@@ -2548,13 +2548,13 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
     query = query==null?'':query;
     switch (authorization_type){
         case 'APP_DATA':{
-            //data token authorization check
+            //id token authorization check
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_data`;
             break;
         }
         case 'APP_SIGNUP':{
-            //data token signup authorization check
+            //id token signup authorization check
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_signup`;
             break;
@@ -2606,7 +2606,7 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
     query += `&lang_code=${COMMON_GLOBAL.user_locale}`;
     //encode query parameters
     const encodedparameters = query?toBase64(query):'';
-    //add and encode IAM parameters, always use Bearer data token in iam to validate EventSource connections
+    //add and encode IAM parameters, always use Bearer id token in iam to validate EventSource connections
     const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
     const iam =  toBase64(  `&authorization_bearer=${authorization_iam}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
                             `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
@@ -2930,7 +2930,7 @@ const set_app_service_parameters = async parameters => {
     COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
 
     //client credentials
-    COMMON_GLOBAL.token_dt = parameters.app_datatoken;
+    COMMON_GLOBAL.token_dt = parameters.app_idtoken;
 
     //system admin
     COMMON_GLOBAL.system_admin = null;
