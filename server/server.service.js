@@ -264,7 +264,7 @@ const COMMON = {
                  * 
                  * @param {string} url 
                  * @param {string} method 
-                 * @param {'user_id'|'app_id'|null} resource_validate_type
+                 * @param {'id'|'app_id'|null} resource_validate_type
                  * @param {string|number|null} resource_validate_value
                  * @returns 
                  */
@@ -272,7 +272,12 @@ const COMMON = {
                     if ((url.endsWith('/' + resource_id_string)?url.replace('/' + resource_id_string, URI_path.substring(URI_path.lastIndexOf('/'))):url) == URI_path && 
                         method == routesparameters.method)
                         if (resource_validate_type)
-                            if (iam_service.AuthenticateResource({iam:routesparameters.res.req.query.iam, resource_id:resource_validate_value, resource_type:resource_validate_type}))
+                            if (iam_service.AuthenticateResource({  app_id:routesparameters.app_id, 
+                                                                    ip:routesparameters.ip, 
+                                                                    authorization:routesparameters.authorization, 
+                                                                    resource_id:resource_validate_value, 
+                                                                    scope: 'USER',
+                                                                    claim_key:resource_validate_type}))
                                 return true
                             else{
                                 resource_id_not_authorized = true;
@@ -340,7 +345,7 @@ const COMMON = {
                         resolve(db_app_setting.getSettingDisplayData(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/user_account-activate/${resource_id_string}`, 'PUT', 'user_id', resource_id_get()):{
+                    case route(`/bff/app_data/v1/server-db/user_account-activate/${resource_id_string}`, 'PUT', 'id', resource_id_get()):{
                         resolve(db_user_account.activate(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
@@ -376,25 +381,25 @@ const COMMON = {
                         resolve(db_user_account_app_data_post.getProfileStatPost(routesparameters.app_id, app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account-password/${resource_id_string}`, 'PATCH', 'user_id', resource_id_get()):{
+                    case route(`/bff/app_access/v1/server-db/user_account-password/${resource_id_string}`, 'PATCH', 'id', resource_id_get()):{
                         resolve(db_user_account.updatePassword(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/user_account/${resource_id_string}`, 'PATCH', 'user_id', resource_id_get()):
-                    case route(`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, 'PATCH', 'user_id', resource_id_get()):{
+                    case route(`/bff/admin/v1/server-db/user_account/${resource_id_string}`, 'PATCH', 'id', resource_id_get()):
+                    case route(`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, 'PATCH', 'id', resource_id_get()):{
                         resolve(db_user_account.updateUserLocal(routesparameters.app_id, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/user_account/${resource_id_string}`, 'GET', 'user_id', resource_id_get()):
-                    case route(`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, 'GET', 'user_id', resource_id_get()):{
+                    case route(`/bff/admin/v1/server-db/user_account/${resource_id_string}`, 'GET', 'id', resource_id_get()):
+                    case route(`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, 'GET', 'id', resource_id_get()):{
                         resolve(db_user_account.getUserByUserId(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account-common/${resource_id_string}`, 'PATCH', 'user_id', resource_id_get()):{
+                    case route(`/bff/app_access/v1/server-db/user_account-common/${resource_id_string}`, 'PATCH', 'id', resource_id_get()):{
                         resolve(db_user_account.updateUserCommon(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, 'DELETE', 'user_id', resource_id_get()):{
+                    case route(`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, 'DELETE', 'id', resource_id_get()):{
                         resolve(db_user_account.deleteUser(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
@@ -403,41 +408,41 @@ const COMMON = {
                         resolve(db_user_account.getProfileDetail(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/user_account_follow/${resource_id_string}`, 'POST', 'user_id', resource_id_get()):
-                    case route(`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, 'POST', 'user_id', resource_id_get()):{
+                    case route(`/bff/admin/v1/server-db/user_account_follow/${resource_id_string}`, 'POST', 'id', resource_id_get()):
+                    case route(`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, 'POST', 'id', resource_id_get()):{
                         resolve(db_user_account.follow(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/user_account_follow/${resource_id_string}`, 'DELETE', 'user_id', resource_id_get()):
-                    case route(`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, 'DELETE', 'user_id', resource_id_get()):{
+                    case route(`/bff/admin/v1/server-db/user_account_follow/${resource_id_string}`, 'DELETE', 'id', resource_id_get()):
+                    case route(`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, 'DELETE', 'id', resource_id_get()):{
                         resolve(db_user_account.unfollow(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/user_account_like/${resource_id_string}`, 'POST', 'user_id', resource_id_get()):
-                    case route(`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, 'POST', 'user_id', resource_id_get()):{
+                    case route(`/bff/admin/v1/server-db/user_account_like/${resource_id_string}`, 'POST', 'id', resource_id_get()):
+                    case route(`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, 'POST', 'id', resource_id_get()):{
                         resolve(db_user_account.like(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/user_account_like/${resource_id_string}`, 'DELETE', 'user_id', resource_id_get()):
-                    case route(`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, 'DELETE', 'user_id', resource_id_get()):{
+                    case route(`/bff/admin/v1/server-db/user_account_like/${resource_id_string}`, 'DELETE', 'id', resource_id_get()):
+                    case route(`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, 'DELETE', 'id', resource_id_get()):{
                         resolve(db_user_account.unlike(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/user_account_app/${resource_id_string}`, 'GET', 'user_id', resource_id_get()):
-                    case route(`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, 'GET', 'user_id', resource_id_get()):{
+                    case route(`/bff/admin/v1/server-db/user_account_app/${resource_id_string}`, 'GET', 'id', resource_id_get()):
+                    case route(`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, 'GET', 'id', resource_id_get()):{
                         resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, resource_id_get()));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_string}`, 'GET', 'user_id', resource_id_get()):{
+                    case route(`/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_string}`, 'GET', 'id', resource_id_get()):{
                         resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, resource_id_get()));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/user_account_app/${resource_id_string}`, 'PATCH', 'user_id', resource_id_get()):
-                    case route(`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, 'PATCH', 'user_id', resource_id_get()):{
+                    case route(`/bff/admin/v1/server-db/user_account_app/${resource_id_string}`, 'PATCH', 'id', resource_id_get()):
+                    case route(`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, 'PATCH', 'id', resource_id_get()):{
                         resolve(db_user_account_app.update(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, 'DELETE', 'user_id', resource_id_get()):{
+                    case route(`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, 'DELETE', 'id', resource_id_get()):{
                         resolve(db_user_account_app.deleteUserAccountApp(routesparameters.app_id, resource_id_get(), app_query));
                         break;
                     }
@@ -445,23 +450,23 @@ const COMMON = {
                         resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post`, 'POST', 'user_id', routesparameters.body.user_account_id):{
+                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post`, 'POST', 'id', routesparameters.body.user_account_id):{
                         resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, 'PUT', 'user_id', resource_id_get()):{
+                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, 'PUT', 'id', routesparameters.body.user_account_id):{
                         resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, 'DELETE', 'user_id', resource_id_get()):{
-                        resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, resource_id_get(), app_query, routesparameters.res));
+                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, 'DELETE', 'id', routesparameters.body.user_account_id):{
+                        resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, resource_id_get(), app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, 'POST', 'user_id', resource_id_get()):{
+                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, 'POST', 'id', resource_id_get()):{
                         resolve(db_user_account_app_data_post.like(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, 'DELETE', 'user_id', resource_id_get()):{
+                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, 'DELETE', 'id', resource_id_get()):{
                         resolve(db_user_account_app_data_post.unlike(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }

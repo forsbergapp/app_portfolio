@@ -280,10 +280,10 @@ const updateUserPost = async (app_id, data, id) => {
 		const sql = `UPDATE <DB_SCHEMA/>.user_account_app_data_post
 						SET description = :description,
 							json_data = :json_data,
-							user_account_app_user_account_id = :user_account_id,
-							user_account_app_app_id = :app_id,
 							date_modified = CURRENT_TIMESTAMP
-					  WHERE id = :id `;
+					  WHERE id = :id 
+					    AND user_account_app_user_account_id = :user_account_id
+						AND user_account_app_app_id = :app_id`;
 		const parameters = {
 						description: data.description,
 						json_data: JSON.stringify(data.json_data),
@@ -298,12 +298,17 @@ const updateUserPost = async (app_id, data, id) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
+ * @param {number} user_account_id
  * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_deleteUserPost>}
  */
-const deleteUserPost = async (app_id, id) => {
+const deleteUserPost = async (app_id, id, user_account_id) => {
 		const sql = `DELETE FROM <DB_SCHEMA/>.user_account_app_data_post
-					WHERE id = :id `;
-		const parameters = {id: id};
+					  WHERE id = :id 
+					    AND user_account_app_user_account_id = :user_account_id
+						AND user_account_app_app_id = :app_id`;
+		const parameters = {id: id,
+							user_account_id: user_account_id,
+							app_id:app_id};
 		return await db_execute(app_id, sql, parameters, null);
 	};
 export{	createUserPost, getUserPost, getUserPostsByUserId, getProfileUserPosts, 

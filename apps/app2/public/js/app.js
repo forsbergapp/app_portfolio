@@ -1584,7 +1584,7 @@ const user_settings_delete = (choice=null) => {
         }
         case 1:{
             AppDocument.querySelector('#setting_btn_user_delete').classList.add('css_spinner');
-            common.FFB(`/server-db/user_account_app_data_post/${user_setting_id}`, null, 'DELETE', 'APP_ACCESS', null)
+            common.FFB(`/server-db/user_account_app_data_post/${user_setting_id}`, null, 'DELETE', 'APP_ACCESS', {user_account_id:common.COMMON_GLOBAL.user_account_id})
             .then(()=>{
                 common.ComponentRemove('common_dialogue_message', true);
                 const select = AppDocument.querySelector('#setting_select_user_setting');

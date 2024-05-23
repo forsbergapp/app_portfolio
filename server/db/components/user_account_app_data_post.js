@@ -190,12 +190,13 @@ const updateUserPost = (app_id, resource_id, query, data, res) => {
  * 
  * @param {number} app_id 
  * @param {number} resource_id
+ * @param {*} data
  * @param {*} query 
  * @param {import('../../../types.js').res} res
  */
-const deleteUserPost = (app_id, resource_id, query, res) => {
+const deleteUserPost = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
-        service.deleteUserPost(app_id, resource_id)
+        service.deleteUserPost(app_id, resource_id, data.user_account_id)
         .then((/**@type{import('../../../types.js').db_result_user_account_app_data_post_deleteUserPost}*/result)=>{
             if (result)
                 resolve(result);

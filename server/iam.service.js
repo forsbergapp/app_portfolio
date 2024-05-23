@@ -477,15 +477,30 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
         return false;
     
 };
-
 /**
  * Authenticate resource
- * @param { {iam:string,
- *           resource_id:number|null,
- *           resource_type:string}} parameters
+ * @param { {app_id:number|null,
+ *           ip:string,
+ *           authorization:string,
+ *           resource_id:string|number|null,
+ *           scope: 'USER'|'APP',
+ *           claim_key:string}} parameters
  */
-const AuthenticateResource = parameters =>  parameters.resource_id && 
-                                            getNumberValue(iam_decode(parameters.iam).get(parameters.resource_type)) == parameters.resource_id;
+const AuthenticateResource = parameters =>  {
+    //authenticate access token
+    try {
+        /**@type{{app_id:number, id:number|null, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
+        const access_token_decoded = jwt.verify(parameters.authorization.split(' ')[1], ConfigGetApp(parameters.app_id, parameters.app_id, 'SECRETS').APP_ACCESS_SECRET);
+        return  parameters.resource_id && 
+                access_token_decoded[parameters.claim_key] == parameters.resource_id &&
+                access_token_decoded.app_id == parameters.app_id &&
+                access_token_decoded.scope == parameters.scope &&
+                access_token_decoded.ip == parameters.ip;    
+    } catch (error) {
+        return false;
+    }
+    
+}
                                             
 /**
  * Authorize token app
@@ -542,12 +557,14 @@ const AuthenticateResource = parameters =>  parameters.resource_id &&
             break;
         }
     }
-    const token = jwt.sign ({   app_id:         app_id,
+    /**@type{import('../types.js').access_token_claim_type} */
+    const access_token_claim = {app_id:         app_id,
                                 id:             claim.id,
                                 name:           claim.name,
                                 ip:             claim.ip,
                                 scope:          claim.scope,
-                                tokentimestamp: Date.now()}, secret, {expiresIn: expiresin});
+                                tokentimestamp: Date.now()};
+    const token = jwt.sign (access_token_claim, secret, {expiresIn: expiresin});
     return {token:token,
             /**@ts-ignore */
             exp:jwt.decode(token, { complete: true }).payload.exp,
