@@ -1,7 +1,7 @@
-/** @module server/dbapi/app_portfolio/user_account_app_data_post_like */
+/** @module server/dbapi/sql/user_account_app_data_post_like */
 
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -11,7 +11,7 @@ const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dba
  * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_like_like>}
  */
 const like = async (app_id, id, id_like) => {
-	const sql = `INSERT INTO ${db_schema()}.user_account_app_data_post_like(
+	const sql = `INSERT INTO <DB_SCHEMA/>.user_account_app_data_post_like(
 					user_account_app_user_account_id, user_account_app_data_post_id, user_account_app_app_id, date_created)
 				VALUES(:user_account_id,:user_account_app_data_post_id, :app_id, CURRENT_TIMESTAMP) `;
 	const parameters = {
@@ -29,7 +29,7 @@ const like = async (app_id, id, id_like) => {
  * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_like_unlike>}
  */
 const unlike = async (app_id, id, id_unlike) => {
-	const sql = `DELETE FROM ${db_schema()}.user_account_app_data_post_like
+	const sql = `DELETE FROM <DB_SCHEMA/>.user_account_app_data_post_like
 					WHERE user_account_app_user_account_id = :user_account_id
 						AND user_account_app_data_post_id = :user_account_app_data_post_id 
 						AND user_account_app_app_id = :app_id`;

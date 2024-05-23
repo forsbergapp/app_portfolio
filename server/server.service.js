@@ -8,6 +8,7 @@
  * @param {string|number|object|null} text 
  * @param {string|null} developer_text 
  * @param {string|null} more_info 
+ * @returns {void}
  */
  const send_iso_error = (res, http, code, text, developer_text, more_info) => {
     //ISO20022 error format

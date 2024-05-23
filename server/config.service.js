@@ -115,18 +115,18 @@ const app_portfolio_title = 'App Portfolio';
 
  /**
  * Config app secret update
- * @param {number} app_id
- * @param {{app_id:             number,
-   *          parameter_name:     string,
-   *          parameter_value:    string}} data
-   * @returns {Promise.<void>}
-   */
-    const ConfigAppSecretUpdate = async (app_id, data) => {
-      const file = await file_get('APPS', true);
-      file.file_content.APPS.filter((/**@type{*}*/row)=> row.APP_ID==data.app_id)[0].SECRETS[data.parameter_name] = data.parameter_value;
-      await file_update('APPS', file.transaction_id, file.file_content);
-      await file_set_cache_all();
-   };
+ * @param {number|null} app_id
+ * @param {{app_id:             number|null,
+ *          parameter_name:     string,
+ *          parameter_value:    string}} data
+ * @returns {Promise.<void>}
+ */
+const ConfigAppSecretUpdate = async (app_id, data) => {
+    const file = await file_get('APPS', true);
+    file.file_content.APPS.filter((/**@type{*}*/row)=> row.APP_ID==data.app_id)[0].SECRETS[data.parameter_name] = data.parameter_value;
+    await file_update('APPS', file.transaction_id, file.file_content);
+    await file_set_cache_all();
+};
  /**
  * Config app parameter update
  * @param {number} app_id
@@ -301,7 +301,7 @@ const InitConfig = async () => {
  * @param {boolean} saved
  * @param {import('../types.js').config_group|null} config_group
  * @param {string|null} parameter
- * @returns {Promise.<object>}
+ * @returns {Promise.<*>}
  */
 const ConfigFileGet = async (file, saved=false, config_group=null, parameter=null) => {
     const config = saved?await file_get(file).then((/**@type{*}*/config)=>config.file_content):file_get_cached(file);

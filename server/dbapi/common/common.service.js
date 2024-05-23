@@ -17,8 +17,8 @@ const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js
  * @param {import('../../../types.js').res} res
  */
  const checked_error = async (app_id, lang_code, err, res) =>{
-	/**@type{import('../../dbapi/app_portfolio/app_setting.service.js')} */
-	const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
+	/**@type{import('../../dbapi/sql/app_setting.service.js')} */
+	const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/dbapi/sql/app_setting.service.js`);
     return new Promise((resolve)=>{
 		const app_code = get_app_code(err);
 		if (app_code != null){
@@ -91,7 +91,7 @@ const get_app_code = error => {
  */
 const record_not_found = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
-		import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`).then(({ getSettingDisplayData }) => {
+		import(`file://${process.cwd()}/server/dbapi/sql/app_setting.service.js`).then(({ getSettingDisplayData }) => {
 			getSettingDisplayData( 	app_id,
 									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
 									'MESSAGE',
@@ -138,11 +138,6 @@ const get_locale = (lang_code, part) => {
 				return null;
 		}
 };
-/**
- * Returns current database schema used by SQL
- * @returns {string}
- */
-const db_schema = () => ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`);
 
 /**
  * Limit SQL rows
@@ -202,7 +197,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 														
 /**
  * 
- * @param {number} app_id 
+ * @param {number|null} app_id 
  * @param {string} sql 
  * @param {object} parameters 
  * @param {number|null} dba 
@@ -210,6 +205,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
  */
  const db_execute = async (app_id, sql, parameters, dba = null) =>{
 	return new Promise ((resolve, reject)=>{
+		sql = sql.replaceAll('<DB_SCHEMA/>', ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`) ?? '');
 		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
 		.then((/**@type{import('../../../types.js').db_query_result}*/result)=> {
 			LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
@@ -245,5 +241,5 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 
 export{
 		checked_error, get_app_code, record_not_found, get_locale,
-		db_schema,  db_limit_rows, db_date_period, db_execute
+		db_limit_rows, db_date_period, db_execute
 };

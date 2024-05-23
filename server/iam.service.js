@@ -53,7 +53,7 @@ const expired_token = (app_id, token_type, token) =>{
  * @param {number} status
  * @param {string} reason
  * @param {boolean} bff
- * @returns {string|null}
+ * @returns {string|null|void}
  */
  const not_authorized = (res, status, reason, bff=false) => {
     if (bff){
@@ -108,7 +108,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
             await file_append_log('IAM_SYSTEMADMIN_LOGIN', file_content, 'YYYYMMDD')
             .then(()=>{
                 if (result == 1){
-                    ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), '', username, iam_decode(iam).get('authorization_bearer'), null, jwt_data.token, ip, user_agent, accept_language, res)
+                    ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), null, username, iam_decode(iam).get('authorization_bearer'), null, jwt_data.token, ip, user_agent, accept_language, res)
                     .then(()=>{
                         resolve({   username:username,
                                     token_at: jwt_data.token,
@@ -194,8 +194,8 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                      */
                     const superadmin = async (user_id) => {
                         if (user_id){
-                            /**@type{import('./dbapi/app_portfolio/user_account.service.js')} */
-                            const {getUserAppRoleAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`)
+                            /**@type{import('./dbapi/sql/user_account.service.js')} */
+                            const {getUserAppRoleAdmin} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account.service.js`)
                             /**@type{import('../types.js').db_result_user_account_getUserAppRoleAdmin[]}*/
                             const result = await getUserAppRoleAdmin(app_id_host, user_id)
                                                     .catch((/**@type{import('../types.js').error}*/error)=>{
@@ -263,8 +263,8 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                 ((scope=='APP_ACCESS_SUPERADMIN' && superadmin(user_id))|| scope!='APP_ACCESS_SUPERADMIN'))
                                 //check access token belongs to user_account.id, app_id and ip saved when logged in
                                 //and if app_id=0 then check user is admin
-                                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`)
-                                .then((/**@type{import('./dbapi/app_portfolio/user_account_logon.service.js')} */{checkLogin}) => {
+                                import(`file://${process.cwd()}/server/dbapi/sql/user_account_logon.service.js`)
+                                .then((/**@type{import('./dbapi/sql/user_account_logon.service.js')} */{checkLogin}) => {
                                     checkLogin(app_id_host, user_id)
                                     .then((/**@type{import('../types.js').db_result_user_account_logon_Checklogin[]}*/result)=>{
                                         if (result.filter(row=>
@@ -405,7 +405,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                         resolve(null);
                                     else{
                                         //check if user-agent exists
-                                        if(ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT_EXIST')==1 &&
+                                        if(ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT_EXIST')=='1' &&
                                             typeof user_agent=='undefined'){
                                             //406 Not Acceptable
                                             resolve({   statusCode: 406, 
@@ -537,8 +537,8 @@ const AuthenticateResource = parameters =>  parameters.resource_id &&
             break;
         }
         case 'SYSTEMADMIN':{
-            secret = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET');
-            expiresin = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_EXPIRE_ACCESS');
+            secret = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '';
+            expiresin = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_EXPIRE_ACCESS') ?? '';
             break;
         }
     }

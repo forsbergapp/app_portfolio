@@ -50,8 +50,8 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
                     (result_geodata.geoplugin_city + ', ' +
                     result_geodata.geoplugin_regionName + ', ' +
                     result_geodata.geoplugin_countryName):'';
-    /**@type{import('./dbapi/app_portfolio/user_account.service.js')} */
-    const {getUserByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
+    /**@type{import('./dbapi/sql/user_account.service.js')} */
+    const {getUserByUserId} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account.service.js`);
     const identity_provider_id = user_account_id?await getUserByUserId(app_id, user_account_id)
                                                     .then((/**@type{string}*/result)=>JSON.parse(result)[0].identity_provider_id)
                                                     .catch((/**@type{import('../types.js').error}*/error)=>null):'';
@@ -104,12 +104,12 @@ const ClientAdd = (newClient) => {
 
 /**
  * Socket connected update
- * @param {number} app_id,
- * @param {number} client_id
- * @param {number} user_account_id
- * @param {number} system_admin
- * @param {string} authorization_bearer
- * @param {string} token_access
+ * @param {number|null} app_id,
+ * @param {number|null} client_id
+ * @param {number|null} user_account_id
+ * @param {string} system_admin
+ * @param {string|null} authorization_bearer
+ * @param {string|null} token_access
  * @param {string} token_systemadmin
  * @param {string} ip
  * @param {string} headers_user_agent
@@ -274,8 +274,8 @@ const ClientAdd = (newClient) => {
     };
     if (connected_clients_no_res.length>0){
         //update with user role
-        /**@type{import('./dbapi/app_portfolio/user_account.service.js')} */
-        const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
+        /**@type{import('./dbapi/sql/user_account.service.js')} */
+        const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/sql/user_account.service.js`);
         for (const client of connected_clients_no_res){
             if (client.system_admin==0)
                 if (await app_start()==true){    
@@ -300,10 +300,10 @@ const ClientAdd = (newClient) => {
 /**
  * Socket client send as admin
  * @param {number} app_id
- * @param {number} client_id
- * @param {number} client_id_current
+ * @param {number|null} client_id
+ * @param {number|null} client_id_current
  * @param {string} broadcast_type
- * @param {import('../types.js').socket_broadcast_type_admin} broadcast_message
+ * @param {string} broadcast_message
  */
  const SocketSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
     if (broadcast_type=='ALERT' || broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){

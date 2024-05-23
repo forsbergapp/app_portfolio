@@ -1,7 +1,7 @@
-/** @module server/dbapi/app_portfolio/profile_search */
+/** @module server/dbapi/sql/profile_search */
 
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -10,7 +10,7 @@ const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dba
  * @returns {Promise.<import('../../../types.js').db_result_profile_search_insertProfileSearch[]>}
  */
 const insertProfileSearch = async (app_id, data) => {
-		const sql = `INSERT INTO ${db_schema()}.profile_search(
+		const sql = `INSERT INTO <DB_SCHEMA/>.profile_search(
 								user_account_id, search, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
 					VALUES(:user_account_id,:search,:client_ip,:client_user_agent,:client_longitude,:client_latitude, CURRENT_TIMESTAMP)`;
 		const parameters = {

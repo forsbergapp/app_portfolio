@@ -1,7 +1,7 @@
 /** @module server/dbapi/object/country */
 
-/**@type{import('../../dbapi/app_portfolio/country.service.js')} */
-const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/country.service.js`);
+/**@type{import('../../dbapi/sql/country.service.js')} */
+const service = await import(`file://${process.cwd()}/server/dbapi/sql/country.service.js`);
 
 /**
  * 

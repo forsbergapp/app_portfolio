@@ -1,7 +1,7 @@
 /** @module server/dbapi/object/database */
 
-/**@type{import('../../dbapi/app_portfolio/database.service.js')} */
-const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/database.service.js`);
+/**@type{import('../../dbapi/sql/database.service.js')} */
+const service = await import(`file://${process.cwd()}/server/dbapi/sql/database.service.js`);
 
 /**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
@@ -67,7 +67,7 @@ const install_db_get_files = async (json_type) =>{
     /**@type{import('../../socket.service.js')} */
     const {SocketSendSystemAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
     /**@type{import('../../dbapi/common/common.service.js')} */
-    const {db_schema, db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+    const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
     const {createHash} = await import('node:crypto');
     const { default: {genSalt, hash} } = await import('bcrypt');
@@ -113,7 +113,7 @@ const install_db_get_files = async (json_type) =>{
        return [sql, password];
     };
     const files = await install_db_get_files('install');
-    const DB_SCHEMA = db_schema();
+    const DB_SCHEMA = ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`) ?? '';
     let install_count = 0;
     for (const file of files){
         SocketSendSystemAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]})));
@@ -394,24 +394,24 @@ const install_db_get_files = async (json_type) =>{
     const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
     /**@type{import('../../log.service.js')} */
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
-    /**@type{import('../../dbapi/app_portfolio/app.service.js')} */
-    const {getAppsAdminId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
-    /**@type{import('../../dbapi/app_portfolio/user_account.service.js')} */
-    const {create} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
-    /**@type{import('../../dbapi/app_portfolio/user_account_app.service.js')} */
-    const {createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
-    /**@type{import('../../dbapi/app_portfolio/user_account_like.service.js')} */
-    const user_account_like = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like.service.js`);
-    /**@type{import('../../dbapi/app_portfolio/user_account_view.service.js')} */
-    const {insertUserAccountView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`);
-    /**@type{import('../../dbapi/app_portfolio/user_account_follow.service.js')} */
-    const user_account_follow = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow.service.js`);
-    /**@type{import('../../dbapi/app_portfolio/user_account_app_data_post.service.js')} */
-    const {createUserPost, getUserPostsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post.service.js`);
-    /**@type{import('../../dbapi/app_portfolio/user_account_app_data_post_like.service.js')} */
-    const user_account_app_data_post_like = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post_like.service.js`);
-    /**@type{import('../../dbapi/app_portfolio/user_account_app_data_post_view.service.js')} */
-    const {insertUserPostView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post_view.service.js`);
+    /**@type{import('../../dbapi/sql/app.service.js')} */
+    const {getAppsAdminId} = await import(`file://${process.cwd()}/server/dbapi/sql/app.service.js`);
+    /**@type{import('../../dbapi/sql/user_account.service.js')} */
+    const {create} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account.service.js`);
+    /**@type{import('../../dbapi/sql/user_account_app.service.js')} */
+    const {createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_app.service.js`);
+    /**@type{import('../../dbapi/sql/user_account_like.service.js')} */
+    const user_account_like = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_like.service.js`);
+    /**@type{import('../../dbapi/sql/user_account_view.service.js')} */
+    const {insertUserAccountView} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_view.service.js`);
+    /**@type{import('../../dbapi/sql/user_account_follow.service.js')} */
+    const user_account_follow = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_follow.service.js`);
+    /**@type{import('../../dbapi/sql/user_account_app_data_post.service.js')} */
+    const {createUserPost, getUserPostsByUserId} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_app_data_post.service.js`);
+    /**@type{import('../../dbapi/sql/user_account_app_data_post_like.service.js')} */
+    const user_account_app_data_post_like = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_app_data_post_like.service.js`);
+    /**@type{import('../../dbapi/sql/user_account_app_data_post_view.service.js')} */
+    const {insertUserPostView} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account_app_data_post_view.service.js`);
     
     const fs = await import('node:fs');
 
@@ -478,7 +478,7 @@ const install_db_get_files = async (json_type) =>{
     /**
      * Create user account app
      * @param {number} app_id 
-     * @param {number|undefined} user_account_id 
+     * @param {number} user_account_id 
      * @returns {Promise.<null>}
      */
     const create_user_account_app = async (app_id, user_account_id) =>{
@@ -497,7 +497,7 @@ const install_db_get_files = async (json_type) =>{
     /**
      * Create user post
      * @param {number} user_account_post_app_id 
-     * @param {object} data 
+     * @param {import('../../../types.js').db_parameter_user_account_app_data_post_createUserPost} data 
      * @returns {Promise.<null>}
      */
     const create_user_post = async (user_account_post_app_id, data) => {
@@ -785,8 +785,8 @@ const DemoUninstall = async (app_id, query)=> {
     const {SocketSendSystemAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
     /**@type{import('../../log.service.js')} */
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
-    /**@type{import('../../dbapi/app_portfolio/user_account.service.js')} */
-	const {getDemousers, deleteUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
+    /**@type{import('../../dbapi/sql/user_account.service.js')} */
+	const {getDemousers, deleteUser} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account.service.js`);
     return new Promise((resolve, reject)=>{
         getDemousers(app_id)
         .then((/**@type{import('../../../types.js').db_result_user_account_getDemousers[]}*/result_demo_users) =>{
@@ -829,7 +829,7 @@ const DemoUninstall = async (app_id, query)=> {
 
 /**
  * Starts pool with parameters
- * @param {number} db_use 
+ * @param {number|null} db_use 
  * @param {number|null} dba 
  * @param {string|null} user 
  * @param {string|null} password 

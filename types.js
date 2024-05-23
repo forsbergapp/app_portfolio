@@ -686,19 +686,19 @@
  * 
  * Server - db pool parameters
  * @typedef {object}        db_pool_parameters
- * @property {number}       use
+ * @property {number|null}  use
  * @property {number|null}  pool_id
- * @property {number}       port
- * @property {string}       host
+ * @property {number|null}  port
+ * @property {string|null}  host
  * @property {number|null}  dba
  * @property {string|null}  user
  * @property {string|null}  password
  * @property {string|null}  database
  * @property {string|null}  charset                 - DB 1+2 MariaDB/MySQL
  * @property {number|null}  connectionLimit         - DB 1+2 MariaDB/MySQL
- * @property {number}       connectionTimeoutMillis - DB 3 PostgreSQL
- * @property {number}       idleTimeoutMillis       - DB 3 PostgreSQL
- * @property {number}       max                     - DB 3 PostgreSQL
+ * @property {number|null}  connectionTimeoutMillis - DB 3 PostgreSQL
+ * @property {number|null}  idleTimeoutMillis       - DB 3 PostgreSQL
+ * @property {number|null}  max                     - DB 3 PostgreSQL
  * @property {string|null}  connectString           - DB 4 Oracle
  * @property {number|null}  poolMin                 - DB 4 Oracle
  * @property {number|null}  poolMax                 - DB 4 Oracle
@@ -819,7 +819,7 @@
  * 
  * Server - admin demo user
  * @typedef {object}    demo_user
- * @property {number}   [id]
+ * @property {number}   id
  * @property {string}   username
  * @property {string}   bio
  * @property {string}   avatar
@@ -1387,10 +1387,10 @@
  * @typedef {   db_result_insert} db_result_user_account_app_data_post_like_like
  * @typedef {   db_result_delete} db_result_user_account_app_data_post_like_unlike
  * USER ACCOUNT APP DATA POST VIEW
- * @typedef {{  client_ip:string,
- *              client_user_agent:string,
- *              client_longitude:string,
- *              client_latitude:string,
+ * @typedef {{  client_ip:string|null,
+ *              client_user_agent:string|null,
+ *              client_longitude:string|null,
+ *              client_latitude:string|null,
  *              user_account_id:number|null,
  *              user_account_app_data_post_id:number}} db_parameter_user_account_app_data_post_view_insertUserPostView
  * @typedef {   db_result_insert} db_result_user_account_app_data_post_view_insertUserPostView
