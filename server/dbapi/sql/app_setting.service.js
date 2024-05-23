@@ -1,7 +1,7 @@
-/** @module server/dbapi/app_portfolio/setting */
+/** @module server/dbapi/sql/setting */
 
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
@@ -24,19 +24,19 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
                          s.data4 "data4",
                          s.data5 "data5",
                          (SELECT str.text
-                            FROM ${db_schema()}.language l,
-                                 ${db_schema()}.app_translation str
+                            FROM <DB_SCHEMA/>.language l,
+                                 <DB_SCHEMA/>.app_translation str
                            WHERE l.id = str.language_id
                              AND str.app_setting_id = s.id
                              AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-                                                  FROM ${db_schema()}.app_translation str1,
-                                                       ${db_schema()}.language l1
+                                                  FROM <DB_SCHEMA/>.app_translation str1,
+                                                       <DB_SCHEMA/>.language l1
                                                   WHERE l1.id  = str1.language_id
                                                   AND str1.app_setting_id = str.app_setting_id
                                                   AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
                                                   )
                          ) "text"
-                    FROM ${db_schema()}.app_setting s
+                    FROM <DB_SCHEMA/>.app_setting s
                     WHERE s.app_setting_type_app_setting_type_name LIKE COALESCE(:app_setting_type_name, s.app_setting_type_app_setting_type_name)
                     AND (((s.app_setting_type_app_id = :app_id) OR :app_id IS NULL)
                          OR
@@ -52,7 +52,7 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
                          s.data4 "data4",
                          s.data5 "data5",
                          s.display_data "text"
-                    FROM ${db_schema()}.app_setting s
+                    FROM <DB_SCHEMA/>.app_setting s
                    WHERE s.app_setting_type_app_setting_type_name LIKE COALESCE(:app_setting_type_name, s.app_setting_type_app_setting_type_name)
                      AND (((s.app_setting_type_app_id = :app_id) OR :app_id IS NULL)
                          OR
@@ -73,7 +73,7 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
 /**
  * Get setting display data
  * @param {number} app_id 
- * @param {number} data_app_id 
+ * @param {number|null} data_app_id 
  * @param {string} app_setting_type_name 
  * @param {*} value 
  * @returns {Promise.<import('../../../types.js').db_result_app_setting_getSettingDisplayData[]>}
@@ -88,7 +88,7 @@ const getSettingDisplayData = async (app_id, data_app_id, app_setting_type_name,
                          data3                                        "data3", 
                          data4                                        "data4",
                          data5                                        "data5"
-                    FROM ${db_schema()}.app_setting s
+                    FROM <DB_SCHEMA/>.app_setting s
                    WHERE (s.app_setting_type_app_setting_type_name = :app_setting_type_name OR :app_setting_type_name IS NULL)
                      AND s.app_setting_type_app_id = :app_id
                      AND (s.value = :value OR :value IS NULL)

@@ -1,11 +1,11 @@
-/** @module server/dbapi/app_portfolio/app */
+/** @module server/dbapi/sql/app */
 
 /**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../../config.service.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -17,11 +17,11 @@ const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()
 const getApp = async (app_id, id,lang_code) => {
 		const sql = `SELECT	id "id",
 							(SELECT aot.json_data 
-								FROM ${db_schema()}.language l,
-								     ${db_schema()}.app_translation aot
+								FROM <DB_SCHEMA/>.language l,
+								     <DB_SCHEMA/>.app_translation aot
 								WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-														FROM ${db_schema()}.app_translation aot1,
-															${db_schema()}.language l1
+														FROM <DB_SCHEMA/>.app_translation aot1,
+															<DB_SCHEMA/>.language l1
 													WHERE l1.id  = aot1.language_id
 														AND aot1.app_id  = aot.app_id
 														AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -31,11 +31,11 @@ const getApp = async (app_id, id,lang_code) => {
 								  AND aot.language_id = l.id
 							) "app_translation",
 						(SELECT act.text 
-							FROM ${db_schema()}.language l,
-							     ${db_schema()}.app_translation act
+							FROM <DB_SCHEMA/>.language l,
+							     <DB_SCHEMA/>.app_translation act
 							WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-													FROM ${db_schema()}.app_translation act1,
-														${db_schema()}.language l1
+													FROM <DB_SCHEMA/>.app_translation act1,
+														<DB_SCHEMA/>.language l1
 												WHERE l1.id  = act1.language_id
 													AND act1.app_category_id  = act.app_category_id
 													AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -44,7 +44,7 @@ const getApp = async (app_id, id,lang_code) => {
 							  AND act.app_category_id = a.app_category_id
 							  AND act.language_id = l.id
 						) "app_category"
-				FROM ${db_schema()}.app a
+				FROM <DB_SCHEMA/>.app a
 				WHERE ( ((id = :id) OR :id IS NULL)
 					OR 
 					:id = :common_app_id)
@@ -66,14 +66,14 @@ const getAppsAdmin = async (app_id, lang_code) => {
 		const sql = `SELECT	a.id "id",
 						a.app_category_id "app_category_id",
 						act.text "app_category_text"
-				FROM ${db_schema()}.app a
-					LEFT OUTER JOIN ${db_schema()}.app_translation act
+				FROM <DB_SCHEMA/>.app a
+					LEFT OUTER JOIN <DB_SCHEMA/>.app_translation act
 						ON act.app_category_id = a.app_category_id
 						AND act.language_id IN (SELECT id 
-												FROM ${db_schema()}.language l
+												FROM <DB_SCHEMA/>.language l
 												WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																		FROM ${db_schema()}.app_translation act1,
-																			${db_schema()}.language l1
+																		FROM <DB_SCHEMA/>.app_translation act1,
+																			<DB_SCHEMA/>.language l1
 																		WHERE l1.id  = act1.language_id
 																		AND act1.app_category_id  = act.app_category_id
 																		AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -93,7 +93,7 @@ const getAppsAdmin = async (app_id, lang_code) => {
  */
 const getAppsAdminId = async (app_id) => {
 	const sql = `SELECT a.id "id"
-				FROM ${db_schema()}.app a
+				FROM <DB_SCHEMA/>.app a
 			ORDER BY 1`;
 	const parameters = {};
 	return await db_execute(app_id, sql, parameters, null);
@@ -106,7 +106,7 @@ const getAppsAdminId = async (app_id) => {
  * @returns {Promise.<import('../../../types.js').db_result_app_updateAppAdmin[]>}
  */
 const updateAppAdmin = async (app_id, id, data) => {
-		const sql = `UPDATE ${db_schema()}.app
+		const sql = `UPDATE <DB_SCHEMA/>.app
 						SET app_category_id = :app_category_id
 					WHERE id = :id`;
 		const parameters = {app_category_id: data.app_category_id,

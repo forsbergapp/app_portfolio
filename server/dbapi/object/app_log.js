@@ -1,7 +1,7 @@
 /** @module server/dbapi/object/app_log */
 
-/**@type{import('../../dbapi/app_portfolio/app_log.service.js')} */
-const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`);
+/**@type{import('../../dbapi/sql/app_log.service.js')} */
+const service = await import(`file://${process.cwd()}/server/dbapi/sql/app_log.service.js`);
 
 /**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);

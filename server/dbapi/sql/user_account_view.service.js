@@ -1,16 +1,16 @@
-/** @module server/dbapi/app_portfolio/user_account_view */
+/** @module server/dbapi/sql/user_account_view */
 
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
  * @param {number} app_id 
  * @param {import('../../../types.js').db_parameter_user_account_view_insertUserAccountView} data 
- * @returns {Promise.<import('../../../types.js').db_result_user_account_view_insertUserAccountView[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_view_insertUserAccountView>}
  */
 const insertUserAccountView = async (app_id, data) => {
-		const sql = `INSERT INTO ${db_schema()}.user_account_view(
+		const sql = `INSERT INTO <DB_SCHEMA/>.user_account_view(
 							user_account_id, user_account_id_view, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
 					VALUES(:user_account_id,:user_account_id_view,:client_ip,:client_user_agent,:client_longitude,:client_latitude, CURRENT_TIMESTAMP) `;
 		const parameters = {

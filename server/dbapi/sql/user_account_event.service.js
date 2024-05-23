@@ -1,7 +1,7 @@
-/** @module server/dbapi/app_portfolio/user_account_event */
+/** @module server/dbapi/sql/user_account_event */
 
 /**@type{import('../../dbapi/common/common.service.js')} */
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -10,7 +10,7 @@ const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dba
  * @returns {Promise.<import('../../../types.js').db_result_user_account_event_insertUserEvent[]>}
  */
 const insertUserEvent = async (app_id, data) => {
-		const sql = `INSERT INTO ${db_schema()}.user_account_event(
+		const sql = `INSERT INTO <DB_SCHEMA/>.user_account_event(
 							user_account_id, event_id, event_status_id,
 							date_created, date_modified,
 							user_language, user_timezone, user_number_system, user_platform,
@@ -21,8 +21,8 @@ const insertUserEvent = async (app_id, data) => {
 						   :user_language, :user_timezone, :user_number_system, :user_platform, 
 						   :client_latitude, :client_longitude,
 						   :server_remote_addr, :server_user_agent, :server_http_host, :server_http_accept_language
-					  FROM ${db_schema()}.event e,
-						   ${db_schema()}.event_status es
+					  FROM <DB_SCHEMA/>.event e,
+						   <DB_SCHEMA/>.event_status es
 					 WHERE e.event_name = :event
 					   AND es.status_name = :event_status`;
 		const parameters = {
@@ -58,16 +58,16 @@ const getLastUserEvent = async (app_id, user_account_id, event) => {
 							uae.date_created "date_created",
 							uae.date_modified "date_modified",
 							CURRENT_TIMESTAMP "current_timestamp"
-					   FROM ${db_schema()}.user_account_event uae,
-							${db_schema()}.event e,
-							${db_schema()}.event_status es
+					   FROM <DB_SCHEMA/>.user_account_event uae,
+							<DB_SCHEMA/>.event e,
+							<DB_SCHEMA/>.event_status es
 					  WHERE uae.user_account_id = :user_account_id
 						AND e.id = uae.event_id
 						AND e.event_name = :event
 						AND es.id = uae.event_status_id
 						AND uae.date_created = (SELECT MAX(uae_max.date_created)
-												  FROM ${db_schema()}.user_account_event uae_max,
-													   ${db_schema()}.event_status es_max
+												  FROM <DB_SCHEMA/>.user_account_event uae_max,
+													   <DB_SCHEMA/>.event_status es_max
 												 WHERE uae_max.user_account_id = uae.user_account_id
 												   AND uae_max.event_id = uae.event_id
 												   AND es_max.id = uae_max.event_status_id)`;

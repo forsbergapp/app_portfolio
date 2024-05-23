@@ -1,7 +1,7 @@
 /** @module server/dbapi/object/locale */
 
-/**@type{import('../../dbapi/app_portfolio/locale.service.js')} */
-const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/locale.service.js`);
+/**@type{import('../../dbapi/sql/locale.service.js')} */
+const service = await import(`file://${process.cwd()}/server/dbapi/sql/locale.service.js`);
 
 /**
  * 
