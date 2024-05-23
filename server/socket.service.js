@@ -50,8 +50,8 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
                     (result_geodata.geoplugin_city + ', ' +
                     result_geodata.geoplugin_regionName + ', ' +
                     result_geodata.geoplugin_countryName):'';
-    /**@type{import('./dbapi/sql/user_account.service.js')} */
-    const {getUserByUserId} = await import(`file://${process.cwd()}/server/dbapi/sql/user_account.service.js`);
+    /**@type{import('./db/sql/user_account.service.js')} */
+    const {getUserByUserId} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
     const identity_provider_id = user_account_id?await getUserByUserId(app_id, user_account_id)
                                                     .then((/**@type{string}*/result)=>JSON.parse(result)[0].identity_provider_id)
                                                     .catch((/**@type{import('../types.js').error}*/error)=>null):'';
@@ -274,8 +274,8 @@ const ClientAdd = (newClient) => {
     };
     if (connected_clients_no_res.length>0){
         //update with user role
-        /**@type{import('./dbapi/sql/user_account.service.js')} */
-        const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/sql/user_account.service.js`);
+        /**@type{import('./db/sql/user_account.service.js')} */
+        const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
         for (const client of connected_clients_no_res){
             if (client.system_admin==0)
                 if (await app_start()==true){    

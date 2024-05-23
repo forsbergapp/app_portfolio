@@ -195,45 +195,45 @@ const COMMON = {
     const socket = await import(`file://${process.cwd()}/server/socket.js`);
 
     //server db api object database
-    /**@type{import('./dbapi/object/database.js')} */
-    const db_database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
+    /**@type{import('./db/components/database.js')} */
+    const db_database = await import(`file://${process.cwd()}/server/db/components/database.js`);
     //server db api object app
-    /**@type{import('./dbapi/object/app.js')} */
-    const db_app = await import(`file://${process.cwd()}/server/dbapi/object/app.js`);
+    /**@type{import('./db/components/app.js')} */
+    const db_app = await import(`file://${process.cwd()}/server/db/components/app.js`);
     //server db api object app_category
-    /**@type{import('./dbapi/object/app_category.js')} */
-    const db_app_category = await import(`file://${process.cwd()}/server/dbapi/object/app_category.js`);
+    /**@type{import('./db/components/app_category.js')} */
+    const db_app_category = await import(`file://${process.cwd()}/server/db/components/app_category.js`);
     //server db api  object app_log
-    /**@type{import('./dbapi/object/app_log.js')} */
-    const db_app_log = await import(`file://${process.cwd()}/server/dbapi/object/app_log.js`);
+    /**@type{import('./db/components/app_log.js')} */
+    const db_app_log = await import(`file://${process.cwd()}/server/db/components/app_log.js`);
     //server db api object app_object
-    /**@type{import('./dbapi/object/app_object.js')} */
-    const db_app_object = await import(`file://${process.cwd()}/server/dbapi/object/app_object.js`);
+    /**@type{import('./db/components/app_object.js')} */
+    const db_app_object = await import(`file://${process.cwd()}/server/db/components/app_object.js`);
     //server db api object app_role
-    /**@type{import('./dbapi/object/app_role.js')} */
-    const db_app_role = await import(`file://${process.cwd()}/server/dbapi/object/app_role.js`);
+    /**@type{import('./db/components/app_role.js')} */
+    const db_app_role = await import(`file://${process.cwd()}/server/db/components/app_role.js`);
     //server db api object app_setting
-    /**@type{import('./dbapi/object/app_setting.js')} */
-    const db_app_setting = await import(`file://${process.cwd()}/server/dbapi/object/app_setting.js`);
+    /**@type{import('./db/components/app_setting.js')} */
+    const db_app_setting = await import(`file://${process.cwd()}/server/db/components/app_setting.js`);
     //server db api object country
-    /**@type{import('./dbapi/object/country.js')} */
-    const db_country = await import(`file://${process.cwd()}/server/dbapi/object/country.js`);
+    /**@type{import('./db/components/country.js')} */
+    const db_country = await import(`file://${process.cwd()}/server/db/components/country.js`);
     //server db api object identity provider
-    /**@type{import('./dbapi/object/identity_provider.js')} */
-    const db_identity_provider = await import(`file://${process.cwd()}/server/dbapi/object/identity_provider.js`);
+    /**@type{import('./db/components/identity_provider.js')} */
+    const db_identity_provider = await import(`file://${process.cwd()}/server/db/components/identity_provider.js`);
     //server db api object locale
-    /**@type{import('./dbapi/object/locale.js')} */
-    const db_locale = await import(`file://${process.cwd()}/server/dbapi/object/locale.js`);
+    /**@type{import('./db/components/locale.js')} */
+    const db_locale = await import(`file://${process.cwd()}/server/db/components/locale.js`);
     
     //server db api object user account
-    /**@type{import('./dbapi/object/user_account.js')} */
-    const db_user_account = await import(`file://${process.cwd()}/server/dbapi/object/user_account.js`);
+    /**@type{import('./db/components/user_account.js')} */
+    const db_user_account = await import(`file://${process.cwd()}/server/db/components/user_account.js`);
     //server db api object user account app
-    /**@type{import('./dbapi/object/user_account_app.js')} */
-    const db_user_account_app = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.js`);
+    /**@type{import('./db/components/user_account_app.js')} */
+    const db_user_account_app = await import(`file://${process.cwd()}/server/db/components/user_account_app.js`);
     //server db api object user account app data post
-    /**@type{import('./dbapi/object/user_account_app_data_post.js')} */
-    const db_user_account_app_data_post = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_data_post.js`);
+    /**@type{import('./db/components/user_account_app_data_post.js')} */
+    const db_user_account_app_data_post = await import(`file://${process.cwd()}/server/db/components/user_account_app_data_post.js`);
     
     return new Promise((resolve, reject)=>{
         try {
@@ -698,8 +698,8 @@ const COMMON = {
  * @async
  */
 const serverStart = async () =>{
-    /**@type{import('./dbapi/object/database.js')} */
-    const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
+    /**@type{import('./db/components/database.js')} */
+    const database = await import(`file://${process.cwd()}/server/db/components/database.js`);
     /**@type{import('./config.service.js')} */
     const {InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
     /**@type{import('./socket.service.js')} */
