@@ -24,20 +24,20 @@ const AuthenticateSystemadmin = (app_id, iam, authorization, ip, user_agent, acc
  const AuthenticateAccessTokenSystemAdmin = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_SYSTEMADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
- * Middleware authenticates data token
+ * Middleware authenticates id token
  * @param {import('../types.js').req} req
  * @param {import('../types.js').res} res
  * @param {function} next
  */
-const AuthenticateDataToken = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_DATA', req.headers.authorization, req.headers.host, req.ip, res, next);
+const AuthenticateIdToken = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_DATA', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
- * Middleware authenticates data token registration
+ * Middleware authenticates id token registration
  * @param {import('../types.js').req} req
  * @param {import('../types.js').res} res
  * @param {function} next
  */
-const AuthenticateDataTokenRegistration = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_DATA_REGISTRATION', req.headers.authorization, req.headers.host, req.ip, res, next);
+const AuthenticateIdTokenRegistration = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_DATA_REGISTRATION', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * Middleware authenticates access token superadmin
@@ -77,7 +77,7 @@ const AuthenticateAccessToken = (req, res, next) => service.AuthenticateUserComm
  * @param {import('../types.js').res} res
  * @param {function} next
  */
-const AuthenticateIAMSystemAdmin = (req, res, next)  => service.AuthenticateUserCommon(req.query.iam, 'SYSTEMADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
+const AuthenticateIAMSystemAdmin = (req, res, next)  => service.AuthenticateUserCommon(req.query.iam, 'AUTH_SYSTEMADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * Middleware authenticates IAM Admin
@@ -85,7 +85,7 @@ const AuthenticateIAMSystemAdmin = (req, res, next)  => service.AuthenticateUser
  * @param {import('../types.js').res} res
  * @param {function} next
  */
-const AuthenticateIAMAdmin = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
+const AuthenticateIAMAdmin = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'AUTH_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * Middleware authenticates IAM User
@@ -93,7 +93,7 @@ const AuthenticateIAMAdmin = (req, res, next) => service.AuthenticateUserCommon(
  * @param {import('../types.js').res} res
  * @param {function} next
  */
-const AuthenticateIAMUser = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'USER', req.headers.authorization, req.headers.host, req.ip, res, next);
+const AuthenticateIAMUser = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'AUTH_USER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
  /**
  * Middleware authenticates IAM System Admin
@@ -101,10 +101,10 @@ const AuthenticateIAMUser = (req, res, next) => service.AuthenticateUserCommon(r
  * @param {import('../types.js').res} res
  * @param {function} next
  */
-const AuthenticateIAMProvider = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
+const AuthenticateIAMProvider = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'AUTH_PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 export{ AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
-        AuthenticateDataToken, AuthenticateDataTokenRegistration,
+        AuthenticateIdToken, AuthenticateIdTokenRegistration,
         AuthenticateAccessTokenSuperAdmin, AuthenticateAccessTokenAdmin, AuthenticateAccessToken,
         AuthenticateSocket,
         AuthenticateIAMSystemAdmin, AuthenticateIAMAdmin, AuthenticateIAMUser,AuthenticateIAMProvider};

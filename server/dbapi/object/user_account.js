@@ -266,10 +266,10 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                 access_token:           null};
             if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && result_signin[0] && (result_signin[0].app_role_id == 0 || result_signin[0].app_role_id == 1))||
                     app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
-                const jwt_data = AuthorizeToken(app_id, {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
-                data_login.access_token = jwt_data.token;
-                data_login.result = 1;
                 if (result_signin.length > 0) {        
+                    const jwt_data_exists = AuthorizeToken(app_id, {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
+                    data_login.access_token = jwt_data_exists.token;
+                    data_login.result = 1;
                     insertUserAccountLogon(app_id, user_account_id, data_login)
                     .then(()=>{
                         service.updateSigninProvider(app_id, result_signin[0].id, data_user)
@@ -280,9 +280,9 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                 .then(()=>{
                                     resolve({
                                         accessToken: data_login.access_token,
-                                        exp:jwt_data.exp,
-                                        iat:jwt_data.iat,
-                                        tokentimestamp:jwt_data.tokentimestamp,
+                                        exp:jwt_data_exists.exp,
+                                        iat:jwt_data_exists.iat,
+                                        tokentimestamp:jwt_data_exists.tokentimestamp,
                                         items: result_signin,
                                         userCreated: 0
                                     });
@@ -302,8 +302,15 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                     //avatar not used by providers, set default null
                     data_user.avatar = data.avatar ?? null;
                     data_user.provider_image = data.provider_image ?? null;
+                    //generate local username for provider 1
+                    data_user.username = `${data_user.provider_first_name}${Date.now()}`;
+                    
                     service.create(app_id, data_user)
                     .then((/**@type{import('../../../types.js').db_result_user_account_create} */result_create)=>{
+                        const jwt_data_new = AuthorizeToken(app_id, {id:result_create.insertId, name:data_user.username ?? '', ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
+                        data_login.access_token = jwt_data_new.token;
+                        data_login.result = 1;
+    
                         insertUserAccountLogon(app_id, result_create.insertId, data_login)
                         .then(()=>{
                             createUserAccountApp(app_id, result_create.insertId)
@@ -314,9 +321,9 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                     .then(()=>{
                                         resolve({
                                             accessToken: data_login.access_token,
-                                            exp:jwt_data.exp,
-                                            iat:jwt_data.iat,
-                                            tokentimestamp:jwt_data.tokentimestamp,
+                                            exp:jwt_data_new.exp,
+                                            iat:jwt_data_new.iat,
+                                            tokentimestamp:jwt_data_new.tokentimestamp,
                                             items: result_signin2,
                                             userCreated: 1
                                         });
@@ -508,7 +515,7 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
             else{
                 const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
                 //return accessToken since PASSWORD_RESET is in progress
-                //email was verified and activated with data token, but now the password will be updated
+                //email was verified and activated with id token, but now the password will be updated
                 //using accessToken and authentication code
                 /**@type{import('../../../types.js').db_parameter_user_account_logon_insertUserAccountLogon} */
                 const data_body = { 

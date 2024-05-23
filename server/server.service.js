@@ -130,8 +130,8 @@ const COMMON = {
     //URI syntax implemented:
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app_data/v1*').all          (iam.AuthenticateDataToken,                 BFF_app_data);
-    app.route('/bff/app_signup/v1*').post       (iam.AuthenticateDataTokenRegistration,     BFF_app_signup);
+    app.route('/bff/app_data/v1*').all          (iam.AuthenticateIdToken,                 BFF_app_data);
+    app.route('/bff/app_signup/v1*').post       (iam.AuthenticateIdTokenRegistration,     BFF_app_signup);
     app.route('/bff/app_access/v1*').all        (iam.AuthenticateAccessToken,               BFF_app_access);
     app.route('/bff/admin/v1*').all             (iam.AuthenticateAccessTokenAdmin,          BFF_admin);    
     app.route('/bff/superadmin/v1*').all        (iam.AuthenticateAccessTokenSuperAdmin,     BFF_superadmin);
@@ -614,7 +614,7 @@ const COMMON = {
                         resolve(db_user_account.login(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/iam_provider/v1/server-iam/login${resource_id_string}`, 'POST'):{
+                    case route(`/bff/iam_provider/v1/server-iam/login/${resource_id_string}`, 'POST'):{
                         resolve(db_user_account.login_provider(routesparameters.app_id, routesparameters.res.req.query.iam, resource_id_get(), routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }

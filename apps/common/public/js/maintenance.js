@@ -31,7 +31,7 @@ const init = parameters => {
     common.COMMON_GLOBAL.user_account_id = null;
     common.COMMON_GLOBAL.user_identity_provider_id = null;
     common.COMMON_GLOBAL.system_admin = null;
-    common.COMMON_GLOBAL.token_dt = decoded_parameters.app_datatoken
+    common.COMMON_GLOBAL.token_dt = decoded_parameters.app_idtoken
     common.connectOnline();    
     common.show_maintenance(null,1);
 };
