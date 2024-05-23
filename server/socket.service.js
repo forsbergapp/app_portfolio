@@ -371,39 +371,47 @@ const ClientAdd = (newClient) => {
                                 headers_accept_language,
                                 ip, 
                                 response) =>{
-    const client_id = Date.now();
-    ClientConnect(response);
-    ClientOnClose(response, client_id);
-
-    const connectUserData =  await getConnectedUserData(app_id, user_account_id, ip, headers_user_agent, headers_accept_language);
-    /**@type{import('../types.js').socket_connect_list} */
-    const newClient = {
-                        id:                     client_id,
-                        app_id:                 app_id,
-                        authorization_bearer:   authorization_bearer,
-                        user_account_id:        user_account_id,
-                        token_access:           null,
-                        identity_provider_id:   connectUserData.identity_provider_id,
-                        system_admin:           system_admin,
-                        token_systemadmin:      null,
-                        connection_date:        new Date().toISOString(),
-                        gps_latitude:           connectUserData.latitude,
-                        gps_longitude:          connectUserData.longitude,
-                        place:                  connectUserData.place,
-                        timezone:               connectUserData.timezone,
-                        ip:                     ip,
-                        user_agent:             headers_user_agent,
-                        response:               response
-                    };
-
-    ClientAdd(newClient);
-    //send message to client with data
+  //no authorization for repeated request using same id token or requesting from browser
+    if (CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length>0 ||response.req.headers['sec-fetch-mode']!='cors'){
+        /**@type{import('./iam.service.js')} */
+        const {not_authorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        throw not_authorized(response, 401, 'SocketConnect, authorization', true);
+    }
+    else{
+        const client_id = Date.now();
+        ClientConnect(response);
+        ClientOnClose(response, client_id);
     
-    ClientSend(response, btoa(JSON.stringify({  client_id: client_id, 
-                                                latitude: connectUserData.latitude,
-                                                longitude: connectUserData.longitude,
-                                                place: connectUserData.place,
-                                                timezone: connectUserData.timezone})), 'CONNECTINFO');
+        const connectUserData =  await getConnectedUserData(app_id, user_account_id, ip, headers_user_agent, headers_accept_language);
+        /**@type{import('../types.js').socket_connect_list} */
+        const newClient = {
+                            id:                     client_id,
+                            app_id:                 app_id,
+                            authorization_bearer:   authorization_bearer,
+                            user_account_id:        user_account_id,
+                            token_access:           null,
+                            identity_provider_id:   connectUserData.identity_provider_id,
+                            system_admin:           system_admin,
+                            token_systemadmin:      null,
+                            connection_date:        new Date().toISOString(),
+                            gps_latitude:           connectUserData.latitude,
+                            gps_longitude:          connectUserData.longitude,
+                            place:                  connectUserData.place,
+                            timezone:               connectUserData.timezone,
+                            ip:                     ip,
+                            user_agent:             headers_user_agent,
+                            response:               response
+                        };
+    
+        ClientAdd(newClient);
+        //send message to client with data
+        
+        ClientSend(response, btoa(JSON.stringify({  client_id: client_id, 
+                                                    latitude: connectUserData.latitude,
+                                                    longitude: connectUserData.longitude,
+                                                    place: connectUserData.place,
+                                                    timezone: connectUserData.timezone})), 'CONNECTINFO');
+    }
 };
 
 /**
