@@ -627,9 +627,7 @@ const COMMON = {
                     //[microservice protocol]://[microservice host]:[microservice port]/[service]/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query];
                     case route(`/bff/app_data/v1/geolocation/ip`, 'GET') ||
                         (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/geolocation/ip'):{
-                        if (config_service.ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION')=='1')
-                            return resolve('');
-                        else{
+                        if (getNumberValue(config_service.ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1){
                             const params = URI_query.split('&');
                             //set ip from client in case ip query parameter is missing
                             //if ip parameter does not exist
@@ -643,7 +641,9 @@ const COMMON = {
                             resolve(call_microservice(  routesparameters.app_id,
                                                 `/geolocation/v${microservice_api_version('GEOLOCATION')}${routesparameters.route_path}`, 
                                                 `${params.reduce((param_sum,param)=>param_sum += '&' + param)}`));
-                        }
+                        }   
+                        else
+                            return resolve('');
                     }
                     case route(`/bff/app_data/v1/geolocation/place`, 'GET'):{
                         resolve(call_microservice(  routesparameters.app_id,`/geolocation/v${microservice_api_version('GEOLOCATION')}${routesparameters.route_path}`, URI_query));
