@@ -18,12 +18,20 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
     LogServiceE(app_id, service, bff_parameters.query, error).then(() => {
         if (bff_parameters.res){
             const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
-            send_iso_error( bff_parameters.res, 
-                            statusCode, 
-                            null, 
-                            (typeof error === 'string' && error.startsWith('MICROSERVICE ERROR'))?'MICROSERVICE ERROR':error, 
-                            null, 
-                            null);
+            if (error.error.code=='MICROSERVICE')
+                send_iso_error( bff_parameters.res, 
+                                error.error.http,
+                                error.error.code, 
+                                `MICROSERVICE ${bff_parameters.route_path.split('/')[1].toUpperCase()} ERROR`, 
+                                error.error.developer_text, 
+                                error.error.more_info);
+            else
+                send_iso_error( bff_parameters.res, 
+                                statusCode, 
+                                null, 
+                                error, 
+                                null, 
+                                null);
         }
     });
 }

@@ -306,7 +306,8 @@ const COMMON = {
                                                 authorization, 
                                                 routesparameters.user_agent, 
                                                 routesparameters.accept_language, 
-                                                routesparameters.body?routesparameters.body:null)
+                                                routesparameters.body?routesparameters.body:null,
+                                                routesparameters.endpoint == 'SERVER_APP')
                             .catch((/**@type{import('../types.js').error}*/error)=>{throw error});
                 };
 

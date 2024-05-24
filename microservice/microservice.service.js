@@ -62,18 +62,24 @@ class CircuitBreaker {
      * @param {string} headers_user_agent 
      * @param {string} headers_accept_language 
      * @param {object} body 
+     * @param {boolean} server_app_timeout
      * @returns {Promise.<string>}
      */
-    async MicroServiceCall(admin, path, query, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
+    async MicroServiceCall(admin, path, query, method, client_ip, authorization, headers_user_agent, headers_accept_language, body, server_app_timeout){
         const service = (path?path.split('/')[1]:'').toUpperCase();
         if (!this.canRequest(service))
             return '';
         try {
             let timeout;
-            if (admin)
-                timeout = 60 * 1000 * (CONFIG?CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES:60);
+            if (server_app_timeout){
+                //wait max 1 second when service called from SERVER_APP to speed up app start
+                timeout = 1000;
+            }
             else
-                timeout = this.requestTimetout * 1000;
+                if (admin)
+                    timeout = 60 * 1000 * (CONFIG?CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES:60);
+                else
+                    timeout = this.requestTimetout * 1000;
             const response = await httpRequest (service, path, query, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);
             this.onSuccess(service);
             return response;    
@@ -142,9 +148,10 @@ const microservice_circuitbreak = new CircuitBreaker();
  * @param {string} headers_user_agent 
  * @param {string} headers_accept_language 
  * @param {object} data 
+ * @param {boolean} server_app_timeout
  */
-const microserviceRequest = async (admin, path, query, method,client_ip,authorization, headers_user_agent, headers_accept_language, data) =>{
-    return microservice_circuitbreak.MicroServiceCall(admin, path, query, method,client_ip,authorization, headers_user_agent, headers_accept_language, data);
+const microserviceRequest = async (admin, path, query, method,client_ip,authorization, headers_user_agent, headers_accept_language, data, server_app_timeout) =>{
+    return microservice_circuitbreak.MicroServiceCall(admin, path, query, method,client_ip,authorization, headers_user_agent, headers_accept_language, data, server_app_timeout);
 }; 
 
 /**
@@ -304,12 +311,12 @@ const httpRequest = async (service, path, query, method, timeout, client_ip, aut
                 if (res.statusCode == 200)
                     resolve (responseBody);
                 else
-                    reject(responseBody);
+                    reject(JSON.parse(responseBody));
             });
         });
         if (method !='GET')
             request.write(JSON.stringify(body));
-        request.on('error', (error) => {
+        request.on('error', error => {
             reject('MICROSERVICE ERROR: ' + error);
         });
         request.on('timeout', () => {
