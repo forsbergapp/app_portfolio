@@ -110,7 +110,7 @@ const ClientAdd = (newClient) => {
  * @param {string} system_admin
  * @param {string|null} authorization_bearer
  * @param {string|null} token_access
- * @param {string} token_systemadmin
+ * @param {string|null} token_systemadmin
  * @param {string} ip
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language

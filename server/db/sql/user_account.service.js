@@ -160,8 +160,8 @@ const data_validation = data => {
  * @param {string} search 
  * @param {string} sort 
  * @param {string} order_by 
- * @param {number} offset 
- * @param {number} limit 
+ * @param {number|null} offset 
+ * @param {number|null} limit 
  * @returns {Promise.<import('../../../types.js').db_result_user_account_getUsersAdmin[]>}
  */
 const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
@@ -387,7 +387,7 @@ const create = async (app_id, data) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {string} verification_type 
+ * @param {number|null} verification_type 
  * @param {string} verification_code 
  * @param {string|null} auth 
  * @returns {Promise.<import('../../../types.js').db_result_user_account_activateUser>}
@@ -477,7 +477,7 @@ const getUserByUserId = async (app_id, id) => {
  * @param {number|null} resource_id_number 
  * @param {string|null} resource_id_name 
  * @param {string|null} search
- * @param {number} id_current_user
+ * @param {number|null} id_current_user
  * @returns {Promise.<import('../../../types.js').db_result_user_account_getProfileUser[]>}
  */
 const getProfileUser = async (app_id, resource_id_number, resource_id_name, search, id_current_user) => {
@@ -581,7 +581,7 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {number} detailchoice
+ * @param {number|null} detailchoice
  * @returns {Promise.<import('../../../types.js').db_result_user_account_getProfileDetail[]>}
  */
 const getProfileDetail = async (app_id, id, detailchoice) => {
@@ -664,7 +664,7 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
 /**
  * 
  * @param {number} app_id 
- * @param {number} statchoice 
+ * @param {number|null} statchoice 
  * @returns {Promise.<import('../../../types.js').db_result_user_account_getProfileStat[]>}
  */
 const getProfileStat = async (app_id, statchoice) => {
@@ -926,7 +926,7 @@ const updateSigninProvider = async (app_id, id, data) => {
 /**
  * 
  * @param {number} app_id 
- * @param {number} identity_provider_id 
+ * @param {number|null} identity_provider_id 
  * @param {number} search_id
  * @returns {Promise.<import('../../../types.js').db_result_user_account_providerSignIn[]>}
  */

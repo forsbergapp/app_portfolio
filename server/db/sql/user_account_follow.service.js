@@ -7,7 +7,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {number} id_follow 
+ * @param {number|null} id_follow 
  * @returns {Promise.<import('../../../types.js').db_result_user_account_follow_follow>}
  */
 const follow = async (app_id, id, id_follow) => {
@@ -24,7 +24,7 @@ const follow = async (app_id, id, id_follow) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {number} id_unfollow 
+ * @param {number|null} id_unfollow 
  * @returns {Promise.<import('../../../types.js').db_result_user_account_follow_unfollow>}
  */
 const unfollow = async (app_id, id, id_unfollow) => {

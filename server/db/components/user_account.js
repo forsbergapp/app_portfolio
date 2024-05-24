@@ -51,11 +51,11 @@ const { default: {compare} } = await import('bcrypt');
     /**@type{import('../../../types.js').email_return_data}*/
     const email_rendered = await createMail( app_id, 
                                     {
-                                        'emailtype':        emailtype,
-                                        'host':             ConfigGet('SERVER', 'HOST'),
-                                        'app_user_id':      userid,
-                                        'verificationCode': verification_code,
-                                        'to':               email,
+                                        emailtype:        emailtype,
+                                        host:             ConfigGet('SERVER', 'HOST'),
+                                        app_user_id:      userid,
+                                        verificationCode: verification_code,
+                                        to:               email,
                                     })
                                     .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
         
@@ -123,7 +123,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                     data_body.result = Number(result_password);
                     if (result_password) {
                         if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
-                                app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
+                                app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
                             const jwt_data = AuthorizeToken(app_id, {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
                             data_body.access_token = jwt_data.token;
                             insertUserAccountLogon(app_id, user_account_id, data_body)
@@ -145,7 +145,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                                             new_code, 
                                                             result_login[0].email)
                                             .then(()=>{
-                                                ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.access_token, null, ip, user_agent, accept_language, res)
+                                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.access_token, null, ip, user_agent, accept_language, res)
                                                 .then(()=>{
                                                     resolve({
                                                         accessToken: data_body.access_token,
@@ -161,7 +161,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                         });
                                     }
                                     else{
-                                        ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.access_token, null, ip, user_agent, accept_language, res)
+                                        ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.access_token, null, ip, user_agent, accept_language, res)
                                         .then(()=>{
                                             resolve({
                                                 accessToken: data_body.access_token,
@@ -265,7 +265,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                 client_latitude:        data.client_latitude,
                                 access_token:           null};
             if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && result_signin[0] && (result_signin[0].app_role_id == 0 || result_signin[0].app_role_id == 1))||
-                    app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
+                    app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
                 if (result_signin.length > 0) {        
                     const jwt_data_exists = AuthorizeToken(app_id, {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
                     data_login.access_token = jwt_data_exists.token;
@@ -276,7 +276,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                         .then(()=>{
                             createUserAccountApp(app_id, result_signin[0].id)
                             .then(()=>{
-                                ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), data_login.access_token, null, ip, user_agent, accept_language, res)
+                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), data_login.access_token, null, ip, user_agent, accept_language, res)
                                 .then(()=>{
                                     resolve({
                                         accessToken: data_login.access_token,
@@ -317,7 +317,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                             .then(()=>{
                                 service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
                                 .then((/**@type{import('../../../types.js').db_result_user_account_providerSignIn[]}*/result_signin2)=>{
-                                    ConnectedUpdate(app_id, iam_decode(iam).get('client_id'), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), data_login.access_token, null, ip, user_agent, accept_language, res)
+                                    ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), data_login.access_token, null, ip, user_agent, accept_language, res)
                                     .then(()=>{
                                         resolve({
                                             accessToken: data_login.access_token,
@@ -408,7 +408,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                                 data_body.verification_code, 
                                 data_body.email ?? '')
                 .then(()=>{
-                    const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
+                    const jwt_data = AuthorizeToken(app_id, {id:result_create.insertId, name:data.username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
                     resolve({
                         accessToken: jwt_data.token,
                         exp:jwt_data.exp,
@@ -421,7 +421,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                 .catch((/**@type{import('../../../types.js').error}*/error)=>reject(error));
             }
             else{
-                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
+                const jwt_data = AuthorizeToken(app_id, {id:result_create.insertId, name:data.username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
                 resolve({
                     accessToken: jwt_data.token,
                     exp:jwt_data.exp,
@@ -473,7 +473,7 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
                     //new email verified
                     /**@type{import('../../../types.js').db_parameter_user_account_event_insertUserEvent}*/
                     const eventData = {
-                        user_account_id: resource_id ?? 0,
+                        user_account_id: resource_id,
                         event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
                         event_status: 'SUCCESSFUL',
                         user_language: data.user_language,
@@ -513,7 +513,7 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
                     });
             }
             else{
-                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS');
+                const jwt_data = AuthorizeToken(app_id, {id:resource_id, name:'', ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
                 //return accessToken since PASSWORD_RESET is in progress
                 //email was verified and activated with id token, but now the password will be updated
                 //using accessToken and authentication code
@@ -640,11 +640,10 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
     return new Promise((resolve, reject)=>{
         /**
          * Clear private data if private
-         * @param {number|null} resource_id_number
          * @param {import('../../../types.js').db_result_user_account_getProfileUser[]} result_getProfileUser 
          * @returns {import('../../../types.js').db_result_user_account_getProfileUser[]}
          */
-        const clear_private = (resource_id_number, result_getProfileUser) =>
+        const clear_private = result_getProfileUser =>
             result_getProfileUser.map(row=>{
                 if ((row.private==1 && row.friends==null) || query.get('search')!=null){
                     //private and not friends or anonymous visit, remove stats
@@ -666,7 +665,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
             if (resource_id_number==-1){
                 //searching, return result
                 import(`file://${process.cwd()}/server/db/sql/profile_search.service.js`)
-                .then((/**@type{import('../app_portfolio/profile_search.service.js')} */{ insertProfileSearch }) => {
+                .then((/**@type{import('../sql/profile_search.service.js')} */{ insertProfileSearch }) => {
                     /**@type{import('../../../types.js').db_parameter_profile_search_insertProfileSearch} */
                     const data_insert = {   user_account_id:    data.user_account_id,
                                             search:             query.get('search') ?? resource_id_name,
@@ -676,7 +675,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                                             client_latitude:    query.get('client_latitude')};
                     insertProfileSearch(app_id, data_insert)
                     .then(()=>{
-                        resolve(clear_private(resource_id_number, result_getProfileUser));
+                        resolve(clear_private(result_getProfileUser));
                     })
                     .catch((/**@type{import('../../../types.js').error}*/error)=>reject(error));
                 });
@@ -694,7 +693,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                                             client_latitude:        query.get('client_latitude')};
                         insertUserAccountView(app_id, data_body)
                         .then(()=>{
-                            resolve(clear_private(resource_id_number, result_getProfileUser));
+                            resolve(clear_private(result_getProfileUser));
                         })
                         .catch((/**@type{import('../../../types.js').error}*/error)=>reject(error));
                     });
