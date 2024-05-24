@@ -446,9 +446,6 @@
  * @typedef {{CHECK_INTERVAL:string}} config_server_socket
  * @typedef {{   START:string,
  *               USE:string,
- *               LIMIT_LIST_SEARCH:string,
- *               LIMIT_PROFILE_STAT:string,
- *               LOG:string,
  *               DB1_SYSTEM_ADMIN_USER:string,
  *               DB1_SYSTEM_ADMIN_PASS:string,
  *               DB1_APP_ADMIN_USER:string,

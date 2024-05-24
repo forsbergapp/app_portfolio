@@ -1,7 +1,7 @@
 /** @module server/db/sql/user_account_app_data_post */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute, db_limit_rows} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -163,8 +163,8 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
 											AND u_like.user_account_app_app_id = us.user_account_app_app_id)
 						   AND  u.active = 1
 						   AND  7 = :detailchoice) t
-					ORDER BY 1, COALESCE(username, provider_first_name) `;
-		sql = db_limit_rows(sql,1);
+					ORDER BY 1, COALESCE(username, provider_first_name) 
+					<APP_PAGINATION_LIMIT_PARAMETER/>`;
 		const parameters = {
 						user_account_id: id,
 						app_id: app_id,
@@ -261,8 +261,8 @@ const getProfileStatPost = async (app_id, statchoice) => {
 						 WHERE  u.active = 1
 						   AND  u.private <> 1
 						   AND  5 = :statchoice) t
-				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
-		sql = db_limit_rows(sql,2);
+				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
+				<APP_PAGINATION_LIMIT_PARAMETER/>`;
 		const parameters = {
 						app_id: app_id,
 						statchoice: statchoice

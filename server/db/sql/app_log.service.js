@@ -5,7 +5,7 @@ const { getNumberValue } = await import(`file://${process.cwd()}/server/server.s
 /**@type{import('../../config.service.js')} */
 const { ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../common.service.js')} */
-const {db_execute, db_limit_rows} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -52,8 +52,8 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 				WHERE ((app_id = :app_id) OR :app_id IS NULL)
 				  AND <DATE_PERIOD_YEAR/> = :year
 				  AND <DATE_PERIOD_MONTH/> = :month
-				ORDER BY ${sort} ${order_by} `;
-		sql = db_limit_rows(sql, null);
+				ORDER BY ${sort} ${order_by} 
+				<APP_PAGINATION_LIMIT_APP/>`;
 		const parameters = {app_id:data_app_id,
 							year:year,
 							month:month,

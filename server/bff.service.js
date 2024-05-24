@@ -18,7 +18,7 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
     LogServiceE(app_id, service, bff_parameters.query, error).then(() => {
         if (bff_parameters.res){
             const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
-            if (error.error.code=='MICROSERVICE')
+            if (error.error && error.error.code=='MICROSERVICE')
                 send_iso_error( bff_parameters.res, 
                                 error.error.http,
                                 error.error.code, 

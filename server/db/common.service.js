@@ -1,44 +1,15 @@
 /** @module server/db */
 
-/**@type{import('../config.service.js')} */
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../log.service.js')} */
 const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.service.js`);
+/**@type{import('../config.service.js')} */
+const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+
 /**@type{import('./db.service.js')} */
 const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js`);
 
-/**
- * 
- * @param {number} app_id 
- * @param {string} lang_code 
- * @param {import('../../types.js').error} err 
- * @param {import('../../types.js').res} res
- */
- const checked_error = async (app_id, lang_code, err, res) =>{
-	/**@type{import('./sql/app_setting.service.js')} */
-	const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`);
-    return new Promise((resolve)=>{
-		const app_code = get_app_code(err);
-		if (app_code != null){
-			getSettingDisplayData( 	app_id,
-									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
-									'MESSAGE',
-									app_code)
-			.then((/**@type{import('../../types.js').db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
-				res.statusCode = 400;
-				res.statusMessage = result_message[0].display_data;
-				resolve(result_message[0].display_data);
-			});
-		}
-		else{
-			res.statusCode = 500;
-			res.statusMessage = err;
-			resolve(err);
-		}
-	});
-};
 /**
  * Get app code derived from database error
  * 
@@ -83,6 +54,39 @@ const get_app_code = error => {
 			return null;	
 	}
 };
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} lang_code 
+ * @param {import('../../types.js').error} err 
+ * @param {import('../../types.js').res} res
+ */
+ const checked_error = async (app_id, lang_code, err, res) =>{
+	/**@type{import('./sql/app_setting.service.js')} */
+	const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`);
+
+	
+    return new Promise((resolve)=>{
+		const app_code = get_app_code(err);
+		if (app_code != null){
+			getSettingDisplayData( 	app_id,
+									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+									'MESSAGE',
+									app_code)
+			.then((/**@type{import('../../types.js').db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+				res.statusCode = 400;
+				res.statusMessage = result_message[0].display_data;
+				resolve(result_message[0].display_data);
+			});
+		}
+		else{
+			res.statusCode = 500;
+			res.statusMessage = err;
+			resolve(err);
+		}
+	});
+};
+
 /**
  * Get message for record not found
  * @param {number} app_id 
@@ -140,43 +144,32 @@ const get_locale = (lang_code, part) => {
 };
 
 /**
- * Limit SQL rows
- * limit_type 1		Env limit LIMIT_LIST_SEARCH
- * limit_type 2 	Env limit LIMIT_LIST_PROFILE_STAT
- * limit_type null 	App function limit
+ * Sets pagination limits on SQL rows
+ * 
+ * @param {number|null} app_id
  * @param {string} sql 
- * @param {1|2|null} limit_type 
+ * @param {boolean} parameter_limit 
  * @returns {string}
  */
-const db_limit_rows = (sql, limit_type = null) => {
+const db_limit_rows = (app_id, parameter_limit = true) => {
 	const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
 	if (db_use == 4)
-		switch (limit_type){
-			case 1:{
-				//use env limit
-				return sql + ` FETCH NEXT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))} ROWS ONLY`;
-			}
-			case 2:{
-				//use env limit
-				return sql + ` FETCH NEXT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_STAT'))} ROWS ONLY`;
-			}
-			default:{
-				//use app function limit
-				return sql + ' OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
-			}
+		if (parameter_limit){
+			//use parameter limit
+			return `	FETCH NEXT ${getNumberValue(ConfigGetApp(app_id, 
+														getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_PAGINATION_LIMIT' in parameter)[0].APP_PAGINATION_LIMIT)} 
+						ROWS ONLY`;
+		}
+		else{
+			//use app function limit
+			return ' 	OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
 		}
 	else
-		switch (limit_type){
-			case 1:{
-				return sql + ` LIMIT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))} `;
-			}
-			case 2:{
-				return sql + ` LIMIT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_STAT'))} `;
-			}
-			default:{
-				return sql + ' LIMIT :limit OFFSET :offset';	
-			}
-		}
+		if (parameter_limit)
+			return 	` 	LIMIT ${getNumberValue(	ConfigGetApp(app_id, 
+													getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_PAGINATION_LIMIT' in parameter)[0].APP_PAGINATION_LIMIT)} `;
+		else
+			return ' 	LIMIT :limit OFFSET :offset';
 };
 
 /**
@@ -222,6 +215,9 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 												locale2: get_locale(locale, 2),
 												locale3: get_locale(locale, 3)}};
 		}
+		//manage pagination
+		sql = sql.replaceAll('<APP_PAGINATION_LIMIT_PARAMETER/>', db_limit_rows(app_id, true));
+		sql = sql.replaceAll('<APP_PAGINATION_LIMIT_APP/>', 		db_limit_rows(app_id, false));
 
 		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
 		.then((/**@type{import('../../types.js').db_query_result}*/result)=> {

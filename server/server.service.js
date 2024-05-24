@@ -539,16 +539,13 @@ const COMMON = {
                         resolve(socket.ConnectedListSystemadmin(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-config/config-apps/${resource_id_string}`, 'GET'):{
-                        resolve(config.ConfigGetApp(routesparameters.app_id, resource_id_get(), app_query));
-                        break;
-                    }
                     case route(`/bff/admin/v1/server-config/config-apps-parameter/${resource_id_string}`, 'PATCH'):{
                         resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, resource_id_get(), routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-config/config/${resource_id_string}`, 'GET') && resource_id_get(true)=='APPS':{
-                        resolve(config.ConfigGetApps(app_query));
+                    case route(`/bff/systemadmin/v1/server-config/config-apps/${resource_id_string}`, 'GET'):
+                    case route(`/bff/admin/v1/server-config/config-apps/${resource_id_string}`, 'GET'):{
+                        resolve(config.ConfigGetApps(resource_id_get(), app_query));
                         break;
                     }
                     case route(`/bff/admin/v1/server-config/config/${resource_id_string}`, 'GET'):
@@ -660,7 +657,8 @@ const COMMON = {
                     case route(`/bff/app_data/v1/worldcities/city`, 'GET'):{
                         resolve(call_microservice(  routesparameters.app_id,
                                                     `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, 
-                                                    URI_query + `&limit=${config_service.ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`));
+                                                    URI_query + `&limit=${getNumberValue(config_service.ConfigGetApp(routesparameters.app_id, 
+														                    getNumberValue(config_service.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_PAGINATION_LIMIT' in parameter)[0].APP_PAGINATION_LIMIT)}`));
                     }
                     case route(`/bff/app_data/v1/worldcities/city-random`, 'GET')||
                         (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/worldcities/city-random'):{
