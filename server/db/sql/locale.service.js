@@ -1,7 +1,7 @@
 /** @module server/db/sql/language/locale */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute, get_locale} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -39,7 +39,7 @@ const getLocales = async (app_id, lang_code) => {
                                                   <DB_SCHEMA/>.language l1
                                             WHERE l1.id  = ct1.language_id
                                               AND ct1.country_id = c.id
-                                              AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+                                              AND l1.lang_code IN (<LOCALE/>)
                                         )
                   )  "text"
              FROM <DB_SCHEMA/>.app_translation lt,
@@ -58,7 +58,7 @@ const getLocales = async (app_id, lang_code) => {
                                                              <DB_SCHEMA/>.language l4
                                                        WHERE l4.id  = lt4.language_id_translation
                                                          AND lt4.language_id = l2.id
-                                                         AND l4.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+                                                         AND l4.lang_code IN (<LOCALE/>)
                                                                       )
                                                )
           UNION ALL
@@ -76,18 +76,14 @@ const getLocales = async (app_id, lang_code) => {
                                                              <DB_SCHEMA/>.language l4
                                                        WHERE l4.id  = lt4.language_id_translation
                                                          AND lt4.language_id = l2.id
-                                                         AND l4.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+                                                         AND l4.lang_code IN (<LOCALE/>)
                                                                       )
                                               )
               AND  EXISTS(SELECT NULL
                             FROM <DB_SCHEMA/>.locale loc
                            WHERE loc.language_id = l2.id)
           ORDER BY 2`;
-    const parameters = {lang_code_default: 'en',
-                  lang_code1: get_locale(lang_code, 1),
-                  lang_code2: get_locale(lang_code, 2),
-                  lang_code3: get_locale(lang_code, 3)
-                };
-    return await db_execute(app_id, sql, parameters, null);
+    const parameters = {lang_code_default: 'en'};
+    return await db_execute(app_id, sql, parameters, null, lang_code);
 };
 export{getLocales};

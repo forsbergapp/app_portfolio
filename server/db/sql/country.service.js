@@ -1,7 +1,7 @@
 /** @module server/db/sql/country */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute, get_locale} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -27,15 +27,11 @@ const getCountries = async (app_id, lang_code) => {
                                                                    <DB_SCHEMA/>.language l1
                                                              WHERE ct1.country_id = ct.country_id
                                                                AND l1.id = ct1.language_id
-                                                               AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+                                                               AND l1.lang_code IN (<LOCALE/>)
                                                             )
                                         )
                ORDER BY 5, 4`;
-     const parameters = {
-                    lang_code1: get_locale(lang_code, 1),
-                    lang_code2: get_locale(lang_code, 2),
-                    lang_code3: get_locale(lang_code, 3)
-                  };
-     return await db_execute(app_id, sql, parameters, null);
+     const parameters = {};
+     return await db_execute(app_id, sql, parameters, null, lang_code);
 };
 export{getCountries};

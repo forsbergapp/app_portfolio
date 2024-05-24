@@ -5,7 +5,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**@type{import('../../config.service.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../../db/common.service.js')} */
-const {db_execute, get_locale} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -24,8 +24,8 @@ const getApp = async (app_id, id,lang_code) => {
 															<DB_SCHEMA/>.language l1
 													WHERE l1.id  = aot1.language_id
 														AND aot1.app_id  = aot.app_id
-														AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
-														AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
+														AND l1.lang_code IN (<LOCALE/>)
+														AND l.lang_code IN ('en', <LOCALE/>)
 													)
 								  AND aot.app_id = a.id
 								  AND aot.language_id = l.id
@@ -38,8 +38,8 @@ const getApp = async (app_id, id,lang_code) => {
 														<DB_SCHEMA/>.language l1
 												WHERE l1.id  = act1.language_id
 													AND act1.app_category_id  = act.app_category_id
-													AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
-													AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
+													AND l1.lang_code IN (<LOCALE/>)
+													AND l.lang_code IN ('en', <LOCALE/>)
 												)
 							  AND act.app_category_id = a.app_category_id
 							  AND act.language_id = l.id
@@ -49,12 +49,9 @@ const getApp = async (app_id, id,lang_code) => {
 					OR 
 					:id = :common_app_id)
 				ORDER BY 1`;
-		const parameters = {lang_code1: get_locale(lang_code, 1),
-							lang_code2: get_locale(lang_code, 2),
-							lang_code3: get_locale(lang_code, 3),
-							common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+		const parameters = {common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 							id: id};
-		return await db_execute(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null, lang_code);
 	};
 /**
  * 
@@ -76,15 +73,12 @@ const getAppsAdmin = async (app_id, lang_code) => {
 																			<DB_SCHEMA/>.language l1
 																		WHERE l1.id  = act1.language_id
 																		AND act1.app_category_id  = act.app_category_id
-																		AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+																		AND l1.lang_code IN (<LOCALE/>)
 																	)
 												)
 				ORDER BY 1`;
-		const parameters = {lang_code1: get_locale(lang_code, 1),
-							lang_code2: get_locale(lang_code, 2),
-							lang_code3: get_locale(lang_code, 3)
-							};
-		return await db_execute(app_id, sql, parameters, null);
+		const parameters = {};
+		return await db_execute(app_id, sql, parameters, null, lang_code);
 	};
 /**
  * 
