@@ -29,21 +29,16 @@ const app_portfolio_title = 'App Portfolio';
 /**
  * Config get apps
  * @param {number|null} app_id
- * @returns {import('../types.js').config_apps_record[]}
+ * @param {string|null} key
+ * @returns {import('../types.js').config_apps_record[]|*}
  */
- const ConfigGetApps = (app_id=null) => {
-    //return apps array in the object without SECRETS, PARAMETERS and RENDER_CONFIG
-    return Object.entries(file_get_cached('APPS'))[0][1]
-                    .filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
-                    .reduce(( /**@type{import('../types.js').config_apps_record} */app, 
-                                                            /**@type {import('../types.js').config_apps_record}*/current)=> 
-                                                                app.concat({APP_ID:current.APP_ID,
-                                                                            NAME:current.NAME,
-                                                                            SUBDOMAIN:current.SUBDOMAIN,
-                                                                            PATH:current.PATH,
-                                                                            LOGO:current.LOGO,
-                                                                            SHOWPARAM:current.SHOWPARAM,
-                                                                            STATUS:current.STATUS}), []);
+ const ConfigGetApps = (app_id=null, key = null) => {
+    const result = file_get_cached('APPS').APPS.filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
+
+                        .reduce((   /**@type{import('../types.js').config_apps_record} */app, 
+                                    /**@type {*}*/current)=> 
+                                    key?app.concat({APP_ID:current.APP_ID, [key]:current[key]}):app.concat(current), []);
+    return result;
  };
  /**
   * 

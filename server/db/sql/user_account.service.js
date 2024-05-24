@@ -3,9 +3,9 @@
 /**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../../config.service.js')} */
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../../db/common.service.js')} */
-const {db_execute, db_limit_rows} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -206,13 +206,14 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 				   OR ua.provider_email LIKE :search
 				   OR CAST(ua.id as VARCHAR(11)) LIKE :search)
 				   OR :search = '*'
-				ORDER BY ${sort} ${order_by}`;
-		sql = db_limit_rows(sql, null);
+				ORDER BY ${sort} ${order_by}
+				<APP_PAGINATION_LIMIT_APP/>`;
 		if (search!='*')
 			search = '%' + search + '%';
 		const parameters = {search: search,
 							offset: offset ?? 0,
-							limit: limit ?? getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))
+							limit: limit ?? getNumberValue(ConfigGetApp(app_id, 
+												getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_PAGINATION_LIMIT' in parameter)[0].APP_PAGINATION_LIMIT)
 							};
 		return await db_execute(app_id, sql, parameters, null);
     };
@@ -653,8 +654,8 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
   					  AND u.id = u_liked.user_account_id
 					  AND u.active = 1
 					  AND 4 = :detailchoice) t
-				ORDER BY 1, COALESCE(username, provider_first_name) `;
-	sql = db_limit_rows(sql,1);
+				ORDER BY 1, COALESCE(username, provider_first_name) 
+				<APP_PAGINATION_LIMIT_PARAMETER/>`;
 	const parameters ={
 						user_account_id: id,
 						detailchoice: detailchoice
@@ -733,8 +734,8 @@ const getProfileStat = async (app_id, statchoice) => {
 						   FROM <DB_SCHEMA/>.user_account_app uap
 						  WHERE uap.user_account_id = t.id
 						    AND uap.app_id = :app_id)
-		    ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
-	sql = db_limit_rows(sql,2);
+		    ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
+			<APP_PAGINATION_LIMIT_PARAMETER/>`;
 	const parameters = {
 						statchoice: statchoice,
 						app_id: app_id

@@ -428,6 +428,9 @@ div.ray8 {
 #common_dialogue_info{
 	visibility: hidden;
 }
+#common_dialogue_apps, #common_dialogue_info{
+	z-index: 1;
+}
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
