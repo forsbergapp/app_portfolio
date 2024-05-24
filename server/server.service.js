@@ -550,6 +550,7 @@ const COMMON = {
                         resolve(config.ConfigGetApps(app_query));
                         break;
                     }
+                    case route(`/bff/admin/v1/server-config/config/${resource_id_string}`, 'GET'):
                     case route(`/bff/systemadmin/v1/server-config/config/${resource_id_string}`, 'GET'):{
                         resolve(config.ConfigFileGet(resource_id_get(true), app_query));
                         break;
