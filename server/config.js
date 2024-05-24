@@ -35,8 +35,9 @@ const ConfigFileSave =  (resource_id, data) => service.ConfigFileSave(resource_i
   const ConfigAppParameterUpdate = (app_id, resource_id, data) => service.ConfigAppParameterUpdate(app_id, resource_id, data);
 /**
  * Config get apps 
+ * @param {number} resource_id
  * @param {*} query
  */
-const ConfigGetApps = query => service.ConfigGetApps(getNumberValue(query.get('app_id')));
+const ConfigGetApps = (resource_id, query) => service.ConfigGetApps(resource_id, query.get('key'));
 
 export {ConfigFileSave, ConfigFileGet, ConfigGetApp, ConfigAppParameterUpdate, ConfigGetApps};

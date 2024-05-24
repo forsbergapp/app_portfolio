@@ -386,27 +386,17 @@ const show_start = async (yearvalues) =>{
 const get_apps_div = async () =>{
     return new Promise((resolve)=>{
         let options = '';
-        let path;
         let authorization_type;
-        if (common.COMMON_GLOBAL.system_admin!=null){
-            path = '/server-config/config/APPS';
+        if (common.COMMON_GLOBAL.system_admin!=null)
             authorization_type = 'SYSTEMADMIN';
-        }
-        else{
-            path = '/app_admin/apps';
+        else
             authorization_type = 'APP_ACCESS';
-        }
-        common.FFB(path, null, 'GET', authorization_type, null)
+        common.FFB('/server-config/config-apps/', 'key=NAME', 'GET', authorization_type, null)
         .then((/**@type{string}*/result)=>{
             const apps = JSON.parse(result);
-            if (common.COMMON_GLOBAL.system_admin!=null)
-                for (const app of apps.data.APPS) {
-                    options += `<div class='common_select_option' data-value='${app.APP_ID}'>${app.APP_ID} - ${' '}</div>`;
-                }
-            else
-                for (const app of apps) {
-                    options += `<div class='common_select_option' data-value='${app.ID}'>${app.ID} - ${app.NAME}</div>`;
-                }
+            for (const app of apps) {
+                options += `<div class='common_select_option' data-value='${app.APP_ID}'>${app.APP_ID} - ${app.NAME}</div>`;
+            }
             resolve(`   <div class='common_select_dropdown'>
                             <div class='common_select_dropdown_value' data-value=''>∞</div>
                             <div class='common_select_dropdown_icon common_icon'></div>
@@ -425,29 +415,19 @@ const get_apps_div = async () =>{
  */
 const get_apps = async () => {
     return new Promise((resolve)=>{
-        let html = `<option value=''>${'∞'}</option>`;
-        let path;
+        let options = `<option value=''>${'∞'}</option>`;
         let authorization_type;
-        if (common.COMMON_GLOBAL.system_admin!=null){
-            path = '/server-config/config/APPS';
+        if (common.COMMON_GLOBAL.system_admin!=null)
             authorization_type = 'SYSTEMADMIN';
-        }
-        else{
-            path = '/app_admin/apps';
+        else
             authorization_type = 'APP_ACCESS';
-        }
-        common.FFB(path, null, 'GET', authorization_type, null)
+        common.FFB('/server-config/config-apps/', 'key=NAME', 'GET', authorization_type, null)
         .then((/**@type{string}*/result)=>{
             const apps = JSON.parse(result);
-            if (common.COMMON_GLOBAL.system_admin!=null)
-                for (const app of apps.data.APPS) {
-                    html += `<option value='${app.APP_ID}'>${app.APP_ID} - ${' '}</option>`;
-                }
-            else
-                for (const app of apps) {
-                    html += `<option value='${app.ID}'>${app.ID} - ${app.NAME}</option>`;
-                }
-            resolve(html);
+            for (const app of apps) {
+                options += `<div class='common_select_option' data-value='${app.APP_ID}'>${app.APP_ID} - ${app.NAME}</div>`;
+            }
+            resolve(options);
         })
         .catch(()=>resolve(null));
     });
@@ -1008,7 +988,7 @@ const show_app_parameter = (app_id) => {
                         <div id='list_app_parameter_col_title3' class='list_app_parameter_col list_title'>VALUE</div>
                         <div id='list_app_parameter_col_title4' class='list_app_parameter_col list_title'>COMMENT</div>
                     </div>`;
-        for (const app_parameter of JSON.parse(result)) {
+        for (const app_parameter of JSON.parse(result)[0].PARAMETERS) {
             html += 
             `<div data-changed-record='0' class='list_app_parameter_row common_row'>
                 <div class='list_app_parameter_col'>
@@ -1227,7 +1207,7 @@ const update_record = async (table,
                 json_data = {   parameter_name:     parameters.app_parameter.parameter_name,
                                 parameter_value:    parameters.app_parameter.parameter_value,
                                 parameter_comment:  parameters.app_parameter.parameter_comment};
-                path = `/server/config/config-apps-parameter/${parameters.app_parameter.app_id}`;
+                path = `/server-config/config-apps-parameter/${parameters.app_parameter.app_id}`;
                 token_type = 'APP_ACCESS';
                 method = 'PATCH';
                 break;
@@ -1319,20 +1299,15 @@ const show_monitor = async (yearvalues) =>{
                                                                                                             FILE_INTERVAL:''},
                                                                                                 logscope_level_options:''};
 
-    let path;
     let token_type = '';
-    if (common.COMMON_GLOBAL.system_admin!=null){
-        path  = '/server-config/config/SERVER';
+    if (common.COMMON_GLOBAL.system_admin!=null)
         token_type = 'SYSTEMADMIN';
-    }
-    else{
-        path  = '/server-config/config/SERVER';
+    else
         token_type = 'APP_ACCESS';
-    }
-    const query = 'config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
+    const query = `key=PARAMETERS`;
 
-    const result_limit = await common.FFB(path, query, 'GET', token_type, null).catch(()=> null);
-    APP_GLOBAL.limit = parseInt(JSON.parse(result_limit).data);
+    const result_limit = await common.FFB(`/server-config/config-apps/${common.COMMON_GLOBAL.app_id}`, query, 'GET', token_type, null).catch(()=> null);
+    APP_GLOBAL.limit = parseInt(JSON.parse(result_limit)[0].PARAMETERS.filter((/**@type{{APP_PAGINATION_LIMIT:number}}*/parameter)=>parameter.APP_PAGINATION_LIMIT)[0].APP_PAGINATION_LIMIT);
 
     AppDocument.querySelector('#list_row_sample').classList.remove('common_icon','css_spinner');
     AppDocument.querySelector('#list_row_sample').innerHTML = 
