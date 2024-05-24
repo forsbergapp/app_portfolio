@@ -260,9 +260,9 @@
  * Apps - Email param data
  * @typedef {object} email_param_data
  * @property {string} emailtype         - [1-4], 1=SIGNUP, 2=UNVERIFIED, 3=PASSWORD RESET (FORGOT), 4=CHANGE EMAIL
- * @property {string} host              
- * @property {string} app_user_id       
- * @property {string} verificationCode  
+ * @property {string|null} host              
+ * @property {number} app_user_id       
+ * @property {string|null} verificationCode  
  * @property {string} to                - to email
  * 
  * Apps - Email return data
