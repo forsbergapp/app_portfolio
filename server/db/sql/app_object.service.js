@@ -5,7 +5,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**@type{import('../../config.service.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../../db/common.service.js')} */
-const {db_execute, get_locale} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -31,14 +31,14 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 							FROM <DB_SCHEMA/>.app_translation aot,
 								<DB_SCHEMA/>.language l
 							WHERE l.id = aot.language_id
-							AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
+							AND l.lang_code IN ('en', <LOCALE/>)
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM <DB_SCHEMA/>.language l1,
 														<DB_SCHEMA/>.app_translation aot1
 												WHERE aot1.language_id = l1.id
 													AND aot1.app_object_app_id = aot.app_object_app_id
 													AND aot1.app_object_object_name = aot.app_object_object_name
-													AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+													AND l1.lang_code IN (<LOCALE/>)
 												)
 							AND aot.app_object_app_id IN(:app_id, :common_app_id)							
 							AND aot.app_object_object_name = :object_name
@@ -60,13 +60,13 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 							AND s.app_setting_type_app_id = st.app_id
 							AND l.id = str.language_id
 							AND str.app_setting_id = s.id
-							AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
+							AND l.lang_code IN ('en', <LOCALE/>)
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM <DB_SCHEMA/>.language l1,
 														<DB_SCHEMA/>.app_translation str1
 												WHERE str1.language_id = l1.id
 													AND str1.app_setting_id = s.id
-													AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+													AND l1.lang_code IN (<LOCALE/>)
 												)
 							AND aoi.app_object_app_id IN(:app_id, :common_app_id)
 							AND ((aoi.app_object_object_name IN ('APP','APP_LOV')
@@ -83,7 +83,7 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 							FROM <DB_SCHEMA/>.app_translation aoit,
 								<DB_SCHEMA/>.language l
 							WHERE l.id = aoit.language_id
-							AND l.lang_code IN ('en', :lang_code1, :lang_code2, :lang_code3)
+							AND l.lang_code IN ('en', <LOCALE/>)
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM <DB_SCHEMA/>.language l1,
 														<DB_SCHEMA/>.app_translation aoit1
@@ -91,7 +91,7 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 													AND aoit1.app_object_item_app_object_app_id = aoit.app_object_item_app_object_app_id
 													AND aoit1.app_object_item_app_object_object_name = aoit.app_object_item_app_object_object_name
 													AND aoit1.app_object_item_object_item_name = aoit.app_object_item_object_item_name
-													AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+													AND l1.lang_code IN (<LOCALE/>)
 												)
 							AND aoit.app_object_item_app_object_app_id IN(:app_id, :common_app_id)
 							AND aoit.app_object_item_app_object_object_name = :object_name
@@ -100,12 +100,9 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 	const parameters = {
 					common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 					app_id: app_id,
-					lang_code1: get_locale(lang_code, 1),
-					lang_code2: get_locale(lang_code, 2),
-					lang_code3: get_locale(lang_code, 3),
 					object_name : object_name,
 					object_item_name: object_item_name
 					};
-	return await db_execute(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null, lang_code);
 };
 export{getObjects};

@@ -5,7 +5,7 @@ const { getNumberValue } = await import(`file://${process.cwd()}/server/server.s
 /**@type{import('../../config.service.js')} */
 const { ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../common.service.js')} */
-const {db_date_period, db_execute, db_limit_rows} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {db_execute, db_limit_rows} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -50,8 +50,8 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 					  count(*) over() "total_rows"
 				 FROM <DB_SCHEMA/>.app_log
 				WHERE ((app_id = :app_id) OR :app_id IS NULL)
-				  AND ${db_date_period('YEAR')} = :year
-				  AND ${db_date_period('MONTH')} = :month
+				  AND <DATE_PERIOD_YEAR/> = :year
+				  AND <DATE_PERIOD_MONTH/> = :month
 				ORDER BY ${sort} ${order_by} `;
 		sql = db_limit_rows(sql, null);
 		const parameters = {app_id:data_app_id,
@@ -77,22 +77,22 @@ const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 					  :month_log 	"month",
 					  t.day_log 	"day",
 					  json_data 	"json_data"
-				 FROM (SELECT 1										chart,
+				 FROM (SELECT 1								chart,
 							  app_id,
-					          NULL 									day_log,
+					          NULL 							day_log,
 					          json_data
 						 FROM <DB_SCHEMA/>.app_log
-						WHERE ${db_date_period('YEAR')} = :year_log
-						  AND ${db_date_period('MONTH')} = :month_log
+						WHERE <DATE_PERIOD_YEAR/> = :year_log
+						  AND <DATE_PERIOD_MONTH/> = :month_log
 						UNION ALL
-					   SELECT 2										chart,
-					   		  NULL 									app_id,
-							  ${db_date_period('DAY')} 			day_log,
+					   SELECT 2								chart,
+					   		  NULL 							app_id,
+							  <DATE_PERIOD_DAY/> 			day_log,
 							  json_data
 						 FROM <DB_SCHEMA/>.app_log
 						WHERE ((app_id = :app_id_log) OR :app_id_log IS NULL)
-						  AND ${db_date_period('YEAR')} = :year_log
-						  AND ${db_date_period('MONTH')} = :month_log) t
+						  AND <DATE_PERIOD_YEAR/> = :year_log
+						  AND <DATE_PERIOD_MONTH/> = :month_log) t
 				ORDER BY 1, 2`;
 		const parameters = {app_id_log: data_app_id,
 							year_log: year,

@@ -1,7 +1,7 @@
 /** @module server/db/sql/setting */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute, get_locale} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
@@ -33,7 +33,7 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
                                                        <DB_SCHEMA/>.language l1
                                                   WHERE l1.id  = str1.language_id
                                                   AND str1.app_setting_id = str.app_setting_id
-                                                  AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+                                                  AND l1.lang_code IN (<LOCALE/>)
                                                   )
                          ) "text"
                     FROM <DB_SCHEMA/>.app_setting s
@@ -61,14 +61,11 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
                 ORDER BY 1, 2, 3`;
 	const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
      const parameters = {
-                         lang_code1: get_locale(lang_code, 1),
-                         lang_code2: get_locale(lang_code, 2),
-                         lang_code3: get_locale(lang_code, 3),
                          app_id : app_id,
                          common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
                          app_setting_type_name: app_setting_type_name
                          };
-     return await db_execute(app_id, sql, parameters, null);
+     return await db_execute(app_id, sql, parameters, null, lang_code);
 };
 /**
  * Get setting display data

@@ -201,11 +201,28 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
  * @param {string} sql 
  * @param {object} parameters 
  * @param {number|null} dba 
+ * @param {string|null} locale 
  * @returns {Promise.<import('../../types.js').error|{}>}
  */
- const db_execute = async (app_id, sql, parameters, dba = null) =>{
+ const db_execute = async (app_id, sql, parameters, dba = null, locale=null) =>{
 	return new Promise ((resolve, reject)=>{
+		//manage schema
+		//syntax in SQL: FROM '<DB_SCHEMA/>'.[table] 
 		sql = sql.replaceAll('<DB_SCHEMA/>', ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`) ?? '');
+		//manage different syntax
+		//syntax in SQL: WHERE '<DATE_PERIOD_YEAR/>' = [bind variable] etc
+		sql = sql.replaceAll('<DATE_PERIOD_YEAR/>', db_date_period('YEAR'));
+		sql = sql.replaceAll('<DATE_PERIOD_MONTH/>', db_date_period('MONTH'));
+		sql = sql.replaceAll('<DATE_PERIOD_DAY/>', db_date_period('DAY'));
+		//manage locale search
+		//syntax in SQL: WHERE [column ] IN ('<LOCALE/>')
+		if (locale && sql.indexOf('<LOCALE/>')>0){
+			sql = sql.replaceAll('<LOCALE/>', ':locale1, :locale2, :locale3');
+			parameters = {...parameters, ...{	locale1: get_locale(locale, 1),
+												locale2: get_locale(locale, 2),
+												locale3: get_locale(locale, 3)}};
+		}
+
 		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
 		.then((/**@type{import('../../types.js').db_query_result}*/result)=> {
 			LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
@@ -240,6 +257,5 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 };
 
 export{
-		checked_error, get_app_code, record_not_found, get_locale,
-		db_limit_rows, db_date_period, db_execute
+		checked_error, get_app_code, record_not_found, db_limit_rows, db_execute
 };
