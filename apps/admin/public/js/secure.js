@@ -738,7 +738,7 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
         }
         else
             input_contentEditable = 'contentEditable="false"';
-        for (const user of JSON.parse(result)) {
+        for (const user of JSON.parse(result).rows) {
             let list_user_account_current_user_row='';
             if (user.id==common.COMMON_GLOBAL.user_account_id)
                 list_user_account_current_user_row = 'list_current_user_row';
@@ -1307,7 +1307,7 @@ const show_monitor = async (yearvalues) =>{
     const query = `key=PARAMETERS`;
 
     const result_limit = await common.FFB(`/server-config/config-apps/${common.COMMON_GLOBAL.app_id}`, query, 'GET', token_type, null).catch(()=> null);
-    APP_GLOBAL.limit = parseInt(JSON.parse(result_limit)[0].PARAMETERS.filter((/**@type{{APP_PAGINATION_LIMIT:number}}*/parameter)=>parameter.APP_PAGINATION_LIMIT)[0].APP_PAGINATION_LIMIT);
+    APP_GLOBAL.limit = parseInt(JSON.parse(result_limit)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS);
 
     AppDocument.querySelector('#list_row_sample').classList.remove('common_icon','css_spinner');
     AppDocument.querySelector('#list_row_sample').innerHTML = 
@@ -1495,7 +1495,7 @@ const show_list = async (list_div, query, sort, order_by) => {
         AppDocument.querySelector('#' + list_div).innerHTML = '';
         common.FFB(path, query, 'GET', token_type, null)
         .then((/**@type{string}*/result)=>{
-            logs = JSON.parse(result);
+            logs = list_div=='list_app_log'?JSON.parse(result).rows:JSON.parse(result);
             let html = '';
             switch (list_div){
                 /*

@@ -17,11 +17,11 @@ const getLogsAdmin = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getLogsAdmin(   app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
                                 query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
-        .then((/**@type{import('../../../types.js').db_result_app_log_getLogsAdmin[]}*/result_logs) =>{
-            if (result_logs.length>0)
-                resolve(
-                            result_logs.map(log=>{return {...log, ...JSON.parse(log.json_data)}})
-                        );
+        .then((/**@type{import('../../../types.js').db_result_app_log_getLogsAdmin[]}*/result) =>{
+            /**@ts-ignore */
+            if (result.rows.length>0){
+                resolve(result);
+            }
             else{
                 import(`file://${process.cwd()}/server/db/common.service.js`)
                 .then((/**@type{import('../common.service.js')} */{record_not_found}) => {

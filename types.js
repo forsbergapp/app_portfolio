@@ -1020,6 +1020,9 @@
  * @typedef {{  rows:[], 
  *              affectedRows:number,
  *              rowsAffected:number,
+ *              page_header : {	total_count:	number,
+ *                              offset: 		number,
+ *                              count:			number},
  *              length:number}}  db_result_select
  * ADMIN
  * DB result DB Info
@@ -1151,7 +1154,8 @@
  *              provider_image_url:string,
  *              provider_email:string,
  *              date_created:string,
- *              date_modified:string}}  db_result_user_account_getUsersAdmin
+ *              date_modified:string,
+ *              total_rows:number}}  db_result_user_account_getUsersAdmin
  * @typedef {{  app_role_id:number}} db_result_user_account_getUserAppRoleAdmin
  * @typedef {{  identity_provider_id:number,
  *              provider_name:string,
@@ -1245,7 +1249,8 @@
  *              provider_image:string,
  *              provider_image_url:string,
  *              username:string,
- *              provider_first_name:string}} db_result_user_account_getProfileDetail
+ *              provider_first_name:string,
+ *              total_rows:number}} db_result_user_account_getProfileDetail
  * @typedef {{  top:string,
  *              id:number,
  *              identity_provider_id:number|null,
@@ -1254,7 +1259,8 @@
  *              provider_image:string|null,
  *              provider_image_url:string|null,
  *              username:string,
- *              provider_first_name:string|null}} db_result_user_account_getProfileStat
+ *              provider_first_name:string|null,
+ *              total_rows:number}} db_result_user_account_getProfileStat
  * @typedef {{  password:string}} db_result_user_account_checkPassword
  * @typedef {{  password_new:string|null,
  *              auth:string|null}} db_parameter_user_account_updatePassword
@@ -1371,7 +1377,8 @@
  *              provider_image:string,
  *              provider_image_url:string,
  *              username:string,
- *              provider_first_name:string}} db_result_user_account_app_data_post_getProfileUserPostDetail
+ *              provider_first_name:string,
+ *              total_rows:number}} db_result_user_account_app_data_post_getProfileUserPostDetail
  * @typedef {{  top:string,
  *              id:number,
  *              iidentity_provider_id:number,
@@ -1381,7 +1388,8 @@
  *              provider_image_url:string,
  *              username:string,
  *              provider_first_name:string,
- *              count:number}} db_result_user_account_app_data_post_getProfileStatPost
+ *              count:number,
+ *              total_rows:number}} db_result_user_account_app_data_post_getProfileStatPost
  * @typedef {{  description:string,
  *              json_data:object,
  *              user_account_id:number|null}} db_parameter_user_account_app_data_post_updateUserPost

@@ -658,7 +658,7 @@ const COMMON = {
                         resolve(call_microservice(  routesparameters.app_id,
                                                     `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, 
                                                     URI_query + `&limit=${getNumberValue(config_service.ConfigGetApp(routesparameters.app_id, 
-														                    getNumberValue(config_service.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_PAGINATION_LIMIT' in parameter)[0].APP_PAGINATION_LIMIT)}`));
+														                    getNumberValue(config_service.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS)}`));
                     }
                     case route(`/bff/app_data/v1/worldcities/city-random`, 'GET')||
                         (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/worldcities/city-random'):{

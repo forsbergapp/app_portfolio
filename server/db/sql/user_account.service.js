@@ -1,9 +1,5 @@
 /** @module server/db/sql/user_account */
 
-/**@type{import('../../server.service.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-/**@type{import('../../config.service.js')} */
-const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../../db/common.service.js')} */
 const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
@@ -191,7 +187,8 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 					  ua.provider_image_url "provider_image_url",
 					  ua.provider_email "provider_email",
 					  ua.date_created "date_created",
-					  ua.date_modified "date_modified"
+					  ua.date_modified "date_modified",
+					  count(*) over() "total_rows"
 				 FROM <DB_SCHEMA/>.user_account ua
 					  LEFT OUTER JOIN <DB_SCHEMA/>.identity_provider ip
 						ON ip.id = ua.identity_provider_id
@@ -207,13 +204,12 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 				   OR CAST(ua.id as VARCHAR(11)) LIKE :search)
 				   OR :search = '*'
 				ORDER BY ${sort} ${order_by}
-				<APP_PAGINATION_LIMIT_APP/>`;
+				<APP_PAGINATION_LIMIT_OFFSET/>`;
 		if (search!='*')
 			search = '%' + search + '%';
 		const parameters = {search: search,
 							offset: offset ?? 0,
-							limit: limit ?? getNumberValue(ConfigGetApp(app_id, 
-												getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_PAGINATION_LIMIT' in parameter)[0].APP_PAGINATION_LIMIT)
+							limit: limit
 							};
 		return await db_execute(app_id, sql, parameters, null);
     };
@@ -594,7 +590,8 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
 					provider_image "provider_image",
 					provider_image_url "provider_image_url",
 					username "username",
-					provider_first_name "provider_first_name"
+					provider_first_name "provider_first_name",
+					count(*) over() "total_rows"
 			 FROM (SELECT 	'FOLLOWING' detail,
 							u.id,
 							u.provider_id,
@@ -655,7 +652,7 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
 					  AND u.active = 1
 					  AND 4 = :detailchoice) t
 				ORDER BY 1, COALESCE(username, provider_first_name) 
-				<APP_PAGINATION_LIMIT_PARAMETER/>`;
+				<APP_LIMIT_RECORDS/>`;
 	const parameters ={
 						user_account_id: id,
 						detailchoice: detailchoice
@@ -679,7 +676,8 @@ const getProfileStat = async (app_id, statchoice) => {
 					provider_image_url "provider_image_url",
 					username "username",
 					provider_first_name "provider_first_name",
-					count "count"
+					count "count",
+					count(*) over() "total_rows"
 			 FROM (SELECT 	'VISITED' top,
 							u.id,
 							u.identity_provider_id,
@@ -735,7 +733,7 @@ const getProfileStat = async (app_id, statchoice) => {
 						  WHERE uap.user_account_id = t.id
 						    AND uap.app_id = :app_id)
 		    ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
-			<APP_PAGINATION_LIMIT_PARAMETER/>`;
+			<APP_LIMIT_RECORDS/>`;
 	const parameters = {
 						statchoice: statchoice,
 						app_id: app_id
