@@ -53,7 +53,7 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 				  AND <DATE_PERIOD_YEAR/> = :year
 				  AND <DATE_PERIOD_MONTH/> = :month
 				ORDER BY ${sort} ${order_by} 
-				<APP_PAGINATION_LIMIT_APP/>`;
+				<APP_PAGINATION_LIMIT_OFFSET/>`;
 		const parameters = {app_id:data_app_id,
 							year:year,
 							month:month,

@@ -144,32 +144,23 @@ const get_locale = (lang_code, part) => {
 };
 
 /**
- * Sets pagination limits on SQL rows
+ * Sets pagination using limit and offset or limit records on SQL rows
  * 
- * @param {number|null} app_id
- * @param {string} sql 
- * @param {boolean} parameter_limit 
+ * @param {boolean} pagination
  * @returns {string}
  */
-const db_limit_rows = (app_id, parameter_limit = true) => {
+const db_limit_rows = (pagination = true) => {
 	const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
 	if (db_use == 4)
-		if (parameter_limit){
-			//use parameter limit
-			return `	FETCH NEXT ${getNumberValue(ConfigGetApp(app_id, 
-														getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_PAGINATION_LIMIT' in parameter)[0].APP_PAGINATION_LIMIT)} 
-						ROWS ONLY`;
-		}
-		else{
-			//use app function limit
+		if (pagination)
 			return ' 	OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
-		}
-	else
-		if (parameter_limit)
-			return 	` 	LIMIT ${getNumberValue(	ConfigGetApp(app_id, 
-													getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_PAGINATION_LIMIT' in parameter)[0].APP_PAGINATION_LIMIT)} `;
 		else
+			return `	FETCH NEXT :limit ROWS ONLY`;
+	else
+		if (pagination)
 			return ' 	LIMIT :limit OFFSET :offset';
+		else
+			return 	` 	LIMIT :limit `;			
 };
 
 /**
@@ -192,7 +183,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
  * 
  * @param {number|null} app_id 
  * @param {string} sql 
- * @param {object} parameters 
+ * @param {*} parameters 
  * @param {number|null} dba 
  * @param {string|null} locale 
  * @returns {Promise.<import('../../types.js').error|{}>}
@@ -216,14 +207,42 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 												locale3: get_locale(locale, 3)}};
 		}
 		//manage pagination
-		sql = sql.replaceAll('<APP_PAGINATION_LIMIT_PARAMETER/>', db_limit_rows(app_id, true));
-		sql = sql.replaceAll('<APP_PAGINATION_LIMIT_APP/>', 		db_limit_rows(app_id, false));
+		let pagination = false;
+		if (sql.indexOf('<APP_PAGINATION_LIMIT_OFFSET/>')>0){
+			//parameters must contain limit and offset keys
+			pagination = true;
+			sql = sql.replaceAll('<APP_PAGINATION_LIMIT_OFFSET/>', 	db_limit_rows(true));
+			if (!parameters.limit)
+				parameters.limit = 	getNumberValue(	ConfigGetApp(app_id, 
+																 getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
+													.filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS) ?? 0;
+		}
+		if (sql.indexOf('<APP_LIMIT_RECORDS/>')>0){
+			//parameters should not contain any limit or offset keys
+			sql = sql.replaceAll('<APP_LIMIT_RECORDS/>', 		db_limit_rows(false));
+			parameters = {...parameters, ...{limit:getNumberValue(	ConfigGetApp(	app_id, 
+																				getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
+																.filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS) ?? 0}};
+		}
 
 		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
 		.then((/**@type{import('../../types.js').db_query_result}*/result)=> {
 			LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
 			.then(()=>{
-				resolve(result);
+				if (pagination){
+					/**@ts-ignore */
+					result.page_header = {	total_count:	result[0].total_rows,
+											offset: 		parameters.offset?parameters.offset:0,
+											count:			Math.min(parameters.limit, result.length)};
+					/**@ts-ignore */
+					const rows = result.map((/**@type{import('../../types.js').db_result_app_log_getLogsAdmin}*/row)=>{return {...row, ...row.json_data?JSON.parse(row.json_data):null}});
+					resolve(
+						/**@ts-ignore */
+						{page_header:result.page_header, rows:rows}
+					);
+				}
+				else                
+					resolve(result);
 			});
 		})
 		.catch((/**@type{import('../../types.js').error}*/error)=>{

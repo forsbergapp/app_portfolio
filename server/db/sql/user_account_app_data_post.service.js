@@ -123,7 +123,8 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
 					  provider_image "provider_image",
 					  provider_image_url "provider_image_url",
 					  username "username",
-					  provider_first_name "provider_first_name"
+					  provider_first_name "provider_first_name",
+					  count(*) over() "total_rows"
 				FROM (SELECT 'LIKE_POST' detail,
 							 u.id,
 							 u.identity_provider_id,
@@ -164,7 +165,7 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
 						   AND  u.active = 1
 						   AND  7 = :detailchoice) t
 					ORDER BY 1, COALESCE(username, provider_first_name) 
-					<APP_PAGINATION_LIMIT_PARAMETER/>`;
+					<APP_LIMIT_RECORDS/>`;
 		const parameters = {
 						user_account_id: id,
 						app_id: app_id,
@@ -219,7 +220,8 @@ const getProfileStatPost = async (app_id, statchoice) => {
 					  provider_image_url "provider_image_url",
 					  username "username",
 					  provider_first_name "provider_first_name",
-					  count "count"
+					  count "count",
+					  count(*) over() "total_rows"
 				FROM (	SELECT 'LIKE_POST' top,
 								u.id,
 								u.identity_provider_id,
@@ -262,7 +264,7 @@ const getProfileStatPost = async (app_id, statchoice) => {
 						   AND  u.private <> 1
 						   AND  5 = :statchoice) t
 				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
-				<APP_PAGINATION_LIMIT_PARAMETER/>`;
+				<APP_LIMIT_RECORDS/>`;
 		const parameters = {
 						app_id: app_id,
 						statchoice: statchoice
