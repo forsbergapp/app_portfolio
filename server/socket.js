@@ -50,23 +50,14 @@ const SocketSendSystemAdmin = (data) =>service.SocketSendSystemAdmin(   getNumbe
  * @param {*} query 
  * @returns 
  */
-const ConnectedListSystemadmin = (app_id, query) =>{
-    return new Promise((resolve, reject)=>{
-        service.ConnectedList(  app_id, getNumberValue(query.get('select_app_id')), 
-                                        getNumberValue(query.get('limit')), 
-                                        getNumberValue(query.get('year')), 
-                                        getNumberValue(query.get('month')), 
-                                        query.get('order_by'), 
-                                        query.get('sort'),  
-                                        1)
-        .then ((/**@type{import('../types.js').socket_connect_list_no_res[]} */result)=>{
-            if (result && result.length>0)
-                resolve(result);
-            else
-                reject('Record not found');
-        });
-    });
-};
+const ConnectedListSystemadmin = (app_id, query) =>service.ConnectedList(   app_id, 
+                                                                            getNumberValue(query.get('select_app_id')), 
+                                                                            getNumberValue(query.get('limit')), 
+                                                                            getNumberValue(query.get('year')), 
+                                                                            getNumberValue(query.get('month')), 
+                                                                            query.get('order_by'), 
+                                                                            query.get('sort'),  
+                                                                            1);
 
 /**
  * 
@@ -82,27 +73,15 @@ const SocketSendAdmin = (data) => service.SocketSendAdmin(  getNumberValue(data.
  * 
  * @param {number} app_id 
  * @param {*} query 
- * @param {import('../types.js').res} res
  * @returns 
  */
-const ConnectedListAdmin = (app_id, query, res) =>{
-    return new Promise((resolve, reject)=>{
-        service.ConnectedList(  app_id, getNumberValue(query.get('select_app_id')), 
-                                        getNumberValue(query.get('limit')), 
-                                        getNumberValue(query.get('year')), 
-                                        getNumberValue(query.get('month')), 
-                                        query.get('order_by'), 
-                                        query.get('sort'), 0)
-        .then ((/**@type{import('../types.js').socket_connect_list_no_res[]} */result)=>{
-            if (result && result.length>0)
-                resolve(result);
-            else
-                import(`file://${process.cwd()}/server/db/common.service.js`).then(({record_not_found}) => {
-                    record_not_found( app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                });
-        });
-    });
-};
+const ConnectedListAdmin = (app_id, query) =>service.ConnectedList(app_id, 
+                                                                        getNumberValue(query.get('select_app_id')), 
+                                                                        getNumberValue(query.get('limit')), 
+                                                                        getNumberValue(query.get('year')), 
+                                                                        getNumberValue(query.get('month')), 
+                                                                        query.get('order_by'), 
+                                                                        query.get('sort'), 0);
 /**
  * 
  * @param {*} query 

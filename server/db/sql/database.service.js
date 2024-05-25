@@ -134,7 +134,7 @@
                    database: db_use,
                    database_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)
                    };
-    return await db_execute(app_id, sql, parameters, DBA);
+    return await db_execute(app_id, sql, parameters, DBA, null, false);
  };
  /**
  * 
@@ -211,7 +211,7 @@ const InfoSpace = async (app_id, DBA) => {
       }
     }
     const parameters = getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)};
-    return await db_execute(app_id, sql, parameters, DBA);
+    return await db_execute(app_id, sql, parameters, DBA, null, true);
  };
  /**
  * 
@@ -232,51 +232,51 @@ const InfoSpaceSum = async (app_id, DBA) => {
       case 1:
       case 2:{
          sql = `SELECT IFNULL(ROUND((SUM(t.data_length)+SUM(t.index_length))/1024/1024,2),0.00) total_size,
-                     IFNULL(ROUND(((SUM(t.data_length)+SUM(t.index_length))-SUM(t.data_free))/1024/1024,2),0.00) data_used,
-                     IFNULL(ROUND(SUM(data_free)/1024/1024,2),0.00) data_free,
-                     IFNULL(ROUND((((SUM(t.data_length)+SUM(t.index_length))-SUM(t.data_free))/((SUM(t.data_length)+SUM(t.index_length)))*100),2),0) pct_used
+                       IFNULL(ROUND(((SUM(t.data_length)+SUM(t.index_length))-SUM(t.data_free))/1024/1024,2),0.00) data_used,
+                       IFNULL(ROUND(SUM(data_free)/1024/1024,2),0.00) data_free,
+                       IFNULL(ROUND((((SUM(t.data_length)+SUM(t.index_length))-SUM(t.data_free))/((SUM(t.data_length)+SUM(t.index_length)))*100),2),0) pct_used
                   FROM INFORMATION_SCHEMA.SCHEMATA s, 
-                     INFORMATION_SCHEMA.TABLES t
-               WHERE s.schema_name = t.table_schema
-                  AND s.schema_name = :db_schema`;
+                       INFORMATION_SCHEMA.TABLES t
+                 WHERE s.schema_name = t.table_schema
+                   AND s.schema_name = :db_schema`;
          break;
       }
       case 3:{
          sql = `SELECT SUM(pg_table_size(t.schemaname || '.' || t.tablename)/1024/1024)::decimal "total_size",
-                     SUM(pg_relation_size(t.schemaname || '.' || t.tablename)/1024/1024)::decimal "data_used",
-                     SUM((pg_table_size(t.schemaname || '.' || t.tablename) - pg_relation_size(t.schemaname || '.' || t.tablename))/1024/1024)::decimal "data_free",
-                     SUM(pg_relation_size(t.schemaname || '.' || t.tablename)) / SUM(CASE pg_table_size(t.schemaname || '.' || t.tablename) 
+                       SUM(pg_relation_size(t.schemaname || '.' || t.tablename)/1024/1024)::decimal "data_used",
+                       SUM((pg_table_size(t.schemaname || '.' || t.tablename) - pg_relation_size(t.schemaname || '.' || t.tablename))/1024/1024)::decimal "data_free",
+                       SUM(pg_relation_size(t.schemaname || '.' || t.tablename)) / SUM(CASE pg_table_size(t.schemaname || '.' || t.tablename) 
                                                                                        WHEN 0 THEN 1 
                                                                                        ELSE pg_table_size(t.schemaname || '.' || t.tablename)::decimal
                                                                                        END) *100 "pct_used"
                   FROM pg_tables t
-               WHERE t.tableowner = LOWER(:db_schema)`;
+                 WHERE t.tableowner = LOWER(:db_schema)`;
          break;
       }
       case 4:{
          sql = `SELECT SUM(ds.bytes)/1024/1024 "total_size",
-                     SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_used",
-                     (SUM(ds.bytes)/1024/1024) - SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_free",
-                     SUM(dt.num_rows*dt.avg_row_len/1024/1024) / (SUM(ds.bytes)/1024/1024)*100 "pct_used"
+                       SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_used",
+                       (SUM(ds.bytes)/1024/1024) - SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_free",
+                       SUM(dt.num_rows*dt.avg_row_len/1024/1024) / (SUM(ds.bytes)/1024/1024)*100 "pct_used"
                   FROM DBA_TABLES dt,
-                     DBA_SEGMENTS ds
-               WHERE dt.owner = UPPER(:db_schema)
-                  AND ds.segment_name = dt.table_name
-                  AND ds.segment_type = 'TABLE'`;
+                       DBA_SEGMENTS ds
+                 WHERE dt.owner = UPPER(:db_schema)
+                   AND ds.segment_name = dt.table_name
+                   AND ds.segment_type = 'TABLE'`;
          break;
       }
       case 5:{
-         sql = `SELECT  printf("%.2f",SUM(pgsize)/1024/1024) "total_size",
-                        printf("%.2f",SUM(pgsize-unused)/1024/1024) "data_used",
-                        printf("%.2f",(SUM(pgsize) - SUM(pgsize-unused))/1024/1024) "data_free",
-                        printf("%.2f",SUM(pgsize-unused)*100/SUM(pgsize)) "pct_used"
-                  FROM  dbstat
-                  WHERE  name NOT LIKE 'sqlite%'`
+         sql = `SELECT printf("%.2f",SUM(pgsize)/1024/1024) "total_size",
+                       printf("%.2f",SUM(pgsize-unused)/1024/1024) "data_used",
+                       printf("%.2f",(SUM(pgsize) - SUM(pgsize-unused))/1024/1024) "data_free",
+                       printf("%.2f",SUM(pgsize-unused)*100/SUM(pgsize)) "pct_used"
+                  FROM dbstat
+                 WHERE name NOT LIKE 'sqlite%'`
          break;
       }
    }
    const parameters = getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)};
-   return await db_execute(app_id, sql, parameters, DBA);
+   return await db_execute(app_id, sql, parameters, DBA, null, false);
  };
  
  /**
@@ -292,6 +292,6 @@ const InfoSpaceSum = async (app_id, DBA) => {
                   FROM <DB_SCHEMA/>.app
                   WHERE id = :app_id`;
    const parameters = {app_id: app_id};
-   return await db_execute(app_id, sql, parameters, DBA);
+   return await db_execute(app_id, sql, parameters, DBA, null, false);
  }; 
  export {Info, InfoSpace, InfoSpaceSum, InstalledCheck};

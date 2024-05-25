@@ -127,7 +127,7 @@ const component = async props => {
         //fetch providers if not admin app
         const providers = props.app_id == props.common_app_id?[]:
                             await props.function_FFB('/server-db/identity_provider', null, 'GET', 'APP_DATA', null)
-                                        .then((/**@type{string}*/result)=>JSON.parse(result))
+                                        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                         .catch((/**@type{Error}*/error)=>{
                                                                             props.common_document.querySelector('#common_user_start_identity_provider_login').classList.remove('css_spinner');
                                                                             throw error});

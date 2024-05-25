@@ -19,6 +19,6 @@ const getIdentityProviders = async app_id => {
 					  WHERE enabled = 1
 					 ORDER BY identity_provider_order ASC`;
 		const parameters = {};
-		return await db_execute(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null, null, true);
 	};
 export{getIdentityProviders};

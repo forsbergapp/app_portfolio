@@ -899,7 +899,7 @@ const Start = async () => {
                 await pool_db(db_use, dba, user, password, null);
                 }
                 dba = 0;
-                for (const app  of ConfigGetApps()){
+                for (const app  of ConfigGetApps().rows){
                     if (ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                         app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`])
                         await pool_db(   db_use, 

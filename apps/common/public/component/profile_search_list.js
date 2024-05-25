@@ -62,7 +62,7 @@ const component = async props => {
                                                     `id=${props.user_account_id ?? ''}&search=${encodeURI(props.searched_username)}` +
                                                     `&client_latitude=${props.client_latitude}&client_longitude=${props.client_longitude}`, 
                                                     'GET', 'APP_DATA', null)
-                                        .then((/**@type{string}*/result)=>JSON.parse(result))
+                                        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                         .catch((/**@type{Error}*/error)=>{throw error});
         spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 

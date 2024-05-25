@@ -137,10 +137,10 @@ const component = async props => {
     const post_component = async () =>{                                                                                             
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({
             locales:props.system_admin_only == 1?[]:await props.function_FFB('/server-db/locale', `lang_code=${props.current_locale}`, 'GET', 'APP_DATA', null)
-                        .then((/**@type{string}*/result)=>JSON.parse(result))
+                        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                         .catch((/**@type{Error}*/error)=>{throw error}),
             settings: props.system_admin_only == 1?[]:await props.function_FFB('/server-db/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
-                        .then((/**@type{string}*/result)=>JSON.parse(result))
+                        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                         .catch((/**@type{Error}*/error)=>{throw error}),
             username:props.username ?? props.system_admin ?? '',
             countdown:(props.token_exp && props.token_iat)?1:0
