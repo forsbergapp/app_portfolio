@@ -186,9 +186,10 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
  * @param {*} parameters 
  * @param {number|null} dba 
  * @param {string|null} locale 
+ * @param {boolean} multiple_resources 
  * @returns {Promise.<import('../../types.js').error|{}>}
  */
- const db_execute = async (app_id, sql, parameters, dba = null, locale=null) =>{
+ const db_execute = async (app_id, sql, parameters, dba = null, locale=null, multiple_resources=false) =>{
 	return new Promise ((resolve, reject)=>{
 		//manage schema
 		//syntax in SQL: FROM '<DB_SCHEMA/>'.[table] 
@@ -217,6 +218,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 																 getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
 													.filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS) ?? 0;
 		}
+		//manage limit records
 		if (sql.indexOf('<APP_LIMIT_RECORDS/>')>0){
 			//parameters should not contain any limit or offset keys
 			sql = sql.replaceAll('<APP_LIMIT_RECORDS/>', 		db_limit_rows(false));
@@ -229,20 +231,39 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 		.then((/**@type{import('../../types.js').db_query_result}*/result)=> {
 			LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
 			.then(()=>{
+				//parse json_data in SELECT rows, return also the json_data column as reference
+				/**@ts-ignore */
+				const rows = sql.trimStart().toUpperCase().startsWith('SELECT')?result.map((/**@type{import('../../types.js').db_result_app_log_getLogsAdmin}*/row)=>{
+																							return {...row, ...row.json_data?JSON.parse(row.json_data):null}
+																							}) ?? []:null;
 				if (pagination){
+					//return pagination ISO20022 format
+					//use pagination OR multiple resource 
 					/**@ts-ignore */
 					result.page_header = {	total_count:	result[0].total_rows,
 											offset: 		parameters.offset?parameters.offset:0,
 											count:			Math.min(parameters.limit, result.length)};
-					/**@ts-ignore */
-					const rows = result.map((/**@type{import('../../types.js').db_result_app_log_getLogsAdmin}*/row)=>{return {...row, ...row.json_data?JSON.parse(row.json_data):null}});
 					resolve(
 						/**@ts-ignore */
 						{page_header:result.page_header, rows:rows}
 					);
 				}
-				else                
-					resolve(result);
+				else
+					if (multiple_resources){
+						//searching for primary key => single resource even if returning multiple records
+						//multiple resources for all other cases
+						//return list ISO20022 format
+						/**@ts-ignore */
+						result.list_header = {	total_count:	result.length,
+												offset: 		parameters.offset?parameters.offset:0,
+												count:			parameters.limit ?? result.length};
+						resolve(
+							/**@ts-ignore */
+							{list_header:result.list_header, rows:rows}
+						);
+					}
+					else
+						resolve(rows ?? result);
 			});
 		})
 		.catch((/**@type{import('../../types.js').error}*/error)=>{

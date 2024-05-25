@@ -59,7 +59,7 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 							month:month,
 							offset:offset,
 							limit:limit};
-		return await db_execute(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null,null, false);
 	};
 /**
  * 
@@ -97,6 +97,6 @@ const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 		const parameters = {app_id_log: data_app_id,
 							year_log: year,
 							month_log: month};
-		return await db_execute(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null, null, true);
 	};
 export{createLog, getLogsAdmin, getStatUniqueVisitorAdmin};

@@ -443,7 +443,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
         /**@type{import('../server/db/sql/app_object.service.js')} */
         const {getObjects} = await import(`file://${process.cwd()}/server/db/sql/app_object.service.js`);
         const result_objects = await getObjects(app_id, client_locale(app_parameters.accept_language), 'APP', null);
-        for (const row of result_objects){
+        for (const row of result_objects.rows){
             translate_items[row.object_item_name.toUpperCase()] = row.text;
         }        
     }
@@ -511,7 +511,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
             query_parameters += ',';
     });
     query_parameters += '}';
-    /** @type {import('../types.js')report_query_parameters}*/
+    /** @type {import('../types.js').report_query_parameters}*/
     const query_parameters_obj = JSON.parse(query_parameters);
     const ps = query_parameters_obj.ps; //papersize     A4/Letter
     const hf = (query_parameters_obj.hf==1); //header/footer 1/0    1= true
@@ -683,7 +683,7 @@ const getApps = async (app_id, resource_id, lang_code) =>{
 
     /**@type{import('../types.js').db_result_app_getApp[]}*/
     const apps_db =  await getApp(app_id, resource_id, lang_code);
-    const apps_registry = ConfigGetApps().filter((/**@type{import('../types.js').config_apps_record}*/app)=>app.APP_ID==resource_id || resource_id == null);
+    const apps_registry = ConfigGetApps().rows.filter((/**@type{import('../types.js').config_apps_record}*/app)=>app.APP_ID==resource_id || resource_id == null);
     /**@type{import('../types.js').config_apps_with_db_columns[]}*/
     const apps = apps_registry.reduce(( /**@type{import('../types.js').config_apps_record} */app, /**@type {import('../types.js').config_apps_record}*/current)=>
                                         app.concat({APP_ID:current.APP_ID,
@@ -697,14 +697,17 @@ const getApps = async (app_id, resource_id, lang_code) =>{
         app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
         app.HOST = ConfigGet('SERVER', 'HOST');
         app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
-        app.APP_CATEGORY = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_category;
-        app.APP_NAME_TRANSLATION = JSON.parse(apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_translation.toString()).name;
-        app.APP_DESCRIPTION = JSON.parse(apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_translation).description;
+        app.APP_CATEGORY = apps_db.rows.filter(app_db=>app_db.id==app.APP_ID)[0].app_category;
+        app.APP_NAME_TRANSLATION = JSON.parse(apps_db.rows.filter(app_db=>app_db.id==app.APP_ID)[0].app_translation.toString()).name;
+        app.APP_DESCRIPTION = JSON.parse(apps_db.rows.filter(app_db=>app_db.id==app.APP_ID)[0].app_translation).description;
         const image = await fs.promises.readFile(`${process.cwd()}${app.LOGO}`);
         /**@ts-ignore */
         app.LOGO = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
     }
-	return apps;
+    const list_header = {   total_count:	apps.length,
+                            offset: 		0,
+                            count:			apps.length};
+    return {list_header:list_header, rows:apps};
 };
 
 /**
@@ -722,7 +725,7 @@ const getApps = async (app_id, resource_id, lang_code) =>{
     const apps_db =  await getAppsAdmin(app_id, lang_code);
     const apps_registry = ConfigGetApps();
     /**@type{import('../types.js').config_apps_admin_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{import('../types.js').config_apps_record} */app, /**@type {import('../types.js').config_apps_record}*/current)=> 
+    const apps = apps_registry.rows.reduce(( /**@type{import('../types.js').config_apps_record} */app, /**@type {import('../types.js').config_apps_record}*/current)=> 
                                         app.concat({ID:current.APP_ID,
                                                     NAME:current.NAME,
                                                     SUBDOMAIN:current.SUBDOMAIN,
@@ -734,10 +737,13 @@ const getApps = async (app_id, resource_id, lang_code) =>{
         app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
         app.HOST = ConfigGet('SERVER', 'HOST');
         app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
-        app.APP_CATEGORY_ID = apps_db.filter(app_db=>app_db.id==app.ID)[0].app_category_id;
-        app.APP_CATEGORY_TEXT = apps_db.filter(app_db=>app_db.id==app.ID)[0].app_category_text;
+        app.APP_CATEGORY_ID = apps_db.rows.filter(app_db=>app_db.id==app.ID)[0].app_category_id;
+        app.APP_CATEGORY_TEXT = apps_db.rows.filter(app_db=>app_db.id==app.ID)[0].app_category_text;
     });
-	return apps;
+    const list_header = {   total_count:	apps.length,
+                            offset: 		0,
+                            count:			apps.length};
+    return {list_header:list_header, rows:apps};
 };
 /**
  * 

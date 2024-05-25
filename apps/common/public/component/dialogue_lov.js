@@ -77,7 +77,7 @@ const component = async props => {
         props.function_FFB(path, null, 'GET', token_type, null)
         .then((/**@type{string}*/result)=>{
                 spinner = '';
-                props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({list:JSON.parse(result), lov_column_value:lov_column_value});
+                props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({list:JSON.parse(result).rows, lov_column_value:lov_column_value});
                 props.common_document.querySelector('#common_lov_list')['data-function'] = props.function_event;
                 props.common_document.querySelector('#common_lov_search_input').focus();
         })

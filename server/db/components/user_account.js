@@ -660,9 +660,9 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                 return row;
             });
         //resource id can be number, string or empty if searching
-        service.getProfileUser(app_id, resource_id_number==-1?null:resource_id_number, resource_id_name, query.get('search'), getNumberValue(query.get('id')))
+        service.getProfileUser(app_id, resource_id_number, resource_id_name, query.get('search'), getNumberValue(query.get('id')))
         .then((/**@type{import('../../../types.js').db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
-            if (resource_id_number==-1){
+            if (query.get('search')){
                 //searching, return result
                 import(`file://${process.cwd()}/server/db/sql/profile_search.service.js`)
                 .then((/**@type{import('../sql/profile_search.service.js')} */{ insertProfileSearch }) => {
@@ -711,25 +711,10 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
- * @param {import('../../../types.js').res} res
+ * @param {*} query
  */
-const getProfileStat = (app_id, query, res) =>{
-    return new Promise((resolve, reject)=>{
-        service.getProfileStat(app_id, getNumberValue(query.get('statchoice')))
-        .then((/**@type{import('../../../types.js').db_result_user_account_getProfileStat[]}*/result)=>{
-            if (result)
-                resolve(result);
-            else {
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
-                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                });
-            }
-        })
-        .catch((/**@type{import('../../../types.js').error}*/error)=>reject(error));
-    });
-};
+const getProfileStat = (app_id, query) => service.getProfileStat(app_id, getNumberValue(query.get('statchoice')))
+                                                    .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error});
 
 /**
  * 
@@ -813,8 +798,7 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
 const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id, 
                                                                 getNumberValue(query.get('data_user_account_id')), 
                                                                 getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
-                                            .then((/**@type{import('../../../types.js').db_result_user_account_logon_getUserAccountLogon[]}*/result)=>result.map(record=>{return {...record, ...JSON.parse(record.json_data)}}))
-                                            .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error});
     
 /**
  * 

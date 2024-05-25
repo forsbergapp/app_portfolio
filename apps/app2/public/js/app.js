@@ -577,7 +577,7 @@ const settings_translate = async (first=true) => {
         //show translation using first or second language
         await common.FFB('/server-db/app_object', `data_lang_code=${locale}&object_name=REPORT`,  'GET', 'APP_DATA', null)
         .then((/**@type{string}*/result)=>{
-            for (const app_object_item of JSON.parse(result)){
+            for (const app_object_item of JSON.parse(result).rows){
                 if (first==true)
                     app_report.REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
                 else
@@ -2704,7 +2704,7 @@ const framework_set = async (framework=null) => {
     return await common.FFB('/server-db/app_settings_display', 
                             `data_app_id=${common.COMMON_GLOBAL.app_id}&setting_type=METHOD`, 
                             'GET', 'APP_DATA')
-                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                             .catch((/**@type{Error}*/error)=>error);
  } 
 /**
@@ -2847,7 +2847,7 @@ const settings_load = async (tab_selected) => {
          *          data4:string,
          *          data5:string}[]} */
         const app_settings_db = await common.FFB('/server-db/app_settings', null, 'GET', 'APP_DATA')
-        .then((/**@type{string}*/result)=>JSON.parse(result))
+        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
         .catch((/**@type{Error}*/error)=>{throw error});
         let option;
         for (const app_setting of app_settings_db) {

@@ -172,7 +172,7 @@ const show_charts = async () => {
              *          day:number,
              *          amount:number,
              *          statValue:string}[]} */
-            const charts = JSON.parse(result);
+            const charts = JSON.parse(result).rows;
             //chart 1=Piechart, 2= Barchart
             //CHART 1
             /**
@@ -393,7 +393,7 @@ const get_apps_div = async () =>{
             authorization_type = 'APP_ACCESS';
         common.FFB('/server-config/config-apps/', 'key=NAME', 'GET', authorization_type, null)
         .then((/**@type{string}*/result)=>{
-            const apps = JSON.parse(result);
+            const apps = JSON.parse(result).rows;
             for (const app of apps) {
                 options += `<div class='common_select_option' data-value='${app.APP_ID}'>${app.APP_ID} - ${app.NAME}</div>`;
             }
@@ -423,7 +423,7 @@ const get_apps = async () => {
             authorization_type = 'APP_ACCESS';
         common.FFB('/server-config/config-apps/', 'key=NAME', 'GET', authorization_type, null)
         .then((/**@type{string}*/result)=>{
-            const apps = JSON.parse(result);
+            const apps = JSON.parse(result).rows;
             for (const app of apps) {
                 options += `<div class='common_select_option' data-value='${app.APP_ID}'>${app.APP_ID} - ${app.NAME}</div>`;
             }
@@ -629,7 +629,7 @@ const count_users = async () => {
         AppDocument.querySelector('#list_user_stat').classList.add('common_icon', 'css_spinner');
         AppDocument.querySelector('#list_user_stat').innerHTML = '';
         const user_stat = await common.FFB('/server-db_admin/user_account-stat', null, 'GET', 'APP_ACCESS', null)
-        .then((/**@type{string}*/result)=>JSON.parse(result))
+        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
         .catch(()=>AppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner'));
         
         let html='';
@@ -935,7 +935,7 @@ const show_apps = async () => {
                         <div id='list_apps_col_title6' class='list_apps_col list_title'>CATEGORY ID</div>
                         <div id='list_apps_col_title7' class='list_apps_col list_title'>CATEGORY NAME</div>
                     </div>`;
-        for (const app of JSON.parse(result)) {
+        for (const app of JSON.parse(result).rows) {
             html += 
             `<div data-changed-record='0' data-app_id = '${app.ID}' class='list_apps_row common_row' >
                 <div class='list_apps_col'>
@@ -1495,7 +1495,7 @@ const show_list = async (list_div, query, sort, order_by) => {
         AppDocument.querySelector('#' + list_div).innerHTML = '';
         common.FFB(path, query, 'GET', token_type, null)
         .then((/**@type{string}*/result)=>{
-            logs = list_div=='list_app_log'?JSON.parse(result).rows:JSON.parse(result);
+            logs = JSON.parse(result).rows;
             let html = '';
             switch (list_div){
                 /*
@@ -2634,7 +2634,7 @@ const show_db_info = () => {
                                 <div id='menu_8_db_info_space_detail_col_title4' class='menu_8_db_info_space_detail_col list_title'>DATA FREE ${size}</div>
                                 <div id='menu_8_db_info_space_detail_col_title5' class='menu_8_db_info_space_detail_col list_title'>% USED</div>
                             </div>`;
-                for (const databaseInfoSpaceTable of JSON.parse(result)) {
+                for (const databaseInfoSpaceTable of JSON.parse(result).rows) {
                     html += 
                     `<div class='menu_8_db_info_space_detail_row' >
                         <div class='menu_8_db_info_space_detail_col'>${databaseInfoSpaceTable.table_name}</div>
@@ -2968,7 +2968,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.target.nextElementSibling?event.target.nextElementSibling.dispatchEvent(new Event('click')):null;
                     }
                     else{
-                        const list_result = result?JSON.parse(result):{};
+                        const list_result = result?JSON.parse(result).rows:{};
                         if (list_result.length == 1){
                             //set lov text
                             if (event.target.parentNode && event.target.parentNode.nextElementSibling)

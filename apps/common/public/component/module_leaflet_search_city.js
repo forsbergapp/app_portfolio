@@ -57,7 +57,7 @@ const component = async props => {
     }
     const post_component = async () =>{
         const records = props.search==''?[]:await props.function_FFB('/worldcities/city', `search=${encodeURI(props.search)}`, 'GET', 'APP_DATA', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                             .catch((/**@type{Error}*/error)=>{throw error});
         spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({records:records});

@@ -51,7 +51,7 @@ const getApp = async (app_id, id,lang_code) => {
 				ORDER BY 1`;
 		const parameters = {common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 							id: id};
-		return await db_execute(app_id, sql, parameters, null, lang_code);
+		return await db_execute(app_id, sql, parameters, null, lang_code, true);
 	};
 /**
  * 
@@ -61,24 +61,24 @@ const getApp = async (app_id, id,lang_code) => {
  */
 const getAppsAdmin = async (app_id, lang_code) => {
 		const sql = `SELECT	a.id "id",
-						a.app_category_id "app_category_id",
-						act.text "app_category_text"
-				FROM <DB_SCHEMA/>.app a
-					LEFT OUTER JOIN <DB_SCHEMA/>.app_translation act
-						ON act.app_category_id = a.app_category_id
-						AND act.language_id IN (SELECT id 
-												FROM <DB_SCHEMA/>.language l
-												WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																		FROM <DB_SCHEMA/>.app_translation act1,
-																			<DB_SCHEMA/>.language l1
-																		WHERE l1.id  = act1.language_id
-																		AND act1.app_category_id  = act.app_category_id
-																		AND l1.lang_code IN (<LOCALE/>)
-																	)
-												)
-				ORDER BY 1`;
+							a.app_category_id "app_category_id",
+							act.text "app_category_text"
+					   FROM <DB_SCHEMA/>.app a
+					   LEFT OUTER JOIN <DB_SCHEMA/>.app_translation act
+							ON act.app_category_id = a.app_category_id
+							AND act.language_id IN (SELECT id 
+													FROM <DB_SCHEMA/>.language l
+													WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+																			FROM <DB_SCHEMA/>.app_translation act1,
+																				<DB_SCHEMA/>.language l1
+																			WHERE l1.id  = act1.language_id
+																			AND act1.app_category_id  = act.app_category_id
+																			AND l1.lang_code IN (<LOCALE/>)
+																		)
+													)
+					ORDER BY 1`;
 		const parameters = {};
-		return await db_execute(app_id, sql, parameters, null, lang_code);
+		return await db_execute(app_id, sql, parameters, null, lang_code, true);
 	};
 /**
  * 
@@ -87,10 +87,10 @@ const getAppsAdmin = async (app_id, lang_code) => {
  */
 const getAppsAdminId = async (app_id) => {
 	const sql = `SELECT a.id "id"
-				FROM <DB_SCHEMA/>.app a
-			ORDER BY 1`;
+				   FROM <DB_SCHEMA/>.app a
+				  ORDER BY 1`;
 	const parameters = {};
-	return await db_execute(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null,null, true);
 };
 /**
  * 
