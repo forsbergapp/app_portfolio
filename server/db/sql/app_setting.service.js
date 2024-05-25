@@ -65,7 +65,7 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
                          common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
                          app_setting_type_name: app_setting_type_name
                          };
-     return await db_execute(app_id, sql, parameters, null, lang_code);
+     return await db_execute(app_id, sql, parameters, null, lang_code, true);
 };
 /**
  * Get setting display data
@@ -96,6 +96,6 @@ const getSettingDisplayData = async (app_id, data_app_id, app_setting_type_name,
                          app_id : data_app_id,
                          value:value ==''?null:value
                          };
-     return await db_execute(app_id, sql, parameters, null);
+     return await db_execute(app_id, sql, parameters, null, null, (app_setting_type_name && value)?false:true);
 };
 export{getSettings, getSettingDisplayData};

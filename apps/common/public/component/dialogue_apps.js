@@ -66,7 +66,7 @@ const component = async props => {
      */
     const post_component = async () =>{
         const apps = await props.function_FFB('/app/apps/', null, 'GET', 'APP_DATA', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                             .catch((/**@type{Error}*/error)=>{throw error});
         class_spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({apps:apps});

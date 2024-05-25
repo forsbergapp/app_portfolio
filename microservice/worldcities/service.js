@@ -102,6 +102,9 @@ const getCitySearch = async (search, limit) => {
         else
             return 0;
     });
-    return cities;
+    const list_header = {   total_count:	cities.length,
+                            offset: 		0,
+                            count:			cities.length};
+    return {list_header:list_header, rows:cities};
 };
 export{getCities, getCityRandom, getCitySearch};

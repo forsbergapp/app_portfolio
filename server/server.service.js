@@ -10,7 +10,7 @@
  * @param {string|null} more_info 
  * @returns {void}
  */
- const send_iso_error = (res, http, code, text, developer_text, more_info) => {
+ const response_send_error = (res, http, code, text, developer_text, more_info) => {
     //ISO20022 error format
     const message = {"error":{
                         "http":http, 
@@ -355,11 +355,11 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/app_data/v1/server-db/user_account-profile-stat`, 'GET'):{
-                        resolve(db_user_account.getProfileStat(routesparameters.app_id, app_query, routesparameters.res));
+                        resolve(db_user_account.getProfileStat(routesparameters.app_id, app_query));
                         break;
                     }
                     case route(`/bff/app_data/v1/server-db/user_account-profile-name/${resource_id_string}`, 'GET'):{
-                        resolve(db_user_account.getProfile(routesparameters.app_id, -1, resource_id_get(true), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
+                        resolve(db_user_account.getProfile(routesparameters.app_id, null, resource_id_get(true), routesparameters.ip, routesparameters.user_agent, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route(`/bff/app_data/v1/server-db/user_account-profile/${resource_id_string}`, 'GET'):{
@@ -480,7 +480,7 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/admin/v1/server-socket/socket`, 'GET'):{
-                        resolve(socket.ConnectedListAdmin(routesparameters.app_id, app_query, routesparameters.res));
+                        resolve(socket.ConnectedListAdmin(routesparameters.app_id, app_query));
                         break;
                     }
                     case route(`/bff/admin/v1/server-db_admin/database-demo`, 'POST'):{
@@ -504,11 +504,11 @@ const COMMON = {
                         break;
                     }
                     case route(`/bff/admin/v1/server-db_admin/app_log`, 'GET'):{
-                        resolve(db_app_log.getLogsAdmin(routesparameters.app_id, app_query, routesparameters.res));
+                        resolve(db_app_log.getLogsAdmin(routesparameters.app_id, app_query));
                         break;
                     }
                     case route(`/bff/admin/v1/server-db_admin/app_log-stat`, 'GET'):{
-                        resolve(db_app_log.getStatUniqueVisitorAdmin(routesparameters.app_id, app_query, routesparameters.res));
+                        resolve(db_app_log.getStatUniqueVisitorAdmin(routesparameters.app_id, app_query));
                         break;
                     }
                     case route(`/bff/admin/v1/server-db_admin/app_role`, 'GET'):{
@@ -761,4 +761,4 @@ const serverStart = async () =>{
     
 };
 
-export {COMMON, send_iso_error, getNumberValue, responsetime, serverRoutes, serverStart };
+export {COMMON, response_send_error, getNumberValue, responsetime, serverRoutes, serverStart };

@@ -24,13 +24,10 @@ const getLogs = (app_id, query) => {
             month:			query.get('month').toString(),
             day:			query.get('day')};
         service.getLogs(data).then((/**@type{object[]} */result)=>{
-            if (result.length>0)
-                resolve(result);
-            else
-                reject('Record not found');
-        });
-    });
-    
+            resolve(result);
+        })
+        .catch((/**@type{import('../types.js').error}*/error)=>reject(error));
+    });  
 };
 /**
  * 
@@ -47,10 +44,7 @@ const getLogStats = (query) =>{
                         month:			getNumberValue(query.get('month')) ?? new Date().getMonth() +1
                         };
         service.getLogsStats(data).then ((/**@type{import('../types.js').admin_log_stats_data[]} */result)=>{
-            if (result.length>0)
-                resolve(result);
-            else
-                reject('Record not found');
+            resolve(result);
         })
         .catch((/**@type{import('../types.js').error}*/error)=>reject(error));
     });
@@ -66,12 +60,9 @@ const getStatusCodes =() => service.getStatusCodes();
 const getFiles = () =>{
     return new Promise((resolve, reject)=>{
         service.getFiles().then((/**@type{import('../types.js').admin_log_files[]}*/result) =>{
-            if (result.length>0)
-                resolve(result);
-            else{
-                reject('Record not found');
-            }
-        });
+            resolve(result);
+        })
+        .catch((/**@type{import('../types.js').error}*/error)=>reject(error));
     });
 };
 export {getLogs, getStatusCodes, getLogStats, getFiles};

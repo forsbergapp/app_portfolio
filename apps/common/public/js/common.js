@@ -244,7 +244,7 @@ const common_translate_ui = async lang_code => {
      * @typedef {   'USERNAME'|'EMAIL'|'NEW_EMAIL'|'BIO'|'PASSWORD'|'PASSWORD_CONFIRM'|'PASSWORD_REMINDER'|'NEW_PASSWORD_CONFIRM'|'NEW_PASSWORD'|'CONFIRM_QUESTION'} translation_key
      */
     /**@type{{object_name:string,object_item_name:translation_key, id:string, text:string}[]} */
-    const app_objects = JSON.parse(app_objects_json);
+    const app_objects = JSON.parse(app_objects_json).rows;
     for (const app_object of app_objects){
         switch (app_object.object_name){
             case 'APP':{
@@ -272,7 +272,7 @@ const common_translate_ui = async lang_code => {
  */
 const get_locales_options = async () =>{
     const locales = await FFB('/server-db/locale', `lang_code=${COMMON_GLOBAL.user_locale}`, 'GET', 'APP_DATA', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                             .catch((/**@type{Error}*/error)=>{throw error});
     return locales.map((/**@type{*}*/row, /**@type{number}*/index)=>
         `<option id="${index}" value="${row.locale}">${row.text}</option>`
@@ -2214,7 +2214,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
     
     /** @type {import('../../../types.js').type_map_layer[]}*/
     const map_layers = await FFB('/server-db/app_settings_display', `data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
-    .then((/**@type{string}*/result)=>JSON.parse(result))
+    .then((/**@type{string}*/result)=>JSON.parse(result).rows)
     .catch((/**@type{Error}*/error)=>error);
     
     let map_layer_array = [];
@@ -2289,7 +2289,7 @@ const map_country = lang_code =>{
         .then(result=>{resolve(
             `<option value='' id='' label='…'>…</option>`
             +
-            JSON.parse(result).map((/**@type{*}*/country, /**@type{number}*/index)=>{
+            JSON.parse(result).rows.map((/**@type{*}*/country, /**@type{number}*/index)=>{
                 const row = (current_group_name !== country.group_name?`<optgroup label=${country.group_name}/>`:'')
                             +
                             `<option value=${index}

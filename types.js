@@ -1063,8 +1063,21 @@
  * APP CATEGORY
  * @typedef {{id:number, category_name:string, app_category_text:string}} db_result_app_category_getAppCategoryAdmin
  * APP LOG
- * @typedef {{  app_id:number,
- *              json_data:string}} db_parameter_app_log_createLog
+ * @typedef {{  app_module:string,
+ *              app_module_type : string,
+ *              app_module_request : string|null,
+ *              app_module_result : string,
+ *              app_user_id : null,
+ *              user_language : string,
+ *              user_timezone : string,
+ *              user_number_system : null,
+ *              user_platform : null,
+ *              server_remote_addr : string,
+ *              server_user_agent : string,
+ *              server_http_host : string,
+ *              server_http_accept_language : string,
+ *              client_latitude : string,
+ *              client_longitude : string}} db_parameter_app_log_createLog
  * @typedef {   db_result_insert} db_result_app_log_createLog
  * @typedef {{  id:number,
  *              app_id:number,

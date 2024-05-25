@@ -454,7 +454,10 @@ const getLogs = async (data) => {
                         return 0;
                 }
             });
-            resolve(log_rows_array_obj);
+            const list_header = {   total_count:	log_rows_array_obj.length,
+                                    offset: 		0,
+                                    count:			log_rows_array_obj.length};
+            resolve({list_header:list_header, rows:log_rows_array_obj});
         })
         //return empty and not error
         .catch(()=> resolve([]));
@@ -594,7 +597,10 @@ const getLogsStats = async (data) => {
             amount: logfiles.filter(log=>log.day == day).length
         });
     });
-    return logstat;
+    const list_header = {   total_count:	logstat.length,
+                            offset: 		0,
+                            count:			logstat.length};
+    return {list_header:list_header, rows:logstat};
 };
 /**
  * Get log files
@@ -619,7 +625,10 @@ const getFiles = async () => {
         /**@ts-ignore */
         logfiles.push({id: i++, filename:file});
     });
-    return logfiles;
+    const list_header = {   total_count:	logfiles.length,
+                            offset: 		0,
+                            count:			logfiles.length};
+    return {list_header:list_header, rows:logfiles};
 };
 
 export {LogRequestE, LogRequestI, LogServerI, LogServerE, LogDBI, LogDBE, LogServiceI, LogServiceE, LogAppI, LogAppE, getLogs, getStatusCodes, getLogsStats, getFiles};

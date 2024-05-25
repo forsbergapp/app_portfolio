@@ -46,7 +46,7 @@ const getUserPost = async (app_id, id) => {
 					   FROM <DB_SCHEMA/>.user_account_app_data_post 
 					  WHERE id = :id `;
 		const parameters = {id: id};
-		return await db_execute(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null, null, false);
 	};
 /**
  * 
@@ -56,20 +56,20 @@ const getUserPost = async (app_id, id) => {
  */
 const getUserPostsByUserId = async (app_id, id) => {
 		const sql = `SELECT	id "id",
-						description "description",
-						json_data "json_data",
-						date_created "date_created",
-						date_modified "date_modified",
-						user_account_app_user_account_id "user_account_app_user_account_id",
-						user_account_app_app_id "app_id"
-				 FROM <DB_SCHEMA/>.user_account_app_data_post
-				WHERE user_account_app_user_account_id = :user_account_id 
-				  AND user_account_app_app_id = :app_id`;
+							description "description",
+							json_data "json_data",
+							date_created "date_created",
+							date_modified "date_modified",
+							user_account_app_user_account_id "user_account_app_user_account_id",
+							user_account_app_app_id "app_id"
+					   FROM <DB_SCHEMA/>.user_account_app_data_post
+					  WHERE user_account_app_user_account_id = :user_account_id 
+					    AND user_account_app_app_id = :app_id`;
 		const parameters = {
 						user_account_id: id,
 						app_id: app_id
 					};
-		return await db_execute(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null, null, false);
 	};
 /**
  * 
@@ -83,28 +83,28 @@ const getProfileUserPosts = async (app_id, id, id_current_user) => {
 					  		us.description "description",
 					  		us.user_account_app_user_account_id "user_account_app_user_account_id",
 							us.json_data "json_data",
-					  (SELECT COUNT(0)
-						 FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like
-						WHERE u_like.user_account_app_data_post_id = us.id
-						 AND  u_like.user_account_app_app_id = us.user_account_app_app_id)					"count_likes",
-					  (SELECT COUNT(0)
-						 FROM <DB_SCHEMA/>.user_account_app_data_post_view u_view
-						WHERE u_view.user_account_app_data_post_id = us.id
-						 AND  u_view.user_account_app_app_id = us.user_account_app_app_id)					"count_views",
-					  (SELECT COUNT(0)
-						 FROM <DB_SCHEMA/>.user_account_app_data_post_like u_liked_current_user
-						WHERE u_liked_current_user.user_account_app_user_account_id = :user_account_id_current
-						  AND u_liked_current_user.user_account_app_data_post_id = us.id
-						  AND u_liked_current_user.user_account_app_app_id = us.user_account_app_app_id) 	"liked"
-				 FROM <DB_SCHEMA/>.user_account_app_data_post us
-				WHERE us.user_account_app_user_account_id = :user_account_id
-				  AND us.user_account_app_app_id = :app_id `;
+							(SELECT COUNT(0)
+								FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like
+								WHERE u_like.user_account_app_data_post_id = us.id
+								AND  u_like.user_account_app_app_id = us.user_account_app_app_id)					"count_likes",
+							(SELECT COUNT(0)
+								FROM <DB_SCHEMA/>.user_account_app_data_post_view u_view
+								WHERE u_view.user_account_app_data_post_id = us.id
+								AND  u_view.user_account_app_app_id = us.user_account_app_app_id)					"count_views",
+							(SELECT COUNT(0)
+								FROM <DB_SCHEMA/>.user_account_app_data_post_like u_liked_current_user
+								WHERE u_liked_current_user.user_account_app_user_account_id = :user_account_id_current
+								AND u_liked_current_user.user_account_app_data_post_id = us.id
+								AND u_liked_current_user.user_account_app_app_id = us.user_account_app_app_id) 		"liked"
+					   FROM <DB_SCHEMA/>.user_account_app_data_post us
+					  WHERE us.user_account_app_user_account_id = :user_account_id
+						AND us.user_account_app_app_id = :app_id `;
 		const parameters = {
 						user_account_id_current: id_current_user,
 						user_account_id: id,
 						app_id: app_id
 						};
-		return await db_execute(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null, null, false);
 	};
 /**
  * 
@@ -171,7 +171,7 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
 						app_id: app_id,
 						detailchoice: detailchoice
 					};
-		return await db_execute(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null, null, false);
     };
 /**
  * 
@@ -180,27 +180,27 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
  * @returns {Promise.<import('../../../types.js').db_result_user_account_data_post_getProfileStatLike[]>}
  */
  const getProfileStatLike = async (app_id, id) => {
-	const sql = `SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
-					 FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
-							 <DB_SCHEMA/>.user_account_app_data_post us
-					WHERE u_like.user_account_app_user_account_id = u.id
-					  AND u_like.user_account_app_app_id = :app_id
-					  AND us.id = u_like.user_account_app_data_post_id
-					  AND us.user_account_app_app_id = u_like.user_account_app_app_id)		"count_user_post_likes",
-				  (SELECT COUNT(DISTINCT u_like.user_account_app_user_account_id)
-					 FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
-						  <DB_SCHEMA/>.user_account_app_data_post us
-					WHERE us.user_account_app_user_account_id = u.id
-					  AND us.user_account_app_app_id = :app_id
-					  AND u_like.user_account_app_data_post_id = us.id
-					  AND u_like.user_account_app_app_id = us.user_account_app_app_id)		"count_user_post_liked"
-			 FROM <DB_SCHEMA/>.user_account u
-			WHERE u.id = :id`;
+	const sql = ` SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
+					FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
+						 <DB_SCHEMA/>.user_account_app_data_post us
+				   WHERE u_like.user_account_app_user_account_id = u.id
+					 AND u_like.user_account_app_app_id = :app_id
+					 AND us.id = u_like.user_account_app_data_post_id
+					 AND us.user_account_app_app_id = u_like.user_account_app_app_id)		"count_user_post_likes",
+				 (SELECT COUNT(DISTINCT u_like.user_account_app_user_account_id)
+					FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
+						 <DB_SCHEMA/>.user_account_app_data_post us
+				   WHERE us.user_account_app_user_account_id = u.id
+ 					 AND us.user_account_app_app_id = :app_id
+					 AND u_like.user_account_app_data_post_id = us.id
+					 AND u_like.user_account_app_app_id = us.user_account_app_app_id)		"count_user_post_liked"
+			 		FROM <DB_SCHEMA/>.user_account u
+				   WHERE u.id = :id`;
 	const parameters ={
 					id: id,
 					app_id: app_id
 				}; 
-	return await db_execute(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null, null, false);
 };
 
 /**
@@ -269,7 +269,7 @@ const getProfileStatPost = async (app_id, statchoice) => {
 						app_id: app_id,
 						statchoice: statchoice
 					};
-		return await db_execute(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null, null, true);
     };
 /**
  * 

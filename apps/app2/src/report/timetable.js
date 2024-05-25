@@ -675,7 +675,7 @@ const set_prayer_method = async(app_id) => {
 		};
         getSettingDisplayData(app_id, app_id, 'METHOD')
 		.then((/**@type{import('../../../../types.js').db_result_app_setting_getSettingDisplayData[]}*/result_settings)=>{
-			for (const setting of result_settings){
+			for (const setting of result_settings.rows){
 				const prayer_value = set_prayer_value(setting.data2, setting.data3,setting.data4,setting.data5);
 				//ES6 object spread 
 				Object.assign(REPORT_GLOBAL.module_praytimes_methods, {[setting.value.toUpperCase()]:{
@@ -1305,7 +1305,7 @@ const timetable_translate_settings = async (app_id, locale, locale_second) => {
 		//show translation using first or second language
 		/**@type{import('../../../../types.js').db_result_app_object_getObjects[]} */
 		const result_app_object_items = await getObjects(app_id, locale, 'REPORT', null);	
-		for (const app_object_item of result_app_object_items){
+		for (const app_object_item of result_app_object_items.rows){
 			if (first == true)
 				REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
 			else

@@ -1,7 +1,7 @@
 /** @module server/iam */
 
 /**@type{import('./server.service.js')} */
-const {send_iso_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {response_send_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('./config.service.js')} */
 const {ConfigGet, ConfigFileGet, ConfigGetApp, ConfigGetAppHost, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('./db/file.service.js')} */
@@ -62,7 +62,7 @@ const expired_token = (app_id, token_type, token) =>{
         return '⛔'
     }
     else
-        return send_iso_error(res, status, null, '⛔', null, reason);
+        return response_send_error(res, status, null, '⛔', null, reason);
 };
 
 /**

@@ -10,36 +10,18 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * 
  * @param {number} app_id 
  * @param {*} query
- * @param {import('../../../types.js').res} res
  * @returns Promise.<{import('../../../types.js').db_result_app_log_getLogsAdmin[]}>
  */
-const getLogsAdmin = (app_id, query, res) =>{
-    return new Promise((resolve, reject)=>{
-        service.getLogsAdmin(   app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
-                                query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
-        .then((/**@type{import('../../../types.js').db_result_app_log_getLogsAdmin[]}*/result) =>{
-            /**@ts-ignore */
-            if (result.rows.length>0){
-                resolve(result);
-            }
-            else{
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../common.service.js')} */{record_not_found}) => {
-                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                });
-            }
-        })
-        .catch((/**@type{import('../../../types.js').error}*/error)=>reject(error));
-    });
-};
+const getLogsAdmin = (app_id, query) => service.getLogsAdmin(  app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
+                                                                    query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+                                                .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error});
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
- * @param {import('../../../types.js').res} res
+ * @param {*} query
  * @returns Promise.<{import('../../../types.js').db_result_app_log_getStatUniqueVisitorAdmin[]}>
  */
-const getStatUniqueVisitorAdmin = (app_id, query, res) =>{
+const getStatUniqueVisitorAdmin = (app_id, query) =>{
     /**
      * Convert to array with object
      * @param {*} log
@@ -65,11 +47,11 @@ const getStatUniqueVisitorAdmin = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getStatUniqueVisitorAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')))
         .then((/**@type{import('../../../types.js').db_result_app_log_getStatUniqueVisitorAdmin[]}*/result_logs) =>{
-            if (result_logs.length>0){
+            if (result_logs.rows.length>0){
                 //use SQL group by and count() in javascript
                 //save unique server_remote_addr in a set
                 const log_unique_ip = new Set();
-                for (const log of result_logs){
+                for (const log of result_logs.rows){
                     log_unique_ip.add( `${log.chart};${log.app_id};${log.year};${log.month};${log.day};${JSON.parse(log.json_data).server_remote_addr}`);
                 }
                 //convert to array with objects
@@ -87,13 +69,13 @@ const getStatUniqueVisitorAdmin = (app_id, query, res) =>{
                 //convert to array with objects
                 const result_getStatUniqueVisitorAdmin = to_object(log_unique_with_amount, true);
                 //return result
-                resolve(result_getStatUniqueVisitorAdmin);
+                const list_header = {	total_count:	result_getStatUniqueVisitorAdmin.length,
+                                        offset: 		0,
+                                        count:			result_getStatUniqueVisitorAdmin.length};
+                resolve ({list_header:list_header, rows:result_getStatUniqueVisitorAdmin});
             }
             else{
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../common.service.js')} */{record_not_found}) => {
-                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                });
+                resolve([]);
             }
         })
         .catch((/**@type{import('../../../types.js').error}*/error)=>reject(error));

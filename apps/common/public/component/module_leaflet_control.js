@@ -115,7 +115,7 @@ const component = async props => {
         await props.function_FFB('/server-db/country', `lang_code=${props.locale}`, 'GET', 'APP_DATA', null)
         .then((/**@type{string}*/countries_json)=>{
             //mount custom code inside Leaflet container
-            props.common_document.querySelectorAll(`#${props.common_mountdiv} #${props.module_leaflet_container} .leaflet-control`)[0].innerHTML += render_template(JSON.parse(countries_json));
+            props.common_document.querySelectorAll(`#${props.common_mountdiv} #${props.module_leaflet_container} .leaflet-control`)[0].innerHTML += render_template(JSON.parse(countries_json).rows);
             if (props.function_search_event){
                 //add search function in data-function that event delegation will use
                 props.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.function_search_event;

@@ -301,7 +301,7 @@ const component = async props => {
                 path = app_rest_url;
             }
             const profile_stat_records = await props.function_FFB(path, `statchoice=${statchoice}`, 'GET', 'APP_DATA', null)
-                                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                                            .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                             .catch((/**@type{Error}*/error)=>{throw error});
             spinner = '';
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 

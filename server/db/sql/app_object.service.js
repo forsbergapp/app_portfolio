@@ -103,6 +103,6 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 					object_name : object_name,
 					object_item_name: object_item_name
 					};
-	return await db_execute(app_id, sql, parameters, null, lang_code);
+	return await db_execute(app_id, sql, parameters, null, lang_code, true);
 };
 export{getObjects};

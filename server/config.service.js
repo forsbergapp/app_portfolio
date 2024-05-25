@@ -34,11 +34,17 @@ const app_portfolio_title = 'App Portfolio';
  */
  const ConfigGetApps = (app_id=null, key = null) => {
     const result = file_get_cached('APPS').APPS.filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
-
                         .reduce((   /**@type{import('../types.js').config_apps_record} */app, 
                                     /**@type {*}*/current)=> 
                                     key?app.concat({APP_ID:current.APP_ID, [key]:current[key]}):app.concat(current), []);
-    return result;
+    if (app_id !=null)
+        return result;
+    else{
+        const list_header = {	total_count:	result.length,
+                                offset: 		0,
+                                count:			result.length};
+        return {list_header:list_header, rows:result};
+    }
  };
  /**
   * 

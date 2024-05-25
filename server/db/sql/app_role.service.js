@@ -18,6 +18,6 @@ const getAppRoleAdmin = async (app_id, id) => {
 					 ORDER BY 1`;
         
 		const parameters = {id: id};
-		return await db_execute(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null, null, id?false:true);
 	};
 export{getAppRoleAdmin};

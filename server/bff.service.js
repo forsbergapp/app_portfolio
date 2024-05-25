@@ -1,7 +1,7 @@
 /** @module apps */
 
 /**@type{import('./server.service.js')} */
-const {send_iso_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {response_send_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('./config.service.js')} */
 const {ConfigGet, ConfigGetAppHost} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('./log.service.js')} */
@@ -19,14 +19,14 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
         if (bff_parameters.res){
             const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
             if (error.error && error.error.code=='MICROSERVICE')
-                send_iso_error( bff_parameters.res, 
+                response_send_error( bff_parameters.res, 
                                 error.error.http,
                                 error.error.code, 
                                 `MICROSERVICE ${bff_parameters.route_path.split('/')[1].toUpperCase()} ERROR`, 
                                 error.error.developer_text, 
                                 error.error.more_info);
             else
-                send_iso_error( bff_parameters.res, 
+                response_send_error( bff_parameters.res, 
                                 statusCode, 
                                 null, 
                                 error, 
@@ -157,4 +157,4 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
         }
     });
 };
-export{send_iso_error, BFF, BFF_server};
+export{response_send_error, BFF, BFF_server};
