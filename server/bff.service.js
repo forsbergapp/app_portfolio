@@ -96,8 +96,12 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
                                     else
                                         bff_parameters.res.redirect(`http://${ConfigGet('SERVER', 'HOST')}`);
                                 }
-                                else
-                                    bff_parameters.res.status(200).send(result_service);
+                                else{
+                                    if (bff_parameters.method.toUpperCase() == 'POST')
+                                        bff_parameters.res.status(201).send(result_service);
+                                    else
+                                        bff_parameters.res.status(200).send(result_service);
+                                }
                         }
                         else{
                             //function called from server return result
