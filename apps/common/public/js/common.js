@@ -2644,7 +2644,8 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
                 })
                 .then((result) => {
                     switch (status){
-                        case 200:{
+                        case 200:
+                        case 201:{
                             //OK
                             return result;
                         }
