@@ -904,7 +904,7 @@ const getAssetFile = (app_id, url, basepath, res) =>{
  * @param {string} url
  * @param {string} reportid
  * @param {number} messagequeue
- * @param {string} info
+ * @param {'privacy_policy'|'disclaimer'|'terms'|'about'} info
  * @param {import('../types.js').res|null} res
  */
 const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, messagequeue, info, res) =>{
@@ -917,101 +917,88 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
         return null;
     }
     else
-        if (url.toLowerCase().startsWith('/maintenance'))
-            return getAssetFile(app_id, url.substring('/maintenance'.length), '/apps/common/public', res)
-                    .catch(()=>null);
-        else
-            if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || await app_start(app_id) ==true)
-                return new Promise((resolve, reject)=>{
-                    if (url.toLowerCase().startsWith('/css')||
-                        url.toLowerCase().startsWith('/component')||
-                        url.toLowerCase().startsWith('/images')||
-                        url.toLowerCase().startsWith('/js')||
-                        url.toLowerCase().startsWith('/common')||
-                        url == '/apps/types.js'||
-                        url == '/manifest.json'||
-                        url == '/sw.js')
-                        if (url.toLowerCase().startsWith('/common'))
-                            resolve(getAssetFile(app_id, url.substring('/common'.length), '/apps/common/public', res)
-                                    .catch(()=>null));
-                        else
-                            resolve(getAssetFile(app_id, url, ConfigGetApp(app_id, app_id,'PATH'), res)
-                                    .catch(()=>null));
-                    else
-                        if (info)
-                            switch (info){
-                                case 'about':
-                                case 'disclaimer':
-                                case 'privacy_policy':
-                                case 'terms':{
-                                    getInfo(app_id, info)
-                                    .then((info_result)=>{
-                                        resolve(info_result);
-                                    })
-                                    .catch((error)=>{
-                                        res.statusCode = 500;
-                                            res.statusMessage = error;
-                                            reject(error);
-                                    });
-                                    break;
-                                }
-                                default:{
-                                    resolve(null);
-                                    break;
-                                }
-                            }
-                        else
-                            if (url.toLowerCase().startsWith('/app-reports'))
-                                getReport(app_id, ip, user_agent, accept_language, reportid, messagequeue)
+        switch (true){
+            case (url.toLowerCase().startsWith('/maintenance')):{
+                return await getAssetFile(app_id, url.substring('/maintenance'.length), '/apps/common/public', res)
+                        .catch(()=>null);
+            }
+            case (app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && await app_start(app_id) ==false):{
+                return await getMaintenance(app_id, ip);
+            }
+            case (url.toLowerCase().startsWith('/common')):{
+                return await getAssetFile(app_id, url.substring('/common'.length), '/apps/common/public', res).catch(()=>null);
+            }
+            case (url.toLowerCase().startsWith('/css')):
+            case (url.toLowerCase().startsWith('/component')):
+            case (url.toLowerCase().startsWith('/images')):
+            case (url.toLowerCase().startsWith('/js')):
+            case (url == '/apps/types.js'):
+            case (url == '/manifest.json'):
+            case (url == '/sw.js'):{
+                return await getAssetFile(app_id, url, ConfigGetApp(app_id, app_id,'PATH'), res).catch(()=>null);
+            }
+            case (url.toLowerCase().startsWith('/info/about')):
+            case (url.toLowerCase().startsWith('/info/disclaimer')):
+            case (url.toLowerCase().startsWith('/info/privacy_policy')):
+            case (url.toLowerCase().startsWith('/info/terms')):{
+                return await getInfo(app_id, info)
+                                .catch((error)=>{
+                                                    res.statusCode = 500;
+                                                    res.statusMessage = error;
+                                                    throw error;
+                                                });
+            }
+            case (url.toLowerCase().startsWith('/app-reports')):{
+                return await getReport(app_id, ip, user_agent, accept_language, reportid, messagequeue)
                                 .then((report_result)=>{
                                     if (report_result.type=='PDF')
                                         res.type('application/pdf');
-                                    resolve(report_result.report);
+                                    return report_result.report;
                                 });
-                            else
-                                if ((ConfigGetApp(app_id, app_id, 'SHOWPARAM') == 1 && url.substring(1) !== '') ||
-                                    url == '/')
-                                    LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '1 ' + new Date().toISOString())
-                                    .then(()=>{
-                                        getAppBFF(app_id, 
-                                                    {   param:          url.substring(1)==''?null:url.substring(1),
-                                                        ip:             ip, 
-                                                        user_agent:     user_agent,
-                                                        accept_language:accept_language,
-                                                        host:           host})
-                                        .then(app_result=>{
-                                            LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '2 ' + new Date().toISOString())
-                                            .then(()=>{
-                                                if (app_result == null)
-                                                    res.statusCode = 301;
-                                                resolve(app_result);
-                                            })
-                                            .catch((/**@type{import('../types.js').error}*/err)=>{
-                                                LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF() and LogAppI()', COMMON.app_line(), err)
-                                                .then(()=>{
-                                                    res.statusCode = 500;
-                                                    res.statusMessage = 'SERVER ERROR';
-                                                    reject(err);
-                                                })
-                                            });
-                                        })
-                                        .catch((/**@type{import('../types.js').error}*/err)=>{
-                                            LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF()', COMMON.app_line(), err)
-                                            .then(()=>{
-                                                res.statusCode = 500;
-                                                res.statusMessage = 'SERVER ERROR';
-                                                reject('SERVER ERROR');
-                                            })
-                                        });
-                                    });
-                                else{
+            }
+            case (url == '/'):
+            case ((ConfigGetApp(app_id, app_id, 'SHOWPARAM') == 1 && url.substring(1) !== '')):{
+                return new Promise((resolve, reject)=>{
+                    LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '1 ' + new Date().toISOString())
+                    .then(()=>{
+                        getAppBFF(app_id, 
+                                    {   param:          url.substring(1)==''?null:url.substring(1),
+                                        ip:             ip, 
+                                        user_agent:     user_agent,
+                                        accept_language:accept_language,
+                                        host:           host})
+                        .then(app_result=>{
+                            LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '2 ' + new Date().toISOString())
+                            .then(()=>{
+                                if (app_result == null)
                                     res.statusCode = 301;
-                                    resolve(null);
-                                }
-                });
-            else
-                return getMaintenance(app_id, ip);
-    
+                                resolve(app_result);
+                            })
+                            .catch((/**@type{import('../types.js').error}*/err)=>{
+                                LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF() and LogAppI()', COMMON.app_line(), err)
+                                .then(()=>{
+                                    res.statusCode = 500;
+                                    res.statusMessage = 'SERVER ERROR';
+                                    reject(err);
+                                })
+                            });
+                        })
+                        .catch((/**@type{import('../types.js').error}*/err)=>{
+                            LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF()', COMMON.app_line(), err)
+                            .then(()=>{
+                                res.statusCode = 500;
+                                res.statusMessage = 'SERVER ERROR';
+                                reject('SERVER ERROR');
+                            })
+                        });
+                    });
+                })
+            }
+            default:{
+                res.statusCode = 301;
+                return null;
+            }
+        }
 };
 export {/*APP functions */
         app_start, render_app_html,render_report_html ,render_app_with_data,
