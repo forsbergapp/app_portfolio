@@ -96,6 +96,7 @@
                     "RENDER_FILES":[
                         ["APP_COMMON",      null,   null,                       "/apps/common/src/index.html"],
                         ["APP_COMMON",      null,   "CommonHead",               "/apps/common/src/head.html"],
+                        ["REPORT_COMMON",   null,   "CommonReport",             "/apps/common/src/report/index.html"],
                         ["REPORT_COMMON",   null,   "CommonReportHead",         "/apps/common/src/report/head.html"],
                         ["REPORT_COMMON",   null,   "CommonReportHeadFonts",    "/apps/common/src/report/fonts.html"],
                         ["MAINTENANCE",     null,   null,                       "/apps/common/src/index_maintenance.html"],
@@ -264,7 +265,7 @@
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
                     "FAVICON_192x192":"/images/favicon-192x192.png",
                     "RENDER_FILES":[
-                        ["REPORT",  "TIMETABLE",    null,   "/apps/app2/src/report/timetable.html"]
+                        ["REPORT",  "TIMETABLE",    null,   "/apps/app2/src/report/timetable.js"]
                     ]
         },
         "STATUS":"ONLINE"
