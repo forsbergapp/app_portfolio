@@ -555,8 +555,8 @@ const set_prayer_method = async(methods) => {
  * @param {number} day 
  * @param {string} timezone 
  * @param {string} calendartype 
- * @param {string} calendar_hijri_type 
- * @param {number} hijri_adj 
+ * @param {string|null} calendar_hijri_type 
+ * @param {number|null} hijri_adj 
  * @returns {boolean}
  */
 const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri_type, hijri_adj) => {
@@ -564,7 +564,7 @@ const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri
 								month: 'numeric'};
 	if (calendartype=='GREGORIAN'){
 		const date_temp = new Date(year,month,day);
-		date_temp.setDate(date_temp.getDate() + hijri_adj);
+		date_temp.setDate(date_temp.getDate() + (hijri_adj ?? 0));
 		const ramadan_day = date_temp.toLocaleString(	REPORT_GLOBAL.regional_def_calendar_lang + 
 														REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 														REPORT_GLOBAL.regional_def_locale_ext_calendar + 
@@ -638,7 +638,7 @@ const getstyle = (img_src, align) => {
 			show_fast_start_end:	number,
 			timezone:				string,
 			calendar_hijri_type:	string,
-			hijri_adjustment:		number,
+			hijri_adjustment:		number|null,
 			locale:					string,
 			number_system:			string,
 			format:					string}} col_data
@@ -1371,7 +1371,7 @@ const displayDay = (settings, item_id, user_settings) => {
 		 * @param {number} user_gps_latitude 
 		 * @param {number} user_gps_longitude 
 		 * @param {string} user_format 
-		 * @param {number} user_hijri_adjustment 
+		 * @param {number|null} user_hijri_adjustment 
 		 * @param {string} user_place 
 		 * @returns {string}
 		 */

@@ -359,13 +359,11 @@
  * @typedef {object}        report_create_parameters
  * @property {number}       app_id
  * @property {string}       reportid
- * @property {string}       reportname
  * @property {string}       ip
  * @property {string}       user_agent
  * @property {string}       accept_language
  * @property {string}       latitude
  * @property {string}       longitude
- * @property {string}       report
  */
 
 /**
@@ -1417,7 +1415,7 @@
  *              client_longitude:string|null,
  *              client_latitude:string|null,
  *              user_account_id:number|null,
- *              user_account_app_data_post_id:number}} db_parameter_user_account_app_data_post_view_insertUserPostView
+ *              user_account_app_data_post_id:number|null}} db_parameter_user_account_app_data_post_view_insertUserPostView
  * @typedef {   db_result_insert} db_result_user_account_app_data_post_view_insertUserPostView
  * USER ACCOUNT EVENT
  * @typedef {{  user_account_id:number,

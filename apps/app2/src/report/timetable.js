@@ -703,8 +703,8 @@ const set_prayer_method = async(app_id) => {
  * @param {number} day 
  * @param {string} timezone 
  * @param {string} calendartype 
- * @param {string} calendar_hijri_type 
- * @param {number} hijri_adj 
+ * @param {string|null} calendar_hijri_type 
+ * @param {number|null} hijri_adj 
  * @returns {boolean}
  */
 const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri_type, hijri_adj) => {
@@ -712,7 +712,7 @@ const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri
 									month: 'numeric'};
 	if (calendartype=='GREGORIAN'){
 		const date_temp = new Date(year,month,day);
-		date_temp.setDate(date_temp.getDate() + hijri_adj);
+		date_temp.setDate(date_temp.getDate() + (hijri_adj ?? 0));
 		const ramadan_day = date_temp.toLocaleString(	
 				REPORT_GLOBAL.regional_def_calendar_lang + 
 				REPORT_GLOBAL.regional_def_locale_ext_prefix + 
@@ -793,7 +793,7 @@ const getstyle = (img_src, align) => {
 			show_fast_start_end:	number,
 			timezone:				string,
 			calendar_hijri_type:	string,
-			hijri_adjustment:		number,
+			hijri_adjustment:		number|null,
 			locale:					string,
 			number_system:			string,
 			format:					string}} col_data
@@ -1480,7 +1480,7 @@ const displayDay = (prayTimes, settings, user_account_app_data_posts) => {
 		 * @param {number} user_gps_latitude 
 		 * @param {number} user_gps_longitude 
 		 * @param {string} user_format 
-		 * @param {number} user_hijri_adjustment 
+		 * @param {number|null} user_hijri_adjustment 
 		 * @param {string} user_place 
 		 * @returns {string}
 		 */
@@ -1944,7 +1944,7 @@ const getQRCode = async (url) =>{
 /**
  * Create timetable day, month or year
  * @param {import('../../../../types.js').report_create_parameters} timetable_parameters
- * @returns {Promise.<string>}
+ * @returns {Promise.<{report:string, papersize:string}>}
  */
 const timetable = async (timetable_parameters) => {
 	const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
@@ -2004,18 +2004,18 @@ const timetable = async (timetable_parameters) => {
 		}
 		/**@type {[string, string][]} */
 		const render_variables = [];
+		/**@type{import('../../../../types.js').db_parameter_user_account_app_data_post_view_insertUserPostView} */
 		const data_ViewStat = { client_ip:          			timetable_parameters.ip,
 								client_user_agent:  			timetable_parameters.user_agent,
 								client_longitude:  				timetable_parameters.longitude,
 								client_latitude:    			timetable_parameters.latitude,
 								user_account_id:    			uid_view,
 								user_account_app_data_post_id:  getNumberValue(user_account_app_data_post_id)};
+		
 		insertUserPostView(timetable_parameters.app_id, data_ViewStat)
 		.then(()=>{
 			timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
 			.then((user_account_app_data_post)=>{
-				render_variables.push(['BODY_CLASSNAME',user_account_app_data_post.arabic_script]);
-				render_variables.push(['REPORT_PAPER_CLASSNAME',user_account_app_data_post.papersize]);
 				timetable_translate_settings(timetable_parameters.app_id, user_account_app_data_post.locale, user_account_app_data_post.second_locale).then(() => {
 					/**@ts-ignore */
 					import('praytimes').then(({default: prayTimes}) => {
@@ -2036,39 +2036,40 @@ const timetable = async (timetable_parameters) => {
 							if (reporttype==0){
 								timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
 								.then((user_account_app_data_posts_parameters)=>{
-									render_variables.push(['REPORT_TIMETABLE',displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters)]);
 									getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
 										render_variables.push(['REPORT_QRCODE',qrcode]);
-										resolve(render_app_with_data(timetable_parameters.report, render_variables));
+										resolve({report:render_app_with_data(displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters), render_variables),
+												 papersize:user_account_app_data_post.papersize
+												});
 									});
 								})
-								.catch(()=>resolve(''));
+								.catch(()=>resolve({report:'', papersize:''}));
 							}
 							else
 								if (reporttype==1){
-									render_variables.push(['REPORT_TIMETABLE',displayMonth(prayTimes, user_account_app_data_post)]);
 									getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
 										render_variables.push(['REPORT_QRCODE',qrcode]);
-										resolve(render_app_with_data(timetable_parameters.report, render_variables));
+										resolve({report:render_app_with_data(displayMonth(prayTimes, user_account_app_data_post), render_variables),
+												 papersize:user_account_app_data_post.papersize});
 									});
 								}
 								else 
 									if (reporttype==2){
-										render_variables.push(['REPORT_TIMETABLE',displayYear(prayTimes, user_account_app_data_post)]);
 										getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
 											render_variables.push(['REPORT_QRCODE',qrcode]);
-											resolve(render_app_with_data(timetable_parameters.report, render_variables));
+											resolve({report:render_app_with_data(displayYear(prayTimes, user_account_app_data_post), render_variables),
+													 papersize:user_account_app_data_post.papersize});
 										});
 									}
 						});
 					});
 				});
 			}) 
-			.catch(()=>resolve(''));
+			.catch(()=>resolve({report:'', papersize:''}));
 		})
 		.catch((/**@type{import('../../../../types.js').error}*/error)=>{
 			resolve(error);
 		});
 	});
 };
-export {timetable};
+export default timetable;

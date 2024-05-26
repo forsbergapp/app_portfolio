@@ -1,7 +1,7 @@
 /** @module apps */
 
 /**@type{import('../server/config.service.js')} */
-const {CheckFirstTime, ConfigGet, ConfigGetAppHost, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigGetAppHost, ConfigGetApp, ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('../server/log.service.js')} */
 const { LogAppI, LogAppE } = await import(`file://${process.cwd()}/server/log.service.js`);
 /**@type{import('../server/server.service.js')} */
@@ -87,21 +87,15 @@ const render_files = (app_id, type, component=null) => {
  * Render html for REPORT
  * 
  * @param {number} app_id
- * @param {string} reportname
  */
-const render_report_html = (app_id, reportname) => {
-    const report = render_files(app_id, 'REPORT', reportname);
-    //list config files and return only tag and file content
-    /**@type {[string,string][]} */
-    const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{import('../types.js').config_apps_render_files}*/filetype)=>filetype[0]=='REPORT_COMMON').map((/**@type{import('../types.js').config_apps_render_files}*/row)=> {return [row[2],row[4]];});
-    const report_with_common = render_app_with_data(report, common_files);
+const render_report_html = (app_id) => {
     /** @type {[string, string][]} */
     const render_variables = [];
     if (ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').CSS_REPORT != '')
         render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').CSS_REPORT}'/>`]);
     else
         render_variables.push(['APP_CSS_REPORT','']);
-    return render_app_with_data(report_with_common, render_variables);
+    return render_app_with_data( render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'REPORT_COMMON'), render_variables)
 };
 
 /**
@@ -494,8 +488,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
  * @returns {Promise.<{type: string, report:string}>}
  */
 const getReport = async (app_id, ip, user_agent, accept_language, reportid, messagequeue) => {
-    /**@type{import('../apps/app2/src/report/index.js')} */
-    const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
     /**@type{import('../microservice/microservice.service.js')} */
     const { MessageQueue } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
     /**@type{import('../server/iam.service.js')} */
@@ -566,20 +558,26 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
                     };
         }
         else{
-            
+            const report_common_html = render_report_html(app_id);
             /**@type{import('../types.js').report_create_parameters} */
             const data = {  app_id:         app_id,
                             reportid:       reportid,
-                            reportname:     query_parameters_obj.module,
                             ip:             ip,
                             user_agent:     user_agent,
                             accept_language:accept_language,
                             latitude:       result_geodata.latitude,
-                            longitude:      result_geodata.longitude,
-                            report:         ''};
-            const report_html = await createReport(app_id, data);
+                            longitude:      result_geodata.longitude};
+            const report_path = ConfigGetApps(app_id, 'RENDER_CONFIG')[0].RENDER_CONFIG.RENDER_FILES.filter((/**@type{*}*/file)=>file[0]=='REPORT' && file[1]==query_parameters_obj.module)[0][3]
+            const {default:RunReport} = await import(`file://${process.cwd()}${report_path}`);
+            /**@type{{report:string,
+             *        papersize:string}} */
+            const report_data = await RunReport(data);
+
+            /** @type {[string, string][]} */
+            const render_variables = [];
+            render_variables.push(['REPORT_PAPERSIZE_CLASSNAME',report_data.papersize]);
             return {    type:'HTML',
-                        report:report_html
+                        report:render_app_with_data(report_common_html, render_variables).replace('<REPORT/>', report_data.report)
                     };
         }
 };

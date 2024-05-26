@@ -98,7 +98,7 @@ const template = props =>
                                     </div>
                                 </div>
                                 <div id='common_profile_public'>
-                                    ${props.info_profile.private==0?
+                                    ${props.info_profile.private!=1?
                                     `<div id='common_profile_main_stat_row1'>
                                         <div id='common_profile_info_view'>
                                             <div id='common_profile_info_view_count_icon' class='common_icon'></div>
