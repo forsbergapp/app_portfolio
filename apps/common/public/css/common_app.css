@@ -528,9 +528,6 @@ select {
 #common_dialogue_info_app_menu_content_info{
 	display: block;
 }
-#common_dialogue_info_app_menu_content_info #common_dialogue_info_datamodel{
-	margin-bottom:30px;
-}
 #common_dialogue_info_app_menu_content_info #common_dialogue_info_contact_text, #common_dialogue_info_app_email{
 	display: inline-block;
 }
