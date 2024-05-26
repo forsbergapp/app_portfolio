@@ -241,7 +241,11 @@ const COMMON = {
                 //App route for app asset, common asset, app info page, app report (using query) and app
                 const URI_query = routesparameters.route_path.startsWith('/app-reports')?routesparameters.url.substring(routesparameters.url.indexOf('?')):null;
                 const app_query = URI_query?new URLSearchParams(URI_query):null;
-                resolve(app.getAppMain(routesparameters.ip, routesparameters.host, routesparameters.user_agent, routesparameters.accept_language, routesparameters.url, app_query, routesparameters.res));
+                resolve(app.getAppMain(routesparameters.ip, routesparameters.host, routesparameters.user_agent, routesparameters.accept_language, routesparameters.url, app_query, routesparameters.res)
+                        .catch((error)=>{
+                            //send minimal HTML with server error
+                            routesparameters.res?.sendFile(`${process.cwd()}/server/servererror.html`);
+                        }));
             }
             else{
                 const resource_id_string = ':RESOURCE_ID';
