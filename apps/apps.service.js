@@ -551,6 +551,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
                                 ip:ip, 
                                 user_agent:user_agent, 
                                 accept_language:accept_language,
+                                /**@ts-ignore */
                                 res:null};
             const pdf = await BFF_server(app_id, parameters).catch((/**@type{import('../types.js').error}*/error)=>error);
             return {    type:'PDF',
@@ -606,6 +607,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                         ip:ip, 
                         user_agent:user_agent, 
                         accept_language:accept_language,
+                        /**@ts-ignore */
                         res:null};
     //ignore error in this case and fetch randcom geolocation using WORLDCITIES service instead if GEOLOCATION is not available
     const result_gps = await BFF_server(app_id, parameters)
@@ -632,6 +634,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                             ip:ip, 
                             user_agent:user_agent, 
                             accept_language:accept_language,
+                            /**@ts-ignore */
                             res:null};
         const result_city = await BFF_server(app_id, parameters).catch((/**@type{import('../types.js').error}*/error)=>{throw error});
         result_geodata.latitude =   JSON.parse(result_city).lat;

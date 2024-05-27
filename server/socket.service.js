@@ -41,6 +41,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
                         ip:ip, 
                         user_agent:headers_user_agent, 
                         accept_language:headers_accept_language,
+                        /**@ts-ignore */
                         res:null};
     
     const result_geodata = await BFF_server(app_id, parameters)

@@ -13,7 +13,7 @@
  *          ip: string,
  *          user_agent:string,
  *          accept_language:string,
- *          res: res|null}} bff_parameters
+ *          res: res}} bff_parameters
  * 
  * Routes paramaters
  * @typedef {{  app_id: number,
@@ -28,7 +28,7 @@
 *               ip: string,
 *               user_agent:string,
 *               accept_language:string,
-*               res: res|null}} routesparameters
+*               res: res}} routesparameters
  */
 /**
  * Server/Apps - Request verbose
