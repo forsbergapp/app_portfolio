@@ -75,9 +75,10 @@ const getUserAccountApps = async (app_id, resource_id) => {
 /**
  * 
  * @param {number} app_id
+ * @param {number} resource_id
  * @param {*} query
  */
-const deleteUserAccountApp = (app_id, query) => service.deleteUserAccountApp(app_id, getNumberValue(query.get('delete_user_accound_id')), getNumberValue(query.get('delete_app_id')))
+const deleteUserAccountApp = (app_id, resource_id, query) => service.deleteUserAccountApp(app_id, resource_id, getNumberValue(query.get('delete_app_id')))
                                                     .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 
 export {/*ADMIN + ACCESS*/
