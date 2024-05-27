@@ -71,6 +71,7 @@ const { default: {compare} } = await import('bcrypt');
                         ip:ip, 
                         user_agent:user_agent, 
                         accept_language:accept_language,
+                        /**@ts-ignore */
                         res:null};
     return await BFF_server(app_id, parameters);
 };

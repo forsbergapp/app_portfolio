@@ -32,7 +32,7 @@ const logdate = () => new Date().toISOString();
  * Log request error
  * @param {import('../types.js').req} req 
  * @param {number} statusCode 
- * @param {string} statusMessage 
+ * @param {string|number|object|Error|null} statusMessage 
  * @param {number} responsetime 
  * @param {import('../types.js').error} err 
  * @returns 
