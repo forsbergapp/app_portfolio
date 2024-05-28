@@ -1,4 +1,4 @@
-/** @module server/db/sql/app_category */
+/** @module server/db/sql */
 
 
 /**@type{import('../common.service.js')} */
