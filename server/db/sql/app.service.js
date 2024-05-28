@@ -1,4 +1,4 @@
-/** @module server/db/sql/app */
+/** @module server/db/sql */
 
 /**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);

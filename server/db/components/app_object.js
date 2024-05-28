@@ -1,4 +1,4 @@
-/** @module server/db/components/app_object */
+/** @module server/db/components */
 
 /**@type{import('../sql/app_object.service.js')} */
 const service = await import(`file://${process.cwd()}/server/db/sql/app_object.service.js`);

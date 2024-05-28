@@ -1,4 +1,4 @@
-/** @module server/db/components/app_object */
+/** @module server/db/components */
 
 
 /**@type{import('../sql/app_setting.service.js')} */
