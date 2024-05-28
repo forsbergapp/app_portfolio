@@ -15,9 +15,10 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {string|null} resource_name
  * @param {number|null} entity_id
  * @param {string|null} locale
+ * @param {boolean|null} user_null
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_get[]>}
  */
- const get = async (app_id, resource_id, master_id, user_account_id, user_account_app_id, data_app_id, resource_name, entity_id, locale) => {
+ const get = async (app_id, resource_id, master_id, user_account_id, user_account_app_id, data_app_id, resource_name, entity_id, locale, user_null) => {
     const sql = `SELECT adrd.id                                                         "id",
                         adrd.json_data                                                  "json_data",
                         adrd.app_data_resource_master_id                                "app_data_resource_master_id",
@@ -63,7 +64,8 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                     AND (adrm.id                                                = :master_id OR :master_id IS NULL)
                     AND ((adrm.user_account_app_user_account_id                 = :user_account_id &&
                           adrm.user_account_app_app_id                          = :user_account_app_id) OR 
-                         (:user_account_id IS NULL && :user_account_app_id IS NULL))                    
+                         (:user_account_id IS NULL && :user_account_app_id IS NULL))          
+                    AND ((adrm.user_account_app_user_account_id                 = NULL && :user_null=1) OR :user_null=0)
                     AND (adrm.app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)
                     AND (as.value                                               = :resource_name OR :resource_name IS NULL)
                     AND (adrm.app_data_entity_resource_app_data_entity_id       = :entity_id OR :entity_id IS NULL)`;
@@ -73,7 +75,8 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                         user_account_app_id : user_account_app_id,
                         data_app_id         : data_app_id,
                         resource_name       : resource_name,
-                        entity_id           : entity_id
+                        entity_id           : entity_id,
+                        user_null           : user_null?1:0
                         };
     return await db_execute(app_id, sql, parameters, null, null, resource_id?false:true);
 };
