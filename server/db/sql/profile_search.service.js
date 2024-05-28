@@ -1,4 +1,4 @@
-/** @module server/db/sql/profile_search */
+/** @module server/db/sql */
 
 /**@type{import('../../db/common.service.js')} */
 const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);

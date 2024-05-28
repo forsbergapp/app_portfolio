@@ -1060,6 +1060,102 @@
  * @typedef {   db_result_update} db_result_app_updateAppAdmin
  * APP CATEGORY
  * @typedef {{id:number, category_name:string, app_category_text:string}} db_result_app_category_getAppCategoryAdmin
+ * 
+ * APP_DATA_ENTITY
+ * @typedef {{id:number, app_id:number, json_data:string}} db_result_app_data_entity_get
+ * APP_DATA_ENTITY_RESOURCE
+ * @typedef {{  id:number, 
+ *              json_data:string, 
+ *              app_setting_id:number, 
+ *              app_data_entity_app_id:number, 
+ *              app_data_entity_id:number, 
+ *              app_setting_type_app_setting_type_name:string, 
+ *              app_setting_value:string, 
+ *              app_setting_display_data:string}} db_result_app_data_entity_resource_get
+ * APP_DATA_RESOURCE_MASTER
+ * @typedef {{  id:number, 
+ *              json_data:string, 
+ *              user_account_app_user_account_id:number|null,
+ *              user_account_app_app_id:number|null,
+ *              app_data_entity_resource_app_data_entity_app_id:number,
+ *              app_data_entity_resource_app_data_entity_id:number,
+ *              app_data_entity_resource_id:number,
+ *              app_data_entity_resource_json_data:string,
+ *              app_setting_id:number,
+ *              app_setting_type_app_setting_type_name:string,
+ *              app_setting_value:string,
+ *              app_setting_display_data:string}} db_result_app_data_resource_master_get
+ * @typedef {db_result_insert} db_result_app_data_resource_master_post
+ * @typedef {db_result_update} db_result_app_data_resource_master_update
+ * @typedef {db_result_delete} db_result_app_data_resource_master_delete
+ * APP_DATA_RESOURCE_DETAIL
+ * @typedef {{  id:number, 
+ *              json_data:string, 
+ *              app_data_resource_master_id:number,
+ *              app_data_entity_resource_id:number,
+ *              app_data_entity_resource_app_data_entity_app_id:number,
+ *              app_data_entity_resource_app_data_entity_id:number,
+ *              app_data_resource_master_attribute_id:number,
+ *              app_data_resource_master_app_data_entity_resource_app_data_entity_app_id:number,
+ *              app_data_resource_master_app_data_entity_resource_app_data_entity_id:number,
+ *              app_data_resource_master_app_data_entity_resource_id:number,
+ *              user_account_app_user_account_id:number,
+ *              user_account_app_app_id:number,
+ *              app_data_resource_master_attribute_app_data_entity_resource_app_data_entity_app_id:number,
+ *              app_data_resource_master_attribute_app_data_entity_resource_app_data_entity_id:number,
+ *              app_data_resource_master_attribute_app_data_entity_resource_id:number,
+ *              app_data_resource_master_attribute_user_account_app_user_account_id:number,
+ *              app_data_resource_master_attribute_user_account_app_app_id:number,
+ *              app_data_resource_master_app_setting_id:number,
+ *              app_data_resource_master_app_setting_type_app_setting_type_name:string,
+ *              app_data_resource_master_app_setting_value:string,
+ *              app_setting_attribute_display_data:string,
+ *              app_setting_id:number,
+ *              app_setting_type_app_setting_type_name:string,
+ *              app_setting_value:string,
+ *              app_setting_display_data:string}} db_result_app_data_resource_detail_get
+ * @typedef {db_result_insert} db_result_app_data_resource_detail_post
+ * @typedef {db_result_update} db_result_app_data_resource_detail_update
+ * @typedef {db_result_delete} db_result_app_data_resource_detail_delete
+ * APP_DATA_RESOURCE_DETAIL_DATA
+ * @typedef {{  id:number, 
+ *              json_data:string, 
+ *              date_created:string,
+ *              date_modified:string|null,
+ *              app_data_resource_detail_id:number,
+ *              app_data_resource_master_attribute_id:number,
+ *              app_data_detail_app_data_resource_master_id:number,
+ *              app_data_detail_app_data_entity_resource_id:number,
+ *              app_data_detail_app_data_entity_resource_app_data_entity_app_id:number,
+ *              app_data_detail_app_data_entity_resource_app_data_entity_id:number,
+ *              app_data_detail_app_data_resource_master_attribute_id:number,
+ *              app_data_resource_master_app_data_entity_resource_app_data_entity_app_id:number,
+ *              app_data_resource_master_app_data_entity_resource_app_data_entity_id:number,
+ *              app_data_resource_master_app_data_entity_resource_id:number,
+ *              user_account_app_user_account_id:number|null,
+ *              user_account_app_app_id:number|null,
+ *              app_data_resource_master_attribute_app_data_entity_resource_app_data_entity_app_id:number,
+ *              app_data_resource_master_attribute_app_data_entity_resource_app_data_entity_id:number,
+ *              app_data_resource_master_attribute_app_data_entity_resource_id:number,
+ *              app_data_resource_master_attribute_user_account_app_user_account_id:number|null,
+ *              app_data_resource_master_attribute_user_account_app_app_id:number|null,
+ *              app_data_resource_master_app_setting_id:number,
+ *              app_data_resource_master_app_setting_type_app_setting_type_name:string,
+ *              app_data_resource_master_app_setting_value:string,
+ *              app_setting_attribute_display_data:string,
+ *              app_setting_id:number,
+ *              app_setting_type_app_setting_type_name:string,
+ *              app_setting_value:string,
+ *              app_setting_display_data:string}} db_result_app_data_resource_detail_data_get
+ * @typedef {db_result_insert} db_result_app_data_resource_detail_data_post
+ * @typedef {db_result_update} db_result_app_data_resource_detail_data_update
+ * @typedef {db_result_delete} db_result_app_data_resource_detail_data_delete
+ * APP_DATA_STAT
+ * @typedef {{id:number, category_name:string, app_category_text:string}} db_result_app_data_stat_get
+ * @typedef {db_result_insert} db_result_app_data_stat_post
+ * 
+ * 
+ * 
  * APP LOG
  * @typedef {{  app_module:string,
  *              app_module_type : string,
