@@ -19,12 +19,4 @@ const get = (app_id, query) => service.get( app_id,
                                             query.get('lang_code'))
                                             .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 
-/**
- * 
- * @param {number} app_id 
- * @param {*} data
- * @returns {Promise.<import('../../../types.js').db_result_app_data_stat_post[]>}
- */
-const post = (app_id, data) => service.post(app_id, data).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
-
-export{get, post};
+export{get};

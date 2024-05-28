@@ -15,9 +15,10 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {string|null} resource_name_master_attribute
  * @param {number|null} entity_id
  * @param {string|null} locale
+ * @param {boolean|null} user_null
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_data_get[]>}
  */
- const get = async (app_id, resource_id, user_account_id, user_account_app_id, data_app_id, resource_name, resource_name_master_attribute, entity_id, locale) => {
+ const get = async (app_id, resource_id, user_account_id, user_account_app_id, data_app_id, resource_name, resource_name_master_attribute, entity_id, locale, user_null=false) => {
     const sql = `SELECT adrdd.id                                                        "id",
                         adrdd.json_data                                                 "json_data",
                         adrdd.date_created                                              "date_created",
@@ -70,6 +71,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                     AND ((adrm.user_account_app_user_account_id                 = :user_account_id &&
                           adrm.user_account_app_app_id                          = :user_account_app_id) OR 
                          (:user_account_id IS NULL && :user_account_app_id IS NULL))                    
+                    AND ((adrm.user_account_app_user_account_id                 = NULL && :user_null=1) OR :user_null=0)
                     AND (adrm.app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)
                     AND (as.value                                               = :resource_name OR :resource_name IS NULL)
                     AND (as_attribute.app_setting_type_app_setting_type_name    = :resource_name_master_attribute OR :resource_name_master_attribute IS NULL)
@@ -80,7 +82,8 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                         data_app_id                     : data_app_id,
                         resource_name                   : resource_name,
                         resource_name_master_attribute  : resource_name_master_attribute,
-                        entity_id                       : entity_id
+                        entity_id                       : entity_id,
+                        user_null                       : user_null?1:0
                         };
     return await db_execute(app_id, sql, parameters, null, null, resource_id?false:true);
 };
