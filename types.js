@@ -437,6 +437,8 @@
  *             AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE:string,
  *             ADMIN_TOKEN_EXPIRE_ACCESS:string,
  *             ADMIN_TOKEN_SECRET:string,
+ *             ADMIN_PASSWORD_ENCRYPTION_KEY:string,
+ *             ADMIN_PASSWORD_INIT_VECTOR:string,
  *             ENABLE_CONTENT_SECURITY_POLICY:string,
  *             ENABLE_GEOLOCATION:string,
  *             ENABLE_USER_REGISTRATION:string,

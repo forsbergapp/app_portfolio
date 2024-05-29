@@ -86,11 +86,12 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
     const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
     return new Promise((resolve, reject)=>{
         const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
-            const { default: {compare} } = await import('bcrypt');
+            /**@type{import('./security.service.js')} */
+            const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.service.js`);
             const config_username = ConfigGetUser('username');
             const config_password = ConfigGetUser('password');
             let result = 0;
-            if (username == config_username && await compare(password, config_password) && app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID')))
+            if (username == config_username && await PasswordCompare(password, config_password) && app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID')))
                 result = 1;
             else
                 result = 0;
