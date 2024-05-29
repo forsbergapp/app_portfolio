@@ -5,18 +5,6 @@ const {SLASH, file_get, file_update, file_get_cached, file_set_cache_all, file_c
 
 const app_portfolio_title = 'App Portfolio';
 
-/**
- * Create random string
- * @returns {string}
- */
- const CreateRandomString =()=>{
-    let randomstring = '';
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    for (let i = 0; i < 256; i++) {
-        randomstring += chars[Math.floor(Math.random() * chars.length)] + Math.floor(1 + Math.random() * 10);
-    }
-    return randomstring;
-};
 
 /**
  * Config get user
@@ -98,17 +86,26 @@ const app_portfolio_title = 'App Portfolio';
  };
 /**
  * Config app secret reset db username and passwords for database in use
- * @param {number} app_id
  * @returns {Promise.<void>}
  */
-  const ConfigAppSecretDBReset = async (app_id) => {
+  const ConfigAppSecretDBReset = async () => {
     /**@type{import('./server.service.js')} */
     const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
     const file = await file_get('APPS', true);
+    /**@type{import('../types.js').config_apps_record[]}*/
+    const APPS = file.file_content.APPS;
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
-    for (const app of file.file_content.APPS){
-        app.SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`] = '';
-        app.SECRETS[`SERVICE_DB_DB${db_use}_APP_PASSWORD`] = '';
+    for (const app of APPS){
+        /**@ts-ignore */
+        if (app.SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`]){
+            /**@ts-ignore */
+            app.SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`] = '';
+        }
+        /**@ts-ignore */
+        if (app.SECRETS[`SERVICE_DB_DB${db_use}_APP_PASSWORD`]){
+            /**@ts-ignore */
+            app.SECRETS[`SERVICE_DB_DB${db_use}_APP_PASSWORD`] = '';
+        }   
     }
     await file_update('APPS', file.transaction_id, file.file_content);
     await file_set_cache_all();
@@ -194,7 +191,8 @@ const ConfigExists = async () => {
  */
 const DefaultConfig = async () => {
     const fs = await import('node:fs');
-    const { createHash } = await import('node:crypto');
+    /**@type{import('./security.service.js')} */
+    const {createSecret}= await import(`file://${process.cwd()}/server/security.service.js`);
     await create_config_and_logs_dir()
     .catch((/**@type{import('../types.js').error}*/err) => {
         throw err;
@@ -232,10 +230,17 @@ const DefaultConfig = async () => {
     });
     //generate hash
     config_obj[0][1].SERVICE_IAM.map((/**@type{import('../types.js').config_server_service_iam}*/row)=>{
-        for (const key of Object.keys(row))
+        for (const key of Object.keys(row)){
             if (key== 'ADMIN_TOKEN_SECRET'){
-                row.ADMIN_TOKEN_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+                row.ADMIN_TOKEN_SECRET = createSecret();
             }
+            if (key== 'ADMIN_PASSWORD_ENCRYPTION_KEY'){
+                row.ADMIN_PASSWORD_ENCRYPTION_KEY = createSecret(false, 32);
+            }
+            if (key== 'ADMIN_PASSWORD_INIT_VECTOR'){
+                row.ADMIN_PASSWORD_INIT_VECTOR = createSecret(false, 16);
+            }
+        }
     });
     //set server metadata
     config_obj[0][1].METADATA.CONFIGURATION = app_portfolio_title;
@@ -244,10 +249,10 @@ const DefaultConfig = async () => {
 
     //generate hash for apps
     config_obj[1][1].APPS.map((/**@type{import('../types.js').config_apps_record}*/row)=>{
-        row.SECRETS.CLIENT_ID = createHash('sha256').update(CreateRandomString()).digest('hex');
-        row.SECRETS.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
-        row.SECRETS.APP_ID_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
-        row.SECRETS.APP_ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+        row.SECRETS.CLIENT_ID = createSecret();
+        row.SECRETS.CLIENT_SECRET = createSecret();
+        row.SECRETS.APP_ID_SECRET = createSecret();
+        row.SECRETS.APP_ACCESS_SECRET = createSecret();
     });
     //set created for user
     config_obj[5][1].created = new Date().toISOString();
@@ -372,16 +377,16 @@ const CheckFirstTime = () => {
  * @returns {Promise.<void>}
  */
 const CreateSystemAdmin = async (admin_name, admin_password) => {
-    const { default: {genSalt, hash} } = await import('bcrypt');
+    /**@type{import('./security.service.js')} */
+    const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.service.js`);
     const file = await file_get('IAM_USER', true);
     file.file_content.username = admin_name;
-    file.file_content.password = await hash(admin_password, await genSalt(10));
+    file.file_content.password = await PasswordCreate(admin_password);
     file.file_content.modified = new Date().toISOString();
     await file_update('IAM_USER', file.transaction_id, file.file_content)
     .catch((/**@type{import('../types.js').error}*/error)=>{throw error;});
 };
 
-export{ CreateRandomString,
-        ConfigFileGet, ConfigFileSave, CheckFirstTime,
+export{ ConfigFileGet, ConfigFileSave, CheckFirstTime,
         CreateSystemAdmin, 
         ConfigGet, ConfigGetUser, ConfigGetApps, ConfigGetAppHost, ConfigGetApp, ConfigAppSecretDBReset, ConfigAppSecretUpdate, ConfigAppParameterUpdate, InitConfig};

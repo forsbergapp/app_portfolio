@@ -102,7 +102,7 @@
 	Security requirements
 
 	- Content Security Policy against XSS
-	- SHA256 for REST API and Bcrypt for user security
+	- SHA256 for REST API and Node.js crypto functions with server parameters for user passwords
 	- JSON web tokens with extra validation that checks at least token is authorized to correct userid, appid and ip.
 	- stateless app meaning cookies or localstorage should not be used in the browser, PWA should not cache files and just be installable
 	- textediting control on app level to block basic cut/copy/paste for apps that need higher security
@@ -256,7 +256,7 @@
 	Single page web app (SPA).
 	Map app with implemented client multiframework using pure Javascript, Vue and React
 	switcher. Vue and React are implemented without Babel and as ECMAScript modules to show
-	how pure Javascript solution without build step, transpiler or any NodeJs module modifications.
+	how pure Javascript solution without build step, transpiler or any Node.js module modifications.
 	
 	App 2 and admin app are both using Leaflet module with same logic although without Javascript 
 	framework switcher.
@@ -312,7 +312,7 @@
    
 	PM2 and NodeJS:
 
-    	PM2 cluster mode and native nodejs cluster functionality are not supported at the moment since configuration 
+    	PM2 cluster mode and native Node.js cluster functionality are not supported at the moment since configuration 
 		functions use module variables for performance and socket uses in memory module variable for connected clients 
 		and no replication method still implemented.
 
