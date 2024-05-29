@@ -79,28 +79,15 @@ const component = async props => {
                         };
                 }
                 else
-                    if (props.content_type=='PDF'){
-                        return {
-                            INFO:'',
-                            CONTENT:'',
-                            STYLE_TOOLBAR_DISPLAY:'none',
-                            STYLE_CONTENT_DISPLAY:'block',
-                            STYLE_INFO_OVERFLOWY:'auto',
-                            STYLE_INFO_INFO_DISPLAY:'none',
-                            IFRAME_CLASS:'class=' + props.iframe_class
-                            };
-                    }
-                    else
-                        return {
-                            INFO:'',
-                            CONTENT:'',
-                            STYLE_TOOLBAR_DISPLAY:'',
-                            STYLE_CONTENT_DISPLAY:'',
-                            STYLE_INFO_OVERFLOWY:'',
-                            STYLE_INFO_INFO_DISPLAY:'',
-                            IFRAME_CLASS:''
-                            };
-                break;
+                    return {
+                        INFO:'',
+                        CONTENT:'',
+                        STYLE_TOOLBAR_DISPLAY:'',
+                        STYLE_CONTENT_DISPLAY:'',
+                        STYLE_INFO_OVERFLOWY:'',
+                        STYLE_INFO_INFO_DISPLAY:'',
+                        IFRAME_CLASS:''
+                        };
             }
             default:
                 return {
@@ -144,30 +131,6 @@ const component = async props => {
             props.common_document.querySelector('#common_window_info_content').style.display= variables.STYLE_CONTENT_DISPLAY;
             props.common_document.querySelector('#common_window_info').style.overflowY= variables.STYLE_INFO_OVERFLOWY;
             props.common_document.querySelector('#common_window_info_info').style.display= variables.STYLE_INFO_INFO_DISPLAY;
-            if (props.info==2 && props.content_type=='PDF'){
-                //show empty component with spinner
-                props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template.replace('<INFO/>','').replace('<CONTENT/>','');
-                props.common_document.querySelector('#common_window_info_info').classList.add('css_spinner');
-                fetch (props.iframe_content,
-                    {
-                        headers: {
-                            'Content-Type': 'application/pdf;charset=UTF-8'
-                        }
-                    }
-                )
-                .then((response) => {
-                    return response.blob();
-                })
-                .then((pdf) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(pdf); 
-                    reader.onloadend = () => {
-                        const base64PDF = reader.result;
-                        props.common_document.querySelector('#common_window_info_info').classList.remove('css_spinner');
-                        props.common_document.querySelector('#common_window_info_content').src = base64PDF;
-                    };
-                });
-            }
         }
     }
     const variables = get_variables(props.info);

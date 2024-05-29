@@ -2,8 +2,6 @@
 
 /**@type{import('./apps.service')} */
 const service = await import(`file://${process.cwd()}/apps/apps.service.js`);
-/**@type{import('../server/server.service.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**
  * 
  * @param {number} app_id
@@ -30,6 +28,6 @@ const getAppsAdmin = async (app_id, query) => service.getAppsAdmin(app_id, query
  * @param {import('../types.js').res} res 
  * @returns 
  */
- const getAppMain = async (ip, host, user_agent, accept_language, url, query, res) => service.getAppMain(ip, host, user_agent, accept_language, url, query?query.get('reportid'):null, query?getNumberValue(query.get('messagequeue')):null, url.startsWith('/info/')?url.substring(6):null, res);
+ const getAppMain = async (ip, host, user_agent, accept_language, url, query, res) => service.getAppMain(ip, host, user_agent, accept_language, url, query?query.get('reportid'):null, url.startsWith('/info/')?url.substring(6):null, res);
 
 export{getApps, getAppsAdmin, getAppMain};

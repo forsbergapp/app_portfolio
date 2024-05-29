@@ -36,17 +36,17 @@ const startserver = async () =>{
 					case route('/mail/v1/mail/sendemail' , 'POST', URI_path, req.method):{
 						req.query.data = app_query.get('data') ?? '';
 						service.sendEmail(req.query.data)
-						.then((result)=>return_result(200, null, result, null, res))
-						.catch((error) =>return_result(500, error, null, null, res));
+						.then((result)=>return_result(200, null, result, res))
+						.catch((error) =>return_result(500, error, null, res));
 						break;
 					}
 					default:{
-						return_result(401, '⛔', null, null, res);
+						return_result(401, '⛔', null, res);
 					}
 				}
 			}
 			else
-				return_result(401, '⛔', null, null, res);
+				return_result(401, '⛔', null, res);
 		});
 	}).listen(request.port, ()=>{
 		console.log(`MICROSERVICE MAIL PORT ${request.port} `);

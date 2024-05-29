@@ -5,7 +5,7 @@
 	third party libraries and module dependencies for performance and better maintainability
 	with code you have control over.
 	Microservice architecture using circuitbreaker and message queue.
-	Services included are batch, geolocation, mail, PDF and worldcities.
+	Services included are batch, geolocation, mail and worldcities.
 	Continuous deployment implemented using batch server with scheduled git pull requests and automatic restart 
 	of Node.js using pm2 managed processes.
 	Runs in Node.js using Express framework.
@@ -71,7 +71,7 @@
 	- social network basic functionality with follow, like, follwed, liked and viewed including statistics
 	- Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js. Thirdparty javascript modules 
 	  should be converted from CommonJS to ECMAScript modules if necessary.
-	- report PDF with QR codes pixel perfect design using css pt font size measurement and full unicode support
+	- report with QR codes pixel perfect design using css pt font size measurement and full unicode support
 	- apps created using server side rendering
 	- database and file logging
 	- microservice arquitecture
@@ -196,7 +196,7 @@
 	User interface and timetables can be displayed in any language
 	and translation of user interface is fetched from translation objects data model.
 	
-	Server generated PDF and HTML generated timetables are pixel perfect designed using pt font sizes
+	Server generated reports with timetables are pixel perfect designed using pt font sizes
 	and timetable paper size supported are A4 and Letter.
 	Different application themes available from about dialogue.
 
@@ -208,9 +208,9 @@
 	They live in India so local settings including number system Devanagari numerals (deva in navigator) should be used.
 	Header and footer will contain some chinese and urdu with Nastaliq to provide information to guests.
 	Timetable shall include all timezones in the current and displayed in the same timetable.
-	To keep timetable modern some emojis will be displayed in the timetable. PDF url with QRCode will be shared
+	To keep timetable modern some emojis will be displayed in the timetable. Url with QRCode will be shared
 	on their social network and if the timetable is printed and on a wall, passing user can scan QR code with the url
-	to their phones and download PDF. Preview of future Hijri month Ramadan timetable will be sent by PDF.
+	to their phones.
 
 	Use case in the app:
 	User works remotely and can choose swedish as user preference displaying message in swedish and seeing 
@@ -223,9 +223,8 @@
 	User get swedish text messages and ui is in swedish and can see other languages in the timetable.
 	User choose to display both transliteration and translation in the timetable.
 	User change the arabic timetable to show numbersystem deva and display second calendar on timetable.
-	User can create pixel perfect PDF with any Unicode character incuding emojis and custom fonts according to theme chosen.
-	User can preview any past or future timetable date period in Gregorian or Hijri and can save to PDF or print.
-	User copies encoded PDF url (to secure privacy) in settings for day, month and year timetable to be shared.
+	User can preview any past or future timetable date period in Gregorian or Hijri and can print.
+	User copies encoded url (to secure privacy) in settings for day, month and year timetable to be shared.
 
 
 	4.App 3 - Presentation app
@@ -319,8 +318,6 @@
 
 	Javascript:
 		Hijri transliteration on Android.
-
-		Armenian language on Chrome or Chromium, use Edge or other for Puppeteer if needed.
 
 		Hanidec numbers Javascript bugs:
 

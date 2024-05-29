@@ -28,23 +28,23 @@ const startserver = async () =>{
 				switch (true){
 					case route('/geolocation/v1/geolocation/place' , 'GET', URI_path, req.method):{
 						service.getPlace(req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
-						.then((result)=>return_result(200, null, JSON.parse(result), null, res))
-						.catch((error) =>return_result(500, error, null, null, res));
+						.then((result)=>return_result(200, null, JSON.parse(result), res))
+						.catch((error) =>return_result(500, error, null, res));
 						break;
 					}
 					case route('/geolocation/v1/geolocation/ip' , 'GET', URI_path, req.method):{
 						service.getIp(req.query.data.ip, req.headers['accept-language'])
-						.then((result)=>return_result(200, null, JSON.parse(result), null, res))
-						.catch((error) =>return_result(500, error, null, null, res));
+						.then((result)=>return_result(200, null, JSON.parse(result), res))
+						.catch((error) =>return_result(500, error, null, res));
 						break;
 					}
 					default:{
-						return_result(401, '⛔', null, null, res);
+						return_result(401, '⛔', null, res);
 					}
 				}
 			}
 			else
-				return_result(401, '⛔', null, null, res);
+				return_result(401, '⛔', null, res);
 		});
 	}).listen(request.port, ()=>{
 		console.log(`MICROSERVICE GEOLOCATION PORT ${request.port} `);

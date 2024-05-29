@@ -1599,9 +1599,6 @@
  *              subject:            string,
  *              html:               string
  *              }}       microservice_data_mail
- * @typedef  {{ ps:string,
- *              hf:boolean,
- *              url:string}} microservice_data_pdf
  * 
  * MicroService Config
  * @typedef {{  PATH_DATA                                   : string,

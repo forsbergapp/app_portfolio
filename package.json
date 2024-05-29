@@ -13,7 +13,6 @@
     "oracledb": "^6.2.0",
     "pg": "^8.10.0",
     "praytimes": "^0.0.5",
-    "puppeteer": "^21.4.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
   },

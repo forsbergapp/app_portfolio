@@ -48,7 +48,6 @@ const template =`   <div id='toolbar_top'>
                                     <div class='setting_horizontal_col'>
                                         <div id='setting_data_user_url_day'>
                                             <div id='user_day_html' class='common_dialogue_button common_icon'> </div>
-                                            <div id='user_day_pdf' class='common_dialogue_button common_icon'> </div>
                                         </div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
@@ -61,7 +60,6 @@ const template =`   <div id='toolbar_top'>
                                     <div class='setting_horizontal_col'>
                                         <div id='setting_data_user_url_month'>
                                             <div id='user_month_html' class='common_dialogue_button common_icon'> </div>
-                                            <div id='user_month_pdf' class='common_dialogue_button common_icon'> </div>
                                         </div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
@@ -74,7 +72,6 @@ const template =`   <div id='toolbar_top'>
                                     <div class='setting_horizontal_col'>
                                         <div id='setting_data_user_url_year'>
                                             <div id='user_year_html' class='common_dialogue_button common_icon'> </div>
-                                            <div id='user_year_pdf' class='common_dialogue_button common_icon'> </div>
                                         </div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
