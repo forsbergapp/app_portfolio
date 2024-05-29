@@ -10,8 +10,9 @@ const {LogRequestI} = await import(`file://${process.cwd()}/server/log.service.j
 const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**@type{import('./config.service.js')} */
 const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./security.service.js')} */
+const {createUUID, createRequestId, createCorrelationId}= await import(`file://${process.cwd()}/server/security.service.js`);
 
-const {randomUUID, createHash} = await import('node:crypto');
 const fs = await import('node:fs');
 /**
  * Backend for frontend (BFF) init for all methods
@@ -44,11 +45,11 @@ const fs = await import('node:fs');
     else{
         //set headers
         res.setHeader('X-Response-Time', process.hrtime());
-        req.headers['X-Request-Id'] =  randomUUID().replaceAll('-','');
+        req.headers['X-Request-Id'] =  createUUID().replaceAll('-','');
         if (req.headers.authorization)
-            req.headers['X-Correlation-Id'] = createHash('md5').update(req.headers.authorization).digest('hex');
+            req.headers['X-Correlation-Id'] = createRequestId();
         else
-            req.headers['X-Correlation-Id'] = createHash('md5').update(req.hostname +  req.ip + req.method).digest('hex');
+            req.headers['X-Correlation-Id'] = createCorrelationId(req.hostname +  req.ip + req.method);
         res.setHeader('Access-Control-Max-Age','5');
         res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');

@@ -27,9 +27,8 @@ const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd
 const user_account_follow_service = await import(`file://${process.cwd()}/server/db/sql/user_account_follow.service.js`);
 /**@type{import('../sql/user_account_like.service.js')} */
 const user_account_like_service = await import(`file://${process.cwd()}/server/db/sql/user_account_like.service.js`);
-
-
-const { default: {compare} } = await import('bcrypt');
+/**@type{import('../../security.service.js')} */
+const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.service.js`);
 
 /**
  * 
@@ -120,7 +119,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                 client_latitude:    data.client_latitude ?? null,
                                 access_token:       null};
             if (result_login[0]) {
-                compare(data.password, result_login[0].password).then((result_password)=>{
+                PasswordCompare(data.password, result_login[0].password).then((result_password)=>{
                     data_body.result = Number(result_password);
                     if (result_password) {
                         if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
@@ -876,7 +875,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
     const result_user_event = await getLastUserEvent(app_id, resource_id, 'EMAIL_VERIFIED_CHANGE_EMAIL');
     return new Promise((resolve, reject)=>{
         if (result_user[0]) {
-            compare(data.password, result_user[0].password ?? '').then((result_compare)=>{
+            PasswordCompare(data.password, result_user[0].password ?? '').then((result_compare)=>{
                 if (result_compare){
                     let send_email=false;
                     if (data.new_email && data.new_email!=''){
@@ -1074,7 +1073,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                     service.checkPassword(app_id, resource_id)
                     .then((/**@type{import('../../../types.js').db_result_user_account_checkPassword[]}*/result_password)=>{
                         if (result_password[0]) {
-                            compare(data.password, result_password[0].password).then((result_password)=>{
+                            PasswordCompare(data.password, result_password[0].password).then((result_password)=>{
                                 if (result_password){
                                     service.deleteUser(app_id, resource_id)
                                     .then((/**@type{import('../../../types.js').db_result_user_account_deleteUser}*/result_delete)=>{

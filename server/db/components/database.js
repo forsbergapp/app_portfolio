@@ -59,7 +59,7 @@ const install_db_get_files = async (json_type) =>{
  */
  const Install = async (app_id, query)=> {
     /**@type{import('../../config.service.js')} */
-    const {CreateRandomString, ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
+    const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
     /**@type{import('../../db/db.service.js')} */
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     /**@type{import('../../log.service.js')} */
@@ -69,8 +69,8 @@ const install_db_get_files = async (json_type) =>{
     /**@type{import('../../db/common.service.js')} */
     const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
-    const {createHash} = await import('node:crypto');
-    const { default: {genSalt, hash} } = await import('bcrypt');
+    /**@type{import('../../security.service.js')} */
+	const {PasswordCreate, createSecret}= await import(`file://${process.cwd()}/server/security.service.js`);
     const fs = await import('node:fs');
 
     let count_statements = 0;
@@ -81,33 +81,32 @@ const install_db_get_files = async (json_type) =>{
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
     install_result.push({'start': new Date().toISOString()});
     /**
-     * 
      * @param {string} username 
      * @param {string} sql 
      * @returns [string,string]
      */
     const sql_with_password = async (username, sql) =>{
        let password;
-       //USER_ACCOUNT uses bcrypt, save as bcrypt but return sha256 password
-       //Database users use SHA256
-       password = createHash('sha256').update(CreateRandomString()).digest('hex');
+       
        if (db_use==4){
           // max 30 characters for passwords and without double quotes
           // also fix ORA-28219: password verification failed for mandatory profile
           // ! + random A-Z character
-          const random_characters = '!' + String.fromCharCode(0|Math.random()*26+97).toUpperCase();
-          password = password.substring(0,28) + random_characters;
+          password = createSecret(true, 30);
           //use singlequote for INSERT, else doublequote for CREATE USER
           if (sql.toUpperCase().includes('INSERT INTO'))
-             sql = sql.replace(password_tag, `'${await hash(password, await genSalt(10))}'`);
+             sql = sql.replace(password_tag, `'${await PasswordCreate(password)}'`);
           else
              sql = sql.replace(password_tag, `"${password}"`);
        }   
-       else
-          if (sql.toUpperCase().includes('INSERT INTO'))
-             sql = sql.replace(password_tag, `'${await hash(password, await genSalt(10))}'`);
-          else
-             sql = sql.replace(password_tag, `'${password}'`);
+       else{
+            password = createSecret();
+            if (sql.toUpperCase().includes('INSERT INTO'))
+                sql = sql.replace(password_tag, `'${await PasswordCreate(password)}'`);
+            else
+                sql = sql.replace(password_tag, `'${password}'`);
+       }
+          
        sql = sql.replace('<APP_USERNAME/>', username);
        install_result.push({[`${username}`]: password});         
        return [sql, password];
@@ -268,6 +267,7 @@ const install_db_get_files = async (json_type) =>{
                     default:{
                         const app_username = 'app_portfolio_app' + file[2];
                         if (users_row.sql.includes(password_tag)){
+                            
                             sql_and_pw = await sql_with_password(app_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
                             await ConfigAppSecretUpdate(file[2], {app_id:             file[2],
@@ -376,7 +376,7 @@ const install_db_get_files = async (json_type) =>{
         }      
     }
     //remove db users and password in apps.json
-    ConfigAppSecretDBReset(app_id);
+    ConfigAppSecretDBReset();
     LogServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {'info':[  { count    : count_statements},
                         {count_fail: count_statements_fail}
@@ -432,11 +432,15 @@ const install_db_get_files = async (json_type) =>{
     /**
      * Create demo users
      * @param {[import('../../../types.js').demo_user]} demo_users 
-     * @returns {Promise.<null>}
+     * @returns {Promise.<void>}
      */
     const create_users = async (demo_users) =>{
-        return await new Promise((resolve, reject)=>{
-            const create_update_id = (/**@type{import('../../../types.js').demo_user}*/demo_user)=>{
+            /**
+             * 
+             * @param {import('../../../types.js').demo_user} demo_user
+             * @returns 
+             */
+            const create_update_id = async demo_user=>{
             /**@type{import('../../../types.js').db_parameter_user_account_create}*/
                 const data_create = {   username:               demo_user.username,
                                         bio:                    demo_user.bio,
@@ -459,21 +463,15 @@ const install_db_get_files = async (json_type) =>{
                                         provider_email:         null,
                                         admin:                  1
                                     };
-                create(app_id, data_create)
-            .then((/**@type{import('../../../types.js').db_result_insert}*/result_create)=> {
-                demo_user.id = result_create.insertId;
-                records_user_account++;
-                if (records_user_account == demo_users.length)
-                    resolve(null);
-            })
-            .catch((/**@type{import('../../../types.js').error}*/err)=> {
-                reject(err);
-            });
+                return await create(app_id, data_create)
+                                .catch((/**@type{import('../../../types.js').error}*/err)=> {
+                                    throw err;
+                                });
             };
             for (const demo_user of demo_users){
-                create_update_id(demo_user);
+                demo_user.id = await create_update_id(demo_user).then(user=>user.insertId);
+                records_user_account++;
             }
-        });
     };
     /**
      * Create user account app
@@ -521,7 +519,7 @@ const install_db_get_files = async (json_type) =>{
         SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username})));
         install_count++;
         //create user_account_app record for all apps
-        for (const app of apps){
+        for (const app of apps.rows){
             await create_user_account_app(app.id, demo_user.id);
         }
         for (const demo_user_account_app_data_post of demo_user.settings){
@@ -791,14 +789,14 @@ const DemoUninstall = async (app_id, query)=> {
         getDemousers(app_id)
         .then((/**@type{import('../../../types.js').db_result_user_account_getDemousers[]}*/result_demo_users) =>{
             let deleted_user = 0;
-            if (result_demo_users.length>0){
+            if (result_demo_users.rows.length>0){
                 const delete_users = async () => {
-                    for (const user of result_demo_users){
+                    for (const user of result_demo_users.rows){
                         SocketSendSystemAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username})));
                         await deleteUser(app_id, user.id)
                         .then(()=>{
                             deleted_user++;
-                            if (deleted_user == result_demo_users.length)
+                            if (deleted_user == result_demo_users.rows.length)
                                 return null;
                         })
                         .catch((/**@type{import('../../../types.js').error}*/error)=>{
@@ -816,8 +814,8 @@ const DemoUninstall = async (app_id, query)=> {
                 });
             }
             else{
-                LogServerI(`Demo uninstall count: ${result_demo_users.length}`);
-                resolve({'info': [{'count': result_demo_users.length}]});
+                LogServerI(`Demo uninstall count: ${result_demo_users.rows.length}`);
+                resolve({'info': [{'count': result_demo_users.rows.length}]});
             }
         })
         .catch((/**@type{import('../../../types.js').error}*/error)=>{
