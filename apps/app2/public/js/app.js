@@ -430,7 +430,7 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
         module_parameters += `&uid_view=${uid_view}`;
     }
     const language_parameter = `&lang_code=${common.COMMON_GLOBAL.user_locale}`;
-    const service_parameter = `&format=${format}&ps=${papersize}&hf=0`; //html/pdf, papersize, header/footer
+    const service_parameter = `&format=${format}&ps=${papersize}&hf=0`; //html, papersize, header/footer
     const encodedurl = common.toBase64( report_module +
                                         module_parameters + 
                                         language_parameter +
@@ -1318,22 +1318,6 @@ const user_setting_link = (item) => {
                         iframe_class:APP_GLOBAL.user_settings[select_user_setting.selectedIndex].design_paper_size}, '/common/component/window_info.js');
             break;
         }
-        case 'user_day_pdf':
-        case 'user_month_pdf':
-        case 'user_year_pdf':{
-            const url = get_report_url(user_account_id, 
-                                     sid, 
-                                     APP_GLOBAL.user_settings[select_user_setting.selectedIndex].design_paper_size,
-                                     item.id,
-                                     'PDF');
-            common.ComponentRender('common_window_info',
-                    {   info:2,
-                        url:null,
-                        content_type:'PDF', 
-                        iframe_content:url,
-                        iframe_class:APP_GLOBAL.user_settings[select_user_setting.selectedIndex].design_paper_size}, '/common/component/window_info.js');
-            break;
-        }
     }
 };
 /**
@@ -2205,11 +2189,8 @@ const app_event_click = event => {
                     break;
                 }
                 case 'user_day_html':        
-                case 'user_day_pdf':
                 case 'user_month_html':
-                case 'user_month_pdf':
-                case 'user_year_html':
-                case 'user_year_pdf':{
+                case 'user_year_html':{
                     user_setting_link(AppDocument.querySelector('#' + event_target_id));
                     break;
                 }

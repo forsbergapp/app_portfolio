@@ -13,7 +13,7 @@ const startserver = async () =>{
 	const request = await MicroServiceServer('BATCH');
 		
 	request.server.createServer(request.options, (/**@type{import('../../types').req_microservice}*/req, /**@type{import('../../types').res_microservice}*/res) => {
-		return_result(401, '⛔', null, null, res);
+		return_result(401, '⛔', null, res);
 	}).listen(request.port, ()=>{
 		console.log(`MICROSERVICE BATCH PORT ${request.port} `);
 	});

@@ -48,15 +48,6 @@
                 "<node_internals>/**"
             ],
             "type": "node"
-        },    
-        {
-            "name": "Microservice PDF",
-            "program": "${workspaceFolder}/microservice/pdf/server.js",
-            "request": "launch",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "type": "node"
         }
     ]
 }

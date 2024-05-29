@@ -93,11 +93,8 @@
 #setting_icon_user_url_year::before{						content:var(--common_app_icon_regional_year)}
     
 #user_day_html::before{										content:var(--common_app_icon_html)}
-#user_day_pdf::before{										content:var(--common_app_icon_pdf)}
 #user_month_html::before{									content:var(--common_app_icon_html)}
-#user_month_pdf::before{									content:var(--common_app_icon_pdf)}
 #user_year_html::before{									content:var(--common_app_icon_html)}
-#user_year_pdf::before{										content:var(--common_app_icon_pdf)}
     
 #setting_btn_user_save::before{								content:var(--common_app_icon_save)}
 #setting_btn_user_add::before{								content:var(--common_app_icon_add)}
