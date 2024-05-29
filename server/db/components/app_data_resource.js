@@ -20,8 +20,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  */
 const MasterGet = (app_id, query, user_null=false) => app_data_resource_master.get(app_id, 
                                                                   getNumberValue(query.get('id')), 
-                                                                  getNumberValue(query.get('user_account_id')), 
-                                                                  getNumberValue(query.get('app_id')), 
+                                                                  getNumberValue(query.get('user_account_id')),
                                                                   getNumberValue(query.get('data_app_id')), 
                                                                   query.get('resource_name'),
                                                                   query.get('entity_id'),
@@ -49,9 +48,10 @@ const MasterGet = (app_id, query, user_null=false) => app_data_resource_master.g
  * 
  * @param {number} app_id 
  * @param {number} resource_id
+ * @param {*}      data
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_master_delete[]>}
  */
-  const MasterDelete = (app_id, resource_id) => app_data_resource_master.deleteRecord(app_id, resource_id).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+  const MasterDelete = (app_id, resource_id, data) => app_data_resource_master.deleteRecord(app_id, resource_id, data).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
  
 /**
  * 
@@ -63,8 +63,7 @@ const MasterGet = (app_id, query, user_null=false) => app_data_resource_master.g
  const DetailGet = (app_id, query, user_null=false) => app_data_resource_detail.get( app_id, 
                                                                     getNumberValue(query.get('id')), 
                                                                     getNumberValue(query.get('master_id')), 
-                                                                    getNumberValue(query.get('user_account_id')), 
-                                                                    getNumberValue(query.get('user_account_app_id')), 
+                                                                    getNumberValue(query.get('user_account_id')),
                                                                     getNumberValue(query.get('data_app_id')), 
                                                                     query.get('resource_name'),
                                                                     query.get('entity_id'),
@@ -93,9 +92,10 @@ const MasterGet = (app_id, query, user_null=false) => app_data_resource_master.g
  * 
  * @param {number} app_id 
  * @param {number} resource_id
+ * @param {*} data
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_delete[]>}
  */
- const DetailDelete = (app_id, resource_id) => app_data_resource_detail.deleteRecord(app_id, resource_id).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+ const DetailDelete = (app_id, resource_id, data) => app_data_resource_detail.deleteRecord(app_id, resource_id, data).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 
  /**
  * 
@@ -106,8 +106,7 @@ const MasterGet = (app_id, query, user_null=false) => app_data_resource_master.g
  */
 const DataGet = (app_id, query, user_null=false) => app_data_resource_detail_data.get( app_id, 
                                                                       getNumberValue(query.get('id')), 
-                                                                      getNumberValue(query.get('user_account_id')), 
-                                                                      getNumberValue(query.get('app_id')), 
+                                                                      getNumberValue(query.get('user_account_id')),
                                                                       getNumberValue(query.get('data_app_id')), 
                                                                       query.get('resource_name'),
                                                                       query.get('resource_name_master_attribute'),
@@ -119,7 +118,7 @@ const DataGet = (app_id, query, user_null=false) => app_data_resource_detail_dat
 /**
  * 
  * @param {number} app_id 
- * @param {*} data
+ * @param {*}      data
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_data_post[]>}
  */
 const DataPost = (app_id, data) => app_data_resource_detail_data.post(app_id, data).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
@@ -128,7 +127,7 @@ const DataPost = (app_id, data) => app_data_resource_detail_data.post(app_id, da
  * 
  * @param {number} app_id 
  * @param {number} resource_id
- * @param {*} data
+ * @param {*}      data
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_data_update[]>}
  */
  const DataUpdate = (app_id, resource_id, data) => app_data_resource_detail_data.update(app_id, resource_id, data).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
@@ -137,9 +136,10 @@ const DataPost = (app_id, data) => app_data_resource_detail_data.post(app_id, da
  * 
  * @param {number} app_id 
  * @param {number} resource_id
+ * @param {*}      data
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_data_delete[]>}
  */
-const DataDelete = (app_id, resource_id) => app_data_resource_detail_data.deleteRecord(app_id, resource_id).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+const DataDelete = (app_id, resource_id, data) => app_data_resource_detail_data.deleteRecord(app_id, resource_id, data).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 
 export{ MasterGet,  MasterPost, MasterUpdate,   MasterDelete,
         DetailGet,  DetailPost, DetailUpdate,   DetailDelete,

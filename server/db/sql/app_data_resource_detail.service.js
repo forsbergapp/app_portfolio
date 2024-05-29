@@ -10,7 +10,6 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number|null} resource_id
  * @param {number|null} master_id
  * @param {number|null} user_account_id
- * @param {number|null} user_account_app_id
  * @param {number|null} data_app_id
  * @param {string|null} resource_name
  * @param {number|null} entity_id
@@ -18,7 +17,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {boolean|null} user_null
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_get[]>}
  */
- const get = async (app_id, resource_id, master_id, user_account_id, user_account_app_id, data_app_id, resource_name, entity_id, locale, user_null) => {
+ const get = async (app_id, resource_id, master_id, user_account_id, data_app_id, resource_name, entity_id, locale, user_null) => {
     const sql = `SELECT adrd.id                                                         "id",
                         adrd.json_data                                                  "json_data",
                         adrd.app_data_resource_master_id                                "app_data_resource_master_id",
@@ -63,8 +62,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                     AND (adrm.id                                                = :resource_id OR :resource_id IS NULL)
                     AND (adrm.id                                                = :master_id OR :master_id IS NULL)
                     AND ((adrm.user_account_app_user_account_id                 = :user_account_id &&
-                          adrm.user_account_app_app_id                          = :user_account_app_id) OR 
-                         (:user_account_id IS NULL && :user_account_app_id IS NULL))          
+                          adrm.user_account_app_app_id                          = :user_account_app_id) OR :user_account_id IS NULL)          
                     AND ((adrm.user_account_app_user_account_id                 = NULL && :user_null=1) OR :user_null=0)
                     AND (adrm.app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)
                     AND (as.value                                               = :resource_name OR :resource_name IS NULL)
@@ -72,7 +70,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
     const parameters = {resource_id         : resource_id,
                         master_id           : master_id,
                         user_account_id     : user_account_id,
-                        user_account_app_id : user_account_app_id,
+                        user_account_app_id : user_account_id?data_app_id:null,
                         data_app_id         : data_app_id,
                         resource_name       : resource_name,
                         entity_id           : entity_id,
@@ -87,19 +85,29 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_post[]>}
  */
  const post = async (app_id, data) => {
-    const sql = `INSERT INTO <DB_SCHEMA/>.app_data_resource_detail (json_data, app_data_resource_master_id,app_data_entity_resource_id, 
-                                                                    app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id,app_data_resource_master_attribute_id)
-                    VALUES( :json_data, 
-                            :app_data_resource_master_id, 
-                            :app_data_entity_resource_id, 
-                            :app_data_entity_resource_app_data_entity_app_id, 
-                            :app_data_entity_resource_app_data_entity_id,
-                            :app_data_resource_master_attribute_id)
-`;
+    const sql = `INSERT INTO <DB_SCHEMA/>.app_data_resource_detail (json_data, 
+                                                                    app_data_resource_master_id,
+                                                                    app_data_entity_resource_id, 
+                                                                    app_data_entity_resource_app_data_entity_app_id, 
+                                                                    app_data_entity_resource_app_data_entity_id,
+                                                                    app_data_resource_master_attribute_id)
+                    SELECT :json_data, 
+                           :app_data_resource_master_id, 
+                           :app_data_entity_resource_id, 
+                           adrm.app_data_entity_resource_app_data_entity_app_id,
+                           :app_data_entity_resource_app_data_entity_id,
+                           :app_data_resource_master_attribute_id
+                      FROM <DB_SCHEMA/>.app_data_resource_master adrm
+                     WHERE adrm.id                                              = :app_data_resource_master_id
+                       AND (adrm.app_data_entity_resource_app_data_entity_app_id = :data_app_id OR :data_app_id IS NULL)
+                       AND ((adrm.user_account_app_user_account_id   = :user_account_id &&
+                             adrm.user_account_app_app_id            = :user_account_app_id) OR :user_account_id IS NULL))`;
     const parameters = {json_data                                       : JSON.stringify(data.json_data),
                         app_data_resource_master_id                     : data.app_data_resource_master_id,
                         app_data_entity_resource_id                     : data.app_data_entity_resource_id,
-                        app_data_entity_resource_app_data_entity_app_id : data.app_data_entity_resource_app_data_entity_app_id,
+                        user_account_id                                 : data.user_account_id,
+                        user_account_app_id                             : data.user_account_id?data.data_app_id:null,
+                        data_app_id                                     : data.data_app_id,
                         app_data_entity_resource_app_data_entity_id     : data.app_data_entity_resource_app_data_entity_id,
                         app_data_resource_master_attribute_id           : data.app_data_resource_master_attribute_id,
                         };
@@ -114,21 +122,30 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_update[]>}
  */
  const update = async (app_id, resource_id, data) => {
-    const sql = `UPDATE <DB_SCHEMA/>.app_data_resource_detail 
-                    SET json_data                                       = :json_data, 
-                        app_data_resource_master_id                     = :app_data_resource_master_id, 
-                        app_data_entity_resource_id                     = :app_data_entity_resource_id, 
-                        app_data_entity_resource_app_data_entity_app_id = :app_data_entity_resource_app_data_entity_app_id, 
-                        app_data_entity_resource_app_data_entity_id     = :app_data_entity_resource_app_data_entity_id,
-                        app_data_resource_master_attribute_id           = :app_data_resource_master_attribute_id
-                  WHERE id = :resource_id`;
-    const parameters = {resource_id:                                        resource_id,
-                        json_data:                                          JSON.stringify(data.json_data),
-                        app_data_resource_master_id                         :data.app_data_resource_master_id, 
-                        app_data_entity_resource_id                         :data.app_data_entity_resource_id, 
-                        app_data_entity_resource_app_data_entity_app_id     :data.app_data_entity_resource_app_data_entity_app_id, 
-                        app_data_entity_resource_app_data_entity_id         :data.app_data_entity_resource_app_data_entity_id,
-                        app_data_resource_master_attribute_id               :data.app_data_resource_master_attribute_id
+    const sql = `UPDATE <DB_SCHEMA/>.app_data_resource_detail adrd
+                    SET adrd.json_data                                       = :json_data, 
+                        adrd.app_data_resource_master_id                     = :app_data_resource_master_id, 
+                        adrd.app_data_entity_resource_id                     = :app_data_entity_resource_id, 
+                        adrd.app_data_entity_resource_app_data_entity_app_id = adrd.app_data_entity_resource_app_data_entity_app_id,
+                        adrd.app_data_entity_resource_app_data_entity_id     = :app_data_entity_resource_app_data_entity_id,
+                        adrd.app_data_resource_master_attribute_id           = :app_data_resource_master_attribute_id
+                  WHERE adrd.id = :resource_id
+                    AND (adrd.app_data_entity_resource_app_data_entity_app_id = :data_app_id OR :data_app_id IS NULL)
+                    AND EXISTS (SELECT NULL
+                                  FROM <DB_SCHEMA/>.app_data_resource_master adrm
+                                 WHERE adrm.id                                              = adrd.app_data_resource_master_id
+                                   AND adrm.app_data_entity_resource_app_data_entity_app_id = adrd.app_data_entity_resource_app_data_entity_app_id
+                                   AND ((adrm.user_account_app_user_account_id   = :user_account_id &&
+                                         adrm.user_account_app_app_id            = :user_account_app_id) OR :user_account_id IS NULL))`;
+    const parameters = {resource_id:                                resource_id,
+                        json_data:                                  JSON.stringify(data.json_data),
+                        app_data_resource_master_id                 :data.app_data_resource_master_id, 
+                        app_data_entity_resource_id                 :data.app_data_entity_resource_id, 
+                        user_account_id                             :data.user_account_id,
+                        user_account_app_id                         :data.user_account_id?data.data_app_id:null,
+                        data_app_id                                 :data.data_app_id, 
+                        app_data_entity_resource_app_data_entity_id :data.app_data_entity_resource_app_data_entity_id,
+                        app_data_resource_master_attribute_id       :data.app_data_resource_master_attribute_id
                         };
     return await db_execute(app_id, sql, parameters);
 };
@@ -137,12 +154,23 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * 
  * @param {number} app_id
  * @param {number} resource_id
+ * @param {*} data
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_delete[]>}
  */
- const deleteRecord = async (app_id, resource_id) => {
-    const sql = `DELETE FROM <DB_SCHEMA/>.app_data_resource_detail 
-                    WHERE id = :resource_id`;
-    const parameters = {resource_id: resource_id};
+ const deleteRecord = async (app_id, resource_id, data) => {
+    const sql = `DELETE FROM <DB_SCHEMA/>.app_data_resource_detail adrd
+                  WHERE adrd.id = :resource_id
+                    AND (adrd.app_data_entity_resource_app_data_entity_app_id = :data_app_id OR :data_app_id IS NULL)
+                    AND EXISTS (SELECT NULL
+                                  FROM <DB_SCHEMA/>.app_data_resource_master adrm
+                                 WHERE adrm.id                                              = adrd.app_data_resource_master_id
+                                   AND adrm.app_data_entity_resource_app_data_entity_app_id = adrd.app_data_entity_resource_app_data_entity_app_id
+                                   AND ((adrm.user_account_app_user_account_id   = :user_account_id &&
+                                         adrm.user_account_app_app_id            = :user_account_app_id) OR :user_account_id IS NULL))`;
+    const parameters = {resource_id         :resource_id,
+                        user_account_id     :data.user_account_id,
+                        user_account_app_id :data.user_account_id?data.data_app_id:null,
+                        data_app_id         :data.data_app_id};
     return await db_execute(app_id, sql, parameters);
 };
 export{get, post, update, deleteRecord};
