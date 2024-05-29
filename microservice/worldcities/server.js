@@ -26,29 +26,29 @@ const startserver = async () =>{
 				switch (true){
 					case route('/worldcities/v1/worldcities/city' , 'GET', URI_path, req.method):{
 						service.getCitySearch(decodeURI(req.query.data.search), req.query.data.limit)
-						.then((result)=>return_result(200, null, result, null, res))
-						.catch((error) =>return_result(500, error, null, null, res));
+						.then((result)=>return_result(200, null, result, res))
+						.catch((error) =>return_result(500, error, null, res));
 						break;
 					}
 					case route('/worldcities/v1/worldcities/city-random' , 'GET', URI_path, req.method):{
 						service.getCityRandom()
-						.then((result)=>return_result(200, null, result, null, res))
-						.catch((error) =>return_result(500, error, null, null, res));
+						.then((result)=>return_result(200, null, result, res))
+						.catch((error) =>return_result(500, error, null, res));
 						break;
 					}
 					case route(`/worldcities/v1/worldcities/country/${resource_id_string}` , 'GET', URI_path, req.method):{
 						service.getCities(resource_id_get(URI_path))
-						.then((result)=>return_result(200, null, result, null, res))
-						.catch((error) =>return_result(500, error, null, null, res));
+						.then((result)=>return_result(200, null, result, res))
+						.catch((error) =>return_result(500, error, null, res));
 						break;
 					}
 					default:{
-						return_result(401, '⛔', null, null, res);
+						return_result(401, '⛔', null, res);
 					}
 				}
 			}
 			else
-				return_result(401, '⛔', null, null, res);
+				return_result(401, '⛔', null, res);
 		});
 	}).listen(request.port, ()=>{
 		console.log(`MICROSERVICE WORLDCITIES PORT ${request.port} `);

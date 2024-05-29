@@ -35,7 +35,7 @@ const route = (route_path, route_method, request_path , request_method) =>
 
 /**
  * 
- * @param {'GEOLOCATION'|'WORLDCITIES'|'MAIL'|'PDF'} service 
+ * @param {'GEOLOCATION'|'WORLDCITIES'|'MAIL'} service 
  * @returns {number}
  */
  const microservice_api_version = service =>{
@@ -168,10 +168,9 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  * @param {number} code 
  * @param {string|null} error 
  * @param {*} result 
- * @param {*} pdf
  * @param {import('../types.js').res_microservice} res
  */
- const return_result = (code, error, result, pdf, res)=>{
+ const return_result = (code, error, result, res)=>{
     res.statusCode = code;
     if (error){
         console.log(error);
@@ -185,14 +184,8 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
         res.write(message, 'utf8');
     }
     else{
-        if (pdf){
-            res.setHeader('Content-Type',  'application/pdf');
-            res.write(pdf);
-        }
-        else{
-            res.setHeader('Content-Type',  'application/json; charset=utf-8');
-            res.write(JSON.stringify(result), 'utf8');
-        }
+        res.setHeader('Content-Type',  'application/json; charset=utf-8');
+        res.write(JSON.stringify(result), 'utf8');
     }
     res.end();
 };
@@ -337,8 +330,6 @@ const httpRequest = async (service, path, query, method, timeout, client_ip, aut
 const MessageQueue = async (service, message_type, message, message_id) => {
     /**@type{import('../microservice/mail/service.js')} */
     const {sendEmail} = await import(`file://${process.cwd()}/microservice/mail/service.js`);
-    /**@type{import('../microservice/pdf/service.js')} */
-    const {getPDF} = await import(`file://${process.cwd()}/microservice/pdf/service.js`);
     return new Promise((resolve, reject) =>{
         /**
          * 
@@ -434,38 +425,6 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                             reject(error);
                                         });
                                     });
-                                })
-                                .catch((/**@type{import('../types.js').error}*/error)=>{
-                                    write_file(0, message_consume, error)
-                                    .then(()=>{
-                                        reject (error);
-                                    })
-                                    .catch((/**@type{import('../types.js').error}*/error)=>{
-                                        reject(error);
-                                    });
-                                });
-                                break;
-                            }
-                            case 'PDF':{
-                                message_consume.start = new Date().toISOString();
-                                getPDF(message_consume.message).then((/**@type{string}*/pdf)=>{
-                                    message_consume.finished = new Date().toISOString();
-                                    message_consume.result = 'PDF';
-                                    //write to message_queue_consume.json
-                                    write_file(2, message_consume, 'PDF')
-                                    .then(()=>{
-                                        resolve(pdf);
-                                    })
-                                    .catch((/**@type{import('../types.js').error}*/error)=>{
-                                        write_file(0, message_consume, error)
-                                        .then(()=>{
-                                            reject (error);
-                                        })
-                                        .catch((/**@type{import('../types.js').error}*/error)=>{
-                                            reject(error);
-                                        });
-                                    });
-                                    
                                 })
                                 .catch((/**@type{import('../types.js').error}*/error)=>{
                                     write_file(0, message_consume, error)

@@ -881,10 +881,6 @@ const COMMON = {
                         resolve(call_microservice(  routesparameters.app_id, `/mail/v${microservice_api_version('MAIL')}${routesparameters.route_path}`, URI_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/pdf`, 'GET'):{
-                        resolve(call_microservice(  routesparameters.app_id, `/pdf/v${microservice_api_version('PDF')}${routesparameters.route_path}`, URI_query));
-                        break;
-                    }
                     default:{
                         
                         if (resource_id_not_authorized){

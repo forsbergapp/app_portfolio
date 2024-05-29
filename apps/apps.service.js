@@ -484,12 +484,9 @@ const getAppBFF = async (app_id, app_parameters) =>{
  * @param {string} user_agent 
  * @param {string} accept_language 
  * @param {string} reportid
- * @param {number} messagequeue
  * @returns {Promise.<{type: string, report:string}>}
  */
-const getReport = async (app_id, ip, user_agent, accept_language, reportid, messagequeue) => {
-    /**@type{import('../microservice/microservice.service.js')} */
-    const { MessageQueue } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const getReport = async (app_id, ip, user_agent, accept_language, reportid) => {
     /**@type{import('../server/iam.service.js')} */
     const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
     await AuthorizeTokenApp(app_id, ip);
@@ -505,82 +502,28 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid, mess
     query_parameters += '}';
     /** @type {import('../types.js').report_query_parameters}*/
     const query_parameters_obj = JSON.parse(query_parameters);
-    const ps = query_parameters_obj.ps; //papersize     A4/Letter
-    const hf = (query_parameters_obj.hf==1); //header/footer 1/0    1= true
-    
-    const use_message_queue = (getNumberValue(ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_PDF_METHOD' in parameter)[0].APP_PDF_METHOD)==1);
-    
-    const host =    (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://') + 
-                    ConfigGetApp(app_id, app_id, 'SUBDOMAIN') + '.' +  
-                    ConfigGet('SERVER', 'HOST') + ':' + 
-                    (getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT')));
 
-    if (use_message_queue && query_parameters_obj.format.toUpperCase() == 'PDF' && messagequeue == null ){
-        //PDF
-        const url = `${host}/app-reports?ps=${ps}&hf=${hf}&reportid=${reportid}&messagequeue=1`;
-        //call message queue
-        
-        return {type:'PDF',
-                report:await MessageQueue('PDF', 'PUBLISH', {url:url, ps:ps, hf:hf}, null)
-                .catch((/**@type{import('../types.js').error}*/error)=>{
-                        throw error;
-                })};
-    }
-    else
-        if (use_message_queue==false && query_parameters_obj.format.toUpperCase() == 'PDF'){
-            query_parameters_obj.format = 'HTML';
-            
-            const ps = query_parameters_obj.ps; //papersize     A4/Letter
-            const hf = getNumberValue(query_parameters_obj.hf); //header/footer 1/0    1= true
-            delete query_parameters_obj.ps;
-            delete query_parameters_obj.hf;
-            /**@type{import('../server/bff.service.js')} */
-            const { BFF_server } = await import(`file://${process.cwd()}/server/bff.service.js`);
-            const url = host + 
-                        '/app-reports?reportid=' +
-                        Buffer.from(Object.entries(query_parameters_obj).reduce((/**@type{*}*/total, current)=>total += (total==''?'':'&') + current[0] + '=' + current[1],''),'utf-8').toString('base64');
-            /**@type{import('../types.js').bff_parameters}*/
-            const parameters = {endpoint:'SERVER_REPORT',
-                                host:null,
-                                url:'/pdf',
-                                route_path:'/pdf',
-                                method:'GET', 
-                                query:`url=${Buffer.from(url,'utf-8').toString('base64')}&ps=${ps}&hf=${hf}`,
-                                body:{},
-                                authorization:null,
-                                ip:ip, 
-                                user_agent:user_agent, 
-                                accept_language:accept_language,
-                                /**@ts-ignore */
-                                res:null};
-            const pdf = await BFF_server(app_id, parameters).catch((/**@type{import('../types.js').error}*/error)=>error);
-            return {    type:'PDF',
-                        report:pdf
-                    };
-        }
-        else{
-            const report_common_html = render_report_html(app_id);
-            /**@type{import('../types.js').report_create_parameters} */
-            const data = {  app_id:         app_id,
-                            reportid:       reportid,
-                            ip:             ip,
-                            user_agent:     user_agent,
-                            accept_language:accept_language,
-                            latitude:       result_geodata.latitude,
-                            longitude:      result_geodata.longitude};
-            const report_path = ConfigGetApps(app_id, 'RENDER_CONFIG')[0].RENDER_CONFIG.RENDER_FILES.filter((/**@type{*}*/file)=>file[0]=='REPORT' && file[1]==query_parameters_obj.module)[0][3]
-            const {default:RunReport} = await import(`file://${process.cwd()}${report_path}`);
-            /**@type{{report:string,
-             *        papersize:string}} */
-            const report_data = await RunReport(data);
+    const report_common_html = render_report_html(app_id);
+    /**@type{import('../types.js').report_create_parameters} */
+    const data = {  app_id:         app_id,
+                    reportid:       reportid,
+                    ip:             ip,
+                    user_agent:     user_agent,
+                    accept_language:accept_language,
+                    latitude:       result_geodata.latitude,
+                    longitude:      result_geodata.longitude};
+    const report_path = ConfigGetApps(app_id, 'RENDER_CONFIG')[0].RENDER_CONFIG.RENDER_FILES.filter((/**@type{*}*/file)=>file[0]=='REPORT' && file[1]==query_parameters_obj.module)[0][3]
+    const {default:RunReport} = await import(`file://${process.cwd()}${report_path}`);
+    /**@type{{report:string,
+     *        papersize:string}} */
+    const report_data = await RunReport(data);
 
-            /** @type {[string, string][]} */
-            const render_variables = [];
-            render_variables.push(['REPORT_PAPERSIZE_CLASSNAME',report_data.papersize]);
-            return {    type:'HTML',
-                        report:render_app_with_data(report_common_html, render_variables).replace('<REPORT/>', report_data.report)
-                    };
-        }
+    /** @type {[string, string][]} */
+    const render_variables = [];
+    render_variables.push(['REPORT_PAPERSIZE_CLASSNAME',report_data.papersize]);
+    return {    type:'HTML',
+                report:render_app_with_data(report_common_html, render_variables).replace('<REPORT/>', report_data.report)
+            };
 };
 /**
  * 
@@ -904,11 +847,10 @@ const getAssetFile = (app_id, url, basepath, res) =>{
  * @param {string} accept_language
  * @param {string} url
  * @param {string} reportid
- * @param {number} messagequeue
- * @param {'privacy_policy'|'disclaimer'|'terms'|'about'} info
+ * @param {'privacy_policy'|'disclaimer'|'terms'|'about'|null} info
  * @param {import('../types.js').res|null} res
  */
-const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, messagequeue, info, res) =>{
+const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, info, res) =>{
     const host_no_port = host.substring(0,host.indexOf(':')==-1?host.length:host.indexOf(':'));
     const app_id = ConfigGetAppHost(host_no_port);
     if (app_id==null || res==null ){
@@ -950,10 +892,8 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                                 });
             }
             case (url.toLowerCase().startsWith('/app-reports')):{
-                return await getReport(app_id, ip, user_agent, accept_language, reportid, messagequeue)
+                return await getReport(app_id, ip, user_agent, accept_language, reportid)
                                 .then((report_result)=>{
-                                    if (report_result.type=='PDF')
-                                        res.type('application/pdf');
                                     return report_result.report;
                                 });
             }
