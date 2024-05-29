@@ -9,7 +9,6 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number}      app_id 
  * @param {number|null} resource_id
  * @param {number|null} user_account_id
- * @param {number|null} user_account_app_id
  * @param {number|null} data_app_id
  * @param {string|null} resource_name
  * @param {number|null} entity_id
@@ -17,7 +16,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {boolean|null} user_null
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_master_get[]>}
  */
-const get = async (app_id, resource_id, user_account_id, user_account_app_id, data_app_id, resource_name, entity_id, locale, user_null) => {
+const get = async (app_id, resource_id, user_account_id, data_app_id, resource_name, entity_id, locale, user_null) => {
 		const sql = `SELECT adrm.id                                                 "id",
                             adrm.json_data                                          "json_data",
                             adrm.user_account_app_user_account_id                   "user_account_app_user_account_id",
@@ -40,15 +39,13 @@ const get = async (app_id, resource_id, user_account_id, user_account_app_id, da
                         AND as.app_setting_type_app_id  = ader.app_data_entity_app_id
                         AND (adrm.id                                                = :resource_id OR :resource_id IS NULL)
                         AND ((adrm.user_account_app_user_account_id                 = :user_account_id &&
-                              adrm.user_account_app_app_id                          = :user_account_app_id) OR 
-                             (:resource_id_user_account_id IS NULL && :resource_id_app_id IS NULL))
+                              adrm.user_account_app_app_id                          = :data_app_id) OR :user_account_id IS NULL)
                         AND ((adrm.user_account_app_user_account_id                 = NULL && :user_null=1) OR :user_null=0)
                         AND (adrm.app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)
                         AND (adrm.app_data_entity_resource_app_data_entity_id       = :entity_id OR :entity_id IS NULL)
                         AND (as.value                                               = :resource_name OR :resource_name IS NULL)`;
 		const parameters = {resource_id: resource_id,
                             user_account_id: user_account_id,
-                            user_account_app_id: user_account_app_id,
                             data_app_id: data_app_id,
                             entity_id: entity_id,
                             resource_name: resource_name,
@@ -64,21 +61,24 @@ const get = async (app_id, resource_id, user_account_id, user_account_app_id, da
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_master_post[]>}
  */
 const post = async (app_id, data) => {
-    const sql = `INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, 
-                                                                    app_data_entity_resource_app_data_entity_app_id,app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id)
+    const sql = `INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, 
+                                                                    user_account_app_user_account_id, 
+                                                                    user_account_app_app_id, 
+                                                                    app_data_entity_resource_app_data_entity_app_id,
+                                                                    app_data_entity_resource_app_data_entity_id, 
+                                                                    app_data_entity_resource_id)
                     VALUES( :json_data, 
-                            :user_account_app_user_account_id, 
-                            :user_account_app_app_id, 
-                            :app_data_entity_resource_app_data_entity_app_id,
+                            :user_account_id, 
+                            :user_account_app_id, 
+                            :data_app_id,
                             :app_data_entity_resource_app_data_entity_id, 
-                            :app_data_entity_resource_id)
-`;
-    const parameters = {json_data                                       : JSON.stringify(data.json_data),
-                        user_account_app_user_account_id                : data.user_account_app_user_account_id,
-                        user_account_app_app_id                         : data.user_account_app_app_id,
-                        app_data_entity_resource_app_data_entity_app_id : data.app_data_entity_resource_app_data_entity_app_id,
-                        app_data_entity_resource_app_data_entity_id     : data.app_data_entity_resource_app_data_entity_id,
-                        app_data_entity_resource_id                     : data.app_data_entity_resource_id
+                            :app_data_entity_resource_id)`;
+    const parameters = {json_data                                   : JSON.stringify(data.json_data),
+                        user_account_id                             : data.user_account_id,
+                        user_account_app_id                         : data.user_account_id?data.user_account_app_id:null,
+                        data_app_id                                 : data.data_app_id,
+                        app_data_entity_resource_app_data_entity_id : data.app_data_entity_resource_app_data_entity_id,
+                        app_data_entity_resource_id                 : data.app_data_entity_resource_id
                         };
     return await db_execute(app_id, sql, parameters);
 };
@@ -93,17 +93,20 @@ const post = async (app_id, data) => {
  const update = async (app_id, resource_id, data) => {
     const sql = `UPDATE <DB_SCHEMA/>.app_data_resource_master 
                     SET json_data                                       = :json_data, 
-                        user_account_app_user_account_id                = :user_account_app_user_account_id, 
-                        user_account_app_app_id                         = :user_account_app_app_id, 
-                        app_data_entity_resource_app_data_entity_app_id = :app_data_entity_resource_app_data_entity_app_id,
+                        user_account_app_user_account_id                = :user_account_id, 
+                        user_account_app_app_id                         = :user_account_app_id, 
+                        app_data_entity_resource_app_data_entity_app_id = app_data_entity_resource_app_data_entity_app_id,
                         app_data_entity_resource_app_data_entity_id     = :app_data_entity_resource_app_data_entity_id, 
                         app_data_entity_resource_id                     = :app_data_entity_resource_id
-                  WHERE id = :resource_id`;
+                  WHERE id = :resource_id
+                    AND ((user_account_app_user_account_id              = :user_account_id &&
+                          user_account_app_app_id                       = :user_account_app_id) OR :user_account_id IS NUL)
+                    AND (app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)`;
     const parameters = {resource_id                                     : resource_id,
                         json_data                                       : JSON.stringify(data.json_data),
-                        user_account_app_user_account_id                : data.user_account_app_user_account_id,
-                        user_account_app_app_id                         : data.user_account_app_app_id,
-                        app_data_entity_resource_app_data_entity_app_id : data.app_data_entity_resource_app_data_entity_app_id,
+                        user_account_id                                 : data.user_account_id,
+                        user_account_app_id                             : data.user_account_id?data.data_app_id:null,
+                        data_app_id                                     : data.data_app_id,
                         app_data_entity_resource_app_data_entity_id     : data.app_data_entity_resource_app_data_entity_id,
                         app_data_entity_resource_id                     : data.app_data_entity_resource_id
                         };
@@ -114,12 +117,19 @@ const post = async (app_id, data) => {
  * 
  * @param {number} app_id
  * @param {number} resource_id
+ * @param {*} data
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_master_delete[]>}
  */
- const deleteRecord = async (app_id, resource_id) => {
+ const deleteRecord = async (app_id, resource_id, data) => {
     const sql = `DELETE FROM <DB_SCHEMA/>.app_data_resource_master 
-                    WHERE id = :resource_id`;
-    const parameters = {resource_id: resource_id};
+                    WHERE id = :resource_id
+                      AND ((user_account_app_user_account_id                 = :user_account_id &&
+                            user_account_app_app_id                          = :user_account_app_id) OR :user_account_id IS NULL)
+                      AND (app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)`;
+    const parameters = {resource_id        : resource_id,
+                        user_account_id    : data.user_account_id,
+                        user_account_app_id: data.user_account_id?data.data_app_id:null,
+                        data_app_id        : data.data_app_id};
     return await db_execute(app_id, sql, parameters);
 };
 export{get, post, update, deleteRecord};
