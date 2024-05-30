@@ -3149,6 +3149,15 @@ const common_event = async (event_type,event) =>{
                                                 iframe_content:null}, '/common/component/window_info.js');
                             break;
                         }
+                        //dialogue app_data_display
+                        case 'common_app_data_display_button_print':
+                        case 'common_app_data_display_button_update':
+                        case 'common_app_data_display_button_post':
+                        case 'common_app_data_display_button_delete':{
+                            if (AppDocument.querySelector(`#${event_target_id}`)['data-function'])
+                                    AppDocument.querySelector(`#${event_target_id}`)['data-function']();
+                            break;
+                        }
                         //window info
                         case 'common_window_info_btn_close':{
                             close_window();
