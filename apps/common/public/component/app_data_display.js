@@ -1,8 +1,12 @@
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 /**
+ * @typedef {{  value:number|string|null, metadata:{default_text:string, length:number, type: string, contentEditable:boolean}}} ObjectData
+ * 
+ * @typedef {Object.<string,ObjectData>} master_object_type
+ * 
  * @typedef {{  display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
- *              master_object:{},
+ *              master_object:master_object_type,
  *              rows:[],
  *              button_print:boolean,
  *              button_update:boolean,
@@ -13,7 +17,7 @@ const AppDocument = document;
  *  Display types:
  *                              usage suggestion        design
  *  VERTICAL_KEY_VALUE          form                    key value vertical array list, 2 columns
- *
+ *                                                      
  *  MASTER_DETAIL_HORIZONTAL    order, invoice,         master key values one object with detail array rows with objects (more than 2 columns) below, 
  *                              product, search etc     detail keys displayed on first row
  * 
@@ -31,43 +35,47 @@ const AppDocument = document;
  * @param {props_template} props 
  * @returns 
  */
-const template = props =>`  ${props.display_type=='VERTICAL_KEY_VALUE'?
-                                `${props.rows.map((/**@type{*}*/row)=>
-                                    `<div data-id='${row.id}' data-key='${row.key}' data-value='${row.value}' tabindex=-1 class=' common_app_data_display_row common_row'>
-                                        <div class='common_app_data_display_col'>${row.key}</div>
-                                        <div class='common_app_data_display_col'>${row.value}</div>
-                                    </div>
-                                    `).join('')
-                                }`:''
+const template = props =>`  ${props.master_object?
+                                `<div class='common_app_data_display_master_title'>${props.master_object.title}</div>`:''
                             }
-                            ${(props.display_type=='MASTER_DETAIL_HORIZONTAL' || props.display_type=='MASTER_DETAIL_VERTICAL')?
+                            ${(props.display_type=='VERTICAL_KEY_VALUE' || props.display_type=='MASTER_DETAIL_HORIZONTAL' || props.display_type=='MASTER_DETAIL_VERTICAL')?
                                 `
-                                <div class='common_app_data_display_master'>
-                                    ${Object.entries(props.master_object).map((/**@type{*}*/master_row)=>
-                                        `<div class='common_app_data_display_master_list'>
-                                            <div class='common_app_data_display_master_row'>
-                                                <div class='common_app_data_display_master_col'>${master_row[0]}</div>
-                                                <div class='common_app_data_display_master_col'>${master_row[1]}</div>
-                                            </div>
-                                        </div>`).join('')
-                                    }
-                                </div>
-                                ${props.display_type=='MASTER_DETAIL_HORIZONTAL'?
+                                ${props.master_object?
+                                    `<div class='common_app_data_display_master'>
+                                        ${Object.entries(props.master_object).map((/**@type{*}*/master_row)=>
+                                            `<div class='common_app_data_display_master_list'>
+                                                <div class='common_app_data_display_master_row'>
+                                                    <div    data-key='${master_row[0]}' 
+                                                            contentEditable='${master_row[1].metadata.contentEditable}' 
+                                                            class='common_app_data_display_master_col'>${master_row[1].metadata.default_text}</div>
+                                                    <div class='common_app_data_display_master_col'>${master_row[1].value}</div>
+                                                </div>
+                                            </div>`).join('')
+                                        }
+                                    </div>`:''
+                                }
+                                ${(props.display_type=='MASTER_DETAIL_HORIZONTAL' && props.rows)?
                                     `
-                                    ${props.rows.map((/**@type{*}*/detail_row)=>
+                                    ${props.rows.map((/**@type{*}*/detail_row, /**@type{number}*/index)=>
                                         `
+                                        ${index==0?
+                                            `
+                                            <div class='common_app_data_display_detail_horizontal_row_title common_row'>
+                                                ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
+                                                    `<div class='common_app_data_display_detail_col'>${Object.keys(detail_col)}</div>`).join('')
+                                                }
+                                            </div>
+                                            `:''
+                                        }
                                         <div class='common_app_data_display_detail_horizontal_row common_row'>
-                                            ${Object.entries(detail_row).map((/**@type{*}*/detail_col, index)=>
-                                                index==0?
-                                                    `   <div class='common_app_data_display_detail_title_col'>${Object.keys(detail_col)}</div>`:
-                                                    `   <div class='common_app_data_display_detail_col'>${Object.values(detail_col)}</div>
-                                                    `).join('')
+                                            ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
+                                                `<div class='common_app_data_display_detail_col'>${Object.values(detail_col)}</div>`).join('')
                                             }
                                         </div>
                                         `).join('')
                                     }`:''
                                 }
-                                ${props.display_type=='MASTER_DETAIL_VERTICAL'?
+                                ${(props.display_type=='MASTER_DETAIL_VERTICAL' && props.rows)?
                                     `
                                     ${props.rows.map((/**@type{*}*/detail_row)=>
                                         `<div data-id='${detail_row.id}' data-key='${detail_row.key}' data-value='${detail_row.value}' tabindex=-1 class='common_app_data_display_row common_row'>
@@ -143,17 +151,17 @@ const component = async props => {
     }
     /**
      * 
-     * @param {props_template} props_template 
+     * @param {props_template} props_template_parameters 
      * @returns 
      */
-    const render_template = (props_template) =>{
-        return template(props_template)
+    const render_template = props_template_parameters =>{
+        return template(props_template_parameters)
     }
     return {
         props:  {function_post:post_component},
         data:   null,
         template: render_template({ display_type:props.display_type,
-                                    master_object:{},
+                                    master_object:{title:{  value:'', metadata:{default_text:'', length:0, type: 'TEXT', contentEditable:false}}},
                                     rows:[],
                                     button_print:false,
                                     button_update:false,
