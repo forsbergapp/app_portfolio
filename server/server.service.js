@@ -429,6 +429,12 @@ const COMMON = {
                         resolve(db_app_resource.MasterGet(routesparameters.app_id, app_query, true));
                         break
                     }
+                    case route(`/bff/app_access/v1/app-function/${resource_id_string}`, 'POST', 'id', routesparameters.body.user_account_id, true):{
+                        resolve(app.getFunction(routesparameters.app_id, 
+                                                /**@ts-ignore */
+                                                resource_id_get_string(), 
+                                                app_query, routesparameters.res));
+                    }
                     case route(`/bff/admin/v1/server-db/app_data_resource_master`, 'GET', null, null, false):
                     case route(`/bff/app_access/v1/app_data_resource_master`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), true, getNumberValue(app_query?.get('data_app_id'))):{
                         resolve(db_app_resource.MasterGet(routesparameters.app_id, app_query));
@@ -439,16 +445,16 @@ const COMMON = {
                         resolve(db_app_resource.MasterPost(routesparameters.app_id, routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_get_string}`, 'PUT', null, null, routesparameters.body.data_app_id):
-                    case route(`/bff/app_access/v1/app_data_resource_master/${resource_id_get_string}`, 'PUT', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
+                    case route(`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_string}`, 'PUT', null, null, routesparameters.body.data_app_id):
+                    case route(`/bff/app_access/v1/app_data_resource_master/${resource_id_string}`, 'PUT', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
                         resolve(db_app_resource.MasterUpdate(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_get_string}`, 'DELETE', null, null, true):
-                    case route(`/bff/app_access/v1/app_data_resource_master/${resource_id_get_string}`, 'DELETE', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
+                    case route(`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_string}`, 'DELETE', null, null, true):
+                    case route(`/bff/app_access/v1/app_data_resource_master/${resource_id_string}`, 'DELETE', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
                         resolve(db_app_resource.MasterDelete(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(),
@@ -468,16 +474,16 @@ const COMMON = {
                             resolve(db_app_resource.DetailPost(routesparameters.app_id, routesparameters.body));
                             break;
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_detail/${resource_id_get_string}`, 'PUT', null, null, true):
-                    case route(`/bff/app_access/v1/app_data_resource_detail/${resource_id_get_string}`, 'PUT', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
+                    case route(`/bff/admin/v1/server-db/app_data_resource_detail/${resource_id_string}`, 'PUT', null, null, true):
+                    case route(`/bff/app_access/v1/app_data_resource_detail/${resource_id_string}`, 'PUT', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
                         resolve(db_app_resource.DetailUpdate(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_detail/${resource_id_get_string}`, 'DELETE', null, null, true):
-                    case route(`/bff/app_access/v1/app_data_resource_detail/${resource_id_get_string}`, 'DELETE', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
+                    case route(`/bff/admin/v1/server-db/app_data_resource_detail/${resource_id_string}`, 'DELETE', null, null, true):
+                    case route(`/bff/app_access/v1/app_data_resource_detail/${resource_id_string}`, 'DELETE', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
                         resolve(db_app_resource.DetailDelete(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(),
@@ -497,16 +503,16 @@ const COMMON = {
                             resolve(db_app_resource.DataPost(routesparameters.app_id, routesparameters.body));
                             break;
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_detail_data/${resource_id_get_string}`, 'PUT', null, null, true):
-                    case route(`/bff/app_access/v1/app_data_resource_detail_data/${resource_id_get_string}`, 'PUT', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
+                    case route(`/bff/admin/v1/server-db/app_data_resource_detail_data/${resource_id_string}`, 'PUT', null, null, true):
+                    case route(`/bff/app_access/v1/app_data_resource_detail_data/${resource_id_string}`, 'PUT', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
                         resolve(db_app_resource.DataUpdate(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_detail_data/${resource_id_get_string}`, 'DELETE', null, null, true):
-                    case route(`/bff/app_access/v1/app_data_resource_detail_data/${resource_id_get_string}`, 'DELETE', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
+                    case route(`/bff/admin/v1/server-db/app_data_resource_detail_data/${resource_id_string}`, 'DELETE', null, null, true):
+                    case route(`/bff/app_access/v1/app_data_resource_detail_data/${resource_id_string}`, 'DELETE', 'id', routesparameters.body.user_account_id, true, routesparameters.body.data_app_id):{
                         resolve(db_app_resource.DataDelete(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(),

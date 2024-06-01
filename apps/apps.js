@@ -30,4 +30,14 @@ const getAppsAdmin = async (app_id, query) => service.getAppsAdmin(app_id, query
  */
  const getAppMain = async (ip, host, user_agent, accept_language, url, query, res) => service.getAppMain(ip, host, user_agent, accept_language, url, query?query.get('reportid'):null, url.startsWith('/info/')?url.substring(6):null, res);
 
-export{getApps, getAppsAdmin, getAppMain};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} resource_id 
+ * @param {*} data
+ * @param {import('../types.js').res} res 
+ * @returns 
+ */
+ const getFunction = async (app_id, resource_id, data, res) => service.getFunction(app_id, resource_id, data, res);
+
+export{getApps, getAppsAdmin, getAppMain, getFunction};

@@ -105,6 +105,7 @@
                         ["MAIL",            null,   "MailBody",                 "/apps/common/src/mail_body_verification.html"]
                     ]
         },
+        "MODULES":[],
         "STATUS":"ONLINE"
     },
     {
@@ -153,6 +154,7 @@
                     "FAVICON_192x192":"/images/favicon-192x192.png",
                     "RENDER_FILES":[]
         },
+        "MODULES":[],
         "STATUS":"ONLINE"
     },
     {
@@ -263,10 +265,11 @@
                     "CSS_REPORT": "/css/app_report.css", 
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
                     "FAVICON_192x192":"/images/favicon-192x192.png",
-                    "RENDER_FILES":[
-                        ["REPORT",  "TIMETABLE",    null,   "/apps/app2/src/report/timetable.js"]
-                    ]
+                    "RENDER_FILES":[]
         },
+        "MODULES":[
+            ["REPORT",  "TIMETABLE",    null,   "/apps/app2/src/report/timetable.js"]
+        ],
         "STATUS":"ONLINE"
     },
     {
@@ -310,6 +313,7 @@
                     "FAVICON_192x192":"/images/favicon-192x192.png",
                     "RENDER_FILES":[]
         },
+        "MODULES":[],
         "STATUS":"ONLINE"
     },
     {
@@ -353,6 +357,7 @@
                     "FAVICON_192x192":"/images/favicon-192x192.png",
                     "RENDER_FILES":[]
         },
+        "MODULES":[],
         "STATUS":"ONLINE"
     },
     {
@@ -396,6 +401,9 @@
                     "FAVICON_192x192":"/images/favicon-192x192.png",
                     "RENDER_FILES":[]
         },
+        "MODULES":[
+            ["FUNCTION","ACCOUNT_CREATE",   "Creates ACCOUNT with logic not to be displayed in app",            "/apps/app5/src/function/account_create.js"]
+        ],
         "STATUS":"ONLINE"
     },
     {
@@ -439,6 +447,7 @@
                     "FAVICON_192x192":"/images/favicon-192x192.png",
                     "RENDER_FILES":[]
         },
+        "MODULES":[],
         "STATUS":"ONLINE"}
 ]
 }

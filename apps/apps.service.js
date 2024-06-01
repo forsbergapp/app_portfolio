@@ -512,7 +512,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid) => {
                     accept_language:accept_language,
                     latitude:       result_geodata.latitude,
                     longitude:      result_geodata.longitude};
-    const report_path = ConfigGetApps(app_id, 'RENDER_CONFIG')[0].RENDER_CONFIG.RENDER_FILES.filter((/**@type{*}*/file)=>file[0]=='REPORT' && file[1]==query_parameters_obj.module)[0][3]
+    const report_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='REPORT' && file[1]==query_parameters_obj.module)[0][3]
     const {default:RunReport} = await import(`file://${process.cwd()}${report_path}`);
     /**@type{{report:string,
      *        papersize:string}} */
@@ -616,7 +616,7 @@ const getMaintenance = async (app_id, ip) => {
 /**
  * 
  * @param {number} app_id 
- * @param {number} resource_id 
+ * @param {number|null} resource_id 
  * @param {string} lang_code 
  */
 const getApps = async (app_id, resource_id, lang_code) =>{
@@ -847,7 +847,7 @@ const getAssetFile = (app_id, url, basepath, res) =>{
  * @param {string} accept_language
  * @param {string} url
  * @param {string} reportid
- * @param {'privacy_policy'|'disclaimer'|'terms'|'about'|null} info
+ * @param {string|null} info
  * @param {import('../types.js').res|null} res
  */
 const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, info, res) =>{
@@ -941,6 +941,32 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
             }
         }
 };
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} resource_id 
+ * @param {*} data 
+ * @param {import('../types.js').res|null} res
+ * @returns 
+ */
+const getFunction = async (app_id, resource_id, data, res) => {
+    const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==resource_id)[0][3]
+    if (module_path){
+        const {default:RunFunction} = await import(`file://${process.cwd()}${module_path}`);
+        /**@type{*} */
+        const function_data = await RunFunction(data);
+        return function_data;
+    }
+    else{
+        LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getFunction()', COMMON.app_line(), `Function ${resource_id} not found`)
+        .then(()=>{
+            if (res)
+                res.statusCode = 404;
+            return null;
+        })
+    }    
+}
+
 export {/*APP functions */
         app_start, render_app_html,render_report_html ,render_app_with_data,
         /*APP EMAIL functions*/
@@ -948,4 +974,6 @@ export {/*APP functions */
         /*APP ROUTER functiontions */
         getReport, getInfo,getMaintenance,
         getApps, getAppsAdmin,
-        getAppMain};
+        getAppMain,
+        getFunction
+};
