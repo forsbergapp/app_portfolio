@@ -525,6 +525,7 @@
  *              'SECRETS'|
  *              'PARAMETERS'|
  *              'RENDER_CONFIG'|
+ *              'MODULES'|
  *              'STATUS'} config_apps_keys
  * @typedef {{  SERVICE_DB_DB1_APP_USER: string,
  *              SERVICE_DB_DB1_APP_PASSWORD: string,
@@ -554,6 +555,7 @@
  *              APP_ACCESS_SECRET:string, 
  *              APP_ACCESS_EXPIRE:string
  *          }} config_apps_secrets
+ * @typedef {[{}]} config_apps_parameters
  * @typedef {{  MANIFEST:boolean,
  *              JS:string,
  *              JS_SECURE:string,
@@ -563,8 +565,8 @@
  *              FAVICON_32x32:string,
  *              FAVICON_192x192:string,
  *              RENDER_FILES:config_apps_render_files[]}} config_apps_render_config
- * @typedef {[{}]} config_apps_parameters
- * @typedef {'ONLINE'|'OFFLINE'} config_apps_status
+ * @typedef  {[string, string, string, string]} config_apps_modules
+ * @typedef  {'ONLINE'|'OFFLINE'} config_apps_status
  * @typedef  {[string,string|null,string|null,string, string|null]} config_apps_render_files
  * @typedef  {object} config_apps_record
  * @property {function} filter
@@ -579,6 +581,7 @@
  * @property {config_apps_secrets} SECRETS
  * @property {config_apps_parameters} [PARAMETERS]
  * @property {config_apps_render_config} [RENDER_CONFIG]
+ * @property {config_apps_modules[]} MODULES
  * @property {config_apps_status} STATUS
  * @typedef  {object} config_apps_with_db_columns
  * @property {number} APP_ID
