@@ -6,7 +6,6 @@ const {render_app_with_data} = await import(`file://${process.cwd()}/apps/apps.s
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../../../../server/db/sql/user_account_app_data_post_view.service.js')} */
 const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
-const {default: QRCode} = await import('easyqrcodejs-nodejs');
 /**
  * App types
  * 
@@ -112,11 +111,6 @@ const {default: QRCode} = await import('easyqrcodejs-nodejs');
  * @property {string}	prayer_hijri_date_adjustment
  */
 /**@type{{	app_copyright:string,
- * 			'module_easy.qrcode_width':number|null,
- * 			'module_easy.qrcode_height':number|null,
- * 			'module_easy.qrcode_color_dark':string,
- * 			'module_easy.qrcode_color_light':string,
- * 			'module_easy.qrcode_background_color':string,
  * 			session_currentDate:Date,
  * 			session_currentHijriDate:[number, number, number],
  * 			module_praytimes_methods:{[index:string]:{	name:string,
@@ -197,12 +191,6 @@ const {default: QRCode} = await import('easyqrcodejs-nodejs');
  * 			}} */
 const REPORT_GLOBAL = {
     app_copyright:'',
-    'module_easy.qrcode_width': null,
-    'module_easy.qrcode_height':null,
-    'module_easy.qrcode_color_dark':'',
-    'module_easy.qrcode_color_light':'',
-    'module_easy.qrcode_background_color':'',
-
     session_currentDate:new Date(),
     session_currentHijriDate:[0,0,0],
     module_praytimes_methods:{},
@@ -1569,7 +1557,6 @@ const displayDay = (prayTimes, settings, user_account_app_data_posts) => {
 					<div >${settings.header_txt1}</div>
 					<div >${settings.header_txt2}</div>
 					<div >${settings.header_txt3}</div>
-					<div id='timetable_qr_code'><REPORT_QRCODE/></div>
 				</div>
 				<div id='timetable_day_timetable_header' class='display_font'>
 					<div>${date_title4}</div>
@@ -1751,7 +1738,6 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 					<div >${settings.header_txt1}</div>
 					<div >${settings.header_txt2}</div>
 					<div >${settings.header_txt3}</div>
-					<div id='timetable_qr_code'><REPORT_QRCODE/></div>
 				</div>`:''}
 				<div id='timetable_month_data_header' class='display_font'>
 					<div id='timetable_month_data_header_title1'>${data.title}</div>
@@ -1856,7 +1842,6 @@ const displayYear = (prayTimes, settings) => {
 						<div >${settings.header_txt1}</div>
 						<div >${settings.header_txt2}</div>
 						<div >${settings.header_txt3}</div>
-						<div id='timetable_qr_code'><REPORT_QRCODE/></div>
 					</div>
 					<div id='timetable_year_timetables_header' class='display_font'>
 						<div>${timetable_title}</div>
@@ -1920,28 +1905,6 @@ const displayYear = (prayTimes, settings) => {
 	return year_timetable();
 };
 /**
- * Get QR Code in SVG format
- * @param {string|null} url 
- * @returns {Promise.<string>}
- */
-const getQRCode = async (url) =>{
-    
-    return new Promise((resolve)=>{
-        const options = {
-                        text: url,
-                        width: REPORT_GLOBAL['module_easy.qrcode_width'],
-                        height: REPORT_GLOBAL['module_easy.qrcode_height'],
-                        colorDark: REPORT_GLOBAL['module_easy.qrcode_color_dark'],
-                        colorLight: REPORT_GLOBAL['module_easy.qrcode_color_light']
-                    };
-        const qrcode = new QRCode(options);
-        qrcode.toSVGText().then((/**@type{string}*/data)=>{
-            resolve(data);
-        });
-    });
-	
-};
-/**
  * Create timetable day, month or year
  * @param {import('../../../../types.js').report_create_parameters} timetable_parameters
  * @returns {Promise.<{report:string, papersize:string}>}
@@ -1960,19 +1923,7 @@ const timetable = async (timetable_parameters) => {
 	 * @param {string} decodedReportparameters 
 	 * @returns 
 	 */
-	const getQRUrl = (decodedReportparameters) =>{
-		const protocol = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE'))==1?'https':'http';
-		const port_http = getNumberValue(ConfigGet('SERVER', 'HTTP_PORT'));
-		const port_https = getNumberValue(ConfigGet('SERVER', 'HTTPS_PORT'));
-		const port = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE'))==1?(port_https==443?'':`:${port_https}`):(port_https==80?'':`:${port_http}`);
-		if (uid_view){
-			const param_modified = decodedReportparameters.replace(`&uid_view=${uid_view}`, '');
-			const report_id_no_uid_view = Buffer.from(param_modified).toString('base64');
-			return `${protocol}://${ConfigGetApp(timetable_parameters.app_id,timetable_parameters.app_id, 'SUBDOMAIN')}.${ConfigGet('SERVER', 'HOST')}${port}/app-reports?reportid=${report_id_no_uid_view}`;
-		}
-		else
-			return `${protocol}://${ConfigGetApp(timetable_parameters.app_id,timetable_parameters.app_id, 'SUBDOMAIN')}.${ConfigGet('SERVER', 'HOST')}${port}/app-reports?reportid=${timetable_parameters.reportid}`;
-	};
+	
 	const result_parameters = ConfigGetApp(timetable_parameters.app_id, timetable_parameters.app_id, 'PARAMETERS');
 	return await new Promise((resolve) => {
 		for (const parameter of result_parameters) {
@@ -1990,17 +1941,6 @@ const timetable = async (timetable_parameters) => {
 				REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
 			if (parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'])
 				REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
-			//QR
-			if (parameter['MODULE_EASY.QRCODE_WIDTH'])
-				REPORT_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);
-			if (parameter['MODULE_EASY.QRCODE_HEIGHT'])
-				REPORT_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter['MODULE_EASY.QRCODE_HEIGHT']);
-			if (parameter['MODULE_EASY.QRCODE_COLOR_DARK'])
-				REPORT_GLOBAL['module_easy.qrcode_color_dark'] = parameter['MODULE_EASY.QRCODE_COLOR_DARK'];
-			if (parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'])
-				REPORT_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];
-			if (parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'])
-				REPORT_GLOBAL['module_easy.qrcode_background_color'] = parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'];
 		}
 		/**@type {[string, string][]} */
 		const render_variables = [];
@@ -2036,30 +1976,22 @@ const timetable = async (timetable_parameters) => {
 							if (reporttype==0){
 								timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
 								.then((user_account_app_data_posts_parameters)=>{
-									getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
-										render_variables.push(['REPORT_QRCODE',qrcode]);
-										resolve({report:render_app_with_data(displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters), render_variables),
-												 papersize:user_account_app_data_post.papersize
-												});
-									});
+									
+									resolve({	report:displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters),
+												papersize:user_account_app_data_post.papersize
+											});
 								})
 								.catch(()=>resolve({report:'', papersize:''}));
 							}
 							else
 								if (reporttype==1){
-									getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
-										render_variables.push(['REPORT_QRCODE',qrcode]);
-										resolve({report:render_app_with_data(displayMonth(prayTimes, user_account_app_data_post), render_variables),
-												 papersize:user_account_app_data_post.papersize});
-									});
+									resolve({	report:displayMonth(prayTimes, user_account_app_data_post),
+												papersize:user_account_app_data_post.papersize});
 								}
 								else 
 									if (reporttype==2){
-										getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
-											render_variables.push(['REPORT_QRCODE',qrcode]);
-											resolve({report:render_app_with_data(displayYear(prayTimes, user_account_app_data_post), render_variables),
-													 papersize:user_account_app_data_post.papersize});
-										});
+										resolve({	report:displayYear(prayTimes, user_account_app_data_post),
+													papersize:user_account_app_data_post.papersize});
 									}
 						});
 					});

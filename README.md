@@ -71,7 +71,7 @@
 	- social network basic functionality with follow, like, follwed, liked and viewed including statistics
 	- Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js. Thirdparty javascript modules 
 	  should be converted from CommonJS to ECMAScript modules if necessary.
-	- report with QR codes pixel perfect design using css pt font size measurement and full unicode support
+	- report with pixel perfect design using css pt font size measurement and full unicode support
 	- apps created using server side rendering
 	- database and file logging
 	- microservice arquitecture
@@ -158,10 +158,8 @@
     www.praytimes.org
     Pray Times server version
     www.npmjs.com/package/praytimes
-    EasyQRCodeJS client version
+    EasyQRCodeJS version
     www.github.com/ushelp/EasyQRCodeJS
-    EasyQRCodeJS server version
-    www.npmjs.com/package/easyqrcodejs-nodejs
 	Country Translations
 	www.github.com/umpirsky/country-list
 	Language Translations
@@ -191,7 +189,6 @@
 	Navigate in calendar per day, month or year in Gregorian or Hijri calendar type in realtime.
 	App can be used without registering but then settings can't be saved.
 	Map integration with automatic timezone and GPS lookup.
-	QR code dynamic generation.
 	Timetables can be displayed with different themes using CSS3.
 	User interface and timetables can be displayed in any language
 	and translation of user interface is fetched from translation objects data model.
@@ -208,9 +205,6 @@
 	They live in India so local settings including number system Devanagari numerals (deva in navigator) should be used.
 	Header and footer will contain some chinese and urdu with Nastaliq to provide information to guests.
 	Timetable shall include all timezones in the current and displayed in the same timetable.
-	To keep timetable modern some emojis will be displayed in the timetable. Url with QRCode will be shared
-	on their social network and if the timetable is printed and on a wall, passing user can scan QR code with the url
-	to their phones.
 
 	Use case in the app:
 	User works remotely and can choose swedish as user preference displaying message in swedish and seeing 

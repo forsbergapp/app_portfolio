@@ -385,19 +385,16 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                 });
             }
             AppDocument.querySelector('#paper').innerHTML = app_report.displayDay(settings, item_id, current_user_settings);
-            await common.create_qr('timetable_qr_code', common.getHostname());
             break;
         }
         //1=create timetable month
         case 1:{
             AppDocument.querySelector('#paper').innerHTML = app_report.displayMonth(settings, item_id);
-            await common.create_qr('timetable_qr_code', common.getHostname());
             break;
         }
         //2=create timetable year
         case 2:{
             AppDocument.querySelector('#paper').innerHTML = app_report.displayYear(settings, item_id);
-            await common.create_qr('timetable_qr_code', common.getHostname());
             break;
         }
         default:{
@@ -3160,8 +3157,6 @@ const init_app = async parameters => {
             common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter['MODULE_EASY.QRCODE_COLOR_DARK'];
         if (parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'])
             common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];
-        if (parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'])
-            common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter['MODULE_EASY.QRCODE_BACKGROUND_COLOR'];
     }
 
     //set current date for report month
