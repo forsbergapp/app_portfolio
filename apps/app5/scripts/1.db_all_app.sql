@@ -78,7 +78,15 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity (app_id, json_data) VALUES (<APP_ID/>, 
 -- app data entity resource
 --
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (json_data, app_setting_id, app_data_entity_app_id, app_data_entity_id) 
-    VALUES ('{"description":"Account info: Accounts using one currency","currency":"€", "currency_name":"App Euro"}', 
+    VALUES ('{  "description":"Account info: Accounts using one currency",
+                "currency":"€", 
+                "currency_name":"App Euro",
+                "data":{
+						"title":	            {"value":'', "metadata":{"default_text":"Account",                      length:null,type: "TEXT",   contentEditable:false}},
+						"bank_account_number":  {"value":'', "metadata":{"default_text":"Number",                       length:16,  type: "TEXT",   contentEditable:false}, "comment":"Generate number with Date.now().toString().padStart(16,''0'')"},
+						"bank_account_secret": 	{"value":'', "metadata":{"default_text":"Secret", 		                length:64,  type: "TEXT", 	contentEditable:false}, "comment":"SHA256"},
+						"bank_account_vpa":		{"value":'', "metadata":{"default_text":"Virtual Payment Address (VPA)",length:36,  type: "TEXT", 	contentEditable:false,  "comment":"UUID format [8characters]-[4characters]-[4characters]-[4characters]-[12characters]"}}
+				}}', 
             (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name='RESOURCE_TYPE' AND value = 'ACCOUNT'), 
             <APP_ID/>, 
             (SELECT id FROM <DB_SCHEMA/>.app_data_entity WHERE app_id = <APP_ID/>));
@@ -88,7 +96,16 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (json_data, app_setting_id, ap
             <APP_ID/>, 
             (SELECT id FROM <DB_SCHEMA/>.app_data_entity WHERE app_id = <APP_ID/>));
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (json_data, app_setting_id, app_data_entity_app_id, app_data_entity_id) 
-    VALUES ('{"description":"Customer info: Customers ...", "status":"ONLINE"}', 
+    VALUES ('{  "description":"Customer info: Customers", 
+                "data":{
+						"title":	    {"value":'', "metadata":{"default_text":"Enter customer info to create new bank account", length:null, type: "TEXT", contentEditable:false}},
+						"customer_type":{"value":'', "metadata":{"default_text":"Customer type", 	length:100, type: "SELECT", contentEditable:true}, "comment": "APP_SETTING.app_setting_type_app_setting_type_name=CUSTOMER_TYPE"},
+						"name": 		{"value":'', "metadata":{"default_text":"Name", 			length:100, type: "TEXT", 	contentEditable:true}},
+						"address":		{"value":'', "metadata":{"default_text":"Address", 		    length:100, type: "TEXT", 	contentEditable:true}},
+						"city":			{"value":'', "metadata":{"default_text":"City", 			length:100, type: "TEXT", 	contentEditable:true}},
+						"country":		{"value":'', "metadata":{"default_text":"Country", 		    length:2,   type: "SELECT", contentEditable:true}, "comment": "lowercase COUNTRY.countrycode"}
+				},
+                "status":"ONLINE"}', 
             (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name='RESOURCE_TYPE' AND value = 'CUSTOMER'), 
             <APP_ID/>, 
             (SELECT id FROM <DB_SCHEMA/>.app_data_entity WHERE app_id = <APP_ID/>));
