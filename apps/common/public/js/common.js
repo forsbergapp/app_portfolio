@@ -93,7 +93,6 @@ const COMMON_GLOBAL = {
     'module_easy.qrcode_height':null,
     'module_easy.qrcode_color_dark':null,
     'module_easy.qrcode_color_light':null,
-    'module_easy.qrcode_background_color':null,
     service_socket_client_ID:null,
     service_socket_eventsource:null
 };

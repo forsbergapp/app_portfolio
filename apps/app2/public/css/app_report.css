@@ -265,21 +265,6 @@
 }
 
 /*Common styles for all timetables*/
-/*QR code*/
-#printbody #timetable_qr_code{
-    transform: scale(0.64);
-	margin-inline-end: -11px;
-}
-#timetable_qr_code{
-    transform: scale(0.8);
-	opacity: 0.8;
-    align-self: end;
-	position: fixed;
-}
-#timetable_qr_code svg{
-	border: 4px solid var(--common_report_color_white);
-	box-shadow: 0 4px 8px 0 var(--report_qr_code_shadow_color1), 0 6px 20px 0 var(----report_qr_code_shadow_color2);
-}
 /*Fasting columns*/
 .timetable_class .timetable_data_fast_start,
 .timetable_class .timetable_data_fast_end {

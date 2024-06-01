@@ -1226,7 +1226,6 @@ const displayMonth = (settings, item_id, year_class='') => {
 					<div >${settings.header_txt1}</div>
 					<div >${settings.header_txt2}</div>
 					<div >${settings.header_txt3}</div>
-					<div id='timetable_qr_code'></div>
 				</div>`:''}
 				<div id='timetable_month_data_header' class='display_font'>
 					<div id='timetable_month_data_header_title1'>${data.title}</div>
@@ -1461,7 +1460,6 @@ const displayDay = (settings, item_id, user_settings) => {
 					<div >${settings.header_txt1}</div>
 					<div >${settings.header_txt2}</div>
 					<div >${settings.header_txt3}</div>
-					<div id='timetable_qr_code'></div>
 				</div>
 				<div id='timetable_day_timetable_header' class='display_font'>
 					<div>${date_title4}</div>
@@ -1563,7 +1561,6 @@ const displayYear = (settings, item_id) => {
 						<div >${settings.header_txt1}</div>
 						<div >${settings.header_txt2}</div>
 						<div >${settings.header_txt3}</div>
-						<div id='timetable_qr_code'></div>
 					</div>
 					<div id='timetable_year_timetables_header' class='display_font'>
 						<div>${timetable_title}</div>

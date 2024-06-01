@@ -146,7 +146,6 @@
  *           'module_easy.qrcode_height':number|null,
  *           'module_easy.qrcode_color_dark':string|null,
  *           'module_easy.qrcode_color_light':string|null,
- *           'module_easy.qrcode_background_color':string|null,
  *           service_socket_client_ID:number|null,
  *           service_socket_eventsource:{onmessage:function,
  *                                       onerror:function,
