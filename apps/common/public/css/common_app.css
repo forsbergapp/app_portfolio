@@ -137,6 +137,10 @@
 #common_toolbar_framework_vue::before{						content:var(--common_app_icon_vue)}
 #common_toolbar_framework_react::before{					content:var(--common_app_icon_react)}
 
+#common_app_data_display_button_update::before{				content:var(--common_app_icon_update)}
+#common_app_data_display_button_post::before{				content:var(--common_app_icon_add)}
+#common_app_data_display_button_delete::before{				content:var(--common_app_icon_delete)}
+#common_app_data_display_button_print::before{				content:var(--common_app_icon_print)}
 body{
 	font-size: 16px;
 	margin: 0;
@@ -378,7 +382,25 @@ select {
 .common_search_input{
 	width: 94%;
 }
-
+/* app display data*/
+.common_app_data_display_master_title{
+	font-weight: bold;
+	margin-bottom:1em;
+}
+.common_app_data_display_master_col1,
+.common_app_data_display_master_col2{
+	display: inline-block;
+	text-align: start;
+    width: calc(50% - 1em);
+}
+.common_app_data_display_master_col2{
+	border:1px solid;
+}
+.common_app_data_display_buttons{
+	position:absolute;
+	bottom:1em;
+	display: inline-block;
+}
 /*dialogue*/
 .common_dialogues_modal {
 	z-index:50 !important;
