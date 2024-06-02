@@ -415,18 +415,18 @@ const COMMON = {
                         break;
                     }
 
-                    case route(`/bff/app_data/v1/server-db/app_data_entity`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id'))):
-                    case route(`/bff/admin/v1/server-db/app_data_entity`, 'GET', null, null, false):{
-                        resolve(db_app_data_entity.getEntity(routesparameters.app_id, app_query));
+                    case route(`/bff/app_data/v1/server-db/app_data_entity/${resource_id_string}`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id'))):
+                    case route(`/bff/admin/v1/server-db/app_data_entity/${resource_id_string}`, 'GET', null, null, false):{
+                        resolve(db_app_data_entity.getEntity(routesparameters.app_id, resource_id_get_number(), app_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/app_data_entity_resource`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id'))):
-                    case route(`/bff/admin/v1/server-db/app_data_entity_resource`, 'GET', null, null, false):{
-                        resolve(db_app_data_entity.getEntityResource(routesparameters.app_id, app_query));
+                    case route(`/bff/app_data/v1/server-db/app_data_entity_resource/${resource_id_string}`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id'))):
+                    case route(`/bff/admin/v1/server-db/app_data_entity_resource/${resource_id_string}`, 'GET', null, null, false):{
+                        resolve(db_app_data_entity.getEntityResource(routesparameters.app_id, resource_id_get_number(), app_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/app_data_resource_master`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id')), true):{
-                        resolve(db_app_resource.MasterGet(routesparameters.app_id, app_query, true));
+                    case route(`/bff/app_data/v1/server-db/app_data_resource_master/${resource_id_string}`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id')), true):{
+                        resolve(db_app_resource.MasterGet(routesparameters.app_id, resource_id_get_number(), app_query, true));
                         break
                     }
                     case route(`/bff/app_access/v1/app-function/${resource_id_string}`, 'POST', 'id', routesparameters.body.user_account_id, true):{
@@ -435,9 +435,9 @@ const COMMON = {
                                                 resource_id_get_string(), 
                                                 app_query, routesparameters.res));
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_master`, 'GET', null, null, false):
-                    case route(`/bff/app_access/v1/app_data_resource_master`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), true, getNumberValue(app_query?.get('data_app_id'))):{
-                        resolve(db_app_resource.MasterGet(routesparameters.app_id, app_query));
+                    case route(`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_string}`, 'GET', null, null, false):
+                    case route(`/bff/app_access/v1/app_data_resource_master/${resource_id_string}`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), true, getNumberValue(app_query?.get('data_app_id'))):{
+                        resolve(db_app_resource.MasterGet(routesparameters.app_id, resource_id_get_number(), app_query));
                         break;
                     }
                     case route(`/bff/admin/v1/server-db/app_data_resource_master`, 'POST', null, null, false):
@@ -461,12 +461,12 @@ const COMMON = {
                                                             routesparameters.body));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/app_data_resource_detail`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id')), true):{
-                        resolve(db_app_resource.DetailGet(routesparameters.app_id, app_query, true));
+                    case route(`/bff/app_data/v1/server-db/app_data_resource_detail/${resource_id_string}`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id')), true):{
+                        resolve(db_app_resource.DetailGet(routesparameters.app_id, resource_id_get_number(), app_query, true));
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_detail`, 'GET', null, null, false):
-                    case route(`/bff/app_access/v1/app_data_resource_detail`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), true, getNumberValue(app_query?.get('data_app_id'))):{
-                        resolve(db_app_resource.DetailGet(routesparameters.app_id, app_query));
+                    case route(`/bff/admin/v1/server-db/app_data_resource_detail/${resource_id_string}`, 'GET', null, null, false):
+                    case route(`/bff/app_access/v1/app_data_resource_detail/${resource_id_string}`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), true, getNumberValue(app_query?.get('data_app_id'))):{
+                        resolve(db_app_resource.DetailGet(routesparameters.app_id, resource_id_get_number(), app_query));
                         break;
                     }
                     case route(`/bff/admin/v1/server-db/app_data_resource_detail`, 'POST', null, null):
@@ -490,12 +490,12 @@ const COMMON = {
                                                             routesparameters.body));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/app_data_resource_detail_data`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id')), true):{
-                        resolve(db_app_resource.DataGet(routesparameters.app_id, app_query, true));
+                    case route(`/bff/app_data/v1/server-db/app_data_resource_detail_data/${resource_id_string}`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id')), true):{
+                        resolve(db_app_resource.DataGet(routesparameters.app_id, resource_id_get_number(), app_query, true));
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_detail_data`, 'GET', null, null, false):
-                    case route(`/bff/app_access/v1/app_data_resource_detail_data`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), true, getNumberValue(app_query?.get('data_app_id'))):{
-                        resolve(db_app_resource.DataGet(routesparameters.app_id, app_query));
+                    case route(`/bff/admin/v1/server-db/app_data_resource_detail_data/${resource_id_string}`, 'GET', null, null, false):
+                    case route(`/bff/app_access/v1/app_data_resource_detail_data/${resource_id_string}`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), true, getNumberValue(app_query?.get('data_app_id'))):{
+                        resolve(db_app_resource.DataGet(routesparameters.app_id, resource_id_get_number(), app_query));
                         break;
                     }
                     case route(`/bff/admin/v1/server-db/app_data_resource_detail_data`, 'POST', null, null):

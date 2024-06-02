@@ -14,12 +14,13 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**
  * 
  * @param {number} app_id 
+ * @param {number|null} resource_id
  * @param {*} query
  * @param {boolean|null} user_null
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_master_get[]>}
  */
-const MasterGet = (app_id, query, user_null=false) => app_data_resource_master.get(app_id, 
-                                                                  getNumberValue(query.get('id')), 
+const MasterGet = (app_id, resource_id, query, user_null=false) => app_data_resource_master.get(app_id, 
+                                                                  resource_id, 
                                                                   getNumberValue(query.get('user_account_id')),
                                                                   getNumberValue(query.get('data_app_id')), 
                                                                   query.get('resource_name'),
@@ -56,20 +57,21 @@ const MasterGet = (app_id, query, user_null=false) => app_data_resource_master.g
 /**
  * 
  * @param {number} app_id 
+ * @param {number|null} resource_id
  * @param {*} query
  * @param {boolean|null} user_null
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_get[]>}
  */
- const DetailGet = (app_id, query, user_null=false) => app_data_resource_detail.get( app_id, 
-                                                                    getNumberValue(query.get('id')), 
-                                                                    getNumberValue(query.get('master_id')), 
-                                                                    getNumberValue(query.get('user_account_id')),
-                                                                    getNumberValue(query.get('data_app_id')), 
-                                                                    query.get('resource_name'),
-                                                                    query.get('entity_id'),
-                                                                    query.get('lang_code'),
-                                                                    user_null)
-                                            .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+ const DetailGet = (app_id, resource_id, query, user_null=false) => app_data_resource_detail.get( app_id, 
+                                                                                                  resource_id, 
+                                                                                                  getNumberValue(query.get('master_id')), 
+                                                                                                  getNumberValue(query.get('user_account_id')),
+                                                                                                  getNumberValue(query.get('data_app_id')), 
+                                                                                                  query.get('resource_name'),
+                                                                                                  query.get('entity_id'),
+                                                                                                  query.get('lang_code'),
+                                                                                                  user_null)
+                                                                      .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 
 /**
  * 
@@ -100,20 +102,21 @@ const MasterGet = (app_id, query, user_null=false) => app_data_resource_master.g
  /**
  * 
  * @param {number} app_id 
+ * @param {number|null} resource_id
  * @param {*} query
  * @param {boolean|null} user_null
  * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_data_get[]>}
  */
-const DataGet = (app_id, query, user_null=false) => app_data_resource_detail_data.get( app_id, 
-                                                                      getNumberValue(query.get('id')), 
-                                                                      getNumberValue(query.get('user_account_id')),
-                                                                      getNumberValue(query.get('data_app_id')), 
-                                                                      query.get('resource_name'),
-                                                                      query.get('resource_name_master_attribute'),
-                                                                      query.get('entity_id'),
-                                                                      query.get('lang_code'),
-                                                                      user_null)
-                                            .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+const DataGet = (app_id, resource_id, query, user_null=false) => app_data_resource_detail_data.get( app_id, 
+                                                                                                    resource_id, 
+                                                                                                    getNumberValue(query.get('user_account_id')),
+                                                                                                    getNumberValue(query.get('data_app_id')), 
+                                                                                                    query.get('resource_name'),
+                                                                                                    query.get('resource_name_master_attribute'),
+                                                                                                    query.get('entity_id'),
+                                                                                                    query.get('lang_code'),
+                                                                                                    user_null)
+                                                                  .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 
 /**
  * 
