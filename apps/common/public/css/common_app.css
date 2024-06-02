@@ -387,6 +387,21 @@ select {
 	font-weight: bold;
 	margin-bottom:1em;
 }
+.common_app_data_display_master,
+.common_app_data_display_detail_horizontal_row_title,
+.common_app_data_display_detail_horizontal_row{
+	font-size: 0.7em;
+	text-align: start;
+	
+}
+.common_app_data_display_detail_horizontal_row_title,
+.common_app_data_display_detail_horizontal_row{
+	display: grid;
+    grid-auto-flow: column;
+}
+.common_app_data_display_detail_horizontal_row_title{
+	font-weight: bold;
+}
 .common_app_data_display_master_col1,
 .common_app_data_display_master_col2{
 	display: inline-block;
@@ -395,6 +410,9 @@ select {
 }
 .common_app_data_display_master_col2{
 	border:1px solid;
+}
+.common_app_data_display_detail_col{
+	display: inline-block;
 }
 .common_app_data_display_buttons{
 	position:absolute;

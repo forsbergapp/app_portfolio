@@ -33,7 +33,7 @@ const getAppsAdmin = async (app_id, query) => service.getAppsAdmin(app_id, query
 /**
  * 
  * @param {number} app_id 
- * @param {string} resource_id 
+ * @param {string} resource_id
  * @param {*} data
  * @param {import('../types.js').res} res 
  * @returns 

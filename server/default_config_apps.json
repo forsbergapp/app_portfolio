@@ -399,7 +399,10 @@
                     "RENDER_FILES":[]
         },
         "MODULES":[
-            ["FUNCTION","ACCOUNT_CREATE",   "Creates ACCOUNT with logic not to be displayed in app",            "/apps/app5/src/function/account_create.js"]
+            ["FUNCTION","ACCOUNT_CREATE",       "Creates ACCOUNT with logic not to be displayed in app",            "/apps/app5/src/functions/account_create.js"],
+            ["FUNCTION","ACCOUNT_STATEMENT",    "Gets ACCOUNT statement with logic not to be displayed in app",     "/apps/app5/src/functions/account_statement.js"],
+            ["FUNCTION","ACCOUNT_TRANSACTIONS", "Gets ACCOUNT transactions with logic not to be displayed in app",  "/apps/app5/src/functions/account_transactions.js"],
+            ["FUNCTION","CUSTOMER_CREATE",      "Creates CUSTOMER with logic not to be displayed in app",           "/apps/app5/src/functions/customer_create.js"]
         ],
         "STATUS":"ONLINE"
     },
