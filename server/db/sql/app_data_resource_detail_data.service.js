@@ -41,14 +41,14 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                         adrm_attribute.app_data_entity_resource_id                      "app_data_resource_master_attribute_app_data_entity_resource_id",
                         adrm_attribute.user_account_app_user_account_id                 "app_data_resource_master_attribute_user_account_app_user_account_id",
                         adrm_attribute.user_account_app_app_id                          "app_data_resource_master_attribute_user_account_app_app_id",
-                        as.id                                                           "app_data_resource_master_app_setting_id"
-                        as_attribute.app_setting_type_app_setting_type_name             "app_data_resource_master_app_setting_type_app_setting_type_name"
-                        as_attribute.value                                              "app_data_resource_master_app_setting_value"
-                        as_attribute.display_data                                       "app_setting_attribute_display_data"
-                        as.id                                                           "app_setting_id",
-                        as.app_setting_type_app_setting_type_name                       "app_setting_type_app_setting_type_name"
-                        as.value                                                        "app_setting_value"
-                        as.display_data                                                 "app_setting_display_data"
+                        app_s.id                                                        "app_data_resource_master_app_setting_id",
+                        as_attribute.app_setting_type_app_setting_type_name             "app_data_resource_master_app_setting_type_app_setting_type_name",
+                        as_attribute.value                                              "app_data_resource_master_app_setting_value",
+                        as_attribute.display_data                                       "app_setting_attribute_display_data",
+                        app_s.id                                                        "app_setting_id",
+                        app_s.app_setting_type_app_setting_type_name                    "app_setting_type_app_setting_type_name",
+                        app_s.value                                                     "app_setting_value",
+                        app_s.display_data                                              "app_setting_display_data"
                    FROM <DB_SCHEMA/>.app_data_resource_detail_data  adrdd,
                         <DB_SCHEMA/>.app_data_resource_detail       adrd,
                         <DB_SCHEMA/>.app_data_resource_master       adrm
@@ -59,19 +59,19 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                             LEFT JOIN <DB_SCHEMA/>.app_setting                  as_attribute
                             ON as_attribute.id = ader_attribute.app_setting_id
                         <DB_SCHEMA/>.app_data_entity_resource ader,
-                        <DB_SCHEMA/>.app_setting              as,
+                        <DB_SCHEMA/>.app_setting              app_s
                   WHERE adrdd.app_data_resource_detail_id                       = adrd.id
                     AND ader.id                                                 = adrd.app_data_entity_resource_id
                     AND ader.app_data_entity_app_id                             = adrd.app_data_entity_resource_app_data_entity_app_id
                     AND adrm.id                                                 = adrd.app_data_resource_master_id
-                    AND as.id                                                   = ader.app_setting_id
-                    AND as.app_setting_type_app_id                              = ader.app_data_entity_app_id
+                    AND app_s.id                                                = ader.app_setting_id
+                    AND app_s.app_setting_type_app_id                           = ader.app_data_entity_app_id
                     AND (adrdd.id                                               = :resource_id OR :resource_id IS NULL)
-                    AND ((adrm.user_account_app_user_account_id                 = :user_account_id &&
+                    AND ((adrm.user_account_app_user_account_id                 = :user_account_id AND
                           adrm.user_account_app_app_id                          = :user_account_app_id) OR :user_account_id IS NULL)                    
-                    AND ((adrm.user_account_app_user_account_id                 = NULL && :user_null=1) OR :user_null=0)
+                    AND ((adrm.user_account_app_user_account_id                 = NULL AND :user_null=1) OR :user_null=0)
                     AND (adrm.app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)
-                    AND (as.value                                               = :resource_name OR :resource_name IS NULL)
+                    AND (app_s.value                                            = :resource_name OR :resource_name IS NULL)
                     AND (as_attribute.app_setting_type_app_setting_type_name    = :resource_name_master_attribute OR :resource_name_master_attribute IS NULL)
                     AND (adrm.app_data_entity_resource_app_data_entity_id       = :entity_id OR :entity_id IS NULL)`;
     const parameters = {resource_id                     : resource_id,
@@ -106,9 +106,9 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                            <DB_SCHEMA/>.app_data_resource_master adrm
                      WHERE adrd.id = :app_data_resource_detail_id
                        AND adrm.id = adrd.app_data_resource_master_id
-                       AND (adrm.app_data_entity_resource_app_data_entity_app_id = :data_app_id OR :data_app_id IS NULL)
-                       AND ((adrm.user_account_app_user_account_id   = :user_account_id &&
-                             adrm.user_account_app_app_id            = :user_account_app_id) OR :user_account_id IS NULL))`;
+                       AND (adrm.app_data_entity_resource_app_data_entity_app_id    = :data_app_id OR :data_app_id IS NULL)
+                       AND ((adrm.user_account_app_user_account_id                  = :user_account_id AND
+                             adrm.user_account_app_app_id                           = :user_account_app_id) OR :user_account_id IS NULL))`;
     const parameters = {json_data                               : JSON.stringify(data.json_data),
                         user_account_id                         : data.user_account_id,
                         user_account_app_id                     : data.user_account_id?data.data_app_id:null,
@@ -138,9 +138,9 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                                       <DB_SCHEMA/>.app_data_resource_master adrm
                                 WHERE adrd.id = :app_data_resource_detail_id
                                   AND adrm.id = adrd.app_data_resource_master_id
-                                  AND (adrm.app_data_entity_resource_app_data_entity_app_id = :data_app_id OR :data_app_id IS NULL)
-                                  AND ((adrm.user_account_app_user_account_id   = :user_account_id &&
-                                        adrm.user_account_app_app_id            = :user_account_app_id) OR :user_account_id IS NULL)))`;
+                                  AND (adrm.app_data_entity_resource_app_data_entity_app_id     = :data_app_id OR :data_app_id IS NULL)
+                                  AND ((adrm.user_account_app_user_account_id                   = :user_account_id AND
+                                        adrm.user_account_app_app_id                            = :user_account_app_id) OR :user_account_id IS NULL)))`;
     const parameters = {resource_id:                                        resource_id,
                         json_data                               :JSON.stringify(data.json_data),
                         user_account_id                         :data.user_account_id,
@@ -167,9 +167,9 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                                       <DB_SCHEMA/>.app_data_resource_master adrm
                                 WHERE adrd.id = :app_data_resource_detail_id
                                   AND adrm.id = adrd.app_data_resource_master_id
-                                  AND (adrm.app_data_entity_resource_app_data_entity_app_id = :data_app_id OR :data_app_id IS NULL)
-                                  AND ((adrm.user_account_app_user_account_id   = :user_account_id &&
-                                        adrm.user_account_app_app_id            = :user_account_app_id) OR :user_account_id IS NULL)))`;
+                                  AND (adrm.app_data_entity_resource_app_data_entity_app_id     = :data_app_id OR :data_app_id IS NULL)
+                                  AND ((adrm.user_account_app_user_account_id                   = :user_account_id AND
+                                        adrm.user_account_app_app_id                            = :user_account_app_id) OR :user_account_id IS NULL)))`;
     const parameters = {resource_id         : resource_id,
                         user_account_id     : data.user_account_id,
                         user_account_app_id : data.user_account_id?data.data_app_id:null,
