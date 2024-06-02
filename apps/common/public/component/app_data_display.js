@@ -3,7 +3,7 @@ const AppDocument = document;
 /**
  * @typedef {{  value:number|string|null, metadata:{default_text:string, length:number, type: string, contentEditable:boolean}}} ObjectData
  * 
- * @typedef {Object.<string,ObjectData>} master_object_type
+ * @typedef {Object.<string,ObjectData>|null} master_object_type
  * 
  * @typedef {{  display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
  *              master_object:master_object_type,
@@ -36,19 +36,19 @@ const AppDocument = document;
  * @returns 
  */
 const template = props =>`  ${props.master_object?
-                                `<div class='common_app_data_display_master_title'>${props.master_object.title}</div>`:''
+                                `<div class='common_app_data_display_master_title'>${props.master_object.title.metadata.default_text}</div>`:''
                             }
                             ${(props.display_type=='VERTICAL_KEY_VALUE' || props.display_type=='MASTER_DETAIL_HORIZONTAL' || props.display_type=='MASTER_DETAIL_VERTICAL')?
                                 `
                                 ${props.master_object?
                                     `<div class='common_app_data_display_master'>
-                                        ${Object.entries(props.master_object).map((/**@type{*}*/master_row)=>
+                                        ${Object.entries(props.master_object).filter(key=>key[0]!='title').map((/**@type{*}*/master_row)=>
                                             `<div class='common_app_data_display_master_list'>
                                                 <div class='common_app_data_display_master_row'>
                                                     <div    data-key='${master_row[0]}' 
-                                                            contentEditable='${master_row[1].metadata.contentEditable}' 
-                                                            class='common_app_data_display_master_col'>${master_row[1].metadata.default_text}</div>
-                                                    <div class='common_app_data_display_master_col'>${master_row[1].value}</div>
+                                                            class='common_app_data_display_master_col1'>${master_row[1].metadata.default_text}</div>
+                                                    <div    class='common_app_data_display_master_col2'
+                                                            contentEditable='${master_row[1].metadata.contentEditable}'>${master_row[1].value ?? ''}</div>
                                                 </div>
                                             </div>`).join('')
                                         }
@@ -130,8 +130,10 @@ const template = props =>`  ${props.master_object?
 const component = async props => {
     let spinner = 'css_spinner';
     const post_component = async () => {
-        const master_object = props.master_path?await props.function_FFB(props.master_path, props.master_query, props.master_method, props.master_token_type, null):{};
-        const detail_rows = props.detail_path?await props.function_FFB(props.detail_path, props.detail_query, props.detail_method, props.detail_token_type, null):[];
+        const master_object = props.master_path?await props.function_FFB(props.master_path, props.master_query, props.master_method, props.master_token_type, null)
+                                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows[0].data):{};
+        const detail_rows = props.detail_path?await props.function_FFB(props.detail_path, props.detail_query, props.detail_method, props.detail_token_type, null)
+                                                        .then((/**@type{*}*/result)=>JSON.parse(result)):[];
         spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
             render_template({   display_type:props.display_type,
@@ -141,7 +143,8 @@ const component = async props => {
                                 button_update:props.button_update,
                                 button_post:props.button_post,
                                 button_delete:props.button_delete});
-        props.common_document.querySelector('#common_app_data_display_button_print')['data-function'] = props.function_button_print;
+        if (props.function_button_print)
+            props.common_document.querySelector('#common_app_data_display_button_print')['data-function'] = props.function_button_print;
         if (props.function_button_update)
             props.common_document.querySelector('#common_app_data_display_button_update')['data-function'] = props.function_button_update;
         if (props.function_button_post)
@@ -161,7 +164,7 @@ const component = async props => {
         props:  {function_post:post_component},
         data:   null,
         template: render_template({ display_type:props.display_type,
-                                    master_object:{title:{  value:'', metadata:{default_text:'', length:0, type: 'TEXT', contentEditable:false}}},
+                                    master_object:null,
                                     rows:[],
                                     button_print:false,
                                     button_update:false,

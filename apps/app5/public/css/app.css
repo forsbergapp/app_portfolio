@@ -84,6 +84,10 @@ body {
 	height: 25em;
 	overflow-x: auto;
 	max-height: 100%;
+	position: relative;
+}
+#app_page_secure_tab_content.css_spinner{
+	padding: unset !important;
 }
 #app_page_secure_tab_content .css_spinner{
 	margin-inline-start:calc(50% - 12.5px) !important;
@@ -252,5 +256,8 @@ body {
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
 #common_window_info{
+	background: var(--common_app_color_white);
+}
+.common_app_data_display_master_col2{
 	background: var(--common_app_color_white);
 }

@@ -3,22 +3,37 @@ const AppDocument = document;
 
 /**
  *  
- * @param {{}} props 
+ * @param {{customer:[]}} props 
  * @returns 
  */
 const template = props => ` <div id='app_page_secure'>
-                                <div id='app_page_secure_nav'>
-                                    <div id='tab1' class='app_page_secure_tab common_link common_icon'></div>
-                                    <div id='tab2' class='app_page_secure_tab common_link common_icon'></div>
-                                    <div id='tab3' class='app_page_secure_tab common_link common_icon'></div>
-                                </div>
-                                <div id='app_page_secure_tab_content' class='app_bank_div <SPINNER_CLASS/>' >
-                                </div>
+                                ${props.customer.length>0?
+                                    `
+                                    <div id='app_page_secure_nav'>
+                                        <div id='tab1' class='app_page_secure_tab common_link common_icon'></div>
+                                        <div id='tab2' class='app_page_secure_tab common_link common_icon'></div>
+                                        <div id='tab3' class='app_page_secure_tab common_link common_icon'></div>
+                                    </div>
+                                    <div id='app_page_secure_tab_content' class='app_bank_div <SPINNER_CLASS/>' >
+                                    </div>
+                                    `:
+                                    `
+                                    <div id='app_page_secure_nav'>
+                                        <div id='tab0' class='app_page_secure_tab common_link common_icon'></div>
+                                    </div>
+                                    <div id='app_page_secure_tab_content' class='app_bank_div <SPINNER_CLASS/>' >
+                                    </div>
+                                    `
+                                }
                             </div>`;
 /**
  * 
  * @param {{common_document:AppDocument,
  *          common_mountdiv:string,
+ *          app_id:number,
+ *          user_id:number,
+ *          function_button_post:function,
+ *          function_ComponentRender:function,
  *          function_FFB:function}} props,
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
@@ -27,7 +42,7 @@ const template = props => ` <div id='app_page_secure'>
 const component = async props => {
     let spinner = `css_spinner'`;
     /**
-     * @param {{}} props_template
+     * @param {{customer:[]}} props_template
      * @returns {string}
      */
     const render_template = props_template =>{
@@ -35,15 +50,42 @@ const component = async props => {
                 .replace('<SPINNER_CLASS/>', spinner);
     }
     const post_component = async () =>{
-        spinner = '';        
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({});
-        props.common_document.querySelector('#tab1').click();
-        //props.common_document.querySelector('#tab1').dispatchEvent(new Event('click'));
+        spinner = '';
+        const customer = await props.function_FFB('/server-db/app_data_resource_master/', `user_account_id=${props.user_id}&data_app_id=${props.app_id}`, 'GET', 'APP_ACCESS', null)
+                                            .then((/**@type{string}*/result)=>JSON.parse(result))
+                                            .catch((/**@type{Error}*/error)=>{throw error});
+        
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  customer:customer.rows});
+        if (customer.length>0)
+            props.common_document.querySelector('#tab1').click();
+        else{
+            props.function_ComponentRender('app_page_secure_tab_content', 
+                                            {
+                                                display_type:'VERTICAL_KEY_VALUE',
+                                                master_path:'/server-db/app_data_entity_resource/',
+                                                master_query:`resource_name=CUSTOMER&data_app_id=${props.app_id}`,
+                                                master_method:'GET',
+                                                master_token_type:'APP_DATA',
+                                                detail_path:null,
+                                                detail_query:null,
+                                                detail_method:null,
+                                                detail_token_type:null,
+                                                button_print: false,
+                                                button_update: false,
+                                                button_post: true,
+                                                button_delete: false,
+                                                function_FFB:props.function_FFB,
+                                                function_button_print:null,
+                                                function_button_update:null,
+                                                function_button_post:props.function_button_post,
+                                                function_button_delete:null
+                                            }, '/common/component/app_data_display.js');
+        }
     }
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({})
+        template: render_template({customer:[]})
     };
 }
 export default component;

@@ -259,14 +259,10 @@ const IBAN_validate = iban => {
 const init_secure = () => {
     common.ComponentRender('app_main_page',
                             {locale:common.COMMON_GLOBAL.user_locale,
-                            app_data_bank_id:1234,
-                            app_data_bank_name:'App Bank',
-                            app_data_bank_country_code:'SE',
-                            app_data_bank_account_currency: '€',
-                            app_data_bank_account_currency_name:'App Euro',
-                            app_data_customer_bban:'0000123456789012',
-                            user_timezone:common.COMMON_GLOBAL.user_timezone,
-                            function_IBAN_compose:IBAN_compose,
+                            app_id:common.COMMON_GLOBAL.app_id,
+                            user_id:common.COMMON_GLOBAL.user_account_id,
+                            function_button_post:null,
+                            function_ComponentRender:common.ComponentRender,
                             function_FFB:common.FFB},
                             '/component/page_secure.js');
 }
