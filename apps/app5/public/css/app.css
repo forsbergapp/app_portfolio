@@ -1,4 +1,8 @@
 /*APP*/
+#tab1::before{content:var(--common_app_icon_chart)}
+#tab2::before{content:var(--common_app_icon_user)}
+#tab3::before{content:var(--common_app_icon_info)}
+
 html, body, #app {
 	height:100%;
 }
@@ -35,6 +39,9 @@ body {
 #app_main_page{
 	height: 100%;
 }
+#app_page_secure{
+	height: 85%;
+}
 #app_page_start_get_bankaccount{
 	cursor: pointer;
 	margin-top: 20px;
@@ -64,56 +71,69 @@ body {
     transition-property: box-shadow;
 	vertical-align: middle;
 }
-#app_page_secure_bank_statement_row{
-	height: 3em;
+
+.app_page_secure_tab{
+	padding: 0.25em;
+	width: 2em;
+	cursor: pointer;
+	border-top-left-radius:4px;
+	border-top-right-radius:4px;
 }
-#app_page_secure_account{
-	height: 80%;
+#app_page_secure_tab_content{
+	width: 25em;
+	height: 25em;
+	overflow-x: auto;
+	max-height: 100%;
+}
+#app_page_secure_tab_content .css_spinner{
+	margin-inline-start:calc(50% - 12.5px) !important;
+}
+#bank_statement_account{
 	text-align: start;
 }
-#app_page_secure_balance{
+#bank_statement_balance{
 	font-size: 2en;
 	font-weight: bold;
 }
-#app_page_secure_transactions{
+#bank_statement_transactions{
 	text-align: start;
-	margin-top: 3em;
 	display: flex !important;
     flex-direction: column;
 	height:calc(100% - 4em);
 }
-#app_page_secure_bank_statement_row{
+#bank_statement_bank_statement_row{
 	font-size:0.5em;
 }
-#app_page_secure_bank_statement_row .app_page_secure_bank_statement_col{
+#bank_statement_bank_statement_row .bank_statement_bank_statement_col{
 	width:calc(50% - 1em);
 	display: inline-block;
     vertical-align: top;
 }
-#app_page_secure_transactions_list{
+#bank_statement_transactions_list{
 	font-size:0.5em;
 	margin-top: 10px;
 	overflow: auto;
 }
-.app_page_secure_transactions_row div{
+
+.bank_statement_transactions_row div{
 	display: inline-block;
 }
-.app_page_secure_transactions_origin{
+.bank_statement_transactions_origin{
 	width: 150px;
 	text-align: start;
 }
-.app_page_secure_transactions_amount_deposit,
-.app_page_secure_transactions_amount_withdrawal{
+.bank_statement_transactions_amount_deposit,
+.bank_statement_transactions_amount_withdrawal{
 	width: 75px;
     text-align: end;	
 }
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
-	#app_page_secure_transactions_list{
+	#bank_statement_transactions_list{
 		font-size: 0.7em;
 	}
-	#app_page_secure_bank_statement_row{
+	#bank_statement_bank_statement_row{
 		font-size:0.7em;
 	}
 	.app_page_start_bank_div{
@@ -166,9 +186,25 @@ body {
 	background-color: var(--common_app_color_white3);
 	box-shadow: 0 0 1px var(--common_app_color_light);
 }
+.app_bank_div .css_spinner{
+	--common_app_color_background_spinner:var(--common_app_color_white3);
+}
 .app_page_start_bank_div:hover,
 .app_page_start_bank_div:active{
 	box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
+}
+.app_page_secure_tab{
+	color: var(--common_app_color_gold);
+	background-color: var(--common_app_color_white);
+	box-shadow: 0 0 1px var(--common_app_color_light);
+}
+.app_page_secure_tab.active{
+	color: var(--common_app_color_gold);
+	background-color: var(--common_app_color_white3);
+	box-shadow: 0 0 1px var(--common_app_color_light);
+}
+#app_page_secure_tab_content:hover, #app_page_secure_tab_content:active {
+    box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
 }
 /* APP THEME COMMON*/
 .common_input{

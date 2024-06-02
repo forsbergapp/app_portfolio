@@ -28,8 +28,36 @@ const app_event_click = event => {
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
-                case 'app_page_secure_refresh':{
-                    init_secure();
+                case 'tab1':
+                case 'tab2':
+                case 'tab3':{
+                    AppDocument.querySelectorAll('.app_page_secure_tab').forEach((/**@type{HTMLElement}*/element)=>element.classList.remove('active'));
+                    AppDocument.querySelector(`#${event_target_id}`).classList.add('active');
+                    switch (event_target_id){
+                        case 'tab1':{
+                            common.ComponentRender('app_page_secure_tab_content',
+                            {locale:common.COMMON_GLOBAL.user_locale,
+                            app_data_bank_id:1234,
+                            app_data_bank_name:'App Bank',
+                            app_data_bank_country_code:'SE',
+                            app_data_bank_account_currency: '€',
+                            app_data_bank_account_currency_name:'App Euro',
+                            app_data_customer_bban:'0000123456789012',
+                            user_timezone:common.COMMON_GLOBAL.user_timezone,
+                            function_IBAN_compose:IBAN_compose,
+                            function_FFB:common.FFB},
+                            '/component/bank_statement.js');
+                            break;
+                        }
+                        case 'tab2':{
+                            AppDocument.querySelector('#app_page_secure_tab_content').innerHTML = '';
+                            break;
+                        }
+                        case 'tab3':{
+                            AppDocument.querySelector('#app_page_secure_tab_content').innerHTML = '';
+                            break;
+                        }
+                    }
                     break;
                 }
                 case 'app_page_start_get_bankaccount':
@@ -103,10 +131,10 @@ const app_event_click = event => {
                 }
                 case 'common_user_start_identity_provider_login':{
                     const target_row = common.element_row(event.target);
-                    common.user_login(null, null, null, target_row.querySelector('.common_login_provider_id').innerHTML)
+                    common.user_login(null, null, null, Number(target_row.querySelector('.common_login_provider_id').innerHTML))
                     .then(()=>common.ComponentRemove('app_main_page'))
                     .then(()=>init_secure())
-                    .catch(()=>null);
+                    .catch(()=>null);             
                     break;
                 }
             }
