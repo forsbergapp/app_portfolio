@@ -73,7 +73,14 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 --
 -- app data entity
 --
-INSERT INTO <DB_SCHEMA/>.app_data_entity (app_id, json_data) VALUES (<APP_ID/>, '{"description":"Entity info: Swedish bank using SEPA, IBAN, VPA","name":"App Bank", "country_code":"SE", "bank_id":1234, "bban_length":16, "bank_type":"SEPA", "entity_type":"BANK"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity (app_id, json_data) 
+    VALUES (<APP_ID/>, '{   "description":"Entity info: Swedish bank using SEPA, IBAN, VPA",
+                            "name":"App Bank", 
+                            "country_code":"SE", 
+                            "bank_id":1234, 
+                            "bban_length":16, 
+                            "bank_type":"SEPA", 
+                            "entity_type":"BANK"}');
 --
 -- app data entity resource
 --
@@ -83,15 +90,18 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (json_data, app_setting_id, ap
                 "currency_name":"App Euro",
                 "data":{
 						"title":	            {"value":null, "metadata":{"default_text":"Account",                      "length":null,"type": "TEXT",     "contentEditable":false}},
-						"bank_account_number":  {"value":null, "metadata":{"default_text":"Number",                       "length":16,  "type": "TEXT",     "contentEditable":false}},  "comment":"Generate number with Date.now().toString().padStart(16,''0'')"},
-						"bank_account_secret": 	{"value":null, "metadata":{"default_text":"Secret", 		              "length":64,  "type": "TEXT", 	"contentEditable":false}},  "comment":"SHA256"},
-						"bank_account_vpa":		{"value":null, "metadata":{"default_text":"Virtual Payment Address (VPA)","length":36,  "type": "TEXT",     "contentEditable":false}},  "comment":"UUID format [8characters]-[4characters]-[4characters]-[4characters]-[12characters]"}
+						"bank_account_number":  {"value":null, "metadata":{"default_text":"Number",                       "length":16,  "type": "TEXT",     "contentEditable":false},  "comment":"Generate number with Date.now().toString().padStart(16,''0'')"},
+						"bank_account_secret": 	{"value":null, "metadata":{"default_text":"Secret", 		              "length":64,  "type": "TEXT", 	"contentEditable":false},  "comment":"SHA256"},
+						"bank_account_vpa":		{"value":null, "metadata":{"default_text":"Virtual Payment Address (VPA)","length":36,  "type": "TEXT",     "contentEditable":false},  "comment":"UUID format [8characters]-[4characters]-[4characters]-[4characters]-[12characters]"}
 				}}', 
             (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name='RESOURCE_TYPE' AND value = 'ACCOUNT'), 
             <APP_ID/>, 
             (SELECT id FROM <DB_SCHEMA/>.app_data_entity WHERE app_id = <APP_ID/>));
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (json_data, app_setting_id, app_data_entity_app_id, app_data_entity_id) 
-    VALUES ('{"description":"Payment info: Payments using VPA (Virtual Payment Address) and UUID random generated id to make payments", "payment_wait":180, "vpa_validity":1, "status":"ONLINE"}', 
+    VALUES ('{  "description":"Payment info: Payments using VPA (Virtual Payment Address) and UUID random generated id to make payments", 
+                "payment_wait":180, 
+                "vpa_validity":1, 
+                "status":"ONLINE"}', 
             (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name='RESOURCE_TYPE' AND value = 'PAYMENT'), 
             <APP_ID/>, 
             (SELECT id FROM <DB_SCHEMA/>.app_data_entity WHERE app_id = <APP_ID/>));

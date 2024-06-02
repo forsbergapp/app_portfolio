@@ -35,26 +35,76 @@ const app_event_click = event => {
                     AppDocument.querySelector(`#${event_target_id}`).classList.add('active');
                     switch (event_target_id){
                         case 'tab1':{
-                            common.ComponentRender('app_page_secure_tab_content',
-                            {locale:common.COMMON_GLOBAL.user_locale,
-                            app_data_bank_id:1234,
-                            app_data_bank_name:'App Bank',
-                            app_data_bank_country_code:'SE',
-                            app_data_bank_account_currency: '€',
-                            app_data_bank_account_currency_name:'App Euro',
-                            app_data_customer_bban:'0000123456789012',
-                            user_timezone:common.COMMON_GLOBAL.user_timezone,
-                            function_IBAN_compose:IBAN_compose,
-                            function_FFB:common.FFB},
-                            '/component/bank_statement.js');
+                            common.ComponentRender('app_page_secure_tab_content', 
+                                            {
+                                                display_type:'MASTER_DETAIL_HORIZONTAL',
+                                                master_path:'/app-function/ACCOUNT_STATEMENT',
+                                                master_query:`user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}`,
+                                                master_method:'GET',
+                                                master_token_type:'APP_ACCESS',
+                                                detail_path:'/app-function/ACCOUNT_TRANSACTIONS',
+                                                detail_query:`user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}&fields=timestamp,logo,origin,amount_deposit,amount_withdrawal`,
+                                                detail_method:'GET',
+                                                detail_token_type:'APP_ACCESS',
+                                                detail_fields:['timestamp', 'logo', 'origin', 'amount_deposit', 'amount_withdrawal'],
+                                                button_print: false,
+                                                button_update: false,
+                                                button_post: false,
+                                                button_delete: false,
+                                                function_FFB:common.FFB,
+                                                function_button_print:null,
+                                                function_button_update:null,
+                                                function_button_post:null,
+                                                function_button_delete:null
+                                            }, '/common/component/app_data_display.js');                            
                             break;
                         }
                         case 'tab2':{
-                            AppDocument.querySelector('#app_page_secure_tab_content').innerHTML = '';
+                            common.ComponentRender('app_page_secure_tab_content', 
+                                            {
+                                                display_type:'VERTICAL_KEY_VALUE',
+                                                master_path:'/server-db/app_data_resource_master/',
+                                                master_query:`resource_name=CUSTOMER&user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}`,
+                                                master_method:'GET',
+                                                master_token_type:'APP_ACCESS',
+                                                detail_path:null,
+                                                detail_query:null,
+                                                detail_method:null,
+                                                detail_token_type:null,
+                                                button_print: false,
+                                                button_update: false,
+                                                button_post: false,
+                                                button_delete: false,
+                                                function_FFB:common.FFB,
+                                                function_button_print:null,
+                                                function_button_update:null,
+                                                function_button_post:null,
+                                                function_button_delete:null
+                                            }, '/common/component/app_data_display.js');
                             break;
                         }
                         case 'tab3':{
-                            AppDocument.querySelector('#app_page_secure_tab_content').innerHTML = '';
+                            common.ComponentRender('app_page_secure_tab_content', 
+                                            {
+                                                display_type:'VERTICAL_KEY_VALUE',
+                                                master_path:'/server-db/app_data_resource_master/',
+                                                master_query:`resource_name=ACCOUNT&user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}`,
+                                                master_method:'GET',
+                                                master_token_type:'APP_ACCESS',
+                                                detail_path:null,
+                                                detail_query:null,
+                                                detail_method:null,
+                                                detail_token_type:null,
+                                                button_print: false,
+                                                button_update: false,
+                                                button_post: false,
+                                                button_delete: false,
+                                                function_FFB:common.FFB,
+                                                function_button_print:null,
+                                                function_button_update:null,
+                                                function_button_post:null,
+                                                function_button_delete:null
+                                            }, '/common/component/app_data_display.js');
                             break;
                         }
                     }
@@ -192,66 +242,24 @@ const framework_set = async (framework=null) => {
             Focus: null,
             Input:null});
 };
-/**
- * IBAN mod 97
- * @param {string} str 
- * @returns {number}
- */
-const IBAN_mod97 = str => {
-    const first9 = str.substring(0, 9);
-    const remainingStr = str.substring(9);
-    const remainder = Number(first9) % 97; 
-    const newString = remainder.toString() + remainingStr;
-    if (newString.length > 2)
-        return IBAN_mod97(newString);
-    return remainder;};
 
-/**
- * IBAN get check digit
- * @param {string} country_code 
- * @param {string} bban 
- * @returns {number}
- */
-const IBAN_getCheckDigit = (country_code, bban) => {
-    const checkstring = bban + (country_code.charCodeAt(0) - 55) + (country_code.charCodeAt(1) - 55); 
-    for(let digit=0; digit<99;digit++){
-        const remainder = IBAN_mod97(checkstring + digit.toString().padStart(2,'0')); 
-        if (remainder == 1)
-            return digit;
-    }
-    return -1;
-};
-/**
- * IBAN compose with optional print format
- * @param {string} country_code 
- * @param {string} bank_id 
- * @param {string} account_number 
- * @param {boolean} print_format 
- * @returns {string}
- */
-const IBAN_compose = (country_code, bank_id, account_number, print_format=false) => {
-    const bban = bank_id.toString() + account_number.toString();
-    if (print_format){
-        const bban_print_string = bban.toString().match(/.{0,4}/g);
-        if (bban_print_string)
-            return country_code.toUpperCase() + IBAN_getCheckDigit(country_code, bban).toString() + ' ' + bban_print_string.join(' ');
-        else
-            return country_code.toUpperCase() + IBAN_getCheckDigit(country_code, bban).toString() + ' ' + '';
-    }
-    else
-        return country_code.toUpperCase() + IBAN_getCheckDigit(country_code, bban) + bban.toString();
+const customer_create = async () => {
+    await common.FFB(   '/app-function/CUSTOMER_CREATE', 
+                        null, 
+                        'POST', 
+                        'APP_ACCESS', 
+                        {
+                            user_account_id :common.COMMON_GLOBAL.user_account_id,
+                            data_app_id     :common.COMMON_GLOBAL.app_id,
+                            customer_type   :AppDocument.querySelector(`#app_page_secure_tab_content [data-value='customer_type']`).innerHTML,
+                            name            :AppDocument.querySelector(`#app_page_secure_tab_content [data-value='name']`).innerHTML,
+                            address         :AppDocument.querySelector(`#app_page_secure_tab_content [data-value='address']`).innerHTML,
+                            city            :AppDocument.querySelector(`#app_page_secure_tab_content [data-value='city']`).innerHTML,
+                            country         :AppDocument.querySelector(`#app_page_secure_tab_content [data-value='customer_type']`).innerHTML
+                        }
+                    );
+    init_secure();
 }
-/**
- * IBAN validate
- * @param {string} iban 
- * @returns {boolean}
- */
-const IBAN_validate = iban => {
-    const reorderedString = iban.substring(4) + iban.substring(0, 4);
-    const replacedString = reorderedString.replaceAll(/[a-z]{1}/gi, match =>(match.toUpperCase().charCodeAt(0) - 55).toString(),);
-    return IBAN_mod97(replacedString) === 1;
-};
-
 /**
  * Init secure
  * @returns {void}
@@ -261,7 +269,7 @@ const init_secure = () => {
                             {locale:common.COMMON_GLOBAL.user_locale,
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_id:common.COMMON_GLOBAL.user_account_id,
-                            function_button_post:null,
+                            function_button_post:customer_create,
                             function_ComponentRender:common.ComponentRender,
                             function_FFB:common.FFB},
                             '/component/page_secure.js');
