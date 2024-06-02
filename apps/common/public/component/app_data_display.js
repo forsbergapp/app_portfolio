@@ -47,7 +47,8 @@ const template = props =>`  ${props.master_object?
                                                 <div class='common_app_data_display_master_row'>
                                                     <div    data-key='${master_row[0]}' 
                                                             class='common_app_data_display_master_col1'>${master_row[1].metadata.default_text}</div>
-                                                    <div    class='common_app_data_display_master_col2'
+                                                    <div    data-value='${master_row[0]}' 
+                                                            class='common_app_data_display_master_col2'
                                                             contentEditable='${master_row[1].metadata.contentEditable}'>${master_row[1].value ?? ''}</div>
                                                 </div>
                                             </div>`).join('')
@@ -62,14 +63,14 @@ const template = props =>`  ${props.master_object?
                                             `
                                             <div class='common_app_data_display_detail_horizontal_row_title common_row'>
                                                 ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
-                                                    `<div class='common_app_data_display_detail_col'>${Object.keys(detail_col)}</div>`).join('')
+                                                    `<div class='common_app_data_display_detail_col'>${detail_col[0]}</div>`).join('')
                                                 }
                                             </div>
                                             `:''
                                         }
                                         <div class='common_app_data_display_detail_horizontal_row common_row'>
                                             ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
-                                                `<div class='common_app_data_display_detail_col'>${Object.values(detail_col)}</div>`).join('')
+                                                `<div class='common_app_data_display_detail_col'>${detail_col[1]}</div>`).join('')
                                             }
                                         </div>
                                         `).join('')
@@ -133,7 +134,7 @@ const component = async props => {
         const master_object = props.master_path?await props.function_FFB(props.master_path, props.master_query, props.master_method, props.master_token_type, null)
                                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows[0].data):{};
         const detail_rows = props.detail_path?await props.function_FFB(props.detail_path, props.detail_query, props.detail_method, props.detail_token_type, null)
-                                                        .then((/**@type{*}*/result)=>JSON.parse(result)):[];
+                                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows):[];
         spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
             render_template({   display_type:props.display_type,

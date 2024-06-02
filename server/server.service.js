@@ -433,7 +433,15 @@ const COMMON = {
                         resolve(app.getFunction(routesparameters.app_id, 
                                                 /**@ts-ignore */
                                                 resource_id_get_string(), 
-                                                app_query, routesparameters.res));
+                                                routesparameters.body, routesparameters.res));
+                    }
+                    case route(`/bff/app_access/v1/app-function/${resource_id_string}`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), true):{
+                        resolve(app.getFunction(routesparameters.app_id, 
+                                                /**@ts-ignore */
+                                                resource_id_get_string(), 
+                                                {user_account_id: getNumberValue(app_query?.get('user_account_id')),
+                                                 data_app_id:     getNumberValue(app_query?.get('data_app_id')),
+                                                 fields:          app_query?.get('fields')}, routesparameters.res));
                     }
                     case route(`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_string}`, 'GET', null, null, false):
                     case route(`/bff/app_access/v1/server-db/app_data_resource_master/${resource_id_string}`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), false, getNumberValue(app_query?.get('data_app_id'))):{

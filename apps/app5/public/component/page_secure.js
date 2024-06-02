@@ -56,7 +56,7 @@ const component = async props => {
                                             .catch((/**@type{Error}*/error)=>{throw error});
         
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  customer:customer.rows});
-        if (customer.length>0)
+        if (customer.rows.length>0)
             props.common_document.querySelector('#tab1').click();
         else{
             props.function_ComponentRender('app_page_secure_tab_content', 
