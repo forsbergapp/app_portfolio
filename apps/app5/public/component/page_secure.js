@@ -53,7 +53,7 @@ const component = async props => {
     }
     const post_component = async () =>{
         spinner = '';
-        const customer = await props.function_FFB('/server-db/app_data_resource_master/', `user_account_id=${props.user_id}&data_app_id=${props.app_id}`, 'GET', 'APP_ACCESS', null)
+        const customer = await props.function_FFB('/server-db/app_data_resource_master/', `resource_name=CUSTOMER&user_account_id=${props.user_id}&data_app_id=${props.app_id}`, 'GET', 'APP_ACCESS', null)
                                             .then((/**@type{string}*/result)=>JSON.parse(result))
                                             .catch((/**@type{Error}*/error)=>{throw error});
         
@@ -64,8 +64,8 @@ const component = async props => {
             props.function_ComponentRender('app_page_secure_tab_content', 
                                             {
                                                 display_type:'VERTICAL_KEY_VALUE',
-                                                master_path:'/server-db/app_data_entity_resource/',
-                                                master_query:`resource_name=CUSTOMER&data_app_id=${props.app_id}`,
+                                                master_path:'/server-db/app_data_resource_master/',
+                                                master_query:`resource_name=CUSTOMER&data_app_id=${props.app_id}&fields=json_data`,
                                                 master_method:'GET',
                                                 master_token_type:'APP_DATA',
                                                 detail_path:null,
@@ -73,6 +73,7 @@ const component = async props => {
                                                 detail_method:null,
                                                 detail_token_type:null,
                                                 detail_class:null,
+                                                new_resource:true,
                                                 mode:'EDIT',
                                                 timezone:props.timezone,
                                                 locale:props.locale,
