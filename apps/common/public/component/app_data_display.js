@@ -10,6 +10,8 @@ const AppDocument = document;
  *              rows:[],
  *              detail_class:string,
  *              function_format_value:function,
+ *              timezone:string,
+ *              locale:string,
  *              button_print:boolean,
  *              button_update:boolean,
  *              button_post:boolean,
@@ -51,7 +53,7 @@ const template = props =>`  ${props.master_object?
                                                             class='common_app_data_display_master_col1'>${master_row[1].metadata.default_text}</div>
                                                     <div    data-value='${master_row[0]}' 
                                                             class='common_app_data_display_master_col2'
-                                                            contentEditable='${master_row[1].metadata.contentEditable}'>${props.function_format_value(master_row[1].value)}</div>
+                                                            contentEditable='${master_row[1].metadata.contentEditable}'>${props.function_format_value(master_row[1].value, props.timezone, props.locale)}</div>
                                                 </div>
                                             </div>`).join('')
                                         }
@@ -72,7 +74,7 @@ const template = props =>`  ${props.master_object?
                                         }
                                         <div class='common_app_data_display_detail_horizontal_row common_row ${props.detail_class}'>
                                             ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
-                                                `<div class='common_app_data_display_detail_col'>${props.function_format_value(detail_col[1])}</div>`).join('')
+                                                `<div class='common_app_data_display_detail_col'>${props.function_format_value(detail_col[1], props.timezone, props.locale)}</div>`).join('')
                                             }
                                         </div>
                                         `).join('')
@@ -83,7 +85,7 @@ const template = props =>`  ${props.master_object?
                                     ${props.rows.map((/**@type{*}*/detail_row)=>
                                         `<div data-id='${detail_row.id}' data-key='${detail_row.key}' data-value='${detail_row.value}' tabindex=-1 class='common_app_data_display_row common_row'>
                                             <div class='common_app_data_display_col'>${detail_row.key}</div>
-                                            <div class='common_app_data_display_col'>${props.function_format_value(detail_row.value)}</div>
+                                            <div class='common_app_data_display_col'>${props.function_format_value(detail_row.value, props.timezone, props.locale)}</div>
                                         </div>
                                         `).join('')
                                     }`:''
@@ -117,6 +119,7 @@ const template = props =>`  ${props.master_object?
  *          detail_method:string,
  *          detail_token_type:string,
  *          detail_class:string,
+ *          timezone:string,
  *          locale:string,
  *          button_print: boolean,
  *          button_update: boolean,
@@ -137,17 +140,62 @@ const component = async props => {
     /**
      * 
      * @param {*} value 
+     * @param {string} timezone
+     * @param {string} locale
+     * @param {boolean} short
      * @returns {string}
      */
-    const format_value = value => {
+    const format_value = (value, timezone, locale, short=true) => {
         if (value)
             if (typeof value=='number')
-                return value.toLocaleString(props.locale ?? 'en').padStart(2,(0).toLocaleString(props.locale ?? 'en'));
-            else
-                return value;
+                return value.toLocaleString(locale ?? 'en').padStart(2,(0).toLocaleString(locale ?? 'en'));
+            else{
+                //ISO 8601 format
+                const isodate = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)+/g;
+                try {
+                    if (value.match(isodate)){
+                        const options = short?
+                                            {
+                                                timeZone: timezone,
+                                                year: 'numeric',
+                                                month: 'numeric',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                second: '2-digit'
+                                            }:{
+                                                timeZone: timezone,
+                                                weekday: 'long',
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                second: '2-digit',
+                                                timeZoneName: 'long'  
+                                            };
+                        const utc_date = new Date(Date.UTC(
+                            Number(value.substring(0, 4)),      //year
+                            Number(value.substring(5, 7)) - 1,  //month
+                            Number(value.substring(8, 10)),     //day
+                            Number(value.substring(11, 13)),    //hour
+                            Number(value.substring(14, 16)),    //min
+                            Number(value.substring(17, 19))     //sec
+                        ));
+                        /**@ts-ignore */
+                        const format_date = utc_date.toLocaleDateString(locale, options);
+                        return format_date;
+                    }
+                    return value;
+
+                } catch (error) {
+                    return value;
+                }
+            }
         else
             return '';
     }
+
     const post_component = async () => {
         const master_object = props.master_path?await props.function_FFB(props.master_path, props.master_query, props.master_method, props.master_token_type, null)
                                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows[0].data):{};
@@ -160,6 +208,8 @@ const component = async props => {
                                 rows:detail_rows,
                                 detail_class:props.detail_class,
                                 function_format_value:format_value,
+                                timezone:props.timezone, 
+                                locale:props.locale,
                                 button_print:props.button_print,
                                 button_update:props.button_update,
                                 button_post:props.button_post,
@@ -189,6 +239,8 @@ const component = async props => {
                                     rows:[],
                                     detail_class:props.detail_class,
                                     function_format_value:format_value,
+                                    timezone:props.timezone,
+                                    locale:props.locale,
                                     button_print:false,
                                     button_update:false,
                                     button_post:false,
