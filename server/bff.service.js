@@ -99,8 +99,37 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
                                 else{
                                     if (bff_parameters.method.toUpperCase() == 'POST')
                                         bff_parameters.res.status(201).send(result_service);
-                                    else
-                                        bff_parameters.res.status(200).send(result_service);
+                                    else{
+                                        if (decodedquery && new URLSearchParams(decodedquery).get('fields')){
+                                            if (result_service.rows){
+                                                //limit fields/keys in rows
+                                                const limit_fields = result_service.rows.map((/**@type{*}*/row)=>{
+                                                    let row_new = {};
+                                                    /**@ts-ignore */
+                                                    for (const field of new URLSearchParams(decodedquery).get('fields').split(',')){
+                                                        /**@ts-ignore */
+                                                        row_new[field] = row[field];
+                                                    }
+                                                    return row_new;
+                                                })
+                                                result_service.rows = limit_fields;
+                                                bff_parameters.res.status(200).send(result_service);
+                                            }
+                                            else{
+                                                //limit fields/keys in object
+                                                let result_service_fields = {};
+                                                /**@ts-ignore */
+                                                for (const field of new URLSearchParams(decodedquery).get('fields').split(',')){
+                                                    /**@ts-ignore */
+                                                    result_service_fields[field] = result_service[field];
+                                                }
+                                                bff_parameters.res.status(200).send(result_service_fields);
+                                            }
+                                        }
+                                        else
+                                            bff_parameters.res.status(200).send(result_service);
+                                    }
+                                        
                                 }
                         }
                         else{
