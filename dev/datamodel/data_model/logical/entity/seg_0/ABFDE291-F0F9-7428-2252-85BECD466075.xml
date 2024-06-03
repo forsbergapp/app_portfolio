@@ -104,6 +104,7 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
+<nullsAllowed>true</nullsAllowed>
 <referedAttribute>FE50529D-BA36-7A16-2E52-490E60EB44C1</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>

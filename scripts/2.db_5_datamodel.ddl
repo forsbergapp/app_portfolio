@@ -51,7 +51,7 @@ CREATE TABLE <DB_SCHEMA/>.app_data_resource_detail (
     app_data_entity_resource_id                     INTEGER NOT NULL,
     app_data_entity_resource_app_data_entity_app_id INTEGER NOT NULL,
     app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL,
-    app_data_resource_master_attribute_id           INTEGER NOT NULL,
+    app_data_resource_master_attribute_id           INTEGER,
     CONSTRAINT app_data_resource_detail_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id,
                                                                                       app_data_entity_resource_app_data_entity_id,
                                                                                       app_data_entity_resource_id )
