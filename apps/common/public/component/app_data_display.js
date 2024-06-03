@@ -1,7 +1,7 @@
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 /**
- * @typedef {{  value:number|string|null, metadata:{default_text:string, length:number, type: string, contentEditable:boolean}}} ObjectData
+ * @typedef {{  value:number|string|null, metadata:{default_text:string, length:number, type: string}}} ObjectData
  * 
  * @typedef {Object.<string,ObjectData>|null} master_object_type
  * 
@@ -9,6 +9,7 @@ const AppDocument = document;
  *              master_object:master_object_type,
  *              rows:[],
  *              detail_class:string,
+ *              mode:'EDIT'|'READ',
  *              function_format_value:function,
  *              timezone:string,
  *              locale:string,
@@ -53,7 +54,7 @@ const template = props =>`  ${props.master_object?
                                                             class='common_app_data_display_master_col1'>${master_row[1].metadata.default_text}</div>
                                                     <div    data-value='${master_row[0]}' 
                                                             class='common_app_data_display_master_col2'
-                                                            contentEditable='${master_row[1].metadata.contentEditable}'>${props.function_format_value(master_row[1].value, props.timezone, props.locale)}</div>
+                                                            contentEditable='${props.mode=='READ'?'true':'false'}'>${props.function_format_value(master_row[1].value, props.timezone, props.locale)}</div>
                                                 </div>
                                             </div>`).join('')
                                         }
@@ -119,6 +120,7 @@ const template = props =>`  ${props.master_object?
  *          detail_method:string,
  *          detail_token_type:string,
  *          detail_class:string,
+ *          mode:'EDIT'|'READ',
  *          timezone:string,
  *          locale:string,
  *          button_print: boolean,
@@ -198,7 +200,7 @@ const component = async props => {
 
     const post_component = async () => {
         const master_object = props.master_path?await props.function_FFB(props.master_path, props.master_query, props.master_method, props.master_token_type, null)
-                                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows[0].data):{};
+                                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows[0].data ?? JSON.parse(result).rows[0]):{};
         const detail_rows = props.detail_path?await props.function_FFB(props.detail_path, props.detail_query, props.detail_method, props.detail_token_type, null)
                                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows):[];
         spinner = '';
@@ -207,6 +209,7 @@ const component = async props => {
                                 master_object:master_object,
                                 rows:detail_rows,
                                 detail_class:props.detail_class,
+                                mode:props.mode,
                                 function_format_value:format_value,
                                 timezone:props.timezone, 
                                 locale:props.locale,
@@ -238,6 +241,7 @@ const component = async props => {
                                     master_object:null,
                                     rows:[],
                                     detail_class:props.detail_class,
+                                    mode:props.mode,
                                     function_format_value:format_value,
                                     timezone:props.timezone,
                                     locale:props.locale,
