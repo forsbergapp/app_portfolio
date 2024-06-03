@@ -65,9 +65,14 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                     AND app_s.id                                                = ader.app_setting_id
                     AND app_s.app_setting_type_app_id                           = ader.app_data_entity_app_id
                     AND (adrdd.id                                               = :resource_id OR :resource_id IS NULL)
-                    AND ((adrm.user_account_app_user_account_id                 = :user_account_id AND
-                          adrm.user_account_app_app_id                          = :user_account_app_id) OR :user_account_id IS NULL)                    
-                    AND ((adrm.user_account_app_user_account_id                 = NULL AND :user_null=1) OR :user_null=0)
+                    AND ( (
+                        (adrm.user_account_app_user_account_id                  = :user_account_id 
+                         AND
+                         adrm.user_account_app_app_id                           = :user_account_app_id) OR :data_app_id IS NULL
+                        )
+                        OR
+                        (adrm.user_account_app_user_account_id                  IS NULL AND :user_null=1)
+                       )
                     AND (adrm.app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)
                     AND (app_s.value                                            = :resource_name OR :resource_name IS NULL)
                     AND (as_attribute.app_setting_type_app_setting_type_name    = :resource_name_master_attribute OR :resource_name_master_attribute IS NULL)

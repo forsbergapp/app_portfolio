@@ -86,12 +86,6 @@ body {
 	max-height: 100%;
 	position: relative;
 }
-#app_page_secure_tab_content.css_spinner{
-	padding: unset !important;
-}
-#app_page_secure_tab_content .css_spinner{
-	margin-inline-start:calc(50% - 12.5px) !important;
-}
 #app_page_secure_tab_content .common_app_data_display_detail_horizontal_row_title.bank_statement,
 #app_page_secure_tab_content .common_app_data_display_detail_horizontal_row.bank_statement {
 	grid-template-columns: 14em 5em minmax(13em, 13em) minmax(10em, 10em) minmax(10em, 10em) !important
@@ -217,6 +211,6 @@ body {
 #common_window_info{
 	background: var(--common_app_color_white);
 }
-.common_app_data_display_master_col2{
+.common_app_data_display_master_col2[contentEditable=true]{
 	background: var(--common_app_color_white);
 }

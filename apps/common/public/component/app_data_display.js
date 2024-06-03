@@ -1,18 +1,20 @@
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 /**
- * @typedef {{  value:number|string|null, metadata:{default_text:string, length:number, type: string}}} ObjectData
+
  * 
- * @typedef {Object.<string,ObjectData>|null} master_object_type
+ * @typedef {*} master_object_type
  * 
  * @typedef {{  display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
  *              master_object:master_object_type,
  *              rows:[],
  *              detail_class:string,
+ *              new_resource:boolean,
  *              mode:'EDIT'|'READ',
  *              function_format_value:function,
  *              timezone:string,
  *              locale:string,
+ *              spinner:string,
  *              button_print:boolean,
  *              button_update:boolean,
  *              button_post:boolean,
@@ -40,21 +42,39 @@ const AppDocument = document;
  * @param {props_template} props 
  * @returns 
  */
-const template = props =>`  ${props.master_object?
-                                `<div class='common_app_data_display_master_title'>${props.master_object.title.metadata.default_text}</div>`:''
+const template = props =>`  ${(props.master_object && props.new_resource)?
+                                `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.title)[0].title.default_text}</div>`:''
+                            }
+                            ${(props.master_object && props.new_resource==false)?
+                                `<div class='common_app_data_display_master_title'>${props.master_object.title?props.master_object.title.default_text:''}</div>`:''
                             }
                             ${(props.display_type=='VERTICAL_KEY_VALUE' || props.display_type=='MASTER_DETAIL_HORIZONTAL' || props.display_type=='MASTER_DETAIL_VERTICAL')?
                                 `
-                                ${props.master_object?
+                                ${(props.master_object && props.new_resource)?
+                                    `<div class='common_app_data_display_master'>
+                                        ${props.master_object.filter((/**@type{*}*/row)=>!row.title).map((/**@type{*}*/master_row)=>
+                                            `<div class='common_app_data_display_master_list'>
+                                                <div class='common_app_data_display_master_row'>
+                                                    <div    data-key='${Object.keys(master_row)[0]}' 
+                                                            class='common_app_data_display_master_col1'>${Object.values(master_row)[0].default_text}</div>
+                                                    <div    data-value='${Object.keys(master_row)[0]}' 
+                                                            class='common_app_data_display_master_col2'
+                                                            contentEditable='${props.mode=='READ'?'false':'true'}'></div>
+                                                </div>
+                                            </div>`).join('')
+                                        }
+                                    </div>`:''
+                                }
+                                ${(props.master_object && props.new_resource==false)?
                                     `<div class='common_app_data_display_master'>
                                         ${Object.entries(props.master_object).filter(key=>key[0]!='title').map((/**@type{*}*/master_row)=>
                                             `<div class='common_app_data_display_master_list'>
                                                 <div class='common_app_data_display_master_row'>
                                                     <div    data-key='${master_row[0]}' 
-                                                            class='common_app_data_display_master_col1'>${master_row[1].metadata.default_text}</div>
+                                                            class='common_app_data_display_master_col1'>${master_row[1].default_text}</div>
                                                     <div    data-value='${master_row[0]}' 
                                                             class='common_app_data_display_master_col2'
-                                                            contentEditable='${props.mode=='READ'?'true':'false'}'>${props.function_format_value(master_row[1].value, props.timezone, props.locale)}</div>
+                                                            contentEditable='${props.mode=='READ'?'false':'true'}'>${props.function_format_value(master_row[1].value, props.timezone, props.locale)}</div>
                                                 </div>
                                             </div>`).join('')
                                         }
@@ -92,7 +112,7 @@ const template = props =>`  ${props.master_object?
                                     }`:''
                                 }`:''
                             }
-                            <div class='common_app_data_display_buttons <SPINNER/>'>
+                            <div class='common_app_data_display_buttons ${props.spinner}'>
                                 ${props.button_print?
                                     `<div id='common_app_data_display_button_print' class='common_dialogue_button common_icon' ></div>`:''
                                 }
@@ -120,6 +140,7 @@ const template = props =>`  ${props.master_object?
  *          detail_method:string,
  *          detail_token_type:string,
  *          detail_class:string,
+ *          new_resource:boolean,
  *          mode:'EDIT'|'READ',
  *          timezone:string,
  *          locale:string,
@@ -199,20 +220,36 @@ const component = async props => {
     }
 
     const post_component = async () => {
+        
         const master_object = props.master_path?await props.function_FFB(props.master_path, props.master_query, props.master_method, props.master_token_type, null)
-                                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows[0].data ?? JSON.parse(result).rows[0]):{};
+                                                        .then((/**@type{*}*/result)=>props.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)):JSON.parse(result).rows[0]):{};
         const detail_rows = props.detail_path?await props.function_FFB(props.detail_path, props.detail_query, props.detail_method, props.detail_token_type, null)
                                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows):[];
+        
+        if (master_object.resource_metadata){
+            master_object.resource_metadata = JSON.parse(master_object.resource_metadata);
+            for (const key of Object.entries(master_object)){
+                if (key[0]!='resource_metadata')
+                    master_object[key[0]] = {   
+                                                value:key[1], 
+                                                default_text:master_object.resource_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].default_text
+                                            }
+            }
+            delete master_object.resource_metadata;
+        }
+            
         spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
             render_template({   display_type:props.display_type,
                                 master_object:master_object,
                                 rows:detail_rows,
                                 detail_class:props.detail_class,
+                                new_resource:props.new_resource,
                                 mode:props.mode,
                                 function_format_value:format_value,
                                 timezone:props.timezone, 
                                 locale:props.locale,
+                                spinner:spinner,
                                 button_print:props.button_print,
                                 button_update:props.button_update,
                                 button_post:props.button_post,
@@ -241,10 +278,12 @@ const component = async props => {
                                     master_object:null,
                                     rows:[],
                                     detail_class:props.detail_class,
+                                    new_resource:props.new_resource,
                                     mode:props.mode,
                                     function_format_value:format_value,
                                     timezone:props.timezone,
                                     locale:props.locale,
+                                    spinner:spinner,
                                     button_print:false,
                                     button_update:false,
                                     button_post:false,

@@ -85,15 +85,7 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity (app_id, json_data)
 -- app data entity resource
 --
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (json_data, app_setting_id, app_data_entity_app_id, app_data_entity_id) 
-    VALUES ('{  "description":"Account info: Accounts using one currency",
-                "currency":"€", 
-                "currency_name":"App Euro",
-                "data":{
-						"title":	            {"value":null, "metadata":{"default_text":"Account",                      "length":null,"type": "TEXT"}},
-						"bank_account_number":  {"value":null, "metadata":{"default_text":"Number",                       "length":16,  "type": "TEXT"},  "comment":"Generate number with Date.now().toString().padStart(16,''0'')"},
-						"bank_account_secret": 	{"value":null, "metadata":{"default_text":"Secret", 		              "length":64,  "type": "TEXT"},  "comment":"SHA256"},
-						"bank_account_vpa":		{"value":null, "metadata":{"default_text":"Virtual Payment Address (VPA)","length":36,  "type": "TEXT"},  "comment":"UUID format [8characters]-[4characters]-[4characters]-[4characters]-[12characters]"}
-				}}', 
+    VALUES ('{  "description":"Account info: Accounts using one currency"}', 
             (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name='RESOURCE_TYPE' AND value = 'ACCOUNT'), 
             <APP_ID/>, 
             (SELECT id FROM <DB_SCHEMA/>.app_data_entity WHERE app_id = <APP_ID/>));
@@ -107,14 +99,6 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (json_data, app_setting_id, ap
             (SELECT id FROM <DB_SCHEMA/>.app_data_entity WHERE app_id = <APP_ID/>));
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (json_data, app_setting_id, app_data_entity_app_id, app_data_entity_id) 
     VALUES ('{  "description":"Customer info: Customers", 
-                "data":{
-						"title":	    {"value":null, "metadata":{"default_text":"Enter customer info to create new bank account", "length":null, "type": "TEXT"}},
-						"customer_type":{"value":null, "metadata":{"default_text":"Customer type", 	"length":100, "type": "SELECT"}, "comment": "APP_SETTING.app_setting_type_app_setting_type_name=CUSTOMER_TYPE"},
-						"name": 		{"value":null, "metadata":{"default_text":"Name", 			"length":100, "type": "TEXT"}},
-						"address":		{"value":null, "metadata":{"default_text":"Address", 		"length":100, "type": "TEXT"}},
-						"city":			{"value":null, "metadata":{"default_text":"City", 			"length":100, "type": "TEXT"}},
-						"country":		{"value":null, "metadata":{"default_text":"Country", 		"length":2,   "type": "SELECT"}, "comment": "lowercase COUNTRY.countrycode"}
-				},
                 "status":"ONLINE"}', 
             (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name='RESOURCE_TYPE' AND value = 'CUSTOMER'), 
             <APP_ID/>, 
@@ -128,6 +112,200 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (json_data, app_setting_id, ap
 --
 -- app data resource master
 --
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "title":{"default_text": "Enter customer info to create new bank account", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'CUSTOMER'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "customer_type":{"default_text":"Customer type", "length":null, "type":"TEXT", "lov":"CUSTOMER_TYPE"}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'CUSTOMER'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "name":{"default_text":"Name", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'CUSTOMER'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "address":{"default_text":"Address", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>),
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'CUSTOMER'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "city":{"default_text":"City", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'CUSTOMER'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "country":{"default_text":"Country", "length":null, "type":"TEXT", "lov":"COUNTRY"}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'CUSTOMER'));
+
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "title":{"default_text":"Account", "length":null, "type":"TEXT", "lov":"COUNTRY"}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'ACCOUNT'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "bank_account_number":{"default_text":"Bank account number", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'ACCOUNT'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "bank_account_secret":{"default_text":"Bank account secret", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'ACCOUNT'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "bank_account_vpa":{"default_text":"Bank account VPA", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'ACCOUNT'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "currency":{"default_text":"Currency", "default_value":"€", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'ACCOUNT'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "currency_name":{"default_text":"Currency name", "default_value":"App Euro", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'ACCOUNT'));
+
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
     VALUES ( '{ "description":"Merchant demo", 
                 "country_code":"SE", 

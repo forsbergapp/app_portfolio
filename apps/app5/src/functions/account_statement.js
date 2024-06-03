@@ -92,15 +92,15 @@ const getStatement = async (app_id, data, locale) =>{
 
     const balance = transactions.rows.reduce((balance, current_row)=>balance += (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0);
     return {
-        rows: [{data:{
-                        title:	                {"value":null, "metadata":{"default_text":"Bank statement",  "length":null,"type": "TEXT", "contentEditable":false}},
-                        bank_name:	            {"value":Entity.name, "metadata":{"default_text":"Bank name",  "length":null,"type": "TEXT", "contentEditable":false}},
-                        bank_iban:	            {"value":IBAN_compose(Entity.country_code, Entity.bank_id, CustomerAccount.bank_account_number, true), "metadata":{"default_text":"Bank IBAN",  "length":null,"type": "TEXT", "contentEditable":false}},
-                        bank_account:           {"value":CustomerAccount.bank_account_number, "metadata":{"default_text":"Bank number",  "length":null,"type": "TEXT", "contentEditable":false}},
-                        bank_currency_symbol:   {"value":AccountResource.currency, "metadata":{"default_text":"Currency",  "length":null,"type": "TEXT", "contentEditable":false}},
-                        bank_currency_text:     {"value":AccountResource.currency_name, "metadata":{"default_text":"Currency name",  "length":null,"type": "TEXT", "contentEditable":false}},
-                        bank_account_balance:   {"value":Number(balance), "metadata":{"default_text":"Bank account balance",  "length":null,"type": "TEXT", "contentEditable":false}}
-                    }}]
+        rows: [{
+                    title:	                {"value":null, "default_text":"Bank statement",  "length":null,"type": "TEXT"},
+                    bank_name:	            {"value":Entity.name, "default_text":"Bank name",  "length":null,"type": "TEXT"},
+                    bank_iban:	            {"value":IBAN_compose(Entity.country_code, Entity.bank_id, CustomerAccount.bank_account_number, true), "default_text":"Bank IBAN",  "length":null,"type": "TEXT"},
+                    bank_account:           {"value":CustomerAccount.bank_account_number, "default_text":"Bank number",  "length":null,"type": "TEXT"},
+                    bank_currency_symbol:   {"value":AccountResource.currency, "default_text":"Currency",  "length":null,"type": "TEXT"},
+                    bank_currency_text:     {"value":AccountResource.currency_name, "default_text":"Currency name",  "length":null,"type": "TEXT"},
+                    bank_account_balance:   {"value":Number(balance), "default_text":"Bank account balance",  "length":null,"type": "TEXT"}
+                }]
     }
 } 
 export default getStatement;

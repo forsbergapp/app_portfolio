@@ -42,7 +42,17 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                         app_s.id                                                        "app_setting_id",
                         app_s.app_setting_type_app_setting_type_name                    "app_setting_type_app_setting_type_name",
                         app_s.value                                                     "app_setting_value",
-                        app_s.display_data                                              "app_setting_display_data"
+                        app_s.display_data                                              "app_setting_display_data",
+                        (SELECT CONCAT(CONCAT('[',GROUP_CONCAT(adrm_resource.json_data,',')),']')
+                                   FROM <DB_SCHEMA/>.app_data_resource_master adrm_resource
+                                  WHERE adrm_resource.app_data_entity_resource_id IN
+                                          (SELECT ader.id
+                                             FROM <DB_SCHEMA/>.app_data_entity_resource 	ader
+                                            WHERE ader.app_setting_id               = app_s.id
+                                              AND ader.app_data_entity_app_id       = app_s.app_setting_type_app_id
+                                              AND ader.app_data_entity_id 		= adrm.app_data_entity_resource_app_data_entity_id)
+                                    AND adrm_resource.user_account_app_user_account_id IS NULL
+                                    AND adrm_resource.user_account_app_app_id IS NULL) "resource_metadata"
                    FROM <DB_SCHEMA/>.app_data_resource_detail adrd,
                         <DB_SCHEMA/>.app_data_resource_master adrm
                           LEFT OUTER JOIN <DB_SCHEMA/>.app_data_resource_master   adrm_attribute
@@ -60,9 +70,14 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                     AND app_s.app_setting_type_app_id                           = ader.app_data_entity_app_id
                     AND (adrm.id                                                = :resource_id OR :resource_id IS NULL)
                     AND (adrm.id                                                = :master_id OR :master_id IS NULL)
-                    AND ((adrm.user_account_app_user_account_id                 = :user_account_id AND
-                          adrm.user_account_app_app_id                          = :user_account_app_id) OR :user_account_id IS NULL)          
-                    AND ((adrm.user_account_app_user_account_id                 = NULL AND :user_null=1) OR :user_null=0)
+                    AND ( (
+                          (adrm.user_account_app_user_account_id                = :user_account_id 
+                           AND
+                           adrm.user_account_app_app_id                         = :user_account_app_id) OR :data_app_id IS NULL
+                          )
+                          OR
+                          (adrm.user_account_app_user_account_id                IS NULL AND :user_null=1)
+                        )
                     AND (adrm.app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)
                     AND (app_s.value                                            = :resource_name OR :resource_name IS NULL)
                     AND (adrm.app_data_entity_resource_app_data_entity_id       = :entity_id OR :entity_id IS NULL)`;

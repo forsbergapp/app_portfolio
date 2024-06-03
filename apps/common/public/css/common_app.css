@@ -394,6 +394,9 @@ select {
 	text-align: start;
 	
 }
+.common_app_data_display_master_list{
+	margin-bottom: 1em;
+}
 .common_app_data_display_detail_horizontal_row_title,
 .common_app_data_display_detail_horizontal_row{
 	display: grid;
@@ -408,8 +411,9 @@ select {
 	display: inline-block;
 	text-align: start;
     width: calc(50% - 1em);
+	word-wrap: break-word;
 }
-.common_app_data_display_master_col2{
+.common_app_data_display_master_col2[contentEditable=true]{
 	border:1px solid;
 }
 .common_app_data_display_detail_col{

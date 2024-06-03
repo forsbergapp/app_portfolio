@@ -48,6 +48,7 @@ const app_event_click = event => {
                                                 detail_method:'GET',
                                                 detail_token_type:'APP_ACCESS',
                                                 detail_class:'bank_statement',
+                                                new_resource:false,
                                                 mode:'READ',
                                                 timezone:common.COMMON_GLOBAL.user_timezone,
                                                 locale:common.COMMON_GLOBAL.user_locale,
@@ -69,7 +70,7 @@ const app_event_click = event => {
                                                 display_type:'VERTICAL_KEY_VALUE',
                                                 master_path:'/server-db/app_data_resource_master/',
                                                 master_query:   `resource_name=CUSTOMER&user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}` + 
-                                                                `&fields=name,customer_type,address,city,country`,
+                                                                `&fields=name,customer_type,address,city,country,resource_metadata`,
                                                 master_method:'GET',
                                                 master_token_type:'APP_ACCESS',
                                                 detail_path:null,
@@ -77,6 +78,7 @@ const app_event_click = event => {
                                                 detail_method:null,
                                                 detail_token_type:null,
                                                 detail_class:null,
+                                                new_resource:false,
                                                 mode:'READ',
                                                 timezone:common.COMMON_GLOBAL.user_timezone,
                                                 locale:common.COMMON_GLOBAL.user_locale,
@@ -98,7 +100,7 @@ const app_event_click = event => {
                                                 display_type:'VERTICAL_KEY_VALUE',
                                                 master_path:'/server-db/app_data_resource_detail/',
                                                 master_query:   `resource_name=ACCOUNT&user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}` + 
-                                                                `&fields=bank_account_number,bank_account_secret,bank_account_vpa`,
+                                                                `&fields=bank_account_number,bank_account_secret,bank_account_vpa,resource_metadata`,
                                                 master_method:'GET',
                                                 master_token_type:'APP_ACCESS',
                                                 detail_path:null,
@@ -106,6 +108,7 @@ const app_event_click = event => {
                                                 detail_method:null,
                                                 detail_token_type:null,
                                                 detail_class:null,
+                                                new_resource:false,
                                                 mode:'READ',
                                                 timezone:common.COMMON_GLOBAL.user_timezone,
                                                 locale:common.COMMON_GLOBAL.user_locale,
@@ -258,6 +261,7 @@ const framework_set = async (framework=null) => {
 };
 
 const customer_create = async () => {
+    AppDocument.querySelector(`#common_app_data_display_button_post`).classList.add('css_spinner');
     await common.FFB(   '/app-function/CUSTOMER_CREATE', 
                         null, 
                         'POST', 
