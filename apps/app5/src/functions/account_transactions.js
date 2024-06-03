@@ -4,14 +4,15 @@
  * 
  * @param {number} app_id 
  * @param {*} data 
+ * @param {string} locale
  */
-const getTransacions = async (app_id, data) =>{
+const getTransacions = async (app_id, data, locale) =>{
 
     /**@type{import('../../../../server/db/sql/app_data_resource_detail_data.service.js')} */
     const {get} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
 
     const transactions = await get(app_id, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, null, false);
-    let transaction_fields = [];
+    
     if (data.fields){
         const transaction_fields = transactions.rows.map((/**@type{*}*/row)=>{
             let transaction_new = {};
