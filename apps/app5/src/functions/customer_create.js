@@ -40,7 +40,7 @@ const customer_create = async (app_id, data, locale) =>{
                         app_data_entity_resource_app_data_entity_id : resource_account.rows[0].app_data_entity_id,
                         app_data_entity_resource_id                 : resource_account.rows[0].id,
                         app_data_resource_master_id                 : Customer.insertId, //CUSTOMER
-                        app_data_resource_master_attribute_id       : Customer.insertId  //CUSTOMER in this case
+                        app_data_resource_master_attribute_id       : null
     }
     //create ACCOUNT
     const BankAccount = await createBankAccount(app_id, post_data_account);
