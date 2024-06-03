@@ -46,7 +46,7 @@ const app_event_click = event => {
                                                 detail_query:`user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}&fields=timestamp,logo,origin,amount_deposit,amount_withdrawal`,
                                                 detail_method:'GET',
                                                 detail_token_type:'APP_ACCESS',
-                                                detail_fields:['timestamp', 'logo', 'origin', 'amount_deposit', 'amount_withdrawal'],
+                                                detail_class:'bank_statement',
                                                 button_print: false,
                                                 button_update: false,
                                                 button_post: false,

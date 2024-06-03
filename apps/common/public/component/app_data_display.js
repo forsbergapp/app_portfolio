@@ -8,6 +8,7 @@ const AppDocument = document;
  * @typedef {{  display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
  *              master_object:master_object_type,
  *              rows:[],
+ *              detail_class:string,
  *              button_print:boolean,
  *              button_update:boolean,
  *              button_post:boolean,
@@ -61,16 +62,16 @@ const template = props =>`  ${props.master_object?
                                         `
                                         ${index==0?
                                             `
-                                            <div class='common_app_data_display_detail_horizontal_row_title common_row'>
+                                            <div class='common_app_data_display_detail_horizontal_row_title common_row ${props.detail_class}'>
                                                 ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
                                                     `<div class='common_app_data_display_detail_col'>${detail_col[0]}</div>`).join('')
                                                 }
                                             </div>
                                             `:''
                                         }
-                                        <div class='common_app_data_display_detail_horizontal_row common_row'>
+                                        <div class='common_app_data_display_detail_horizontal_row common_row ${props.detail_class}'>
                                             ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
-                                                `<div class='common_app_data_display_detail_col'>${detail_col[1]}</div>`).join('')
+                                                `<div class='common_app_data_display_detail_col'>${detail_col[1] ?? ''}</div>`).join('')
                                             }
                                         </div>
                                         `).join('')
@@ -114,6 +115,7 @@ const template = props =>`  ${props.master_object?
  *          detail_query:string,
  *          detail_method:string,
  *          detail_token_type:string,
+ *          detail_class:string,
  *          button_print: boolean,
  *          button_update: boolean,
  *          button_post: boolean,
@@ -140,6 +142,7 @@ const component = async props => {
             render_template({   display_type:props.display_type,
                                 master_object:master_object,
                                 rows:detail_rows,
+                                detail_class:props.detail_class,
                                 button_print:props.button_print,
                                 button_update:props.button_update,
                                 button_post:props.button_post,
@@ -167,6 +170,7 @@ const component = async props => {
         template: render_template({ display_type:props.display_type,
                                     master_object:null,
                                     rows:[],
+                                    detail_class:props.detail_class,
                                     button_print:false,
                                     button_update:false,
                                     button_post:false,
