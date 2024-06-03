@@ -92,54 +92,13 @@ body {
 #app_page_secure_tab_content .css_spinner{
 	margin-inline-start:calc(50% - 12.5px) !important;
 }
-#bank_statement_account{
-	text-align: start;
-}
-#bank_statement_balance{
-	font-size: 2en;
-	font-weight: bold;
-}
-#bank_statement_transactions{
-	text-align: start;
-	display: flex !important;
-    flex-direction: column;
-	height:calc(100% - 4em);
-}
-#bank_statement_bank_statement_row{
-	font-size:0.5em;
-}
-#bank_statement_bank_statement_row .bank_statement_bank_statement_col{
-	width:calc(50% - 1em);
-	display: inline-block;
-    vertical-align: top;
-}
-#bank_statement_transactions_list{
-	font-size:0.5em;
-	margin-top: 10px;
-	overflow: auto;
-}
-
-.bank_statement_transactions_row div{
-	display: inline-block;
-}
-.bank_statement_transactions_origin{
-	width: 150px;
-	text-align: start;
-}
-.bank_statement_transactions_amount_deposit,
-.bank_statement_transactions_amount_withdrawal{
-	width: 75px;
-    text-align: end;	
+#app_page_secure_tab_content .common_app_data_display_detail_horizontal_row_title.bank_statement,
+#app_page_secure_tab_content .common_app_data_display_detail_horizontal_row.bank_statement {
+	grid-template-columns: 140px 50px minmax(130px, 130px) minmax(100px, 100px) minmax(100px, 100px) !important;
 }
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
-	#bank_statement_transactions_list{
-		font-size: 0.7em;
-	}
-	#bank_statement_bank_statement_row{
-		font-size:0.7em;
-	}
 	.app_page_start_bank_div{
 		height: 1em;
 		width: 9em;

@@ -397,7 +397,8 @@ select {
 .common_app_data_display_detail_horizontal_row_title,
 .common_app_data_display_detail_horizontal_row{
 	display: grid;
-    grid-auto-flow: column;
+	grid-auto-flow: column;
+    grid-template-columns: auto;
 }
 .common_app_data_display_detail_horizontal_row_title{
 	font-weight: bold;
