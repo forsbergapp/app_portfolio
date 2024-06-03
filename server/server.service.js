@@ -436,6 +436,7 @@ const COMMON = {
                                                 routesparameters.body, 
                                                 null,
                                                 routesparameters.res));
+                        break;
                     }
                     case route(`/bff/app_access/v1/app-function/${resource_id_string}`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), true):{
                         resolve(app.getFunction(routesparameters.app_id, 
@@ -447,6 +448,7 @@ const COMMON = {
                                                 }, 
                                                 app_query?.get('lang_code'),
                                                 routesparameters.res));
+                        break;
                     }
                     case route(`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_string}`, 'GET', null, null, false):
                     case route(`/bff/app_access/v1/server-db/app_data_resource_master/${resource_id_string}`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), false, getNumberValue(app_query?.get('data_app_id'))):{
