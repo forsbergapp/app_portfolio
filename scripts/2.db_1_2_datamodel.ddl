@@ -6,46 +6,46 @@ CREATE USER app_portfolio IDENTIFIED BY <APP_PASSWORD/>
     ACCOUNT UNLOCK;
 GRANT app_portfolio_role_app_dba TO app_portfolio;
 
-GRANT ALL PRIVILEGES ON app_portfolio.* TO app_portfolio_role_app_dba;
+GRANT ALL PRIVILEGES ON <DB_SCHEMA/>.* TO app_portfolio_role_app_dba;
 
-CREATE TABLE app_portfolio.app (
+CREATE TABLE <DB_SCHEMA/>.app (
     id        INTEGER NOT NULL,
     app_category_id INTEGER,
 	CONSTRAINT app_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.app TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.app_category (
+CREATE TABLE <DB_SCHEMA/>.app_category (
     id            INT NOT NULL AUTO_INCREMENT,
     category_name VARCHAR(100) NOT NULL,
     CONSTRAINT app_category_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.app_category TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_category TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_category TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.app_data_entity (
+CREATE TABLE <DB_SCHEMA/>.app_data_entity (
     id        INT NOT NULL AUTO_INCREMENT,
     app_id    INTEGER NOT NULL,
-    json_data LONGBLOB,
+    json_data TEXT,
     CONSTRAINT app_data_entity_pk PRIMARY KEY ( app_id,
                                                 id ),
     INDEX (id)
 );
 
-ALTER TABLE app_portfolio.app_data_entity AUTO_INCREMENT=1000000;
+ALTER TABLE <DB_SCHEMA/>.app_data_entity AUTO_INCREMENT=1000000;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_entity TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_entity TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_data_entity TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_data_entity TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.app_data_entity_resource (
+CREATE TABLE <DB_SCHEMA/>.app_data_entity_resource (
     id                     INT NOT NULL AUTO_INCREMENT,
-    json_data              LONGBLOB,
+    json_data              TEXT,
     app_setting_id         INTEGER NOT NULL,
     app_data_entity_app_id INTEGER NOT NULL,
     app_data_entity_id     INTEGER NOT NULL,
@@ -55,33 +55,33 @@ CREATE TABLE app_portfolio.app_data_entity_resource (
     INDEX (id)
 );
 
-ALTER TABLE app_portfolio.app_data_entity_resource AUTO_INCREMENT=1000000;
+ALTER TABLE <DB_SCHEMA/>.app_data_entity_resource AUTO_INCREMENT=1000000;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_entity_resource TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_entity_resource TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_data_entity_resource TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_data_entity_resource TO app_portfolio_role_app_common;
 
 
-CREATE TABLE app_portfolio.app_data_resource_detail (
+CREATE TABLE <DB_SCHEMA/>.app_data_resource_detail (
     id                                              INT NOT NULL AUTO_INCREMENT,
-    json_data                                       LONGBLOB,
+    json_data                                       TEXT,
     app_data_resource_master_id                     INTEGER NOT NULL,
     app_data_entity_resource_id                     INTEGER NOT NULL,
     app_data_entity_resource_app_data_entity_app_id INTEGER NOT NULL,
     app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL,
-    app_data_resource_master_attribute_id           INTEGER NOT NULL,
+    app_data_resource_master_attribute_id           INTEGER,
     CONSTRAINT app_data_resource_detail_pk PRIMARY KEY ( id )
 );
 
-ALTER TABLE app_portfolio.app_data_resource_detail AUTO_INCREMENT=1000000;
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail AUTO_INCREMENT=1000000;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_detail TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_detail TO app_portfolio_role_app_admin;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_detail TO app_portfolio_role_app_common;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_detail TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.app_data_resource_detail_data (
+CREATE TABLE <DB_SCHEMA/>.app_data_resource_detail_data (
     id                                    INT NOT NULL AUTO_INCREMENT,
-    json_data                             LONGBLOB,
+    json_data                             TEXT,
     date_created                          DATE,
     date_modified                         DATE,
     app_data_resource_detail_id           INTEGER NOT NULL,
@@ -89,15 +89,15 @@ CREATE TABLE app_portfolio.app_data_resource_detail_data (
     CONSTRAINT app_data_resource_detail_data_pk PRIMARY KEY ( id )
 );
 
-ALTER TABLE app_portfolio.app_data_resource_detail_data AUTO_INCREMENT=1000000;
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail_data AUTO_INCREMENT=1000000;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_detail_data TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_detail_data TO app_portfolio_role_app_admin;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_detail_data TO app_portfolio_role_app_common;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_detail_data TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.app_data_resource_master (
+CREATE TABLE <DB_SCHEMA/>.app_data_resource_master (
     id                                              INT NOT NULL AUTO_INCREMENT,
-    json_data                                       LONGBLOB,
+    json_data                                       TEXT,
     user_account_app_user_account_id                INTEGER,
     user_account_app_app_id                         INTEGER,
     app_data_entity_resource_app_data_entity_app_id INTEGER NOT NULL,
@@ -106,15 +106,15 @@ CREATE TABLE app_portfolio.app_data_resource_master (
     CONSTRAINT app_data_resource_master_pk PRIMARY KEY ( id )
 );
 
-ALTER TABLE app_portfolio.app_data_resource_master AUTO_INCREMENT=1000000;
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_master AUTO_INCREMENT=1000000;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_master TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_master TO app_portfolio_role_app_admin;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_resource_master TO app_portfolio_role_app_common;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_master TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.app_data_stat (
+CREATE TABLE <DB_SCHEMA/>.app_data_stat (
     id                                              INT NOT NULL AUTO_INCREMENT,
-    json_data                                       LONGBLOB,
+    json_data                                       TEXT,
     date_created                                    DATE,
     app_id                                          INTEGER NOT NULL,
     user_account_app_user_account_id                INTEGER,
@@ -126,66 +126,66 @@ CREATE TABLE app_portfolio.app_data_stat (
     CONSTRAINT app_data_stat_pk PRIMARY KEY (id)
 );
 
-ALTER TABLE app_portfolio.app_data_stat AUTO_INCREMENT=1000000;
+ALTER TABLE <DB_SCHEMA/>.app_data_stat AUTO_INCREMENT=1000000;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_stat TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_stat TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_data_stat TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_data_stat TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.app_data_translation (
-    json_data                   LONGBLOB,
+CREATE TABLE <DB_SCHEMA/>.app_data_translation (
+    json_data                   TEXT,
     language_id                 INTEGER NOT NULL,
     app_data_resource_master_id INTEGER NOT NULL,
     CONSTRAINT app_data_translation_pk PRIMARY KEY ( language_id,
                                                     app_data_resource_master_id )
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_data_translation TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_translation TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_data_translation TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_data_translation TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.app_device (
+CREATE TABLE <DB_SCHEMA/>.app_device (
     app_id          INTEGER NOT NULL,
     app_setting_id  INTEGER NOT NULL,
-    json_data       LONGBLOB,
+    json_data       TEXT,
     CONSTRAINT app_device_pk PRIMARY KEY ( app_id,
                                            app_setting_id )
 );
 
-GRANT SELECT ON app_portfolio.app_device TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_device TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_device TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_device TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.app_log (
+CREATE TABLE <DB_SCHEMA/>.app_log (
     id                           INT NOT NULL AUTO_INCREMENT,
-    json_data                    LONGBLOB NOT NULL,
+    json_data                    TEXT NOT NULL,
     date_created                 DATETIME,
 	app_id                       INTEGER NOT NULL,
 	CONSTRAINT app_log_pk PRIMARY KEY ( id )
 );
 
 CREATE INDEX app_log_date_created_index ON
-    app_portfolio.app_log (
+    <DB_SCHEMA/>.app_log (
         date_created
     ASC );
 
-GRANT SELECT, INSERT ON app_portfolio.app_log TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT ON <DB_SCHEMA/>.app_log TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_log TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_log TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.app_object (
+CREATE TABLE <DB_SCHEMA/>.app_object (
     app_id       INTEGER NOT NULL,
     object_name  VARCHAR(100) NOT NULL,
 	CONSTRAINT app_object_pk PRIMARY KEY ( object_name,
                                            app_id )
 );
 
-GRANT SELECT ON app_portfolio.app_object TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_object TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_object TO app_portfolio_role_app_admin;
 
 
-CREATE TABLE app_portfolio.app_object_item (
+CREATE TABLE <DB_SCHEMA/>.app_object_item (
     app_object_object_name                  VARCHAR(100) NOT NULL,
     object_item_name                        VARCHAR(100) NOT NULL,
     app_object_app_id                       INTEGER NOT NULL,
@@ -196,23 +196,23 @@ CREATE TABLE app_portfolio.app_object_item (
                                                 app_object_app_id )
 );
 
-GRANT SELECT ON app_portfolio.app_object_item TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_object_item TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_object_item TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.app_role (
+CREATE TABLE <DB_SCHEMA/>.app_role (
     id        INTEGER NOT NULL,
     role_name VARCHAR(100) NOT NULL,
     icon      VARCHAR(10) NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.app_role TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_role TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_role TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_role TO app_portfolio_role_app_admin;
 
-ALTER TABLE app_portfolio.app_role ADD CONSTRAINT app_role_pk PRIMARY KEY ( id );
+ALTER TABLE <DB_SCHEMA/>.app_role ADD CONSTRAINT app_role_pk PRIMARY KEY ( id );
 
-CREATE TABLE app_portfolio.app_setting (
+CREATE TABLE <DB_SCHEMA/>.app_setting (
     id                                      INT NOT NULL AUTO_INCREMENT,
     app_setting_type_app_id                 INTEGER NOT NULL,
     app_setting_type_app_setting_type_name  VARCHAR(100) NOT NULL,
@@ -225,27 +225,27 @@ CREATE TABLE app_portfolio.app_setting (
     CONSTRAINT app_setting_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.app_setting TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_setting TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_setting TO app_portfolio_role_app_admin;
 
-ALTER TABLE app_portfolio.app_setting
+ALTER TABLE <DB_SCHEMA/>.app_setting
     ADD CONSTRAINT app_setting_un UNIQUE ( app_setting_type_app_setting_type_name,
                                            value,
                                            app_setting_type_app_id );
                                                                
-CREATE TABLE app_portfolio.app_setting_type (
+CREATE TABLE <DB_SCHEMA/>.app_setting_type (
     app_id                  INTEGER NOT NULL,
     app_setting_type_name   VARCHAR(100) NOT NULL,
     CONSTRAINT app_setting_type_pk PRIMARY KEY ( app_setting_type_name,
                                                  app_id )
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting_type TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_setting_type TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_setting_type TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_setting_type TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.app_translation (
+CREATE TABLE <DB_SCHEMA/>.app_translation (
     language_id                            INTEGER NOT NULL,
     app_id                                 INTEGER,
     app_category_id                        INTEGER,
@@ -258,10 +258,10 @@ CREATE TABLE app_portfolio.app_translation (
     country_id                             INTEGER,
     language_id_translation                INTEGER,
     text                                   VARCHAR(2000),
-    json_data                              LONGBLOB
+    json_data                              TEXT
 );
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT arc_3 CHECK ( ( ( app_object_object_name IS NOT NULL )
                                    AND ( app_object_app_id IS NOT NULL )
                                    AND ( app_object_item_object_item_name IS NULL )
@@ -333,39 +333,39 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL ) ) );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_translation TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_translation TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_common;
 
-ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
+ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
                                                                                          language_id );
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
                                                             app_id,
                                                             language_id );
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
                                                           app_object_app_id,
                                                           language_id );
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_object_item_un UNIQUE ( app_object_item_object_item_name,
                                                                app_object_item_app_object_object_name,
                                                                app_object_item_app_object_app_id,
                                                                language_id );
 
-ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
+ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
                                                                                                  language_id );
 
-ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_country_un UNIQUE ( country_id,
+ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_country_un UNIQUE ( country_id,
                                                                                              language_id );
 
-ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_language_translation_un UNIQUE ( language_id_translation,
+ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_language_translation_un UNIQUE ( language_id_translation,
                                                                                                           language_id );
 
-CREATE TABLE app_portfolio.country (
+CREATE TABLE <DB_SCHEMA/>.country (
     id            INT NOT NULL AUTO_INCREMENT,
     country_code  VARCHAR(10) NOT NULL,
     flag_emoji    VARCHAR(10),
@@ -373,52 +373,52 @@ CREATE TABLE app_portfolio.country (
     country_group_id  INTEGER NOT NULL,
 	CONSTRAINT country_pk PRIMARY KEY ( id )
 );
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.country TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.country TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.country TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.country_group (
+CREATE TABLE <DB_SCHEMA/>.country_group (
     id          INT NOT NULL AUTO_INCREMENT,
     group_name  VARCHAR(100) NOT NULL,
 	CONSTRAINT country_group_pk PRIMARY KEY ( id )
 );
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country_group TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.country_group TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.country_group TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.country_group TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.event (
+CREATE TABLE <DB_SCHEMA/>.event (
     id            INT NOT NULL AUTO_INCREMENT,
     event_name    VARCHAR(100) NOT NULL,
     event_type_id INTEGER NOT NULL,
     CONSTRAINT event_pk PRIMARY KEY ( id )
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.event TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.event TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.event TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.event_status (
+CREATE TABLE <DB_SCHEMA/>.event_status (
     id          INT NOT NULL AUTO_INCREMENT,
     status_name VARCHAR(100) NOT NULL,
     CONSTRAINT event_status_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.event_status TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.event_status TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_status TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.event_status TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.event_type (
+CREATE TABLE <DB_SCHEMA/>.event_type (
     id              INT NOT NULL AUTO_INCREMENT,
     event_type_name VARCHAR(100) NOT NULL,
     CONSTRAINT event_type_pk PRIMARY KEY ( id )
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_type TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.event_type TO app_portfolio_role_app_admin;
 
 
-GRANT SELECT ON app_portfolio.event_type TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.event_type TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.identity_provider (
+CREATE TABLE <DB_SCHEMA/>.identity_provider (
     id                      INTEGER NOT NULL,
     provider_name           VARCHAR(100) NOT NULL,
     provider_url_logo       VARCHAR(100),
@@ -431,38 +431,38 @@ CREATE TABLE app_portfolio.identity_provider (
     CONSTRAINT identity_provider_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.identity_provider TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.identity_provider TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.identity_provider TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.identity_provider TO app_portfolio_role_app_admin;
 
-ALTER TABLE app_portfolio.identity_provider ADD CONSTRAINT identity_provider_order_un UNIQUE ( identity_provider_order );
+ALTER TABLE <DB_SCHEMA/>.identity_provider ADD CONSTRAINT identity_provider_order_un UNIQUE ( identity_provider_order );
 
-CREATE TABLE app_portfolio.language (
+CREATE TABLE <DB_SCHEMA/>.language (
     id         INT NOT NULL AUTO_INCREMENT,
     lang_code  VARCHAR(10) NOT NULL,
 	CONSTRAINT language_pk PRIMARY KEY ( id )
 );
 
 CREATE INDEX lang_code_index ON
-    app_portfolio.language (
+    <DB_SCHEMA/>.language (
         lang_code
     ASC );
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.language TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.language TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.language TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.language TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.locale (
+CREATE TABLE <DB_SCHEMA/>.locale (
     language_id  INTEGER NOT NULL,
     country_id   INTEGER NOT NULL
 );
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.locale TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.locale TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.locale TO app_portfolio_role_app_common;
+GRANT SELECT ON <DB_SCHEMA/>.locale TO app_portfolio_role_app_common;
 
-ALTER TABLE app_portfolio.locale ADD CONSTRAINT locale_language_id_country_id_un UNIQUE ( language_id,
+ALTER TABLE <DB_SCHEMA/>.locale ADD CONSTRAINT locale_language_id_country_id_un UNIQUE ( language_id,
                                                      country_id );
 
-CREATE TABLE app_portfolio.profile_search (
+CREATE TABLE <DB_SCHEMA/>.profile_search (
     user_account_id    INTEGER,
     search             VARCHAR(100) NOT NULL,
     client_ip          VARCHAR(1000),
@@ -471,11 +471,11 @@ CREATE TABLE app_portfolio.profile_search (
     client_latitude    VARCHAR(100),
     date_created       DATETIME NOT NULL
 );
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.profile_search TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.profile_search TO app_portfolio_role_app_admin;
 
-GRANT SELECT, INSERT ON app_portfolio.profile_search TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT ON <DB_SCHEMA/>.profile_search TO app_portfolio_role_app_common;
 	
-CREATE TABLE app_portfolio.user_account (
+CREATE TABLE <DB_SCHEMA/>.user_account (
     id                    INT NOT NULL AUTO_INCREMENT,
     username              VARCHAR(100),
     bio                   VARCHAR(150),
@@ -487,30 +487,30 @@ CREATE TABLE app_portfolio.user_account (
     password_reminder     VARCHAR(100),
     email                 VARCHAR(100),
     email_unverified      VARCHAR(100),
-    avatar                LONGBLOB,
+    avatar                TEXT,
     verification_code     VARCHAR(6),
     active                DECIMAL(1,0),
     identity_provider_id  INTEGER,
     provider_id           VARCHAR(100),
     provider_first_name   VARCHAR(1000),
     provider_last_name    VARCHAR(1000),
-    provider_image        LONGBLOB,
+    provider_image        TEXT,
     provider_image_url    VARCHAR(1000),
     provider_email        VARCHAR(1000),
     app_role_id           INTEGER,
 	CONSTRAINT user_account_pk PRIMARY KEY ( id )
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account TO app_portfolio_role_app_admin;
 
-ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_provider_id_un UNIQUE ( provider_id );
+ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_provider_id_un UNIQUE ( provider_id );
 
-ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_username_un UNIQUE ( username );
+ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_username_un UNIQUE ( username );
 
-ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_email_un UNIQUE ( email );
+ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_email_un UNIQUE ( email );
 
-CREATE TABLE app_portfolio.user_account_app (
+CREATE TABLE <DB_SCHEMA/>.user_account_app (
     user_account_id                                   INTEGER NOT NULL,
     app_id                                            INTEGER NOT NULL,
     preference_locale                                 VARCHAR(100),
@@ -522,14 +522,14 @@ CREATE TABLE app_portfolio.user_account_app (
                                                  app_id
                                                  )
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_app TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_app TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.user_account_app_data_post (
+CREATE TABLE <DB_SCHEMA/>.user_account_app_data_post (
     id                                         INT NOT NULL AUTO_INCREMENT,
     description                                VARCHAR(100),
-    json_data                                  LONGBLOB,
+    json_data                                  TEXT,
     date_created                               DATETIME,
     date_modified                              DATETIME,
     user_account_app_user_account_id           INT NOT NULL,
@@ -537,22 +537,22 @@ CREATE TABLE app_portfolio.user_account_app_data_post (
 	CONSTRAINT user_account_app_data_post_pk PRIMARY KEY ( id )
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post TO app_portfolio_role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.user_account_app_data_post_like (
+CREATE TABLE <DB_SCHEMA/>.user_account_app_data_post_like (
     date_created                        DATETIME,	
     user_account_app_data_post_id         INTEGER NOT NULL,
     user_account_app_user_account_id    INTEGER NOT NULL,
     user_account_app_app_id             INTEGER NOT NULL,
 	CONSTRAINT user_account_app_data_post_like_pk PRIMARY KEY ( user_account_app_user_account_id, user_account_app_data_post_id )
 );
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post_like TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post_like TO app_portfolio_role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post_like TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post_like TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.user_account_app_data_post_view (
+CREATE TABLE <DB_SCHEMA/>.user_account_app_data_post_view (
     client_ip                           VARCHAR(1000),
     client_user_agent                   VARCHAR(1000),
     client_longitude                    VARCHAR(100),
@@ -562,11 +562,11 @@ CREATE TABLE app_portfolio.user_account_app_data_post_view (
     user_account_app_user_account_id    INTEGER,
     user_account_app_app_id             INTEGER
 );
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post_view TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post_view TO app_portfolio_role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post_view TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post_view TO app_portfolio_role_app_common;
 
-CREATE TABLE app_portfolio.user_account_event (
+CREATE TABLE <DB_SCHEMA/>.user_account_event (
     user_account_id             INTEGER NOT NULL,
     event_id                    INTEGER NOT NULL,
     event_status_id             INTEGER NOT NULL,
@@ -584,41 +584,41 @@ CREATE TABLE app_portfolio.user_account_event (
     server_http_accept_language VARCHAR(1000)
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO app_portfolio_role_app_common;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_event TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_event TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.user_account_follow (
+CREATE TABLE <DB_SCHEMA/>.user_account_follow (
     user_account_id         INTEGER NOT NULL,
     user_account_id_follow  INTEGER NOT NULL,
 	date_created            DATETIME,
 	CONSTRAINT user_account_follow_pk PRIMARY KEY ( user_account_id, user_account_id_follow )
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_follow TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_follow TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_follow TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.user_account_like (
+CREATE TABLE <DB_SCHEMA/>.user_account_like (
     user_account_id       INTEGER NOT NULL,
     user_account_id_like  INTEGER NOT NULL,
 	date_created          DATETIME,
 	CONSTRAINT user_account_like_pk PRIMARY KEY ( user_account_id, user_account_id_like )
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_like TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_like TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_like TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.user_account_logon (
+CREATE TABLE <DB_SCHEMA/>.user_account_logon (
     user_account_id    INTEGER,
     app_id             INTEGER NOT NULL,
-    json_data          LONGBLOB,
+    json_data          TEXT,
     date_created       DATETIME NOT NULL
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_logon TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_logon TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_logon TO app_portfolio_role_app_admin;
 
-CREATE TABLE app_portfolio.user_account_view (
+CREATE TABLE <DB_SCHEMA/>.user_account_view (
     user_account_id       INTEGER,
     user_account_id_view  INTEGER NOT NULL,
     client_ip             VARCHAR(1000),
@@ -627,316 +627,316 @@ CREATE TABLE app_portfolio.user_account_view (
     client_latitude       VARCHAR(100),
     date_created          DATETIME NOT NULL
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO app_portfolio_role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_view TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_view TO app_portfolio_role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_view TO app_portfolio_role_app_admin;
 
-ALTER TABLE app_portfolio.app
+ALTER TABLE <DB_SCHEMA/>.app
     ADD CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
-        REFERENCES app_portfolio.app_category ( id );
+        REFERENCES <DB_SCHEMA/>.app_category ( id );
 
-ALTER TABLE app_portfolio.app_data_entity
+ALTER TABLE <DB_SCHEMA/>.app_data_entity
     ADD CONSTRAINT app_data_entity_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id );
+        REFERENCES <DB_SCHEMA/>.app ( id );
 
-ALTER TABLE app_portfolio.app_data_entity_resource
+ALTER TABLE <DB_SCHEMA/>.app_data_entity_resource
     ADD CONSTRAINT app_data_entity_resource_app_data_entity_fk FOREIGN KEY ( app_data_entity_app_id,
                                                                              app_data_entity_id )
-        REFERENCES app_portfolio.app_data_entity ( app_id,
+        REFERENCES <DB_SCHEMA/>.app_data_entity ( app_id,
                                                    id );
 
-ALTER TABLE app_portfolio.app_data_entity_resource
+ALTER TABLE <DB_SCHEMA/>.app_data_entity_resource
     ADD CONSTRAINT app_data_entity_resource_app_setting_fk FOREIGN KEY ( app_setting_id )
-        REFERENCES app_portfolio.app_setting ( id );
+        REFERENCES <DB_SCHEMA/>.app_setting ( id );
 
-ALTER TABLE app_portfolio.app_data_resource_detail
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
     ADD CONSTRAINT app_data_resource_detail_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id
     ,
                                                                                       app_data_entity_resource_app_data_entity_id,
                                                                                       app_data_entity_resource_id )
-        REFERENCES app_portfolio.app_data_entity_resource ( app_data_entity_app_id,
+        REFERENCES <DB_SCHEMA/>.app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
                                                             id );
 
-ALTER TABLE app_portfolio.app_data_resource_detail
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
     ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES app_portfolio.app_data_resource_master ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id );
 
-ALTER TABLE app_portfolio.app_data_resource_detail
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
     ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_fkv2 FOREIGN KEY ( app_data_resource_master_attribute_id )
-        REFERENCES app_portfolio.app_data_resource_master ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id );
 
-ALTER TABLE app_portfolio.app_data_resource_detail_data
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail_data
     ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_detail_fk FOREIGN KEY ( app_data_resource_detail_id )
-        REFERENCES app_portfolio.app_data_resource_detail ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_detail ( id );
 
-ALTER TABLE app_portfolio.app_data_resource_detail_data
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail_data
     ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_attribute_id )
-        REFERENCES app_portfolio.app_data_resource_master ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id );
 
-ALTER TABLE app_portfolio.app_data_resource_master
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_master
     ADD CONSTRAINT app_data_resource_master_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id
     ,
                                                                                       app_data_entity_resource_app_data_entity_id,
                                                                                       app_data_entity_resource_id )
-        REFERENCES app_portfolio.app_data_entity_resource ( app_data_entity_app_id,
+        REFERENCES <DB_SCHEMA/>.app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
                                                             id );
 
-ALTER TABLE app_portfolio.app_data_resource_master
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_master
     ADD CONSTRAINT app_data_resource_master_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                               user_account_app_app_id )
-        REFERENCES app_portfolio.user_account_app ( user_account_id,
+        REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
                                                     app_id );
 
-ALTER TABLE app_portfolio.app_data_stat
+ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id,
                                                                            app_data_entity_resource_app_data_entity_id,
                                                                            app_data_entity_resource_id )
-        REFERENCES app_portfolio.app_data_entity_resource ( app_data_entity_app_id,
+        REFERENCES <DB_SCHEMA/>.app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
                                                             id );
 
-ALTER TABLE app_portfolio.app_data_stat
+ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES app_portfolio.app_data_resource_master ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id );
 
-ALTER TABLE app_portfolio.app_data_stat
+ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id );
+        REFERENCES <DB_SCHEMA/>.app ( id );
 
-ALTER TABLE app_portfolio.app_data_stat
+ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                    user_account_app_app_id )
-        REFERENCES app_portfolio.user_account_app ( user_account_id,
+        REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
                                                     app_id );
 
-ALTER TABLE app_portfolio.app_data_translation
+ALTER TABLE <DB_SCHEMA/>.app_data_translation
     ADD CONSTRAINT app_data_translation_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES app_portfolio.app_data_resource_master ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id );
 
-ALTER TABLE app_portfolio.app_data_translation
+ALTER TABLE <DB_SCHEMA/>.app_data_translation
     ADD CONSTRAINT app_data_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES app_portfolio.language ( id );
+        REFERENCES <DB_SCHEMA/>.language ( id );
 
-ALTER TABLE app_portfolio.app_device
+ALTER TABLE <DB_SCHEMA/>.app_device
     ADD CONSTRAINT app_device_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id )
+        REFERENCES <DB_SCHEMA/>.app ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_device
+ALTER TABLE <DB_SCHEMA/>.app_device
     ADD CONSTRAINT app_device_app_setting_fk FOREIGN KEY ( app_setting_id )
-        REFERENCES app_portfolio.app_setting ( id );
+        REFERENCES <DB_SCHEMA/>.app_setting ( id );
 
-ALTER TABLE app_portfolio.app_log
+ALTER TABLE <DB_SCHEMA/>.app_log
     ADD CONSTRAINT app_log_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id )
+        REFERENCES <DB_SCHEMA/>.app ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_object
+ALTER TABLE <DB_SCHEMA/>.app_object
     ADD CONSTRAINT app_object_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id )
+        REFERENCES <DB_SCHEMA/>.app ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_object_item
+ALTER TABLE <DB_SCHEMA/>.app_object_item
     ADD CONSTRAINT app_object_item_app_object_fk FOREIGN KEY ( app_object_object_name,
                                                                app_object_app_id )
-        REFERENCES app_portfolio.app_object ( object_name,
+        REFERENCES <DB_SCHEMA/>.app_object ( object_name,
                                               app_id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_object_item
+ALTER TABLE <DB_SCHEMA/>.app_object_item
     ADD CONSTRAINT app_object_item_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
                                                                      app_setting_type_app_id )
-        REFERENCES app_portfolio.app_setting_type ( app_setting_type_name,
+        REFERENCES <DB_SCHEMA/>.app_setting_type ( app_setting_type_name,
                                                     app_id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_setting
+ALTER TABLE <DB_SCHEMA/>.app_setting
     ADD CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
                                                                  app_setting_type_app_id )
-        REFERENCES app_portfolio.app_setting_type ( app_setting_type_name,
+        REFERENCES <DB_SCHEMA/>.app_setting_type ( app_setting_type_name,
                                                     app_id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_setting_type
+ALTER TABLE <DB_SCHEMA/>.app_setting_type
     ADD CONSTRAINT app_setting_type_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id )
+        REFERENCES <DB_SCHEMA/>.app ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_category_fk FOREIGN KEY ( app_category_id )
-        REFERENCES app_portfolio.app_category ( id );
+        REFERENCES <DB_SCHEMA/>.app_category ( id );
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id )
+        REFERENCES <DB_SCHEMA/>.app ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_object_fk FOREIGN KEY ( app_object_object_name,
                                                                app_object_app_id )
-        REFERENCES app_portfolio.app_object ( object_name,
+        REFERENCES <DB_SCHEMA/>.app_object ( object_name,
                                               app_id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_object_item_fk FOREIGN KEY ( app_object_item_object_item_name,
                                                                     app_object_item_app_object_object_name,
                                                                     app_object_item_app_object_app_id )
-        REFERENCES app_portfolio.app_object_item ( object_item_name,
+        REFERENCES <DB_SCHEMA/>.app_object_item ( object_item_name,
                                                    app_object_object_name,
                                                    app_object_app_id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_setting_fk FOREIGN KEY ( app_setting_id )
-        REFERENCES app_portfolio.app_setting ( id )
+        REFERENCES <DB_SCHEMA/>.app_setting ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_country_fk FOREIGN KEY ( country_id )
-        REFERENCES app_portfolio.country ( id );
+        REFERENCES <DB_SCHEMA/>.country ( id );
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_language_fk FOREIGN KEY ( language_id_translation )
-        REFERENCES app_portfolio.language ( id );
+        REFERENCES <DB_SCHEMA/>.language ( id );
 
-ALTER TABLE app_portfolio.app_translation
+ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_language_translation_fk FOREIGN KEY ( language_id )
-        REFERENCES app_portfolio.language ( id );
+        REFERENCES <DB_SCHEMA/>.language ( id );
 
-ALTER TABLE app_portfolio.country
+ALTER TABLE <DB_SCHEMA/>.country
     ADD CONSTRAINT country_country_group_fk FOREIGN KEY ( country_group_id )
-        REFERENCES app_portfolio.country_group ( id );
+        REFERENCES <DB_SCHEMA/>.country_group ( id );
 
-ALTER TABLE app_portfolio.event
+ALTER TABLE <DB_SCHEMA/>.event
     ADD CONSTRAINT event_event_type_fk FOREIGN KEY ( event_type_id )
-        REFERENCES app_portfolio.event_type ( id );
+        REFERENCES <DB_SCHEMA/>.event_type ( id );
 
-ALTER TABLE app_portfolio.locale
+ALTER TABLE <DB_SCHEMA/>.locale
     ADD CONSTRAINT locale_country_fk FOREIGN KEY ( country_id )
-        REFERENCES app_portfolio.country ( id );
+        REFERENCES <DB_SCHEMA/>.country ( id );
 
-ALTER TABLE app_portfolio.locale
+ALTER TABLE <DB_SCHEMA/>.locale
     ADD CONSTRAINT locale_language_fk FOREIGN KEY ( language_id )
-        REFERENCES app_portfolio.language ( id );
+        REFERENCES <DB_SCHEMA/>.language ( id );
 
-ALTER TABLE app_portfolio.profile_search
+ALTER TABLE <DB_SCHEMA/>.profile_search
     ADD CONSTRAINT profile_search_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES app_portfolio.user_account ( id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_app
+ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id )
+        REFERENCES <DB_SCHEMA/>.app ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_app
+ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_app_setting_arabic_script_fk FOREIGN KEY ( app_setting_preference_arabic_script_id )
-        REFERENCES app_portfolio.app_setting ( id );
+        REFERENCES <DB_SCHEMA/>.app_setting ( id );
 
-ALTER TABLE app_portfolio.user_account_app
+ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_app_setting_direction_fk FOREIGN KEY ( app_setting_preference_direction_id )
-        REFERENCES app_portfolio.app_setting ( id );
+        REFERENCES <DB_SCHEMA/>.app_setting ( id );
 
-ALTER TABLE app_portfolio.user_account_app
+ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_app_setting_timezone_fk FOREIGN KEY ( app_setting_preference_timezone_id )
-        REFERENCES app_portfolio.app_setting ( id );
+        REFERENCES <DB_SCHEMA/>.app_setting ( id );
 
-ALTER TABLE app_portfolio.user_account_app_data_post_like
+ALTER TABLE <DB_SCHEMA/>.user_account_app_data_post_like
     ADD CONSTRAINT user_account_app_data_post_like_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                                    user_account_app_app_id )
-        REFERENCES app_portfolio.user_account_app ( user_account_id,
+        REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
                                                     app_id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_app_data_post_like
+ALTER TABLE <DB_SCHEMA/>.user_account_app_data_post_like
     ADD CONSTRAINT user_account_app_data_post_like_user_account_app_data_post_fk FOREIGN KEY ( user_account_app_data_post_id )
-        REFERENCES app_portfolio.user_account_app_data_post ( id )
+        REFERENCES <DB_SCHEMA/>.user_account_app_data_post ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_app_data_post
+ALTER TABLE <DB_SCHEMA/>.user_account_app_data_post
     ADD CONSTRAINT user_account_app_data_post_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                               user_account_app_app_id )
-        REFERENCES app_portfolio.user_account_app ( user_account_id,
+        REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
                                                     app_id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_app_data_post_view
+ALTER TABLE <DB_SCHEMA/>.user_account_app_data_post_view
     ADD CONSTRAINT user_account_app_data_post_view_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                                    user_account_app_app_id )
-        REFERENCES app_portfolio.user_account_app ( user_account_id,
+        REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
                                                     app_id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_app_data_post_view
+ALTER TABLE <DB_SCHEMA/>.user_account_app_data_post_view
     ADD CONSTRAINT user_account_app_data_post_view_user_account_app_data_post_fk FOREIGN KEY ( user_account_app_data_post_id )
-        REFERENCES app_portfolio.user_account_app_data_post ( id )
+        REFERENCES <DB_SCHEMA/>.user_account_app_data_post ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account
+ALTER TABLE <DB_SCHEMA/>.user_account
     ADD CONSTRAINT user_account_app_role_fk FOREIGN KEY ( app_role_id )
-        REFERENCES app_portfolio.app_role ( id );
+        REFERENCES <DB_SCHEMA/>.app_role ( id );
 
 
-ALTER TABLE app_portfolio.user_account_app
+ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES app_portfolio.user_account ( id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_event
+ALTER TABLE <DB_SCHEMA/>.user_account_event
     ADD CONSTRAINT user_account_event_event_fk FOREIGN KEY ( event_id )
-        REFERENCES app_portfolio.event ( id );
+        REFERENCES <DB_SCHEMA/>.event ( id );
 
-ALTER TABLE app_portfolio.user_account_event
+ALTER TABLE <DB_SCHEMA/>.user_account_event
     ADD CONSTRAINT user_account_event_event_status_fk FOREIGN KEY ( event_status_id )
-        REFERENCES app_portfolio.event_status ( id );
+        REFERENCES <DB_SCHEMA/>.event_status ( id );
 
-ALTER TABLE app_portfolio.user_account_event
+ALTER TABLE <DB_SCHEMA/>.user_account_event
     ADD CONSTRAINT user_account_event_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES app_portfolio.user_account ( id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE;
 	
-ALTER TABLE app_portfolio.user_account_follow
+ALTER TABLE <DB_SCHEMA/>.user_account_follow
     ADD CONSTRAINT user_account_follow_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES app_portfolio.user_account ( id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
 		    ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_follow
+ALTER TABLE <DB_SCHEMA/>.user_account_follow
     ADD CONSTRAINT user_account_follow_user_account_follow_fk FOREIGN KEY ( user_account_id_follow )
-        REFERENCES app_portfolio.user_account ( id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
 		    ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account
+ALTER TABLE <DB_SCHEMA/>.user_account
     ADD CONSTRAINT user_account_identity_provider_fk FOREIGN KEY ( identity_provider_id )
-        REFERENCES app_portfolio.identity_provider ( id );
+        REFERENCES <DB_SCHEMA/>.identity_provider ( id );
 
-ALTER TABLE app_portfolio.user_account_like
+ALTER TABLE <DB_SCHEMA/>.user_account_like
     ADD CONSTRAINT user_account_like_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES app_portfolio.user_account ( id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
 		    ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_like
+ALTER TABLE <DB_SCHEMA/>.user_account_like
     ADD CONSTRAINT user_account_like_user_account_like_fk FOREIGN KEY ( user_account_id_like )
-        REFERENCES app_portfolio.user_account ( id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
 		    ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_logon
+ALTER TABLE <DB_SCHEMA/>.user_account_logon
     ADD CONSTRAINT user_account_logon_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id );
+        REFERENCES <DB_SCHEMA/>.app ( id );
 
-ALTER TABLE app_portfolio.user_account_logon
+ALTER TABLE <DB_SCHEMA/>.user_account_logon
     ADD CONSTRAINT user_account_logon_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES app_portfolio.user_account ( id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_view
+ALTER TABLE <DB_SCHEMA/>.user_account_view
     ADD CONSTRAINT user_account_view_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES app_portfolio.user_account ( id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.user_account_view
+ALTER TABLE <DB_SCHEMA/>.user_account_view
     ADD CONSTRAINT user_account_view_user_account_view_fk FOREIGN KEY ( user_account_id_view )
-        REFERENCES app_portfolio.user_account ( id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE;
