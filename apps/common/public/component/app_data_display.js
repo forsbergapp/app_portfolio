@@ -9,6 +9,7 @@ const AppDocument = document;
  *              master_object:master_object_type,
  *              rows:[],
  *              detail_class:string,
+ *              function_format_value:function,
  *              button_print:boolean,
  *              button_update:boolean,
  *              button_post:boolean,
@@ -50,7 +51,7 @@ const template = props =>`  ${props.master_object?
                                                             class='common_app_data_display_master_col1'>${master_row[1].metadata.default_text}</div>
                                                     <div    data-value='${master_row[0]}' 
                                                             class='common_app_data_display_master_col2'
-                                                            contentEditable='${master_row[1].metadata.contentEditable}'>${master_row[1].value ?? ''}</div>
+                                                            contentEditable='${master_row[1].metadata.contentEditable}'>${props.function_format_value(master_row[1].value)}</div>
                                                 </div>
                                             </div>`).join('')
                                         }
@@ -71,7 +72,7 @@ const template = props =>`  ${props.master_object?
                                         }
                                         <div class='common_app_data_display_detail_horizontal_row common_row ${props.detail_class}'>
                                             ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
-                                                `<div class='common_app_data_display_detail_col'>${detail_col[1] ?? ''}</div>`).join('')
+                                                `<div class='common_app_data_display_detail_col'>${props.function_format_value(detail_col[1])}</div>`).join('')
                                             }
                                         </div>
                                         `).join('')
@@ -82,7 +83,7 @@ const template = props =>`  ${props.master_object?
                                     ${props.rows.map((/**@type{*}*/detail_row)=>
                                         `<div data-id='${detail_row.id}' data-key='${detail_row.key}' data-value='${detail_row.value}' tabindex=-1 class='common_app_data_display_row common_row'>
                                             <div class='common_app_data_display_col'>${detail_row.key}</div>
-                                            <div class='common_app_data_display_col'>${detail_row.value}</div>
+                                            <div class='common_app_data_display_col'>${props.function_format_value(detail_row.value)}</div>
                                         </div>
                                         `).join('')
                                     }`:''
@@ -116,6 +117,7 @@ const template = props =>`  ${props.master_object?
  *          detail_method:string,
  *          detail_token_type:string,
  *          detail_class:string,
+ *          locale:string,
  *          button_print: boolean,
  *          button_update: boolean,
  *          button_post: boolean,
@@ -132,6 +134,20 @@ const template = props =>`  ${props.master_object?
  */
 const component = async props => {
     let spinner = 'css_spinner';
+    /**
+     * 
+     * @param {*} value 
+     * @returns {string}
+     */
+    const format_value = value => {
+        if (value)
+            if (typeof value=='number')
+                return value.toLocaleString(props.locale ?? 'en').padStart(2,(0).toLocaleString(props.locale ?? 'en'));
+            else
+                return value;
+        else
+            return '';
+    }
     const post_component = async () => {
         const master_object = props.master_path?await props.function_FFB(props.master_path, props.master_query, props.master_method, props.master_token_type, null)
                                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows[0].data):{};
@@ -143,6 +159,7 @@ const component = async props => {
                                 master_object:master_object,
                                 rows:detail_rows,
                                 detail_class:props.detail_class,
+                                function_format_value:format_value,
                                 button_print:props.button_print,
                                 button_update:props.button_update,
                                 button_post:props.button_post,
@@ -171,6 +188,7 @@ const component = async props => {
                                     master_object:null,
                                     rows:[],
                                     detail_class:props.detail_class,
+                                    function_format_value:format_value,
                                     button_print:false,
                                     button_update:false,
                                     button_post:false,

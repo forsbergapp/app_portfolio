@@ -2,9 +2,10 @@
 /**
  * @param {number} app_id
  * @param {*} data
+ * @param {string} locale
  * @returns {Promise.<void>}
  */
-const customer_create = async (app_id, data) =>{
+const customer_create = async (app_id, data, locale) =>{
     /**@type{import('../../../../server/db/sql/app_data_entity_resource.service.js')} */
     const {get} = await import(`file://${process.cwd()}/server/db/sql/app_data_entity_resource.service.js`);
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */

@@ -65,8 +65,9 @@ const IBAN_validate = iban => {
  * 
  * @param {number} app_id 
  * @param {*} data 
+ * @param {string} locale
  */
-const getStatement = async (app_id, data) =>{
+const getStatement = async (app_id, data, locale) =>{
 
     /**@type{import('../../../../server/db/sql/app_data_entity.service.js')} */
     const {get:EntityGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_entity.service.js`);
@@ -77,6 +78,11 @@ const getStatement = async (app_id, data) =>{
     /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
     const {get:CustomerAccountGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
 
+    /**@type{import('../../../../server/db/sql/app_data_resource_detail_data.service.js')} */
+    const {get:TransactionsGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
+
+    const transactions = await TransactionsGet(app_id, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, null, false);    
+
     const Entity            = await EntityGet(app_id, null, data.data_app_id, null)
                                         .then(result=>JSON.parse(result.rows[0].json_data));
     const AccountResource   = await AccountGet(app_id, null, data.data_app_id, 'ACCOUNT', null, null)
@@ -84,7 +90,7 @@ const getStatement = async (app_id, data) =>{
     const CustomerAccount   = await CustomerAccountGet(app_id, null, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, false)
                                         .then(result=>JSON.parse(result.rows[0].json_data));
 
-        
+    const balance = transactions.rows.reduce((balance, current_row)=>balance += (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0);
     return {
         rows: [{data:{
                         title:	                {"value":null, "metadata":{"default_text":"Bank statement",  "length":null,"type": "TEXT", "contentEditable":false}},
@@ -92,7 +98,8 @@ const getStatement = async (app_id, data) =>{
                         bank_iban:	            {"value":IBAN_compose(Entity.country_code, Entity.bank_id, CustomerAccount.bank_account_number, true), "metadata":{"default_text":"Bank IBAN",  "length":null,"type": "TEXT", "contentEditable":false}},
                         bank_account:           {"value":CustomerAccount.bank_account_number, "metadata":{"default_text":"Bank number",  "length":null,"type": "TEXT", "contentEditable":false}},
                         bank_currency_symbol:   {"value":AccountResource.currency, "metadata":{"default_text":"Currency",  "length":null,"type": "TEXT", "contentEditable":false}},
-                        bank_currency_text:     {"value":AccountResource.currency_name, "metadata":{"default_text":"Currency name",  "length":null,"type": "TEXT", "contentEditable":false}}
+                        bank_currency_text:     {"value":AccountResource.currency_name, "metadata":{"default_text":"Currency name",  "length":null,"type": "TEXT", "contentEditable":false}},
+                        bank_account_balance:   {"value":Number(balance), "metadata":{"default_text":"Bank account balance",  "length":null,"type": "TEXT", "contentEditable":false}}
                     }}]
     }
 } 
