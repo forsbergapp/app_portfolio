@@ -261,7 +261,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
                                 access_token_decoded.id == user_id &&
-                                ((scope=='APP_ACCESS_SUPERADMIN' && superadmin(user_id))|| scope!='APP_ACCESS_SUPERADMIN'))
+                                ((scope=='APP_ACCESS_SUPERADMIN' && await superadmin(user_id))|| scope!='APP_ACCESS_SUPERADMIN'))
                                 //check access token belongs to user_account.id, app_id and ip saved when logged in
                                 //and if app_id=0 then check user is admin
                                 import(`file://${process.cwd()}/server/db/sql/user_account_logon.service.js`)

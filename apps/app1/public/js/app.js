@@ -38,7 +38,9 @@ const app_event_click = event => {
         common.common_event('click',event)
         .then(()=>{
             if (event.target.className == 'common_dialogue_apps_app_logo'){
-                window.open(common.element_row(event.target).querySelector('.common_dialogue_apps_app_url').innerHTML);
+                const element = common.element_row(event.target).querySelector('.common_dialogue_apps_app_url');
+                if (element)
+                    window.open(element.innerHTML);
             }
             else{
                 switch (event_target_id){
@@ -165,7 +167,9 @@ const app_event_click = event => {
                     }
                     case 'common_user_start_identity_provider_login':{
                         const target_row = common.element_row(event.target);
-                        user_login_app(null, null, null, target_row.querySelector('.common_login_provider_id').innerHTML);
+                        const provider_element = target_row.querySelector('.common_login_provider_id');
+                        if (provider_element && provider_element.innerHTML)
+                            user_login_app(null, null, null, parseInt(provider_element.innerHTML));
                         break;
                     }
                     case 'common_user_edit_btn_user_delete_account':{

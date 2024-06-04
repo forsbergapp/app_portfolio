@@ -92,8 +92,8 @@ const AppDocument = document;
  *          design_default_show_timezone:boolean,
  *          image_default_report_header_src:string,
  *          image_default_report_footer_src:string,
- *          image_header_footer_width:string,
- *          image_header_footer_height:string,
+ *          image_header_footer_width:number,
+ *          image_header_footer_height:number,
  *          text_default_reporttitle1:string,
  *          text_default_reporttitle2:string,
  *          text_default_reporttitle3:string,
@@ -228,8 +228,8 @@ const APP_GLOBAL = {
 
     image_default_report_header_src:'',
     image_default_report_footer_src:'',
-    image_header_footer_width:'',
-    image_header_footer_height:'',
+    image_header_footer_width:0,
+    image_header_footer_height:0,
 
     text_default_reporttitle1:'',
     text_default_reporttitle2:'',
@@ -366,6 +366,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
     switch (timetable_type){
         //create timetable month or day or year if they are visible instead
         case 0:{
+            /**@type{import('./app_report.js').type_day_user_account_app_data_posts[]} */
             const current_user_settings =[];
             for (const setting of APP_GLOBAL.user_settings){
                 current_user_settings.push(
@@ -474,6 +475,7 @@ const get_theme_id = type => {
     if (AppDocument.querySelectorAll('.slider_active_' + type)[0])
         return AppDocument.querySelectorAll('.slider_active_' + type)[0].getAttribute('data-theme_id');
     else{
+        /**@ts-ignore */
         return APP_GLOBAL.user_settings[select_user_setting.selectedIndex]['design_theme_' + type + '_id'];
     }
         
@@ -962,7 +964,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                                     marker_id:common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                     to_method:common.COMMON_GLOBAL.module_leaflet_jumpto})
                     .then((timezone_text) => {
-                        APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_text;
+                        APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_text ?? '';
                     });
                     //display empty country and city
                     common.SearchAndSetSelectedIndex('', country,0);
@@ -1344,7 +1346,7 @@ const user_settings_load = async (tab_selected) => {
         }
         case 2:{
             //GPS
-            common.SearchAndSetSelectedIndex(   APP_GLOBAL.user_settings[settings_index].gps_popular_place_id?APP_GLOBAL.user_settings[settings_index].gps_popular_place_id.toString():'',
+            common.SearchAndSetSelectedIndex(   APP_GLOBAL.user_settings[settings_index].gps_popular_place_id?APP_GLOBAL.user_settings[settings_index].gps_popular_place_id?.toString()??'':'',
                                                 AppDocument.querySelector('#setting_select_popular_place'),0);
             AppDocument.querySelector('#setting_input_place').innerHTML = APP_GLOBAL.user_settings[settings_index].description;
             AppDocument.querySelector('#setting_input_lat').innerHTML = APP_GLOBAL.user_settings[settings_index].gps_lat_text;
@@ -1478,8 +1480,8 @@ const user_settings_function = async (function_name, initial_user_setting) => {
     if (common.input_control(null,{
                                     check_valid_list_values:[
                                                 [APP_GLOBAL.user_settings[select_user_setting.selectedIndex].description,null],
-                                                [APP_GLOBAL.user_settings[select_user_setting.selectedIndex].gps_lat_text,null],
-                                                [APP_GLOBAL.user_settings[select_user_setting.selectedIndex].gps_long_text,null],
+                                                [APP_GLOBAL.user_settings[select_user_setting.selectedIndex].gps_lat_text?.toString()??'',null],
+                                                [APP_GLOBAL.user_settings[select_user_setting.selectedIndex].gps_long_text?.toString()??'',null],
                                                 [APP_GLOBAL.user_settings[select_user_setting.selectedIndex].text_header_1_text,null],
                                                 [APP_GLOBAL.user_settings[select_user_setting.selectedIndex].text_header_2_text,null],
                                                 [APP_GLOBAL.user_settings[select_user_setting.selectedIndex].text_header_3_text,null],
@@ -2298,7 +2300,9 @@ const app_event_click = event => {
                 }
                 case 'common_user_start_identity_provider_login':{
                     const target_row = common.element_row(event.target);
-                    ProviderSignIn_app(target_row.querySelector('.common_login_provider_id').innerHTML);
+                    const provider_element = target_row.querySelector('.common_login_provider_id');
+                    if (provider_element && provider_element.innerHTML)
+                        ProviderSignIn_app(parseInt(provider_element.innerHTML));
                     break;
                 }
                 //dialogue profile
@@ -2619,7 +2623,7 @@ const map_show_qibbla = () => {
  *          marker_id:string,
  *          to_method:number
  *          }} parameters
- * @returns {Promise.<string>}
+ * @returns {Promise.<string|null>}
  */
 const map_update_app = async (parameters) => {
     return new Promise((resolve) => {
@@ -3166,7 +3170,7 @@ const init_app = async parameters => {
         app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(common.COMMON_GLOBAL.client_timezone);
     else
         app_report.REPORT_GLOBAL.session_currentDate = new Date();
-    app_report.REPORT_GLOBAL.session_currentHijriDate = new Array();
+    app_report.REPORT_GLOBAL.session_currentHijriDate = [0,0];
     //get Hijri date from initial Gregorian date
     app_report.REPORT_GLOBAL.session_currentHijriDate[0] = parseInt(new Date(app_report.REPORT_GLOBAL.session_currentDate.getFullYear(),
         app_report.REPORT_GLOBAL.session_currentDate.getMonth(),
