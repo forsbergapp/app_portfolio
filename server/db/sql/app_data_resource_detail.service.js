@@ -15,7 +15,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number|null} entity_id
  * @param {string|null} locale
  * @param {boolean|null} user_null
- * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_get[]>}
+ * @returns {Promise.<{rows:import('../../../types.js').db_result_app_data_resource_detail_get[]}>}
  */
  const get = async (app_id, resource_id, master_id, user_account_id, data_app_id, resource_name, entity_id, locale, user_null) => {
     const sql = `SELECT adrd.id                                                         "id",
@@ -96,7 +96,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * 
  * @param {number}      app_id
  * @param {*}           data
- * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_post[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_post>}
  */
  const post = async (app_id, data) => {
     const sql = `INSERT INTO <DB_SCHEMA/>.app_data_resource_detail (json_data, 
@@ -133,7 +133,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*}      data
- * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_update[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_update>}
  */
  const update = async (app_id, resource_id, data) => {
     const sql = `UPDATE <DB_SCHEMA/>.app_data_resource_detail adrd
@@ -169,7 +169,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} data
- * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_delete[]>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_delete>}
  */
  const deleteRecord = async (app_id, resource_id, data) => {
     const sql = `DELETE FROM <DB_SCHEMA/>.app_data_resource_detail adrd

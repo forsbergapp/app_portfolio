@@ -90,8 +90,11 @@ const getStatement = async (app_id, data, locale) =>{
                                         .then(result=>JSON.parse(result.rows[0].resource_metadata));
     const CustomerAccount   = await CustomerAccountGet(app_id, null, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, false)
                                         .then(result=>JSON.parse(result.rows[0].json_data));
-
-    const balance = transactions.rows.reduce((balance, current_row)=>balance += (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0);
+    
+    //amount_deposit and amount_withdrawal from JSON.parse(json_data) column, each app is responsible for APP_DATA json_data content
+    const balance = transactions.rows.reduce((balance, current_row)=>balance += 
+                                                                    /**@ts-ignore */
+                                                                    (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0);
     return {
         rows: [{
                     title:	                {"value":null, "default_text":"Bank statement",  "length":null,"type": "TEXT"},

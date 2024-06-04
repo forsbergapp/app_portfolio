@@ -1089,7 +1089,8 @@
  *              app_setting_id:number,
  *              app_setting_type_app_setting_type_name:string,
  *              app_setting_value:string,
- *              app_setting_display_data:string}} db_result_app_data_resource_master_get
+ *              app_setting_display_data:string,
+ *              resource_metadata:string}} db_result_app_data_resource_master_get
  * @typedef {db_result_insert} db_result_app_data_resource_master_post
  * @typedef {db_result_update} db_result_app_data_resource_master_update
  * @typedef {db_result_delete} db_result_app_data_resource_master_delete
@@ -1118,7 +1119,8 @@
  *              app_setting_id:number,
  *              app_setting_type_app_setting_type_name:string,
  *              app_setting_value:string,
- *              app_setting_display_data:string}} db_result_app_data_resource_detail_get
+ *              app_setting_display_data:string,
+ *              resource_metadata:string}} db_result_app_data_resource_detail_get
  * @typedef {db_result_insert} db_result_app_data_resource_detail_post
  * @typedef {db_result_update} db_result_app_data_resource_detail_update
  * @typedef {db_result_delete} db_result_app_data_resource_detail_delete
