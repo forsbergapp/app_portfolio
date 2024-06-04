@@ -10,7 +10,6 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * 
  * @param {number} app_id 
  * @param {*} query
- * @returns {Promise.<import('../../../types.js').db_result_app_data_stat_get[]>}
  */
 const get = (app_id, query) => service.get( app_id, 
                                             getNumberValue(query.get('id')),

@@ -64,7 +64,7 @@ const client_locale = (accept_language) =>{
     return locale;
 };
 /**
- * @param {number} app_id
+ * @param {number|null} app_id
  * @param { 'APP'|'APP_COMMON'|
  *          'REPORT'|'REPORT_COMMON'|
  *          'MAINTENANCE'|'MAIL'} type
@@ -201,9 +201,9 @@ const get_module_with_initBFF = async (app_info) => {
                 app_link_url: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_URL' in parameter)[0].LINK_URL,
                 app_link_title: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'LINK_TITLE' in parameter)[0].LINK_TITLE,
                 app_text_edit: ConfigGetApp(app_info.app_id, app_info.app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'TEXT_EDIT' in parameter)[0].TEXT_EDIT,
-                app_framework : getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK),
-                app_framework_messages:getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES),
-                app_rest_api_version:getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_REST_API_VERSION' in parameter)[0].APP_REST_API_VERSION),
+                app_framework : getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK) ?? 0,
+                app_framework_messages:getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES) ?? 1,
+                app_rest_api_version:getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_REST_API_VERSION' in parameter)[0].APP_REST_API_VERSION) ?? 1,
                 app_idtoken: app_info.idtoken,
                 locale: app_info.locale,
                 translate_items:app_info.translate_items,
@@ -213,7 +213,7 @@ const get_module_with_initBFF = async (app_info) => {
                 client_place: app_info.place,
                 client_timezone: app_info.timezone,
                 common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
-                rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF'),
+                rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF') ?? '/bff',
                 first_time: first_time
             };
             const json_parameters = JSON.stringify({
@@ -285,7 +285,7 @@ const createMail = async (app_id, data) =>{
             /** @type {[string, string][]} */
             const render_variables = [];
             render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
-            render_variables.push(['Verification_code',data.verificationCode]);
+            render_variables.push(['Verification_code',data.verificationCode ?? '']);
             render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
 
             resolve ({
@@ -625,7 +625,6 @@ const getApps = async (app_id, resource_id, lang_code) =>{
     /**@type{import('../server/config.service.js')} */
     const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
 
-    /**@type{import('../types.js').db_result_app_getApp[]}*/
     const apps_db =  await getApp(app_id, resource_id, lang_code);
     const apps_registry = ConfigGetApps().rows.filter((/**@type{import('../types.js').config_apps_record}*/app)=>app.APP_ID==resource_id || resource_id == null);
     /**@type{import('../types.js').config_apps_with_db_columns[]}*/
@@ -665,7 +664,6 @@ const getApps = async (app_id, resource_id, lang_code) =>{
     /**@type{import('../server/config.service.js')} */
     const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
 
-    /**@type{import('../types.js').db_result_app_getAppsAdmin[]}*/
     const apps_db =  await getAppsAdmin(app_id, lang_code);
     const apps_registry = ConfigGetApps();
     /**@type{import('../types.js').config_apps_admin_with_db_columns[]}*/
@@ -847,7 +845,7 @@ const getAssetFile = (app_id, url, basepath, res) =>{
  * @param {string} accept_language
  * @param {string} url
  * @param {string} reportid
- * @param {string|null} info
+ * @param {'privacy_policy'|'disclaimer'|'terms'|'about'} info
  * @param {import('../types.js').res|null} res
  */
 const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, info, res) =>{

@@ -13,7 +13,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {string} lang_code 
  * @param {string} object_name 
  * @param {string|null} object_item_name
- * @returns {Promise.<import('../../../types.js').db_result_app_object_getObjects[]>}
+ * @returns {Promise.<{rows:import('../../../types.js').db_result_app_object_getObjects[]}>}
  */
 const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 	const sql = ` SELECT 	object_name "object_name", 
