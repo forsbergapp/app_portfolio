@@ -83,7 +83,7 @@ const getAppsAdmin = async (app_id, lang_code) => {
 /**
  * 
  * @param {number} app_id 
- * @returns {Promise.<import('../../../types.js').db_result_app_getAppsAdminId[]>}
+ * @returns {Promise.<{rows:import('../../../types.js').db_result_app_getAppsAdminId[]}>}
  */
 const getAppsAdminId = async (app_id) => {
 	const sql = `SELECT a.id "id"

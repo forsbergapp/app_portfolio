@@ -787,12 +787,12 @@ const DemoUninstall = async (app_id, query)=> {
 	const {getDemousers, deleteUser} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
     return new Promise((resolve, reject)=>{
         getDemousers(app_id)
-        .then((/**@type{import('../../../types.js').db_result_user_account_getDemousers[]}*/result_demo_users) =>{
+        .then(result_demo_users=>{
             let deleted_user = 0;
             if (result_demo_users.rows.length>0){
                 const delete_users = async () => {
                     for (const user of result_demo_users.rows){
-                        SocketSendSystemAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username})));
+                        SocketSendSystemAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:deleted_user, total:result_demo_users.rows.length, text:user.username})));
                         await deleteUser(app_id, user.id)
                         .then(()=>{
                             deleted_user++;

@@ -46,7 +46,7 @@ const getStatUniqueVisitorAdmin = (app_id, query) =>{
     }
     return new Promise((resolve, reject)=>{
         service.getStatUniqueVisitorAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')))
-        .then((/**@type{import('../../../types.js').db_result_app_log_getStatUniqueVisitorAdmin[]}*/result_logs) =>{
+        .then(result_logs =>{
             if (result_logs.rows.length>0){
                 //use SQL group by and count() in javascript
                 //save unique server_remote_addr in a set
