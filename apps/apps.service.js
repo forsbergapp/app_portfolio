@@ -309,7 +309,7 @@ const createMail = async (app_id, data) =>{
  * Gets info page with rendered data
  * @async
  * @param {number} app_id
- * @param {'privacy_policy'|'disclaimer'|'terms'|'about'} info
+ * @param {'privacy_policy'|'disclaimer'|'terms'|'about'|null} info
  */
 const getInfo = async (app_id, info) => {
     const info_html1 = `<!DOCTYPE html>
@@ -845,10 +845,9 @@ const getAssetFile = (app_id, url, basepath, res) =>{
  * @param {string} accept_language
  * @param {string} url
  * @param {string} reportid
- * @param {'privacy_policy'|'disclaimer'|'terms'|'about'} info
  * @param {import('../types.js').res|null} res
  */
-const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, info, res) =>{
+const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, res) =>{
     const host_no_port = host.substring(0,host.indexOf(':')==-1?host.length:host.indexOf(':'));
     const app_id = ConfigGetAppHost(host_no_port);
     if (app_id==null || res==null ){
@@ -882,7 +881,8 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
             case (url.toLowerCase().startsWith('/info/disclaimer')):
             case (url.toLowerCase().startsWith('/info/privacy_policy')):
             case (url.toLowerCase().startsWith('/info/terms')):{
-                return await getInfo(app_id, info)
+                /**@ts-ignore */
+                return await getInfo(app_id, url.toLowerCase().substring('/info/'.length))
                                 .catch((error)=>{
                                                     res.statusCode = 500;
                                                     res.statusMessage = error;
