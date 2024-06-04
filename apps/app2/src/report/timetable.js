@@ -110,7 +110,7 @@ const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sq
  */
 /**@type{{	app_copyright:string,
  * 			session_currentDate:Date,
- * 			session_currentHijriDate:[number, number, number],
+ * 			session_currentHijriDate:[number, number],
  * 			module_praytimes_methods:{[index:string]:{	name:string,
  *														params:{fajr:string, 
  *																isha:string|null, 
@@ -190,7 +190,7 @@ const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sq
 const REPORT_GLOBAL = {
     app_copyright:'',
     session_currentDate:new Date(),
-    session_currentHijriDate:[0,0,0],
+    session_currentHijriDate:[0,0],
     module_praytimes_methods:{},
 	regional_def_calendar_lang:'',
 	regional_def_locale_ext_prefix:'',
@@ -1959,7 +1959,7 @@ const timetable = async (timetable_parameters) => {
 					import(path_praytimes).then(({default: prayTimes}) => {
 						//set current date for report month
 						REPORT_GLOBAL.session_currentDate = new Date();
-						REPORT_GLOBAL.session_currentHijriDate = [0,0,0];
+						REPORT_GLOBAL.session_currentHijriDate = [0,0];
 						//get Hijri date from initial Gregorian date
 						REPORT_GLOBAL.session_currentHijriDate[0] = 
 							parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),

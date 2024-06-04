@@ -10,12 +10,11 @@
  * @property {string}	calendartype
  * @property {string}	calendar_hijri_type
  * @property {string}	place
- * @property {string}	gps_lat
- * @property {string}	gps_long
+ * @property {number|null}	gps_lat
+ * @property {number|null}	gps_long
  * @property {string}	theme_day
  * @property {string}	theme_month
  * @property {string}	theme_year
- * @property {string}	papersize
  * @property {string}	highlight
  * @property {number}	show_weekday
  * @property {number}	show_calendartype
@@ -91,18 +90,18 @@
  * @property {string}	regional_timezone
  * @property {string}	regional_number_system
  * @property {string}	regional_calendar_hijri_type
- * @property {string}	gps_lat_text
- * @property {string}	gps_long_text
+ * @property {number|null}	gps_lat_text
+ * @property {number|null}	gps_long_text
  * @property {string}	prayer_method
  * @property {string}	prayer_asr_method
  * @property {string}	prayer_high_latitude_adjustment
  * @property {string}	prayer_time_format
- * @property {string}	prayer_hijri_date_adjustment
+ * @property {number}	prayer_hijri_date_adjustment
  * 
  * @typedef {{	
  * 			app_copyright:string,
  * 			session_currentDate:Date,
- * 			session_currentHijriDate:[number, number, number],
+ * 			session_currentHijriDate:[number, number],
  * 			module_praytimes_methods:{[index:string]:{	name:string,
  *														params:{fajr:string, 
  *																isha:string|null, 
@@ -193,7 +192,7 @@ const {default:prayTimes} = await import(path_prayTimes);
 const REPORT_GLOBAL = {
 	app_copyright:'',
 	session_currentDate:new Date(),
-	session_currentHijriDate:[0,0,0],
+	session_currentHijriDate:[0,0],
 	module_praytimes_methods:{},
 	regional_def_calendar_lang:'',
 	regional_def_locale_ext_prefix:'',
@@ -1385,8 +1384,8 @@ const displayDay = (settings, item_id, user_settings) => {
 		 * @param {string} user_timezone 
 		 * @param {string} user_number_system 
 		 * @param {string} user_calendar_hijri_type 
-		 * @param {number} user_gps_latitude 
-		 * @param {number} user_gps_longitude 
+		 * @param {number|null} user_gps_latitude 
+		 * @param {number|null} user_gps_longitude 
 		 * @param {string} user_format 
 		 * @param {number|null} user_hijri_adjustment 
 		 * @param {string} user_place 
@@ -1430,9 +1429,9 @@ const displayDay = (settings, item_id, user_settings) => {
 					<div class='timetable_day_timetable_footer_row'>
 						<div>${user_place}</div>
 						<div>${settings.show_gps == 1 ? REPORT_GLOBAL.first_language.gps_lat_text:''}</div>
-						<div>${settings.show_gps == 1 ? user_gps_latitude.toLocaleString(user_locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system):''}</div>
+						<div>${settings.show_gps == 1 ? user_gps_latitude?.toLocaleString(user_locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system):''}</div>
 						<div>${settings.show_gps == 1 ? REPORT_GLOBAL.first_language.gps_long_text:''}</div>
-						<div>${settings.show_gps == 1 ? user_gps_longitude.toLocaleString(user_locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system):''}</div>
+						<div>${settings.show_gps == 1 ? user_gps_longitude?.toLocaleString(user_locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system):''}</div>
 					</div>
 					${settings.show_timezone == 1?`<div class='timetable_day_timetable_footer_row'>
 														<div class='timetable_day_timezone'>${REPORT_GLOBAL.first_language.timezone_text + ' ' + user_timezone}</div>
@@ -1451,8 +1450,8 @@ const displayDay = (settings, item_id, user_settings) => {
 									user_setting.regional_timezone, 
 									user_setting.regional_number_system, 
 									user_setting.regional_calendar_hijri_type,
-									parseFloat(user_setting.gps_lat_text), 
-									parseFloat(user_setting.gps_long_text), 
+									user_setting.gps_lat_text, 
+									user_setting.gps_long_text,
 									user_setting.prayer_time_format, 
 									Number(user_setting.prayer_hijri_date_adjustment), 
 									user_setting.description);
