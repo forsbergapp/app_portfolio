@@ -248,7 +248,7 @@ const pool_get = (pool_id, db_use, dba) => {
       if (db_use==5)
          return POOL_DB.filter(db=>db[0]==db_use)[0][1];
       else
-         if (pool_id)
+         if (pool_id!=null)
             if (dba==1)
                if (db_use==4){
                   /**@ts-ignore */
