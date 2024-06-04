@@ -25,14 +25,7 @@ const app_portfolio_title = 'App Portfolio';
                         .reduce((   /**@type{import('../types.js').config_apps_record} */app, 
                                     /**@type {*}*/current)=> 
                                     key?app.concat({APP_ID:current.APP_ID, [key]:current[key]}):app.concat(current), []);
-    if (app_id !=null)
-        return result;
-    else{
-        const list_header = {	total_count:	result.length,
-                                offset: 		0,
-                                count:			result.length};
-        return {list_header:list_header, rows:result};
-    }
+    return result;
  };
  /**
   * 

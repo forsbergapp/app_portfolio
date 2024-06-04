@@ -560,6 +560,7 @@ const set_prayer_method = async(methods) => {
  * @returns {boolean}
  */
 const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri_type, hijri_adj) => {
+	/**@type{Intl.DateTimeFormatOptions} */
 	const options_calendartype = {timeZone: timezone,
 								month: 'numeric'};
 	if (calendartype=='GREGORIAN'){
@@ -906,7 +907,9 @@ const calculateIqamat = (option, calculated_time) => {
  */
 const makeTableRow = (data, columns, year, month, settings, date = null) => {
 
+	/**@type{Intl.DateTimeFormatOptions} */
 	const options_weekday = {weekday:'long'};
+	/**@type{Intl.DateTimeFormatOptions} */
 	const options_calendartype = {timeZone: settings.timezone, 
 								dateStyle: 'short'};
 	let iqamat;
@@ -952,7 +955,7 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 																										(settings.number_system=='hanidec'?'latn':settings.number_system), options_calendartype)}</div>`;
 				}
 				else{
-					html += `<div class='timetable_month_data_col timetable_month_data_calendartype	'>${new Date(date[0],date[1]-1,date[2]).toLocaleDateString(settings.locale + 
+					html += `<div class='timetable_month_data_col timetable_month_data_calendartype	'>${new Date(date?date[0]:0,(date?date[1]:0)-1,date?date[2]:0).toLocaleDateString(settings.locale + 
 																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										REPORT_GLOBAL.regional_def_calendar_type_greg + 
@@ -972,7 +975,7 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 																										settings.calendar_hijri_type, options_weekday)}</div>`;
 					}
 				else{
-					html += `<div class='timetable_month_data_col timetable_month_data_date'>${new Date(date[0],date[1]-1,date[2]).toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
+					html += `<div class='timetable_month_data_col timetable_month_data_date'>${new Date(date?date[0]:0,(date?date[1]:0)-1,date?date[2]:0).toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
 																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										REPORT_GLOBAL.regional_def_calendar_type_greg, 
@@ -1098,6 +1101,7 @@ const displayMonth = (settings, item_id, year_class='') => {
 	else
 		month_data_class = 'default_font';
 	const getDatesAndTitle = () =>{
+		/**@type{Intl.DateTimeFormatOptions} */
 		let options;
 		switch (settings.reporttype_year_month){
 			case 'MONTH':{
@@ -1108,17 +1112,21 @@ const displayMonth = (settings, item_id, year_class='') => {
 				options = {timeZone: settings.timezone, month:'long'};
 				break;
 				}
+			default:{
+				options = {timeZone: settings.timezone, month:'long'};
+				break;
+			}
 		}
 		if (settings.calendartype=='GREGORIAN'){
 			const month_gregorian = REPORT_GLOBAL.session_currentDate.getMonth();
 			const year_greogrian = REPORT_GLOBAL.session_currentDate.getFullYear();
 			return {month:			month_gregorian,
 					year:			year_greogrian,
-					title:			new Date(year_greogrian,month_gregorian,1).toLocaleDateString(settings.locale + 
-										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
-										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-										(settings.number_system=='hanidec'?'latn':settings.number_system), 
-										options).toLocaleUpperCase(),
+					title:			new Date(	year_greogrian,month_gregorian,1).toLocaleDateString(settings.locale + 
+												REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+												REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+												(settings.number_system=='hanidec'?'latn':settings.number_system), 
+												options).toLocaleUpperCase(),
 					date:			new Date(year_greogrian, month_gregorian, 1),
 					endDate: 		new Date(year_greogrian, month_gregorian+ 1, 1),
 					date_hijri : 	[0,0,0],
@@ -1243,9 +1251,17 @@ const displayMonth = (settings, item_id, year_class='') => {
 							${settings.show_gps == 1?
 								`
 								<div >${REPORT_GLOBAL.first_language.gps_lat_text}</div>
-								<div >${settings.gps_lat.toLocaleString(settings.locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + settings.number_system)}</div>
+								<div >${Number(settings.gps_lat).toLocaleString(
+																		settings.locale + 
+																		REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																		REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																		settings.number_system)}</div>
 								<div >${REPORT_GLOBAL.first_language.gps_long_text}</div>
-								<div >${settings.gps_long.toLocaleString(settings.locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + settings.number_system)}</div>`
+								<div >${Number(settings.gps_long).toLocaleString(
+																		settings.locale + 
+																		REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																		REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																		settings.number_system)}</div>`
 								:''}
 							${settings.show_timezone == 1?
 								`<div >${REPORT_GLOBAL.first_language.timezone_text}</div>
@@ -1326,11 +1342,13 @@ const displayMonth = (settings, item_id, year_class='') => {
  */
 const displayDay = (settings, item_id, user_settings) => {
 	let times; 
+	/**@type{Intl.DateTimeFormatOptions} */
 	const options = { timeZone: settings.timezone, 
 					weekday: 'long', 
 					year: 'numeric', 
 					month: 'long', 
 					day: 'numeric'};
+	/**@type{Intl.DateTimeFormatOptions} */
 	const options_hijri = { timeZone: settings.timezone, 
 					year: 'numeric', 
 					month: 'long', 
@@ -1378,7 +1396,10 @@ const displayDay = (settings, item_id, user_settings) => {
 								user_gps_latitude, user_gps_longitude, user_format, user_hijri_adjustment, user_place) =>{
 			let day_html = '';
 			const timezone_offset = common.getTimezoneOffset(user_timezone);
-			times = prayTimes.getTimes(REPORT_GLOBAL.session_currentDate, [user_gps_latitude, user_gps_longitude], parseInt(timezone_offset), 0, 'Float');
+			times = prayTimes.getTimes(REPORT_GLOBAL.session_currentDate, [user_gps_latitude, user_gps_longitude], 
+										/**@ts-ignore */
+										parseInt(timezone_offset), 
+										0, 'Float');
 
 			const show_col_data = {	year: 					REPORT_GLOBAL.session_currentDate.getFullYear(),
 									month: 					REPORT_GLOBAL.session_currentDate.getMonth(),
@@ -1591,12 +1612,12 @@ const displayYear = (settings, item_id) => {
 							<div id='timetable_year_timetables_footer_col'>
 								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.place}</div>
 								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?REPORT_GLOBAL.first_language.gps_lat_text:''}</div>
-								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?settings.gps_lat.toLocaleString(settings.locale + 
+								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?Number(settings.gps_lat).toLocaleString(settings.locale + 
 																													REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																													REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																													settings.number_system):''}</div>
 								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?REPORT_GLOBAL.first_language.gps_long_text:''}</div>
-								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?settings.gps_long.toLocaleString(settings.locale + 
+								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?Number(settings.gps_long).toLocaleString(settings.locale + 
 																													REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																													REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																													settings.number_system):''}</div>

@@ -1,5 +1,8 @@
 /**@type{import('../../../types.js').AppDocument} */
  const AppDocument = document;
+/**@type{import('../../../types.js').AppWindow} */
+const AppWindow = window;
+
  
 /**@type{import('../../../types.js').type_COMMON_GLOBAL} */
 const COMMON_GLOBAL = {
@@ -16,7 +19,7 @@ const COMMON_GLOBAL = {
     app_rest_api_version:null,
     app_root:'app_root',
     app_div:'app',
-    app_console:{warn:window.console.warn, info:window.console.info, error:window.console.error},
+    app_console:{warn:AppWindow.console.warn, info:AppWindow.console.info, error:AppWindow.console.error},
     app_eventListeners:{original: HTMLElement.prototype.addEventListener, LEAFLET:[], REACT:[], VUE:[], OTHER:[]},
     app_function_exception:null,
     app_function_session_expired:null,
@@ -138,16 +141,16 @@ const LengthWithoutDiacrites = (str) =>{
  * @returns {number}
  */
 const getTimezoneOffset = (local_timezone) =>{
-    const utc = new Date(	new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'}),
-                            new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'})-1,
-                            new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'}),
-                            new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false}),
-                            new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})).valueOf();
-    const local = new Date(	new Date().toLocaleString('en', {timeZone: local_timezone, year:'numeric'}),
-                            new Date().toLocaleString('en', {timeZone: local_timezone, month:'numeric'})-1,
-                            new Date().toLocaleString('en', {timeZone: local_timezone, day:'numeric'}),
-                            new Date().toLocaleString('en', {timeZone: local_timezone, hour:'numeric', hour12:false}),
-                            new Date().toLocaleString('en', {timeZone: local_timezone, minute:'numeric'})).valueOf();
+    const utc = new Date(	Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
+                            Number(Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'}))),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'}))).valueOf();
+    const local = new Date(	Number(new Date().toLocaleString('en', {timeZone: local_timezone, year:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, month:'numeric'}))-1,
+                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, day:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, hour:'numeric', hour12:false})),
+                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, minute:'numeric'}))).valueOf();
     return (local-utc) / 1000 / 60 / 60;
 };
 /**
@@ -211,7 +214,7 @@ const typewatch = (function_name, ...parameter) =>{
             }
         }
     clearTimeout(timer);
-    timer = window.setTimeout(() => {
+    timer = AppWindow.setTimeout(() => {
         function_name(...parameter);
     }, type_delay);
 };
@@ -221,7 +224,7 @@ const typewatch = (function_name, ...parameter) =>{
  * @returns {string}
  */
 const toBase64 = str => {
-    return window.btoa(unescape(encodeURIComponent(str)));
+    return AppWindow.btoa(unescape(encodeURIComponent(str)));
 };	
 /**
  * Convert base64 to string
@@ -229,7 +232,7 @@ const toBase64 = str => {
  * @returns {string}
  */
 const fromBase64 = (str) => {
-    return decodeURIComponent(escape(window.atob(str)));
+    return decodeURIComponent(escape(AppWindow.atob(str)));
 };
 /**
  * Translate ui
@@ -291,6 +294,7 @@ const format_json_date = (db_date, short) => {
         //in ISO 8601 format
         //JSON returns format 2020-08-08T05:15:28Z
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
+        /**@type{Intl.DateTimeFormatOptions} */
         let options;
         if (short)
             options = {
@@ -409,17 +413,6 @@ const set_avatar = (avatar, item) => {
         recreate_img(item);
     else
         item.src = image_format(avatar);
-};
-/**
- * Checks if running inside and iframe
- * @returns {boolean}
- */
-const inIframe = () => {
-    try {
-        return window.self !== window.top;
-    } catch (e) {
-        return true;
-    }
 };
 /**
  * Show image
@@ -780,6 +773,7 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
             
             if (props.style){
                 //props.style contains string, convert to object
+                /**@type{Object.<string, {}>} */
                 let style_object = {};
                 for (const style of subelement.style){
                     style_object[style] = subelement.style[style];
@@ -1551,7 +1545,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                             provider_id:            provider_data.profile_id,
                             provider_first_name:    provider_data.profile_first_name,
                             provider_last_name:     provider_data.profile_last_name,
-                            provider_image:         profile_image?window.btoa(profile_image):null,
+                            provider_image:         profile_image?AppWindow.btoa(profile_image):null,
                             provider_image_url:     provider_data.profile_image_url,
                             provider_email:         provider_data.profile_email,
                             ...get_uservariables()
@@ -2392,7 +2386,7 @@ const map_control_toggle_expand = async item =>{
  */
 const map_resize = async () => {
     //fixes not rendering correct showing map div
-    COMMON_GLOBAL.module_leaflet_session_map.invalidateSize();
+    COMMON_GLOBAL.module_leaflet_session_map?.invalidateSize?.();
 };
 /**
  * Map line remove all
@@ -2401,7 +2395,7 @@ const map_resize = async () => {
 const map_line_removeall = () => {
     if(COMMON_GLOBAL.module_leaflet_session_map_layer)
         for (let i=0;i<COMMON_GLOBAL.module_leaflet_session_map_layer.length;i++){
-            COMMON_GLOBAL.module_leaflet_session_map.removeLayer(COMMON_GLOBAL.module_leaflet_session_map_layer[i]);
+            COMMON_GLOBAL.module_leaflet_session_map?.removeLayer?.(COMMON_GLOBAL.module_leaflet_session_map_layer[i]);
         }
     COMMON_GLOBAL.module_leaflet_session_map_layer=[];
 };
@@ -2439,9 +2433,9 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
         weight: width,
         opacity: opacity
     };
+    
     const layer = COMMON_GLOBAL.module_leaflet.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
-    if(!COMMON_GLOBAL.module_leaflet_session_map_layer)
-        COMMON_GLOBAL.module_leaflet_session_map_layer=[];
+    /**@ts-ignore*/
     COMMON_GLOBAL.module_leaflet_session_map_layer.push(layer);
 };
 /**
@@ -2452,7 +2446,7 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
 const map_setstyle = mapstyle => {
     for (const module_leaflet_map_style of COMMON_GLOBAL.module_leaflet_map_styles){
         if (COMMON_GLOBAL.module_leaflet_session_map && module_leaflet_map_style.session_map_layer){
-            COMMON_GLOBAL.module_leaflet_session_map.removeLayer(module_leaflet_map_style.session_map_layer);
+            COMMON_GLOBAL.module_leaflet_session_map?.removeLayer?.(module_leaflet_map_style.session_map_layer);
         }
     }
     const mapstyle_record = COMMON_GLOBAL.module_leaflet_map_styles.filter(map_style=>map_style.value==mapstyle)[0];
@@ -2496,15 +2490,15 @@ const map_update = async (parameters) => {
             switch (to_method){
                 case 0:{
                     if (zoomvalue == null){
-                        COMMON_GLOBAL.module_leaflet_session_map.setView(new COMMON_GLOBAL.module_leaflet.LatLng(latitude, longitude));
+                        COMMON_GLOBAL.module_leaflet_session_map?.setView?.(new COMMON_GLOBAL.module_leaflet.LatLng(latitude, longitude));
                     }
                     else{
-                        COMMON_GLOBAL.module_leaflet_session_map.setView(new COMMON_GLOBAL.module_leaflet.LatLng(latitude, longitude), zoomvalue);
+                        COMMON_GLOBAL.module_leaflet_session_map?.setView?.(new COMMON_GLOBAL.module_leaflet.LatLng(latitude, longitude), zoomvalue);
                     }
                     break;
                 }
                 case 1:{
-                    COMMON_GLOBAL.module_leaflet_session_map.flyTo([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
+                    COMMON_GLOBAL.module_leaflet_session_map?.flyTo?.([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
                     break;
                 }
                 //also have COMMON_GLOBAL.module_leaflet_session_map.panTo(new COMMON_GLOBAL.module_leaflet.LatLng({lng: longitude, lat: latitude}));
@@ -2592,7 +2586,7 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
         case 'IAM_USER':{
             //user,admin or system admin login
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            authorization_basic = `Basic ${window.btoa(json_data.username + ':' + json_data.password)}`;
+            authorization_basic = `Basic ${AppWindow.btoa(json_data.username + ':' + json_data.password)}`;
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && authorization_type == 'IAM_USER')
                 service_path = `${COMMON_GLOBAL.rest_resource_bff}/iam_admin`;
             else
@@ -2689,7 +2683,7 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
  * @returns {void}
  */
 const show_broadcast = (broadcast_message) => {
-    broadcast_message = window.atob(broadcast_message);
+    broadcast_message = AppWindow.atob(broadcast_message);
     const broadcast_type = JSON.parse(broadcast_message).broadcast_type;
     const message = JSON.parse(broadcast_message).broadcast_message;
     switch (broadcast_type){
@@ -2698,7 +2692,7 @@ const show_broadcast = (broadcast_message) => {
                 location.href = '/';
             else
                 if (message)
-                    show_maintenance(window.atob(message));
+                    show_maintenance(AppWindow.atob(message));
             break;
         }
         case 'SESSION_EXPIRED':{
@@ -2706,23 +2700,23 @@ const show_broadcast = (broadcast_message) => {
             break;
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL.service_socket_client_ID =    JSON.parse(window.atob(message)).client_id;
-            COMMON_GLOBAL.client_latitude =             JSON.parse(window.atob(message)).latitude==''?COMMON_GLOBAL.client_latitude:JSON.parse(window.atob(message)).latitude;
-            COMMON_GLOBAL.client_longitude =            JSON.parse(window.atob(message)).longitude==''?COMMON_GLOBAL.client_longitude:JSON.parse(window.atob(message)).longitude;
-            COMMON_GLOBAL.client_place =                JSON.parse(window.atob(message)).place==''?COMMON_GLOBAL.client_place:JSON.parse(window.atob(message)).place;
-            COMMON_GLOBAL.client_timezone =             JSON.parse(window.atob(message)).timezone==''?COMMON_GLOBAL.client_timezone:JSON.parse(window.atob(message)).timezone;
+            COMMON_GLOBAL.service_socket_client_ID =    JSON.parse(AppWindow.atob(message)).client_id;
+            COMMON_GLOBAL.client_latitude =             JSON.parse(AppWindow.atob(message)).latitude==''?COMMON_GLOBAL.client_latitude:JSON.parse(AppWindow.atob(message)).latitude;
+            COMMON_GLOBAL.client_longitude =            JSON.parse(AppWindow.atob(message)).longitude==''?COMMON_GLOBAL.client_longitude:JSON.parse(AppWindow.atob(message)).longitude;
+            COMMON_GLOBAL.client_place =                JSON.parse(AppWindow.atob(message)).place==''?COMMON_GLOBAL.client_place:JSON.parse(AppWindow.atob(message)).place;
+            COMMON_GLOBAL.client_timezone =             JSON.parse(AppWindow.atob(message)).timezone==''?COMMON_GLOBAL.client_timezone:JSON.parse(AppWindow.atob(message)).timezone;
             break;
         }
         case 'CHAT':
         case 'ALERT':{
             if (AppDocument.querySelector('#common_dialogue_maintenance'))
-                ComponentRender('common_broadcast', {message:window.atob(message)}, '/maintenance/component/broadcast.js');
+                ComponentRender('common_broadcast', {message:AppWindow.atob(message)}, '/maintenance/component/broadcast.js');
             else
-                ComponentRender('common_broadcast', {message:window.atob(message)}, '/common/component/broadcast.js');
+                ComponentRender('common_broadcast', {message:AppWindow.atob(message)}, '/common/component/broadcast.js');
             break;
         }
 		case 'PROGRESS':{
-			show_message('PROGRESS', null, null, null, JSON.parse(window.atob(message)));
+			show_message('PROGRESS', null, null, null, JSON.parse(AppWindow.atob(message)));
             break;
         }
     }
@@ -3062,7 +3056,7 @@ const common_event = async (event_type,event) =>{
                             if (event.target.className == 'common_dialogue_apps_app_logo'){
                                 const app_url = element_row(event.target).querySelector('.common_dialogue_apps_app_url');
                                 if (app_url)
-                                    window.open(app_url.innerHTML);
+                                    AppWindow.open(app_url.innerHTML);
                             }
                             break;
                         case 'common_dialogue_apps_info':{
@@ -3073,7 +3067,7 @@ const common_event = async (event_type,event) =>{
                         }
                         case 'common_dialogue_info_app_link':{
                             if (COMMON_GLOBAL.app_link_url)
-                                window.open(COMMON_GLOBAL.app_link_url,'_blank','');
+                                AppWindow.open(COMMON_GLOBAL.app_link_url,'_blank','');
                             break;
                         }
                         //Dialogue info
@@ -3114,7 +3108,7 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         case 'common_dialogue_info_app_email':{
-                            window.open(`mailto:${COMMON_GLOBAL.app_email}`,'_blank','');
+                            AppWindow.open(`mailto:${COMMON_GLOBAL.app_email}`,'_blank','');
                             break;
                         }
                         case 'common_dialogue_info_info_link1':{
@@ -3281,7 +3275,7 @@ const common_event = async (event_type,event) =>{
                             else{
                                 //app list
                                 if (event.target.classList.contains('common_profile_detail_list_app_name')){
-                                    window.open(element_row(event.target).getAttribute('data-url') ?? '', '_blank');
+                                    AppWindow.open(element_row(event.target).getAttribute('data-url') ?? '', '_blank');
                                 }
                                 else
                                     if (AppDocument.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id &&
@@ -3387,10 +3381,10 @@ const common_event = async (event_type,event) =>{
                         }    
                         default:{
                             if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in')){
-                                COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() + 1);
+                                COMMON_GLOBAL.module_leaflet_session_map?.setZoom?.(COMMON_GLOBAL.module_leaflet_session_map?.getZoom?.() + 1);
                             }
                             if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out')){
-                                COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() - 1);
+                                COMMON_GLOBAL.module_leaflet_session_map?.setZoom?.(COMMON_GLOBAL.module_leaflet_session_map?.getZoom?.() - 1);
                             }
                             break;
                         }
@@ -3669,12 +3663,13 @@ const set_app_parameters = (common_parameters) => {
 };
 const framework_clean = () =>{
     //remove Reacts objects
-    delete window.ReactDOM;
-    delete window.React;
+    delete AppWindow.ReactDOM;
+    delete AppWindow.React;
 
     //remove react key
     for (const key of Object.keys(AppDocument)){
         if (key.startsWith('_react')){
+            /**@ts-ignore */
             delete AppDocument[key];
         }
     }
@@ -3686,9 +3681,9 @@ const framework_clean = () =>{
     }
     //remove Vue objects
     COMMON_GLOBAL.app_eventListeners.VUE = []
-    delete window.__VUE_DEVTOOLS_HOOK_REPLAY__;
-    delete window.__VUE_HMR_RUNTIME__;
-    delete window.__VUE__;
+    delete AppWindow.__VUE_DEVTOOLS_HOOK_REPLAY__;
+    delete AppWindow.__VUE_HMR_RUNTIME__;
+    delete AppWindow.__VUE__;
     const app_root_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
     if (AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`))
         app_root_element.innerHTML = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`).innerHTML;
@@ -3871,7 +3866,7 @@ const custom_framework = () => {
     /**
      * 
      * @param {*} stack 
-     * @returns {string}
+     * @returns {'LEAFLET'|'REACT'|'VUE'|'OTHER'}
      */
     const module = (stack) => {
         if (stack.toLowerCase().indexOf('leaflet')>-1)
@@ -3893,13 +3888,18 @@ const custom_framework = () => {
      * @returns 
      */
     function custom_event (...eventParameters) {   
-        COMMON_GLOBAL.app_eventListeners[module(Error().stack)].push([this, eventParameters[0], eventParameters[1], eventParameters[2]]);
-        return COMMON_GLOBAL.app_eventListeners.original.apply(this, arguments);
+        COMMON_GLOBAL.app_eventListeners[module(Error().stack)]
+            /**@ts-ignore */
+            .push([this, eventParameters[0], eventParameters[1], eventParameters[2]]);
+        return COMMON_GLOBAL.app_eventListeners.original.apply(
+                /**@ts-ignore */
+                this, 
+                arguments);
     };
 
     //set custom event on both HTMLElement and document level
     AppDocument.addEventListener = custom_event;
-    window.addEventListener = custom_event;
+    AppWindow.addEventListener = custom_event;
     HTMLElement.prototype.addEventListener = custom_event;
 
     /**
@@ -3907,27 +3907,36 @@ const custom_framework = () => {
      * @param  {...any} parameters 
      */
     function console_warn (...parameters) {
-            COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.warn.apply(this, arguments):null;
+            COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.warn.apply(
+                /**@ts-ignore */
+                this, 
+                arguments):null;
     };
     /**
      * console error
      * @param  {...any} parameters 
      */
      function console_error (...parameters) {
-        COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.error.apply(this, arguments):null;
+        COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.error.apply(
+            /**@ts-ignore */
+            this, 
+            arguments):null;
     };
     /**
      * console info
      * @param  {...any} parameters 
      */
      function console_info (...parameters) {
-        COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.info.apply(this, arguments):null;
+        COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.info.apply(
+            /**@ts-ignore */
+            this, 
+            arguments):null;
     };
     //Vue uses console.warn, show or hide from any framework 
-    window.console.warn = console_warn;
+    AppWindow.console.warn = console_warn;
     //React uses console.info and error, show or hide from any framework
-    window.console.info = console_info;
-    window.console.error = console_error;
+    AppWindow.console.info = console_info;
+    AppWindow.console.error = console_error;
 }
 /**
  * Init common
@@ -3980,7 +3989,7 @@ export{/* GLOBALS*/
        common_translate_ui, get_locales_options, 
        mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
-       inIframe, show_image, getHostname, input_control, getUserAgentPlatform, SearchAndSetSelectedIndex,
+       show_image, getHostname, input_control, getUserAgentPlatform, SearchAndSetSelectedIndex,
        common_theme_update_from_body,common_preferences_post_mount,
        common_preferences_update_body_class_from_preferences,
        /* COMPONENTS */

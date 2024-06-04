@@ -523,7 +523,7 @@ const install_db_get_files = async (json_type) =>{
         SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username})));
         install_count++;
         //create user_account_app record for all apps
-        for (const app of apps.rows){
+        for (const app of apps){
             await create_user_account_app(app.id, demo_user.id);
         }
         for (const demo_user_account_app_data_post of demo_user.settings){
@@ -794,14 +794,14 @@ const DemoUninstall = async (app_id, query)=> {
         getDemousers(app_id)
         .then(result_demo_users=>{
             let deleted_user = 0;
-            if (result_demo_users.rows.length>0){
+            if (result_demo_users.length>0){
                 const delete_users = async () => {
-                    for (const user of result_demo_users.rows){
-                        SocketSendSystemAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:deleted_user, total:result_demo_users.rows.length, text:user.username})));
+                    for (const user of result_demo_users){
+                        SocketSendSystemAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username})));
                         await deleteUser(app_id, user.id)
                         .then(()=>{
                             deleted_user++;
-                            if (deleted_user == result_demo_users.rows.length)
+                            if (deleted_user == result_demo_users.length)
                                 return null;
                         })
                         .catch((/**@type{import('../../../types.js').error}*/error)=>{
@@ -819,8 +819,8 @@ const DemoUninstall = async (app_id, query)=> {
                 });
             }
             else{
-                LogServerI(`Demo uninstall count: ${result_demo_users.rows.length}`);
-                resolve({info: [{'count': result_demo_users.rows.length}]});
+                LogServerI(`Demo uninstall count: ${result_demo_users.length}`);
+                resolve({info: [{'count': result_demo_users.length}]});
             }
         })
         .catch((/**@type{import('../../../types.js').error}*/error)=>{
@@ -902,7 +902,7 @@ const Start = async () => {
                 await pool_db(db_use, dba, user, password, null);
                 }
                 dba = 0;
-                for (const app  of ConfigGetApps().rows){
+                for (const app  of ConfigGetApps()){
                     if (ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                         app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`])
                         await pool_db(   db_use, 

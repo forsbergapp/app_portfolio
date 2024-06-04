@@ -31,6 +31,6 @@ const getAppCategoryAdmin = async (app_id, id, lang_code) => {
 						WHERE ((ac.id = :id) OR :id IS NULL)
 						ORDER BY 1`;
 		const parameters = {id: id};
-		return await db_execute(app_id, sql, parameters, null, lang_code, id?false:true);
+		return await db_execute(app_id, sql, parameters, null, lang_code);
 	};
 export{getAppCategoryAdmin};

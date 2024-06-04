@@ -134,7 +134,7 @@
                    database: db_use,
                    database_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)
                    };
-    return await db_execute(app_id, sql, parameters, DBA, null, false);
+    return await db_execute(app_id, sql, parameters, DBA, null);
  };
  /**
  * 
@@ -211,7 +211,7 @@ const InfoSpace = async (app_id, DBA) => {
       }
     }
     const parameters = getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)};
-    return await db_execute(app_id, sql, parameters, DBA, null, true);
+    return await db_execute(app_id, sql, parameters, DBA, null);
  };
  /**
  * 
@@ -276,7 +276,7 @@ const InfoSpaceSum = async (app_id, DBA) => {
       }
    }
    const parameters = getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)};
-   return await db_execute(app_id, sql, parameters, DBA, null, false);
+   return await db_execute(app_id, sql, parameters, DBA, null);
  };
  
  /**
@@ -292,6 +292,6 @@ const InfoSpaceSum = async (app_id, DBA) => {
                   FROM <DB_SCHEMA/>.app
                   WHERE id = :app_id`;
    const parameters = {app_id: app_id};
-   return await db_execute(app_id, sql, parameters, DBA, null, false);
+   return await db_execute(app_id, sql, parameters, DBA, null);
  }; 
  export {Info, InfoSpace, InfoSpaceSum, InstalledCheck};

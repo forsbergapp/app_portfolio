@@ -32,6 +32,6 @@ const getCountries = async (app_id, lang_code) => {
                                              )
                     ORDER BY 5, 4`;
      const parameters = {};
-     return await db_execute(app_id, sql, parameters, null, lang_code, true);
+     return await db_execute(app_id, sql, parameters, null, lang_code);
 };
 export{getCountries};

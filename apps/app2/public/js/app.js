@@ -631,6 +631,7 @@ const get_align = (al,ac,ar) => {
  */
 const settingsTimesShow = () => {
     //user timezone
+    /**@type{Intl.DateTimeFormatOptions} */
     const options = {
         timeZone: common.COMMON_GLOBAL.user_timezone,
         weekday: 'long',
