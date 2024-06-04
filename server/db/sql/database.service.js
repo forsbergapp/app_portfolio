@@ -281,7 +281,7 @@ const InfoSpaceSum = async (app_id, DBA) => {
  
  /**
   * A simple check of database is installed.
-  * @param {number} app_id 
+  * @param {number|null} app_id 
   * @param {number} DBA 
   * @returns 
   */

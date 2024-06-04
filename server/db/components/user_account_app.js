@@ -47,7 +47,7 @@ const getUserAccountApps = async (app_id, resource_id) => {
     
     const fs = await import('node:fs');
 
-    /**@type{import('../../../types.js').db_result_user_account_app_getUserAccountApps_with_app_registry[]}*/
+    /**@type{import('../../../types.js').db_result_user_account_app_getUserAccountApps[]}*/
     const apps_db = await service.getUserAccountApps(app_id, resource_id);
     const apps_registry = ConfigGetApps();
     /**@type{import('../../../types.js').config_apps_with_db_columns[]}*/
@@ -56,20 +56,26 @@ const getUserAccountApps = async (app_id, resource_id) => {
                                                     NAME:current.NAME,
                                                     LOGO:current.PATH + current.LOGO,
                                                     SUBDOMAIN:current.SUBDOMAIN
-                                                    }) , []);    
-    for (const app of apps_db){
-        app.NAME = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].NAME;
+                                                    }) , []);
+    
+    /**@type{import('../../../types.js').db_result_user_account_app_getUserAccountApps_with_app_registry[]}*/
+    let user_account_apps = [];
+    for (const app_db of apps_db){
+        /**@type{import('../../../types.js').db_result_user_account_app_getUserAccountApps_with_app_registry}*/
+        const app = {};
+        app.NAME = apps.filter(app_registry=>app_registry.APP_ID == app_db.app_id)[0].NAME;
         app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
-        app.SUBDOMAIN = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].SUBDOMAIN;
+        app.SUBDOMAIN = apps.filter(app_registry=>app_registry.APP_ID == app_db.app_id)[0].SUBDOMAIN;
         app.HOST = ConfigGet('SERVER', 'HOST');
         app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
-        app.LOGO = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].LOGO;
+        app.LOGO = apps.filter(app_registry=>app_registry.APP_ID == app_db.app_id)[0].LOGO;
         const image = await fs.promises.readFile(`${process.cwd()}${app.LOGO}`);
         /**@ts-ignore */
         app.LOGO = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
         app.APP_ID = app.app_id;
+        user_account_apps.push(app);
     }
-    return apps_db;        
+    return user_account_apps;        
 };
 
 /**

@@ -10,7 +10,6 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * 
  * @param {number} app_id 
  * @param {*} query
- * @returns Promise.<{import('../../../types.js').db_result_app_log_getLogsAdmin[]}>
  */
 const getLogsAdmin = (app_id, query) => service.getLogsAdmin(  app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
                                                                     query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
@@ -19,7 +18,6 @@ const getLogsAdmin = (app_id, query) => service.getLogsAdmin(  app_id, getNumber
  * 
  * @param {number} app_id 
  * @param {*} query
- * @returns Promise.<{import('../../../types.js').db_result_app_log_getStatUniqueVisitorAdmin[]}>
  */
 const getStatUniqueVisitorAdmin = (app_id, query) =>{
     /**
