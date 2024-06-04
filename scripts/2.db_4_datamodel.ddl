@@ -545,7 +545,7 @@ CREATE TABLE <DB_SCHEMA/>.user_account (
     user_level           NUMBER(1),
     date_created         DATE,
     date_modified        DATE,
-    password             VARCHAR2(100),
+    password             VARCHAR2(500),
     password_reminder    VARCHAR2(100),
     email                VARCHAR2(100),
     email_unverified     VARCHAR2(100),

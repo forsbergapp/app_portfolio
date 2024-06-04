@@ -483,7 +483,7 @@ CREATE TABLE <DB_SCHEMA/>.user_account (
     user_level            DECIMAL(1,0),
     date_created          DATETIME,
     date_modified         DATETIME,
-    password              VARCHAR(100),
+    password              VARCHAR(500),
     password_reminder     VARCHAR(100),
     email                 VARCHAR(100),
     email_unverified      VARCHAR(100),
