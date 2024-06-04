@@ -3,7 +3,7 @@
 /**@type{import('./service.js')} */
 const service = await import('./service.js');
 /**@type{import('../../microservice/microservice.service.js')} */
-const { resource_id_string, resource_id_get, route, getNumberValue, return_result, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const { resource_id_string, resource_id_get_string, route, getNumberValue, return_result, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 /**@type{import('../../server/iam.service.js')} */
 const { AuthenticateApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**
@@ -37,7 +37,7 @@ const startserver = async () =>{
 						break;
 					}
 					case route(`/worldcities/v1/worldcities/country/${resource_id_string}` , 'GET', URI_path, req.method):{
-						service.getCities(resource_id_get(URI_path))
+						service.getCities(resource_id_get_string(URI_path))
 						.then((result)=>return_result(200, null, result, res))
 						.catch((error) =>return_result(500, error, null, res));
 						break;

@@ -17,27 +17,48 @@ const startserver = async () =>{
 		const URI_query = Buffer.from(req.url.substring(req.url.indexOf('?')), 'base64').toString('utf-8');
 		const URI_path = req.url.substring(0, req.url.indexOf('?'));
 		const app_query = new URLSearchParams(URI_query);
-		/**@type{import('../../types.js').microservice_data_mail} */
-		const data = {
-						email_host:         app_query.get('email_host') ?? '',
-						email_port:         getNumberValue(app_query.get('email_port')),
-						email_secure:       getNumberValue(app_query.get('email_secure')),
-						email_auth_user:    app_query.get('email_auth_user') ?? '',
-						email_auth_pass:    app_query.get('email_auth_pass') ?? '',
-						from:               app_query.get('email_from') ?? '',
-						to:                 app_query.get('email_to') ?? '',
-						subject:            app_query.get('email_subject') ?? '',
-						html:               app_query.get('email_html') ?? ''};
+		
 		req.query = {	app_id:	getNumberValue(app_query.get('app_id')),
-						data:	data};
+						data: 	null};
 		AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 			if (authenticate){
 				switch (true){
 					case route('/mail/v1/mail/sendemail' , 'POST', URI_path, req.method):{
-						req.query.data = app_query.get('data') ?? '';
-						service.sendEmail(req.query.data)
-						.then((result)=>return_result(200, null, result, res))
-						.catch((error) =>return_result(500, error, null, res));
+						if (app_query.get('email_host') && 
+							getNumberValue(app_query.get('email_port')) && 
+							getNumberValue(app_query.get('email_secure')) &&
+							app_query.get('email_auth_user') && 
+							app_query.get('email_auth_pass') &&
+							app_query.get('email_from') &&
+							app_query.get('email_to') && 
+							app_query.get('email_subject') &&
+							app_query.get('email_html')){
+							/**@type{import('../../types.js').microservice_data_mail} */
+							const data = {
+								/**@ts-ignore */
+								email_host:         app_query.get('email_host'),
+								/**@ts-ignore */
+								email_port:         getNumberValue(app_query.get('email_port')),
+								/**@ts-ignore */
+								email_secure:       getNumberValue(app_query.get('email_secure')),
+								/**@ts-ignore */
+								email_auth_user:    app_query.get('email_auth_user'),
+								/**@ts-ignore */
+								email_auth_pass:    app_query.get('email_auth_pass'),
+								/**@ts-ignore */
+								from:               app_query.get('email_from'),
+								/**@ts-ignore */
+								to:                 app_query.get('email_to'),
+								/**@ts-ignore */
+								subject:            app_query.get('email_subject'),
+								/**@ts-ignore */
+								html:               app_query.get('email_html')};
+							service.sendEmail(data)
+							.then((result)=>return_result(200, null, result, res))
+							.catch((error) =>return_result(500, error, null, res));
+						}
+						else
+							return_result(400, '⛔', null, res);
 						break;
 					}
 					default:{
@@ -48,6 +69,7 @@ const startserver = async () =>{
 			else
 				return_result(401, '⛔', null, res);
 		});
+		
 	}).listen(request.port, ()=>{
 		console.log(`MICROSERVICE MAIL PORT ${request.port} `);
 	});

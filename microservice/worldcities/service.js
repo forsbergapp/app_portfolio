@@ -44,7 +44,7 @@ const getService = async () => {
 };
 /**
  * 
- * @param {string} country 
+ * @param {string|null} country 
  * @returns {Promise.<*>}
  */
 const getCities = async (country) => {

@@ -23,17 +23,17 @@ const getLogs = (app_id, query) => {
             year: 			query.get('year').toString(),
             month:			query.get('month').toString(),
             day:			query.get('day')};
-        service.getLogs(data).then((/**@type{object[]} */result)=>{
+        service.getLogs(data).then(result=>{
             resolve(result);
         })
         .catch((/**@type{import('../types.js').error}*/error)=>reject(error));
     });  
 };
 /**
- * 
+ * Get log stat
  * @param {*} query 
  */
-const getLogStats = (query) =>{
+const getLogStats = query =>{
     return new Promise((resolve, reject)=>{
         /**@type{import('../types.js').log_parameter_getLogStats} */
         const data = {	app_id:			getNumberValue(query.get('select_app_id')),
@@ -43,26 +43,20 @@ const getLogStats = (query) =>{
                         year: 			getNumberValue(query.get('year')) ?? new Date().getFullYear(),
                         month:			getNumberValue(query.get('month')) ?? new Date().getMonth() +1
                         };
-        service.getLogsStats(data).then ((/**@type{import('../types.js').admin_log_stats_data[]} */result)=>{
+        service.getLogsStats(data).then (result=>{
             resolve(result);
         })
         .catch((/**@type{import('../types.js').error}*/error)=>reject(error));
     });
 };
 /**
- *
+ * Get status codes
  */
 const getStatusCodes =() => service.getStatusCodes();
 
 /**
- * 
+ * Get log files
  */
-const getFiles = () =>{
-    return new Promise((resolve, reject)=>{
-        service.getFiles().then((/**@type{import('../types.js').admin_log_files[]}*/result) =>{
-            resolve(result);
-        })
-        .catch((/**@type{import('../types.js').error}*/error)=>reject(error));
-    });
-};
+const getFiles = () =>service.getFiles();
+
 export {getLogs, getStatusCodes, getLogStats, getFiles};

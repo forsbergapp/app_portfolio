@@ -7,8 +7,8 @@ const {file_get_log, file_get_log_dir, file_append_log} = await import(`file://$
 
 /**
  * Send log
- * @param {string} logscope 
- * @param {string} loglevel 
+ * @param {'APP'|'DB'|'REQUEST'|'SERVER'|'SERVICE'} logscope 
+ * @param {'INFO'|'ERROR'} loglevel 
  * @param {object} log 
  * @returns {Promise.<null>}
  */
@@ -56,6 +56,7 @@ const LogRequestE = async (req, statusCode, statusMessage, responsetime, err) =>
                                     responsetime:       responsetime,
                                     logtext:            err.status + '-' + err.message
                                 };
+        /**@ts-ignore */
         resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST'), ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
     });
 };
@@ -69,7 +70,7 @@ const LogRequestE = async (req, statusCode, statusMessage, responsetime, err) =>
  */
 const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
     return await new Promise((resolve) => {
-        let log_level = '';
+        let log_level;
         let log_json_server = {};
         switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
             case '1':{
@@ -143,6 +144,7 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
                 return resolve(null);
             }
         }   
+        /**@ts-ignore */
         return resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server));     
     });
 };
@@ -158,6 +160,7 @@ const LogServer = async (log_level, logtext) =>{
                                 logdate: logdate(),
                                 logtext: logtext
                               };
+        /**@ts-ignore */
         resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
     });
 };
@@ -168,6 +171,7 @@ const LogServer = async (log_level, logtext) =>{
  */
 const LogServerI = async (logtext)=>{
     return await new Promise((resolve) => {
+        /**@ts-ignore */
         resolve(LogServer(ConfigGet('SERVICE_LOG', 'LEVEL_INFO'), logtext));
     });
 };
@@ -178,6 +182,7 @@ const LogServerI = async (logtext)=>{
  */
 const LogServerE = async (logtext)=>{
     return await new Promise((resolve) => {
+        /**@ts-ignore */
         resolve(LogServer(ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), logtext));
     });
 };
@@ -224,6 +229,7 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
                 return resolve(null);
             }
         }
+        /**@ts-ignore */
         return resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db));
     });
 };
@@ -246,6 +252,7 @@ const LogDBE = async (app_id, db, sql, parameters, result) => {
             parameters:     JSON.stringify(parameters),
             logtext:        result
             };
+        /**@ts-ignore */
         resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_DB'), ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_db));
     });
 };
@@ -287,6 +294,7 @@ const LogServiceI = async (app_id, service, parameters, logtext) => {
                 return resolve(null);
             }
         }
+        /**@ts-ignore */
         return resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
     });
 };
@@ -307,6 +315,7 @@ const LogServiceE = async (app_id, service, parameters, logtext) => {
                         parameters: parameters,
                         logtext:    logtext
                        };
+        /**@ts-ignore */
         return resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_SERVICE'), ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json));
     });
 };
@@ -330,6 +339,7 @@ const LogApp = async (app_id, level_info, app_filename, app_function_name, app_l
                     app_app_line:       app_line,
                     logtext:            logtext
                     };
+    /**@ts-ignore */
     resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_APP'), level_info, log_json));
     });
 };
@@ -346,6 +356,7 @@ const LogAppI = async (app_id, app_filename, app_function_name, app_line, logtex
     return await new Promise((resolve) => {
         //log if INFO or VERBOSE level
         if (ConfigGet('SERVICE_LOG', 'APP_LEVEL')=='1' || ConfigGet('SERVICE_LOG', 'APP_LEVEL')=='2')
+            /**@ts-ignore */
             resolve(LogApp(app_id, ConfigGet('SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext));
         else
             resolve(null);
@@ -362,6 +373,7 @@ const LogAppI = async (app_id, app_filename, app_function_name, app_line, logtex
  */
 const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtext) => {
     return await new Promise((resolve) => {
+        /**@ts-ignore */
         resolve(LogApp(app_id, ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), app_filename, app_function_name, app_line, logtext));
     });
 };
@@ -369,6 +381,10 @@ const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtex
 /**
  * Get logs
  * @param {import('../types.js').admin_log_data_parameters} data
+ * @returns{Promise.<{  list_header:{   total_count:	number,
+ *                                      offset: 		number,
+ *                                      count:			number}, 
+ *                      rows:[*]}|[]>}
  */
 const getLogs = async (data) => {
     return new Promise ((resolve)=>{
@@ -489,6 +505,10 @@ const getStatusCodes = async () =>{
 /**
  * Get log stat
  * @param {import('../types.js').log_parameter_getLogStats} data 
+ * @returns{Promise.<{  list_header:{   total_count:	number,
+ *                                      offset: 		number,
+ *                                      count:			number}, 
+ *                      rows:import('../types.js').admin_log_stats_data[]|[]}>}
  */
 const getLogsStats = async (data) => {
     /**@type{import('../types.js').admin_log_stats_data[]|[]} */
@@ -521,7 +541,7 @@ const getLogsStats = async (data) => {
                 logs.forEach((/**@type{import('../types.js').server_log_request_record|''}*/record) => {
                     if (record != ''){
                         if (data.statGroup != null){
-                            const domain_app_id = record.host?ConfigGetAppHost(record.host, 'SUBDOMAIN'):null;
+                            const domain_app_id = record.host?ConfigGetAppHost(record.host):null;
                             if (data.app_id == null || data.app_id == domain_app_id){
                                 const statGroupvalue = (data.statGroup=='url' && record[data.statGroup].indexOf('?')>0)?record[data.statGroup].substring(0,record[data.statGroup].indexOf('?')):record[data.statGroup];
                                 //add unique statGroup to a set
@@ -543,7 +563,7 @@ const getLogsStats = async (data) => {
                             //add for given status code or all status codes if all should be returned
                             //save this as chart 2 with days
                             if (data.statValue == null || data.statValue == record.statusCode){
-                                const domain_app_id = record.host?ConfigGetAppHost(record.host, 'SUBDOMAIN'):null;
+                                const domain_app_id = record.host?ConfigGetAppHost(record.host):null;
                                 if (data.app_id == null || data.app_id == domain_app_id){
                                     //add unique status codes to a set
                                     log_stat_value.add(record.statusCode);
@@ -604,6 +624,11 @@ const getLogsStats = async (data) => {
 };
 /**
  * Get log files
+ * 
+ * @returns{Promise.<{  list_header:{   total_count:	number,
+ *                                      offset: 		number,
+ *                                      count:			number}, 
+ *                      rows:[import('../types.js').admin_log_files]|[]}>}
  */
 const getFiles = async () => {
     /**@type{[import('../types.js').admin_log_files]|[]} */

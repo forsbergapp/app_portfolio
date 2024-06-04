@@ -459,7 +459,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
 
 /**
  * 
- * @param {number} app_id 
+ * @param {number|null} app_id 
  * @param {string} authorization 
  * @returns {Promise.<boolean>}
  */
