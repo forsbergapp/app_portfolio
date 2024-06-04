@@ -998,7 +998,7 @@ const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
 /**
  * 
  * @param {number} app_id
- * @returns {Promise.<import('../../../types.js').db_result_user_account_getDemousers[]>}
+ * @returns {Promise.<{rows:import('../../../types.js').db_result_user_account_getDemousers[]}>}
  */
 const getDemousers = async app_id => {
 	const sql = `SELECT id "id",

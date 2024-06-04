@@ -67,7 +67,7 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
  * @param {number|null} data_app_id 
  * @param {number|null} year 
  * @param {number|null} month 
- * @returns {Promise.<import('../../../types.js').db_result_app_log_getStatUniqueVisitorAdmin[]>}
+ * @returns {Promise.<{rows:import('../../../types.js').db_result_app_log_getStatUniqueVisitorAdmin[]}>}
  */
 const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 		
