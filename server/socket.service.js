@@ -68,6 +68,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
  * @param {import('../types.js').res} res
  * @param {string} message
  * @param {import('../types.js').socket_broadcast_type_all} message_type
+ * @returns {void}
  */
  const ClientSend = (res, message, message_type) => {
     res.write (`data: ${btoa(`{"broadcast_type"   : "${message_type}", 
@@ -78,6 +79,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
  * Socket client connect
  * Used by EventSource and leaves connection open
  * @param {import('../types.js').res} res
+ * @returns {void}
  */
  const ClientConnect = (res) => {
     res.setHeader('Content-Type', 'text/event-stream');
@@ -88,6 +90,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
  * Used by EventSource and closes connection
  * @param {import('../types.js').res} res
  * @param {number} client_id
+ * @returns {void}
  */
 const ClientOnClose = (res, client_id) => {
     res.on('close', ()=>{
@@ -98,6 +101,7 @@ const ClientOnClose = (res, client_id) => {
 /**
  * Socket client add
  * @param {import('../types.js').socket_connect_list} newClient
+ * @returns {void}
  */
 const ClientAdd = (newClient) => {
     CONNECTED_CLIENTS.push(newClient);
@@ -151,6 +155,7 @@ const ClientAdd = (newClient) => {
 /**
  * Socket check connected
  * @param {number} user_account_id
+ * @returns {import('../types.js').socket_connect_list[]}
  */
  const ConnectedGet = user_account_id => {
     return CONNECTED_CLIENTS.filter(client => client.user_account_id == user_account_id);
@@ -163,6 +168,7 @@ const ClientAdd = (newClient) => {
  * @param {number|null} client_id_current
  * @param {import('../types.js').socket_broadcast_type_all} broadcast_type
  * @param {string} broadcast_message
+ * @returns {{sent:number}}
  */
  const SocketSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
     if (broadcast_type=='ALERT' || broadcast_type=='MAINTENANCE'){
@@ -203,6 +209,7 @@ const ClientAdd = (newClient) => {
  * @param {string} order_by
  * @param {import('../types.js').sort_socket} sort
  * @param {number} dba
+ * @returns {Promise.<import('../types.js').socket_connect_list_no_res[]>}
  */
  const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba) => {
     
@@ -305,6 +312,7 @@ const ClientAdd = (newClient) => {
  * @param {number|null} client_id_current
  * @param {string} broadcast_type
  * @param {string} broadcast_message
+ * @returns {{sent:number}}
  */
  const SocketSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
     if (broadcast_type=='ALERT' || broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
@@ -336,6 +344,7 @@ const ClientAdd = (newClient) => {
  * Socket connected count
  * @param {number|null} identity_provider_id
  * @param {number|null} logged_in
+ * @returns {{count_connected:number}}
  */
  const ConnectedCount = (identity_provider_id, logged_in) => {
     if (logged_in == 1)
@@ -363,6 +372,7 @@ const ClientAdd = (newClient) => {
  * @param {string} headers_accept_language
  * @param {string} ip
  * @param {import('../types.js').res} response
+ * @returns {Promise.<void>}
  */
  const SocketConnect = async (  app_id, 
                                 user_account_id, 
@@ -417,6 +427,7 @@ const ClientAdd = (newClient) => {
 
 /**
  * Socket check interval
+ * @returns {void}
  */
  const SocketCheckInterval = () => {
     //start interval if apps are started
@@ -431,6 +442,10 @@ const ClientAdd = (newClient) => {
         }, getNumberValue(ConfigGet('SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
     }
 };
+/**
+ * Sends SESSIONE_EXPIRED message to clients with expired token
+ * @returns {void}
+ */
 const SocketUpdateExpiredTokens = () =>{
     for (const client of CONNECTED_CLIENTS){
         if (client.token_access && expired_token(client.app_id, 'APP_ACCESS', client.token_access)||
