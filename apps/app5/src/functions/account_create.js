@@ -30,7 +30,7 @@ const createRandomTransactions = async (app_id, data)=>{
  * 
  * @param {number} app_id 
  * @param {*} data 
- * @returns {Promise.<import('../../../../types.js').db_result_app_data_resource_detail_post[]>}
+ * @returns {Promise.<import('../../../../types.js').db_result_app_data_resource_detail_post>}
  */
 const createBankAccount = async (app_id, data) =>{
     /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
