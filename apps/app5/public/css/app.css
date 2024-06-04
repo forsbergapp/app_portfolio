@@ -10,7 +10,8 @@ body {
 	text-align: center;
 	overflow: hidden;
 }
-#app_root{
+#app_root,
+#app_root_vue{
 	height:100%;
 }
 #app_top, #app_bottom{
@@ -80,10 +81,11 @@ body {
 	border-top-right-radius:4px;
 }
 #app_page_secure_tab_content{
-	width: 25em;
-	height: 25em;
+	
 	overflow-x: auto;
 	max-height: 100%;
+	max-width: 80%;
+	min-width: 15em;
 	position: relative;
 }
 #app_page_secure_tab_content .common_app_data_display_detail_horizontal_row_title.bank_statement,
