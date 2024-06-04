@@ -13,14 +13,19 @@ const CONFIG_SERVICES = await file_get('MICROSERVICE_SERVICES').then((/**@type{i
 const timeout_message = '🗺⛔?';
 const resource_id_string = ':RESOURCE_ID';
 /**
- * Returns resource id from URI path
+ * Returns resource id number from URI path
  * if resource id not requested for a route using resource id and last part of path is string then return null
  * @param {string} uri_path
- * @returns {number|string|null}
+ * @returns {number|null}
  */
- const resource_id_get = (uri_path) => isNaN(getNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1))??0)?
-                                            uri_path.substring(uri_path.lastIndexOf('/') + 1):
-                                                getNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1));
+ const resource_id_get_number = uri_path => getNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1));
+/**
+ * Returns resource id string from URI path
+ * if resource id not requested for a route using resource id and last part of path is string then return null
+ * @param {string} uri_path
+ * @returns {string|null}
+ */
+ const resource_id_get_string = uri_path => uri_path.substring(uri_path.lastIndexOf('/') + 1);
 /**
  * 
  * @param {string} route_path
@@ -202,7 +207,7 @@ const ConfigServices = (servicename) =>{
 /**
  * 
  * @param {string} service 
- * @returns {Promise.<{ server:object,
+ * @returns {Promise.<{ server:{createServer:function},
  *                      port:number,
  *                      options?:object}>}
  */
@@ -336,34 +341,12 @@ const MessageQueue = async (service, message_type, message, message_id) => {
          * @param {number} file 
          * @param {object|null} message 
          * @param {*} result 
-         * @returns {Promise.<null>}
+         * @returns {Promise.<void>}
          */
-        const write_file = (file, message, result) =>{
-            return new Promise((resolve, reject)=>{
-                //add record:
-                let json_message;
-                let filename;
-                switch (file){
-                    case 0:{
-                        filename = 'MESSAGE_QUEUE_ERROR';
-                        json_message = {'message_id': new Date().toISOString(), 'message':   message, 'result':result};
-                        break;
-                    }
-                    case 1:{
-                        filename = 'MESSAGE_QUEUE_PUBLISH';
-                        json_message = message;
-                        break;
-                    }
-                    case 2:{
-                        filename = 'MESSAGE_QUEUE_CONSUME';
-                        json_message = message;
-                        break;
-                    }
-                }
-                file_append_log(filename, json_message)
-                .then(()=>resolve(null))
-                .catch((/**@type{import('../types.js').error}*/error)=>reject(error));
-            });
+        const write_file = async (file, message, result) =>{
+            file_append_log(file==0?'MESSAGE_QUEUE_ERROR':file==1?'MESSAGE_QUEUE_PUBLISH':file==2?'MESSAGE_QUEUE_CONSUME':'MESSAGE_QUEUE_ERROR', 
+                            file==0?{message_id: new Date().toISOString(), message:   message, result:result}:message??{})
+            .catch((/**@type{import('../types.js').error}*/error)=>{throw error});
         };
         try {
             switch (message_type) {
@@ -460,4 +443,4 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         }
     });
 };
-export {resource_id_string, resource_id_get, route, microservice_api_version, getNumberValue, return_result, MicroServiceServer, CONFIG, ConfigServices, microserviceRequest, MessageQueue};
+export {resource_id_string, resource_id_get_number, resource_id_get_string, route, microservice_api_version, getNumberValue, return_result, MicroServiceServer, CONFIG, ConfigServices, microserviceRequest, MessageQueue};

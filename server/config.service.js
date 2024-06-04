@@ -39,7 +39,7 @@ const app_portfolio_title = 'App Portfolio';
   * @param {string} host 
   * @returns 
   */
- const ConfigGetAppHost = (host) =>{
+ const ConfigGetAppHost = host =>{
     switch (host.toString().split('.')[0]){
         case 'localhost':
         case 'www':{

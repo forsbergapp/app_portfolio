@@ -334,7 +334,7 @@ const start_jobs = async () =>{
      *          cron_expression:string,
      *          enabled:boolean}[]} 
      */
-    const jobs = ConfigServices('BATCH').CONFIG.jobs;
+    const jobs = ConfigServices('BATCH').CONFIG.filter(row=>'jobs' in row)[0].jobs;
     for (const job of jobs){
         //schedule enabled jobs and for current platform
         //use cron expression syntax
