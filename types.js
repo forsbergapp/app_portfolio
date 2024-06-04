@@ -1652,7 +1652,7 @@
  *              message:object|null}}  microservice_message_queue_publish
  * @typedef {{  message_id:string|null,
  *              service:string|null,
- *              message:object|null,
+ *              message:*|null,
  *              start:string|null,
  *              finished:string|null,
  *              result:*}}  microservice_message_queue_consume
