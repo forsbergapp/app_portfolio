@@ -72,8 +72,8 @@ const getStatement = async (app_id, data, locale) =>{
     /**@type{import('../../../../server/db/sql/app_data_entity.service.js')} */
     const {get:EntityGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_entity.service.js`);
 
-    /**@type{import('../../../../server/db/sql/app_data_entity_resource.service.js')} */
-    const {get:AccountGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_entity_resource.service.js`);
+    /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
+    const {get:AccountMetadataGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
 
     /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
     const {get:CustomerAccountGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
@@ -85,8 +85,9 @@ const getStatement = async (app_id, data, locale) =>{
 
     const Entity            = await EntityGet(app_id, null, data.data_app_id, null)
                                         .then(result=>JSON.parse(result.rows[0].json_data));
-    const AccountResource   = await AccountGet(app_id, null, data.data_app_id, 'ACCOUNT', null, null)
-                                        .then(result=>JSON.parse(result.rows[0].json_data));
+
+    const AccountMetaData   = await AccountMetadataGet(app_id, null, null, data.data_app_id, 'ACCOUNT', null, null, true)
+                                        .then(result=>JSON.parse(result.rows[0].resource_metadata));
     const CustomerAccount   = await CustomerAccountGet(app_id, null, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, false)
                                         .then(result=>JSON.parse(result.rows[0].json_data));
 
@@ -97,8 +98,8 @@ const getStatement = async (app_id, data, locale) =>{
                     bank_name:	            {"value":Entity.name, "default_text":"Bank name",  "length":null,"type": "TEXT"},
                     bank_iban:	            {"value":IBAN_compose(Entity.country_code, Entity.bank_id, CustomerAccount.bank_account_number, true), "default_text":"Bank IBAN",  "length":null,"type": "TEXT"},
                     bank_account:           {"value":CustomerAccount.bank_account_number, "default_text":"Bank number",  "length":null,"type": "TEXT"},
-                    bank_currency_symbol:   {"value":AccountResource.currency, "default_text":"Currency",  "length":null,"type": "TEXT"},
-                    bank_currency_text:     {"value":AccountResource.currency_name, "default_text":"Currency name",  "length":null,"type": "TEXT"},
+                    bank_currency_symbol:   {"value":AccountMetaData.filter((/**@type{*}*/row)=>'currency' in row)[0].currency.default_value, "default_text":AccountMetaData.filter((/**@type{*}*/row)=>'currency' in row)[0].currency.default_text,  "length":null,"type": "TEXT"},
+                    bank_currency_text:     {"value":AccountMetaData.filter((/**@type{*}*/row)=>'currency_name' in row)[0].currency_name.default_value, "default_text":AccountMetaData.filter((/**@type{*}*/row)=>'currency_name' in row)[0].currency_name.default_text,  "length":null,"type": "TEXT"},
                     bank_account_balance:   {"value":Number(balance), "default_text":"Bank account balance",  "length":null,"type": "TEXT"}
                 }]
     }
