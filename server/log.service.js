@@ -368,7 +368,7 @@ const LogAppI = async (app_id, app_filename, app_function_name, app_line, logtex
  * @param {string} app_filename 
  * @param {string} app_function_name 
  * @param {number} app_line 
- * @param {string} logtext 
+ * @param {*} logtext 
  * @returns {Promise.<null>}
  */
 const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtext) => {

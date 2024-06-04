@@ -596,8 +596,8 @@
  * @property {string} APP_DESCRIPTION
  * @property {string} APP_CATEGORY
  * @property {string} PROTOCOL
- * @property {string} HOST
- * @property {number} PORT
+ * @property {string|null} HOST
+ * @property {number|null} PORT
  * 
  * @typedef  {object} config_apps_admin_with_db_columns
  * @property {number} ID
@@ -611,8 +611,8 @@
  * @property {number} APP_CATEGORY_ID
  * @property {string} APP_CATEGORY_TEXT
  * @property {string} PROTOCOL
- * @property {string} HOST
- * @property {number} PORT
+ * @property {string|null} HOST
+ * @property {number|null} PORT
  *
  * @typedef {{['APPS']:config_apps_record[]}} config_apps
  * Server - Config IAM blockip
@@ -1438,8 +1438,8 @@
  *              NAME:string,
  *              PROTOCOL:string,
  *              SUBDOMAIN:string,
- *              HOST:string,
- *              PORT:string,
+ *              HOST:string|null,
+ *              PORT:number|null,
  *              LOGO:string,
  *              date_created:string}} db_result_user_account_app_getUserAccountApps_with_app_registry
  * @typedef {{  preference_locale:string,

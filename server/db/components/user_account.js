@@ -553,7 +553,7 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
  * @param {string} accept_language 
  * @param {*} host 
  * @param {*} data 
- * @returns 
+ * @returns {Promise.<{sent: number,id?: number}>}
  */
 const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
     return new Promise((resolve, reject)=>{
@@ -634,7 +634,7 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
  * @param {*} query 
  * @param {*} data
  * @param {import('../../../types.js').res} res
- * @returns 
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getProfileUser[]>}
  */
 const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
@@ -723,6 +723,7 @@ const getProfileStat = (app_id, query) => service.getProfileStat(app_id, getNumb
  * @param {*} query 
  * @param {*} data
  * @param {import('../../../types.js').res} res
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_updateUserSuperAdmin>}
  */
 const updateAdmin =(app_id, resource_id, query, data, res) =>{
     return new Promise((resolve, reject)=>{
@@ -786,7 +787,6 @@ const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get
 /**
  * 
  * @param {number} app_id 
- * @returns 
  */
 const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 
@@ -811,6 +811,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
  * @param {*} query 
  * @param {*} data 
  * @param {import('../../../types.js').res} res
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_updatePassword|{sent: number}>}
  */
  const updatePassword = (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
     return new Promise((resolve, reject)=>{
@@ -867,6 +868,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
  * @param {*} query 
  * @param {*} data 
  * @param {import('../../../types.js').res} res 
+ * @returns {Promise.<{sent_change_email: number}>}
  */
  const updateUserLocal = async (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
     /**@type{import('../../../types.js').db_result_user_account_getUserByUserId[]}*/
@@ -987,6 +989,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
  * @param {*} query
  * @param {*} data
  * @param {import('../../../types.js').res} res
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_updateUserCommon>}
  */
  const updateUserCommon = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
@@ -1016,6 +1019,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
  * @param {number} resource_id
  * @param {*} query 
  * @param {import('../../../types.js').res} res 
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getUserByUserId[]|{last_logontime:string|null}>}
  */
 const getUserByUserId = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
@@ -1049,6 +1053,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
  * @param {*} query
  * @param {*} data
  * @param {import('../../../types.js').res} res 
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_deleteUser>}
  */
  const deleteUser = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{

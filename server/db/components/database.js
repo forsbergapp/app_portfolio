@@ -56,6 +56,7 @@ const install_db_get_files = async (json_type) =>{
  * Install db
  * @param {number}      app_id 
  * @param {*}           query
+ * @returns {Promise.<{info: {}[]}>}
  */
  const Install = async (app_id, query)=> {
     /**@type{import('../../config.service.js')} */
@@ -291,11 +292,12 @@ const install_db_get_files = async (json_type) =>{
     install_result.push({'SQL optional': count_statements_optional});
     install_result.push({'finished': new Date().toISOString()});
     LogServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
-    return {'info': install_result};
+    return {info: install_result};
  };
  /**
   * Install db check
   * @param {number} app_id
+  * @returns {Promise.<{installed: number}>}
   */
  const InstalledCheck = async (app_id)=>{
     return service.InstalledCheck(app_id, DBA)
@@ -307,6 +309,7 @@ const install_db_get_files = async (json_type) =>{
   * Uninstall database installation
   * @param {number} app_id
   * @param {*} query
+  * @returns {Promise.<{'info': {}[]}>}
   */
  const Uninstall = async (app_id, query)=> {
     /**@type{import('../../config.service.js')} */
@@ -378,9 +381,9 @@ const install_db_get_files = async (json_type) =>{
     //remove db users and password in apps.json
     ConfigAppSecretDBReset();
     LogServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
-    return {'info':[  { count    : count_statements},
-                        {count_fail: count_statements_fail}
-                    ]};
+    return {info:[  { count    : count_statements},
+                    {count_fail: count_statements_fail}
+                ]};
 };
 /**
  * Install demo users with user settings from /scripts/demo/demo.json
@@ -388,6 +391,7 @@ const install_db_get_files = async (json_type) =>{
  * @param {number} app_id
  * @param {*} query
  * @param {*} data
+ * @returns {Promise.<{info: {}[]}>}
  */
  const DemoInstall = async (app_id, query, data)=> {
     /**@type{import('../../socket.service.js')} */
@@ -771,12 +775,13 @@ const install_db_get_files = async (json_type) =>{
     install_result.push({'user_account_app_data_post_view': records_user_account_app_data_post_view});
     install_result.push({'finished': new Date().toISOString()});
     LogServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
-    return {'info': install_result};
+    return {info: install_result};
 };
 /**
  * Demo uninstall
  * @param {number} app_id
  * @param {*} query
+ * @returns {Promise.<{info: {}[]}>}
  */
 const DemoUninstall = async (app_id, query)=> {
     /**@type{import('../../socket.service.js')} */
@@ -807,7 +812,7 @@ const DemoUninstall = async (app_id, query)=> {
                 delete_users()
                 .then(()=>{
                     LogServerI(`Demo uninstall count: ${deleted_user}`);
-                    resolve({'info': [{'count': deleted_user}]});
+                    resolve({info: [{'count': deleted_user}]});
                 })
                 .catch((/**@type{import('../../../types.js').error}*/error)=>{
                     reject(error);
@@ -815,7 +820,7 @@ const DemoUninstall = async (app_id, query)=> {
             }
             else{
                 LogServerI(`Demo uninstall count: ${result_demo_users.rows.length}`);
-                resolve({'info': [{'count': result_demo_users.rows.length}]});
+                resolve({info: [{'count': result_demo_users.rows.length}]});
             }
         })
         .catch((/**@type{import('../../../types.js').error}*/error)=>{

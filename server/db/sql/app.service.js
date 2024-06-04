@@ -10,9 +10,9 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
 /**
  * 
  * @param {number} app_id 
- * @param {number} id 
+ * @param {number|null} id 
  * @param {string} lang_code 
- * @returns {Promise.<import('../../../types.js').db_result_app_getApp[]>}
+ * @returns {Promise.<{rows:import('../../../types.js').db_result_app_getApp[]}>}
  */
 const getApp = async (app_id, id,lang_code) => {
 		const sql = `SELECT	id "id",
@@ -57,7 +57,7 @@ const getApp = async (app_id, id,lang_code) => {
  * 
  * @param {number} app_id 
  * @param {string|null} lang_code 
- * @returns {Promise.<import('../../../types.js').db_result_app_getAppsAdmin[]>}
+ * @returns {Promise.<{rows:import('../../../types.js').db_result_app_getAppsAdmin[]}>}
  */
 const getAppsAdmin = async (app_id, lang_code) => {
 		const sql = `SELECT	a.id "id",
