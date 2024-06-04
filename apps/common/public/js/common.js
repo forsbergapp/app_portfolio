@@ -2404,10 +2404,10 @@ const map_line_removeall = () => {
  * @param {string} id 
  * @param {string} title 
  * @param {number} text_size 
- * @param {string} from_longitude 
- * @param {string} from_latitude 
- * @param {string} to_longitude 
- * @param {string} to_latitude 
+ * @param {number} from_longitude 
+ * @param {number} from_latitude 
+ * @param {number} to_longitude 
+ * @param {number} to_latitude 
  * @param {string} color 
  * @param {number} width 
  * @param {number} opacity 
