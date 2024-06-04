@@ -73,7 +73,7 @@ const get_app_code = error => {
 									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 									'MESSAGE',
 									app_code)
-			.then((/**@type{import('../../types.js').db_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+			.then(result_message=>{
 				res.statusCode = 400;
 				res.statusMessage = result_message[0].display_data;
 				resolve(result_message[0].display_data);
@@ -186,10 +186,9 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
  * @param {*} parameters 
  * @param {number|null} dba 
  * @param {string|null} locale 
- * @param {boolean} multiple_resources 
  * @returns {Promise.<import('../../types.js').error|{}>}
  */
- const db_execute = async (app_id, sql, parameters, dba = null, locale=null, multiple_resources=false) =>{
+ const db_execute = async (app_id, sql, parameters, dba = null, locale=null) =>{
 	return new Promise ((resolve, reject)=>{
 		//manage schema
 		//syntax in SQL: FROM '<DB_SCHEMA/>'.[table] 
@@ -240,7 +239,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 					//return pagination ISO20022 format
 					//use pagination OR multiple resource 
 					/**@ts-ignore */
-					result.page_header = {	total_count:	result[0].total_rows,
+					result.page_header = {	total_count:	result.length>0?result[0].total_rows:0,
 											offset: 		parameters.offset?parameters.offset:0,
 											count:			Math.min(parameters.limit, result.length)};
 					resolve(
@@ -249,21 +248,8 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 					);
 				}
 				else
-					if (multiple_resources){
-						//searching for primary key => single resource even if returning multiple records
-						//multiple resources for all other cases
-						//return list ISO20022 format
-						/**@ts-ignore */
-						result.list_header = {	total_count:	result.length,
-												offset: 		parameters.offset?parameters.offset:0,
-												count:			parameters.limit ?? result.length};
-						resolve(
-							/**@ts-ignore */
-							{list_header:result.list_header, rows:rows}
-						);
-					}
-					else
-						resolve(rows ?? result);
+					resolve(rows ?? result);
+						
 			});
 		})
 		.catch((/**@type{import('../../types.js').error}*/error)=>{

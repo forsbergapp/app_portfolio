@@ -15,7 +15,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number|null} entity_id
  * @param {string|null} locale
  * @param {boolean|null} user_null
- * @returns {Promise.<{rows:import('../../../types.js').db_result_app_data_resource_detail_data_get[]}>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_data_resource_detail_data_get[]>}
  */
  const get = async (app_id, resource_id, user_account_id, data_app_id, resource_name, resource_name_master_attribute, entity_id, locale, user_null=false) => {
     const sql = `SELECT adrdd.id                                                        "id",
@@ -86,7 +86,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                         entity_id                       : entity_id,
                         user_null                       : user_null?1:0
                         };
-    return await db_execute(app_id, sql, parameters, null, null, resource_id?false:true);
+    return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 

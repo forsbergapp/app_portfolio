@@ -41,7 +41,7 @@ const getUserAccountApps = async (app_id, user_account_id) => {
 		const parameters = {
 						user_account_id: user_account_id
 						};
-		return await db_execute(app_id, sql, parameters, null, null, false);
+		return await db_execute(app_id, sql, parameters, null, null);
 	};
 /**
  * 
@@ -71,7 +71,7 @@ const getUserAccountApp = async (app_id, user_account_id) => {
 						user_account_id: user_account_id,
 						app_id: app_id
 						};
-		return await db_execute(app_id, sql, parameters, null, null, false);
+		return await db_execute(app_id, sql, parameters, null, null);
 	};
 /**
  * 

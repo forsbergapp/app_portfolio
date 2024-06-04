@@ -145,7 +145,9 @@ const app_event_click = event => {
                 /**Dialogue user start */
                 case 'common_user_start_identity_provider_login':{
                     const target_row = common.element_row(event.target);
-                    common.user_login(null, null, null, parseInt(target_row.querySelector('.common_login_provider_id').innerHTML));
+                    const provider_element = target_row.querySelector('.common_login_provider_id');
+                    if (provider_element && provider_element.innerHTML)
+                        common.user_login(null, null, null, parseInt(provider_element.innerHTML));
                     break;
                 }
                 case 'common_user_start_login_button':

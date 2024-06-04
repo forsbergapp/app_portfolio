@@ -46,7 +46,7 @@ const getUserPost = async (app_id, id) => {
 					   FROM <DB_SCHEMA/>.user_account_app_data_post 
 					  WHERE id = :id `;
 		const parameters = {id: id};
-		return await db_execute(app_id, sql, parameters, null, null, false);
+		return await db_execute(app_id, sql, parameters, null, null);
 	};
 /**
  * 
@@ -69,7 +69,7 @@ const getUserPostsByUserId = async (app_id, id) => {
 						user_account_id: id,
 						app_id: app_id
 					};
-		return await db_execute(app_id, sql, parameters, null, null, false);
+		return await db_execute(app_id, sql, parameters, null, null);
 	};
 /**
  * 
@@ -104,7 +104,7 @@ const getProfileUserPosts = async (app_id, id, id_current_user) => {
 						user_account_id: id,
 						app_id: app_id
 						};
-		return await db_execute(app_id, sql, parameters, null, null, false);
+		return await db_execute(app_id, sql, parameters, null, null);
 	};
 /**
  * 
@@ -171,7 +171,7 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
 						app_id: app_id,
 						detailchoice: detailchoice
 					};
-		return await db_execute(app_id, sql, parameters, null, null, false);
+		return await db_execute(app_id, sql, parameters, null, null);
     };
 /**
  * 
@@ -200,7 +200,7 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
 					id: id,
 					app_id: app_id
 				}; 
-	return await db_execute(app_id, sql, parameters, null, null, false);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 
 /**
@@ -269,7 +269,7 @@ const getProfileStatPost = async (app_id, statchoice) => {
 						app_id: app_id,
 						statchoice: statchoice
 					};
-		return await db_execute(app_id, sql, parameters, null, null, true);
+		return await db_execute(app_id, sql, parameters, null, null);
     };
 /**
  * 

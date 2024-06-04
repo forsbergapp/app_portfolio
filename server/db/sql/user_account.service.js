@@ -211,7 +211,7 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 							offset: offset ?? 0,
 							limit: limit
 							};
-		return await db_execute(app_id, sql, parameters, null, null, false);
+		return await db_execute(app_id, sql, parameters, null, null);
     };
 /**
  * 
@@ -224,7 +224,7 @@ const getUserAppRoleAdmin = async (app_id, id) => {
 				   FROM <DB_SCHEMA/>.user_account
 				  WHERE id = :id`;
 	const parameters = {id: id};
-	return await db_execute(app_id, sql, parameters, null, null, false);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -246,7 +246,7 @@ const getStatCountAdmin = async app_id => {
 				  GROUP BY ua.identity_provider_id, ip.provider_name
 				  ORDER BY ua.identity_provider_id`;
 	const parameters = {};
-	return await db_execute(app_id, sql, parameters, null, null, true);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -466,7 +466,7 @@ const getUserByUserId = async (app_id, id) => {
 				FROM   <DB_SCHEMA/>.user_account u
 			WHERE   u.id = :id `;
 	const parameters = {id: id};
-	return await db_execute(app_id, sql, parameters, null, null, false);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -572,7 +572,7 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
 						user_value: user_where_value(),
 						app_id: app_id
 					}; 
-	return await db_execute(app_id, sql, parameters, null, null, (search!='' && search != null));
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -657,7 +657,7 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
 						user_account_id: id,
 						detailchoice: detailchoice
 					}; 
-	return await db_execute(app_id, sql, parameters, null, null, false);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -738,7 +738,7 @@ const getProfileStat = async (app_id, statchoice) => {
 						statchoice: statchoice,
 						app_id: app_id
 					};
-	return await db_execute(app_id, sql, parameters, null, null, true);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -751,7 +751,7 @@ const checkPassword = async (app_id, id) => {
 				   FROM <DB_SCHEMA/>.user_account
 				  WHERE id = :id `;
 	const parameters = {id: id};
-	return await db_execute(app_id, sql, parameters, null, null, false);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -882,7 +882,7 @@ const userLogin = async (app_id, data) => {
 	const parameters ={
 						username: data.username
 					};
-	return await db_execute(app_id, sql, parameters, null, null, false);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -948,7 +948,7 @@ const providerSignIn = async (app_id, identity_provider_id, search_id) => {
 						provider_id: search_id,
 						identity_provider_id: identity_provider_id
 					};
-	return await db_execute(app_id, sql, parameters, null, null, false);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -964,7 +964,7 @@ const getEmailUser = async (app_id, email) => {
 	const parameters ={
 					email: email
 				};
-	return await db_execute(app_id, sql, parameters, null, null, false);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -993,12 +993,12 @@ const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
 					id: user_account_id,
 					id_user_icon: 2
 				};
-	return await db_execute(app_id, sql, parameters, dba, null, false);
+	return await db_execute(app_id, sql, parameters, dba, null);
 };
 /**
  * 
  * @param {number} app_id
- * @returns {Promise.<{rows:import('../../../types.js').db_result_user_account_getDemousers[]}>}
+ * @returns {Promise.<import('../../../types.js').db_result_user_account_getDemousers[]>}
  */
 const getDemousers = async app_id => {
 	const sql = `SELECT id "id",
@@ -1008,7 +1008,7 @@ const getDemousers = async app_id => {
 	const parameters ={
 					demo_level: 2
 				};
-	return await db_execute(app_id, sql, parameters, null, null, true);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 
 export{	verification_code,

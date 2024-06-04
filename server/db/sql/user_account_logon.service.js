@@ -25,7 +25,7 @@ const getUserAccountLogon = async (app_id, user_account_id, app_id_select) => {
 					user_account_id: user_account_id,
 					app_id_select: app_id_select
 				};
-	return await db_execute(app_id, sql, parameters, null, null, false);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -53,7 +53,7 @@ const checkLogin = async (app_id, user_account_id) => {
 		super_admin_app_role_id: 0,
 		admin_app_role_id: 1
 	};
-	return await db_execute(app_id, sql, parameters, null, null, false);
+	return await db_execute(app_id, sql, parameters, null, null);
 };
 /**
  * 

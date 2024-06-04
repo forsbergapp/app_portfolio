@@ -84,6 +84,6 @@ const getLocales = async (app_id, lang_code) => {
                            WHERE loc.language_id = l2.id)
           ORDER BY 2`;
     const parameters = {lang_code_default: 'en'};
-    return await db_execute(app_id, sql, parameters, null, lang_code, true);
+    return await db_execute(app_id, sql, parameters, null, lang_code);
 };
 export{getLocales};

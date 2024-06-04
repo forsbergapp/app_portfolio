@@ -1,7 +1,5 @@
 /** @module apps/app2 */
 
-/**@type{import('../../../../apps/apps.service')} */
-const {render_app_with_data} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 /**@type{import('../../../../server/server.service')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../../../../server/db/sql/user_account_app_data_post_view.service.js')} */
@@ -551,6 +549,7 @@ const isToday = checkdate => {
  * @returns {Promise.<null>}
  */
 const set_prayer_method = async(app_id) => {
+	/**@type{import('../../../../server/db/sql/app_setting.service.js')} */
     const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`);
 	return new Promise( (resolve, reject) => {
 		/* see more in PrayTimes module
@@ -662,8 +661,8 @@ const set_prayer_method = async(app_id) => {
 					midnight: (midnight_data==null || midnight_data=='')?{}:{midnight: midnight_data}};
 		};
         getSettingDisplayData(app_id, app_id, 'METHOD')
-		.then((/**@type{import('../../../../types.js').db_result_app_setting_getSettingDisplayData[]}*/result_settings)=>{
-			for (const setting of result_settings.rows){
+		.then(result_settings=>{
+			for (const setting of result_settings){
 				const prayer_value = set_prayer_value(setting.data2, setting.data3,setting.data4,setting.data5);
 				//ES6 object spread 
 				Object.assign(REPORT_GLOBAL.module_praytimes_methods, {[setting.value.toUpperCase()]:{
@@ -696,6 +695,7 @@ const set_prayer_method = async(app_id) => {
  * @returns {boolean}
  */
 const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri_type, hijri_adj) => {
+	/**@type{Intl.DateTimeFormatOptions} */
 	const options_calendartype = {	timeZone: timezone,
 									month: 'numeric'};
 	if (calendartype=='GREGORIAN'){
@@ -708,7 +708,6 @@ const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri
 				calendar_hijri_type + 
 				REPORT_GLOBAL.regional_def_locale_ext_number_system +
 				REPORT_GLOBAL.regional_def_calendar_number_system, 
-				/**@ts-ignore */
 				options_calendartype);
 		return Number(ramadan_day) == 9;
 	}
@@ -1048,7 +1047,9 @@ const calculateIqamat = (option, calculated_time) => {
  */
 const makeTableRow = (data, columns, year, month, settings, date = null) => {
 
+	/**@type{Intl.DateTimeFormatOptions} */
 	const options_weekday = {weekday:'long'};
+	/**@type{Intl.DateTimeFormatOptions} */
 	const options_calendartype = {timeZone: settings.timezone, 
 								dateStyle: 'short'};
 	let iqamat;
@@ -1091,17 +1092,14 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										settings.calendar_hijri_type + 
 																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																										/**@ts-ignore */
 																										(settings.number_system=='hanidec'?'latn':settings.number_system), options_calendartype)}</div>`;
 				}
 				else{							
-					/**@ts-ignore */
-					html += `<div class='timetable_month_data_col timetable_month_data_calendartype	'>${new Date(date[0],date[1]-1,date[2]).toLocaleDateString(settings.locale + 
+					html += `<div class='timetable_month_data_col timetable_month_data_calendartype	'>${new Date(date?date[0]:0,(date?date[1]:0)-1,date?date[2]:0).toLocaleDateString(settings.locale + 
 																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										REPORT_GLOBAL.regional_def_calendar_type_greg + 
 																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																										/**@ts-ignore */
 																										(settings.number_system=='hanidec'?'latn':settings.number_system), options_calendartype)}</div>`;							
 				}
 				break;
@@ -1114,16 +1112,13 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 					html += `<div class='timetable_month_data_col timetable_month_data_date'>${date_temp.toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
 																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
-																										/**@ts-ignore */
 																										settings.calendar_hijri_type, options_weekday)}</div>`;
 					}
 				else{
-					/**@ts-ignore */
-					html += `<div class='timetable_month_data_col timetable_month_data_date'>${new Date(date[0],date[1]-1,date[2]).toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
+					html += `<div class='timetable_month_data_col timetable_month_data_date'>${new Date(date?date[0]:0,(date?date[1]:0)-1,date?date[2]:0).toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
 																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										REPORT_GLOBAL.regional_def_calendar_type_greg, 
-																										/**@ts-ignore */
 																										options_weekday)}</div>`;
 				}
 				break;
@@ -1282,6 +1277,7 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
  * @param {string} locale_second 
  */
 const timetable_translate_settings = async (app_id, locale, locale_second) => {
+	/**@type{import('../../../../server/db/sql/app_object.service.js')} */
     const { getObjects } = await import(`file://${process.cwd()}/server/db/sql/app_object.service.js`);
 	/**
 	 * 
@@ -1291,9 +1287,8 @@ const timetable_translate_settings = async (app_id, locale, locale_second) => {
 	 */
 	const fetch_translation = async (locale, first) => {
 		//show translation using first or second language
-		/**@type{import('../../../../types.js').db_result_app_object_getObjects[]} */
 		const result_app_object_items = await getObjects(app_id, locale, 'REPORT', null);	
-		for (const app_object_item of result_app_object_items.rows){
+		for (const app_object_item of result_app_object_items){
 			if (first == true)
 				REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
 			else
@@ -1433,11 +1428,13 @@ const create_header_row = (report_type, col_titles, settings) => {
  */
 const displayDay = (prayTimes, settings, user_account_app_data_posts) => {
 	let times; 
+	/**@type{Intl.DateTimeFormatOptions} */
 	const options = { 	timeZone: settings.timezone, 
 						weekday: 'long', 
 						year: 'numeric', 
 						month: 'long', 
 						day: 'numeric'};
+	/**@type{Intl.DateTimeFormatOptions} */
 	const options_hijri = { timeZone: settings.timezone, 
 							year: 'numeric', 
 							month: 'long', 
@@ -1603,6 +1600,7 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 	 *				endDate_hijri: 	[number, number, number]}}
 	 */
 	const getDatesAndTitle = () =>{
+		/**@type{Intl.DateTimeFormatOptions} */
 		let options;
 		switch (settings.reporttype_year_month){
 			case 'MONTH':{
@@ -1613,6 +1611,10 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 				options = {timeZone: settings.timezone, month:'long'};
 				break;
 				}
+			default:{
+				options = {timeZone: settings.timezone, month:'long'};
+				break;
+			}
 		}
 		if (settings.calendartype=='GREGORIAN'){
 			const month_gregorian = REPORT_GLOBAL.session_currentDate.getMonth();
@@ -1623,7 +1625,6 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 										(settings.number_system=='hanidec'?'latn':settings.number_system),
-										/**@ts-ignore */
 										options).toLocaleUpperCase(),
 					date:			new Date(year_greogrian, month_gregorian, 1),
 					endDate: 		new Date(year_greogrian, month_gregorian+ 1, 1),
@@ -1652,7 +1653,6 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 										settings.calendar_hijri_type + 
 										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 										(settings.number_system=='hanidec'?'latn':settings.number_system), 
-										/**@ts-ignore */
 										options).toLocaleUpperCase(),
 					date:			new Date(dateGregorian[0], dateGregorian[1]-1, dateGregorian[2]),
 					endDate:		new Date(endDateGregorian[0], endDateGregorian[1]-1, endDateGregorian[2]),
@@ -1910,7 +1910,7 @@ const displayYear = (prayTimes, settings) => {
  * @returns {Promise.<{report:string, papersize:string}>}
  */
 const timetable = async (timetable_parameters) => {
-	const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+	const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
 	const urlParams = new URLSearchParams(decodedReportparameters);
@@ -1942,8 +1942,6 @@ const timetable = async (timetable_parameters) => {
 			if (parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'])
 				REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
 		}
-		/**@type {[string, string][]} */
-		const render_variables = [];
 		/**@type{import('../../../../types.js').db_parameter_user_account_app_data_post_view_insertUserPostView} */
 		const data_ViewStat = { client_ip:          			timetable_parameters.ip,
 								client_user_agent:  			timetable_parameters.user_agent,
@@ -1957,8 +1955,8 @@ const timetable = async (timetable_parameters) => {
 			timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
 			.then((user_account_app_data_post)=>{
 				timetable_translate_settings(timetable_parameters.app_id, user_account_app_data_post.locale, user_account_app_data_post.second_locale).then(() => {
-					/**@ts-ignore */
-					import('praytimes').then(({default: prayTimes}) => {
+					const path_praytimes ='praytimes';
+					import(path_praytimes).then(({default: prayTimes}) => {
 						//set current date for report month
 						REPORT_GLOBAL.session_currentDate = new Date();
 						REPORT_GLOBAL.session_currentHijriDate = [0,0,0];

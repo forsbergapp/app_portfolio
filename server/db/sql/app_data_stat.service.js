@@ -51,7 +51,7 @@ const get = async (app_id, resource_id, data_app_id, resource_name_entity, local
 		const parameters = {resource_id         : resource_id,
 							data_app_id         : data_app_id,
                             resource_name_entity: resource_name_entity};
-		return await db_execute(app_id, sql, parameters, null, null, resource_id?false:true);
+		return await db_execute(app_id, sql, parameters, null, null);
 	};
 /**
  * 

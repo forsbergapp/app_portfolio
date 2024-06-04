@@ -177,6 +177,7 @@ const component = async props => {
                 const isodate = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)+/g;
                 try {
                     if (value.match(isodate)){
+                        /**@type{Intl.DateTimeFormatOptions} */
                         const options = short?
                                             {
                                                 timeZone: timezone,
@@ -205,7 +206,6 @@ const component = async props => {
                             Number(value.substring(14, 16)),    //min
                             Number(value.substring(17, 19))     //sec
                         ));
-                        /**@ts-ignore */
                         const format_date = utc_date.toLocaleDateString(locale, options);
                         return format_date;
                     }

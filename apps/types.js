@@ -9,6 +9,19 @@
  *              querySelectorAll:function,
  *              title:string}} AppDocument
  * 
+ * @typedef {{  console:{ warn:function,
+ *                      info:function,
+ *                      error:function},
+ *              atob:function,
+ *              btoa:function,
+ *              setTimeout:function,
+ *              open:function,
+ *              addEventListener:function,
+ *              ReactDOM?:*,
+ *              React?:*,
+ *              __VUE_DEVTOOLS_HOOK_REPLAY__?:*,
+ *              __VUE_HMR_RUNTIME__?:*,
+ *              __VUE__?:*}} AppWindow
  * @typedef {object}    AppEvent
  * @property {object}   clipboardData
  * @property {function} clipboardData.getData 
@@ -133,7 +146,7 @@
  *                                          setView:function|null,
  *                                          flyTo:function|null,
  *                                          setZoom:function|null,
- *                                          getZoom:function|null},
+ *                                          getZoom:function|null}|null,
  *           module_leaflet_session_map_layer:[],
  *           module_leaflet_zoom:number, 
  *           module_leaflet_zoom_city:number,

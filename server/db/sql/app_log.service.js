@@ -59,7 +59,7 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 							month:month,
 							offset:offset,
 							limit:limit};
-		return await db_execute(app_id, sql, parameters, null,null, false);
+		return await db_execute(app_id, sql, parameters, null,null);
 	};
 /**
  * 
@@ -67,7 +67,7 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
  * @param {number|null} data_app_id 
  * @param {number|null} year 
  * @param {number|null} month 
- * @returns {Promise.<{rows:import('../../../types.js').db_result_app_log_getStatUniqueVisitorAdmin[]}>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_log_getStatUniqueVisitorAdmin[]>}
  */
 const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 		
@@ -97,6 +97,6 @@ const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 		const parameters = {app_id_log: data_app_id,
 							year_log: year,
 							month_log: month};
-		return await db_execute(app_id, sql, parameters, null, null, true);
+		return await db_execute(app_id, sql, parameters, null, null);
 	};
 export{createLog, getLogsAdmin, getStatUniqueVisitorAdmin};

@@ -45,11 +45,11 @@ const getStatUniqueVisitorAdmin = (app_id, query) =>{
     return new Promise((resolve, reject)=>{
         service.getStatUniqueVisitorAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')))
         .then(result_logs =>{
-            if (result_logs.rows.length>0){
+            if (result_logs.length>0){
                 //use SQL group by and count() in javascript
                 //save unique server_remote_addr in a set
                 const log_unique_ip = new Set();
-                for (const log of result_logs.rows){
+                for (const log of result_logs){
                     log_unique_ip.add( `${log.chart};${log.app_id};${log.year};${log.month};${log.day};${JSON.parse(log.json_data).server_remote_addr}`);
                 }
                 //convert to array with objects
@@ -66,11 +66,7 @@ const getStatUniqueVisitorAdmin = (app_id, query) =>{
                 })
                 //convert to array with objects
                 const result_getStatUniqueVisitorAdmin = to_object(log_unique_with_amount, true);
-                //return result
-                const list_header = {	total_count:	result_getStatUniqueVisitorAdmin.length,
-                                        offset: 		0,
-                                        count:			result_getStatUniqueVisitorAdmin.length};
-                resolve ({list_header:list_header, rows:result_getStatUniqueVisitorAdmin});
+                resolve(result_getStatUniqueVisitorAdmin);
             }
             else{
                 resolve([]);
