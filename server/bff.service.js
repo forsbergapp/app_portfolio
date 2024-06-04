@@ -154,7 +154,7 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
 };
 /**
  * BFF called from server
- * @param {number} app_id
+ * @param {number|null} app_id
  * @param {import('../types.js').bff_parameters} bff_parameters
  * @returns {Promise<(*)>}
  */

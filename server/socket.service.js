@@ -23,7 +23,7 @@ let CONNECTED_CLIENTS = [];
  *              longitude:string,
  *               place:string,
  *               timezone:string,
- *               identity_provider_id:number}>}
+ *               identity_provider_id:number|null}>}
  */
 const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
     /**@type{import('./bff.service.js')} */
@@ -54,8 +54,8 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
     /**@type{import('./db/sql/user_account.service.js')} */
     const {getUserByUserId} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
     const identity_provider_id = user_account_id?await getUserByUserId(app_id, user_account_id)
-                                                    .then((/**@type{string}*/result)=>JSON.parse(result)[0].identity_provider_id)
-                                                    .catch((/**@type{import('../types.js').error}*/error)=>null):'';
+                                                    .then(result=>result[0].identity_provider_id)
+                                                    .catch((/**@type{import('../types.js').error}*/error)=>null):null;
     return {latitude:result_geodata?result_geodata.geoplugin_latitude ?? '':'',
             longitude:result_geodata?result_geodata.geoplugin_longitude ?? '':'',
             place:place,
@@ -105,10 +105,10 @@ const ClientAdd = (newClient) => {
 
 /**
  * Socket connected update
- * @param {number|null} app_id,
+ * @param {number} app_id,
  * @param {number|null} client_id
  * @param {number|null} user_account_id
- * @param {string} system_admin
+ * @param {string|null} system_admin
  * @param {string|null} authorization_bearer
  * @param {string|null} token_access
  * @param {string|null} token_systemadmin
@@ -196,16 +196,16 @@ const ClientAdd = (newClient) => {
 /**
  * Socket connected list
  * @param {number} app_id
- * @param {number} app_id_select
- * @param {number} limit
- * @param {number} year
- * @param {number} month
+ * @param {number|null} app_id_select
+ * @param {number|null} limit
+ * @param {number|null} year
+ * @param {number|null} month
  * @param {string} order_by
  * @param {import('../types.js').sort_socket} sort
  * @param {number} dba
  */
  const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba) => {
-    limit = Number(limit ?? 0);
+    
     /**@type{import('../apps/apps.service.js')} */
     const { app_start } = await import(`file://${process.cwd()}/apps/apps.service.js`);
     //filter    
@@ -230,7 +230,7 @@ const ClientAdd = (newClient) => {
                                         user_agent: client.user_agent});
     //return rows controlling limit, app_id, year and month
     connected_clients_no_res = connected_clients_no_res.filter((client, index)=>{
-        return index<=limit &&
+        return index<=Number(limit ?? 0) &&
         (client.app_id == app_id_select || app_id_select==null) &&
         (parseInt(client.connection_date.substring(0,4)) == year && 
          parseInt(client.connection_date.substring(5,7)) == month);
@@ -252,17 +252,17 @@ const ClientAdd = (newClient) => {
                 //number sort
                 const first_sort_num = first[sort==null?'connection_date':sort];
                 const second_sort_num = second[sort==null?'connection_date':sort];
-                if (first_sort_num< second_sort_num )
+                if ((first_sort_num??0) < (second_sort_num??0) )
                     return -1 * order_by_num;
-                else if (first_sort_num> second_sort_num)
+                else if ((first_sort_num??0) > (second_sort_num??0))
                     return 1 * order_by_num;
                 else
                     return 0;
             }
             else{
                 //string sort with lowercase and localcompare
-                const first_sort = first[sort==null?'connection_date':sort].toString().toLowerCase();
-                const second_sort = second[sort==null?'connection_date':sort].toString().toLowerCase();
+                const first_sort = (first[sort==null?'connection_date':sort] ?? '').toString().toLowerCase();
+                const second_sort = (second[sort==null?'connection_date':sort] ?? '').toString().toLowerCase();
                 //using localeCompare as collation method
                 if (first_sort.localeCompare(second_sort)<0 )
                     return -1 * order_by_num;
@@ -278,7 +278,7 @@ const ClientAdd = (newClient) => {
         /**@type{import('./db/sql/user_account.service.js')} */
         const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
         for (const client of connected_clients_no_res){
-            if (client.system_admin==0)
+            if (client.system_admin=='')
                 if (await app_start()==true){    
                     await getUserRoleAdmin(app_id, client.user_account_id, dba)
                     .then((/**@type{import('../types.js').db_result_user_account_getUserRoleAdmin[]}*/result_app_role)=>{
@@ -307,7 +307,7 @@ const ClientAdd = (newClient) => {
 };
 /**
  * Socket client send as admin
- * @param {number} app_id
+ * @param {number|null} app_id
  * @param {number|null} client_id
  * @param {number|null} client_id_current
  * @param {string} broadcast_type
@@ -341,8 +341,8 @@ const ClientAdd = (newClient) => {
 };
 /**
  * Socket connected count
- * @param {number} identity_provider_id
- * @param {number} logged_in
+ * @param {number|null} identity_provider_id
+ * @param {number|null} logged_in
  */
  const ConnectedCount = (identity_provider_id, logged_in) => {
     if (logged_in == 1)
@@ -351,21 +351,21 @@ const ClientAdd = (newClient) => {
                                                         connected.user_account_id != null)||
                                                         (identity_provider_id ==null &&
                                                         connected.identity_provider_id ==null &&
-                                                        (connected.user_account_id != null ||connected.system_admin == 1))).length};
+                                                        (connected.user_account_id != null ||connected.system_admin != ''))).length};
     else
         return {count_connected:CONNECTED_CLIENTS.filter(connected =>identity_provider_id ==null &&
                                                     connected.identity_provider_id ==null &&
                                                     connected.user_account_id ==null &&
-                                                    connected.system_admin == 0).length};
+                                                    connected.system_admin == '').length};
 };
 
 /**
  * Socket connect
  * Used by EventSource and leaves connection open
  * @param {number} app_id
- * @param {number} user_account_id
- * @param {number} system_admin
- * @param {string} authorization_bearer
+ * @param {number|null} user_account_id
+ * @param {string|null} system_admin
+ * @param {string|null} authorization_bearer
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
  * @param {string} ip
@@ -434,7 +434,8 @@ const ClientAdd = (newClient) => {
                 SocketSendSystemAdmin(null, null, null, 'MAINTENANCE', '');
             }
             SocketUpdateExpiredTokens();
-        }, ConfigGet('SERVICE_SOCKET', 'CHECK_INTERVAL'));
+        //set default interval to 5 seconds if no parameter is set
+        }, getNumberValue(ConfigGet('SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
     }
 };
 const SocketUpdateExpiredTokens = () =>{

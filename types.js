@@ -638,11 +638,11 @@
  * @property {number} id
  * @property {string} connection_date
  * @property {number} app_id
- * @property {string} authorization_bearer
- * @property {number} user_account_id
+ * @property {string|null} authorization_bearer
+ * @property {number|null} user_account_id
  * @property {string|null} token_access
- * @property {number} identity_provider_id
- * @property {number} system_admin
+ * @property {number|null} identity_provider_id
+ * @property {string|null} system_admin
  * @property {string|null} token_systemadmin
  * @property {string} gps_latitude
  * @property {string} gps_longitude
@@ -655,12 +655,12 @@
  * Server - Socket client no res
  * @typedef {{  id:number,
  *              app_id:number,
- *              authorization_bearer:string,
+ *              authorization_bearer:string|null,
  *              app_role_icon:number|string,
  *              app_role_id:number|string,
- *              user_account_id:number,
- *              identity_provider_id:number,
- *              system_admin:number,
+ *              user_account_id:number|null,
+ *              identity_provider_id:number|null,
+ *              system_admin:string|null,
  *              connection_date:string,
  *              gps_latitude:string,
  *              gps_longitude:string,

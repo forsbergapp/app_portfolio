@@ -969,7 +969,7 @@ const getEmailUser = async (app_id, email) => {
 /**
  * 
  * @param {number} app_id 
- * @param {number} user_account_id 
+ * @param {number|null} user_account_id 
  * @param {number} dba 
  * @returns {Promise.<import('../../../types.js').db_result_user_account_getUserRoleAdmin[]>}
  */
