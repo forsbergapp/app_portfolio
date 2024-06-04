@@ -381,10 +381,7 @@ const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtex
 /**
  * Get logs
  * @param {import('../types.js').admin_log_data_parameters} data
- * @returns{Promise.<{  list_header:{   total_count:	number,
- *                                      offset: 		number,
- *                                      count:			number}, 
- *                      rows:[*]}|[]>}
+ * @returns{Promise.<[]>}
  */
 const getLogs = async (data) => {
     return new Promise ((resolve)=>{
@@ -470,10 +467,7 @@ const getLogs = async (data) => {
                         return 0;
                 }
             });
-            const list_header = {   total_count:	log_rows_array_obj.length,
-                                    offset: 		0,
-                                    count:			log_rows_array_obj.length};
-            resolve({list_header:list_header, rows:log_rows_array_obj});
+            resolve(log_rows_array_obj);
         })
         //return empty and not error
         .catch(()=> resolve([]));
@@ -505,10 +499,7 @@ const getStatusCodes = async () =>{
 /**
  * Get log stat
  * @param {import('../types.js').log_parameter_getLogStats} data 
- * @returns{Promise.<{  list_header:{   total_count:	number,
- *                                      offset: 		number,
- *                                      count:			number}, 
- *                      rows:import('../types.js').admin_log_stats_data[]|[]}>}
+ * @returns{Promise.<import('../types.js').admin_log_stats_data[]|[]>}
  */
 const getLogsStats = async (data) => {
     /**@type{import('../types.js').admin_log_stats_data[]|[]} */
@@ -617,18 +608,12 @@ const getLogsStats = async (data) => {
             amount: logfiles.filter(log=>log.day == day).length
         });
     });
-    const list_header = {   total_count:	logstat.length,
-                            offset: 		0,
-                            count:			logstat.length};
-    return {list_header:list_header, rows:logstat};
+    return logstat;
 };
 /**
  * Get log files
  * 
- * @returns{Promise.<{  list_header:{   total_count:	number,
- *                                      offset: 		number,
- *                                      count:			number}, 
- *                      rows:[import('../types.js').admin_log_files]|[]}>}
+ * @returns{Promise.<[import('../types.js').admin_log_files]|[]>}
  */
 const getFiles = async () => {
     /**@type{[import('../types.js').admin_log_files]|[]} */
@@ -650,10 +635,7 @@ const getFiles = async () => {
         /**@ts-ignore */
         logfiles.push({id: i++, filename:file});
     });
-    const list_header = {   total_count:	logfiles.length,
-                            offset: 		0,
-                            count:			logfiles.length};
-    return {list_header:list_header, rows:logfiles};
+    return logfiles;
 };
 
 export {LogRequestE, LogRequestI, LogServerI, LogServerE, LogDBI, LogDBE, LogServiceI, LogServiceE, LogAppI, LogAppE, getLogs, getStatusCodes, getLogsStats, getFiles};

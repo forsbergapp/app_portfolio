@@ -293,17 +293,10 @@ const ClientAdd = (newClient) => {
                 client.app_role_icon = '';
             } 
         }
-        const list_header = {   total_count:	connected_clients_no_res.length,
-                                offset: 		0,
-                                count:			connected_clients_no_res.length};
-        return {list_header:list_header, rows:sort_and_return(sort)};
+        return sort_and_return(sort);
     }
-    else{
-        const list_header = {   total_count:	0,
-                                offset: 		0,
-                                count:			0};
-        return {list_header:list_header, rows:[]};
-    }
+    else
+        return [];
 };
 /**
  * Socket client send as admin

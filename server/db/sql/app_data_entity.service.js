@@ -10,7 +10,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number|null} resource_id 
  * @param {number|null} data_app_id 
  * @param {string|null} locale
- * @returns {Promise.<{rows:import('../../../types.js').db_result_app_data_entity_get[]}>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_data_entity_get[]>}
  */
 const get = async (app_id, resource_id, data_app_id, locale) => {
 		const sql = `SELECT id "id",
@@ -21,6 +21,6 @@ const get = async (app_id, resource_id, data_app_id, locale) => {
 					    AND (app_id = :data_app_id OR :data_app_id IS NULL)`;
 		const parameters = {resource_id: resource_id,
 							data_app_id : data_app_id};
-		return await db_execute(app_id, sql, parameters, null, null, resource_id?false:true);
+		return await db_execute(app_id, sql, parameters, null, null);
 	};
 export{get};

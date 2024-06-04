@@ -26,8 +26,8 @@ const customer_create = async (app_id, data, locale) =>{
                         user_account_id                             : data.user_account_id,
                         user_account_app_id                         : data.data_app_id,
                         data_app_id                                 : data.data_app_id,
-                        app_data_entity_resource_app_data_entity_id : resource_customer.rows[0].app_data_entity_id,
-                        app_data_entity_resource_id                 : resource_customer.rows[0].id,
+                        app_data_entity_resource_app_data_entity_id : resource_customer[0].app_data_entity_id,
+                        app_data_entity_resource_id                 : resource_customer[0].id,
                         }
     //create CUSTOMER    
     const Customer = await MasterPost(app_id, post_data);
@@ -37,8 +37,8 @@ const customer_create = async (app_id, data, locale) =>{
                         user_account_id                             : data.user_account_id,
                         user_account_app_id                         : data.data_app_id,
                         data_app_id                                 : data.data_app_id,
-                        app_data_entity_resource_app_data_entity_id : resource_account.rows[0].app_data_entity_id,
-                        app_data_entity_resource_id                 : resource_account.rows[0].id,
+                        app_data_entity_resource_app_data_entity_id : resource_account[0].app_data_entity_id,
+                        app_data_entity_resource_id                 : resource_account[0].id,
                         app_data_resource_master_id                 : Customer.insertId, //CUSTOMER
                         app_data_resource_master_attribute_id       : null
     }

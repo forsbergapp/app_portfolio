@@ -84,19 +84,18 @@ const getStatement = async (app_id, data, locale) =>{
     const transactions = await TransactionsGet(app_id, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, null, false);    
 
     const Entity            = await EntityGet(app_id, null, data.data_app_id, null)
-                                        .then(result=>JSON.parse(result.rows[0].json_data));
+                                        .then(result=>JSON.parse(result[0].json_data));
 
     const AccountMetaData   = await AccountMetadataGet(app_id, null, null, data.data_app_id, 'ACCOUNT', null, null, true)
-                                        .then(result=>JSON.parse(result.rows[0].resource_metadata));
+                                        .then(result=>JSON.parse(result[0].resource_metadata));
     const CustomerAccount   = await CustomerAccountGet(app_id, null, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, false)
-                                        .then(result=>JSON.parse(result.rows[0].json_data));
+                                        .then(result=>JSON.parse(result[0].json_data));
     
     //amount_deposit and amount_withdrawal from JSON.parse(json_data) column, each app is responsible for APP_DATA json_data content
-    const balance = transactions.rows.reduce((balance, current_row)=>balance += 
+    const balance = transactions.reduce((balance, current_row)=>balance += 
                                                                     /**@ts-ignore */
                                                                     (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0);
-    return {
-        rows: [{
+    return [{
                     title:	                {"value":null, "default_text":"Bank statement",  "length":null,"type": "TEXT"},
                     bank_name:	            {"value":Entity.name, "default_text":"Bank name",  "length":null,"type": "TEXT"},
                     bank_iban:	            {"value":IBAN_compose(Entity.country_code, Entity.bank_id, CustomerAccount.bank_account_number, true), "default_text":"Bank IBAN",  "length":null,"type": "TEXT"},
@@ -104,7 +103,6 @@ const getStatement = async (app_id, data, locale) =>{
                     bank_currency_symbol:   {"value":AccountMetaData.filter((/**@type{*}*/row)=>'currency' in row)[0].currency.default_value, "default_text":AccountMetaData.filter((/**@type{*}*/row)=>'currency' in row)[0].currency.default_text,  "length":null,"type": "TEXT"},
                     bank_currency_text:     {"value":AccountMetaData.filter((/**@type{*}*/row)=>'currency_name' in row)[0].currency_name.default_value, "default_text":AccountMetaData.filter((/**@type{*}*/row)=>'currency_name' in row)[0].currency_name.default_text,  "length":null,"type": "TEXT"},
                     bank_account_balance:   {"value":Number(balance), "default_text":"Bank account balance",  "length":null,"type": "TEXT"}
-                }]
-    }
+            }];
 } 
 export default getStatement;

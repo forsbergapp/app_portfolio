@@ -75,6 +75,6 @@ const getLastUserEvent = async (app_id, user_account_id, event) => {
 						user_account_id: user_account_id,
 						event : event
 					};
-		return await db_execute(app_id, sql, parameters, null, null, false);
+		return await db_execute(app_id, sql, parameters, null, null);
 	};
 export{insertUserEvent, getLastUserEvent};

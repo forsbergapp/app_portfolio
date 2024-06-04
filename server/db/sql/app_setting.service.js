@@ -65,7 +65,7 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
                          common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
                          app_setting_type_name: app_setting_type_name
                          };
-     return await db_execute(app_id, sql, parameters, null, lang_code, true);
+     return await db_execute(app_id, sql, parameters, null, lang_code);
 };
 /**
  * Get setting display data
@@ -75,7 +75,7 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
  * @param {*} value 
  * @returns {Promise.<import('../../../types.js').db_result_app_setting_getSettingDisplayData[]>}
  */
-const getSettingDisplayData = async (app_id, data_app_id, app_setting_type_name, value) => {
+const getSettingDisplayData = async (app_id, data_app_id, app_setting_type_name, value=null) => {
      const sql = `SELECT s.id                                         "id", 
                          s.app_setting_type_app_setting_type_name     "app_setting_type_name",
                          s.value                                      "value", 
@@ -96,6 +96,6 @@ const getSettingDisplayData = async (app_id, data_app_id, app_setting_type_name,
                          app_id : data_app_id,
                          value:value ==''?null:value
                          };
-     return await db_execute(app_id, sql, parameters, null, null, (app_setting_type_name && value)?false:true);
+     return await db_execute(app_id, sql, parameters, null, null);
 };
 export{getSettings, getSettingDisplayData};

@@ -12,7 +12,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number} app_id 
  * @param {number|null} id 
  * @param {string} lang_code 
- * @returns {Promise.<{rows:import('../../../types.js').db_result_app_getApp[]}>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_getApp[]>}
  */
 const getApp = async (app_id, id,lang_code) => {
 		const sql = `SELECT	id "id",
@@ -51,13 +51,13 @@ const getApp = async (app_id, id,lang_code) => {
 				ORDER BY 1`;
 		const parameters = {common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 							id: id};
-		return await db_execute(app_id, sql, parameters, null, lang_code, true);
+		return await db_execute(app_id, sql, parameters, null, lang_code);
 	};
 /**
  * 
  * @param {number} app_id 
  * @param {string|null} lang_code 
- * @returns {Promise.<{rows:import('../../../types.js').db_result_app_getAppsAdmin[]}>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_getAppsAdmin[]>}
  */
 const getAppsAdmin = async (app_id, lang_code) => {
 		const sql = `SELECT	a.id "id",
@@ -78,19 +78,19 @@ const getAppsAdmin = async (app_id, lang_code) => {
 													)
 					ORDER BY 1`;
 		const parameters = {};
-		return await db_execute(app_id, sql, parameters, null, lang_code, true);
+		return await db_execute(app_id, sql, parameters, null, lang_code);
 	};
 /**
  * 
  * @param {number} app_id 
- * @returns {Promise.<{rows:import('../../../types.js').db_result_app_getAppsAdminId[]}>}
+ * @returns {Promise.<import('../../../types.js').db_result_app_getAppsAdminId[]>}
  */
 const getAppsAdminId = async (app_id) => {
 	const sql = `SELECT a.id "id"
 				   FROM <DB_SCHEMA/>.app a
 				  ORDER BY 1`;
 	const parameters = {};
-	return await db_execute(app_id, sql, parameters, null,null, true);
+	return await db_execute(app_id, sql, parameters, null,null);
 };
 /**
  * 

@@ -1,8 +1,10 @@
 /**@type{import('../../../types.js').AppDocument} */
  const AppDocument = document;
- 
- const common_path ='common';
- /**@type {import('../../../types.js').module_common} */
+/**@type{import('../../../types.js').AppWindow} */
+const AppWindow = window;
+
+const common_path ='common';
+/**@type {import('../../../types.js').module_common} */
 const common = await import(common_path);
 
 /**
@@ -462,7 +464,7 @@ const sendBroadcast = () => {
                             client_id:          client_id==''?null:client_id,
                             client_id_current:  common.COMMON_GLOBAL.service_socket_client_ID,
                             broadcast_type:     broadcast_type, 
-                            broadcast_message:  window.btoa(broadcast_message)};
+                            broadcast_message:  AppWindow.btoa(broadcast_message)};
         let path='';
         let token_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
@@ -2864,12 +2866,17 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         //setting values from LOV
                         const row = common.element_row(event.target);
                         const row_lov = common.element_row(event_lov.target);
+                        /**@type{HTMLElement|null} */
                         const common_input_lov = row.querySelector('.common_input_lov');
+                        /**@type{HTMLElement|null} */
                         const common_lov_value = row.querySelector('.common_lov_value');
-                        common_input_lov.innerHTML = row_lov.getAttribute('data-id');
-                        common_input_lov.focus();
-                        common_lov_value.innerHTML = row_lov.getAttribute('data-value');
-                        common_input_lov.dispatchEvent(new Event('input'));
+                        if (common_input_lov){
+                            common_input_lov.innerHTML = row_lov.getAttribute('data-id') ?? '';
+                            common_input_lov.focus();
+                        }
+                        if (common_lov_value)
+                            common_lov_value.innerHTML = row_lov.getAttribute('data-value') ?? '';
+                        common_input_lov?.dispatchEvent(new Event('input'));
                         AppDocument.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
                     };
                     if (event.target.classList.contains('common_list_lov_click')){
@@ -2934,7 +2941,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     //event on master to automatically show detail records
                     if (APP_GLOBAL.previous_row != common.element_row(event.target)){
                         APP_GLOBAL.previous_row = common.element_row(event.target);
-                        show_app_parameter(parseInt(common.element_row(event.target).getAttribute('data-app_id')));
+                        show_app_parameter(parseInt(common.element_row(event.target).getAttribute('data-app_id') ?? ''));
                     }
                     break;
                 }
@@ -2942,7 +2949,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     //event on master to automatically show detail records
                     if (APP_GLOBAL.previous_row != common.element_row(event.target)){
                         APP_GLOBAL.previous_row = common.element_row(event.target);
-                        show_user_account_logon(parseInt(common.element_row(event.target).getAttribute('data-user_account_id')));
+                        show_user_account_logon(parseInt(common.element_row(event.target).getAttribute('data-user_account_id') ?? ''));
                     }
                     break;
                 }   
@@ -3046,17 +3053,21 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     APP_GLOBAL.previous_row = common.element_row(event.target);
                     event.preventDefault();
                     //focus on first list_edit item in the row
-                    if (common.element_row(event.target).previousSibling && common.element_row(event.target).previousSibling.classList.contains('common_row')){
-                        common.element_row(event.target).previousSibling.querySelectorAll('.list_edit')[0].focus();
+                    const element_previous = common.element_row(event.target).previousSibling;
+                    /**@ts-ignore */
+                    if (element_previous && element_previous.classList.contains('common_row')){
+                        /**@ts-ignore */
+                        element_previous.querySelectorAll('.list_edit')[0].focus();
                     }
-                        
                 }
                 if (event.code=='ArrowDown') {
                     APP_GLOBAL.previous_row = common.element_row(event.target);
                     event.preventDefault();
                     //focus on first list_edit item in the row
-                    if (common.element_row(event.target).nextSibling){
-                        common.element_row(event.target).nextSibling.querySelectorAll('.list_edit')[0].focus();       
+                    const element_next = common.element_row(event.target).nextSibling;
+                    if (element_next){
+                        /**@ts-ignore */
+                        element_next.querySelectorAll('.list_edit')[0].focus();       
                     }
                 }
             }
