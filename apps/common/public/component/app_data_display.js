@@ -46,37 +46,37 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                 `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.title)[0].title.default_text}</div>`:''
                             }
                             ${(props.master_object && props.new_resource==false)?
-                                `<div class='common_app_data_display_master_title'>${props.master_object.title?props.master_object.title.default_text:''}</div>`:''
+                                `<div class='common_app_data_display_master_title'>${props.master_object.title?props.master_object.title.default_text:''}</div>
+                                 <div class='common_app_data_display_master_title_sub'>${props.master_object.title_sub?props.master_object.title_sub.default_text:''}</div>`
+                                :''
                             }
                             ${(props.display_type=='VERTICAL_KEY_VALUE' || props.display_type=='MASTER_DETAIL_HORIZONTAL' || props.display_type=='MASTER_DETAIL_VERTICAL')?
                                 `
                                 ${(props.master_object && props.new_resource)?
                                     `<div class='common_app_data_display_master'>
-                                        ${props.master_object.filter((/**@type{*}*/row)=>!row.title).map((/**@type{*}*/master_row)=>
-                                            `<div class='common_app_data_display_master_list'>
-                                                <div class='common_app_data_display_master_row'>
+                                        ${props.master_object.filter((/**@type{*}*/row)=>!row.title && !row.title_sub).map((/**@type{*}*/master_row)=>
+                                            `<div class='common_app_data_display_master_row'>
                                                     <div    data-key='${Object.keys(master_row)[0]}' 
                                                             class='common_app_data_display_master_col1'>${Object.values(master_row)[0].default_text}</div>
                                                     <div    data-value='${Object.keys(master_row)[0]}' 
                                                             class='common_app_data_display_master_col2'
                                                             contentEditable='${props.mode=='READ'?'false':'true'}'></div>
-                                                </div>
-                                            </div>`).join('')
+                                            </div>
+                                            `).join('')
                                         }
                                     </div>`:''
                                 }
                                 ${(props.master_object && props.new_resource==false)?
                                     `<div class='common_app_data_display_master'>
-                                        ${Object.entries(props.master_object).filter(key=>key[0]!='title').map((/**@type{*}*/master_row)=>
-                                            `<div class='common_app_data_display_master_list'>
-                                                <div class='common_app_data_display_master_row'>
+                                        ${Object.entries(props.master_object).filter(key=>key[0]!='title' && key[0]!='title_sub').map((/**@type{*}*/master_row)=>
+                                            `<div class='common_app_data_display_master_row'>
                                                     <div    data-key='${master_row[0]}' 
                                                             class='common_app_data_display_master_col1'>${master_row[1].default_text}</div>
                                                     <div    data-value='${master_row[0]}' 
                                                             class='common_app_data_display_master_col2'
                                                             contentEditable='${props.mode=='READ'?'false':'true'}'>${props.function_format_value(master_row[1].value, props.timezone, props.locale)}</div>
                                                 </div>
-                                            </div>`).join('')
+                                            `).join('')
                                         }
                                     </div>`:''
                                 }
@@ -130,11 +130,13 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  * 
  * @param {{common_document:AppDocument,
  *          common_mountdiv:string,
+ *          app_id:number,
  *          display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL'
  *          master_path:string,
  *          master_query:string,
  *          master_method:string,
  *          master_token_type:string,
+ *          master_resource:string,
  *          detail_path:string,
  *          detail_query:string,
  *          detail_method:string,
@@ -221,21 +223,31 @@ const component = async props => {
 
     const post_component = async () => {
         
-        const master_object = props.master_path?await props.function_FFB(props.master_path, props.master_query, props.master_method, props.master_token_type, null)
-                                                        .then((/**@type{*}*/result)=>props.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)):JSON.parse(result).rows[0]):{};
-        const detail_rows = props.detail_path?await props.function_FFB(props.detail_path, props.detail_query, props.detail_method, props.detail_token_type, null)
-                                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows):[];
+        const master_object = props.master_path?
+                                    await props.function_FFB(   props.master_path, 
+                                                                props.master_query, 
+                                                                props.master_method, props.master_token_type, null)
+                                            .then((/**@type{*}*/result)=>props.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)):
+                                    JSON.parse(result).rows[0]):{};
+        const detail_rows = props.detail_path?
+                                    await props.function_FFB(   props.detail_path, 
+                                                                props.detail_query, 
+                                                                props.detail_method, props.detail_token_type, null)
+                                            .then((/**@type{*}*/result)=>JSON.parse(result).rows):
+                                    [];
         
-        if (master_object.resource_metadata){
-            master_object.resource_metadata = JSON.parse(master_object.resource_metadata);
+        const master_metadata = await props.function_FFB(  '/server-db/app_data_resource_master/', 
+                                                            `resource_name=${props.master_resource}&data_app_id=${props.app_id}&fields=json_data`, 
+                                                            'GET', 'APP_DATA', null)
+                                            .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
+        
+        if (props.new_resource==false){
             for (const key of Object.entries(master_object)){
-                if (key[0]!='resource_metadata')
-                    master_object[key[0]] = {   
-                                                value:key[1], 
-                                                default_text:master_object.resource_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].default_text
-                                            }
+                master_object[key[0]] = {   
+                                            value:key[1], 
+                                            default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].default_text:key[0]
+                                        }
             }
-            delete master_object.resource_metadata;
         }
             
         spinner = '';

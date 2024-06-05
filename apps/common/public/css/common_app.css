@@ -387,15 +387,17 @@ select {
 	font-weight: bold;
 	margin-bottom:1em;
 }
+.common_app_data_display_master{
+	margin-bottom: 2em;
+}
 .common_app_data_display_master,
 .common_app_data_display_detail_horizontal_row_title,
 .common_app_data_display_detail_horizontal_row{
 	font-size: 0.7em;
 	text-align: start;
-	
 }
-.common_app_data_display_master_list{
-	margin-bottom: 1em;
+.common_app_data_display_master_row{
+	margin-bottom: 0.5em;
 }
 .common_app_data_display_detail_horizontal_row_title,
 .common_app_data_display_detail_horizontal_row{
