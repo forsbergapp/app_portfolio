@@ -37,11 +37,14 @@ const app_event_click = event => {
                         case 'tab1':{
                             common.ComponentRender('app_page_secure_tab_content', 
                                             {
+                                                app_id:common.COMMON_GLOBAL.app_id,
                                                 display_type:'MASTER_DETAIL_HORIZONTAL',
                                                 master_path:'/app-function/ACCOUNT_STATEMENT',
-                                                master_query:`user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}`,
+                                                master_query:`user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}` + 
+                                                             '&fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
                                                 master_method:'GET',
                                                 master_token_type:'APP_ACCESS',
+                                                master_resource:'ACCOUNT',
                                                 detail_path:'/app-function/ACCOUNT_TRANSACTIONS',
                                                 detail_query:   `user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}`+ 
                                                                 `&fields=timestamp,logo,origin,amount_deposit,amount_withdrawal`,
@@ -67,12 +70,14 @@ const app_event_click = event => {
                         case 'tab2':{
                             common.ComponentRender('app_page_secure_tab_content', 
                                             {
+                                                app_id:common.COMMON_GLOBAL.app_id,
                                                 display_type:'VERTICAL_KEY_VALUE',
                                                 master_path:'/server-db/app_data_resource_master/',
                                                 master_query:   `resource_name=CUSTOMER&user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}` + 
-                                                                `&fields=name,customer_type,address,city,country,resource_metadata`,
+                                                                `&fields=name,customer_type,address,city,country`,
                                                 master_method:'GET',
                                                 master_token_type:'APP_ACCESS',
+                                                master_resource:'CUSTOMER',
                                                 detail_path:null,
                                                 detail_query:null,
                                                 detail_method:null,
@@ -97,12 +102,14 @@ const app_event_click = event => {
                         case 'tab3':{
                             common.ComponentRender('app_page_secure_tab_content', 
                                             {
+                                                app_id:common.COMMON_GLOBAL.app_id,
                                                 display_type:'VERTICAL_KEY_VALUE',
                                                 master_path:'/server-db/app_data_resource_detail/',
                                                 master_query:   `resource_name=ACCOUNT&user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}` + 
-                                                                `&fields=bank_account_number,bank_account_secret,bank_account_vpa,resource_metadata`,
+                                                                `&fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa`,
                                                 master_method:'GET',
                                                 master_token_type:'APP_ACCESS',
+                                                master_resource:'ACCOUNT',
                                                 detail_path:null,
                                                 detail_query:null,
                                                 detail_method:null,
@@ -288,7 +295,7 @@ const init_secure = () => {
     common.ComponentRender('app_main_page',
                             {
                             app_id:common.COMMON_GLOBAL.app_id,
-                            user_id:common.COMMON_GLOBAL.user_account_id,
+                            user_account_id:common.COMMON_GLOBAL.user_account_id,
                             timezone:common.COMMON_GLOBAL.user_timezone,
                             locale:common.COMMON_GLOBAL.user_locale,
                             function_button_post:customer_create,

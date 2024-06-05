@@ -226,7 +226,39 @@ INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_u
                 AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
                 AND ap_s.value = 'ACCOUNT'));
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "bank_account_iban":{"default_text":"Bank account IBAN", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'ACCOUNT'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
     VALUES ( '{ "bank_account_number":{"default_text":"Bank account number", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
+            (SELECT id
+               FROM <DB_SCHEMA/>.app_data_entity 
+              WHERE app_id = <APP_ID/>), 
+            (SELECT ader.id
+               FROM <DB_SCHEMA/>.app_data_entity_resource ader, 
+                    <DB_SCHEMA/>.app_data_entity ade, 
+                    <DB_SCHEMA/>.app_setting ap_s 
+              WHERE ade.app_id = <APP_ID/> 
+                AND ader.app_data_entity_app_id = ade.app_id 
+                AND ader.app_data_entity_id = ade.id 
+                AND ader.app_setting_id =  ap_s.id 
+                AND ap_s.app_setting_type_app_id = ader.app_data_entity_app_id 
+                AND ap_s.app_setting_type_app_setting_type_name='RESOURCE_TYPE' 
+                AND ap_s.value = 'ACCOUNT'));
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id) 
+    VALUES ( '{ "bank_account_balance":{"default_text":"Bank account balance", "length":null, "type":"TEXT", "lov":null}}', null, null, <APP_ID/>,
             (SELECT id
                FROM <DB_SCHEMA/>.app_data_entity 
               WHERE app_id = <APP_ID/>), 

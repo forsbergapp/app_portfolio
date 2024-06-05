@@ -87,7 +87,7 @@ const getStatement = async (app_id, data, locale) =>{
                                         .then(result=>JSON.parse(result[0].json_data));
 
     const AccountMetaData   = await AccountMetadataGet(app_id, null, null, data.data_app_id, 'ACCOUNT', null, null, true)
-                                        .then(result=>JSON.parse(result[0].resource_metadata));
+                                    .then(result=>result.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
     const CustomerAccount   = await CustomerAccountGet(app_id, null, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, false)
                                         .then(result=>JSON.parse(result[0].json_data));
     
@@ -96,13 +96,18 @@ const getStatement = async (app_id, data, locale) =>{
                                                                     /**@ts-ignore */
                                                                     (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0);
     return [{
-                    title:	                {"value":null, "default_text":"Bank statement",  "length":null,"type": "TEXT"},
-                    bank_name:	            {"value":Entity.name, "default_text":"Bank name",  "length":null,"type": "TEXT"},
-                    bank_iban:	            {"value":IBAN_compose(Entity.country_code, Entity.bank_id, CustomerAccount.bank_account_number, true), "default_text":"Bank IBAN",  "length":null,"type": "TEXT"},
-                    bank_account:           {"value":CustomerAccount.bank_account_number, "default_text":"Bank number",  "length":null,"type": "TEXT"},
-                    bank_currency_symbol:   {"value":AccountMetaData.filter((/**@type{*}*/row)=>'currency' in row)[0].currency.default_value, "default_text":AccountMetaData.filter((/**@type{*}*/row)=>'currency' in row)[0].currency.default_text,  "length":null,"type": "TEXT"},
-                    bank_currency_text:     {"value":AccountMetaData.filter((/**@type{*}*/row)=>'currency_name' in row)[0].currency_name.default_value, "default_text":AccountMetaData.filter((/**@type{*}*/row)=>'currency_name' in row)[0].currency_name.default_text,  "length":null,"type": "TEXT"},
-                    bank_account_balance:   {"value":Number(balance), "default_text":"Bank account balance",  "length":null,"type": "TEXT"}
+                    //ENTITY ACCOUNT resource
+                    title_sub	            :Entity.name,
+                    //ACCOUNT resource
+                    /**@ts-ignore */
+                    title	                :AccountMetaData.filter((/**@type{*}*/row)=>'title' in row)[0].title.default_text,
+                    bank_account_iban	    :IBAN_compose(Entity.country_code, Entity.bank_id, CustomerAccount.bank_account_number, true),
+                    bank_account_number     :CustomerAccount.bank_account_number,
+                    /**@ts-ignore */
+                    currency                :AccountMetaData.filter((/**@type{*}*/row)=>'currency' in row)[0].currency.default_value,
+                    /**@ts-ignore */
+                    currency_name           :AccountMetaData.filter((/**@type{*}*/row)=>'currency_name' in row)[0].currency_name.default_value,
+                    bank_account_balance    :Number(balance)
             }];
 } 
 export default getStatement;

@@ -29,18 +29,7 @@ const get = async (app_id, resource_id, user_account_id, data_app_id, resource_n
                                 ader.app_setting_id                                     "app_setting_id",
                                 app_s.app_setting_type_app_setting_type_name            "app_setting_type_app_setting_type_name",
                                 app_s.value                                             "app_setting_value",
-                                app_s.display_data                                      "app_setting_display_data",
-
-                                (SELECT CONCAT(CONCAT('[',GROUP_CONCAT(adrm_resource.json_data,',')),']')
-                                   FROM <DB_SCHEMA/>.app_data_resource_master adrm_resource
-                                  WHERE adrm_resource.app_data_entity_resource_id IN
-                                          (SELECT ader.id
-                                             FROM <DB_SCHEMA/>.app_data_entity_resource 	ader
-                                            WHERE ader.app_setting_id               = app_s.id
-                                              AND ader.app_data_entity_app_id       = app_s.app_setting_type_app_id
-                                              AND ader.app_data_entity_id 		= adrm.app_data_entity_resource_app_data_entity_id)
-                                    AND adrm_resource.user_account_app_user_account_id IS NULL
-                                    AND adrm_resource.user_account_app_app_id IS NULL) "resource_metadata"
+                                app_s.display_data                                      "app_setting_display_data"
 				   FROM <DB_SCHEMA/>.app_data_resource_master adrm,
                                 <DB_SCHEMA/>.app_data_entity_resource ader,
                                 <DB_SCHEMA/>.app_setting              app_s
