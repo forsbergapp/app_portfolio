@@ -504,15 +504,21 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             });
             const sql_convert = queryConvert(sql, parameters);
             const db = pool_get(pool_id, db_use, dba);
-            /**@ts-ignore */
-            return resolve(sql.trimStart().toUpperCase().startsWith('SELECT')?db.all(sql_convert, parameters_convert):db.run(sql_convert, parameters_convert)
-            .then((/**@type{*}*/result)=>{
-               if (result.lastID)
-                  result.insertId = result.lastID;
-               if (result.changes)
-                     result.affectedRows = result.changes;
-               return result;
-            }));
+            try {
+               /**@ts-ignore */
+               (sql.trimStart().toUpperCase().startsWith('SELECT')?db.all(sql_convert, parameters_convert):db.run(sql_convert, parameters_convert))
+               .then((/**@type{*}*/result)=>{
+                  if (result.lastID)
+                     result.insertId = result.lastID;
+                  if (result.changes)
+                        result.affectedRows = result.changes;
+                  resolve(result);
+               })
+               .catch((/**@type{Error}*/err)=> reject(err));   
+            }catch (err) {
+               return reject(err);
+            }
+            break;
          }
          default:{
             return reject();
