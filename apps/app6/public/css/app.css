@@ -5,12 +5,55 @@ html, body, #app {
 body {
 	text-align: center;
 }
-#app_logo{
+#app_root,
+#app_root_vue{
+	height:100%;
+}
+#app_top, #app_bottom{
+	display: flex;
+	justify-content: space-between;
+	height: 60px;
+	width: 100%;
+}
+#app_top_logo{
 	background-image: url('/images/logo.png');
 	background-size: contain;
-	width: 192px;
-	height: 192px;
-	margin: 0 auto;
+	width: 60px;
+	height: 60px;
+	display: inline-block;
+	margin-inline-start: 5px;
+}
+.app_page_start_shop{
+	height: 1em;
+	width: 9em;
+	cursor:default;
+	font-size: 0.7em;
+}
+.app_shop_div {
+	padding: 2em;
+	display:inline-block;
+	border-radius: 4px;	
+	transition-duration: .3s;
+    transition-property: box-shadow;
+	vertical-align: middle;
+}
+#app_page_start_shop{
+	height: 50%;
+	width: 50%;
+    margin: auto;
+	font-size: 2em;
+	display: grid;
+	align-content: space-around;
+}
+#app_top_end{
+	width: 60px;
+}
+#app_main{
+	height: calc(100% - 120px);
+}
+#app_main_page{
+	height: 100%;
+	display: grid;
 }
 .dialogue{
 	width: 100%;
@@ -24,14 +67,39 @@ body {
 	display:inline-block;
 	border-radius: 4px;
 }
-/*COMMON*/
-.common_toolbar_selected{
-	background-color: var(--common_app_color_blue1) !important;
+/*RESPONSIVE SETTINGS*/
+/*CSS for minimum 768px*/
+@media only screen and (min-width: 768px) {
+	.app_page_start_shop{
+		height: 1em;
+		width: 9em;
+		cursor:pointer;
+		font-size: 1em;
+	}
 }
-#common_toolbar_framework {
-    color: var(--common_app_color_black);
-    background-color: var(--common_app_color_white1);
-    box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1), 0 6px 20px 0 var(--common_app_color_shadow2);
+/*COMMON*/
+.common_app_data_display_buttons{
+	position: unset !important;
+}
+#common_app_data_display_button_post{
+    border-radius: 20%;
+    height: 1em !important;
+    width: 1em !important;
+	rotate:45deg;
+    display: inline-block;
+	position:absolute;
+}
+@keyframes glowing {
+	0% {background-position: 0 0;}
+	50% {background-position: 400% 0;}
+	100% {background-position: 0 0;}
+}
+#common_app_data_display_button_post::before{
+	margin-inline-start: -0.2em;
+	font-size: 1.3em;
+	rotate:135deg;
+	display: inline-block;
+	margin-top: -0.1em;
 }
 #common_profile_input_row,
 #common_profile_search_list_wrap{
@@ -52,14 +120,32 @@ body {
 	margin:20px;
 	margin-top:-70px;
 }
+#common_toolbar_framework{
+    bottom: 0px !important;
+    top: unset !important;
+	position: fixed !important;
+}
 /*APP THEME*/
 body {
 	--common_app_color_spinner:var(--common_app_color_black);
 	--common_app_color_background_spinner:var(--common_app_color_blue1);
-	color: var(--common_app_color_black);
-	background: var(--common_app_color_blue1);
-	caret-color: var(--common_app_color_black);
+	color: var(--common_app_color_blue1);
+	background: var(--common_app_color_white);
+	caret-color: var(--common_app_color_blue1);
 }
+.app_page_start_shop:hover,
+.app_page_start_shop:active{
+	box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
+}
+.app_shop_div{
+	color:var(--common_app_color_white);
+	background-color: var(--common_app_color_blue3);
+	box-shadow: 0 0 1px var(--common_app_color_light);
+}
+.app_shop_div .css_spinner{
+	--common_app_color_background_spinner:var(--common_app_color_white3);
+}
+
 .dialogue_content{
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1), 0 6px 20px 0 var(--common_app_color_shadow2);
 	background-color: var(--common_app_color_white1);
@@ -69,9 +155,30 @@ body {
 	box-shadow: 0 0 35px 4px var(--common_app_color_white_transparent);
 }
 /* APP THEME COMMON*/
+#common_app_data_display_button_post{
+	background-color: var(--common_app_color_gold);
+}
+#common_app_data_display_button_post::before{
+	content: var(--common_app_icon_infinite) !important;
+	color: var(--common_app_color_blue3);
+}
+#common_app_data_display_button_post:hover{
+	background-color: var(--common_app_color_green) !important;
+	background:linear-gradient(45deg, var(--common_app_color_blue3), var(--common_app_color_gold), var(--common_app_color_gold), var(--common_app_color_blue3));
+	animation:glowing 2s linear infinite;
+	background-size:400%;
+}
+.common_toolbar_selected{
+	background-color: var(--common_app_color_blue1) !important;
+}
+#common_toolbar_framework {
+    color: var(--common_app_color_black);
+    background-color: var(--common_app_color_white1);
+    box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1), 0 6px 20px 0 var(--common_app_color_shadow2);
+}
 .common_dialogue_button,
 .common_toolbar_button{
-	color: var(--common_app_color_black) !important;
+	color: var(--common_app_color_gold) !important;
 }
 .common_dialogue_button:hover,
 .common_dialogue_button:active,
