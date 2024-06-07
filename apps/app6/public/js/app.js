@@ -63,8 +63,17 @@ const app_event_click = event => {
  * @returns {Promise.<void>}
  */
 const init_app = async () => {
+    AppDocument.body.className = 'app_theme1';
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
-    .then(()=>common.ComponentRender('app_construction', {}, '/common/component/construction.js'));
+    .then(()=> common.ComponentRender('app_main_page', 
+                                        {app_id:common.COMMON_GLOBAL.app_id,
+                                        timezone:common.COMMON_GLOBAL.user_timezone,
+                                        locale:common.COMMON_GLOBAL.user_locale,
+                                        function_FFB:common.FFB,
+                                        function_ComponentRender:common.ComponentRender,
+                                        function_show_message:common.show_message},
+                                        '/component/page_start.js'))
+    .then(()=> common.ComponentRender('app_construction', {}, '/common/component/construction.js'));
    framework_set();
 };
 /**
