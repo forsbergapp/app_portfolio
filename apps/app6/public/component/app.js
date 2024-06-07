@@ -1,10 +1,15 @@
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
-const template =`   <div id='dialogue_documents' class='dialogue'>
-                        <div id='dialogue_documents_content' class='dialogue_content'>
-                            <div id='app_logo'></div>
-                            <div id='app_construction'></div>
-                        </div>
+const template =`   <div id='app_top'>
+                        <div id='app_top_logo'></div>
+                        <div id='app_construction'></div>
+                        <div id='app_top_end'></div>
+                    </div>
+                    <div id='app_main'>
+                        <div id='app_main_page'></div>
+                    </div>
+                    <div id='app_bottom'>
+                        <div id='app_bottom_about'></div>
                     </div>`;
 /**
  * 
