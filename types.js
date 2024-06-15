@@ -830,7 +830,7 @@
  * @property {string}   username
  * @property {string}   bio
  * @property {string}   avatar
- * @property {[{
+ * @property {{
  *              app_id:                             number,
  *              description:                        string,
  *              regional_language_locale:           string,
@@ -880,7 +880,13 @@
  *              prayer_column_sunset_checked:       string,
  *              prayer_column_midnight_checked:     string,
  *              prayer_column_fast_start_end:       string
- *              }]}   settings
+ *              }[]}   settings
+ * @property {{ user_account_app_user_account_id:               string,
+ *              user_account_app_app_id:                        number, 
+ *              app_data_entity_resource_app_data_entity_app_id:number, 
+ *              app_data_entity_resource_app_data_entity_id:    number, 
+ *              app_data_entity_resource_id:                    number, 
+ *              json_data:{}}[]} resource_master
  * 
  * Server - admin install script files
  * @typedef {   [number|null,

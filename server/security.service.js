@@ -2,7 +2,9 @@
 
 const { randomUUID, 
         createHash, 
-        createCipheriv, createDecipheriv} = await import('node:crypto');
+        createCipheriv, createDecipheriv,
+        generateKeyPair,
+        publicEncrypt, privateDecrypt} = await import('node:crypto');
 
 /**
  * Create random string
@@ -90,5 +92,47 @@ const PasswordCompare = async (password, compare_password) =>{
         return false;
     }
 };
+/**
+ * @returns {Promise.<Error|{ publicKey:string, privateKey:string }>}
+ */
+const CreateKeyPair = async () => {
+    return new Promise((resolve, reject)=>{
+        generateKeyPair('rsa', {
+            modulusLength: 4096,
+            publicKeyEncoding: {
+                    type: 'spki',
+                    format: 'pem'
+                },
+            privateKeyEncoding: {
+                    type: 'pkcs8',
+                    format: 'pem'
+                }
+            }, (error, result_publicKey, result_privateKey)=>{
+                if (error)
+                    reject(error);
+                else{
+                    resolve ({  publicKey:result_publicKey, 
+                                privateKey:result_privateKey
+                            });
+                }
+        })
+    })
+}
+/**
+ * 
+ * @param {string} publicKey 
+ * @param {string} text 
+ * @returns {string}
+ */
+const PublicEncrypt = (publicKey, text) => publicEncrypt(publicKey,Buffer.from(text)).toString();
+/**
+ * 
+ * @param {string} privateKey 
+ * @param {string} text 
+ * @returns {string}
+ */
+const PrivateDecrypt = (privateKey, text) => privateDecrypt(privateKey,
+                                                            /**@ts-ignore */
+                                                            Buffer.from(text.toString('base64'), 'base64')).toString();
 
-export {createUUID, createRequestId, createCorrelationId, createSecret, PasswordCreate, PasswordCompare };
+export {createUUID, createRequestId, createCorrelationId, createSecret, PasswordCreate, PasswordCompare, CreateKeyPair, PublicEncrypt, PrivateDecrypt };
