@@ -311,15 +311,15 @@
 <colUsage columnID="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="A048C95B-47FC-7FD5-5549-96E9BB11397E" name="user_account_username_UN">
+<ind_PK_UK id="0CEB15F4-8A9F-B811-B39A-72894A3218F1" name="user_account_email_UN">
 <createdBy>admin</createdBy>
-<createdTime>2022-08-17 18:49:13 UTC</createdTime>
-<generatorID>0AEC17CD-C2F5-B40B-6C02-090C17600FBF</generatorID>
+<createdTime>2022-11-30 18:38:15 UTC</createdTime>
+<generatorID>2E13C833-354C-96ED-5CD2-D7A89A4ABD18</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <indexState>Unique Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="8B447387-4E64-ED95-2993-BDC63FFCBCFC"/>
+<colUsage columnID="FB8A16B6-EBE2-5962-9B04-13F589B1945F"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="7EBB7A18-AC30-D038-88F4-7ADC7DCF1A6F" name="user_account_provider_id_UN">
@@ -333,15 +333,15 @@
 <colUsage columnID="92CF4EFC-93A8-0B3A-6795-0E6A7FE28B64"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="0CEB15F4-8A9F-B811-B39A-72894A3218F1" name="user_account_email_UN">
+<ind_PK_UK id="A048C95B-47FC-7FD5-5549-96E9BB11397E" name="user_account_username_UN">
 <createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>2E13C833-354C-96ED-5CD2-D7A89A4ABD18</generatorID>
+<createdTime>2022-08-17 18:49:13 UTC</createdTime>
+<generatorID>0AEC17CD-C2F5-B40B-6C02-090C17600FBF</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <indexState>Unique Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="FB8A16B6-EBE2-5962-9B04-13F589B1945F"/>
+<colUsage columnID="8B447387-4E64-ED95-2993-BDC63FFCBCFC"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="3C762A3F-615A-296F-B87C-B66A61B0D806" name="user_account_identity_provider_FK">

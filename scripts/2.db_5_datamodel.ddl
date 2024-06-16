@@ -19,6 +19,7 @@ CREATE TABLE <DB_SCHEMA/>.app_data_entity (
                                             id ),
     CONSTRAINT app_data_entity_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id )
+            ON DELETE CASCADE
 );
 CREATE INDEX <DB_SCHEMA/>.app_data_entity_id_index ON app_data_entity (id);
 
@@ -35,8 +36,9 @@ CREATE TABLE <DB_SCHEMA/>.app_data_entity_resource (
                                                         id ),
     CONSTRAINT app_data_entity_resource_app_data_entity_fk FOREIGN KEY ( app_data_entity_app_id,
                                                                              app_data_entity_id )
-        REFERENCES app_data_entity ( app_id,
-                                                   id ),
+        REFERENCES app_data_entity (    app_id,
+                                        id )
+            ON DELETE CASCADE,
     CONSTRAINT app_data_entity_resource_app_setting_fk FOREIGN KEY ( app_setting_id )
         REFERENCES app_setting ( id )
 );
@@ -57,11 +59,14 @@ CREATE TABLE <DB_SCHEMA/>.app_data_resource_detail (
                                                                                       app_data_entity_resource_id )
         REFERENCES app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
-                                                            id ),
-    CONSTRAINT app_data_resource_detail_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES app_data_resource_master ( id ),
-    CONSTRAINT app_data_resource_detail_app_data_resource_master_fkv2 FOREIGN KEY ( app_data_resource_master_attribute_id )
+                                                            id )
+            ON DELETE CASCADE,
+    CONSTRAINT app_data_resource_detail_app_data_resource_master_attribute_fk FOREIGN KEY ( app_data_resource_master_attribute_id )
         REFERENCES app_data_resource_master ( id )
+            ON DELETE CASCADE,
+    CONSTRAINT app_data_resource_detail_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
+        REFERENCES app_data_resource_master ( id )
+            ON DELETE CASCADE    
 );
 
 UPDATE SQLITE_SEQUENCE SET seq = 1000000 WHERE name = 'app_data_resource_detail';
@@ -74,9 +79,11 @@ CREATE TABLE <DB_SCHEMA/>.app_data_resource_detail_data (
     app_data_resource_detail_id           INTEGER NOT NULL,
     app_data_resource_master_attribute_id INTEGER,
     CONSTRAINT app_data_resource_detail_data_app_data_resource_detail_fk FOREIGN KEY ( app_data_resource_detail_id )
-        REFERENCES app_data_resource_detail ( id ),
-    CONSTRAINT app_data_resource_detail_data_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_attribute_id )
+        REFERENCES app_data_resource_detail ( id )
+            ON DELETE CASCADE,
+    CONSTRAINT app_data_resource_detail_data_app_data_resource_master_attribute_fk FOREIGN KEY ( app_data_resource_master_attribute_id )
         REFERENCES app_data_resource_master ( id )
+            ON DELETE CASCADE
 );
 
 UPDATE SQLITE_SEQUENCE SET seq = 1000000 WHERE name = 'app_data_resource_detail_data';
@@ -94,11 +101,13 @@ CREATE TABLE <DB_SCHEMA/>.app_data_resource_master (
                                                                                       app_data_entity_resource_id )
         REFERENCES app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
-                                                            id ),
+                                                            id )
+            ON DELETE CASCADE,
     CONSTRAINT app_data_resource_master_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                               user_account_app_app_id )
         REFERENCES user_account_app ( user_account_id,
                                                     app_id )
+            ON DELETE CASCADE
 );
 
 UPDATE SQLITE_SEQUENCE SET seq = 1000000 WHERE name = 'app_data_resource_master';
@@ -119,15 +128,19 @@ CREATE TABLE <DB_SCHEMA/>.app_data_stat (
                                                                            app_data_entity_resource_id )
         REFERENCES app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
-                                                            id ),
+                                                            id )
+            ON DELETE CASCADE,
     CONSTRAINT app_data_stat_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES app_data_resource_master ( id ),
+        REFERENCES app_data_resource_master ( id )
+            ON DELETE CASCADE,
     CONSTRAINT app_data_stat_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id ),
+        REFERENCES app ( id )
+            ON DELETE CASCADE,
     CONSTRAINT app_data_stat_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                    user_account_app_app_id )
         REFERENCES user_account_app ( user_account_id,
-                                                    app_id )
+                                        app_id )
+            ON DELETE CASCADE
 );
 
 UPDATE SQLITE_SEQUENCE SET seq = 1000000 WHERE name = 'app_data_stat';
@@ -139,7 +152,8 @@ CREATE TABLE <DB_SCHEMA/>.app_data_translation (
     CONSTRAINT app_data_translation_pk PRIMARY KEY ( language_id,
                                                     app_data_resource_master_id ),
     CONSTRAINT app_data_translation_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES app_data_resource_master ( id ),
+        REFERENCES app_data_resource_master ( id )
+            ON DELETE CASCADE,
     CONSTRAINT app_data_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id )
 );

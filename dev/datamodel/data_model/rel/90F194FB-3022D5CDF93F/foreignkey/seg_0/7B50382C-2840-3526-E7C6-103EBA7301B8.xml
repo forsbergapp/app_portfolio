@@ -5,7 +5,7 @@
 <generatorID>14E9BCE8-2B15-7C25-2B06-1C055F7C8C03</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <referredTableLongName>app_data_entity</referredTableLongName>
-<deleteRule>NO ACTION</deleteRule>
+<deleteRule>CASCADE</deleteRule>
 <referredTableID>AFE5C59D-E2E1-FB78-8816-8FF70BBAA123</referredTableID>
 <keyObject>06735792-E924-2834-5D9E-B4174B79D866</keyObject>
 <referredKeyID>06735792-E924-2834-5D9E-B4174B79D866</referredKeyID>

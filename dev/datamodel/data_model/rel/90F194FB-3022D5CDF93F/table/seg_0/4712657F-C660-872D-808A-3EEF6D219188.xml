@@ -24,9 +24,10 @@
 <autoIncrementCache>30</autoIncrementCache>
 <autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
 </Column>
-<Column name="json_data" id="776E3A88-8594-E541-6D85-144B47B5C59D">
+<Column name="json_data" id="92563720-23FA-8E6A-5306-EB0FAF89FA83">
 <createdBy>admin</createdBy>
-<createdTime>2024-03-31 02:04:54 UTC</createdTime>
+<createdTime>2024-06-16 16:46:44 UTC</createdTime>
+<generatorID>DCE3B63C-F807-1C1D-015A-F9B6A2436698</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>

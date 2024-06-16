@@ -85,9 +85,15 @@
 </ForeignKey>
 </foreignKeys>
 <primaryKeys>
-<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="app_data_stat_PK" id="CF68A6BB-8B97-A783-45E0-0DE971E82BCE">
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="app_data_stat_PK" id="410F9627-C0E0-259C-71A4-D1948F872F5B">
 <createdBy>admin</createdBy>
-<createdTime>2024-03-04 17:31:42 UTC</createdTime>
+<createdTime>2024-06-16 16:46:44 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_data_stat_PK" id="CF68A6BB-8B97-A783-45E0-0DE971E82BCE">
+<createdBy>admin</createdBy>
+<createdTime>2024-06-16 16:46:44 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <indexSort>SORTED</indexSort>
 </PrimaryKey>

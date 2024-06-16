@@ -10,73 +10,6 @@
 <accessDriverType>oracle_loader</accessDriverType>
 <rejectLimit></rejectLimit>
 <storeAs>CLOB</storeAs>
-<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
-<ColumnProxy name="app_id" id="145515DA-45DC-6089-FDC7-67E257F1F543">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="json_data" id="17D6BA0E-D368-129D-293A-32DDEA0ACCD8">
-<createdBy>admin</createdBy>
-<createdTime>2024-03-02 19:12:43 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_object_app_id" id="6096566C-43D6-F94A-CA2B-817ED77780EF">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_object_item_app_object_object_name" id="6F263B4F-6157-A254-7ACF-EEC20F31ABF8">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_setting_id" id="731248E8-998E-5F49-DB6A-58095E5C150B">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="text" id="7C3D92E4-9ACA-697C-9A87-86B63DD23918">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="country_id" id="8570199D-E163-7A1A-9A2F-A9E9C7817E90">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="language_id_translation" id="B6265773-7C95-5239-C73D-DAAD7BBCC650">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_object_item_object_item_name" id="B767C61E-5F8A-AB9E-7964-75F53C94019B">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="language_id" id="C5AB26BC-7D0F-4C8B-7DB7-19EFE728ADA7">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_object_item_app_object_app_id" id="D7167EAB-F3D5-469D-11FF-257D60CF7189">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_category_id" id="D87D7DA9-6BFA-2F3C-A591-B73628E6C537">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_object_object_name" id="FA2871CC-0BAB-15A7-4043-B374B99DE5B6">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-</columnProxies>
 <foreignKeys>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_setting_FK" id="2E4E0ACF-41EC-D3A9-99D7-C2CD0570E15E">
 <createdBy>admin</createdBy>
@@ -120,7 +53,7 @@
 </ForeignKey>
 </foreignKeys>
 <uniqueKeys>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_UN" id="0D920F6B-FDAD-B539-F590-A060F3BB1B53">
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_id_UN" id="0D920F6B-FDAD-B539-F590-A060F3BB1B53">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -150,13 +83,13 @@
 <ownerDesignName>data_model</ownerDesignName>
 <indexSort>SORTED</indexSort>
 </UniqueKey>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_language_translation_UN" id="9C96029F-82F4-D3E8-5482-B89191835E11">
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_language_UN" id="9C96029F-82F4-D3E8-5482-B89191835E11">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <indexSort>SORTED</indexSort>
 </UniqueKey>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_object_UN" id="C6A0FE01-2BC2-81B4-3F68-DC8AE801C67B">
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_object_object_UN" id="C6A0FE01-2BC2-81B4-3F68-DC8AE801C67B">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
