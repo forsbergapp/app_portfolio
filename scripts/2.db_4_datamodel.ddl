@@ -568,11 +568,11 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account TO app_portfol
 
 ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_pk PRIMARY KEY ( id );
 
-ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_username_un UNIQUE ( username );
+ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_email_un UNIQUE ( email );
 
 ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_provider_id_un UNIQUE ( provider_id );
 
-ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_email_un UNIQUE ( email );
+ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_username_un UNIQUE ( username );
 
 CREATE TABLE <DB_SCHEMA/>.user_account_app (
     user_account_id                         INTEGER NOT NULL,
@@ -722,6 +722,7 @@ ALTER TABLE <DB_SCHEMA/>.app
 ALTER TABLE <DB_SCHEMA/>.app_data_entity
     ADD CONSTRAINT app_data_entity_app_fk FOREIGN KEY ( app_id )
         REFERENCES <DB_SCHEMA/>.app ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_entity_resource
@@ -729,6 +730,7 @@ ALTER TABLE <DB_SCHEMA/>.app_data_entity_resource
                                                                              app_data_entity_id )
         REFERENCES <DB_SCHEMA/>.app_data_entity ( app_id,
                                                    id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_entity_resource
@@ -744,26 +746,33 @@ ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
         REFERENCES <DB_SCHEMA/>.app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
                                                             id )
+            ON DELETE CASCADE
+    NOT DEFERRABLE;
+
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
+    ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_attribute_fk FOREIGN KEY ( app_data_resource_master_attribute_id
+    )
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
     ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
         REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
-    NOT DEFERRABLE;
-
-ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
-    ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_fkv2 FOREIGN KEY ( app_data_resource_master_attribute_id )
-        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail_data
     ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_detail_fk FOREIGN KEY ( app_data_resource_detail_id )
         REFERENCES <DB_SCHEMA/>.app_data_resource_detail ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail_data
-    ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_attribute_id )
+    ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_master_attribute_fk FOREIGN KEY ( app_data_resource_master_attribute_id
+    )
         REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_master
@@ -774,6 +783,7 @@ ALTER TABLE <DB_SCHEMA/>.app_data_resource_master
         REFERENCES <DB_SCHEMA/>.app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
                                                             id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_master
@@ -781,6 +791,7 @@ ALTER TABLE <DB_SCHEMA/>.app_data_resource_master
                                                                               user_account_app_app_id )
         REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
                                                     app_id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_stat
@@ -790,16 +801,19 @@ ALTER TABLE <DB_SCHEMA/>.app_data_stat
         REFERENCES <DB_SCHEMA/>.app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
                                                             id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
         REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_app_fk FOREIGN KEY ( app_id )
         REFERENCES <DB_SCHEMA/>.app ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_stat
@@ -807,11 +821,13 @@ ALTER TABLE <DB_SCHEMA/>.app_data_stat
                                                                    user_account_app_app_id )
         REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
                                                     app_id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_translation
     ADD CONSTRAINT app_data_translation_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
         REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_translation

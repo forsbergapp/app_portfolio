@@ -81,10 +81,10 @@
 <colAssociation fkAssociation="423FBE9E-59A0-4A3C-15FA-4041D8325D90" referredColumn="93C58542-9E64-4064-7D3B-63604934E015"/>
 </associations>
 </Column>
-<Column name="app_setting_preference_arabic_script_id" id="2F15CB87-EE14-F1BE-39A5-38048B3F84F1">
+<Column name="app_setting_preference_arabic_script_id" id="B97BF682-4952-79E1-650C-62182A095CF6">
 <createdBy>admin</createdBy>
-<createdTime>2024-03-02 19:02:42 UTC</createdTime>
-<generatorID>BF49DA62-DFCD-182E-B5A3-FCBA966BE35F</generatorID>
+<createdTime>2024-06-16 16:46:44 UTC</createdTime>
+<generatorID>BCC22102-3491-6C68-3735-0D886E73BC1F</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
@@ -187,7 +187,7 @@
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="2F15CB87-EE14-F1BE-39A5-38048B3F84F1"/>
+<colUsage columnID="B97BF682-4952-79E1-650C-62182A095CF6"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

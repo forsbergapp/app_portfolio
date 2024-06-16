@@ -5,7 +5,7 @@
 <generatorID>0317CBA9-5DFC-5382-7946-994424F9E7F8</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <referredTableLongName>app_portfolio.user_account_app</referredTableLongName>
-<deleteRule>NO ACTION</deleteRule>
+<deleteRule>CASCADE</deleteRule>
 <referredTableID>5888BB48-41F2-21A9-F5A0-08C442EC79DC</referredTableID>
 <keyObject>5AEA98A8-9A57-48E4-DB73-FB2843B5EBB5</keyObject>
 <referredKeyID>5AEA98A8-9A57-48E4-DB73-FB2843B5EBB5</referredKeyID>

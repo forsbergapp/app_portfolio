@@ -11,7 +11,7 @@
 <keyObject>5492C1B2-8800-7727-399B-A2DD277E501F</keyObject>
 <referredKeyID>5492C1B2-8800-7727-399B-A2DD277E501F</referredKeyID>
 <mandatory>false</mandatory>
-<refColNames>app_object_object_name,object_item_name,app_object_app_id</refColNames>
+<refColNames>object_item_name,app_object_object_name,app_object_app_id</refColNames>
 <transferable>true</transferable>
 <rely>false</rely>
 <columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
