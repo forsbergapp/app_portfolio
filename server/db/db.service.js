@@ -197,6 +197,7 @@ const pool_start = async (dbparameters) =>{
                   })
                   .then((sqlite_db)=>{
                      db[1]=sqlite_db;
+                     sqlite_db.get("PRAGMA foreign_keys = ON");
                      resolve(null);
                   })
                   .catch((error)=>reject(error));

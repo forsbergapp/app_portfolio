@@ -151,7 +151,7 @@
 <colUsage columnID="753230E9-96CD-B776-4092-5E01A7675A9D"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="FD9F7726-A62A-667C-BF7E-4942A32409D6" name="app_data_resource_detail_app_data_resource_master_FKv2">
+<ind_PK_UK id="FD9F7726-A62A-667C-BF7E-4942A32409D6" name="app_data_resource_detail_app_data_resource_master_attribute_FK">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>
 <generatorID>787BA882-36CB-FD8E-D555-17680CFAC991</generatorID>

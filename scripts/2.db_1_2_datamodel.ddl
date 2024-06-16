@@ -637,13 +637,15 @@ ALTER TABLE <DB_SCHEMA/>.app
 
 ALTER TABLE <DB_SCHEMA/>.app_data_entity
     ADD CONSTRAINT app_data_entity_app_fk FOREIGN KEY ( app_id )
-        REFERENCES <DB_SCHEMA/>.app ( id );
+        REFERENCES <DB_SCHEMA/>.app ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_entity_resource
     ADD CONSTRAINT app_data_entity_resource_app_data_entity_fk FOREIGN KEY ( app_data_entity_app_id,
                                                                              app_data_entity_id )
         REFERENCES <DB_SCHEMA/>.app_data_entity ( app_id,
-                                                   id );
+                                                   id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_entity_resource
     ADD CONSTRAINT app_data_entity_resource_app_setting_fk FOREIGN KEY ( app_setting_id )
@@ -656,23 +658,28 @@ ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
                                                                                       app_data_entity_resource_id )
         REFERENCES <DB_SCHEMA/>.app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
-                                                            id );
+                                                            id )
+            ON DELETE CASCADE;
+
+ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
+    ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_attribute_fk FOREIGN KEY ( app_data_resource_master_attribute_id )
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
     ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id );
-
-ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
-    ADD CONSTRAINT app_data_resource_detail_app_data_resource_master_fkv2 FOREIGN KEY ( app_data_resource_master_attribute_id )
-        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail_data
     ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_detail_fk FOREIGN KEY ( app_data_resource_detail_id )
-        REFERENCES <DB_SCHEMA/>.app_data_resource_detail ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_detail ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail_data
     ADD CONSTRAINT app_data_resource_detail_data_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_attribute_id )
-        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_master
     ADD CONSTRAINT app_data_resource_master_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id
@@ -681,13 +688,15 @@ ALTER TABLE <DB_SCHEMA/>.app_data_resource_master
                                                                                       app_data_entity_resource_id )
         REFERENCES <DB_SCHEMA/>.app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
-                                                            id );
+                                                            id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_master
     ADD CONSTRAINT app_data_resource_master_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                               user_account_app_app_id )
         REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
-                                                    app_id );
+                                                    app_id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id,
@@ -695,25 +704,30 @@ ALTER TABLE <DB_SCHEMA/>.app_data_stat
                                                                            app_data_entity_resource_id )
         REFERENCES <DB_SCHEMA/>.app_data_entity_resource ( app_data_entity_app_id,
                                                             app_data_entity_id,
-                                                            id );
+                                                            id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_app_fk FOREIGN KEY ( app_id )
-        REFERENCES <DB_SCHEMA/>.app ( id );
+        REFERENCES <DB_SCHEMA/>.app ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                    user_account_app_app_id )
         REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
-                                                    app_id );
+                                                    app_id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_translation
     ADD CONSTRAINT app_data_translation_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id );
+        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_translation
     ADD CONSTRAINT app_data_translation_language_fk FOREIGN KEY ( language_id )

@@ -27,9 +27,9 @@
 <createdTime>2020-08-06 18:00:54 UTC</createdTime>
 <ownerDesignName>data_model_20220115</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="json_data" id="776E3A88-8594-E541-6D85-144B47B5C59D">
+<ColumnProxy name="json_data" id="92563720-23FA-8E6A-5306-EB0FAF89FA83">
 <createdBy>admin</createdBy>
-<createdTime>2024-03-31 02:04:54 UTC</createdTime>
+<createdTime>2024-06-16 16:46:44 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
 </columnProxies>

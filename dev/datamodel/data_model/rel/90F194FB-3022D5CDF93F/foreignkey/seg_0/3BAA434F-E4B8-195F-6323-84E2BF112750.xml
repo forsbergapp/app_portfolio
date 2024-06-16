@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="3C2A8C50-C88B-F567-2B1E-3F136DDE01BD" containerWithKeyObject="04531048-2DA4-1839-3B09-1AAD0242B555" localFKIndex="E9C9E735-17D6-5DB4-11BA-8AA03BF7E50B" name="user_account_follow_user_account_follow_FK">
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="3BAA434F-E4B8-195F-6323-84E2BF112750" containerWithKeyObject="04531048-2DA4-1839-3B09-1AAD0242B555" localFKIndex="21FDFF7C-16A1-400D-310E-69640E5AF1A5" name="user_account_follow_user_account_follow_FK">
 <createdBy>admin</createdBy>
-<createdTime>2024-03-02 20:36:12 UTC</createdTime>
+<createdTime>2024-06-16 16:46:44 UTC</createdTime>
 <generatorID>DB3CE97A-6D8A-F1A8-B8BE-9CF3488EEBE6</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <referredTableLongName>app_portfolio.user_account</referredTableLongName>

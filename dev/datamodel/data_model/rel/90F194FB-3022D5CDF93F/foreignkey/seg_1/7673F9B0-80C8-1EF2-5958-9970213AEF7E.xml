@@ -4,7 +4,7 @@
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <generatorID>04A5B336-138A-B146-CF43-812FC459CA1D</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<referredTableLongName>app_category</referredTableLongName>
+<referredTableLongName>app_portfolio.app_category</referredTableLongName>
 <arc>5AC405D6-8C30-0E15-46E1-38688D9496D2</arc>
 <deleteRule>NO ACTION</deleteRule>
 <referredTableID>26828276-74F3-85BA-8734-5C8ECE071D60</referredTableID>

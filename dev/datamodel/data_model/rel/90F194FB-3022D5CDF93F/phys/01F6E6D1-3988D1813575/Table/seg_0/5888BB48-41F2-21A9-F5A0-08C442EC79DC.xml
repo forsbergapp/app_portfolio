@@ -16,11 +16,6 @@
 <createdTime>2022-08-17 18:49:13 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_setting_preference_arabic_script_id" id="2F15CB87-EE14-F1BE-39A5-38048B3F84F1">
-<createdBy>admin</createdBy>
-<createdTime>2024-03-02 19:12:43 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="app_setting_preference_timezone_id" id="38704FD8-7829-817C-86D7-6A2EB427CBBC">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:55:23 UTC</createdTime>
@@ -40,6 +35,11 @@
 <createdBy>admin</createdBy>
 <createdTime>2022-01-15 13:58:05 UTC</createdTime>
 <ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_setting_preference_arabic_script_id" id="B97BF682-4952-79E1-650C-62182A095CF6">
+<createdBy>admin</createdBy>
+<createdTime>2024-06-16 16:46:44 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
 <ColumnProxy name="app_id" id="E1FDA2F7-F988-CCCC-AC65-D887CE690DA0">
 <createdBy>admin</createdBy>

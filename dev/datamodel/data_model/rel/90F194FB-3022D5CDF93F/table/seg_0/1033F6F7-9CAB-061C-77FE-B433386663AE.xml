@@ -118,7 +118,7 @@
 <colUsage columnID="AFC04532-B4FB-91D4-D029-32A25E12EAEF"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="B4D16BEE-8E9D-94E2-6E41-742EB7B89445" name="app_data_resource_detail_data_app_data_resource_master_FK">
+<ind_PK_UK id="B4D16BEE-8E9D-94E2-6E41-742EB7B89445" name="app_data_resource_detail_data_app_data_resource_master_attribute_FK">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 20:36:12 UTC</createdTime>
 <generatorID>869C7DB5-71FD-D67C-D49D-15D712B38621</generatorID>
