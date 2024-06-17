@@ -417,9 +417,9 @@ const install_db_get_files = async (json_type) =>{
     /**@type{import('../sql/user_account_app_data_post_view.service.js')} */
     const {insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
     /**@type{import('../sql/app_data_resource_master.service.js')} */
-    const {post:MasterResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`)
+    const {post:MasterResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
     /**@type{import('../../security.service.js')} */
-    const {CreateKeyPair, createSecret} = await import(`file://${process.cwd()}/server/security.service.js`)
+    const {CreateKeyPair, createSecret} = await import(`file://${process.cwd()}/server/security.service.js`);
     /**@type{import('../../config.service.js')} */
     const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
 
