@@ -107,7 +107,7 @@ const fs = await import('node:fs');
     };
     //if first time, when no system admin exists, then redirect everything to admin
     if (CheckFirstTime() && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
-        res.redirect(`http://admin.${ConfigGet('SERVER','HOST')}`)
+        res.redirect(`http://admin.${ConfigGet('SERVER','HOST')}`);
     else{
         //check if SSL verification using letsencrypt should be enabled when validating domains
         if (ConfigGet('SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
@@ -148,7 +148,7 @@ const fs = await import('node:fs');
         //response
         res: res
     };
- }
+ };
 /**
  * Backend for frontend (BFF) APP including assets, report and info pages
  * 

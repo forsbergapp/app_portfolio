@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`   <div id='mapid'></div>
                     <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
@@ -41,7 +39,7 @@ const template =`   <div id='mapid'></div>
                     </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          AppPlaces:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
@@ -53,11 +51,11 @@ const method = async props => {
     const render_template = () =>{
         return template
                     .replace('<AppPlaces/>',props.AppPlaces ?? '');
-    }
+    };
     return {
         props:  {function_post:null},
         data:   null,
         template: render_template()
     };
-}
+};
 export default method;

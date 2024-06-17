@@ -46,7 +46,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
     
     const result_geodata = await BFF_server(app_id, parameters)
                                     .then((/**@type{*}*/result_gps)=>JSON.parse(result_gps))
-                                    .catch((/**@type{import('../types.js').error}*/error)=>null);
+                                    .catch(()=>null);
     const place = result_geodata?
                     (result_geodata.geoplugin_city + ', ' +
                     result_geodata.geoplugin_regionName + ', ' +
@@ -55,13 +55,13 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
     const {getUserByUserId} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
     const identity_provider_id = user_account_id?await getUserByUserId(app_id, user_account_id)
                                                     .then(result=>result[0].identity_provider_id)
-                                                    .catch((/**@type{import('../types.js').error}*/error)=>null):null;
+                                                    .catch(()=>null):null;
     return {latitude:result_geodata?result_geodata.geoplugin_latitude ?? '':'',
             longitude:result_geodata?result_geodata.geoplugin_longitude ?? '':'',
             place:place,
             timezone:result_geodata?result_geodata.geoplugin_timezone ?? '':'',
-            identity_provider_id:identity_provider_id}
-}
+            identity_provider_id:identity_provider_id};
+};
 /**
  * Socket client send
  * Used by EventSource and closes connection
@@ -452,6 +452,6 @@ const SocketUpdateExpiredTokens = () =>{
             client.token_systemadmin && expired_token(null, 'SYSTEMADMIN', client.token_systemadmin))
             ClientSend(client.response, '', 'SESSION_EXPIRED');
     }
-}
+};
 
 export {ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedList, SocketSendAdmin, ConnectedCount, SocketConnect, SocketCheckInterval};

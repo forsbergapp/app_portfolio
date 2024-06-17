@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * @typedef { {profile_id:number|null,
  *             private:number|null}} result_profile
@@ -131,7 +129,7 @@ const template = props =>
                                     }
                                 </div>
                                 <div id='common_profile_private'>
-                                    ${props.info_profile.private==1?`<div id='common_profile_private_title' class='common_icon'></div>`:''}
+                                    ${props.info_profile.private==1?'<div id=\'common_profile_private_title\' class=\'common_icon\'></div>':''}
                                 </div>
                                 `:''
                             }
@@ -172,7 +170,7 @@ const template = props =>
 
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          tab:string,
  *          info_user_account_id:number,
@@ -199,7 +197,7 @@ const template = props =>
 const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
-    let spinner = `class='css_spinner'`;
+    let spinner = 'class=\'css_spinner\'';
     if (props.tab=='INFO'){
         let path;
         if (props.info_user_account_id_other !== null)
@@ -214,7 +212,7 @@ const component = async props => {
                             `id=${props.info_user_account_id ?? ''}&client_latitude=${props.info_client_latitude}&client_longitude=${props.info_client_longitude}`, 
                             'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result)[0])
-                            .catch((/**@type{Error}*/error)=>{throw error});
+                            .catch((/**@type{Error}*/error)=>{throw error;});
     }
         
     /**
@@ -302,7 +300,7 @@ const component = async props => {
             }
             const profile_stat_records = await props.function_FFB(path, `statchoice=${statchoice}`, 'GET', 'APP_DATA', null)
                                             .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                                            .catch((/**@type{Error}*/error)=>{throw error});
+                                            .catch((/**@type{Error}*/error)=>{throw error;});
             spinner = '';
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
                 render_template(profile_empty, profile_stat_records);
@@ -323,13 +321,13 @@ const component = async props => {
                             info_function_format_json_date:props.info_function_format_json_date
                         })
                 .replace('<SPINNER_CLASS/>', spinner);
-    }
+    };
     const post_component = async () =>{
         if (props.tab=='INFO')
             profile_show(props.info_user_account_id_other, props.info_username);
         else
-            await profile_stat(props.top_statchoice, props.top_app_rest_url, props.top_function_user_click)
-    }
+            await profile_stat(props.top_statchoice, props.top_app_rest_url, props.top_function_user_click);
+    };
     return {
         props:  {function_post:post_component},
         data:   props.tab=='INFO'?{
@@ -338,5 +336,5 @@ const component = async props => {
                 }:null,
         template: render_template(profile_empty, [])
     };
-}
+};
 export default component;

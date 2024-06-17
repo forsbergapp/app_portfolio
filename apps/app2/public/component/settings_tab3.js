@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`   <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_design_theme_day' class='common_icon'></div>
@@ -117,7 +115,7 @@ const template =`   <div class='setting_horizontal_row'>
                     </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          AppSettingsThemesDay:string,
  *          AppSettingsThemesMonth:string,
@@ -137,11 +135,11 @@ const method = async props => {
                     .replace('<AppSettingsThemesYear/>',props.AppSettingsThemesYear ?? '')
                     .replace('<AppPapersize/>',props.AppPapersize ?? '')
                     .replace('<AppHighlightrow/>',props.AppHighlightrow ?? '');
-    }
+    };
     return {
         props:  {function_post:null},
         data:   null,
         template: render_template()
     };
-}
+};
 export default method;

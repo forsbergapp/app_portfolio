@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * @typedef {{  doubleClickZoom:function,
  *              invalidateSize:function,
@@ -19,7 +17,7 @@ const template =`   <link media="all" rel="stylesheet" href="<CSS_URL/>" type="t
 
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          longitude:string,
  *          latitude:string,
@@ -92,7 +90,7 @@ const component = async props => {
         return template
                     .replace('<LEAFLET_CONTAINER/>', LEAFLET_CONTAINER)
                     .replace('<CSS_URL/>', '/common/modules/leaflet/leaflet.css');
-    }
+    };
     //mounts template with css and Leaflet div inside apps mountdiv props
     props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML += render_template();
     
@@ -108,5 +106,5 @@ const component = async props => {
         //return empty template
         template: null
     };
-}
+};
 export default component;

@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`   <div id='profile_info_user_settings'>
                         <div id='profile_main_btn_user_settings' class='common_link common_icon'></div>
                     </div>
@@ -36,21 +34,21 @@ const template =`   <div id='profile_info_user_settings'>
                     </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:null, 
  *                      template:string}>}
  */
 const method = async props => {
-    
+    props;
     const render_template = () =>{
         return template;
-    }
+    };
     return {
         props:  {function_post:null},
         data:   null,
         template: render_template()
     };
-}
+};
 export default method;

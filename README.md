@@ -300,7 +300,7 @@
 
 8. Typescript
 	
-	[docs/8.typescript.md](docs/8.typescript.md)
+	[docs/8.typescript_eslint.md](docs/8.typescript_eslint.md)
 
 9. Issues
    

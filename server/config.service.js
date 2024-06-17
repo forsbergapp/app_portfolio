@@ -315,7 +315,7 @@ const ConfigFileGet = async (file, saved=false, config_group=null, parameter=nul
             resolve(config);
         }
     });
-}
+};
 /**
  * Config save
  * @param {import('../types.js').db_file_db_name} resource_id
@@ -347,7 +347,6 @@ const ConfigFileSave = async (resource_id, config, maintenance, configuration, c
         file_config.file_content.METADATA.MAINTENANCE = maintenance ?? file_config.file_content.METADATA.MAINTENANCE;
         file_config.file_content.METADATA.CONFIGURATION = configuration ?? file_config.file_content.METADATA.CONFIGURATION;
         file_config.file_content.METADATA.COMMENT = comment ?? file_config.file_content.METADATA.COMMENT;
-        file_config.file_content.METADATA.CREATED = file_config.file_content.METADATA.CREATED;
         file_config.file_content.METADATA.MODIFIED = new Date().toISOString();
     }
     await file_update(resource_id, file_config.transaction_id, file_config.file_content);

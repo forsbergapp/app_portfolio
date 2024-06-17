@@ -275,7 +275,7 @@ const common_translate_ui = async lang_code => {
 const get_locales_options = async () =>{
     const locales = await FFB('/server-db/locale', `lang_code=${COMMON_GLOBAL.user_locale}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                            .catch((/**@type{Error}*/error)=>{throw error});
+                            .catch((/**@type{Error}*/error)=>{throw error;});
     return locales.map((/**@type{*}*/row, /**@type{number}*/index)=>
         `<option id="${index}" value="${row.locale}">${row.text}</option>`
         ).join('');
@@ -459,7 +459,7 @@ const show_image = async (item_img, item_input, image_width, image_height) => {
             reader.readAsDataURL(file); //reads the data as a URL
         else
             item_img.src = '';
-    })
+    });
     
 };
 /**
@@ -641,7 +641,7 @@ const getUserAgentPlatform = useragent =>{
                 return 'Linux';
             else
                 return 'Other';
-}
+};
 /**
  * Get user variables
  * @returns {{  user_language:string,
@@ -723,12 +723,12 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
  * @returns {*}
  */
  const html2reactcomponent = (React_create_element, element) =>{
-    let result_component_current = [];
+    const result_component_current = [];
     if(element.length>0 ){
         for (const subelement of element){
             let props;
             /**@type{*} */
-            const element_object = {}
+            const element_object = {};
             Object.entries(subelement.attributes).forEach((/**@type{*}*/attribute)=>element_object[attribute[1].name] = attribute[1].value);
             //always rename class to className, React will not create class if className is empty
             //but no error/warning will be displayed using this syntax
@@ -769,12 +769,12 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
                             label: subelement.text};
             }
             else
-                props = {   ...element_object}
+                props = {   ...element_object};
             
             if (props.style){
                 //props.style contains string, convert to object
                 /**@type{Object.<string, {}>} */
-                let style_object = {};
+                const style_object = {};
                 for (const style of subelement.style){
                     style_object[style] = subelement.style[style];
                 }
@@ -791,7 +791,7 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
     }
     else
         return null;
-}
+};
 /**
  * Component render
  * @param {string|null} div 
@@ -825,9 +825,9 @@ const ComponentRender = async (div,props, component_path) => {
                 /**@type {import('../../../types.js').module_vue} */
                 const Vue = await import(path_vue);
                 //Use tempmount div to be able to return pure HTML
-                AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
+                AppDocument.querySelector(`#${div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
                 Vue.createApp({
-                    data(){return {}},
+                    data(){return {};},
                     template: component.template,
                     methods:{}
                 }).mount('#tempmount');
@@ -850,7 +850,7 @@ const ComponentRender = async (div,props, component_path) => {
                                                         { id: div_template.id, className: div_template.className}, 
                                                         html2reactcomponent(React.createElement, div_template.children));
 
-                AppDocument.querySelector(`#${div}`).innerHTML =`<div id='tempmount'></div>`; 
+                AppDocument.querySelector(`#${div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
                 //use inner tempmount div to remove React events
                 const application = ReactDOM.createRoot(AppDocument.querySelector(`#${div} #tempmount`));
                 application.render( result_component);
@@ -878,7 +878,7 @@ const ComponentRender = async (div,props, component_path) => {
         }
         return component.data;
     }
-}
+};
 /**
  * Component remove
  * @param {string} div 
@@ -898,7 +898,7 @@ const ComponentRemove = (div, remove_modal=false) => {
             AppDocument.querySelector('#common_app #common_dialogues').classList.remove('common_dialogues_modal');
         }
     }
-}
+};
 
 /**
  * Show common dialogue
@@ -916,7 +916,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 {   auth:title,
                                     translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
                                     translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM}, 
-                                '/common/component/dialogue_user_password_new.js')
+                                '/common/component/dialogue_user_password_new.js');
                 break;
             }
         case 'VERIFY':
@@ -937,7 +937,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 app_id:                         COMMON_GLOBAL.app_id,
                                 common_app_id:                  COMMON_GLOBAL.common_app_id,
                                 system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
-			                    system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
+                                system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
                                 translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
                                 translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
                                 translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
@@ -954,7 +954,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 app_id:                         COMMON_GLOBAL.app_id,
                                 common_app_id:                  COMMON_GLOBAL.common_app_id,
                                 system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
-			                    system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
+                                system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
                                 translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
                                 translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
                                 translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
@@ -970,7 +970,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 app_id:                         COMMON_GLOBAL.app_id,
                                 common_app_id:                  COMMON_GLOBAL.common_app_id,
                                 system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
-			                    system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
+                                system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
                                 translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
                                 translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
                                 translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
@@ -986,7 +986,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 app_id:                         COMMON_GLOBAL.app_id,
                                 common_app_id:                  COMMON_GLOBAL.common_app_id,
                                 system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
-			                    system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
+                                system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
                                 translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
                                 translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
                                 translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
@@ -1124,7 +1124,7 @@ const close_window = () =>{
     AppDocument.querySelector('#common_window_info').style.visibility = 'hidden'; 
     if (AppDocument.fullscreenElement)
         AppDocument.exitFullscreen();
-}
+};
 
 /**
  * Profile follow or like and then update stat
@@ -1374,25 +1374,25 @@ const list_key_event = (event, module, event_function=null) => {
                 element.focus();
                 AppDocument.querySelector(`#common_${search_input}_input`).focus();
             };
-            if (Object.entries(rows).filter(row=>row[1].classList.contains(`common_list_row_selected`)).length>0){
+            if (Object.entries(rows).filter(row=>row[1].classList.contains('common_list_row_selected')).length>0){
                 let i=0;
                 for (const row of rows) {
-                    if (row.classList.contains(`common_list_row_selected`))
+                    if (row.classList.contains('common_list_row_selected'))
                         //if up and first or
                         //if down and last
                         if ((event.code=='ArrowUp' && i == 0)||
                             (event.code=='ArrowDown' && i == rows.length -1)){
                             if(event.code=='ArrowUp'){
                                 //if the first, set the last
-                                row.classList.remove (`common_list_row_selected`);
-                                rows[rows.length -1].classList.add (`common_list_row_selected`);
+                                row.classList.remove ('common_list_row_selected');
+                                rows[rows.length -1].classList.add ('common_list_row_selected');
                                 focus_item(rows[rows.length -1]);
                             }
                             else{
                                 //down
                                 //if the last, set the first
-                                row.classList.remove (`common_list_row_selected`);
-                                rows[0].classList.add (`common_list_row_selected`);
+                                row.classList.remove ('common_list_row_selected');
+                                rows[0].classList.add ('common_list_row_selected');
                                 focus_item(rows[0]);
                             }
                             break;
@@ -1400,15 +1400,15 @@ const list_key_event = (event, module, event_function=null) => {
                         else{
                             if(event.code=='ArrowUp'){
                                 //remove highlight, highlight previous
-                                row.classList.remove (`common_list_row_selected`);
-                                rows[i-1].classList.add (`common_list_row_selected`);
+                                row.classList.remove ('common_list_row_selected');
+                                rows[i-1].classList.add ('common_list_row_selected');
                                 focus_item(rows[i-1]);
                             }
                             else{
                                 //down
                                 //remove highlight, highlight next
-                                row.classList.remove (`common_list_row_selected`);
-                                rows[i+1].classList.add (`common_list_row_selected`);
+                                row.classList.remove ('common_list_row_selected');
+                                rows[i+1].classList.add ('common_list_row_selected');
                                 focus_item(rows[i+1]);
                             }
                             break;
@@ -1418,7 +1418,7 @@ const list_key_event = (event, module, event_function=null) => {
             }
             else{
                 //no highlight found, highlight first
-                rows[0].classList.add (`common_list_row_selected`);
+                rows[0].classList.add ('common_list_row_selected');
                 focus_item(rows[0]);
             }
             break;
@@ -1428,17 +1428,17 @@ const list_key_event = (event, module, event_function=null) => {
             if (module == 'lov'){
                 const rows = AppDocument.querySelectorAll(`.common_${list_name}_row`);
                 for (const row of rows) {
-                    if (row.classList.contains(`common_list_row_selected`)){
+                    if (row.classList.contains('common_list_row_selected')){
                         //event on row is set in app when calling lov, dispatch it!
                         row.dispatchEvent(new Event('click'));
-                        row.classList.remove (`common_list_row_selected`);
+                        row.classList.remove ('common_list_row_selected');
                     }
                 }   
             }
             else{
                 const rows = AppDocument.querySelectorAll(`.common_${list_name}_list_row`);
                 for (let i = 0; i <= rows.length -1; i++) {
-                    if (rows[i].classList.contains(`common_list_row_selected`)){
+                    if (rows[i].classList.contains('common_list_row_selected')){
                         /*Show profile and leave searchresult so user can go back to searchresult again*/
                         if (event_function ==null){
                             if (module=='profile')
@@ -1462,7 +1462,7 @@ const list_key_event = (event, module, event_function=null) => {
                                             });
                         }
                             
-                        rows[i].classList.remove (`common_list_row_selected`);
+                        rows[i].classList.remove ('common_list_row_selected');
                     }
                 }
             }
@@ -1507,7 +1507,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                         ...get_uservariables()
         };
         path = '/server-iam/login';
-        tokentype = 'IAM_SYSTEMADMIN'
+        tokentype = 'IAM_SYSTEMADMIN';
         if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
                         {
                         username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
@@ -1537,7 +1537,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                                     profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`};
             const profile_image = provider_data.profile_image_url==''?null:await convert_image(  provider_data.profile_image_url, 
                                                         COMMON_GLOBAL.image_avatar_width,
-                                                        COMMON_GLOBAL.image_avatar_height)
+                                                        COMMON_GLOBAL.image_avatar_height);
             json_data ={    username:               null,
                             password:               null,
                             active:                 1,
@@ -1551,7 +1551,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                             ...get_uservariables()
                         };
             path = `/server-iam/login/${provider_data.profile_id}`;
-            tokentype = 'IAM_PROVIDER'
+            tokentype = 'IAM_PROVIDER';
         }
         else{
             // ES6 object spread operator for user variables
@@ -1690,14 +1690,14 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             null;
         }
     }
-}
+};
 /**
  * User logoff
  * @returns {Promise.<void>}
  */
 const user_logoff = async () => {
     ComponentRemove('common_dialogue_user_menu');
-    FFB(`/server-iam/user/logoff`, null, 'POST', 'APP_DATA', null)
+    FFB('/server-iam/user/logoff', null, 'POST', 'APP_DATA', null)
     .then(()=>{
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
             AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
@@ -1901,7 +1901,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                             ComponentRemove('common_dialogue_user_edit', true);
                             resolve({   actived: 1, 
                                         verification_type : verification_type});
-                        }
+                        };
                         switch (verification_type){
                             //LOGIN
                             //SIGNUP
@@ -1920,7 +1920,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                                 COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
                                 COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
                                 //show dialogue new password
-                                show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth)
+                                show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth);
                                 resolve_function();
                                 break;
                             }
@@ -2191,7 +2191,7 @@ const create_qr = async (div, url) => {
         drawer: 'svg'
     });
     //executing await promise 1 ms results in QRCode rendered
-    await new Promise ((resolve)=>{setTimeout(()=> resolve(null),1)});
+    await new Promise ((resolve)=>{setTimeout(()=> resolve(null),1);});
 };
 /**
  * Map init
@@ -2210,7 +2210,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
     .then((/**@type{string}*/result)=>JSON.parse(result).rows)
     .catch((/**@type{Error}*/error)=>error);
     
-    let map_layer_array = [];
+    const map_layer_array = [];
     for (const map_layer_option of map_layers){
         map_layer_array.push({  id:map_layer_option.id, 
                                 display_data:map_layer_option.display_data, 
@@ -2280,7 +2280,7 @@ const map_country = lang_code =>{
         //country
         FFB('/server-db/country', `lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
         .then(result=>{resolve(
-            `<option value='' id='' label='…'>…</option>`
+            '<option value=\'\' id=\'\' label=\'…\'>…</option>'
             +
             JSON.parse(result).rows.map((/**@type{*}*/country, /**@type{number}*/index)=>{
                 const row = (current_group_name !== country.group_name?`<optgroup label=${country.group_name}/>`:'')
@@ -2605,7 +2605,7 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
                             `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                             `&app_id=${COMMON_GLOBAL.app_id??''}`);
 
-    let url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${path}?parameters=${encodedparameters}&iam=${iam}`;
+    const url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${path}?parameters=${encodedparameters}&iam=${iam}`;
 
     if (authorization_type=='SOCKET'){
         return new EventSource(url);
@@ -2918,7 +2918,7 @@ const set_app_service_parameters = async parameters => {
     
     COMMON_GLOBAL.app_framework = parameters.app_framework;
     COMMON_GLOBAL.app_framework_messages = parameters.app_framework_messages;
-    COMMON_GLOBAL.app_rest_api_version = parameters.app_rest_api_version
+    COMMON_GLOBAL.app_rest_api_version = parameters.app_rest_api_version;
     
     //rest 
     COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
@@ -3620,7 +3620,7 @@ const common_events_remove = () => {
     AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('mousedown', disable_copy_paste_cut);
     AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('touchstart', disable_common_input);
 
-}
+};
 
 /**
  * Set app parameters
@@ -3680,7 +3680,7 @@ const framework_clean = () =>{
         COMMON_GLOBAL.app_eventListeners.REACT = [];
     }
     //remove Vue objects
-    COMMON_GLOBAL.app_eventListeners.VUE = []
+    COMMON_GLOBAL.app_eventListeners.VUE = [];
     delete AppWindow.__VUE_DEVTOOLS_HOOK_REPLAY__;
     delete AppWindow.__VUE_HMR_RUNTIME__;
     delete AppWindow.__VUE__;
@@ -3693,7 +3693,7 @@ const framework_clean = () =>{
 
     //remove all attributes except id
     Object.entries(app_root_element.attributes).forEach((/**@type{*}*/attribute)=>attribute[1].name=='id'?null:app_root_element.removeAttribute(attribute[1].name));
-}
+};
 /**
  * Sets framework and uses given list of event functions
  * @param {number|null} framework
@@ -3708,7 +3708,7 @@ const framework_clean = () =>{
 const framework_set = async (framework, events) => {
     const app_root_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
     const app_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_div}`);
-    const common_app_element = AppDocument.querySelector(`#common_app`);
+    const common_app_element = AppDocument.querySelector('#common_app');
 
     //get all select and selectedIndex
     /**@type{{id:string,index:number}[]} */
@@ -3720,11 +3720,11 @@ const framework_set = async (framework, events) => {
             select_selectedindex = [{id:select.id, index:select.selectedIndex}];
     });
     //save Leaflet containers with special event management and saved objects on elements if any Leaflet container used
-    const leaflet_containers = AppDocument.querySelectorAll(`.leaflet-container`);
+    const leaflet_containers = AppDocument.querySelectorAll('.leaflet-container');
 
     //remove common listeners
     common_events_remove();
-    COMMON_GLOBAL.app_eventListeners.OTHER = []
+    COMMON_GLOBAL.app_eventListeners.OTHER = [];
 
     //remove all listeners in app and app root divs including all objects saved on elements
     app_element.replaceWith(app_element.cloneNode(true));
@@ -3840,7 +3840,7 @@ const framework_set = async (framework, events) => {
     //replace Leaflet containers with the saved ones containing Leaflet objects and events if any Leaflet container used
     let index= 0;
     for (const leaflet_container of leaflet_containers){
-        AppDocument.querySelectorAll(`.leaflet-container`)[index].replaceWith(leaflet_container);
+        AppDocument.querySelectorAll('.leaflet-container')[index].replaceWith(leaflet_container);
         index++;
     }
     //update all select with selectedIndex since copying outerHTML does not include setting correct selectedIndex
@@ -3856,7 +3856,7 @@ const framework_set = async (framework, events) => {
  const setUserAgentAttibutes = () => {
     if (navigator.userAgent.toLowerCase().indexOf('firefox')>-1)
         AppDocument.querySelector(':root').style.setProperty('--common_app_useragent_fix_margin_top', '-5px');
- }
+ };
 /**
  * Set custom framework functionality overriding console messages and save info about events created
  * @returns {void}
@@ -3881,7 +3881,7 @@ const custom_framework = () => {
                     return 'OTHER';
             }
         }
-    }
+    };
     /**
      * 
      * @param  {...any} eventParameters 
@@ -3895,7 +3895,7 @@ const custom_framework = () => {
                 /**@ts-ignore */
                 this, 
                 arguments);
-    };
+    }
 
     //set custom event on both HTMLElement and document level
     AppDocument.addEventListener = custom_event;
@@ -3906,38 +3906,24 @@ const custom_framework = () => {
      * console warn
      * @param  {...any} parameters 
      */
-    function console_warn (...parameters) {
-            COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.warn.apply(
-                /**@ts-ignore */
-                this, 
-                arguments):null;
-    };
+    const console_warn = (...parameters) => COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.warn(...parameters):null;
     /**
      * console error
      * @param  {...any} parameters 
      */
-     function console_error (...parameters) {
-        COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.error.apply(
-            /**@ts-ignore */
-            this, 
-            arguments):null;
-    };
+     const console_error = (...parameters) => COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.error(...parameters):null;
     /**
      * console info
      * @param  {...any} parameters 
      */
-     function console_info (...parameters) {
-        COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.info.apply(
-            /**@ts-ignore */
-            this, 
-            arguments):null;
-    };
+     const console_info = (...parameters) => COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.info(...parameters):null;
+
     //Vue uses console.warn, show or hide from any framework 
     AppWindow.console.warn = console_warn;
     //React uses console.info and error, show or hide from any framework
     AppWindow.console.info = console_info;
     AppWindow.console.error = console_error;
-}
+};
 /**
  * Init common
  * @param {string} parameters 

@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * @typedef {{  APP_ID:number,
  *              SUBDOMAIN:string,
@@ -41,7 +39,7 @@ const template = props => `
                             </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          common_app_id:number,
  *          app_copyright:string,
@@ -60,14 +58,14 @@ const template = props => `
  */
 const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
-    let class_spinner = `class='css_spinner'`;        
+    let class_spinner = 'class=\'css_spinner\'';        
     /**
      * @returns {Promise<void>}
      */
     const post_component = async () =>{
         const apps = await props.function_FFB('/app/apps/', null, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                            .catch((/**@type{Error}*/error)=>{throw error});
+                            .catch((/**@type{Error}*/error)=>{throw error;});
         class_spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({apps:apps});
         props.function_ComponentRender('common_dialogue_info', {apps:apps,
@@ -80,7 +78,7 @@ const component = async props => {
                                                                 info_link_terms_name:props.info_link_terms_name,
                                                                 info_link_about_name:props.info_link_about_name
                                                                 }, '/common/component/dialogue_info.js');
-    }
+    };
     /**
      * 
      * @param {*} props 
@@ -89,11 +87,11 @@ const component = async props => {
     const render_template = props =>{
         return template(props)
                 .replace('<CLASS_SPINNER/>', class_spinner);
-    }
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
         template: render_template({apps:[]})
     };
-}
+};
 export default component;

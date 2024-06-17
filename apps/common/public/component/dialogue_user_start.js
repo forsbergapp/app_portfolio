@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * @typedef {{id:number, provider_name:string}} provider_type
  */
@@ -14,10 +12,10 @@ const AppDocument = document;
 const template = props =>`  <div id='common_user_start_logo'></div>
                             <div id='common_user_start_nav'>
                                 ${props.system_admin_only?'':
-                                    `<div id='common_user_start_login'  class='common_icon'></div>`
+                                    '<div id=\'common_user_start_login\'  class=\'common_icon\'></div>'
                                 }
                                 ${props.admin_app?
-                                    `<div id='common_user_start_login_system_admin'  class='common_icon'></div>`:
+                                    '<div id=\'common_user_start_login_system_admin\'  class=\'common_icon\'></div>':
                                     `<div id='common_user_start_signup' class='common_icon' ></div>
                                     <div id='common_user_start_forgot' class='common_icon' ></div>`
                                 }
@@ -44,7 +42,7 @@ const template = props =>`  <div id='common_user_start_logo'></div>
                             ${props.admin_app?
                                 `<div id='common_user_start_login_system_admin_form' class='common_user_start_form'>
                                     ${props.first_time?
-                                        `<div id='common_user_start_login_system_admin_first_time'></div>`:''
+                                        '<div id=\'common_user_start_login_system_admin_first_time\'></div>':''
                                     }
                                     <div id='common_user_start_login_system_admin_username' contentEditable='true' class='common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
                                     <div class='common_password_container'>
@@ -83,7 +81,7 @@ const template = props =>`  <div id='common_user_start_logo'></div>
                             <div id='common_user_start_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          user_click:string,
  *          app_id:number,
@@ -103,7 +101,7 @@ const template = props =>`  <div id='common_user_start_logo'></div>
 const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
-    let spinner = `class='css_spinner'`;
+    let spinner = 'class=\'css_spinner\'';
 
     /**
      * 
@@ -121,7 +119,7 @@ const component = async props => {
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD_CONFIRM/>',props.translation_password_confirm)
                 .replaceAll('<COMMON_TRANSLATION_EMAIL/>',props.translation_email)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD_REMINDER/>',props.translation_password_reminder);
-    }
+    };
     const post_component = async () =>{
         props.common_document.querySelector(`#${props.user_click}`).click();
         //fetch providers if not admin app
@@ -130,7 +128,7 @@ const component = async props => {
                                         .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                         .catch((/**@type{Error}*/error)=>{
                                                                             props.common_document.querySelector('#common_user_start_identity_provider_login').classList.remove('css_spinner');
-                                                                            throw error});
+                                                                            throw error;});
         spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
             render_template({
@@ -140,7 +138,7 @@ const component = async props => {
                                 system_admin_only: props.system_admin_only == 1
                             });
             props.common_document.querySelector(`#${props.user_click}`).click();
-    }
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
@@ -150,5 +148,5 @@ const component = async props => {
                         first_time: props.system_admin_first_time == 1,
                         system_admin_only: props.system_admin_only == 1})
     };
-}
+};
 export default component;

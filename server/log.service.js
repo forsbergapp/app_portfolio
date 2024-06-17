@@ -520,7 +520,7 @@ const getLogsStats = async (data) => {
             //filename format: REQUEST_INFO_YYYMMDD.log
             if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
                 //return DD
-                day = file.slice(-6).substring(0,2)
+                day = file.slice(-6).substring(0,2);
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
             }
             else
@@ -576,7 +576,7 @@ const getLogsStats = async (data) => {
             })
             .catch((error)=>{
                 throw `${file}: ${error}`;
-            })
+            });
         }
     }
 

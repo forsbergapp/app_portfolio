@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * @returns {string}
  */
@@ -7,7 +5,7 @@ const template = () => ` <div id='app_page_start_shop' class='app_page_start_sho
                             </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
  *          timezone:string,
@@ -26,13 +24,13 @@ const component = async props => {
      */
     const render_template = () =>{
         return template();
-    }
+    };
     /**
      * Pay product
      */
     const pay = () =>{
-        props.function_show_message('INFO',null,null,null, 'Payed!')
-    }
+        props.function_show_message('INFO',null,null,null, 'Payed!');
+    };
     const post_component = () =>{
         props.function_ComponentRender('app_page_start_shop', 
                                             {
@@ -62,11 +60,11 @@ const component = async props => {
                                                 function_button_post:pay,
                                                 function_button_delete:null
                                             }, '/common/component/app_data_display.js');
-    }
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
         template: render_template()
     };
-}
+};
 export default component;

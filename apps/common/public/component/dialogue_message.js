@@ -6,8 +6,6 @@
  *               "developer_text":string|null,
  *               "more_info":string|null}}} error_message_ISO20022
  */
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * 
  * @param {{message:*,
@@ -48,15 +46,15 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
                             }
                             <div id='common_message_buttons'>
                                 ${props.message_type=='CONFIRM'?
-                                    `<div id='common_message_cancel' class='common_dialogue_button common_icon' ></div>`:''
+                                    '<div id=\'common_message_cancel\' class=\'common_dialogue_button common_icon\' ></div>':''
                                 }
                                 ${props.message_type!='PROGRESS'?
-                                    `<div id='common_message_close' class='common_dialogue_button common_icon' ></div>`:''
+                                    '<div id=\'common_message_close\' class=\'common_dialogue_button common_icon\' ></div>':''
                                 }
                             </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          text_class:string,
  *          message_type:string,
@@ -89,9 +87,9 @@ const component = async props => {
                 message_title_icon_class:props.text_class,
                 translation_confirm_question:props.translation_confirm_question
             });
-    }
+    };
     const post_component = async () => {
-        const function_close = () => { props.function_componentremove('common_dialogue_message', true)};
+        const function_close = () => { props.function_componentremove('common_dialogue_message', true);};
         
         switch (props.message_type){
             case 'ERROR_BFF':{
@@ -129,7 +127,7 @@ const component = async props => {
                 break;
             }
         }
-    }
+    };
     /**
      * 
      * @param {{message:*,
@@ -141,8 +139,8 @@ const component = async props => {
      * @returns 
      */
     const render_template = (props_template) =>{
-        return template(props_template)
-    }
+        return template(props_template);
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
@@ -153,5 +151,5 @@ const component = async props => {
                                     translation_confirm_question:''
                                 })
     };
-}
+};
 export default component;

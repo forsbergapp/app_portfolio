@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * 
  * @param {{country:string,
@@ -22,7 +20,7 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
                         `;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          timezone_text:string,
  *          latitude:string,
@@ -60,5 +58,5 @@ const component = async props => {
         data:   null,
         template: null
     };
-}
+};
 export default component;

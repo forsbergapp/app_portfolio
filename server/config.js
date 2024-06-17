@@ -17,8 +17,8 @@ const ConfigFileSave =  (resource_id, data) => service.ConfigFileSave(resource_i
  * @param {*} query
  */
  const ConfigFileGet = async (resource_id, query) => {
-    return {data:await service.ConfigFileGet(resource_id, getNumberValue(query.get('saved'))==1, query.get('config_group'), query.get('parameter'))}
- }
+    return {data:await service.ConfigFileGet(resource_id, getNumberValue(query.get('saved'))==1, query.get('config_group'), query.get('parameter'))};
+ };
 /**
  * Config get app
  * @param {number} app_id

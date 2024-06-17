@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`   <div id='send_broadcast_form'>
                         <div id='send_broadcast_title' class='common_icon'></div>
                         <div id="select_broadcast_type" class="common_select <ADMIN_CLASS/>">
@@ -20,7 +18,7 @@ const template =`   <div id='send_broadcast_form'>
                     </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          system_admin:boolean,
  *          apps:string}} props 
@@ -35,11 +33,11 @@ const component = async props => {
         return template
                 .replace('<ADMIN_CLASS/>', props.system_admin?'system_admin':'admin')
                 .replace('<APPS/>', props.apps);
-    }
+    };
     return {
         props:  {function_post:null},
         data:   null,
         template: render_template()
     };
-}
+};
 export default component;

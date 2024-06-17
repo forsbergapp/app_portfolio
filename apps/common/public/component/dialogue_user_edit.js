@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`   <div id='common_user_edit_common'>
                         <div class='common_setting_horizontal_row'>
                             <div class='common_setting_horizontal_col'>
@@ -183,7 +181,7 @@ const template =`   <div id='common_user_edit_common'>
                     <div id='common_user_edit_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          user_account_id:number,
  *          common_app_id:number,
@@ -277,11 +275,11 @@ const component = async props => {
                 .replaceAll('<COMMON_TRANSLATION_NEW_PASSWORD/>',props.translation_new_password)
                 .replaceAll('<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>',props.translation_new_password_confirm)
                 .replaceAll('<COMMON_TRANSLATION_PASSWORD_REMINDER/>',props.translation_password_reminder);
-    }
+    };
     return {
         props:  {function_post:user_get},
         data:   null,
         template: render_template()
-    }
-}
+    };
+};
 export default component;
