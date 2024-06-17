@@ -266,36 +266,18 @@
                             "app_data_entity_resource_app_data_entity_app_id":5, 
                             "app_data_entity_resource_app_data_entity_id":5000, 
                             "app_data_entity_resource_id":5003, 
-                            "json_data":{   "description":"Merchant demo", 
-                                            "merchant_id":"<DEMO_MERCHANT_ID/>",
+                            "json_data":{   "merchant_id":"<DEMO_MERCHANT_ID/>",
+                                            "merchant_name":"Shop",
+                                            "merchant_url":"https://app6.localhost",
+                                            "merchant_email":"",
+                                            "merchant_longitude":"",
+                                            "merchant_latitude":"",
+                                            "merchant_logo":"data:image/webp;base64,UklGRngDAABXRUJQVlA4WAoAAAAQAAAAPwAAPwAAQUxQSFsAAAABYFTbtpKHNiAADahAGuoQQMbEYawlCOB+cBhExATIQ1wj7z9lisWoptRQnjMWUOqx+rD8oYRTD9U0m1T2ajTPxsU4U0Q8lPRdTirDESWU37CUku5HRAmvw70PAFZQOCD2AgAAkBMAnQEqQABAAD4lEIVCIaEMfjraDAEiWYAuzQhw+eq/RnxyXenmryldN32v8qv6r9AP6B6mPKd6FfmN/Xn9cvdo/rn9g9gHnM+j1/qvYi9AD9ZOtP/c/0orv6SAkWfK5zTN8A/TMSKJMdF9IQFiJX/weRwBWgGwarSsPblAidsUcnsCgUsgG66o2YpingO/VzjMmV38y5GY25gnoiKlRFTYXiuIAP77KLPFn7CsXRta8lCaemxUN5cDl4qm+cBS3kHig0Yo/Z0v4oHAc+CeR90jP+PR+JlAd5aKnUyDmBEiDBFuG+6j9p1+SkCfewx48ufifn5jHtlrbwf8LfSD7azr0/bjiyz9JEFLTnas6tdKJfzyJtj4YG/7sz7vfVtietU4bzT8eCz4q1aawaJ5MZ/9WFVpZE6j54qyBJ1GvCEtuMBtpljclRZUvibjRFqzhT+NPFCgkZDUCz1uZHxNrFODt78R9t0xMI6dudvZjn0tYoz7ywotCAv2nHELgKvsUmpXjhf4yQuLhQcp4uDdiO4d7pFbBf7MnlM64YwZinisnXR3uVOFvuLu1i7v+0HRNz9qchiuinlTrtcuFwf9T2pgvu4mjXFHAruJkNnTytP+vmVPj/70CaL6lIfjI4cbTagePk90Ue5z78rzmT0q33l0gej1GIZ0SuXdU75iaxWN93/jDn/NN8EPrhPZzBtskBE2iaGTXVSYEelA2jGobM/0bfqTnNmT6lFuQtM0Oh8ccEPHcQ8HyFFtpxLH7vTs48f1SleeEDHvmidnmY4O/ZU8n08p7Sf/gq/hgRMFGHKd2kAb5GqOYRqN/hb/TYXiw2fu8hBLejTWl5zsBTQxqYcF/5Ae+grEMUHJsKDbGk1RtmXUtfjS8YigRINZMlYnaUC8HkSjYT/9Prj0Uz/b5HIdldxuDbf6Zz7j/57HdfNo9/IiE+rAVkJd/8nx4puVKfDIoOerBy8IBssrJjAFKFbbNA8d1ki+Ekn8940ugDSsGnA5AAA=",
                                             "merchant_type":"ECOMMERCE", 
-                                            "api_url":"app5.localhost/bff/app_external/v1/app-function/PAYMENT_REQUEST", 
-                                            "api_secret":"<DEMO_API_SECRET/>", 
-                                            "public_key":"<DEMO_PUBLIC_KEY/>",
-                                            "private_key":"<DEMO_PRIVATE_KEY/>",
-                                            "body": {"api_secret":"<API_SECRET/>", "reference":"<REFERENCE/>", "payeeid":"<PAYEE_ID/>", "payerid":"<PAYER_ID/>", "currency":"<CURRENCY/>", "amount":"<AMOUNT/>", "message":"<MESSAGE/>"}
-                                        }
-                            }
-        ]
-    },
-    {
-        "username":"demo_shop",
-        "bio": "Demo_Shop",
-        "avatar": "data:image/webp;base64,UklGRggDAABXRUJQVlA4WAoAAAAQAAAAPwAAPwAAQUxQSLsAAAABgFpt2/PkSe9V9aySETJCaA6NRZUJkDAAKocZcDgUIzBCh8f8fO/7vw8dExETgJ/NK5I81GGiCJMlaBSgOdxKjo6fTEWOnkO5M7mN3CJW1wPBv35LWyEabPh0YIHgddqNAtKgmQLVg6wLKFeq+IKvSXqQZIhbZnctT8y+y+uIqWlMHeZC4+V7DzTmQHsW7W70fALu6enE0C6MvSdHB4b/cE7i7Vso+N8AwHmkDdynEUYIeOp1DMVWG99dAFZQOCAmAgAAUA8AnQEqQABAAD4lDoVCIYZ/maoGAJEtgBny8v9P85/En8d/lFqD8G+2H7sf33FKfyf6AbwB+g/9y+w3hAfwD/bf13rAegB+lfWAegB/DP6N///WQ9gj9qP27+An+Jf3j/zcIB/AAwfCTfCWDAYNNKgYuIP447YSXbX8GiryMbsjP+AA/v+Pw5/7oB//ur//7hf//7gL6MOQMRHsQT8ZB/Drq/dFOxCEJq9A/8Bx/O9lBRv/627rKOF2ckCyftTHWiiBz8779MzwFI4j5dvXGQAMxkb/3UkkL09H5UYwqGoHH07qdOCk3Lzg+2lJZwj2dsAKVa7y1kT1+Hi3M6RX8fHt6/9/idP/pAdbsGgjL5ZfaZJOvHn/3g8qAlGEDmVT413wzdw1VABH/sMv/9zZ//cvf//uAzO2zUMKRzL5PP1X6AzCN3NKBOk9bVBY+zrz8CwDeUYNPAPn2l1tqL3GLTzilNZKZ4SepFex8XewRpyrRLHLxY0Xpunt+D/gXrSTYnC3KXtVvbd9UhU5vBqc0dgvc1V8TNORWxH9n2L+ROcJXC60xkH5seJUt2degtwQgcO5eh1m/K1JF4gHkGK7naZJ/RdUWxw//nO1t5HoegvqkGNBWaIFYSWDrsWoaZ78Kyk8e56B8HLt866EKp3T3nlv/tSjXsRQ5dpOeE/2HrGtL1IcMZi1xpfiAQ9JnxgL392cNegIrqMrJWlOmd38SbRWvrAAAA==",
-        "settings":[],
-        "resource_master": [
-                            {"user_account_app_user_account_id":"<USER_ACCOUNT_ID/>",
-                            "user_account_app_app_id":6, 
-                            "app_data_entity_resource_app_data_entity_app_id":6, 
-                            "app_data_entity_resource_app_data_entity_id":6000, 
-                            "app_data_entity_resource_id":6012, 
-                            "json_data":{   "description":"Merchant settings", 
-                                            "merchant_id":"<DEMO_MERCHANT_ID/>",
-                                            "api_url":"app5.localhost/bff/app_external/v1/app-function/PAYMENT_REQUEST", 
-                                            "api_secret":"<DEMO_API_SECRET/>", 
-                                            "public_key":"<DEMO_PUBLIC_KEY/>",
-                                            "private_key":"<DEMO_PRIVATE_KEY/>",
-                                            "body": {"api_secret":"<API_SECRET/>", "reference":"<REFERENCE/>", "payeeid":"<PAYEE_ID/>", "payerid":"<PAYER_ID/>", "currency":"<CURRENCY/>", "amount":"<AMOUNT/>", "message":"<MESSAGE/>"}
+                                            "merchant_api_url":"app5.localhost/bff/app_external/v1/app-function/PAYMENT_REQUEST", 
+                                            "merchant_api_secret":"<DEMO_API_SECRET/>", 
+                                            "merchant_public_key":"<DEMO_PUBLIC_KEY/>",
+                                            "merchant_private_key":"<DEMO_PRIVATE_KEY/>"
                                         }
                             }
         ]

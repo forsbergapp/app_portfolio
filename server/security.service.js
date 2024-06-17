@@ -93,7 +93,7 @@ const PasswordCompare = async (password, compare_password) =>{
     }
 };
 /**
- * @returns {Promise.<Error|{ publicKey:string, privateKey:string }>}
+ * @returns {Promise.<{ publicKey:string, privateKey:string }>}
  */
 const CreateKeyPair = async () => {
     return new Promise((resolve, reject)=>{
@@ -111,9 +111,7 @@ const CreateKeyPair = async () => {
                 if (error)
                     reject(error);
                 else{
-                    resolve ({  publicKey:result_publicKey, 
-                                privateKey:result_privateKey
-                            });
+                    resolve ({publicKey:result_publicKey, privateKey:result_privateKey});
                 }
         })
     })
