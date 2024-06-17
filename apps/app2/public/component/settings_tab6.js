@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`   <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
@@ -175,7 +173,7 @@ const template =`   <div class='setting_horizontal_row'>
                     </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          AppMethod:string,
  *          AppMethodAsr:string,
@@ -199,11 +197,11 @@ const method = async props => {
                     .replace('<AppHijridateadjustment/>',props.AppHijridateadjustment ?? '')
                     .replaceAll('<AppIqamat/>',props.AppIqamat ?? '')
                     .replace('<AppFaststartend/>',props.AppFaststartend ?? '');
-    }
+    };
     return {
         props:  {function_post:null},
         data:   null,
         template: render_template()
     };
-}
+};
 export default method;

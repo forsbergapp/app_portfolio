@@ -95,7 +95,7 @@ const render_report_html = (app_id) => {
         render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').CSS_REPORT}'/>`]);
     else
         render_variables.push(['APP_CSS_REPORT','']);
-    return render_app_with_data( render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'REPORT_COMMON'), render_variables)
+    return render_app_with_data( render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'REPORT_COMMON'), render_variables);
 };
 
 /**
@@ -120,10 +120,9 @@ const render_app_with_data = (app, data)=>{
  * 
  * @async
  * @param {number} app_id
- * @param {string|null} locale
  * @returns {Promise<string>}
  */
-const render_app_html = async (app_id, locale) =>{
+const render_app_html = async (app_id) =>{
     /**@type{import('../types.js').config_apps_render_config} */
     const app_config = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG');
     /** @type {[string, string][]} */
@@ -347,16 +346,14 @@ const getInfo = async (app_id, info) => {
  * Creates app
  * @param {number} app_id
  * @param {string|null} param
- * @param {string} locale
  * @returns {Promise.<string|null>}
  */
- const createApp = async (app_id, param, locale) => {
+ const createApp = async (app_id, param) => {
     return new Promise((resolve, reject) => {
         const main = async (/**@type{number}*/app_id) => {
-            render_app_html(app_id, locale)
+            render_app_html(app_id)
             .then((/**@type{string}*/app)=>{
                 resolve(app);
-                
             })
             .catch((/**@type{import('../types.js').error}*/err)=>reject(err));
         };
@@ -407,7 +404,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
 
     if (app_id == 0){
         //get app admin
-        app = await createApp(app_id, null, client_locale(app_parameters.accept_language));
+        app = await createApp(app_id, null);
         if (await app_start()==true){
             system_admin_only = 0;
         }
@@ -429,7 +426,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
     }
     else{
         system_admin_only = 0;
-        app = await createApp(app_id, app_parameters.param, client_locale(app_parameters.accept_language));
+        app = await createApp(app_id, app_parameters.param);
         if (app == null)
             return null;
         app_module_type = 'APP';
@@ -512,7 +509,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid) => {
                     accept_language:accept_language,
                     latitude:       result_geodata.latitude,
                     longitude:      result_geodata.longitude};
-    const report_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='REPORT' && file[1]==query_parameters_obj.module)[0][3]
+    const report_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='REPORT' && file[1]==query_parameters_obj.module)[0][3];
     const {default:RunReport} = await import(`file://${process.cwd()}${report_path}`);
     /**@type{{report:string,
      *        papersize:string}} */
@@ -554,7 +551,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                         res:null};
     //ignore error in this case and fetch randcom geolocation using WORLDCITIES service instead if GEOLOCATION is not available
     const result_gps = await BFF_server(app_id, parameters)
-    .catch((/**@type{import('../types.js').error}*/error)=>null);
+    .catch(()=>null);
     const result_geodata = {};
     if (result_gps){
         result_geodata.latitude =   JSON.parse(result_gps).geoplugin_latitude;
@@ -579,7 +576,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                             accept_language:accept_language,
                             /**@ts-ignore */
                             res:null};
-        const result_city = await BFF_server(app_id, parameters).catch((/**@type{import('../types.js').error}*/error)=>{throw error});
+        const result_city = await BFF_server(app_id, parameters).catch((/**@type{import('../types.js').error}*/error)=>{throw error;});
         result_geodata.latitude =   JSON.parse(result_city).lat;
         result_geodata.longitude=   JSON.parse(result_city).lng;
         result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
@@ -722,7 +719,7 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                             }
                             
                             resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
-                        })
+                        });
                         break;
                     }
                     case '/modules/PrayTimes/PrayTimes.js':{
@@ -766,12 +763,13 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                             modulefile = modulefile.replace(  'if (typeof module === "object" && typeof module.exports === "object")','if (1==2)');
                             modulefile = modulefile + 'export{ctx}';
                             resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
-                        })
+                        });
                         break;
                     }
                     case '/apps/types.js':{
                         //in development another path is used, return correct path in app
                         resolve({STATIC:true, SENDFILE:`${process.cwd()}/apps/types.js`});
+                        break;
                     }
                     default:
                         resolve({STATIC:true, SENDFILE:`${process.cwd()}${basepath}${url}`});
@@ -913,7 +911,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                     res.statusCode = 500;
                                     res.statusMessage = 'SERVER ERROR';
                                     reject(err);
-                                })
+                                });
                             });
                         })
                         .catch((/**@type{import('../types.js').error}*/err)=>{
@@ -922,10 +920,10 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                 res.statusCode = 500;
                                 res.statusMessage = 'SERVER ERROR';
                                 reject('SERVER ERROR');
-                            })
+                            });
                         });
                     });
-                })
+                });
             }
             default:{
                 res.statusCode = 301;
@@ -943,7 +941,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
  * @returns 
  */
 const getFunction = async (app_id, resource_id, data, locale, res) => {
-    const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==resource_id)[0][3]
+    const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==resource_id)[0][3];
     if (module_path){
         try {
             const {default:RunFunction} = await import(`file://${process.cwd()}${module_path}`);
@@ -958,7 +956,7 @@ const getFunction = async (app_id, resource_id, data, locale, res) => {
                     res.statusMessage = 'SERVER FUNCTION ERROR';
                 }
                 return null;
-            })
+            });
         }
     }
     else{
@@ -967,9 +965,9 @@ const getFunction = async (app_id, resource_id, data, locale, res) => {
             if (res)
                 res.statusCode = 404;
             return null;
-        })
+        });
     }    
-}
+};
 
 export {/*APP functions */
         app_start, render_app_html,render_report_html ,render_app_with_data,

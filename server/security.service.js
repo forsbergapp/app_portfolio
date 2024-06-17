@@ -85,7 +85,7 @@ const PasswordCompare = async (password, compare_password) =>{
     const AppPasswordEncryptionKey = ConfigGet('SERVICE_IAM', 'ADMIN_PASSWORD_ENCRYPTION_KEY');
     const AppPasswordInitializationVector = ConfigGet('SERVICE_IAM', 'ADMIN_PASSWORD_INIT_VECTOR');
     const decipher = createDecipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
-    let  decrypted = decipher.update(compare_password, 'base64', 'utf8'); //ERR_OSSL_WRONG_FINAL_BLOCK_LENGTH, Provider routines::wrong final block length
+    const  decrypted = decipher.update(compare_password, 'base64', 'utf8'); //ERR_OSSL_WRONG_FINAL_BLOCK_LENGTH, Provider routines::wrong final block length
     try {
         return (decrypted + decipher.final('utf8')) == password;    
     } catch (error) {
@@ -113,9 +113,9 @@ const CreateKeyPair = async () => {
                 else{
                     resolve ({publicKey:result_publicKey, privateKey:result_privateKey});
                 }
-        })
-    })
-}
+        });
+    });
+};
 /**
  * 
  * @param {string} publicKey 

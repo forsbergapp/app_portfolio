@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * @typedef {object} AppEvent
  */
@@ -75,7 +73,7 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
                             </div>`;
 /**
  * div common_dialogue_user_menu_app_theme used to show optional component app_theme.js
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
  *          user_account_id:number,
@@ -104,7 +102,7 @@ const component = async props => {
     const is_provider_user = async () =>{
         const user = await props.function_FFB(`/server-db/user_account/${props.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result))
-                            .catch((/**@type{Error}*/error)=>{throw error});
+                            .catch((/**@type{Error}*/error)=>{throw error;});
         if (props.user_account_id == parseInt(user.id))
             return user.identity_provider_id!=null;
         else {
@@ -112,7 +110,7 @@ const component = async props => {
             props.function_show_message('ERROR', '20305', null, null, null, props.common_app_id);
             return null;
         }
-    }
+    };
     
     const adjust_logged_out_logged_in = async () =>{
         //set logged out or logged in
@@ -133,15 +131,15 @@ const component = async props => {
                 props.common_document.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'none';
                 props.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'inline-block';
             }
-    }
+    };
     const post_component = async () =>{                                                                                             
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({
             locales:props.system_admin_only == 1?[]:await props.function_FFB('/server-db/locale', `lang_code=${props.current_locale}`, 'GET', 'APP_DATA', null)
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                        .catch((/**@type{Error}*/error)=>{throw error}),
+                        .catch((/**@type{Error}*/error)=>{throw error;}),
             settings: props.system_admin_only == 1?[]:await props.function_FFB('/server-db/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                        .catch((/**@type{Error}*/error)=>{throw error}),
+                        .catch((/**@type{Error}*/error)=>{throw error;}),
             username:props.username ?? props.system_admin ?? '',
             countdown:(props.token_exp && props.token_iat)?1:0
         });
@@ -161,7 +159,7 @@ const component = async props => {
             const element_id = 'common_dialogue_user_menu_token_countdown_time';
             props.function_user_session_countdown(props.common_document.querySelector(`#${element_id}`), props.token_exp, true);
         }   
-    }
+    };
     /**
      * 
      * @param {{locales:{locale:string, text:string}[],
@@ -172,11 +170,11 @@ const component = async props => {
      */
     const render_template = props =>{
         return template(props);
-    }
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
         template: render_template({locales:[], settings:[], username:props.username ?? props.system_admin ?? '', countdown:0})
     };
-}
+};
 export default component;

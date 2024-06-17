@@ -152,10 +152,9 @@ const app_event_click = event =>{
 
 /**
  * Init app
- * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
-const init_map = async (framework=null)=>{
+const init_map = async ()=>{
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
     AppDocument.querySelector('#mapid').outerHTML = '<div id="mapid"></div>';
     common.map_init(APP_GLOBAL.module_leaflet_map_container,

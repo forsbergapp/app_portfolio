@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * @typedef {{  APP_ID:number,
  *              SUBDOMAIN:string,
@@ -99,7 +97,7 @@ const template = props => `
                             </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          apps:app_record_type[],
  *          app_copyright:string,
@@ -136,11 +134,11 @@ const component = async props => {
             info_link_terms_name:props.info_link_terms_name,
             info_link_about_name:props.info_link_about_name
         });
-    }
+    };
     return {
         props:  {function_post:null},
         data:   null,
         template: render_template()
     };
-}
+};
 export default component;

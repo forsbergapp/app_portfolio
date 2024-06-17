@@ -13,7 +13,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  */
 const getLogsAdmin = (app_id, query) => service.getLogsAdmin(  app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
                                                                     query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
-                                                .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error});
+                                                .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 /**
  * 
  * @param {number} app_id 
@@ -28,7 +28,7 @@ const getStatUniqueVisitorAdmin = (app_id, query) =>{
      */
      const to_object = (log, log_amount) => {
         /**@type{*} */
-        let log_array_with_object = [];
+        const log_array_with_object = [];
         log.forEach((/**@type{*}*/log_row)=>
                 {
                     const log_split = log_row.split(';');
@@ -37,11 +37,11 @@ const getStatUniqueVisitorAdmin = (app_id, query) =>{
                                                 year:Number(log_split[2]),
                                                 month:Number(log_split[3]),
                                                 day:log_split[4]=='null'?null:Number(log_split[4]),
-                                                amount:log_amount?Number(log_split[5]):null})
+                                                amount:log_amount?Number(log_split[5]):null});
                 }
-        )
+        );
         return log_array_with_object;
-    }
+    };
     return new Promise((resolve, reject)=>{
         service.getStatUniqueVisitorAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')))
         .then(result_logs =>{
@@ -55,7 +55,7 @@ const getStatUniqueVisitorAdmin = (app_id, query) =>{
                 //convert to array with objects
                 const log_unique = to_object(log_unique_ip, false);
                 //save amount in unique server_remote_addr list in a set
-                let log_unique_with_amount = new Set();
+                const log_unique_with_amount = new Set();
                 log_unique.forEach((/**@type{*}*/log)=>{
                     log_unique_with_amount.add( `${log.chart};${log.app_id};${log.year};${log.month};${log.day};${log_unique.filter((/**@type{*}*/log_amount)=>   
                                                                                                                         log_amount.chart==log.chart && 
@@ -63,7 +63,7 @@ const getStatUniqueVisitorAdmin = (app_id, query) =>{
                                                                                                                         log_amount.year == log.year &&
                                                                                                                         log_amount.month == log.month &&
                                                                                                                         log_amount.day == log.day).length}`);
-                })
+                });
                 //convert to array with objects
                 const result_getStatUniqueVisitorAdmin = to_object(log_unique_with_amount, true);
                 resolve(result_getStatUniqueVisitorAdmin);

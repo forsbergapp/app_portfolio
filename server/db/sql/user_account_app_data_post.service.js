@@ -114,58 +114,57 @@ const getProfileUserPosts = async (app_id, id, id_current_user) => {
  * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_getProfileUserPostDetail[]>}
  */
 const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
-		let sql;
-		sql = `SELECT detail "detail", 
-					  id "id", 
-					  identity_provider_id "identity_provider_id", 
-					  provider_id "provider_id", 
-					  avatar "avatar",
-					  provider_image "provider_image",
-					  provider_image_url "provider_image_url",
-					  username "username",
-					  provider_first_name "provider_first_name",
-					  count(*) over() "total_rows"
-				FROM (SELECT 'LIKE_POST' detail,
-							 u.id,
-							 u.identity_provider_id,
-							 u.provider_id,
-							 u.avatar,
-							 u.provider_image,
-							 u.provider_image_url,
-							 u.username,
-							 u.provider_first_name
-						FROM <DB_SCHEMA/>.user_account u
-					   WHERE u.id IN (SELECT us.user_account_app_user_account_id
-										FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
-											 <DB_SCHEMA/>.user_account_app_data_post us
-									   WHERE u_like.user_account_app_user_account_id = :user_account_id
-									     AND u_like.user_account_app_app_id = :app_id
-										 AND us.user_account_app_app_id = u_like.user_account_app_app_id
-										 AND us.id = u_like.user_account_app_data_post_id)
-						 AND    u.active = 1
-						 AND    6 = :detailchoice
-						UNION ALL
-						SELECT 'LIKED_POST' detail,
-								u.id,
-								u.identity_provider_id,
-								u.provider_id,
-								u.avatar,
-								u.provider_image,
-								u.provider_image_url,
-								u.username,
-								u.provider_first_name
-						  FROM  <DB_SCHEMA/>.user_account u
-						 WHERE  u.id IN (SELECT u_like.user_account_app_user_account_id
-										   FROM <DB_SCHEMA/>.user_account_app_data_post us,
-												<DB_SCHEMA/>.user_account_app_data_post_like u_like
-										  WHERE us.user_account_app_user_account_id = :user_account_id
-											AND us.user_account_app_app_id = :app_id
-											AND us.id = u_like.user_account_app_data_post_id
-											AND u_like.user_account_app_app_id = us.user_account_app_app_id)
-						   AND  u.active = 1
-						   AND  7 = :detailchoice) t
-					ORDER BY 1, COALESCE(username, provider_first_name) 
-					<APP_LIMIT_RECORDS/>`;
+		const sql = `SELECT detail "detail", 
+							id "id", 
+							identity_provider_id "identity_provider_id", 
+							provider_id "provider_id", 
+							avatar "avatar",
+							provider_image "provider_image",
+							provider_image_url "provider_image_url",
+							username "username",
+							provider_first_name "provider_first_name",
+							count(*) over() "total_rows"
+						FROM (SELECT 'LIKE_POST' detail,
+									u.id,
+									u.identity_provider_id,
+									u.provider_id,
+									u.avatar,
+									u.provider_image,
+									u.provider_image_url,
+									u.username,
+									u.provider_first_name
+								FROM <DB_SCHEMA/>.user_account u
+							WHERE u.id IN (SELECT us.user_account_app_user_account_id
+												FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
+													<DB_SCHEMA/>.user_account_app_data_post us
+											WHERE u_like.user_account_app_user_account_id = :user_account_id
+												AND u_like.user_account_app_app_id = :app_id
+												AND us.user_account_app_app_id = u_like.user_account_app_app_id
+												AND us.id = u_like.user_account_app_data_post_id)
+								AND    u.active = 1
+								AND    6 = :detailchoice
+								UNION ALL
+								SELECT 'LIKED_POST' detail,
+										u.id,
+										u.identity_provider_id,
+										u.provider_id,
+										u.avatar,
+										u.provider_image,
+										u.provider_image_url,
+										u.username,
+										u.provider_first_name
+								FROM  <DB_SCHEMA/>.user_account u
+								WHERE  u.id IN (SELECT u_like.user_account_app_user_account_id
+												FROM <DB_SCHEMA/>.user_account_app_data_post us,
+														<DB_SCHEMA/>.user_account_app_data_post_like u_like
+												WHERE us.user_account_app_user_account_id = :user_account_id
+													AND us.user_account_app_app_id = :app_id
+													AND us.id = u_like.user_account_app_data_post_id
+													AND u_like.user_account_app_app_id = us.user_account_app_app_id)
+								AND  u.active = 1
+								AND  7 = :detailchoice) t
+							ORDER BY 1, COALESCE(username, provider_first_name) 
+							<APP_LIMIT_RECORDS/>`;
 		const parameters = {
 						user_account_id: id,
 						app_id: app_id,
@@ -210,61 +209,60 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
  * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_getProfileStatPost[]>}
  */
 const getProfileStatPost = async (app_id, statchoice) => {
-		let sql;
-		sql = `SELECT top "top", 
-					  id "id", 
-					  identity_provider_id "identity_provider_id", 
-					  provider_id "provider_id", 
-					  avatar "avatar",
-					  provider_image "provider_image",
-					  provider_image_url "provider_image_url",
-					  username "username",
-					  provider_first_name "provider_first_name",
-					  count "count",
-					  count(*) over() "total_rows"
-				FROM (	SELECT 'LIKE_POST' top,
-								u.id,
-								u.identity_provider_id,
-								u.provider_id,
-								u.avatar,
-								u.provider_image,
-								u.provider_image_url,
-								u.username,
-								u.provider_first_name,
-								(SELECT COUNT(us.user_account_app_user_account_id)
-								   FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
-										<DB_SCHEMA/>.user_account_app_data_post us
-								  WHERE us.user_account_app_user_account_id = u.id
-									AND us.user_account_app_app_id = :app_id
-									AND u_like.user_account_app_data_post_id = us.id
-									AND u_like.user_account_app_app_id = us.user_account_app_app_id) count
-						  FROM  <DB_SCHEMA/>.user_account u
-						 WHERE  u.active = 1
-						   AND  u.private <> 1
-						   AND  4 = :statchoice
-						UNION ALL
-						SELECT 'VISITED_POST' top,
-								u.id,
-								u.identity_provider_id,
-								u.provider_id,
-								u.avatar,
-								u.provider_image,
-								u.provider_image_url,
-								u.username,
-								u.provider_first_name,
-								(SELECT COUNT(us.user_account_app_user_account_id)
-								   FROM <DB_SCHEMA/>.user_account_app_data_post_view u_view,
-										<DB_SCHEMA/>.user_account_app_data_post us
-								  WHERE us.user_account_app_user_account_id = u.id
-									AND us.user_account_app_app_id = :app_id
-									AND u_view.user_account_app_data_post_id = us.id
-									AND u_view.user_account_app_app_id = us.user_account_app_app_id) count
-						  FROM  <DB_SCHEMA/>.user_account u
-						 WHERE  u.active = 1
-						   AND  u.private <> 1
-						   AND  5 = :statchoice) t
-				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
-				<APP_LIMIT_RECORDS/>`;
+		const sql = `SELECT top "top", 
+							id "id", 
+							identity_provider_id "identity_provider_id", 
+							provider_id "provider_id", 
+							avatar "avatar",
+							provider_image "provider_image",
+							provider_image_url "provider_image_url",
+							username "username",
+							provider_first_name "provider_first_name",
+							count "count",
+							count(*) over() "total_rows"
+						FROM (	SELECT 'LIKE_POST' top,
+										u.id,
+										u.identity_provider_id,
+										u.provider_id,
+										u.avatar,
+										u.provider_image,
+										u.provider_image_url,
+										u.username,
+										u.provider_first_name,
+										(SELECT COUNT(us.user_account_app_user_account_id)
+										FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
+												<DB_SCHEMA/>.user_account_app_data_post us
+										WHERE us.user_account_app_user_account_id = u.id
+											AND us.user_account_app_app_id = :app_id
+											AND u_like.user_account_app_data_post_id = us.id
+											AND u_like.user_account_app_app_id = us.user_account_app_app_id) count
+								FROM  <DB_SCHEMA/>.user_account u
+								WHERE  u.active = 1
+								AND  u.private <> 1
+								AND  4 = :statchoice
+								UNION ALL
+								SELECT 'VISITED_POST' top,
+										u.id,
+										u.identity_provider_id,
+										u.provider_id,
+										u.avatar,
+										u.provider_image,
+										u.provider_image_url,
+										u.username,
+										u.provider_first_name,
+										(SELECT COUNT(us.user_account_app_user_account_id)
+										FROM <DB_SCHEMA/>.user_account_app_data_post_view u_view,
+												<DB_SCHEMA/>.user_account_app_data_post us
+										WHERE us.user_account_app_user_account_id = u.id
+											AND us.user_account_app_app_id = :app_id
+											AND u_view.user_account_app_data_post_id = us.id
+											AND u_view.user_account_app_app_id = us.user_account_app_app_id) count
+								FROM  <DB_SCHEMA/>.user_account u
+								WHERE  u.active = 1
+								AND  u.private <> 1
+								AND  5 = :statchoice) t
+						ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
+						<APP_LIMIT_RECORDS/>`;
 		const parameters = {
 						app_id: app_id,
 						statchoice: statchoice

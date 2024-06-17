@@ -15,8 +15,8 @@ const {default:jwt} = await import('jsonwebtoken');
  * @returns {URLSearchParams}
  */
  const iam_decode = query =>{
-    return new URLSearchParams(atob(query))
-}
+    return new URLSearchParams(atob(query));
+};
 /**
  * @param {number|null}  app_id
  * @param {'APP_ACCESS'|'APP_DATA'|'SYSTEMADMIN'} token_type 
@@ -47,7 +47,7 @@ const expired_token = (app_id, token_type, token) =>{
         default:
             return false;
     }
-}
+};
 /**
  * @param {import('../types.js').res} res
  * @param {number} status
@@ -59,7 +59,7 @@ const expired_token = (app_id, token_type, token) =>{
     if (bff){
         res.statusCode = status;
         res.statusMessage = reason;
-        return '⛔'
+        return '⛔';
     }
     else
         return response_send_error(res, status, null, '⛔', null, reason);
@@ -196,7 +196,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                     const superadmin = async (user_id) => {
                         if (user_id){
                             /**@type{import('./db/sql/user_account.service.js')} */
-                            const {getUserAppRoleAdmin} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`)
+                            const {getUserAppRoleAdmin} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
                             /**@type{import('../types.js').db_result_user_account_getUserAppRoleAdmin[]}*/
                             const result = await getUserAppRoleAdmin(app_id_host, user_id)
                                                     .catch((/**@type{import('../types.js').error}*/error)=>{
@@ -207,7 +207,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                         }
                         else
                             return false;
-                    }
+                    };
                     //validate scope, app_id and authorization
                     switch (true){
                         case (scope=='AUTH_SYSTEMADMIN' || scope=='AUTH_ADMIN') && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BASIC'):{
@@ -281,7 +281,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                             error
                                         );
                                     });
-                                })
+                                });
                             else
                                 not_authorized(res, 401, 'AuthenticateUserCommon, token claim error');
                             break;
@@ -501,7 +501,7 @@ const AuthenticateResource = parameters =>  {
         return false;
     }
     
-}
+};
                                             
 /**
  * Authorize token app

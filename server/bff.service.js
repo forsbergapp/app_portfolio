@@ -34,7 +34,7 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
                                 null);
         }
     });
-}
+};
 
 /**
  * Backend for frontend (BFF) called from client
@@ -104,20 +104,20 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
                                             if (result_service.rows){
                                                 //limit fields/keys in rows
                                                 const limit_fields = result_service.rows.map((/**@type{*}*/row)=>{
-                                                    let row_new = {};
+                                                    const row_new = {};
                                                     /**@ts-ignore */
                                                     for (const field of new URLSearchParams(decodedquery).get('fields').split(',')){
                                                         /**@ts-ignore */
                                                         row_new[field] = row[field];
                                                     }
                                                     return row_new;
-                                                })
+                                                });
                                                 result_service.rows = limit_fields;
                                                 bff_parameters.res.status(200).send(result_service);
                                             }
                                             else{
                                                 //limit fields/keys in object
-                                                let result_service_fields = {};
+                                                const result_service_fields = {};
                                                 /**@ts-ignore */
                                                 for (const field of new URLSearchParams(decodedquery).get('fields').split(',')){
                                                     /**@ts-ignore */
@@ -137,7 +137,7 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
                             return result_service;
                         }
                     }  
-                })
+                });
             }
         })
         .catch((/**@type{import('../types.js').error}*/error) => {

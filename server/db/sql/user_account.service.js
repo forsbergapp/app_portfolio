@@ -161,50 +161,49 @@ const data_validation = data => {
  * @returns {Promise.<import('../../../types.js').db_result_user_account_getUsersAdmin[]>}
  */
 const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
-		let sql;
-		sql = `SELECT ua.id "id",
-					  ua.avatar "avatar",
-					  ua.app_role_id "app_role_id",
-					  (SELECT ap_user.icon
-						 FROM <DB_SCHEMA/>.app_role ap_user
-						WHERE ap_user.id = COALESCE(ua.app_role_id,2)) "app_role_icon",
-					  ua.active "active",
-					  ua.user_level "user_level",
-					  ua.private "private",
-					  ua.username "username",
-					  ua.bio "bio",
-					  ua.email "email",
-					  ua.email_unverified "email_unverified",
-					  ua.password "password",
-					  ua.password_reminder "password_reminder",
-					  ua.verification_code "verification_code",
-		              ua.identity_provider_id "identity_provider_id",
-					  ip.provider_name "provider_name",
-					  ua.provider_id "provider_id",
-					  ua.provider_first_name "provider_first_name",
-					  ua.provider_last_name "provider_last_name",
-					  ua.provider_image "provider_image",
-					  ua.provider_image_url "provider_image_url",
-					  ua.provider_email "provider_email",
-					  ua.date_created "date_created",
-					  ua.date_modified "date_modified",
-					  count(*) over() "total_rows"
-				 FROM <DB_SCHEMA/>.user_account ua
-					  LEFT OUTER JOIN <DB_SCHEMA/>.identity_provider ip
-						ON ip.id = ua.identity_provider_id
-					  LEFT OUTER JOIN <DB_SCHEMA/>.app_role ap
-						ON ap.id = ua.app_role_id
-				WHERE (ua.username LIKE :search
-				   OR ua.bio LIKE :search
-				   OR ua.email LIKE :search
-				   OR ua.email_unverified LIKE :search
-				   OR ua.provider_first_name LIKE :search
-				   OR ua.provider_last_name LIKE :search
-				   OR ua.provider_email LIKE :search
-				   OR CAST(ua.id as VARCHAR(11)) LIKE :search)
-				   OR :search = '*'
-				ORDER BY ${sort} ${order_by}
-				<APP_PAGINATION_LIMIT_OFFSET/>`;
+		const sql = `SELECT ua.id "id",
+							ua.avatar "avatar",
+							ua.app_role_id "app_role_id",
+							(SELECT ap_user.icon
+								FROM <DB_SCHEMA/>.app_role ap_user
+								WHERE ap_user.id = COALESCE(ua.app_role_id,2)) "app_role_icon",
+							ua.active "active",
+							ua.user_level "user_level",
+							ua.private "private",
+							ua.username "username",
+							ua.bio "bio",
+							ua.email "email",
+							ua.email_unverified "email_unverified",
+							ua.password "password",
+							ua.password_reminder "password_reminder",
+							ua.verification_code "verification_code",
+							ua.identity_provider_id "identity_provider_id",
+							ip.provider_name "provider_name",
+							ua.provider_id "provider_id",
+							ua.provider_first_name "provider_first_name",
+							ua.provider_last_name "provider_last_name",
+							ua.provider_image "provider_image",
+							ua.provider_image_url "provider_image_url",
+							ua.provider_email "provider_email",
+							ua.date_created "date_created",
+							ua.date_modified "date_modified",
+							count(*) over() "total_rows"
+						FROM <DB_SCHEMA/>.user_account ua
+							LEFT OUTER JOIN <DB_SCHEMA/>.identity_provider ip
+								ON ip.id = ua.identity_provider_id
+							LEFT OUTER JOIN <DB_SCHEMA/>.app_role ap
+								ON ap.id = ua.app_role_id
+						WHERE (ua.username LIKE :search
+						OR ua.bio LIKE :search
+						OR ua.email LIKE :search
+						OR ua.email_unverified LIKE :search
+						OR ua.provider_first_name LIKE :search
+						OR ua.provider_last_name LIKE :search
+						OR ua.provider_email LIKE :search
+						OR CAST(ua.id as VARCHAR(11)) LIKE :search)
+						OR :search = '*'
+						ORDER BY ${sort} ${order_by}
+						<APP_PAGINATION_LIMIT_OFFSET/>`;
 		if (search!='*')
 			search = '%' + search + '%';
 		const parameters = {search: search,
@@ -493,7 +492,7 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
 				return '1=2';
 			}
 		}
-	}
+	};
 	const user_where_value = () =>{
 		switch (true){
 			case (search!='' && search != null):{
@@ -509,7 +508,7 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
 				return null;
 			}
 		}
-	}
+	};
 	const sql = `SELECT	u.id "id",
 						u.bio "bio",
 						u.private "private",
@@ -582,77 +581,76 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
  * @returns {Promise.<import('../../../types.js').db_result_user_account_getProfileDetail[]>}
  */
 const getProfileDetail = async (app_id, id, detailchoice) => {
-	let sql;
-	sql = `SELECT 	detail "detail",
-					id "id",
-					provider_id "provider_id",
-					avatar "avatar",
-					provider_image "provider_image",
-					provider_image_url "provider_image_url",
-					username "username",
-					provider_first_name "provider_first_name",
-					count(*) over() "total_rows"
-			 FROM (SELECT 	'FOLLOWING' detail,
-							u.id,
-							u.provider_id,
-							u.avatar,
-							u.provider_image,
-							u.provider_image_url,
-							u.username,
-							u.provider_first_name
-					 FROM <DB_SCHEMA/>.user_account_follow u_follow,
-						  <DB_SCHEMA/>.user_account u
-				    WHERE u_follow.user_account_id = :user_account_id
- 					  AND u.id = u_follow.user_account_id_follow
-					  AND u.active = 1
-					  AND 1 = :detailchoice
-				    UNION ALL
-				   SELECT 	'FOLLOWED' detail,
-							u.id,
-							u.provider_id,
-							u.avatar,
-							u.provider_image,
-							u.provider_image_url,
-							u.username,
-							u.provider_first_name
-					 FROM <DB_SCHEMA/>.user_account_follow u_followed,
-						  <DB_SCHEMA/>.user_account u
-					WHERE u_followed.user_account_id_follow = :user_account_id
- 					  AND u.id = u_followed.user_account_id
-					  AND u.active = 1
-					  AND 2 = :detailchoice
-				    UNION ALL
-				   SELECT	'LIKE_USER' detail,
-							u.id,
-							u.provider_id,
-							u.avatar,
-							u.provider_image,
-							u.provider_image_url,
-							u.username,
-							u.provider_first_name
-					 FROM <DB_SCHEMA/>.user_account_like u_like,
-						  <DB_SCHEMA/>.user_account u
-				    WHERE u_like.user_account_id = :user_account_id
- 					  AND u.id = u_like.user_account_id_like
-					  AND u.active = 1
-					  AND 3 = :detailchoice
-				    UNION ALL
-				   SELECT	'LIKED_USER' detail,
-							u.id,
-							u.provider_id,
-							u.avatar,
-							u.provider_image,
-							u.provider_image_url,
-							u.username,
-							u.provider_first_name
-					 FROM <DB_SCHEMA/>.user_account_like u_liked,
-						  <DB_SCHEMA/>.user_account u
-				    WHERE u_liked.user_account_id_like = :user_account_id
-  					  AND u.id = u_liked.user_account_id
-					  AND u.active = 1
-					  AND 4 = :detailchoice) t
-				ORDER BY 1, COALESCE(username, provider_first_name) 
-				<APP_LIMIT_RECORDS/>`;
+	const sql = `SELECT detail "detail",
+						id "id",
+						provider_id "provider_id",
+						avatar "avatar",
+						provider_image "provider_image",
+						provider_image_url "provider_image_url",
+						username "username",
+						provider_first_name "provider_first_name",
+						count(*) over() "total_rows"
+				FROM (SELECT 	'FOLLOWING' detail,
+								u.id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name
+						FROM <DB_SCHEMA/>.user_account_follow u_follow,
+							<DB_SCHEMA/>.user_account u
+						WHERE u_follow.user_account_id = :user_account_id
+						AND u.id = u_follow.user_account_id_follow
+						AND u.active = 1
+						AND 1 = :detailchoice
+						UNION ALL
+					SELECT 	'FOLLOWED' detail,
+								u.id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name
+						FROM <DB_SCHEMA/>.user_account_follow u_followed,
+							<DB_SCHEMA/>.user_account u
+						WHERE u_followed.user_account_id_follow = :user_account_id
+						AND u.id = u_followed.user_account_id
+						AND u.active = 1
+						AND 2 = :detailchoice
+						UNION ALL
+					SELECT	'LIKE_USER' detail,
+								u.id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name
+						FROM <DB_SCHEMA/>.user_account_like u_like,
+							<DB_SCHEMA/>.user_account u
+						WHERE u_like.user_account_id = :user_account_id
+						AND u.id = u_like.user_account_id_like
+						AND u.active = 1
+						AND 3 = :detailchoice
+						UNION ALL
+					SELECT	'LIKED_USER' detail,
+								u.id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name
+						FROM <DB_SCHEMA/>.user_account_like u_liked,
+							<DB_SCHEMA/>.user_account u
+						WHERE u_liked.user_account_id_like = :user_account_id
+						AND u.id = u_liked.user_account_id
+						AND u.active = 1
+						AND 4 = :detailchoice) t
+					ORDER BY 1, COALESCE(username, provider_first_name) 
+					<APP_LIMIT_RECORDS/>`;
 	const parameters ={
 						user_account_id: id,
 						detailchoice: detailchoice
@@ -666,74 +664,73 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
  * @returns {Promise.<import('../../../types.js').db_result_user_account_getProfileStat[]>}
  */
 const getProfileStat = async (app_id, statchoice) => {
-	let sql;
-	sql = `SELECT	top "top", 
-					id "id", 
-					identity_provider_id "identity_provider_id", 
-					provider_id "provider_id", 
-					avatar "avatar",
-					provider_image "provider_image",
-					provider_image_url "provider_image_url",
-					username "username",
-					provider_first_name "provider_first_name",
-					count "count",
-					count(*) over() "total_rows"
-			 FROM (SELECT 	'VISITED' top,
-							u.id,
-							u.identity_provider_id,
-							u.provider_id,
-							u.avatar,
-							u.provider_image,
-							u.provider_image_url,
-							u.username,
-							u.provider_first_name,
-							(SELECT COUNT(u_visited.user_account_id_view)
-							   FROM <DB_SCHEMA/>.user_account_view u_visited
-							  WHERE u_visited.user_account_id_view = u.id) count
-				     FROM <DB_SCHEMA/>.user_account u
-				    WHERE u.active = 1
-					  AND u.private <> 1
-					  AND 1 = :statchoice
-				    UNION ALL
-				   SELECT 	'FOLLOWING' top,
-							u.id,
-							u.identity_provider_id,
-							u.provider_id,
-							u.avatar,
-							u.provider_image,
-							u.provider_image_url,
-							u.username,
-							u.provider_first_name,
-							(SELECT COUNT(u_follow.user_account_id_follow)
-							   FROM <DB_SCHEMA/>.user_account_follow u_follow
-							  WHERE u_follow.user_account_id_follow = u.id) count
-					 FROM <DB_SCHEMA/>.user_account u
-				    WHERE u.active = 1
-  					  AND u.private <> 1
-					  AND 2 = :statchoice
-				    UNION ALL
-				   SELECT 	'LIKE_USER' top,
-							u.id,
-							u.identity_provider_id,
-							u.provider_id,
-							u.avatar,
-							u.provider_image,
-							u.provider_image_url,
-							u.username,
-							u.provider_first_name,
-							(SELECT COUNT(u_like.user_account_id_like)
-							   FROM <DB_SCHEMA/>.user_account_like u_like
-						      WHERE u_like.user_account_id_like = u.id) count
-					 FROM <DB_SCHEMA/>.user_account u
-					WHERE  u.active = 1
- 					  AND  u.private <> 1
-					  AND  3 = :statchoice) t
-			WHERE EXISTS(SELECT NULL
-						   FROM <DB_SCHEMA/>.user_account_app uap
-						  WHERE uap.user_account_id = t.id
-						    AND uap.app_id = :app_id)
-		    ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
-			<APP_LIMIT_RECORDS/>`;
+	const sql = `SELECT	top "top", 
+						id "id", 
+						identity_provider_id "identity_provider_id", 
+						provider_id "provider_id", 
+						avatar "avatar",
+						provider_image "provider_image",
+						provider_image_url "provider_image_url",
+						username "username",
+						provider_first_name "provider_first_name",
+						count "count",
+						count(*) over() "total_rows"
+				FROM (SELECT 	'VISITED' top,
+								u.id,
+								u.identity_provider_id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name,
+								(SELECT COUNT(u_visited.user_account_id_view)
+								FROM <DB_SCHEMA/>.user_account_view u_visited
+								WHERE u_visited.user_account_id_view = u.id) count
+						FROM <DB_SCHEMA/>.user_account u
+						WHERE u.active = 1
+						AND u.private <> 1
+						AND 1 = :statchoice
+						UNION ALL
+					SELECT 	'FOLLOWING' top,
+								u.id,
+								u.identity_provider_id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name,
+								(SELECT COUNT(u_follow.user_account_id_follow)
+								FROM <DB_SCHEMA/>.user_account_follow u_follow
+								WHERE u_follow.user_account_id_follow = u.id) count
+						FROM <DB_SCHEMA/>.user_account u
+						WHERE u.active = 1
+						AND u.private <> 1
+						AND 2 = :statchoice
+						UNION ALL
+					SELECT 	'LIKE_USER' top,
+								u.id,
+								u.identity_provider_id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name,
+								(SELECT COUNT(u_like.user_account_id_like)
+								FROM <DB_SCHEMA/>.user_account_like u_like
+								WHERE u_like.user_account_id_like = u.id) count
+						FROM <DB_SCHEMA/>.user_account u
+						WHERE  u.active = 1
+						AND  u.private <> 1
+						AND  3 = :statchoice) t
+				WHERE EXISTS(SELECT NULL
+							FROM <DB_SCHEMA/>.user_account_app uap
+							WHERE uap.user_account_id = t.id
+								AND uap.app_id = :app_id)
+				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
+				<APP_LIMIT_RECORDS/>`;
 	const parameters = {
 						statchoice: statchoice,
 						app_id: app_id

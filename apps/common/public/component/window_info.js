@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`   <div id='common_window_info_btn_close' class='common_toolbar_button common_icon'></div>
                     <div id='common_window_info_info'><INFO/></div>
                     <div id='common_window_info_toolbar'>
@@ -14,11 +12,11 @@ const template =`   <div id='common_window_info_btn_close' class='common_toolbar
                     <iframe id='common_window_info_content' scrolling='auto' <IFRAME_CLASS/> src=<CONTENT/> ></iframe>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          url:string,
  *          content_type:string,
- *          frame:AppDocument|null,
+ *          frame:import('../../../types.js').AppDocument|null,
  *          iframe_content:string,
  *          iframe_class:string,
  *          info:number}} props 
@@ -51,7 +49,6 @@ const component = async props => {
                     STYLE_INFO_INFO_DISPLAY:'inline-block',
                     IFRAME_CLASS:''
                     }; 
-                break;
             }
             case 1:{
                 //show url in iframe, use overflowY=hidden
@@ -64,7 +61,6 @@ const component = async props => {
                     STYLE_INFO_INFO_DISPLAY:'none',
                     IFRAME_CLASS:''
                     }; 
-                break;
             }    
             case 2:{
                 if (props.content_type == 'HTML'){
@@ -100,7 +96,7 @@ const component = async props => {
                     IFRAME_CLASS:''
                     };
         }
-    }
+    };
     const render_template = async () =>{
         if (props.info==3)
             return template
@@ -114,7 +110,7 @@ const component = async props => {
                     .replace('<IFRAME_CLASS/>',variables.IFRAME_CLASS)
                     .replace('<CONTENT/>',variables.CONTENT);
         }
-    }
+    };
     const post_component = async () =>{
         if (props.info==3){
             //print content only
@@ -132,13 +128,13 @@ const component = async props => {
             props.common_document.querySelector('#common_window_info').style.overflowY= variables.STYLE_INFO_OVERFLOWY;
             props.common_document.querySelector('#common_window_info_info').style.display= variables.STYLE_INFO_INFO_DISPLAY;
         }
-    }
+    };
     const variables = get_variables(props.info);
-    const template_rendered = await render_template()    
+    const template_rendered = await render_template();    
     return {
         props:  {function_post:post_component},
         data:   null,
         template: template_rendered
     };
-}
+};
 export default component;

@@ -59,7 +59,7 @@ const getUserAccountApps = async (app_id, resource_id) => {
                                                     }) , []);
     
     /**@type{import('../../../types.js').db_result_user_account_app_getUserAccountApps_with_app_registry[]}*/
-    let user_account_apps = [];
+    const user_account_apps = [];
     for (const app_db of apps_db){
         /**@type{import('../../../types.js').db_result_user_account_app_getUserAccountApps_with_app_registry}*/
         const app = {};

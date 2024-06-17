@@ -45,9 +45,9 @@ const route = (route_path, route_method, request_path , request_method) =>
  */
  const microservice_api_version = service =>{
     /**@type{import('../types.js').microservice_config_service_record} */
-    const config_service = ConfigServices(service)
+    const config_service = ConfigServices(service);
     return config_service.CONFIG.filter((/**@type{*}*/row)=>'APP_REST_API_VERSION' in row)[0].APP_REST_API_VERSION;
-} 
+}; 
 class CircuitBreaker {
     constructor() {
         /**@type{[index:any][*]} */
@@ -180,12 +180,12 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
     if (error){
         console.log(error);
         //ISO20022 error format
-        const message = JSON.stringify({"error":{
-                            "http":code, 
-                            "code":'MICROSERVICE',
-                            "text":error, 
-                            "developer_text":null, 
-                            "more_info":null}});
+        const message = JSON.stringify({error:{
+                                        http:code, 
+                                        code:'MICROSERVICE',
+                                        text:error, 
+                                        developer_text:null, 
+                                        more_info:null}});
         res.write(message, 'utf8');
     }
     else{
@@ -346,7 +346,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         const write_file = async (file, message, result) =>{
             file_append_log(file==0?'MESSAGE_QUEUE_ERROR':file==1?'MESSAGE_QUEUE_PUBLISH':file==2?'MESSAGE_QUEUE_CONSUME':'MESSAGE_QUEUE_ERROR', 
                             file==0?{message_id: new Date().toISOString(), message:   message, result:result}:message??{})
-            .catch((/**@type{import('../types.js').error}*/error)=>{throw error});
+            .catch((/**@type{import('../types.js').error}*/error)=>{throw error;});
         };
         try {
             switch (message_type) {

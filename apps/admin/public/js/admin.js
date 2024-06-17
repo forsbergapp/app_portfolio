@@ -50,8 +50,8 @@ const admin_login = async () => {
                     AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
                 }
                 app_secure.init();
-            })
-        })
+            });
+        });
     })
     .catch(()=>common.ComponentRemove('admin_secure'));
 };
@@ -237,7 +237,7 @@ const app_event_change = event => {
                 case 'common_dialogue_user_menu_user_arabic_script_select':
                 case 'common_dialogue_user_menu_app_select_theme':{
                     AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
-                    common.common_preferences_update_body_class_from_preferences()
+                    common.common_preferences_update_body_class_from_preferences();
                     break;
                 }
                 default:{

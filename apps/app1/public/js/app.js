@@ -172,7 +172,7 @@ const app_event_click = event => {
                 }
             }
         });
-    };
+    }
 };
 /**
  * App event change
@@ -200,7 +200,7 @@ const app_event_change = event => {
                 }
             }
         });
-    };
+    }
 };
 /**
  * App event keyup
@@ -246,7 +246,7 @@ const app_event_keyup = event => {
                 }
             }
         });
-    };
+    }
 };
 /**
  * App theme update
@@ -313,13 +313,13 @@ const profile_show_app = async (user_account_id_other, username) =>{
                                         {},
                                         '/component/profile_info.js')
                 .then(()=>{
-                    common.ComponentRender(`profile_info_apps`, 
+                    common.ComponentRender('profile_info_apps', 
                                             {},
                                             '/common/component/profile_info_apps.js');
                 });
         }
     });
-}
+};
 /**
  * User login app
  * @param {boolean|null} system_admin 
@@ -331,7 +331,7 @@ const profile_show_app = async (user_account_id_other, username) =>{
 const user_login_app = async (system_admin=false, username_verify=null, password_verify=null, provider_id=null) =>{
     common.user_login(system_admin, username_verify, password_verify, provider_id)
     .then(()=>get_apps());
-}
+};
 /**
  * User logoff app
  * @returns {Promise.<void>}
@@ -339,7 +339,7 @@ const user_login_app = async (system_admin=false, username_verify=null, password
  const user_logoff_app = async () =>{
     common.user_logoff()
     .then(()=>get_apps());
-}
+};
 
 /**
  * Get apps

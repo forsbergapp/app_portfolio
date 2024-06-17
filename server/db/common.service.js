@@ -155,12 +155,12 @@ const db_limit_rows = (pagination = true) => {
 		if (pagination)
 			return ' 	OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
 		else
-			return `	FETCH NEXT :limit ROWS ONLY`;
+			return '	FETCH NEXT :limit ROWS ONLY';
 	else
 		if (pagination)
 			return ' 	LIMIT :limit OFFSET :offset';
 		else
-			return 	` 	LIMIT :limit `;			
+			return 	' 	LIMIT :limit ';			
 };
 
 /**
@@ -214,7 +214,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 			sql = sql.replaceAll('<APP_PAGINATION_LIMIT_OFFSET/>', 	db_limit_rows(true));
 			if (!parameters.limit)
 				parameters.limit = 	getNumberValue(	ConfigGetApp(app_id, 
-																 getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
+																getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
 													.filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS) ?? 0;
 		}
 		//manage limit records
@@ -233,7 +233,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 				//parse json_data in SELECT rows, return also the json_data column as reference
 				/**@ts-ignore */
 				const rows = sql.trimStart().toUpperCase().startsWith('SELECT')?result.map((/**@type{import('../../types.js').db_result_app_log_getLogsAdmin}*/row)=>{
-																							return {...row, ...row.json_data?JSON.parse(row.json_data):null}
+																							return {...row, ...row.json_data?JSON.parse(row.json_data):null};
 																							}) ?? []:null;
 				if (pagination){
 					//return pagination ISO20022 format
@@ -256,7 +256,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 			const database_error = 'DATABASE ERROR';
 			//add db_message key since message is not saved for SQLite
 			if (error.message)
-            	error.db_message = error.message;
+				error.db_message = error.message;
 			LogDBE(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, error)
 			.then(()=>{
 				const app_code = get_app_code(error);

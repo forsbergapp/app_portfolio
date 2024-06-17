@@ -1,7 +1,7 @@
 /** @module server/db */
 
 /**@type{import('../server.service')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`)
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../config.service')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('./file.service')} */
@@ -197,7 +197,7 @@ const pool_start = async (dbparameters) =>{
                   })
                   .then((sqlite_db)=>{
                      db[1]=sqlite_db;
-                     sqlite_db.get("PRAGMA foreign_keys = ON");
+                     sqlite_db.get('PRAGMA foreign_keys = ON');
                      resolve(null);
                   })
                   .catch((error)=>reject(error));

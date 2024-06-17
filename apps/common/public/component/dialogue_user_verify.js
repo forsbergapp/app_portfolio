@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`
                 <div id='common_user_verify_email_icon' class='common_icon'></div>
                 <div id='common_user_verify_email'><TITLE/></div>
@@ -17,7 +15,7 @@ const template =`
                 <div id='common_user_verify_cancel' class='common_dialogue_button common_icon'></div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          user_verification_type:string,
  *          username_login:string,
@@ -64,14 +62,14 @@ const component = async props => {
                 .replace('<VERIFICATION_TYPE/>',verification_type)
                 .replace('<USERNAME/>',username)
                 .replace('<PASSWORD/>',password);
-    }
+    };
     const post_component = async () =>{
         props.common_document.querySelector(`#${props.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.function_data_function;
-    }
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
         template: render_template()
     };
-}
+};
 export default component;

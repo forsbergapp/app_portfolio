@@ -47,7 +47,7 @@ const app_event_click = event => {
                                                 master_resource:'ACCOUNT',
                                                 detail_path:'/app-function/ACCOUNT_TRANSACTIONS',
                                                 detail_query:   `user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}`+ 
-                                                                `&fields=timestamp,logo,origin,amount_deposit,amount_withdrawal`,
+                                                                '&fields=timestamp,logo,origin,amount_deposit,amount_withdrawal',
                                                 detail_method:'GET',
                                                 detail_token_type:'APP_ACCESS',
                                                 detail_class:'bank_statement',
@@ -74,7 +74,7 @@ const app_event_click = event => {
                                                 display_type:'VERTICAL_KEY_VALUE',
                                                 master_path:'/server-db/app_data_resource_master/',
                                                 master_query:   `resource_name=CUSTOMER&user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}` + 
-                                                                `&fields=name,customer_type,address,city,country`,
+                                                                '&fields=name,customer_type,address,city,country',
                                                 master_method:'GET',
                                                 master_token_type:'APP_ACCESS',
                                                 master_resource:'CUSTOMER',
@@ -106,7 +106,7 @@ const app_event_click = event => {
                                                 display_type:'VERTICAL_KEY_VALUE',
                                                 master_path:'/server-db/app_data_resource_detail/',
                                                 master_query:   `resource_name=ACCOUNT&user_account_id=${common.COMMON_GLOBAL.user_account_id}&data_app_id=${common.COMMON_GLOBAL.app_id}` + 
-                                                                `&fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa`,
+                                                                '&fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
                                                 master_method:'GET',
                                                 master_token_type:'APP_ACCESS',
                                                 master_resource:'ACCOUNT',
@@ -240,7 +240,7 @@ const app_event_change = event =>{
                 case 'common_dialogue_user_menu_user_arabic_script_select':
                 case 'common_dialogue_user_menu_app_select_theme':{
                     AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
-                    common.common_preferences_update_body_class_from_preferences()
+                    common.common_preferences_update_body_class_from_preferences();
                     break;
                 }
             }
@@ -253,7 +253,7 @@ const user_logoff_app = () =>{
     .then(()=>common.ComponentRender('app_main_page',
                                     {},
                                     '/component/page_start.js'));
-}
+};
 /**
  * Sets framework
  * @param {number|null} framework 
@@ -270,7 +270,7 @@ const framework_set = async (framework=null) => {
 };
 
 const customer_create = async () => {
-    AppDocument.querySelector(`#common_app_data_display_button_post`).classList.add('css_spinner');
+    AppDocument.querySelector('#common_app_data_display_button_post').classList.add('css_spinner');
     await common.FFB(   '/app-function/CUSTOMER_CREATE', 
                         null, 
                         'POST', 
@@ -278,15 +278,15 @@ const customer_create = async () => {
                         {
                             user_account_id :common.COMMON_GLOBAL.user_account_id,
                             data_app_id     :common.COMMON_GLOBAL.app_id,
-                            customer_type   :AppDocument.querySelector(`#app_page_secure_tab_content [data-value='customer_type']`).innerHTML,
-                            name            :AppDocument.querySelector(`#app_page_secure_tab_content [data-value='name']`).innerHTML,
-                            address         :AppDocument.querySelector(`#app_page_secure_tab_content [data-value='address']`).innerHTML,
-                            city            :AppDocument.querySelector(`#app_page_secure_tab_content [data-value='city']`).innerHTML,
-                            country         :AppDocument.querySelector(`#app_page_secure_tab_content [data-value='customer_type']`).innerHTML
+                            customer_type   :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').innerHTML,
+                            name            :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'name\']').innerHTML,
+                            address         :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'address\']').innerHTML,
+                            city            :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'city\']').innerHTML,
+                            country         :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').innerHTML
                         }
                     );
     init_secure();
-}
+};
 /**
  * Init secure
  * @returns {void}
@@ -302,7 +302,7 @@ const init_secure = () => {
                             function_ComponentRender:common.ComponentRender,
                             function_FFB:common.FFB},
                             '/component/page_secure.js');
-}
+};
 /**
  * Init app
  * @returns {Promise.<void>}

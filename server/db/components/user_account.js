@@ -79,14 +79,13 @@ const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.s
  * @param {number} app_id 
  */
 const login_error = async (app_id) =>{
-    return getSettingDisplayData
-        (   app_id,
-            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-            'MESSAGE',
-            '20300')
+    return getSettingDisplayData(   app_id,
+                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                    'MESSAGE',
+                                    '20300')
     .then((/**@type{import('../../../types.js').db_result_app_setting_getSettingDisplayData[]}*/result_message)=>result_message[0].display_data)
     .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
-}
+};
 /**
  * 
  * @param {number} app_id
@@ -714,7 +713,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
  * @param {*} query
  */
 const getProfileStat = (app_id, query) => service.getProfileStat(app_id, getNumberValue(query.get('statchoice')))
-                                                    .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error});
+                                                    .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 
 /**
  * 
@@ -798,7 +797,7 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
 const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id, 
                                                                 getNumberValue(query.get('data_user_account_id')), 
                                                                 getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
-                                            .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error});
+                                            .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
     
 /**
  * 

@@ -1,6 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
-
 /**
  *  
  * @param {{customer:[]}} props 
@@ -28,7 +25,7 @@ const template = props => ` <div id='app_page_secure'>
                             </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
  *          user_account_id:number,
@@ -42,7 +39,7 @@ const template = props => ` <div id='app_page_secure'>
  *                      template:string}>}
  */
 const component = async props => {
-    let spinner = `css_spinner'`;
+    let spinner = 'css_spinner\'';
     /**
      * @param {{customer:[]}} props_template
      * @returns {string}
@@ -50,12 +47,12 @@ const component = async props => {
     const render_template = props_template =>{
         return template(props_template)
                 .replace('<SPINNER_CLASS/>', spinner);
-    }
+    };
     const post_component = async () =>{
         spinner = '';
         const customer = await props.function_FFB('/server-db/app_data_resource_master/', `resource_name=CUSTOMER&user_account_id=${props.user_account_id}&data_app_id=${props.app_id}`, 'GET', 'APP_ACCESS', null)
                                             .then((/**@type{string}*/result)=>JSON.parse(result))
-                                            .catch((/**@type{Error}*/error)=>{throw error});
+                                            .catch((/**@type{Error}*/error)=>{throw error;});
         
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  customer:customer.rows});
         if (customer.rows.length>0)
@@ -90,11 +87,11 @@ const component = async props => {
                                                 function_button_delete:null
                                             }, '/common/component/app_data_display.js');
         }
-    }
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
         template: render_template({customer:[]})
     };
-}
+};
 export default component;

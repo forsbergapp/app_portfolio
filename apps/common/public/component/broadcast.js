@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`<div id='common_broadcast_info'>
                     <div id='common_broadcast_banner'>
                         <div id='common_broadcast_header'>
@@ -16,7 +14,7 @@ const template =`<div id='common_broadcast_info'>
                 </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          message:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
@@ -26,11 +24,11 @@ const template =`<div id='common_broadcast_info'>
 const component = async props => {
     const render_template = () =>{
         return template.replace('<MESSAGE/>',props.message);
-    }
+    };
     return {
         props:  {function_post:null},
         data:   null,
         template: render_template()
     };
-}
+};
 export default component;
