@@ -12,16 +12,16 @@
  */
  const response_send_error = (res, http, code, text, developer_text, more_info) => {
     //ISO20022 error format
-    const message = {"error":{
-                        "http":http, 
-                        "code":code, 
-                        "text":text, 
-                        "developer_text":developer_text, 
-                        "more_info":more_info}};
+    const message = {error:{
+                        http:http, 
+                        code:code, 
+                        text:text, 
+                        developer_text:developer_text, 
+                        more_info:more_info}};
     //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
     res.statusMessage = '';
     res.status(http).send(message);
-}
+};
 /**
  * Get number value from request key
  * returns number or null for numbers
@@ -249,7 +249,7 @@ const COMMON = {
                 const URI_query = routesparameters.route_path.startsWith('/app-reports')?routesparameters.url.substring(routesparameters.url.indexOf('?')):null;
                 const app_query = URI_query?new URLSearchParams(URI_query):null;
                 resolve(app.getAppMain(routesparameters.ip, routesparameters.host, routesparameters.user_agent, routesparameters.accept_language, routesparameters.url, app_query, routesparameters.res)
-                        .catch((error)=>{
+                        .catch(()=>{
                             //send minimal HTML with server error
                             routesparameters.res?.sendFile(`${process.cwd()}/server/servererror.html`);
                         }));
@@ -286,7 +286,7 @@ const COMMON = {
                                             };
                         return {list_header:result.list_header, rows:result};
                     }
-                }
+                };
                 /**
                  * 
                  * @param {string} url 
@@ -312,16 +312,16 @@ const COMMON = {
                                                                     resource_id:resource_validate_value, 
                                                                     scope: 'USER',
                                                                     claim_key:resource_validate_type}))
-                                return true
+                                return true;
                             else{
                                 resource_id_not_authorized = true;
-                                return false
+                                return false;
                             }
                         else
                             return true;
                     else
                         return false;
-                }
+                };
                                 
                 /**
                  * @param {number} app_id
@@ -342,7 +342,7 @@ const COMMON = {
                                                 routesparameters.accept_language, 
                                                 routesparameters.body?routesparameters.body:null,
                                                 routesparameters.endpoint == 'SERVER_APP')
-                            .catch((/**@type{import('../types.js').error}*/error)=>{throw error});
+                            .catch((/**@type{import('../types.js').error}*/error)=>{throw error;});
                 };
 
                 
@@ -361,32 +361,32 @@ const COMMON = {
                                                     true));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/app_object`, 'GET'):{
+                    case route('/bff/app_data/v1/server-db/app_object', 'GET'):{
                         resolve(db_app_object.getObjects(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/country`, 'GET'):{
+                    case route('/bff/app_data/v1/server-db/country', 'GET'):{
                         resolve(db_country.getCountries(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/identity_provider`, 'GET'):{
+                    case route('/bff/app_data/v1/server-db/identity_provider', 'GET'):{
                         resolve(db_identity_provider.getIdentityProviders(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/locale`, 'GET'):{
+                    case route('/bff/app_data/v1/server-db/locale', 'GET'):{
                         resolve(db_locale.getLocales(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/app_settings`, 'GET'):{
+                    case route('/bff/app_data/v1/server-db/app_settings', 'GET'):{
                         resolve(db_app_setting.getSettings(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/app_settings_display`, 'GET'):{
+                    case route('/bff/app_data/v1/server-db/app_settings_display', 'GET'):{
                         resolve(db_app_setting.getSettingDisplayData(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, (app_query?.get('setting_type')!='' && app_query?.get('setting_type')!=null && app_query?.get('value')!='' && app_query?.get('value')!=null)) ));
                         break;
@@ -398,11 +398,11 @@ const COMMON = {
                                 routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/user_account-forgot`, 'POST'):{
+                    case route('/bff/app_data/v1/server-db/user_account-forgot', 'POST'):{
                         resolve(db_user_account.forgot(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, routesparameters.body));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/user_account-profile-stat`, 'GET'):{
+                    case route('/bff/app_data/v1/server-db/user_account-profile-stat', 'GET'):{
                         resolve(db_user_account.getProfileStat(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
@@ -441,7 +441,7 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-db/user_account_app_data_post-profile-stat`, 'GET'):{
+                    case route('/bff/app_data/v1/server-db/user_account_app_data_post-profile-stat', 'GET'):{
                         resolve(db_user_account_app_data_post.getProfileStatPost(routesparameters.app_id, app_query, routesparameters.res)
                                     .then(result=>iso_return_message(result, false)));
                         break;
@@ -462,7 +462,7 @@ const COMMON = {
                     case route(`/bff/app_data/v1/server-db/app_data_resource_master/${resource_id_string}`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id')), true):{
                         resolve(db_app_resource.MasterGet(routesparameters.app_id, resource_id_get_number(), app_query, true)
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break
+                        break;
                     }
                     case route(`/bff/app_access/v1/app-function/${resource_id_string}`, 'POST', 'id', routesparameters.body.user_account_id, true):{
                         resolve(app.getFunction(routesparameters.app_id, 
@@ -492,8 +492,8 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_master`, 'POST', null, null, false):
-                    case route(`/bff/app_access/v1/server-db/app_data_resource_master`, 'POST', 'id', routesparameters.body.user_account_id, false, routesparameters.body.data_app_id):{
+                    case route('/bff/admin/v1/server-db/app_data_resource_master', 'POST', null, null, false):
+                    case route('/bff/app_access/v1/server-db/app_data_resource_master', 'POST', 'id', routesparameters.body.user_account_id, false, routesparameters.body.data_app_id):{
                         resolve(db_app_resource.MasterPost(routesparameters.app_id, routesparameters.body));
                         break;
                     }
@@ -516,6 +516,7 @@ const COMMON = {
                     case route(`/bff/app_data/v1/server-db/app_data_resource_detail/${resource_id_string}`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id')), true):{
                         resolve(db_app_resource.DetailGet(routesparameters.app_id, resource_id_get_number(), app_query, true)
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
                     }
                     case route(`/bff/admin/v1/server-db/app_data_resource_detail/${resource_id_string}`, 'GET', null, null, false):
                     case route(`/bff/app_access/v1/server-db/app_data_resource_detail/${resource_id_string}`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), false, getNumberValue(app_query?.get('data_app_id'))):{
@@ -523,8 +524,8 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_detail`, 'POST', null, null):
-                    case route(`/bff/app_access/v1/server-db/app_data_resource_detail`, 'POST', 'id',  routesparameters.body.user_account_id, false, routesparameters.body.data_app_id):{
+                    case route('/bff/admin/v1/server-db/app_data_resource_detail', 'POST', null, null):
+                    case route('/bff/app_access/v1/server-db/app_data_resource_detail', 'POST', 'id',  routesparameters.body.user_account_id, false, routesparameters.body.data_app_id):{
                             resolve(db_app_resource.DetailPost(routesparameters.app_id, routesparameters.body));
                             break;
                     }
@@ -547,6 +548,7 @@ const COMMON = {
                     case route(`/bff/app_data/v1/server-db/app_data_resource_detail_data/${resource_id_string}`, 'GET', null, null, false, getNumberValue(app_query?.get('data_app_id')), true):{
                         resolve(db_app_resource.DataGet(routesparameters.app_id, resource_id_get_number(), app_query, true)
                                 .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
                     }
                     case route(`/bff/admin/v1/server-db/app_data_resource_detail_data/${resource_id_string}`, 'GET', null, null, false):
                     case route(`/bff/app_access/v1/server-db/app_data_resource_detail_data/${resource_id_string}`, 'GET', 'id', getNumberValue(app_query?.get('user_account_id')), true, getNumberValue(app_query?.get('data_app_id'))):{
@@ -554,8 +556,8 @@ const COMMON = {
                                 .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_resource_detail_data`, 'POST', null, null):
-                    case route(`/bff/app_access/v1/server-db/app_data_resource_detail_data`, 'POST', 'id',  routesparameters.body.user_account_id, false, routesparameters.body.data_app_id):{
+                    case route('/bff/admin/v1/server-db/app_data_resource_detail_data', 'POST', null, null):
+                    case route('/bff/app_access/v1/server-db/app_data_resource_detail_data', 'POST', 'id',  routesparameters.body.user_account_id, false, routesparameters.body.data_app_id):{
                             resolve(db_app_resource.DataPost(routesparameters.app_id, routesparameters.body));
                             break;
                     }
@@ -575,7 +577,7 @@ const COMMON = {
                                                             routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db/app_data_stat`, 'GET', null, null, false):{
+                    case route('/bff/admin/v1/server-db/app_data_stat', 'GET', null, null, false):{
                         resolve(db_app_stat.get(routesparameters.app_id, app_query)
                                 .then(result=>iso_return_message(result, false)));
                         break;
@@ -697,7 +699,7 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
-                    case route(`/bff/app_access/v1/server-db/user_account_app_data_post`, 'POST', 'id', routesparameters.body.user_account_id):{
+                    case route('/bff/app_access/v1/server-db/user_account_app_data_post', 'POST', 'id', routesparameters.body.user_account_id):{
                         resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
@@ -726,28 +728,28 @@ const COMMON = {
                                                                         routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-socket/message`, 'POST'):{
+                    case route('/bff/admin/v1/server-socket/message', 'POST'):{
                         resolve(socket.SocketSendAdmin(routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-socket/socket-stat`, 'GET'):{
+                    case route('/bff/admin/v1/server-socket/socket-stat', 'GET'):{
                         resolve(iso_return_message(socket.ConnectedCount(app_query), true));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-socket/socket`, 'GET'):{
+                    case route('/bff/admin/v1/server-socket/socket', 'GET'):{
                         resolve(socket.ConnectedListAdmin(routesparameters.app_id, app_query)
                                 .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db_admin/database-demo`, 'POST'):{
+                    case route('/bff/admin/v1/server-db_admin/database-demo', 'POST'):{
                         resolve(db_database.DemoInstall(routesparameters.app_id, app_query, routesparameters.body));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db_admin/database-demo`, 'DELETE'):{
+                    case route('/bff/admin/v1/server-db_admin/database-demo', 'DELETE'):{
                         resolve(db_database.DemoUninstall(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/admin/v1/app_admin/apps`, 'GET'):{
+                    case route('/bff/admin/v1/app_admin/apps', 'GET'):{
                         resolve(app.getAppsAdmin(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
@@ -760,37 +762,37 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db_admin/app_category`, 'GET'):{
+                    case route('/bff/admin/v1/server-db_admin/app_category', 'GET'):{
                         resolve(db_app_category.getAppCategoryAdmin(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db_admin/app_log`, 'GET'):{
+                    case route('/bff/admin/v1/server-db_admin/app_log', 'GET'):{
                         resolve(db_app_log.getLogsAdmin(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db_admin/app_log-stat`, 'GET'):{
+                    case route('/bff/admin/v1/server-db_admin/app_log-stat', 'GET'):{
                         resolve(db_app_log.getStatUniqueVisitorAdmin(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db_admin/app_role`, 'GET'):{
+                    case route('/bff/admin/v1/server-db_admin/app_role', 'GET'):{
                         resolve(db_app_role.getAppRoleAdmin(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db_admin/user_account-stat`, 'GET'):{
+                    case route('/bff/admin/v1/server-db_admin/user_account-stat', 'GET'):{
                         resolve(db_user_account.getStatCountAdmin(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db_admin/user_account`, 'GET'):{
+                    case route('/bff/admin/v1/server-db_admin/user_account', 'GET'):{
                         resolve(db_user_account.getUsersAdmin(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/admin/v1/server-db_admin/user_account_logon`, 'GET'):{
+                    case route('/bff/admin/v1/server-db_admin/user_account_logon', 'GET'):{
                         resolve(db_user_account.getLogonAdmin(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, true)));
                         break;
@@ -802,11 +804,11 @@ const COMMON = {
                                                             app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-socket/message`, 'POST'):{
+                    case route('/bff/systemadmin/v1/server-socket/message', 'POST'):{
                         resolve(socket.SocketSendSystemAdmin(routesparameters.body));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-socket/socket`, 'GET'):{
+                    case route('/bff/systemadmin/v1/server-socket/socket', 'GET'):{
                         resolve(socket.ConnectedListSystemadmin(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
@@ -843,74 +845,74 @@ const COMMON = {
                                                         routesparameters.body));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/info`, 'GET'):{
+                    case route('/bff/systemadmin/v1/server/info', 'GET'):{
                         resolve(info.Info()
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-db_admin/database-installation`, 'GET'):{
+                    case route('/bff/systemadmin/v1/server-db_admin/database-installation', 'GET'):{
                         resolve(db_database.InstalledCheck(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-db_admin/database-space`, 'GET'):{
+                    case route('/bff/systemadmin/v1/server-db_admin/database-space', 'GET'):{
                         resolve(db_database.InfoSpace(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-db_admin/database-spacesum`, 'GET'):{
+                    case route('/bff/systemadmin/v1/server-db_admin/database-spacesum', 'GET'):{
                         resolve(db_database.InfoSpaceSum(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-db_admin/database`, 'GET'):{
+                    case route('/bff/systemadmin/v1/server-db_admin/database', 'GET'):{
                         resolve(db_database.Info(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-db_admin/database`, 'POST'):{
+                    case route('/bff/systemadmin/v1/server-db_admin/database', 'POST'):{
                         resolve(db_database.Install(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-db_admin/database`, 'DELETE'):{
+                    case route('/bff/systemadmin/v1/server-db_admin/database', 'DELETE'):{
                         resolve(db_database.Uninstall(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-log/log`, 'GET'):{
+                    case route('/bff/systemadmin/v1/server-log/log', 'GET'):{
                         resolve(log.getLogs(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server/info-statuscode`, 'GET'):{
+                    case route('/bff/systemadmin/v1/server/info-statuscode', 'GET'):{
                         resolve(log.getStatusCodes()
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-log/log-stat`, 'GET'):{
+                    case route('/bff/systemadmin/v1/server-log/log-stat', 'GET'):{
                         resolve(log.getLogStats(app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/systemadmin/v1/server-log/log-files`, 'GET'):{
+                    case route('/bff/systemadmin/v1/server-log/log-files', 'GET'):{
                         resolve(log.getFiles()
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route(`/bff/socket/v1/server-socket/socket`, 'GET'):{
+                    case route('/bff/socket/v1/server-socket/socket', 'GET'):{
                         //EventSource uses GET method, should otherwise be POST
                         resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_signup/v1/server-db/user_account-signup`, 'POST'):{
+                    case route('/bff/app_signup/v1/server-db/user_account-signup', 'POST'):{
                         resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/iam_systemadmin/v1/server-iam/login`, 'POST'):{
+                    case route('/bff/iam_systemadmin/v1/server-iam/login', 'POST'):{
                         resolve(iam.AuthenticateSystemadmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/iam_admin/v1/server-iam/login`, 'POST'):
-                    case route(`/bff/iam_user/v1/server-iam/login`, 'POST'):{
+                    case route('/bff/iam_admin/v1/server-iam/login', 'POST'):
+                    case route('/bff/iam_user/v1/server-iam/login', 'POST'):{
                         resolve(db_user_account.login(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.body, routesparameters.res));
                         break;
                     }
@@ -921,14 +923,14 @@ const COMMON = {
                                                                 routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route(`/bff/app_data/v1/server-iam/user/logoff`, 'POST'):{
+                    case route('/bff/app_data/v1/server-iam/user/logoff', 'POST'):{
                         resolve(socket.ConnectedUpdate(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip,routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
                     //microservice routes
                     //changes URI to call microservices, syntax:
                     //[microservice protocol]://[microservice host]:[microservice port]/[service]/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query];
-                    case route(`/bff/app_data/v1/geolocation/ip`, 'GET') ||
+                    case route('/bff/app_data/v1/geolocation/ip', 'GET') ||
                         (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/geolocation/ip'):{
                         if (getNumberValue(config_service.ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1){
                             const params = URI_query.split('&');
@@ -947,24 +949,27 @@ const COMMON = {
                         }   
                         else
                             return resolve('');
+                        break;
                     }
-                    case route(`/bff/app_data/v1/geolocation/place`, 'GET'):{
+                    case route('/bff/app_data/v1/geolocation/place', 'GET'):{
                         resolve(call_microservice(  routesparameters.app_id,`/geolocation/v${microservice_api_version('GEOLOCATION')}${routesparameters.route_path}`, URI_query));
                         break;
                     }
-                    case route(`/bff/app_data/v1/worldcities/city`, 'GET'):{
+                    case route('/bff/app_data/v1/worldcities/city', 'GET'):{
                         resolve(call_microservice(  routesparameters.app_id,
                                                     `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, 
                                                     URI_query + `&limit=${getNumberValue(config_service.ConfigGetApp(routesparameters.app_id, 
-														                    getNumberValue(config_service.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS)}`));
+                                                    getNumberValue(config_service.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS)}`));
+                        break;
                     }
-                    case route(`/bff/app_data/v1/worldcities/city-random`, 'GET')||
+                    case route('/bff/app_data/v1/worldcities/city-random', 'GET')||
                         (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/worldcities/city-random'):{
                         resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, URI_query));
                         break;
                     }
                     case route(`/bff/app_data/v1/worldcities/country/${resource_id_string}`, 'GET'):{
                         resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, URI_query));
+                        break;
                     }
                     case routesparameters.route_path=='/mail/sendemail' && routesparameters.endpoint.startsWith('SERVER'):{
                         //mail can only be sent from server
@@ -974,7 +979,7 @@ const COMMON = {
                     default:{
                         
                         if (resource_id_not_authorized){
-                            routesparameters.res.statusMessage = `resource id not authorized`;
+                            routesparameters.res.statusMessage = 'resource id not authorized';
                             routesparameters.res.statusCode =401;
                         }
                         else{

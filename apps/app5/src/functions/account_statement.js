@@ -1,7 +1,5 @@
 /** @module apps/app5 */
 
-import { get } from '../../../../server/db/sql/app_data_entity.service.js';
-
 /**
  * IBAN mod 97
  * @param {string} str 
@@ -50,7 +48,7 @@ const IBAN_compose = (country_code, bank_id, account_number, print_format=false)
     }
     else
         return country_code.toUpperCase() + IBAN_getCheckDigit(country_code, bban) + bban.toString();
-}
+};
 /**
  * IBAN validate
  * @param {string} iban 
@@ -109,5 +107,6 @@ const getStatement = async (app_id, data, locale) =>{
                     currency_name           :AccountMetaData.filter((/**@type{*}*/row)=>'currency_name' in row)[0].currency_name.default_value,
                     bank_account_balance    :Number(balance)
             }];
-} 
+}; 
 export default getStatement;
+export {IBAN_validate};

@@ -154,10 +154,10 @@ const show_charts = async () => {
         if (common.COMMON_GLOBAL.system_admin!=null){
             path = '/server-log/log-stat';
             if (system_admin_statGroup=='REQUEST'){
-                query = `select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`
+                query = `select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`;
             }
             else
-                query = `select_app_id=${app_id}&statGroup=&statValue=${system_admin_statValues.value}&unique=&year=${year}&month=${month}`
+                query = `select_app_id=${app_id}&statGroup=&statValue=${system_admin_statValues.value}&unique=&year=${year}&month=${month}`;
             authorization_type = 'SYSTEMADMIN';
         }
         else{
@@ -982,7 +982,7 @@ const show_app_parameter = (app_id) => {
     AppDocument.querySelector('#apps_save').style.display = 'none';
     AppDocument.querySelector('#list_app_parameter').innerHTML = '';
 
-    common.FFB(`/server-config/config-apps/${app_id}`, `key=PARAMETERS`, 'GET', 'APP_ACCESS', null)
+    common.FFB(`/server-config/config-apps/${app_id}`, 'key=PARAMETERS', 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div id='list_app_parameter_row_title' class='list_app_parameter_row'>
                         <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>APP ID</div>
@@ -1306,7 +1306,7 @@ const show_monitor = async (yearvalues) =>{
         token_type = 'SYSTEMADMIN';
     else
         token_type = 'APP_ACCESS';
-    const query = `key=PARAMETERS`;
+    const query = 'key=PARAMETERS';
 
     const result_limit = await common.FFB(`/server-config/config-apps/${common.COMMON_GLOBAL.app_id}`, query, 'GET', token_type, null).catch(()=> null);
     APP_GLOBAL.limit = parseInt(JSON.parse(result_limit)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS);
@@ -1374,7 +1374,7 @@ const show_monitor = async (yearvalues) =>{
                                 timezone_text :null,
                                 marker_id:common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                 to_method:common.COMMON_GLOBAL.module_leaflet_jumpto
-                            })
+                            });
             common.map_resize();
         });
     nav_click('list_monitor_nav_connected'); 
@@ -2418,7 +2418,7 @@ const show_config = async file => {
         AppDocument.querySelector('#list_config').style.display = 'none';
     }
 
-    await common.FFB(`/server-config/config/${file}`, `saved=1`, 'GET', 'SYSTEMADMIN', null)
+    await common.FFB(`/server-config/config/${file}`, 'saved=1', 'GET', 'SYSTEMADMIN', null)
     .then((/**@type{string}*/result)=>{
         const config = JSON.parse(result).data;
         let i = 0;

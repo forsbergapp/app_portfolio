@@ -42,8 +42,7 @@ const createLog = async (app_id, data_app_id, json_data) => {
  * @returns {Promise.<import('../../../types.js').db_result_app_log_getLogsAdmin[]>}
  */
 const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, offset, limit) => {
-		let sql;
-		sql = `SELECT id "id",
+		const sql = `SELECT id "id",
 					  app_id "app_id",
 					  json_data "json_data",
 					  date_created "date_created",

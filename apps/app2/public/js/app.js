@@ -652,7 +652,7 @@ const settingsTimesShow = () => {
         options.timeZone = select[select.selectedIndex].value;
         AppDocument.querySelector('#setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(AppDocument.querySelector('#setting_select_locale').value, options);
     }
-}
+};
 /**
  * Toolbar button
  * @param {number} choice 
@@ -679,9 +679,9 @@ const toolbar_button = async (choice) => {
                 if (common.mobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
-                AppDocument.querySelector(`#toolbar_btn_day`).classList.remove('toolbar_bottom_selected');
-                AppDocument.querySelector(`#toolbar_btn_month`).classList.remove('toolbar_bottom_selected');
-                AppDocument.querySelector(`#toolbar_btn_year`).classList.remove('toolbar_bottom_selected');
+                AppDocument.querySelector('#toolbar_btn_day').classList.remove('toolbar_bottom_selected');
+                AppDocument.querySelector('#toolbar_btn_month').classList.remove('toolbar_bottom_selected');
+                AppDocument.querySelector('#toolbar_btn_year').classList.remove('toolbar_bottom_selected');
                 AppDocument.querySelector(`#toolbar_btn_${choice==2?'day':choice==3?'month':'year'}`).classList.add('toolbar_bottom_selected');
 
                 //choice day=0, month=1, year=2
@@ -741,9 +741,9 @@ const openTab = async (tab_selected) => {
     common.ComponentRemove('settings_tab5');
     common.ComponentRemove('settings_tab6');
     if (common.COMMON_GLOBAL.user_account_id == null)
-        AppDocument.querySelector(`#settings_tab_nav_7`).style.display = 'none';
+        AppDocument.querySelector('#settings_tab_nav_7').style.display = 'none';
     else
-        AppDocument.querySelector(`#settings_tab_nav_7`).style.display = 'inline-block';
+        AppDocument.querySelector('#settings_tab_nav_7').style.display = 'inline-block';
     if (tab_selected==7)
         AppDocument.querySelector('#user_settings').style.display = 'block';
     else
@@ -780,7 +780,7 @@ const align_button_value = (report_align_where) => {
  */
 const dialogue_loading = (visible) => {
     if (visible==1){
-        common.ComponentRender('dialogue_loading', {}, '/component/dialogue_loading.js')
+        common.ComponentRender('dialogue_loading', {}, '/component/dialogue_loading.js');
     }
     else{
         common.ComponentRemove('dialogue_loading', true);
@@ -1130,8 +1130,8 @@ const login_common = (avatar) => {
                 });
             });
         });
-    })
-}
+    });
+};
 /**
  * Provider signin
  * @param {*} provider_id 
@@ -1165,8 +1165,8 @@ const profile_update_stat_app = async () => {
         common.ComponentRender('common_profile_stat_row2', 
                                 {},
                                 '/component/profile_stat.js');
-    })
- }
+    });
+ };
 /**
  * Profile show
  * @param {number|null} user_account_id_other 
@@ -1190,7 +1190,7 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
                     profile_show_user_setting();
                     AppDocument.querySelector('#common_profile_main_stat_row2').style.display = 'block';
                     profile_user_setting_stat(result.profile_id);
-                })
+                });
             }    
         }
     });
@@ -1590,7 +1590,7 @@ const user_settings_delete = (choice=null) => {
                 
             })
             .catch(()=>{common.ComponentRemove('common_dialogue_message', true);
-                        AppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner')});
+                        AppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner');});
         }
     }
 };
@@ -2074,7 +2074,7 @@ const app_event_click = event => {
                     if (common.mobile())
                         AppDocument.querySelector('#paper').style.display = 'block';
                     AppDocument.querySelector('#settings').style.visibility = 'hidden';
-                    const timetable_type = AppDocument.querySelector(`#toolbar_bottom .toolbar_bottom_selected`).id
+                    const timetable_type = AppDocument.querySelector('#toolbar_bottom .toolbar_bottom_selected').id
                                                 .toLowerCase()
                                                 .substring('toolbar_btn_'.length);
                     update_timetable_report(timetable_type=='day'?0:timetable_type=='month'?1:2, null, getReportSettings());
@@ -2521,7 +2521,7 @@ const app_event_keyup = event => {
                 //settings gps
                 case 'setting_input_place':{
                     const select_place = AppDocument.querySelector('#setting_select_popular_place');
-                    common.SearchAndSetSelectedIndex('', select_place,0)
+                    common.SearchAndSetSelectedIndex('', select_place,0);
                     settings_update('GPS');
                     break;
                 }
@@ -2550,7 +2550,7 @@ const app_event_keyup = event => {
                 case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
-                        user_login_app().catch(()=>null);;
+                        user_login_app().catch(()=>null);
                     }
                     break;
                 }
@@ -2649,7 +2649,7 @@ const map_update_app = async (parameters) => {
  */
 const map_show_search_on_map_app = async (data) =>{
     await common.map_show_search_on_map(data);
-    component_setting_update('GPS', 'CITY')
+    component_setting_update('GPS', 'CITY');
 };
 /**
  * App exception function
@@ -2689,7 +2689,7 @@ const framework_set = async (framework=null) => {
                             'GET', 'APP_DATA')
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                             .catch((/**@type{Error}*/error)=>error);
- } 
+ }; 
 /**
  * @param {number} tab_selected
  * @returns {Promise.<void>}
@@ -2778,7 +2778,7 @@ const settings_load = async (tab_selected) => {
         for (const app_setting of APP_GLOBAL.places ?? []){
             if (place_found==false){
                 place_found = true;
-                select_places  =`<option value="" id="" latitude="0" longitude="0" timezone="">...</option>`;
+                select_places  ='<option value="" id="" latitude="0" longitude="0" timezone="">...</option>';
             }
             i++;
             //data 2 = latitude
@@ -2796,7 +2796,7 @@ const settings_load = async (tab_selected) => {
         if (place_found)
             return select_places;
         else{
-            return `<option value="" id="" latitude="0" longitude="0" timezone="">...</option>`;
+            return '<option value="" id="" latitude="0" longitude="0" timezone="">...</option>';
         }
     };
     let USER_TIMEZONE ='';
@@ -2831,7 +2831,7 @@ const settings_load = async (tab_selected) => {
          *          data5:string}[]} */
         const app_settings_db = await common.FFB('/server-db/app_settings', null, 'GET', 'APP_DATA')
         .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-        .catch((/**@type{Error}*/error)=>{throw error});
+        .catch((/**@type{Error}*/error)=>{throw error;});
         let option;
         for (const app_setting of app_settings_db) {
             option = `<option id=${app_setting.id} value='${app_setting.value}'>${app_setting.text}</option>`;
@@ -2911,7 +2911,7 @@ const settings_load = async (tab_selected) => {
     switch (tab_selected){
         case 1:{
             //tab 1 - settings regional
-            let LOCALES = await common.get_locales_options().catch((/**@type{Error}*/error)=>{throw error;});
+            const LOCALES = await common.get_locales_options().catch((/**@type{Error}*/error)=>{throw error;});
             AppDocument.querySelector('#setting_select_locale').innerHTML = LOCALES;
             
             AppDocument.querySelector('#setting_timezone_current').innerHTML = common.COMMON_GLOBAL.user_timezone;
@@ -3004,7 +3004,7 @@ const settings_load = async (tab_selected) => {
             break;
         }
     }
-}
+};
 /**
  * 
  * @param {{app:*[],

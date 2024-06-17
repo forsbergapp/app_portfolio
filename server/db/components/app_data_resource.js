@@ -72,7 +72,7 @@ const MasterGet = (app_id, resource_id, query, user_null=false) => app_data_reso
  * @param {number} app_id 
  * @param {*} data
  */
- const DetailPost = (app_id, data) => app_data_resource_detail.post(app_id, data).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});;
+ const DetailPost = (app_id, data) => app_data_resource_detail.post(app_id, data).catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 
 /**
  * 

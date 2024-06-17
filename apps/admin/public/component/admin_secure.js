@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`       <div id='dialogues'>
                             <div id='dialogue_send_broadcast' class='common_dialogue common_dialogue_content'></div>
                         </div>
@@ -35,21 +33,19 @@ const template =`       <div id='dialogues'>
                         </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:null, 
  *                      template:string}>}
  */
 const component = async props => {
-    
-    const render_template = () =>{
-        return template;
-    }
+    props;
+    const render_template = () =>template;
     return {
         props:  {function_post:null},
         data:   null,
         template: render_template()
     };
-}
+};
 export default component;

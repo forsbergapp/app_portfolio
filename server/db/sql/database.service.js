@@ -206,7 +206,7 @@ const InfoSpace = async (app_id, DBA) => {
                   FROM  dbstat
                  WHERE  name NOT LIKE 'sqlite%'
                  GROUP BY name 
-                 ORDER BY 2 DESC`
+                 ORDER BY 2 DESC`;
       break;
       }
     }
@@ -271,7 +271,7 @@ const InfoSpaceSum = async (app_id, DBA) => {
                        printf("%.2f",(SUM(pgsize) - SUM(pgsize-unused))/1024/1024) "data_free",
                        printf("%.2f",SUM(pgsize-unused)*100/SUM(pgsize)) "pct_used"
                   FROM dbstat
-                 WHERE name NOT LIKE 'sqlite%'`
+                 WHERE name NOT LIKE 'sqlite%'`;
          break;
       }
    }

@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  *  
  * @param {{text_get_bankaccount:string,
@@ -22,14 +20,14 @@ const template = props => ` <div id='app_page_start_get_bankaccount'>${props.tex
                             </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:null, 
  *                      template:string}>}
  */
 const component = async props => {
-    
+    props;
     /**
      * @param {{text_get_bankaccount:string,
      *          text_account:string,
@@ -40,7 +38,7 @@ const component = async props => {
      */
     const render_template = props_template =>{
         return template(props_template);
-    }
+    };
     return {
         props:  {function_post:null},
         data:   null,
@@ -50,5 +48,5 @@ const component = async props => {
                                     text_directpayment:'DIRECT PAYMENT',
                                     text_iso:'ISO STANDARDS'})
     };
-}
+};
 export default component;

@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * 
  * @param {{font_default:boolean|null,
@@ -224,7 +222,7 @@ const template = props =>`  <div id='common_toolbar_framework'>
                             </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          font_default:boolean|null,
  *          font_arabic:boolean|null,
@@ -247,11 +245,11 @@ const component = async props => {
                             font_prio2:     props.font_prio2,
                             font_prio3:     props.font_prio3
                         });
-    }
+    };
     return {
         props:  {function_post:null},
         data:   null,
         template: render_template()
     };
-}
+};
 export default component;

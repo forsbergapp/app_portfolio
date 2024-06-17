@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * 
  * @param {{list:*,
@@ -29,7 +27,7 @@ const template = props =>` <div id='common_lov_form'>
                         </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          lov:string,
  *          function_event:function,
@@ -48,7 +46,6 @@ const component = async props => {
      const post_component = () =>{
         let path = '';
         let token_type = '';
-        let service = '';
         let lov_column_value = '';
         switch (props.lov){
             case 'SERVER_LOG_FILES':{
@@ -69,7 +66,6 @@ const component = async props => {
                 props.common_document.querySelector('#common_lov_title').classList.add('app_role');
                 lov_column_value = 'icon';
                 path = '/server-db_admin/app_role';
-                service = 'SERVER-DB_ADMIN';
                 token_type = 'APP_ACCESS';
                 break;
             }
@@ -82,7 +78,7 @@ const component = async props => {
                 props.common_document.querySelector('#common_lov_search_input').focus();
         })
         .catch(()=>props.common_document.querySelector('#common_lov_list').classList.remove('css_spinner'));
-    }
+    };
     /**
      * 
      * @param {{list:*,
@@ -92,7 +88,7 @@ const component = async props => {
     const render_template = props =>{
         return template(props)
                 .replace('<SPINNER/>', spinner);
-    }
+    };
     //render first time with spinner and empty records
     //post function will render again without spinner
     return {
@@ -100,5 +96,5 @@ const component = async props => {
         data:   null,
         template: render_template({list: [], lov_column_value:''})
     };
-}
+};
 export default component;

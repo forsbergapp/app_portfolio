@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
 
  * 
@@ -114,21 +112,21 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                             }
                             <div class='common_app_data_display_buttons ${props.spinner}'>
                                 ${props.button_print?
-                                    `<div id='common_app_data_display_button_print' class='common_dialogue_button common_icon' ></div>`:''
+                                    '<div id=\'common_app_data_display_button_print\' class=\'common_dialogue_button common_icon\' ></div>':''
                                 }
                                 ${props.button_update?
-                                    `<div id='common_app_data_display_button_update' class='common_dialogue_button common_icon' ></div>`:''
+                                    '<div id=\'common_app_data_display_button_update\' class=\'common_dialogue_button common_icon\' ></div>':''
                                 }
                                 ${props.button_post?
-                                    `<div id='common_app_data_display_button_post' class='common_dialogue_button common_icon' ></div>`:''
+                                    '<div id=\'common_app_data_display_button_post\' class=\'common_dialogue_button common_icon\' ></div>':''
                                 }
                                 ${props.button_delete?
-                                    `<div id='common_app_data_display_button_delete' class='common_dialogue_button common_icon' ></div>`:''
+                                    '<div id=\'common_app_data_display_button_delete\' class=\'common_dialogue_button common_icon\' ></div>':''
                                 }
                             </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
  *          display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL'
@@ -219,7 +217,7 @@ const component = async props => {
             }
         else
             return '';
-    }
+    };
 
     const post_component = async () => {
         
@@ -246,7 +244,7 @@ const component = async props => {
                 master_object[key[0]] = {   
                                             value:key[1], 
                                             default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].default_text:key[0]
-                                        }
+                                        };
             }
         }
             
@@ -274,15 +272,15 @@ const component = async props => {
             props.common_document.querySelector('#common_app_data_display_button_post')['data-function'] = props.function_button_post;
         if (props.function_button_delete)
             props.common_document.querySelector('#common_app_data_display_button_delete')['data-function'] = props.function_button_delete;
-    }
+    };
     /**
      * 
      * @param {props_template} props_template_parameters 
      * @returns 
      */
     const render_template = props_template_parameters =>{
-        return template(props_template_parameters)
-    }
+        return template(props_template_parameters);
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
@@ -301,5 +299,5 @@ const component = async props => {
                                     button_post:false,
                                     button_delete:false})
     };
-}
+};
 export default component;

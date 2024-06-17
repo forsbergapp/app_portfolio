@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`   <div id='common_user_password_new_icon' class='common_icon'></div>
                     <div id='common_user_password_new_auth'><AUTH/></div>
                     <div class='common_password_container'>
@@ -16,7 +14,7 @@ const template =`   <div id='common_user_password_new_icon' class='common_icon'>
                     </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          auth:string,
  *          translation_new_password:string,
@@ -34,11 +32,11 @@ const component = async props => {
                 .replaceAll('<AUTH/>',props.auth)
                 .replaceAll('<COMMON_TRANSLATION_NEW_PASSWORD/>',props.translation_new_password)
                 .replaceAll('<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>',props.translation_new_password_confirm);
-    }
+    };
     return {
         props:  {function_post:null},
         data:   null,
         template: render_template()
     };
-}
+};
 export default component;
