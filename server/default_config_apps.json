@@ -378,7 +378,12 @@
                     "APP_ID_SECRET":"", 
                     "APP_ID_EXPIRE":"2d", 
                     "APP_ACCESS_SECRET":"", 
-                    "APP_ACCESS_EXPIRE":"1h"
+                    "APP_ACCESS_EXPIRE":"1h",
+                    "MERCHANT_ID":"<MERCHANT_ID/>",
+                    "MERCHANT_API_URL":"app5.localhost/bff/app_external/v1/app-function/PAYMENT_REQUEST", 
+                    "MERCHANT_API_SECRET":"<API_SECRET/>", 
+                    "MERCHANT_PUBLIC_KEY":"<PUBLIC_KEY/>",
+                    "MERCHANT_PRIVATE_KEY":"<PRIVATE_KEY/>"
         },
         "PARAMETERS":[
                     {"TEXT_EDIT": "0"},
