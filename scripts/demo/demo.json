@@ -256,8 +256,68 @@
         ]
     },
     {
-        "username":"demo_merchant",
-        "bio": "Demo_Merchant",
+        "username":"demo_bank_owner",
+        "bio": "Demo_Bank_Owner",
+        "avatar": "data:image/webp;base64,UklGRggDAABXRUJQVlA4WAoAAAAQAAAAPwAAPwAAQUxQSLsAAAABgFpt2/PkSe9V9aySETJCaA6NRZUJkDAAKocZcDgUIzBCh8f8fO/7vw8dExETgJ/NK5I81GGiCJMlaBSgOdxKjo6fTEWOnkO5M7mN3CJW1wPBv35LWyEabPh0YIHgddqNAtKgmQLVg6wLKFeq+IKvSXqQZIhbZnctT8y+y+uIqWlMHeZC4+V7DzTmQHsW7W70fALu6enE0C6MvSdHB4b/cE7i7Vso+N8AwHmkDdynEUYIeOp1DMVWG99dAFZQOCAmAgAAUA8AnQEqQABAAD4lDoVCIYZ/maoGAJEtgBny8v9P85/En8d/lFqD8G+2H7sf33FKfyf6AbwB+g/9y+w3hAfwD/bf13rAegB+lfWAegB/DP6N///WQ9gj9qP27+An+Jf3j/zcIB/AAwfCTfCWDAYNNKgYuIP447YSXbX8GiryMbsjP+AA/v+Pw5/7oB//ur//7hf//7gL6MOQMRHsQT8ZB/Drq/dFOxCEJq9A/8Bx/O9lBRv/627rKOF2ckCyftTHWiiBz8779MzwFI4j5dvXGQAMxkb/3UkkL09H5UYwqGoHH07qdOCk3Lzg+2lJZwj2dsAKVa7y1kT1+Hi3M6RX8fHt6/9/idP/pAdbsGgjL5ZfaZJOvHn/3g8qAlGEDmVT413wzdw1VABH/sMv/9zZ//cvf//uAzO2zUMKRzL5PP1X6AzCN3NKBOk9bVBY+zrz8CwDeUYNPAPn2l1tqL3GLTzilNZKZ4SepFex8XewRpyrRLHLxY0Xpunt+D/gXrSTYnC3KXtVvbd9UhU5vBqc0dgvc1V8TNORWxH9n2L+ROcJXC60xkH5seJUt2degtwQgcO5eh1m/K1JF4gHkGK7naZJ/RdUWxw//nO1t5HoegvqkGNBWaIFYSWDrsWoaZ78Kyk8e56B8HLt866EKp3T3nlv/tSjXsRQ5dpOeE/2HrGtL1IcMZi1xpfiAQ9JnxgL392cNegIrqMrJWlOmd38SbRWvrAAAA==",
+        "settings":[],
+        "resource_master": [
+                            {"user_account_app_user_account_id":"<USER_ACCOUNT_ID/>", 
+                             "user_account_app_app_id":5, 
+                             "app_data_entity_resource_app_data_entity_app_id":5, 
+                             "app_data_entity_resource_app_data_entity_id":5000, 
+                             "app_data_entity_resource_id":5005, 
+                             "json_data":{   "name":"Bank owner",
+                                             "address":"",
+                                             "city":"",
+                                             "country":"",
+                                             "amount_initial":"2000000000"
+                                         }
+                            },
+                            {"user_account_app_user_account_id":"<USER_ACCOUNT_ID/>", 
+                            "user_account_app_app_id":5, 
+                            "app_data_entity_resource_app_data_entity_app_id":5, 
+                            "app_data_entity_resource_app_data_entity_id":5000, 
+                            "app_data_entity_resource_id":5002, 
+                            "json_data":{   "customer_type":"BUSINESS_COMPANY_PRIVATE",
+                                            "name":"Bank owner",
+                                            "address":"",
+                                            "city":"",
+                                            "country":""
+                                        },
+                            "app_registry_update_app_id":5,
+                            "app_update_secret":[{"USER_ACCOUNT_ID_OWNER":"USER_ACCOUNT_ID"}],
+                            "resource_detail":[{"app_data_resource_master_id":"<MASTER_ID/>",
+                                                "app_data_entity_resource_id":5000,
+                                                "user_account_id"                                 : "<USER_ACCOUNT_ID/>",
+                                                "user_account_app_id"                             : 5,
+                                                "data_app_id"                                     : 5,
+                                                "app_data_entity_resource_app_data_entity_id"     : 5000,
+                                                "app_data_resource_master_attribute_id"           : null,
+                                                "json_data":{   "bank_account_number":"<BANK_ACCOUNT_NUMBER/>",
+                                                                "bank_account_secret":"<BANK_ACCOUNT_SECRET/>",
+                                                                "bank_account_vpa":"<VPA/>"
+                                                            },
+                                                "app_update_secret":[{"BANK_ACCOUNT_NUMBER":"DATE_NOW_PADSTART_16"}, {"BANK_ACCOUNT_SECRET":"SECRET"}, {"BANK_ACCOUNT_VPA":"UUID"}],
+                                                "resource_detail_data":[{"app_data_resource_detail_id": "<DETAIL_ID/>",
+                                                                         "user_account_id": "<USER_ACCOUNT_ID/>",
+                                                                         "user_account_app_id": 5,
+                                                                         "data_app_id": 5,
+                                                                         "app_data_resource_master_attribute_id": null,
+                                                                         "json_data":{  "timestamp":"DATE_ISO",
+                                                                                        "logo":"",
+                                                                                        "origin":"Initial deposit",
+                                                                                        "amount_deposit":2000000000,
+                                                                                        "amount_withdrawal":null},
+                                                                         "app_update_secret":[{"TIMESTAMP":"DATE_ISO"}]
+                                                                        }]
+                                                }
+                            ]
+                            }
+        ]
+    },
+    {
+        "username":"demo_bank_merchant",
+        "bio": "Demo_Bank_Merchant",
         "avatar": "data:image/webp;base64,UklGRggDAABXRUJQVlA4WAoAAAAQAAAAPwAAPwAAQUxQSLsAAAABgFpt2/PkSe9V9aySETJCaA6NRZUJkDAAKocZcDgUIzBCh8f8fO/7vw8dExETgJ/NK5I81GGiCJMlaBSgOdxKjo6fTEWOnkO5M7mN3CJW1wPBv35LWyEabPh0YIHgddqNAtKgmQLVg6wLKFeq+IKvSXqQZIhbZnctT8y+y+uIqWlMHeZC4+V7DzTmQHsW7W70fALu6enE0C6MvSdHB4b/cE7i7Vso+N8AwHmkDdynEUYIeOp1DMVWG99dAFZQOCAmAgAAUA8AnQEqQABAAD4lDoVCIYZ/maoGAJEtgBny8v9P85/En8d/lFqD8G+2H7sf33FKfyf6AbwB+g/9y+w3hAfwD/bf13rAegB+lfWAegB/DP6N///WQ9gj9qP27+An+Jf3j/zcIB/AAwfCTfCWDAYNNKgYuIP447YSXbX8GiryMbsjP+AA/v+Pw5/7oB//ur//7hf//7gL6MOQMRHsQT8ZB/Drq/dFOxCEJq9A/8Bx/O9lBRv/627rKOF2ckCyftTHWiiBz8779MzwFI4j5dvXGQAMxkb/3UkkL09H5UYwqGoHH07qdOCk3Lzg+2lJZwj2dsAKVa7y1kT1+Hi3M6RX8fHt6/9/idP/pAdbsGgjL5ZfaZJOvHn/3g8qAlGEDmVT413wzdw1VABH/sMv/9zZ//cvf//uAzO2zUMKRzL5PP1X6AzCN3NKBOk9bVBY+zrz8CwDeUYNPAPn2l1tqL3GLTzilNZKZ4SepFex8XewRpyrRLHLxY0Xpunt+D/gXrSTYnC3KXtVvbd9UhU5vBqc0dgvc1V8TNORWxH9n2L+ROcJXC60xkH5seJUt2degtwQgcO5eh1m/K1JF4gHkGK7naZJ/RdUWxw//nO1t5HoegvqkGNBWaIFYSWDrsWoaZ78Kyk8e56B8HLt866EKp3T3nlv/tSjXsRQ5dpOeE/2HrGtL1IcMZi1xpfiAQ9JnxgL392cNegIrqMrJWlOmd38SbRWvrAAAA==",
         "settings":[],
         "resource_master": [
@@ -278,7 +338,31 @@
                                             "merchant_api_secret":"<DEMO_API_SECRET/>", 
                                             "merchant_public_key":"<DEMO_PUBLIC_KEY/>",
                                             "merchant_private_key":"<DEMO_PRIVATE_KEY/>"
-                                        }
+                                        },
+                            "app_registry_update_app_id":6,
+                            "app_update_secret":[{"MERCHANT_ID":"DATE_NOW"}, {"MERCHANT_URL":""}, {"MERCHANT_API_SECRET":"SECRET"}, {"MERCHANT_PUBLIC_KEY":"PUBLIC_KEY"}, {"MERCHANT_PRIVATE_KEY":"PRIVATE_KEY"}]
+                            }
+        ]
+    },
+    {
+        "username":"demo_shop_anonymous_user",
+        "bio": "Demo_Shop_Anonymous_User",
+        "avatar": "data:image/webp;base64,UklGRggDAABXRUJQVlA4WAoAAAAQAAAAPwAAPwAAQUxQSLsAAAABgFpt2/PkSe9V9aySETJCaA6NRZUJkDAAKocZcDgUIzBCh8f8fO/7vw8dExETgJ/NK5I81GGiCJMlaBSgOdxKjo6fTEWOnkO5M7mN3CJW1wPBv35LWyEabPh0YIHgddqNAtKgmQLVg6wLKFeq+IKvSXqQZIhbZnctT8y+y+uIqWlMHeZC4+V7DzTmQHsW7W70fALu6enE0C6MvSdHB4b/cE7i7Vso+N8AwHmkDdynEUYIeOp1DMVWG99dAFZQOCAmAgAAUA8AnQEqQABAAD4lDoVCIYZ/maoGAJEtgBny8v9P85/En8d/lFqD8G+2H7sf33FKfyf6AbwB+g/9y+w3hAfwD/bf13rAegB+lfWAegB/DP6N///WQ9gj9qP27+An+Jf3j/zcIB/AAwfCTfCWDAYNNKgYuIP447YSXbX8GiryMbsjP+AA/v+Pw5/7oB//ur//7hf//7gL6MOQMRHsQT8ZB/Drq/dFOxCEJq9A/8Bx/O9lBRv/627rKOF2ckCyftTHWiiBz8779MzwFI4j5dvXGQAMxkb/3UkkL09H5UYwqGoHH07qdOCk3Lzg+2lJZwj2dsAKVa7y1kT1+Hi3M6RX8fHt6/9/idP/pAdbsGgjL5ZfaZJOvHn/3g8qAlGEDmVT413wzdw1VABH/sMv/9zZ//cvf//uAzO2zUMKRzL5PP1X6AzCN3NKBOk9bVBY+zrz8CwDeUYNPAPn2l1tqL3GLTzilNZKZ4SepFex8XewRpyrRLHLxY0Xpunt+D/gXrSTYnC3KXtVvbd9UhU5vBqc0dgvc1V8TNORWxH9n2L+ROcJXC60xkH5seJUt2degtwQgcO5eh1m/K1JF4gHkGK7naZJ/RdUWxw//nO1t5HoegvqkGNBWaIFYSWDrsWoaZ78Kyk8e56B8HLt866EKp3T3nlv/tSjXsRQ5dpOeE/2HrGtL1IcMZi1xpfiAQ9JnxgL392cNegIrqMrJWlOmd38SbRWvrAAAA==",
+        "settings":[],
+        "resource_master": [
+                            {"user_account_app_user_account_id":"<USER_ACCOUNT_ID/>", 
+                            "user_account_app_app_id":6, 
+                            "app_data_entity_resource_app_data_entity_app_id":6, 
+                            "app_data_entity_resource_app_data_entity_id":6000, 
+                            "app_data_entity_resource_id":6006, 
+                            "json_data":{   "customer_type":"ANONYMOUS",
+                                            "name":"Anonymous Customer",
+                                            "address":"",
+                                            "city":"",
+                                            "country":""
+                                        },
+                            "app_registry_update_app_id":6,
+                            "app_update_secret":[{"USER_ACCOUNT_ID_ANONYMOUS":"USER_ACCOUNT_ID"}]
                             }
         ]
     }
