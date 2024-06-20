@@ -418,8 +418,12 @@ const install_db_get_files = async (json_type) =>{
     const {insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
     /**@type{import('../sql/app_data_resource_master.service.js')} */
     const {post:MasterResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
+    /**@type{import('../sql/app_data_resource_detail.service.js')} */
+    const {post:DetailResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
+    /**@type{import('../sql/app_data_resource_detail_data.service.js')} */
+    const {post:DetailDataResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
     /**@type{import('../../security.service.js')} */
-    const {CreateKeyPair, createSecret} = await import(`file://${process.cwd()}/server/security.service.js`);
+    const {CreateKeyPair, createUUID, createSecret} = await import(`file://${process.cwd()}/server/security.service.js`);
     /**@type{import('../../config.service.js')} */
     const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
 
@@ -437,6 +441,8 @@ const install_db_get_files = async (json_type) =>{
     let records_user_account_app = 0;
     let records_user_account_app_data_post = 0;
     let records_user_account_resource_master = 0;
+    let records_user_account_resource_detail = 0;
+    let records_user_account_resource_detail_data = 0;
     let install_count=0;
     const install_total_count = demo_users.length + social_types.length;
     install_count++;
@@ -527,7 +533,7 @@ const install_db_get_files = async (json_type) =>{
      * 
      * @param {number} user_account_post_app_id 
      * @param {*} data 
-     * @returns {Promise.<null>}
+     * @returns {Promise.<number>}
      */
     const create_resource_master = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
@@ -535,13 +541,53 @@ const install_db_get_files = async (json_type) =>{
             .then((/**@type{import('../../../types.js').db_result_app_data_resource_master_post}*/result)=>{
                 if (result.affectedRows == 1)
                     records_user_account_resource_master++;
-                resolve(null);
+                resolve(result.insertId);
             })
             .catch((/**@type{import('../../../types.js').error}*/error)=>{
                 reject(error);
             });
         });
     };
+    /**
+     * 
+     * @param {number} user_account_post_app_id 
+     * @param {*} data 
+     * @returns {Promise.<number>}
+     */
+    const create_resource_detail = async (user_account_post_app_id, data) => {
+        return new Promise((resolve, reject) => {
+            DetailResourcePost(user_account_post_app_id, data)
+            .then((/**@type{import('../../../types.js').db_result_app_data_resource_detail_post}*/result)=>{
+                if (result.affectedRows == 1)
+                    records_user_account_resource_detail++;
+                resolve(result.insertId);
+            })
+            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+                reject(error);
+            });
+        });
+    };
+
+    /**
+     * 
+     * @param {number} user_account_post_app_id 
+     * @param {*} data 
+     * @returns {Promise.<number>}
+     */
+    const create_resource_detail_data = async (user_account_post_app_id, data) => {
+        return new Promise((resolve, reject) => {
+            DetailDataResourcePost(user_account_post_app_id, data)
+            .then((/**@type{import('../../../types.js').db_result_app_data_resource_detail_data_post}*/result)=>{
+                if (result.affectedRows == 1)
+                    records_user_account_resource_detail_data++;
+                resolve(result.insertId);
+            })
+            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+                reject(error);
+            });
+        });
+    };
+
     //create all users first and update with id
     await create_users(demo_users);
     const apps = await getAppsAdminId(app_id);
@@ -588,62 +634,63 @@ const install_db_get_files = async (json_type) =>{
             await create_user_post(demo_user_account_app_data_post.app_id, json_data_user_account_app_data_post);
         }
         /**
-         * Updates user merchant resource that have secrets with demo generated secrets and sets the SECRETS key values needed in the app
-         * @param {number} app_id
-         * @param {*} json_data 
+         * Updates resource values
+         * @param {*} resource
          * @returns {Promise.<*>} 
          */
-        const demo_data_update = async (app_id, json_data) =>   {
-            for (const key of Object.entries(json_data))
-                switch (key[0].toLowerCase()){
-                    case 'merchant_id':{
-                        const demo_merchant_id = Date.now().toString();
-                        json_data[key[0]] = demo_merchant_id;
-                        await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                        {   app_id:             app_id,
-                            parameter_name:     'MERCHANT_ID',
-                            parameter_value:    demo_merchant_id});
-                        break;
+        const demo_data_update = async resource => {
+            /**
+             * 
+             * @param {[string, string]} key_name 
+             * @returns {string}
+             */
+            const value_set = key_name =>{
+                if (resource.app_update_secret && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>secret_key[key_name[0].toUpperCase()]).length>0)
+                    switch (resource.app_update_secret.filter((/**@type{*}*/secret_key)=>secret_key[key_name[0].toUpperCase()])[0][key_name[0].toUpperCase()]){
+                        case 'DATE_NOW':
+                            return Date.now().toString();
+                        case 'DATE_NOW_PADSTART_16':
+                            return Date.now().toString().padStart(16,'0');
+                        case 'DATE_ISO':
+                            return new Date().toISOString();
+                        case 'UUID':
+                            return createUUID();
+                        case 'SECRET':
+                            return createSecret();
+                        case 'PUBLIC_KEY':
+                            return demo_public_key;
+                        case 'PRIVATE_KEY':
+                            return demo_private_key;
+                        case 'USER_ACCOUNT_ID':
+                            return demo_user.id.toString();
+                        default:
+                            return key_name[1];
                     }
-                    case 'merchant_url':{
-                        await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                        {   app_id:             app_id,
-                            parameter_name:     'MERCHANT_URL',
-                            parameter_value:    key[1]});
-                        break;
-                    }
-                    case 'merchant_api_secret':{
-                        //generates values for resources
-                        const demo_api_secret = createSecret();
-                        json_data[key[0]] = demo_api_secret;
-                        await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                        {   app_id:             app_id,
-                            parameter_name:     'MERCHANT_API_SECRET',
-                            parameter_value:    demo_api_secret});
-                        break;
-                    }
-                    case 'merchant_public_key':{
-                        json_data[key[0]] = demo_public_key;
-                        await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                        {   app_id:             app_id,
-                            parameter_name:     'MERCHANT_PUBLIC_KEY',
-                            parameter_value:    demo_public_key});
-                        break;
-                    }
-                    case 'merchant_private_key':{
-                        json_data[key[0]] = demo_private_key;
-                        await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                        {   app_id:             app_id,
-                            parameter_name:     'MERCHANT_PRIVATE_KEY',
-                            parameter_value:    demo_private_key});
-                        break;
-                    }
-                    default:{
-                        json_data[key[0]] = key[1];
-                        break;
-                    }
+                else
+                    return key_name[1];
+            };
+            //loop json_data keys
+            for (const key of Object.entries(resource.json_data)){
+                const value = value_set(key);
+                if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>secret_key[key[0].toUpperCase()]).length>0)
+                    await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                        {   app_id:             resource.app_registry_update_app_id,
+                            parameter_name:     key[0].toUpperCase(),
+                            parameter_value:    value
+                        });
+                resource.json_data[key[0]] = value;
+            }
+            //loop custom secret keys containing USER_ACCOUNT_ID not in json_data
+            if (resource.app_update_secret)
+                for (const key of resource.app_update_secret.filter((/**@type{*}*/secret_key)=>Object.values(secret_key)[0]=='USER_ACCOUNT_ID')){
+                    const value = value_set([Object.keys(key)[0], Object.values(key)[0]]);
+                    await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                            {   app_id:             resource.app_registry_update_app_id,
+                                parameter_name:     Object.keys(key)[0].toUpperCase(),
+                                parameter_value:    value
+                            });
                 }
-            return json_data;
+            return resource.json_data;
         };
 
         for (const resource_master of demo_user.resource_master ?? []){
@@ -653,9 +700,31 @@ const install_db_get_files = async (json_type) =>{
                             data_app_id:                                    resource_master.app_data_entity_resource_app_data_entity_app_id,
                             app_data_entity_resource_app_data_entity_id:    resource_master.app_data_entity_resource_app_data_entity_id,
                             app_data_entity_resource_id:                    resource_master.app_data_entity_resource_id,
-                            json_data:                                      await demo_data_update(resource_master.user_account_app_app_id, resource_master.json_data)
+                            json_data:                                      await demo_data_update(resource_master)
             };
-            await create_resource_master(app_id, data);
+            const master_id = await create_resource_master(app_id, data);
+            for (const resource_detail of resource_master.resource_detail ?? []){
+                const data = {  app_data_resource_master_id                     : master_id,
+                                app_data_entity_resource_id                     : resource_detail.app_data_entity_resource_id,
+                                user_account_id                                 : demo_user.id,
+                                user_account_app_id                             : resource_detail.user_account_app_id,
+                                data_app_id                                     : resource_detail.data_app_id,
+                                app_data_entity_resource_app_data_entity_id     : resource_detail.app_data_entity_resource_app_data_entity_id,
+                                app_data_resource_master_attribute_id           : resource_detail.app_data_resource_master_attribute_id,
+                                json_data                                       : await demo_data_update(resource_detail)
+                                };
+                const detail_id = await create_resource_detail(app_id, data);
+                for (const resource_detail_data of resource_detail.resource_detail_data ?? []){
+                    const data ={   app_data_resource_detail_id             : detail_id,
+                                    user_account_id                         : demo_user.id,
+                                    user_account_app_id                     : resource_detail_data.user_account_app_id,
+                                    data_app_id                             : resource_detail_data.data_app_id,
+                                    app_data_resource_master_attribute_id   : resource_detail_data.app_data_resource_master_attribute_id,
+                                    json_data                               : await demo_data_update(resource_detail_data)
+                                    };
+                    create_resource_detail_data(app_id, data);
+                }
+            }
         }
     }
     let records_user_account_like = 0;
@@ -874,7 +943,9 @@ const install_db_get_files = async (json_type) =>{
     }
     install_result.push({'user_account': records_user_account});
     install_result.push({'user_account_app': records_user_account_app});
-    install_result.push({'user_account_resource_master': records_user_account_resource_master});    
+    install_result.push({'user_account_resource_master': records_user_account_resource_master});
+    install_result.push({'user_account_resource_master': records_user_account_resource_detail});
+    install_result.push({'user_account_resource_master': records_user_account_resource_detail_data});
     install_result.push({'user_account_like': records_user_account_like});
     install_result.push({'user_account_view': records_user_account_view});
     install_result.push({'user_account_follow': records_user_account_follow});

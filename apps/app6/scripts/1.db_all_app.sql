@@ -14,6 +14,7 @@ INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('STORE_ROLE', <APP_ID/>);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('ENTITY_TYPE', <APP_ID/>);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('RESOURCE_TYPE', <APP_ID/>);
+INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('CUSTOMER_TYPE', <APP_ID/>);
 
 --settings used as relations
 
@@ -32,6 +33,7 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PRODUCT_CATEGORY','Product category',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','BRAND','Brand',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','CATALOG','Product',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'CUSTOMER_TYPE','ANONYMOUS', 'Anonymous',NULL,NULL,NULL,NULL);
 --settings used as attributes
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'ENTITY_TYPE','SHOP','Shop',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'PAYMENT_METHOD','CASH','Cash',NULL,NULL,NULL,NULL);
@@ -127,6 +129,13 @@ INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_acc
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6032, null, null, <APP_ID/>,  6000, 6005, '{"name":"CHECKOUT"}');
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6033, null, null, <APP_ID/>,  6000, 6011, '{ "title":{"default_text": "Product", "length":null, "type":"TEXT", "lov":null}}');
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6034, null, null, <APP_ID/>,  6000, 6011, '{ "name":{"default_text": "Name", "length":null, "type":"TEXT", "lov":null}}');
+
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6035, null, null, <APP_ID/>,  6000, 6006, '{ "title":{"default_text": "Customer", "length":null, "type":"TEXT", "lov":null}}');
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6036, null, null, <APP_ID/>,  6000, 6006, '{ "customer_type":{"default_text":"Customer type", "length":null, "type":"TEXT", "lov":"CUSTOMER_TYPE"}}');
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6037, null, null, <APP_ID/>,  6000, 6006, '{ "name":{"default_text":"Name", "length":null, "type":"TEXT", "lov":null}}');
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6038, null, null, <APP_ID/>,  6000, 6006, '{ "address":{"default_text":"Address", "length":null, "type":"TEXT", "lov":null}}');
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6039, null, null, <APP_ID/>,  6000, 6006, '{ "city":{"default_text":"City", "length":null, "type":"TEXT", "lov":null}}');
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6040, null, null, <APP_ID/>,  6000, 6006, '{ "country":{"default_text":"Country", "length":null, "type":"TEXT", "lov":"COUNTRY"}}');
 --
 --app data resource detail
 --
