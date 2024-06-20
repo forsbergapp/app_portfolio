@@ -944,8 +944,8 @@ const install_db_get_files = async (json_type) =>{
     install_result.push({'user_account': records_user_account});
     install_result.push({'user_account_app': records_user_account_app});
     install_result.push({'user_account_resource_master': records_user_account_resource_master});
-    install_result.push({'user_account_resource_master': records_user_account_resource_detail});
-    install_result.push({'user_account_resource_master': records_user_account_resource_detail_data});
+    install_result.push({'user_account_resource_detail': records_user_account_resource_detail});
+    install_result.push({'user_account_resource_detail_data': records_user_account_resource_detail_data});
     install_result.push({'user_account_like': records_user_account_like});
     install_result.push({'user_account_view': records_user_account_view});
     install_result.push({'user_account_follow': records_user_account_follow});
