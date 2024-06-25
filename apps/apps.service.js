@@ -941,7 +941,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
  * @returns 
  */
 const getFunction = async (app_id, resource_id, data, locale, res) => {
-    const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==resource_id)[0][3];
+    const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==resource_id)[0][4];
     if (module_path){
         try {
             const {default:RunFunction} = await import(`file://${process.cwd()}${module_path}`);

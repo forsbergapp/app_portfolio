@@ -36,9 +36,10 @@ const component = async props => {
                                             {
                                                 app_id:props.app_id,
                                                 display_type:'VERTICAL_KEY_VALUE',
-                                                master_path:'/server-db/app_data_resource_master/',
-                                                master_query:`resource_name=PRODUCT&data_app_id=${props.app_id}&fields=name`,
-                                                master_method:'GET',
+                                                master_path:'/app-function/PRODUCT_GET',
+                                                master_query:'fields=name',
+                                                master_body:{data_app_id:props.app_id},
+                                                master_method:'POST',
                                                 master_token_type:'APP_DATA',
                                                 master_resource:'PRODUCT_METADATA',
                                                 detail_path:null,

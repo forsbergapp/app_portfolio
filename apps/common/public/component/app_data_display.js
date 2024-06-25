@@ -132,11 +132,13 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *          display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL'
  *          master_path:string,
  *          master_query:string,
+*           master_body:string,
  *          master_method:string,
  *          master_token_type:string,
  *          master_resource:string,
  *          detail_path:string,
  *          detail_query:string,
+ *          detail_body:string,
  *          detail_method:string,
  *          detail_token_type:string,
  *          detail_class:string,
@@ -224,19 +226,19 @@ const component = async props => {
         const master_object = props.master_path?
                                     await props.function_FFB(   props.master_path, 
                                                                 props.master_query, 
-                                                                props.master_method, props.master_token_type, null)
+                                                                props.master_method, props.master_token_type, props.master_body)
                                             .then((/**@type{*}*/result)=>props.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)):
                                     JSON.parse(result).rows[0]):{};
         const detail_rows = props.detail_path?
                                     await props.function_FFB(   props.detail_path, 
                                                                 props.detail_query, 
-                                                                props.detail_method, props.detail_token_type, null)
+                                                                props.detail_method, props.detail_token_type, props.detail_body)
                                             .then((/**@type{*}*/result)=>JSON.parse(result).rows):
                                     [];
         
-        const master_metadata = await props.function_FFB(  '/server-db/app_data_resource_master/', 
-                                                            `resource_name=${props.master_resource}&data_app_id=${props.app_id}&fields=json_data`, 
-                                                            'GET', 'APP_DATA', null)
+        const master_metadata = await props.function_FFB(  `/app-function/${props.master_resource}`, 
+                                                            'fields=json_data', 
+                                                            'POST', 'APP_DATA', {data_app_id:props.app_id})
                                             .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
         
         if (props.new_resource==false){
