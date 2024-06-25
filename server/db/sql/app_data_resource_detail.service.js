@@ -71,13 +71,13 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                     AND (adrm.app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)
                     AND (app_s.value                                            = :resource_name OR :resource_name IS NULL)
                     AND (adrm.app_data_entity_resource_app_data_entity_id       = :entity_id OR :entity_id IS NULL)`;
-    const parameters = {resource_id         : resource_id,
+    const parameters = {resource_id         : resource_id ?? null,
                         master_id           : master_id,
-                        user_account_id     : user_account_id,
+                        user_account_id     : user_account_id ?? null,
                         user_account_app_id : user_account_id?data_app_id:null,
                         data_app_id         : data_app_id,
                         resource_name       : resource_name,
-                        entity_id           : entity_id,
+                        entity_id           : entity_id ?? null,
                         user_null           : user_null?1:0
                         };
     return await db_execute(app_id, sql, parameters, null, null);
