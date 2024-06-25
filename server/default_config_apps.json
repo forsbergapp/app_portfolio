@@ -464,6 +464,7 @@
         },
         "MODULES":[
             ["FUNCTION","PRODUCT_GET",     		    "APP_DATA",   	"PRODUCT get",              "/apps/app6/src/functions/product_get.js"],
+            ["FUNCTION","PRODUCT_METADATA",         "APP_DATA",   	"PRODUCT metadata",         "/apps/app6/src/functions/product_metadata.js"],
             ["FUNCTION","ORDER_METADATA",     		"APP_DATA",   	"ORDER metadata",           "/apps/app6/src/functions/order_metadata.js"],
 			["FUNCTION","PAYMENT_REQUEST_METADATA", "APP_DATA",   	"PAYMENT REQUEST metadata", "/apps/app6/src/functions/payment_request_metadata.js"],
 			["FUNCTION","BUY",     					"APP_DATA",   	"ORDER create, buy",        "/apps/app6/src/functions/buy.js"],
