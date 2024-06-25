@@ -3,7 +3,7 @@
  * @param {number} app_id
  * @param {*} data
  * @param {string} locale
- * @returns {Promise.<void>}
+ * @returns {Promise.<import('../../../../types.js').db_result_app_data_resource_master_post>}
  */
 const customer_create = async (app_id, data, locale) =>{
     /**@type{import('../../../../server/db/sql/app_data_entity_resource.service.js')} */
@@ -54,5 +54,6 @@ const customer_create = async (app_id, data, locale) =>{
             app_data_resource_master_attribute_id   : null
     };
     await createRandomTransactions(app_id, post_data_transaction);
+    return Customer;
 };
 export default customer_create;

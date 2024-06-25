@@ -97,7 +97,7 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
                                         bff_parameters.res.redirect(`http://${ConfigGet('SERVER', 'HOST')}`);
                                 }
                                 else{
-                                    if (bff_parameters.method.toUpperCase() == 'POST')
+                                    if (bff_parameters.method.toUpperCase() == 'POST' && !bff_parameters.route_path.toLowerCase().startsWith('/app-function'))
                                         bff_parameters.res.status(201).send(result_service);
                                     else{
                                         if (decodedquery && new URLSearchParams(decodedquery).get('fields')){

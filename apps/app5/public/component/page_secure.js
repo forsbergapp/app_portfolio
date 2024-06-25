@@ -50,7 +50,7 @@ const component = async props => {
     };
     const post_component = async () =>{
         spinner = '';
-        const customer = await props.function_FFB('/server-db/app_data_resource_master/', `resource_name=CUSTOMER&user_account_id=${props.user_account_id}&data_app_id=${props.app_id}`, 'GET', 'APP_ACCESS', null)
+        const customer = await props.function_FFB('/app-function/CUSTOMER_GET', null, 'POST', 'APP_ACCESS', {user_account_id:props.user_account_id,data_app_id:props.app_id})
                                             .then((/**@type{string}*/result)=>JSON.parse(result))
                                             .catch((/**@type{Error}*/error)=>{throw error;});
         
@@ -62,11 +62,12 @@ const component = async props => {
                                             {
                                                 app_id:props.app_id,
                                                 display_type:'VERTICAL_KEY_VALUE',
-                                                master_path:'/server-db/app_data_resource_master/',
-                                                master_query:`resource_name=CUSTOMER&data_app_id=${props.app_id}&fields=json_data`,
-                                                master_method:'GET',
+                                                master_path:'/app-function/CUSTOMER_METADATA',
+                                                master_query:'fields=json_data',
+                                                master_body:{data_app_id:props.app_id},
+                                                master_method:'POST',
                                                 master_token_type:'APP_DATA',
-                                                master_resource:'CUSTOMER',
+                                                master_resource:'CUSTOMER_METADATA',
                                                 detail_path:null,
                                                 detail_query:null,
                                                 detail_method:null,

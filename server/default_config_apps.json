@@ -400,10 +400,18 @@
                     "RENDER_FILES":[]
         },
         "MODULES":[
-            ["FUNCTION","ACCOUNT_CREATE",       "Creates ACCOUNT with logic not to be displayed in app",            "/apps/app5/src/functions/account_create.js"],
-            ["FUNCTION","ACCOUNT_STATEMENT",    "Gets ACCOUNT statement with logic not to be displayed in app",     "/apps/app5/src/functions/account_statement.js"],
-            ["FUNCTION","ACCOUNT_TRANSACTIONS", "Gets ACCOUNT transactions with logic not to be displayed in app",  "/apps/app5/src/functions/account_transactions.js"],
-            ["FUNCTION","CUSTOMER_CREATE",      "Creates CUSTOMER with logic not to be displayed in app",           "/apps/app5/src/functions/customer_create.js"]
+            ["FUNCTION","ACCOUNT_METADATA",     	"APP_DATA",   "ACCOUNT metadata",           "/apps/app5/src/functions/account_metadata.js"],
+			["FUNCTION","CUSTOMER_METADATA",    	"APP_DATA",   "CUSTOMER metadata",          "/apps/app5/src/functions/customer_metadata.js"],
+			["FUNCTION","TRANSACTIONS_METADATA",	"APP_DATA",   "TRANSACTIONS metadata",   	"/apps/app5/src/functions/transactions_metadata.js"],
+			["FUNCTION","ACCOUNT_CREATE",       	"APP_ACCESS", "ACCOUNT create",            	"/apps/app5/src/functions/account_create.js"],
+			["FUNCTION","ACCOUNT_GET",       		"APP_ACCESS", "ACCOUNT get",            	"/apps/app5/src/functions/account_get.js"],
+			["FUNCTION","ACCOUNT_STATEMENT",    	"APP_ACCESS", "ACCOUNT get statement",     	"/apps/app5/src/functions/account_statement.js"],
+			["FUNCTION","ACCOUNT_TRANSACTIONS", 	"APP_ACCESS", "ACCOUNT get transactions",  	"/apps/app5/src/functions/account_transactions.js"],
+			["FUNCTION","CUSTOMER_CREATE",      	"APP_ACCESS", "CUSTOMER create",           	"/apps/app5/src/functions/customer_create.js"],
+			["FUNCTION","CUSTOMER_GET",      		"APP_ACCESS", "CUSTOMER get",           	"/apps/app5/src/functions/customer_get.js"],
+			["FUNCTION","PAYMENT_ACCEPT",			"APP_ACCESS", "PAYMENT accept",   			"/apps/app5/src/functions/payment_accept.js"],
+			["FUNCTION","PAYMENT_CANCEL",			"APP_ACCESS", "PAYMENT cancel",   			"/apps/app5/src/functions/payment_cancel.js"],
+			["FUNCTION","PAYMENT_REQUEST_CREATE",	"APP_DATA",	  "PAYMENT REQUEST create",   	"/apps/app5/src/functions/payment_request_create.js"]
         ],
         "STATUS":"ONLINE"
     },
@@ -454,7 +462,15 @@
                     "FAVICON_192x192":"/images/favicon-192x192.png",
                     "RENDER_FILES":[]
         },
-        "MODULES":[],
+        "MODULES":[
+            ["FUNCTION","PRODUCT_GET",     		    "APP_DATA",   	"PRODUCT get",              "/apps/app6/src/functions/product_get.js"],
+            ["FUNCTION","ORDER_METADATA",     		"APP_DATA",   	"ORDER metadata",           "/apps/app6/src/functions/order_metadata.js"],
+			["FUNCTION","PAYMENT_REQUEST_METADATA", "APP_DATA",   	"PAYMENT REQUEST metadata", "/apps/app6/src/functions/payment_request_metadata.js"],
+			["FUNCTION","BUY",     					"APP_DATA",   	"ORDER create, buy",        "/apps/app6/src/functions/buy.js"],
+			["FUNCTION","ORDER_UPDATE",       		"APP_DATA",		"ORDER update",            	"/apps/app6/src/functions/order_update.js"],
+			["FUNCTION","PAYMENT_REQUEST_CREATE",	"APP_DATA",		"PAYMENT REQUEST create",   "/apps/app6/src/functions/payment_request_create.js"],
+			["FUNCTION","PAYMENT_REQUEST_GET",		"APP_DATA",		"PAYMENT REQUEST get",   	"/apps/app6/src/functions/payment_request_get.js"]
+        ],
         "STATUS":"ONLINE"}
 ]
 }

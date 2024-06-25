@@ -49,11 +49,11 @@ const get = async (app_id, resource_id, user_account_id, data_app_id, resource_n
                             AND (adrm.app_data_entity_resource_app_data_entity_app_id     = :data_app_id OR :data_app_id IS NULL)
                             AND (adrm.app_data_entity_resource_app_data_entity_id         = :entity_id OR :entity_id IS NULL)
                             AND (app_s.value                                              = :resource_name OR :resource_name IS NULL)`;
-		const parameters = {resource_id     : resource_id,
-                            user_account_id     : user_account_id,
+		const parameters = {resource_id     : resource_id ?? null,
+                            user_account_id     : user_account_id ?? null,
                             user_account_app_id : user_account_id?data_app_id:null,
                             data_app_id         : data_app_id,
-                            entity_id           : entity_id,
+                            entity_id           : entity_id ?? null,
                             resource_name       : resource_name,
                             user_null           : user_null?1:0
                             };
