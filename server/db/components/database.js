@@ -591,16 +591,19 @@ const install_db_get_files = async (json_type) =>{
     //create all users first and update with id
     await create_users(demo_users);
     const apps = await getAppsAdminId(app_id);
-
-    //generate demo key pairs
+    
+    //generate key pairs for each user that can be saved both in resource and apps.json.
+    //Use same for all demo users since key creation can be slow
     const {publicKey, privateKey} = await CreateKeyPair();
     const demo_public_key = publicKey;
     const demo_private_key = privateKey;
-
     //create user posts
     for (const demo_user of demo_users){
         SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username})));
         install_count++;
+
+        //generate vpa for each user that can be saved both in resource and apps.json
+        const demo_vpa = createUUID();
         //create user_account_app record for all apps
         for (const app of apps){
             await create_user_account_app(app.id, demo_user.id);
@@ -654,7 +657,7 @@ const install_db_get_files = async (json_type) =>{
                         case 'DATE_ISO':
                             return new Date().toISOString();
                         case 'UUID':
-                            return createUUID();
+                            return demo_vpa;
                         case 'SECRET':
                             return createSecret();
                         case 'PUBLIC_KEY':

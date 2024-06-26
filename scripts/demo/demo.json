@@ -325,6 +325,18 @@
                             "user_account_app_app_id":5, 
                             "app_data_entity_resource_app_data_entity_app_id":5, 
                             "app_data_entity_resource_app_data_entity_id":5000, 
+                            "app_data_entity_resource_id":5002, 
+                            "json_data":{   "customer_type":"BUSINESS_COMPANY_PRIVATE",
+                                            "name":"Merchant Shop owner",
+                                            "address":"Shop",
+                                            "city":"",
+                                            "country":""
+                                        }
+                            },
+                            {"user_account_app_user_account_id":"<USER_ACCOUNT_ID/>", 
+                            "user_account_app_app_id":5, 
+                            "app_data_entity_resource_app_data_entity_app_id":5, 
+                            "app_data_entity_resource_app_data_entity_id":5000, 
                             "app_data_entity_resource_id":5003, 
                             "json_data":{   "merchant_id":"<DEMO_MERCHANT_ID/>",
                                             "merchant_name":"Shop",
@@ -337,10 +349,37 @@
                                             "merchant_api_url":"app5.localhost/bff/app_external/v1/app-function/PAYMENT_REQUEST", 
                                             "merchant_api_secret":"<DEMO_API_SECRET/>", 
                                             "merchant_public_key":"<DEMO_PUBLIC_KEY/>",
-                                            "merchant_private_key":"<DEMO_PRIVATE_KEY/>"
+                                            "merchant_private_key":"<DEMO_PRIVATE_KEY/>",
+                                            "merchant_vpa":"<DEMO_VPA/>"
                                         },
                             "app_registry_update_app_id":6,
-                            "app_update_secret":[{"MERCHANT_ID":"DATE_NOW"}, {"MERCHANT_URL":""}, {"MERCHANT_API_SECRET":"SECRET"}, {"MERCHANT_PUBLIC_KEY":"PUBLIC_KEY"}, {"MERCHANT_PRIVATE_KEY":"PRIVATE_KEY"}]
+                            "app_update_secret":[{"MERCHANT_ID":"DATE_NOW"}, {"MERCHANT_URL":""}, {"MERCHANT_API_SECRET":"SECRET"}, {"MERCHANT_PUBLIC_KEY":"PUBLIC_KEY"}, {"MERCHANT_PRIVATE_KEY":"PRIVATE_KEY"}, {"MERCHANT_VPA":"UUID"}],
+                            "resource_detail":[{"app_data_resource_master_id":"<MASTER_ID/>",
+                                                "app_data_entity_resource_id":5000,
+                                                "user_account_id"                                 : "<USER_ACCOUNT_ID/>",
+                                                "user_account_app_id"                             : 5,
+                                                "data_app_id"                                     : 5,
+                                                "app_data_entity_resource_app_data_entity_id"     : 5000,
+                                                "app_data_resource_master_attribute_id"           : null,
+                                                "json_data":{   "bank_account_number":"<BANK_ACCOUNT_NUMBER/>",
+                                                                "bank_account_secret":"<BANK_ACCOUNT_SECRET/>",
+                                                                "bank_account_vpa":"<VPA/>"
+                                                            },
+                                                "app_update_secret":[{"BANK_ACCOUNT_NUMBER":"DATE_NOW_PADSTART_16"}, {"BANK_ACCOUNT_SECRET":"SECRET"}, {"BANK_ACCOUNT_VPA":"UUID"}],
+                                                "resource_detail_data":[{"app_data_resource_detail_id": "<DETAIL_ID/>",
+                                                                         "user_account_id": "<USER_ACCOUNT_ID/>",
+                                                                         "user_account_app_id": 5,
+                                                                         "data_app_id": 5,
+                                                                         "app_data_resource_master_attribute_id": null,
+                                                                         "json_data":{  "timestamp":"DATE_ISO",
+                                                                                        "logo":"",
+                                                                                        "origin":"Initial deposit",
+                                                                                        "amount_deposit":2000000,
+                                                                                        "amount_withdrawal":null},
+                                                                         "app_update_secret":[{"TIMESTAMP":"DATE_ISO"}]
+                                                                        }]
+                                                }
+                            ]
                             }
         ]
     },
