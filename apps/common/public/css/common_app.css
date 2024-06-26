@@ -414,6 +414,7 @@ select {
 	text-align: start;
     width: calc(50% - 1em);
 	word-wrap: break-word;
+	vertical-align: middle;
 }
 .common_app_data_display_master_col2[contentEditable=true]{
 	border:1px solid;

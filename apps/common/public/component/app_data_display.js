@@ -56,7 +56,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                             `<div class='common_app_data_display_master_row'>
                                                     <div    data-key='${Object.keys(master_row)[0]}' 
                                                             class='common_app_data_display_master_col1'>${Object.values(master_row)[0].default_text}</div>
-                                                    <div    data-value='${Object.keys(master_row)[0]}' 
+                                                    <div    data-value='${Object.keys(master_row)[0]}'
                                                             class='common_app_data_display_master_col2'
                                                             contentEditable='${props.mode=='READ'?'false':'true'}'></div>
                                             </div>
@@ -70,7 +70,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                             `<div class='common_app_data_display_master_row'>
                                                     <div    data-key='${master_row[0]}' 
                                                             class='common_app_data_display_master_col1'>${master_row[1].default_text}</div>
-                                                    <div    data-value='${master_row[0]}' 
+                                                    <div    data-value='${master_row[1].value}' 
                                                             class='common_app_data_display_master_col2'
                                                             contentEditable='${props.mode=='READ'?'false':'true'}'>${props.function_format_value(master_row[1].value, props.timezone, props.locale)}</div>
                                                 </div>
