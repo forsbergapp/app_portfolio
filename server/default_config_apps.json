@@ -442,6 +442,7 @@
                     "MERCHANT_API_SECRET":"<API_SECRET/>", 
                     "MERCHANT_PUBLIC_KEY":"<PUBLIC_KEY/>",
                     "MERCHANT_PRIVATE_KEY":"<PRIVATE_KEY/>",
+                    "MERCHANT_VPA":"<VPA/>",
                     "USER_ACCOUNT_ID_ANONYMOUS":"<USER_ACCOUNT_ID_ANONYMOUS/>"
         },
         "PARAMETERS":[
