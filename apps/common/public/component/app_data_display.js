@@ -70,9 +70,11 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                             `<div class='common_app_data_display_master_row'>
                                                     <div    data-key='${master_row[0]}' 
                                                             class='common_app_data_display_master_col1'>${master_row[1].default_text}</div>
-                                                    <div    data-value='${master_row[1].value}' 
-                                                            class='common_app_data_display_master_col2'
-                                                            contentEditable='${props.mode=='READ'?'false':'true'}'>${props.function_format_value(master_row[1].value, props.timezone, props.locale)}</div>
+                                                    <div    data-value='${master_row[1].type.toUpperCase()=='IMAGE'?'':master_row[1].value}' 
+                                                            class='common_app_data_display_master_col2 common_app_data_display_type_${master_row[1].type.toLowerCase()}'
+                                                            ${master_row[1].type.toUpperCase()=='IMAGE'?' ':` contentEditable='${props.mode=='READ'?'false':'true'}'`}>${master_row[1].type.toUpperCase()=='IMAGE'?
+                                                                                                                        master_row[1].value:
+                                                                                                                            props.function_format_value(master_row[1].value, props.timezone, props.locale)}</div>
                                                 </div>
                                             `).join('')
                                         }
@@ -245,7 +247,8 @@ const component = async props => {
             for (const key of Object.entries(master_object)){
                 master_object[key[0]] = {   
                                             value:key[1], 
-                                            default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].default_text:key[0]
+                                            default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].default_text:key[0],
+                                            type:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].type:key[0]
                                         };
             }
         }

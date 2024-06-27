@@ -28,7 +28,8 @@ const component = async props => {
     /**
      * Pay product
      */
-    const pay = () =>{
+    const pay = async () =>{
+        
         props.function_show_message('INFO',null,null,null, 'Payed!');
     };
     const post_component = () =>{
@@ -37,8 +38,8 @@ const component = async props => {
                                                 app_id:props.app_id,
                                                 display_type:'VERTICAL_KEY_VALUE',
                                                 master_path:'/app-function/PRODUCT_GET',
-                                                master_query:'fields=name',
-                                                master_body:{data_app_id:props.app_id},
+                                                master_query:'fields=name,image,description',
+                                                master_body:{data_app_id:props.app_id, resource_id : 6000},
                                                 master_method:'POST',
                                                 master_token_type:'APP_DATA',
                                                 master_resource:'PRODUCT_METADATA',
