@@ -71,9 +71,6 @@ body {
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
 	.app_page_start_shop{
-		height: 1em;
-		width: 9em;
-		cursor:pointer;
 		font-size: 1em;
 	}
 }
@@ -155,6 +152,12 @@ body {
 	box-shadow: 0 0 35px 4px var(--common_app_color_white_transparent);
 }
 /* APP THEME COMMON*/
+.common_app_data_display_type_image{
+	background-color: var(--common_app_color_white);
+}
+.common_app_data_display_master{
+	color: var(--common_app_color_gold);
+}
 #common_app_data_display_button_post{
 	background-color: var(--common_app_color_gold);
 }

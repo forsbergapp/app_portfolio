@@ -416,6 +416,10 @@ select {
 	word-wrap: break-word;
 	vertical-align: middle;
 }
+.common_app_data_display_type_image{
+	width: 2em;
+	height: 2em;
+}
 .common_app_data_display_master_col2[contentEditable=true]{
 	border:1px solid;
 }
