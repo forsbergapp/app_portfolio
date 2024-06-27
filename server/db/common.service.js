@@ -231,24 +231,28 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 			LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
 			.then(()=>{
 				//parse json_data in SELECT rows, return also the json_data column as reference
-				/**@ts-ignore */
-				const rows = sql.trimStart().toUpperCase().startsWith('SELECT')?result.map((/**@type{import('../../types.js').db_result_app_log_getLogsAdmin}*/row)=>{
-																							return {...row, ...row.json_data?JSON.parse(row.json_data):null};
-																							}) ?? []:null;
-				if (pagination){
-					//return pagination ISO20022 format
-					//use pagination OR multiple resource 
+				try {
 					/**@ts-ignore */
-					result.page_header = {	total_count:	result.length>0?result[0].total_rows:0,
-											offset: 		parameters.offset?parameters.offset:0,
-											count:			Math.min(parameters.limit, result.length)};
-					resolve(
+					const rows = sql.trimStart().toUpperCase().startsWith('SELECT')?result.map((/**@type{import('../../types.js').db_result_app_log_getLogsAdmin}*/row)=>{
+						return {...row, ...row.json_data?JSON.parse(row.json_data.replaceAll('\r\n','')):null};
+						}) ?? []:null;	
+					if (pagination){
+						//return pagination ISO20022 format
+						//use pagination OR multiple resource 
 						/**@ts-ignore */
-						{page_header:result.page_header, rows:rows}
-					);
+						result.page_header = {	total_count:	result.length>0?result[0].total_rows:0,
+												offset: 		parameters.offset?parameters.offset:0,
+												count:			Math.min(parameters.limit, result.length)};
+						resolve(
+							/**@ts-ignore */
+							{page_header:result.page_header, rows:rows}
+						);
+					}
+					else
+						resolve(rows ?? result);
+				} catch (error) {
+					return reject(error);
 				}
-				else
-					resolve(rows ?? result);
 						
 			});
 		})
