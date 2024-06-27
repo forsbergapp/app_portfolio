@@ -79,7 +79,10 @@ const getStatement = async (app_id, data, locale) =>{
     /**@type{import('../../../../server/db/sql/app_data_resource_detail_data.service.js')} */
     const {get:TransactionsGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
 
-    const transactions = await TransactionsGet(app_id, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, null, false);    
+    const transactions = await TransactionsGet(app_id, null, null, data.user_account_id, data.data_app_id, 
+                                                'RESOURCE_TYPE', 'ACCOUNT', 
+                                                'RESOURCE_TYPE', 'CUSTOMER',
+                                                null, null, null, null, false);
 
     const Entity            = await EntityGet(app_id, null, data.data_app_id, null)
                                         .then(result=>JSON.parse(result[0].json_data));
