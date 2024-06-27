@@ -234,7 +234,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 				try {
 					/**@ts-ignore */
 					const rows = sql.trimStart().toUpperCase().startsWith('SELECT')?result.map((/**@type{import('../../types.js').db_result_app_log_getLogsAdmin}*/row)=>{
-						return {...row, ...row.json_data?JSON.parse(row.json_data.replaceAll('\r\n','')):null};
+						return {...row, ...row.json_data?JSON.parse(row.json_data.replaceAll(process.platform == 'win32'?'\r\n':'\n','')):null};
 						}) ?? []:null;	
 					if (pagination){
 						//return pagination ISO20022 format
