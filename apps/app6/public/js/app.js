@@ -28,6 +28,13 @@ const app_event_click = event => {
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
+                case 'tshirt':{
+                    if (AppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform == 'scale(2)')
+                        AppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(1)';
+                    else
+                        AppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(2)';
+                    break;
+                }
                 case 'common_toolbar_framework_js':{
                    framework_set(1);
                     break;
@@ -75,6 +82,15 @@ const init_app = async () => {
                                         '/component/page_start.js'))
     .then(()=> common.ComponentRender('app_construction', {}, '/common/component/construction.js'));
    framework_set();
+   
+   AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousemove',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        const event_target_id = common.element_id(event.target);
+        if (event_target_id=='tshirt'){
+            AppDocument.querySelector('#tshirt').style.transform = `rotateY(${event.layerX}deg)`;
+        }   
+        else
+            AppDocument.querySelector('#tshirt').style.transform = 'rotateY(0deg)';
+    });
 };
 /**
  * Init common

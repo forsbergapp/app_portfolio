@@ -67,6 +67,26 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                 ${(props.master_object && props.new_resource==false)?
                                     `<div class='common_app_data_display_master'>
                                         ${Object.entries(props.master_object).filter(key=>key[0]!='title' && key[0]!='title_sub').map((/**@type{*}*/master_row)=>
+                                            master_row[1].value.constructor===Array?
+                                                    `<div class='common_app_data_display_master_row'>
+                                                        <div class='common_select_dropdown'>
+                                                            <div class='common_select_dropdown_value common_app_data_display_master_row_list' data-value=''>
+                                                                ${master_row[1].value[0].map(key=>
+                                                                    `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key[1].toLowerCase()}' data-value='${key[0]}' ${key[1]=='COLOR'?`style='background-color:${key[0]};'`:''}>${key[1]=='COLOR'?' ':key[0]}</div>`
+                                                                ).join('')}
+                                                            </div>
+                                                            <div class='common_select_dropdown_icon common_icon'></div>
+                                                        </div>
+                                                        <div class='common_select_options'>
+                                                            ${master_row[1].value.map(list=>
+                                                                `<div class='common_select_option common_app_data_display_master_row_list'>
+                                                                    ${list.map(key=>
+                                                                        `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key[1].toLowerCase()}' data-value='${key[0]}' ${key[1]=='COLOR'?`style='background-color:${key[0]};'`:''}>${key[1]=='COLOR'?' ':key[0]}</div>`
+                                                                    ).join('')}
+                                                                </div>`
+                                                            ).join('')}
+                                                        </div>
+                                                    </div>`:
                                             `<div class='common_app_data_display_master_row'>
                                                     <div    data-key='${master_row[0]}' 
                                                             class='common_app_data_display_master_col1'>${master_row[1].default_text}</div>

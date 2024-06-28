@@ -399,6 +399,14 @@ select {
 .common_app_data_display_master_row{
 	margin-bottom: 0.5em;
 }
+.common_app_data_display_master_col_list{
+	display: inline-block;
+}
+.common_app_data_display_master_col_list_color{
+	width: 1em;
+	height: 1em;
+	border-radius: 50%;
+}
 .common_app_data_display_detail_horizontal_row_title,
 .common_app_data_display_detail_horizontal_row{
 	display: grid;
@@ -417,8 +425,9 @@ select {
 	vertical-align: middle;
 }
 .common_app_data_display_type_image{
-	width: 2em;
-	height: 2em;
+	width: 8em;
+	height: 8em;
+	margin-inline-start: -2em;
 }
 .common_app_data_display_master_col2[contentEditable=true]{
 	border:1px solid;

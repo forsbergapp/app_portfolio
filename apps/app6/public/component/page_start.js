@@ -29,8 +29,10 @@ const component = async props => {
      * Pay product
      */
     const pay = async () =>{
+        const price = props.common_document.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list')[3].getAttribute('data-value');
+        const sku = props.common_document.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list')[0].getAttribute('data-value');
         
-        props.function_show_message('INFO',null,null,null, 'Payed!');
+        props.function_show_message('INFO',null,null,null, `Paid ${price} for SKU ${sku}!`);
     };
     const post_component = () =>{
         props.function_ComponentRender('app_page_start_shop', 
@@ -38,7 +40,7 @@ const component = async props => {
                                                 app_id:props.app_id,
                                                 display_type:'VERTICAL_KEY_VALUE',
                                                 master_path:'/app-function/PRODUCT_GET',
-                                                master_query:'fields=name,image,description',
+                                                master_query:'fields=name,image,description,sku',
                                                 master_body:{data_app_id:props.app_id, resource_id : 6000},
                                                 master_method:'POST',
                                                 master_token_type:'APP_DATA',
