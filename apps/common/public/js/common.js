@@ -2984,10 +2984,18 @@ const common_event = async (event_type,event) =>{
                 else{
                     const event_target_id = element_id(event.target);
                     switch(event_target_id){
+                        case event.target.parentNode.classList.contains('common_select_dropdown_value')?event_target_id:'':
+                        case event.target.parentNode.classList.contains('common_select_dropdown_icon')?event_target_id:'':
                         case event.target.classList.contains('common_select_dropdown_value')?event_target_id:'':
                         case event.target.classList.contains('common_select_dropdown_icon')?event_target_id:'':{
                             AppDocument.querySelector(`#${event_target_id} .common_select_options`).style.display = 
                                 AppDocument.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
+                            break;
+                        }
+                        case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
+                            AppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
+                            AppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
+                            event.target.parentNode.parentNode.style.display = 'none';
                             break;
                         }
                         case event.target.classList.contains('common_select_option')?event_target_id:'':{
