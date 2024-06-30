@@ -13,9 +13,11 @@ const product_get = async (app_id, data, locale) =>{
     const {get:DetailGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
     
     const products = await MasterGet(app_id, data.resource_id, null, data.data_app_id, 'PRODUCT', data.entity_id, data.locale, true);
+    /**@ts-ignore */
     for (const product of products.rows ?? products){
         product.sku = [];
         const product_variants = await DetailGet(app_id, data.resource_id_variant, product.id, null, data.data_app_id, 'PRODUCT_VARIANT', data.entity_id, data.locale, true);
+        /**@ts-ignore */
         for (const product_variant of product_variants.rows ?? product_variants){
             const data = JSON.parse(product_variant.json_data);
             const product_variant_metadatas = await MasterGet(app_id, data.resource_id, null, data.data_app_id, 'PRODUCT_VARIANT_METADATA', data.entity_id, data.locale, true);

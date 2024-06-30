@@ -71,16 +71,16 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                     `<div class='common_app_data_display_master_row'>
                                                         <div class='common_select_dropdown'>
                                                             <div class='common_select_dropdown_value common_app_data_display_master_row_list' data-value=''>
-                                                                ${master_row[1].value[0].map(key=>
+                                                                ${master_row[1].value[0].map((/**@type{*}*/key)=>
                                                                     `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.key_type.toLowerCase()}' data-${key.key_name}='${key.key_value}' ${key.key_type=='COLOR'?`style='background-color:${key.key_value};'`:''}>${key.key_type=='COLOR'?' ':key.key_value}</div>`
                                                                 ).join('')}
                                                             </div>
                                                             <div class='common_select_dropdown_icon common_icon'></div>
                                                         </div>
                                                         <div class='common_select_options'>
-                                                            ${master_row[1].value.map(list=>
+                                                            ${master_row[1].value.map((/**@type{*}*/list)=>
                                                                 `<div class='common_select_option common_app_data_display_master_row_list'>
-                                                                    ${list.map(key=>
+                                                                    ${list.map((/**@type{*}*/key)=>
                                                                         `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.key_type.toLowerCase()}' data-${key.key_name}='${key.key_value}' ${key.key_type=='COLOR'?`style='background-color:${key.key_value};'`:''}>${key.key_type=='COLOR'?' ':key.key_value}</div>`
                                                                     ).join('')}
                                                                 </div>`
