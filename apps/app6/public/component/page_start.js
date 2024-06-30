@@ -34,8 +34,8 @@ const component = async props => {
         
         props.function_show_message('INFO',null,null,null, `Paid ${price} for SKU ${sku}!`);
     };
-    const post_component = () =>{
-        props.function_ComponentRender('app_page_start_shop', 
+    const post_component = async () =>{
+        await props.function_ComponentRender('app_page_start_shop', 
                                             {
                                                 app_id:props.app_id,
                                                 display_type:'VERTICAL_KEY_VALUE',
