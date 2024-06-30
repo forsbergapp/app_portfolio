@@ -33,6 +33,7 @@
  * @property {function} preventDefault
  * @property {function} stopPropagation
  * @property {string}   type
+ * @property {number}   layerX
  * @property {{ id:                 string,
  *              blur:               function,
  *              focus:              function,
@@ -49,7 +50,10 @@
  *              parentNode:         {id: string,
  *                                   classList:{contains:function},
  *                                   nextElementSibling:{querySelector:function},
- *                                  style:{display:string}},
+ *                                   innerHTML:string,
+ *                                   getAttribute:function,
+ *                                   parentNode:{style:{display:string}},
+ *                                   style:{display:string}},
  *              selectedIndex:      number,
  *              setAttribute:       function,
  *              value:              string
