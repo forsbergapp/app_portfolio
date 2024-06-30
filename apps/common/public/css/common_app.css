@@ -209,7 +209,7 @@ select {
 }
 .common_select_option:hover,
 .common_select_option:active{
-	filter: invert(1);
+	background-color: var(--common_app_color_white3);
 }
 [contentEditable=true]:empty::before{
 	content:attr(placeholder);

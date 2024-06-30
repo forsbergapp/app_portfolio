@@ -75,6 +75,9 @@ body {
 	}
 }
 /*COMMON*/
+.common_app_data_display_buttons.css_spinner{
+	justify-self: center;
+}
 .common_app_data_display_buttons{
 	position: unset !important;
 }
@@ -182,7 +185,7 @@ body {
 	box-shadow: 0 0 1px var(--common_app_color_light);
 }
 .app_shop_div .css_spinner{
-	--common_app_color_background_spinner:var(--common_app_color_white3);
+	--common_app_color_background_spinner:var(--common_app_color_blue3);
 }
 
 .dialogue_content{

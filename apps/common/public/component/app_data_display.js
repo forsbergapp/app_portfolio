@@ -72,7 +72,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                         <div class='common_select_dropdown'>
                                                             <div class='common_select_dropdown_value common_app_data_display_master_row_list' data-value=''>
                                                                 ${master_row[1].value[0].map(key=>
-                                                                    `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key[1].toLowerCase()}' data-value='${key[0]}' ${key[1]=='COLOR'?`style='background-color:${key[0]};'`:''}>${key[1]=='COLOR'?' ':key[0]}</div>`
+                                                                    `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.key_type.toLowerCase()}' data-${key.key_name}='${key.key_value}' ${key.key_type=='COLOR'?`style='background-color:${key.key_value};'`:''}>${key.key_type=='COLOR'?' ':key.key_value}</div>`
                                                                 ).join('')}
                                                             </div>
                                                             <div class='common_select_dropdown_icon common_icon'></div>
@@ -81,7 +81,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                             ${master_row[1].value.map(list=>
                                                                 `<div class='common_select_option common_app_data_display_master_row_list'>
                                                                     ${list.map(key=>
-                                                                        `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key[1].toLowerCase()}' data-value='${key[0]}' ${key[1]=='COLOR'?`style='background-color:${key[0]};'`:''}>${key[1]=='COLOR'?' ':key[0]}</div>`
+                                                                        `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.key_type.toLowerCase()}' data-${key.key_name}='${key.key_value}' ${key.key_type=='COLOR'?`style='background-color:${key.key_value};'`:''}>${key.key_type=='COLOR'?' ':key.key_value}</div>`
                                                                     ).join('')}
                                                                 </div>`
                                                             ).join('')}

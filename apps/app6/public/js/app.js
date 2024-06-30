@@ -28,6 +28,10 @@ const app_event_click = event => {
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
+                case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
+                    product_update();
+                    break;
+                }
                 case 'tshirt':{
                     if (AppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform == 'scale(2)')
                         AppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(1)';
@@ -52,6 +56,12 @@ const app_event_click = event => {
     }
 };
 /**
+ * Product update attributes
+ */
+const product_update = () =>{
+    AppDocument.querySelector('#tshirt').style.fill = AppDocument.querySelector('.common_select_dropdown_value.common_app_data_display_master_row_list [data-product_color]').getAttribute('data-product_color');
+};
+/**
  * Sets framework
  * @param {number|null} framework 
  * @returns {Promise.<void>}
@@ -71,19 +81,20 @@ const app_event_click = event => {
  */
 const init_app = async () => {
     AppDocument.body.className = 'app_theme1';
-    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
-    .then(()=> common.ComponentRender('app_main_page', 
+    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
+    await common.ComponentRender('app_main_page', 
                                         {app_id:common.COMMON_GLOBAL.app_id,
                                         timezone:common.COMMON_GLOBAL.user_timezone,
                                         locale:common.COMMON_GLOBAL.user_locale,
                                         function_FFB:common.FFB,
                                         function_ComponentRender:common.ComponentRender,
                                         function_show_message:common.show_message},
-                                        '/component/page_start.js'))
-    .then(()=> common.ComponentRender('app_construction', {}, '/common/component/construction.js'));
-   framework_set();
+                                        '/component/page_start.js');
+    product_update();
+    common.ComponentRender('app_construction', {}, '/common/component/construction.js');
+    framework_set();
    
-   AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousemove',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+    AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousemove',(/**@type{import('../../../types.js').AppEvent}*/event) => {
         const event_target_id = common.element_id(event.target);
         if (event_target_id=='tshirt'){
             AppDocument.querySelector('#tshirt').style.transform = `rotateY(${event.layerX}deg)`;

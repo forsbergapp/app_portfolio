@@ -24,7 +24,7 @@ const product_get = async (app_id, data, locale) =>{
                 const key_name = Object.keys(JSON.parse(product_variant_metadata.json_data))[0];
                 if (key_name.toLowerCase() != 'name'){
                     const key_type = JSON.parse(product_variant_metadata.json_data)[Object.keys(JSON.parse(product_variant_metadata.json_data))[0]].type;
-                    product.sku_keys.push([data[key_name], key_type]);
+                    product.sku_keys.push({key_name:key_name, key_value:data[key_name], key_type:key_type});
                 }
             }
             product.sku.push(product.sku_keys);
