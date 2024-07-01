@@ -124,7 +124,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                 ${(props.display_type=='MASTER_DETAIL_VERTICAL' && props.rows)?
                                     `
                                     ${props.rows.map((/**@type{*}*/detail_row)=>
-                                        `<div data-id='${detail_row.id}' data-key='${detail_row.key}' data-value='${detail_row.value}' tabindex=-1 class='common_app_data_display_row common_row'>
+                                        `<div data-id='${detail_row.id}' data-key='${detail_row.key}' data-value='${detail_row.value}' tabindex=-1 class='common_app_data_display_detail_vertical_row common_row'>
                                             <div class='common_app_data_display_col'>${detail_row.key}</div>
                                             <div class='common_app_data_display_col'>${props.function_format_value(detail_row.value, props.timezone, props.locale)}</div>
                                         </div>
@@ -279,7 +279,7 @@ const component = async props => {
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
             render_template({   display_type:props.display_type,
                                 master_object:master_object,
-                                rows:detail_rows,
+                                rows:props.detail_path? Object.values(detail_rows[0])[0]:[],
                                 detail_class:props.detail_class,
                                 new_resource:props.new_resource,
                                 mode:props.mode,

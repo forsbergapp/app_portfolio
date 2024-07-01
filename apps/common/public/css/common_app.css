@@ -416,6 +416,15 @@ select {
 .common_app_data_display_detail_horizontal_row_title{
 	font-weight: bold;
 }
+.common_app_data_display_detail_vertical_row{
+	display: grid;
+	grid-auto-flow: column;
+    grid-template-columns: 50% 50%;
+	font-size: 0.7em;
+	justify-items: start;
+	margin-inline-start: 33%;
+}
+
 .common_app_data_display_master_col1,
 .common_app_data_display_master_col2{
 	display: inline-block;
