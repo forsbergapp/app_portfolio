@@ -33,6 +33,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                         adrdd.app_data_resource_master_attribute_id                     "app_data_resource_master_attribute_id",
                         as_attribute_master.app_setting_type_app_setting_type_name		  "as_attribute_master_app_setting_type_app_setting_type_name",
                         as_attribute_master.value										                    "as_attribute_master_value",
+                        adrm_attribute_master.json_data									                "adrm_attribute_master_json_data",
                         adrd.app_data_resource_master_id                                "app_data_detail_app_data_resource_master_id",
                         adrd.app_data_entity_resource_id                                "app_data_detail_app_data_entity_resource_id",
                         adrd.app_data_entity_resource_app_data_entity_app_id            "app_data_detail_app_data_entity_resource_app_data_entity_app_id",
