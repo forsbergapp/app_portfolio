@@ -1,6 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
-
 /**
  * @typedef {{  id:number,
  *              display_data:string,
@@ -74,7 +71,7 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
                         </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          data_app_id:number,
  *          locale:string,
@@ -109,7 +106,7 @@ const component = async props => {
                 .replace('<TITLE_SEARCH/>',         'Search')
                 .replace('<TITLE_FULLSCREEN/>',     'Fullscreen')
                 .replace('<TITLE_MY_LOCATION/>',    'My location');
-    }
+    };
     
     const post_component = async () =>{
         await props.function_FFB('/server-db/country', `lang_code=${props.locale}`, 'GET', 'APP_DATA', null)
@@ -123,13 +120,13 @@ const component = async props => {
             //set additonal settings on rendered Leaflet module
             props.function_map_setstyle(props.map_layer);
             //set map layer 
-            props.function_SearchAndSetSelectedIndex(props.map_layer, AppDocument.querySelector('#common_module_leaflet_select_mapstyle'),1);
+            props.function_SearchAndSetSelectedIndex(props.map_layer, props.common_document.querySelector('#common_module_leaflet_select_mapstyle'),1);
         });
-    }
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
         template: null
     };
-}
+};
 export default component;

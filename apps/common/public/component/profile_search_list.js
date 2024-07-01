@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * @typedef {{id:number, avatar:string, provider_image:string, username:string}} record_type
  */
@@ -30,7 +28,7 @@ const template = props =>`  <div id='common_profile_search_list' <SPINNER_CLASS/
                             </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          user_account_id:number,
  *          searched_username:string,
@@ -44,7 +42,7 @@ const template = props =>`  <div id='common_profile_search_list' <SPINNER_CLASS/
  *                      template:string}>}
  */
 const component = async props => {
-    let spinner = `class='css_spinner'`;
+    let spinner = 'class=\'css_spinner\'';
     
     /**
      * 
@@ -56,26 +54,26 @@ const component = async props => {
     const render_template = props =>{
         return template(props)
                 .replace('<SPINNER_CLASS/>', spinner);
-    }
+    };
     const post_component = async () =>{
         const records = await props.function_FFB(   '/server-db/user_account-profile/', 
                                                     `id=${props.user_account_id ?? ''}&search=${encodeURI(props.searched_username)}` +
                                                     `&client_latitude=${props.client_latitude}&client_longitude=${props.client_longitude}`, 
                                                     'GET', 'APP_DATA', null)
                                         .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                                        .catch((/**@type{Error}*/error)=>{throw error});
+                                        .catch((/**@type{Error}*/error)=>{throw error;});
         spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
             render_template({
                                 records:records,
                                 function_list_image_format_src:props.function_list_image_format_src
                             });
-        AppDocument.querySelector('#common_profile_search_list')['data-function'] = props.function_click_function;
-    }
+        props.common_document.querySelector('#common_profile_search_list')['data-function'] = props.function_click_function;
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
         template: render_template({records:[], function_list_image_format_src:props.function_list_image_format_src})
     };
-}
+};
 export default component;

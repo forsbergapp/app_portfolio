@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 /**
  * @typedef {{id:number, city:string, admin_name:string, country:string, lat:string, lng:string}} record_type
  */
@@ -33,7 +31,7 @@ const template = props =>`  <div id='common_module_leaflet_search_list' <SPINNER
                             </div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          search:string,
  *          function_click_function:function,
@@ -43,7 +41,7 @@ const template = props =>`  <div id='common_module_leaflet_search_list' <SPINNER
  *                      template:string}>}
  */
 const component = async props => {
-    let spinner = `class='css_spinner'`;
+    let spinner = 'class=\'css_spinner\'';
     
     /**
      * 
@@ -54,20 +52,20 @@ const component = async props => {
     const render_template = props =>{
         return template(props)
                 .replace('<SPINNER_CLASS/>', spinner);
-    }
+    };
     const post_component = async () =>{
         const records = props.search==''?[]:await props.function_FFB('/worldcities/city', `search=${encodeURI(props.search)}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                            .catch((/**@type{Error}*/error)=>{throw error});
+                            .catch((/**@type{Error}*/error)=>{throw error;});
         spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({records:records});
         if (props.search.length>0)
-            AppDocument.querySelector('#common_module_leaflet_search_list')['data-function'] = props.function_click_function;
-    }
+            props.common_document.querySelector('#common_module_leaflet_search_list')['data-function'] = props.function_click_function;
+    };
     return {
         props:  {function_post:post_component},
         data:   null,
         template: render_template({records:[]})
     };
-}
+};
 export default component;

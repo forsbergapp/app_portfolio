@@ -1,5 +1,3 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template =`   <div id='about_logo'></div>
                     <div id='app_copyright'><APP_COPYRIGHT/></div>
                     <div id='app_link' class='common_link'></div>
@@ -10,7 +8,7 @@ const template =`   <div id='about_logo'></div>
                     <div id='info_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string,
  *          about_logo:string,
  *          app_copyright:string,
@@ -37,9 +35,9 @@ const method = async props => {
     };
     const post_component = async () =>{
         if ((props.app_link_url ?? '')=='')
-            AppDocument.querySelector('#about_logo').style.backgroundImage=`url(${props.about_logo})`;
+            props.common_document.querySelector('#about_logo').style.backgroundImage=`url(${props.about_logo})`;
         else
-            AppDocument.querySelector('#app_link').innerHTML = props.app_link_title;
+            props.common_document.querySelector('#app_link').innerHTML = props.app_link_title;
     };
     return {
         props:  {function_post:post_component},

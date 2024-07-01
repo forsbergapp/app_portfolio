@@ -1,9 +1,7 @@
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
 const template ='   <div id=\'dialogue_loading_content\'></div>';
 /**
  * 
- * @param {{common_document:AppDocument,
+ * @param {{common_document:import('../../../types.js').AppDocument,
  *          common_mountdiv:string}} props 
  * @returns {Promise.<{ props:{function_post:function},
  *                      data:null, 
@@ -17,7 +15,7 @@ const method = async props => {
         return template;
     };
     const post_component = async () =>{
-        AppDocument.querySelector('#dialogue_loading_content').classList.add('css_spinner');
+        props.common_document.querySelector('#dialogue_loading_content').classList.add('css_spinner');
     };
     return {
         props:  {function_post:post_component},
