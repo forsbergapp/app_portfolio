@@ -279,7 +279,7 @@ const component = async props => {
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
             render_template({   display_type:props.display_type,
                                 master_object:master_object,
-                                rows:props.detail_path? Object.values(detail_rows[0])[0]:[],
+                                rows:props.detail_path?(Object.values(detail_rows[0])[0].constructor===Array?Object.values(detail_rows[0])[0]:detail_rows):[],
                                 detail_class:props.detail_class,
                                 new_resource:props.new_resource,
                                 mode:props.mode,
