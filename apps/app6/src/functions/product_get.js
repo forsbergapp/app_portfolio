@@ -1,4 +1,4 @@
-/** @module apps/app5 */
+/** @module apps/app6 */
 /**
  * @param {number} app_id
  * @param {*} data
@@ -11,7 +11,7 @@ const product_get = async (app_id, data, locale) =>{
     
     /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
     const {get:DetailGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
-    
+
     const products = await MasterGet(app_id, data.resource_id, null, data.data_app_id, 'PRODUCT', data.entity_id, data.locale, true);
     /**@ts-ignore */
     for (const product of products.rows ?? products){
@@ -29,11 +29,14 @@ const product_get = async (app_id, data, locale) =>{
                     product.sku_keys.push({key_name:key_name, key_value:data[key_name], key_type:key_type});
                 }
             }
+            product.sku_keys.push({key_name:'id', key_value:product_variant.id, key_type:'TEXT'});
             product.sku.push(product.sku_keys);
         }
+        //return placeholder for stock info
+        product.stock =  [  [{key_name:'location', key_value:'', key_type:'TEXT'}, 
+                            {key_name:'stock_text', key_value:'', key_type:'TEXT'}, 
+                            {key_name:'stock', key_value:'', key_type:'TEXT'}]];
     }
-
     return products;
-
 };
 export default product_get;

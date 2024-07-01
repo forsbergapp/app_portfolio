@@ -58,8 +58,41 @@ const app_event_click = event => {
 /**
  * Product update attributes
  */
-const product_update = () =>{
+const product_update = async () =>{
     AppDocument.querySelector('#tshirt').style.fill = AppDocument.querySelector('.common_select_dropdown_value.common_app_data_display_master_row_list [data-product_color]').getAttribute('data-product_color');
+
+    const product_variant_id = AppDocument.querySelectorAll('.common_app_data_display_master_row[id] .common_select_dropdown_value .common_app_data_display_master_col_list[data-id]')[0].getAttribute('data-id');
+
+    await common.ComponentRender(AppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].id, 
+        {
+            app_id:common.COMMON_GLOBAL.app_id,
+            display_type:'VERTICAL_KEY_VALUE',
+            master_path:'/app-function/PRODUCT_LOCATION_GET',
+            master_query:'fields=stock',
+            master_body:{data_app_id:common.COMMON_GLOBAL.app_id, resource_id : product_variant_id},
+            master_method:'POST',
+            master_token_type:'APP_DATA',
+            master_resource:'PRODUCT_VARIANT_LOCATION_METADATA',
+            detail_path:null,
+            detail_query:null,
+            detail_method:null,
+            detail_token_type:null,
+            detail_class:null,
+            new_resource:false,
+            mode:'READ',
+            timezone:common.COMMON_GLOBAL.user_timezone,
+            locale:common.COMMON_GLOBAL.user_locale,
+            button_print: false,
+            button_update: false,
+            button_post: false,
+            button_delete: false,
+            function_FFB:common.FFB,
+            function_button_print:null,
+            function_button_update:null,
+            function_button_post:null,
+            function_button_delete:null
+        }, '/common/component/app_data_display.js');
+    AppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].innerHTML = AppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[2].innerHTML;
 };
 /**
  * Sets framework

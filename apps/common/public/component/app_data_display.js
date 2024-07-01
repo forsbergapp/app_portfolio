@@ -68,7 +68,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                     `<div class='common_app_data_display_master'>
                                         ${Object.entries(props.master_object).filter(key=>key[0]!='title' && key[0]!='title_sub').map((/**@type{*}*/master_row)=>
                                             master_row[1].value.constructor===Array?
-                                                    `<div class='common_app_data_display_master_row'>
+                                                    `<div id='LIST_${Date.now().toString() + Math.floor(Math.random() *100000).toString()}' class='common_app_data_display_master_row'>
                                                         <div class='common_select_dropdown'>
                                                             <div class='common_select_dropdown_value common_app_data_display_master_row_list' data-value=''>
                                                                 ${master_row[1].value[0].map((/**@type{*}*/key)=>
@@ -249,7 +249,9 @@ const component = async props => {
                                     await props.function_FFB(   props.master_path, 
                                                                 props.master_query, 
                                                                 props.master_method, props.master_token_type, props.master_body)
-                                            .then((/**@type{*}*/result)=>props.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)):
+                                            .then((/**@type{*}*/result)=>
+                                                props.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>
+                                                    JSON.parse(row.json_data)):
                                     JSON.parse(result).rows[0]):{};
         const detail_rows = props.detail_path?
                                     await props.function_FFB(   props.detail_path, 
