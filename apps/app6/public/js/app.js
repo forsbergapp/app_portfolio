@@ -93,6 +93,7 @@ const product_update = async () =>{
             function_button_delete:null
         }, '/common/component/app_data_display.js');
     AppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].innerHTML = AppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[2].innerHTML;
+    
 };
 /**
  * Sets framework

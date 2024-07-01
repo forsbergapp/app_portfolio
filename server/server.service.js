@@ -280,11 +280,11 @@ const COMMON = {
                     if (singleresource || result.page_header)
                         return result;
                     else{
-						result.list_header = {	total_count:	result.length,
+						const list_header = {	total_count:	result.length,
                                                 offset: 		getNumberValue(app_query?.get('offset'))?getNumberValue(app_query?.get('offset')):0,
                                                 count:			getNumberValue(app_query?.get('limit')) ?? result.length
                                             };
-                        return {list_header:result.list_header, rows:result};
+                        return {list_header:list_header, rows:result};
                     }
                 };
                 /**
