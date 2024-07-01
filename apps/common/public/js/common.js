@@ -3727,6 +3727,16 @@ const framework_set = async (framework, events) => {
         else
             select_selectedindex = [{id:select.id, index:select.selectedIndex}];
     });
+    //get all ellements with data-function
+    /**@type{{id:string,element_function:function}[]} */
+    const data_function = [];
+    AppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} div`).forEach((/**@type{HTMLElement}*/element) =>{
+        /**@ts-ignore */
+        if (element['data-function']){
+            /**@ts-ignore */
+            data_function.push({id:element.id, element_function:element['data-function']});
+        }
+    });
     //save Leaflet containers with special event management and saved objects on elements if any Leaflet container used
     const leaflet_containers = AppDocument.querySelectorAll('.leaflet-container');
 
@@ -3852,7 +3862,9 @@ const framework_set = async (framework, events) => {
         index++;
     }
     //update all select with selectedIndex since copying outerHTML does not include setting correct selectedIndex
-    select_selectedindex.forEach((/**@type{{id:string,index:number}}*/select) =>AppDocument.querySelector(`#${select.id}`).selectedIndex = select.index);
+    select_selectedindex.forEach(select =>AppDocument.querySelector(`#${select.id}`).selectedIndex = select.index);
+    //update all elements with data-function since copying outerHTML does not include data-function
+    data_function.forEach(element =>AppDocument.querySelector(`#${element.id}`)['data-function'] = element.element_function);
     //add common events for all apps
     common_events_add();
     

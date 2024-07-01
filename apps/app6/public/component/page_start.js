@@ -29,8 +29,8 @@ const component = async props => {
      * Pay product
      */
     const pay = async () =>{
-        const price = props.common_document.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list')[3].getAttribute('data-value');
-        const sku = props.common_document.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list')[0].getAttribute('data-value');
+        const price = props.common_document.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price');
+        const sku = props.common_document.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
         
         props.function_show_message('INFO',null,null,null, `Paid ${price} for SKU ${sku}!`);
     };
