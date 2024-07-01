@@ -464,14 +464,16 @@
                     "RENDER_FILES":[]
         },
         "MODULES":[
-            ["FUNCTION","PRODUCT_GET",     		    "APP_DATA",   	"PRODUCT get",              "/apps/app6/src/functions/product_get.js"],
-            ["FUNCTION","PRODUCT_METADATA",         "APP_DATA",   	"PRODUCT metadata",         "/apps/app6/src/functions/product_metadata.js"],
-            ["FUNCTION","ORDER_METADATA",     		"APP_DATA",   	"ORDER metadata",           "/apps/app6/src/functions/order_metadata.js"],
-			["FUNCTION","PAYMENT_REQUEST_METADATA", "APP_DATA",   	"PAYMENT REQUEST metadata", "/apps/app6/src/functions/payment_request_metadata.js"],
-			["FUNCTION","BUY",     					"APP_DATA",   	"ORDER create, buy",        "/apps/app6/src/functions/buy.js"],
-			["FUNCTION","ORDER_UPDATE",       		"APP_DATA",		"ORDER update",            	"/apps/app6/src/functions/order_update.js"],
-			["FUNCTION","PAYMENT_REQUEST_CREATE",	"APP_DATA",		"PAYMENT REQUEST create",   "/apps/app6/src/functions/payment_request_create.js"],
-			["FUNCTION","PAYMENT_REQUEST_GET",		"APP_DATA",		"PAYMENT REQUEST get",   	"/apps/app6/src/functions/payment_request_get.js"]
+            ["FUNCTION","PRODUCT_GET",     		                "APP_DATA",   	"PRODUCT get",                      "/apps/app6/src/functions/product_get.js"],
+            ["FUNCTION","PRODUCT_LOCATION_GET",                 "APP_DATA",   	"PRODUCT location get",             "/apps/app6/src/functions/product_location_get.js"],
+            ["FUNCTION","PRODUCT_METADATA",                     "APP_DATA",   	"PRODUCT metadata",                 "/apps/app6/src/functions/product_metadata.js"],
+            ["FUNCTION","PRODUCT_VARIANT_LOCATION_METADATA",    "APP_DATA",   	"PRODUCT variant location metadata","/apps/app6/src/functions/product_variant_location_metadata.js"],
+            ["FUNCTION","ORDER_METADATA",     		            "APP_DATA",   	"ORDER metadata",                   "/apps/app6/src/functions/order_metadata.js"],
+			["FUNCTION","PAYMENT_REQUEST_METADATA",             "APP_DATA",   	"PAYMENT REQUEST metadata",         "/apps/app6/src/functions/payment_request_metadata.js"],
+			["FUNCTION","BUY",     					            "APP_DATA",   	"ORDER create, buy",                "/apps/app6/src/functions/buy.js"],
+			["FUNCTION","ORDER_UPDATE",       		            "APP_DATA",		"ORDER update",            	        "/apps/app6/src/functions/order_update.js"],
+			["FUNCTION","PAYMENT_REQUEST_CREATE",	            "APP_DATA",		"PAYMENT REQUEST create",           "/apps/app6/src/functions/payment_request_create.js"],
+			["FUNCTION","PAYMENT_REQUEST_GET",		            "APP_DATA",		"PAYMENT REQUEST get",   	        "/apps/app6/src/functions/payment_request_get.js"]
         ],
         "STATUS":"ONLINE"}
 ]

@@ -40,7 +40,7 @@ const component = async props => {
                                                 app_id:props.app_id,
                                                 display_type:'VERTICAL_KEY_VALUE',
                                                 master_path:'/app-function/PRODUCT_GET',
-                                                master_query:'fields=name,image,description,sku',
+                                                master_query:'fields=name,image,description,sku,stock',
                                                 master_body:{data_app_id:props.app_id, resource_id : 6000},
                                                 master_method:'POST',
                                                 master_token_type:'APP_DATA',
