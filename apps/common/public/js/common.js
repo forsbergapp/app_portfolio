@@ -3151,10 +3151,10 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         //dialogue app_data_display
-                        case 'common_app_data_display_button_print':
-                        case 'common_app_data_display_button_update':
-                        case 'common_app_data_display_button_post':
-                        case 'common_app_data_display_button_delete':{
+                        case event.target.classList.contains('common_app_data_display_button_print')?event_target_id:'':
+                        case event.target.classList.contains('common_app_data_display_button_update')?event_target_id:'':
+                        case event.target.classList.contains('common_app_data_display_button_post')?event_target_id:'':
+                        case event.target.classList.contains('common_app_data_display_button_delete')?event_target_id:'':{
                             if (AppDocument.querySelector(`#${event_target_id}`)['data-function'])
                                     AppDocument.querySelector(`#${event_target_id}`)['data-function']();
                             break;

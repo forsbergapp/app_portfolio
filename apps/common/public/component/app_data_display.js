@@ -10,6 +10,7 @@
  *              new_resource:boolean,
  *              mode:'EDIT'|'READ',
  *              function_format_value:function,
+ *              function_div_id:function,
  *              timezone:string,
  *              locale:string,
  *              spinner:string,
@@ -41,7 +42,7 @@
  * @returns 
  */
 const template = props =>`  ${(props.master_object && props.new_resource)?
-                                `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.title)[0].title.default_text}</div>`:''
+                                `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.title).length>0?props.master_object.filter((/**@type{*}*/row)=>row.title)[0].title.default_text:''}</div>`:''
                             }
                             ${(props.master_object && props.new_resource==false)?
                                 `<div class='common_app_data_display_master_title'>${props.master_object.title?props.master_object.title.default_text:''}</div>
@@ -68,7 +69,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                     `<div class='common_app_data_display_master'>
                                         ${Object.entries(props.master_object).filter(key=>key[0]!='title' && key[0]!='title_sub').map((/**@type{*}*/master_row)=>
                                             master_row[1].value.constructor===Array?
-                                                    `<div id='LIST_${Date.now().toString() + Math.floor(Math.random() *100000).toString()}' class='common_app_data_display_master_row'>
+                                                    `<div id='LIST_${props.function_div_id()}' class='common_app_data_display_master_row'>
                                                         <div class='common_select_dropdown'>
                                                             <div class='common_select_dropdown_value common_app_data_display_master_row_list' data-value=''>
                                                                 ${master_row[1].value[0].map((/**@type{*}*/key)=>
@@ -134,16 +135,16 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                             }
                             <div class='common_app_data_display_buttons ${props.spinner}'>
                                 ${props.button_print?
-                                    '<div id=\'common_app_data_display_button_print\' class=\'common_dialogue_button common_icon\' ></div>':''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_dialogue_button common_icon' ></div>`:''
                                 }
                                 ${props.button_update?
-                                    '<div id=\'common_app_data_display_button_update\' class=\'common_dialogue_button common_icon\' ></div>':''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_dialogue_button common_icon' ></div>`:''
                                 }
                                 ${props.button_post?
-                                    '<div id=\'common_app_data_display_button_post\' class=\'common_dialogue_button common_icon\' ></div>':''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_dialogue_button common_icon' ></div>`:''
                                 }
                                 ${props.button_delete?
-                                    '<div id=\'common_app_data_display_button_delete\' class=\'common_dialogue_button common_icon\' ></div>':''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_dialogue_button common_icon' ></div>`:''
                                 }
                             </div>`;
 /**
@@ -152,6 +153,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *          common_mountdiv:string,
  *          app_id:number,
  *          display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL'
+ *          dialogue:boolean,
  *          master_path:string,
  *          master_query:string,
 *           master_body:string,
@@ -183,7 +185,12 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      template:string}>}
  */
 const component = async props => {
+    if (props.dialogue){
+        props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
+		props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    }
     let spinner = 'css_spinner';
+    const div_id = () =>Date.now().toString() + Math.floor(Math.random() *100000).toString();
     /**
      * 
      * @param {*} value 
@@ -260,12 +267,11 @@ const component = async props => {
                                             .then((/**@type{*}*/result)=>JSON.parse(result).rows):
                                     [];
         
-        const master_metadata = await props.function_FFB(  `/app-function/${props.master_resource}`, 
-                                                            'fields=json_data', 
-                                                            'POST', 'APP_DATA', {data_app_id:props.app_id})
-                                            .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
-        
         if (props.new_resource==false){
+            const master_metadata = await props.function_FFB(   `/app-function/${props.master_resource}`, 
+                                                                'fields=json_data', 
+                                                                'POST', 'APP_DATA', {data_app_id:props.app_id})
+                                            .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
             for (const key of Object.entries(master_object)){
                 master_object[key[0]] = {   
                                             value:key[1], 
@@ -284,6 +290,7 @@ const component = async props => {
                                 new_resource:props.new_resource,
                                 mode:props.mode,
                                 function_format_value:format_value,
+                                function_div_id:div_id,
                                 timezone:props.timezone, 
                                 locale:props.locale,
                                 spinner:spinner,
@@ -292,13 +299,13 @@ const component = async props => {
                                 button_post:props.button_post,
                                 button_delete:props.button_delete});
         if (props.function_button_print)
-            props.common_document.querySelector('#common_app_data_display_button_print')['data-function'] = props.function_button_print;
+            props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_print`)['data-function'] = props.function_button_print;
         if (props.function_button_update)
-            props.common_document.querySelector('#common_app_data_display_button_update')['data-function'] = props.function_button_update;
+            props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_update`)['data-function'] = props.function_button_update;
         if (props.function_button_post)
-            props.common_document.querySelector('#common_app_data_display_button_post')['data-function'] = props.function_button_post;
+            props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_post`)['data-function'] = props.function_button_post;
         if (props.function_button_delete)
-            props.common_document.querySelector('#common_app_data_display_button_delete')['data-function'] = props.function_button_delete;
+            props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_delete`)['data-function'] = props.function_button_delete;
     };
     /**
      * 
@@ -318,6 +325,7 @@ const component = async props => {
                                     new_resource:props.new_resource,
                                     mode:props.mode,
                                     function_format_value:format_value,
+                                    function_div_id:div_id,
                                     timezone:props.timezone,
                                     locale:props.locale,
                                     spinner:spinner,
