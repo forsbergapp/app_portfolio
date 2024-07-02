@@ -10,6 +10,7 @@ const template = () => ` <div id='app_page_start_shop' class='app_page_start_sho
  *          app_id:number,
  *          timezone:string,
  *          locale:string,
+ *          function_pay:function,
  *          function_FFB:function,
  *          function_ComponentRender:function,
  *          function_show_message:function}} props 
@@ -25,15 +26,7 @@ const component = async props => {
     const render_template = () =>{
         return template();
     };
-    /**
-     * Pay product
-     */
-    const pay = async () =>{
-        const price = props.common_document.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price');
-        const sku = props.common_document.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
-        
-        props.function_show_message('INFO',null,null,null, `Paid ${price} for SKU ${sku}!`);
-    };
+    
     const post_component = async () =>{
         await props.function_ComponentRender('app_page_start_shop', 
                                             {
@@ -62,8 +55,8 @@ const component = async props => {
                                                 function_FFB:props.function_FFB,
                                                 function_button_print:null,
                                                 function_button_update:null,
-                                                function_button_post:pay,
-                                                function_button_delete:null
+                                                function_button_post:props.function_pay,
+                                                function_button_delete:null,
                                             }, '/common/component/app_data_display.js');
     };
     return {

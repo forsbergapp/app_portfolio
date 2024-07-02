@@ -137,10 +137,10 @@
 #common_toolbar_framework_vue::before{						content:var(--common_app_icon_vue)}
 #common_toolbar_framework_react::before{					content:var(--common_app_icon_react)}
 
-#common_app_data_display_button_update::before{				content:var(--common_app_icon_update)}
-#common_app_data_display_button_post::before{				content:var(--common_app_icon_add)}
-#common_app_data_display_button_delete::before{				content:var(--common_app_icon_delete)}
-#common_app_data_display_button_print::before{				content:var(--common_app_icon_print)}
+.common_app_data_display_button_update::before{				content:var(--common_app_icon_update)}
+.common_app_data_display_button_post::before{				content:var(--common_app_icon_add)}
+.common_app_data_display_button_delete::before{				content:var(--common_app_icon_delete)}
+.common_app_data_display_button_print::before{				content:var(--common_app_icon_print)}
 body{
 	font-size: 16px;
 	margin: 0;
@@ -740,6 +740,12 @@ select {
 	height:40px;
 	border: 1px solid;
 }
+/*Dialogue app data display*/
+#common_dialogue_app_data_display.common_dialogue_show1{
+	max-height: 90%;
+	width: 360px;
+}
+
 /*Dialogue user password new*/
 #common_dialogue_user_password_new.common_dialogue_show2{
 	width: 300px;

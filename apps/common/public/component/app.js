@@ -24,6 +24,7 @@ const template = props =>`  <div id='common_toolbar_framework'>
                                 <div id='common_dialogue_message' class='common_dialogue_content'></div>
                                 <div id='common_dialogue_profile' class='common_dialogue_content'></div>
                                 <div id='common_dialogue_lov' class='common_dialogue_content'></div>
+                                <div id='common_dialogue_app_data_display' class='common_dialogue_content'></div>
                             </div>
                             <div id='common_window_info'></div>
                             <div id='common_broadcast'></div>

@@ -96,6 +96,61 @@ const product_update = async () =>{
     
 };
 /**
+     * Payment request
+     */
+const payment_request = async () =>{
+    const price = AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price');
+    const sku = AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
+    
+    common.show_message('INFO',null,null,null, `Paid ${price} for SKU ${sku}!`);
+    common.ComponentRemove('common_dialogue_app_data_display', true);
+};
+/**
+ * Pay cancel
+ */
+const pay_cancel = async () =>{
+    common.show_message('INFO',null,null,null, 'Payment cancel');
+    common.ComponentRemove('common_dialogue_app_data_display', true);
+};
+/**
+ * Pay product
+ */
+const pay = async () =>{
+    
+    await common.ComponentRender('common_dialogue_app_data_display', 
+        {
+            app_id:common.COMMON_GLOBAL.app_id,
+            display_type:'VERTICAL_KEY_VALUE',
+            dialogue:true,
+            master_path:'/app-function/PAYMENT_METADATA',
+            master_query:'fields=json_data',
+            master_body:{data_app_id:common.COMMON_GLOBAL.app_id},
+            master_method:'POST',
+            master_token_type:'APP_DATA',
+            master_resource:'PAYMENT_METADATA',
+            detail_path:null,
+            detail_query:null,
+            detail_body:null,
+            detail_method:null,
+            detail_token_type:null,
+            detail_class:null,
+            new_resource:true,
+            mode:'EDIT',
+            timezone:common.COMMON_GLOBAL.user_timezone,
+            locale:common.COMMON_GLOBAL.user_locale,
+            button_print: false,
+            button_update: false,
+            button_post: true,
+            button_delete: true,
+            function_FFB:common.FFB,
+            function_button_print:null,
+            function_button_update:null,
+            function_button_post:payment_request,
+            function_button_delete:pay_cancel,
+        }, '/common/component/app_data_display.js');
+
+};
+/**
  * Sets framework
  * @param {number|null} framework 
  * @returns {Promise.<void>}
@@ -120,6 +175,7 @@ const init_app = async () => {
                                         {app_id:common.COMMON_GLOBAL.app_id,
                                         timezone:common.COMMON_GLOBAL.user_timezone,
                                         locale:common.COMMON_GLOBAL.user_locale,
+                                        function_pay:pay,
                                         function_FFB:common.FFB,
                                         function_ComponentRender:common.ComponentRender,
                                         function_show_message:common.show_message},

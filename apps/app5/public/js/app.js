@@ -270,7 +270,7 @@ const framework_set = async (framework=null) => {
 };
 
 const customer_create = async () => {
-    AppDocument.querySelector('#common_app_data_display_button_post').classList.add('css_spinner');
+    AppDocument.querySelector('.common_app_data_display_button_post').classList.add('css_spinner');
     await common.FFB(   '/app-function/CUSTOMER_CREATE', 
                         null, 
                         'POST', 
