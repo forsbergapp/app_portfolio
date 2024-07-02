@@ -84,7 +84,7 @@ body {
 .common_app_data_display_buttons{
 	position: unset !important;
 }
-#common_app_data_display_button_post{
+#app_page_start_shop .common_app_data_display_button_post{
     border-radius: 20%;
     height: 1em !important;
     width: 1em !important;
@@ -97,12 +97,13 @@ body {
 	50% {background-position: 400% 0;}
 	100% {background-position: 0 0;}
 }
-#common_app_data_display_button_post::before{
+#app_page_start_shop .common_app_data_display_button_post::before{
 	margin-inline-start: -0.2em;
-	font-size: 1.3em;
+	margin-top: -0.3em;
+	font-size: 1.2em;
+	font-weight: bold;
 	rotate:135deg;
 	display: inline-block;
-	margin-top: -0.2em;
 }
 #common_profile_input_row,
 #common_profile_search_list_wrap{
@@ -219,15 +220,14 @@ body {
 	fill:var(--common_app_color_blue3);
 	stroke: var(--common_app_color_black);
 }
-
-#common_app_data_display_button_post{
-	background-color: var(--common_app_color_gold);
+#app_page_start_shop .common_app_data_display_button_post{
+	background-color: var(--common_app_color_gold) !important;
 }
-#common_app_data_display_button_post::before{
+#app_page_start_shop .common_app_data_display_button_post::before{
 	content: var(--common_app_icon_infinite) !important;
 	color: var(--common_app_color_blue3);
 }
-#common_app_data_display_button_post:hover{
+#app_page_start_shop .common_app_data_display_button_post:hover{
 	background-color: var(--common_app_color_green) !important;
 	background:linear-gradient(45deg, var(--common_app_color_blue3), var(--common_app_color_gold), var(--common_app_color_gold), var(--common_app_color_blue3));
 	animation:glowing 2s linear infinite;
