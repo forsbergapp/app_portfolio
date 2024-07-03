@@ -60,6 +60,9 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                     <div    data-value='${Object.keys(master_row)[0]}'
                                                             class='common_app_data_display_master_col2'
                                                             contentEditable='${props.mode=='READ'?'false':'true'}'></div>
+                                                    ${Object.values(master_row)[0].type=='LOV'?
+                                                        `<div data-lov='${Object.values(master_row)[0].lov}' class='common_lov_button common_list_lov_click common_icon'></div>`:''
+                                                    }
                                             </div>
                                             `).join('')
                                         }
