@@ -183,15 +183,6 @@ const init_app = async () => {
     product_update();
     common.ComponentRender('app_construction', {}, '/common/component/construction.js');
     framework_set();
-   
-    AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousemove',(/**@type{import('../../../types.js').AppEvent}*/event) => {
-        const event_target_id = common.element_id(event.target);
-        if (event_target_id=='tshirt'){
-            AppDocument.querySelector('#tshirt').style.transform = `rotateY(${event.layerX}deg)`;
-        }   
-        else
-            AppDocument.querySelector('#tshirt').style.transform = 'rotateY(0deg)';
-    });
 };
 /**
  * Init common
