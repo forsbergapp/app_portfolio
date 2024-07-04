@@ -1028,6 +1028,91 @@ const dialogue_password_new_clear = () => {
     COMMON_GLOBAL.token_at = '';
 };
 /**
+ * LOV event
+ * @param {import('../../../types.js').AppEvent} event
+ * @param {'APP_CATEGORY'|'APP_ROLE'} lov
+ */
+const lov_event = (event, lov) => {
+    /**
+     * LOV event function
+     * calling row event decides to have common_input_lov and common_input_value
+     * admin row should show technical details
+     *  common_input_lov   = data-id
+     *  common_input_value = data-value
+     * app data row for users should not show technical details
+     *  common_input_value = data-value
+     * @param {import('../../../types.js').AppEvent} event_lov 
+     */
+    const lov_event_function = event_lov => {
+        //setting values from LOV
+        const row = element_row(event.target);
+        const row_lov = element_row(event_lov.target);
+        /**@type{HTMLElement|null} */
+        const common_input_lov = row.querySelector('.common_input_lov');
+        /**@type{HTMLElement|null} */
+        const common_lov_value = row.querySelector('.common_lov_value');
+        if (common_input_lov){
+            common_input_lov.innerText = row_lov.getAttribute('data-id') ?? '';
+            common_input_lov.focus();
+        }
+        if (common_lov_value)
+            common_lov_value.innerText = row_lov.getAttribute('data-value') ?? '';
+        //dispatch event for either common_input lov if used or common_lov_value
+        (common_input_lov ?? common_lov_value)?.dispatchEvent(new Event('input'));
+        AppDocument.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
+    };
+    if (event.target.classList.contains('common_list_lov_click')){
+        lov_show(lov, lov_event_function);
+    }
+};
+/**
+ * Lov action fetches id and value, updates values and manages data-defaultValue
+ * @param {import('../../../types.js').AppEvent} event 
+ * @param {string} lov 
+ * @param {string|null} old_value
+ * @param {string} path 
+ * @param {string} query 
+ * @param {string} method 
+ * @param {string} token_type 
+ * @param {{}|null} json_data 
+ */
+const lov_action = (event, lov, old_value, path, query, method, token_type, json_data) => {
+    FFB(path, query, method, token_type, json_data)
+    .then((/**@type{string}*/result)=>{
+        const list_result = result?JSON.parse(result).rows:{};
+        if (list_result.length == 1){
+            //set lov text
+            if (event.target.parentNode && event.target.parentNode.nextElementSibling)
+                event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').innerText = Object.values(list_result[0])[2];
+            //set new value in data-defaultValue used to save old value when editing next time
+            event.target.setAttribute('data-defaultValue', Object.values(list_result[0])[0]);
+        }
+        else{
+            event.stopPropagation();
+            event.preventDefault();
+            //set old value
+            event.target.innerText = event.target.getAttribute('data-defaultValue') ?? '';
+            event.target.focus();    
+            //dispatch click on lov button
+            event.target.nextElementSibling.dispatchEvent(new Event('click'));
+        }
+        if (lov=='APP_ROLE'){
+            //if wrong value then field is empty again, fetch default value for empty app_role
+            if (old_value!='' && event.target.innerText=='')
+                event.target.dispatchEvent(new Event('input'));
+        }
+    })
+    .catch(()=>{
+        event.stopPropagation();
+        event.preventDefault();
+        //set old value
+        event.target.innerText = event.target.getAttribute('data-defaultValue') ?? '';
+        event.target.focus();
+        event.target.nextElementSibling?event.target.nextElementSibling.dispatchEvent(new Event('click')):null;
+    });
+};
+
+/**
  * Lov close
  * @returns {void}
  */
@@ -3045,15 +3130,6 @@ const common_event = async (event_type,event) =>{
                             await updatePassword();
                             break;
                         }
-                        //dialogue lov
-                        case 'common_lov_search_icon':{
-                            lov_filter(AppDocument.querySelector('#common_lov_search_input').innerHTML);
-                            break;
-                        }
-                        case 'common_lov_close':{
-                            lov_close();
-                            break;
-                        }
                         case 'common_profile_search_icon':{
                             AppDocument.querySelector('#common_profile_search_input').focus();
                             AppDocument.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
@@ -3387,6 +3463,19 @@ const common_event = async (event_type,event) =>{
                             AppDocument.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
                             break;
                         }    
+                        //dialogue lov
+                        case 'common_lov_search_icon':{
+                            lov_filter(AppDocument.querySelector('#common_lov_search_input').innerHTML);
+                            break;
+                        }
+                        case 'common_lov_close':{
+                            lov_close();
+                            break;
+                        }
+                        case 'common_lov_list':{
+                            AppDocument.querySelector('#common_lov_list')['data-function'](event);
+                            break;
+                        }        
                         default:{
                             if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in')){
                                 COMMON_GLOBAL.module_leaflet_session_map?.setZoom?.(COMMON_GLOBAL.module_leaflet_session_map?.getZoom?.() + 1);
@@ -4002,6 +4091,7 @@ export{/* GLOBALS*/
        ComponentRender,ComponentRemove,
        /* MESSAGE & DIALOGUE */
        show_common_dialogue, show_message,
+       lov_event, lov_action,
        lov_close, lov_show,
        /* PROFILE */
        profile_follow_like, profile_stat, profile_detail, profile_show,
