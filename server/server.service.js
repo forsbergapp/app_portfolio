@@ -402,11 +402,13 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
+                    //app settings all values with or without translations including all common app id settings if requested setting is empty
                     case route({url:'/bff/app_data/v1/server-db/app_settings', method:'GET'}):{
                         resolve(db_app_setting.getSettings(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
+                    //app settings without translations and only value if specified
                     case route({url:'/bff/app_data/v1/server-db/app_settings_display', method:'GET'}):{
                         resolve(db_app_setting.getSettingDisplayData(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, (app_query?.get('setting_type')!='' && app_query?.get('setting_type')!=null && app_query?.get('value')!='' && app_query?.get('value')!=null)) ));

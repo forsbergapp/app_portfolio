@@ -1059,11 +1059,9 @@ const lov_event = (event, lov) => {
             common_lov_value.innerText = row_lov.getAttribute('data-value') ?? '';
         //dispatch event for either common_input lov if used or common_lov_value
         (common_input_lov ?? common_lov_value)?.dispatchEvent(new Event('input'));
-        AppDocument.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
+        AppDocument.querySelector('#common_lov_close').click();
     };
-    if (event.target.classList.contains('common_list_lov_click')){
-        lov_show(lov, lov_event_function);
-    }
+    lov_show(lov, lov_event_function);
 };
 /**
  * Lov action fetches id and value, updates values and manages data-defaultValue
@@ -3464,6 +3462,10 @@ const common_event = async (event_type,event) =>{
                             break;
                         }    
                         //dialogue lov
+                        case event.target.classList.contains('common_list_lov_click') && event.target.getAttribute('data-lov')?event_target_id:'':{
+                            lov_event(event, event.target.getAttribute('data-lov'));
+                            break;
+                        }
                         case 'common_lov_search_icon':{
                             lov_filter(AppDocument.querySelector('#common_lov_search_input').innerHTML);
                             break;

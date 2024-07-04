@@ -11,10 +11,6 @@
 
 .common_lov_button::before{									content:var(--common_app_icon_lov)}
 #common_lov_search_icon::before{							content:var(--common_app_icon_search)}
-#common_lov_title.parameter_type::before{					content:var(--common_app_icon_apps) ' ' var(--common_app_icon_settings) ' ' var(--common_app_icon_type)}
-#common_lov_title.server_log_files::before{					content:var(--common_app_icon_server) ' ' var(--common_app_icon_file_path)}
-#common_lov_title.app_category::before{						content:var(--common_app_icon_apps) ' ' var(--common_app_icon_type)}
-#common_lov_title.app_role::before{							content:var(--common_app_icon_role)}
 
 .common_unlike::before{										content:var(--common_app_icon_user_unlike)}	
 .common_like::before{										content:var(--common_app_icon_user_like)}	
@@ -30,6 +26,8 @@
 
 #common_user_menu_default_avatar::before{					content:var(--common_app_icon_user_avatar)}
 .app_role_system_admin::before{								content:var(--common_app_icon_user_system_admin) !important}
+
+#common_lov_close::before{									content:var(--common_app_icon_close)}
 
 #common_dialogue_user_menu_token_countdown_icon::before{	content:var(--common_app_icon_user_password)}
 #common_dialogue_user_menu_edit::before{					content:var(--common_app_icon_edit)}
@@ -905,7 +903,7 @@ select {
 }
 
 /*Dialogue lov*/
-#common_dialogue_lov.common_dialogue_show1{
+#common_dialogue_lov.common_dialogue_show2{
 	height:auto;
 	width: 350px;
 }

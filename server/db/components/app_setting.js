@@ -12,7 +12,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {number} app_id 
  * @param {*} query 
  */
-const getSettings = (app_id, query) => service.getSettings(app_id, query.get('lang_code'), query.get('setting_type') ?? query.get('setting_type')==''?null:query.get('setting_type'))
+const getSettings = (app_id, query) => service.getSettings(app_id, query.get('lang_code'), query.get('setting_type') ?? (query.get('setting_type')==''?null:query.get('setting_type')))
                                         .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
 
 /**
