@@ -2855,42 +2855,12 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                                              id: Number(event.target.getAttribute('data-id'))});
                     break;
                 }
-                case 'list_apps':
-                case 'list_app_parameter':
+                case 'list_apps':{
+                    common.lov_event(event, 'APP_CATEGORY');
+                    break;
+                }
                 case 'list_user_account':{
-                    /**
-                     * LOV event
-                     * @param {import('../../../types.js').AppEvent} event_lov 
-                     */
-                    const lov_event = event_lov => {
-                        //setting values from LOV
-                        const row = common.element_row(event.target);
-                        const row_lov = common.element_row(event_lov.target);
-                        /**@type{HTMLElement|null} */
-                        const common_input_lov = row.querySelector('.common_input_lov');
-                        /**@type{HTMLElement|null} */
-                        const common_lov_value = row.querySelector('.common_lov_value');
-                        if (common_input_lov){
-                            common_input_lov.innerHTML = row_lov.getAttribute('data-id') ?? '';
-                            common_input_lov.focus();
-                        }
-                        if (common_lov_value)
-                            common_lov_value.innerHTML = row_lov.getAttribute('data-value') ?? '';
-                        common_input_lov?.dispatchEvent(new Event('input'));
-                        AppDocument.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
-                    };
-                    if (event.target.classList.contains('common_list_lov_click')){
-                        switch (event_target_id){
-                            case 'list_apps':{
-                                common.lov_show('APP_CATEGORY', lov_event);
-                                break;
-                            }
-                            case 'list_user_account':{
-                                common.lov_show('APP_ROLE', lov_event);
-                                break;
-                            }
-                        }
-                    }
+                    common.lov_event(event, 'APP_ROLE');
                     break;
                 }
                 case 'send_broadcast_send':{
@@ -2899,10 +2869,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 }
                 case 'send_broadcast_close':{
                     closeBroadcast();
-                    break;
-                }
-                case 'common_lov_list':{
-                    AppDocument.querySelector('#common_lov_list')['data-function'](event);
                     break;
                 }
             }
@@ -2959,67 +2925,23 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
         case 'input':{
             if (event.target.classList.contains('list_edit')){
                 common.element_row(event.target).setAttribute('data-changed-record','1');
-                /**
-                 * 
-                 * @param {Error|null} err 
-                 * @param {string|null} result 
-                 * @param {import('../../../types.js').AppEvent} event 
-                 */
-                const lov_action = (err, result, event) => {
-                    if (err){
-                        event.stopPropagation();
-                        event.preventDefault();
-                        //set old value
-                        event.target.innerHTML = event.target.getAttribute('data-defaultValue') ?? '';
-                        event.target.focus();
-                        event.target.nextElementSibling?event.target.nextElementSibling.dispatchEvent(new Event('click')):null;
-                    }
-                    else{
-                        const list_result = result?JSON.parse(result).rows:{};
-                        if (list_result.length == 1){
-                            //set lov text
-                            if (event.target.parentNode && event.target.parentNode.nextElementSibling)
-                                event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').innerHTML = Object.values(list_result[0])[2];
-                            //set new value in data-defaultValue used to save old value when editing next time
-                            event.target.setAttribute('data-defaultValue', Object.values(list_result[0])[0]);
-                        }
-                        else{
-                            event.stopPropagation();
-                            event.preventDefault();
-                            //set old value
-                            event.target.innerHTML = event.target.getAttribute('data-defaultValue') ?? '';
-                            event.target.focus();    
-                            //dispatch click on lov button
-                            event.target.nextElementSibling.dispatchEvent(new Event('click'));
-                        }
-                    }
-                };
+                event.target.innerText = event.target.innerText.replace('\n', '');
                 //app category LOV
                 if (common.element_row(event.target).classList.contains('list_apps_row') && event.target.classList.contains('common_input_lov'))
-                    if (event.target.innerHTML=='')
-                        event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').innerHTML = '';
-                    else{
-                        common.FFB('/server-db_admin/app_category', `id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null)
-                        .then((/**@type{string}*/result)=>lov_action(null, result, event))
-                        .catch((/**@type{Error}*/err)=>lov_action(err, null, event));
-                    }
+                    if (event.target.innerText=='')
+                        event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').innerText = '';
+                    else
+                        common.lov_action(event, 'APP_CATEGORY', null, '/server-db_admin/app_category', `id=${event.target.innerText}`, 'GET', 'APP_ACCESS', null);
                 //app role LOV
                 if (common.element_row(event.target).classList.contains('list_user_account_row') && event.target.classList.contains('common_input_lov')){
                     let app_role_id_lookup='';
-                    const old_value =event.target.innerHTML;
+                    const old_value =event.target.innerText;
                     //if empty then lookup default
-                    if (event.target.innerHTML=='')
+                    if (event.target.innerText=='')
                         app_role_id_lookup='2';
                     else
-                        app_role_id_lookup=event.target.innerHTML;
-                    common.FFB('/server-db_admin/app_role', `id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null)
-                    .then((/**@type{string}*/result)=>{
-                        lov_action(null, result, event);
-                        //if wrong value then field is empty again, fetch default value for empty app_role
-                        if (old_value!='' && event.target.innerHTML=='')
-                            event.target.dispatchEvent(new Event('input'));
-                    })
-                    .catch((/**@type{Error}*/err)=>lov_action(err, null, event));
+                        app_role_id_lookup=event.target.innerText;
+                    common.lov_action(event, 'APP_ROLE', old_value, '/server-db_admin/app_role', `id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null);
                 }
             }
             break;
