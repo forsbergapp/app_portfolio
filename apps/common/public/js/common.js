@@ -1140,8 +1140,8 @@ const lov_filter = text_filter => {
         row.classList.remove ('common_list_row_selected');
     }
     for (const row of rows) {
-        if (row.children[0].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1 ||
-            row.children[1].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1){
+        if (row.children[0].children[0].innerText.toUpperCase().indexOf(text_filter.toUpperCase()) > -1 ||
+            row.children[1].children[0].innerText.toUpperCase().indexOf(text_filter.toUpperCase()) > -1){
                 row.classList.remove ('common_list_lov_row_hide');
             }
         else{
@@ -1513,7 +1513,7 @@ const list_key_event = (event, module, event_function=null) => {
                 for (const row of rows) {
                     if (row.classList.contains('common_list_row_selected')){
                         //event on row is set in app when calling lov, dispatch it!
-                        row.dispatchEvent(new Event('click'));
+                        row.click();
                         row.classList.remove ('common_list_row_selected');
                     }
                 }   
@@ -1554,8 +1554,8 @@ const list_key_event = (event, module, event_function=null) => {
         default:{
             if (module=='lov'){
                 //if db call will be implemented, add delay
-                //typewatch(lov_filter, AppDocument.querySelector(`#common_${search_input}_input`).innerHTML); 
-                lov_filter(AppDocument.querySelector(`#common_${search_input}_input`).innerHTML); 
+                //typewatch(lov_filter, AppDocument.querySelector(`#common_${search_input}_input`).innerText); 
+                lov_filter(AppDocument.querySelector(`#common_${search_input}_input`).innerText); 
             }
             else
                 if (module=='profile')
@@ -3602,6 +3602,8 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         case 'common_lov_search_input':{
+                            if (event.target.innerText.indexOf('\n')>-1)
+                                event.target.innerText = event.target.innerText.replace('\n','');
                             list_key_event(event, 'lov');
                             break;
                         }
