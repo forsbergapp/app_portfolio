@@ -2856,11 +2856,13 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case 'list_apps':{
-                    common.lov_event(event, 'APP_CATEGORY');
+                    if (event.target.classList.contains('common_list_lov_click'))
+                        common.lov_event(event, 'APP_CATEGORY');
                     break;
                 }
                 case 'list_user_account':{
-                    common.lov_event(event, 'APP_ROLE');
+                    if (event.target.classList.contains('common_list_lov_click'))
+                        common.lov_event(event, 'APP_ROLE');
                     break;
                 }
                 case 'send_broadcast_send':{

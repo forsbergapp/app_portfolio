@@ -21,7 +21,6 @@
  
 #send_broadcast_send::before{														content:var(--common_app_icon_send)}
 #send_broadcast_close::before{														content:var(--common_app_icon_close)}
-#common_lov_close::before{															content:var(--common_app_icon_close)}
 #send_broadcast_title::before{														content:var(--common_app_icon_broadcast)}
 #client_id_label::before{															content:var(--common_app_icon_user)}
 .icon_infinite::before{																content:var(--common_app_icon_infinite)}

@@ -37,7 +37,7 @@ const template = props =>` <div id='common_lov_form'>
  *                      template:string}>}
  */
 const component = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
+    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show2');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     let spinner = 'css_spinner';
     /**
@@ -45,32 +45,39 @@ const component = async props => {
      */
      const post_component = () =>{
         let path = '';
+        let query = null;
         let token_type = '';
         let lov_column_value = '';
         switch (props.lov){
             case 'SERVER_LOG_FILES':{
-                props.common_document.querySelector('#common_lov_title').classList.add('server_log_file');
                 lov_column_value = 'filename';
                 path = '/server-log/log-files';
+                query= null;
                 token_type = 'SYSTEMADMIN';
                 break;
             }
             case 'APP_CATEGORY':{
-                props.common_document.querySelector('#common_lov_title').classList.add('app_category');
                 lov_column_value = 'app_category_text';
                 path = '/server-db_admin/app_category';
+                query= null;
                 token_type = 'APP_ACCESS';
                 break;
             }
             case 'APP_ROLE':{
-                props.common_document.querySelector('#common_lov_title').classList.add('app_role');
                 lov_column_value = 'icon';
                 path = '/server-db_admin/app_role';
+                query= null;
                 token_type = 'APP_ACCESS';
                 break;
             }
+            default:{
+                lov_column_value = 'value';
+                path = '/server-db/app_settings';
+                query= `setting_type=${props.lov}`;
+                token_type = 'APP_DATA';
+            }
         }
-        props.function_FFB(path, null, 'GET', token_type, null)
+        props.function_FFB(path, query, 'GET', token_type, null)
         .then((/**@type{string}*/result)=>{
                 spinner = '';
                 props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({list:JSON.parse(result).rows, lov_column_value:lov_column_value});
