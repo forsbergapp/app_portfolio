@@ -233,6 +233,9 @@ body {
 	animation:glowing 2s linear infinite;
 	background-size:400%;
 }
+.common_list_row_selected{
+	background-color: var(--common_app_color_white3);
+}
 .common_toolbar_selected{
 	background-color: var(--common_app_color_blue1) !important;
 }
