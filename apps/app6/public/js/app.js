@@ -56,6 +56,41 @@ const app_event_click = event => {
     }
 };
 /**
+ * App event keyup
+ * @param {import('../../../types.js').AppEvent} event 
+ * @returns {void}
+ */
+const app_event_keyup = event => {
+    if (event==null){
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+            app_event_keyup(event);
+        }, true);
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
+        common.common_event('keyup',event)
+        .then(()=>{
+            switch(event_target_id){
+                case event.target.getAttribute('data-value')=='payment_id'?event_target_id:'':{
+                    event.target.classList.remove('common_input_error');
+                    if (isValidVPA(event.target.innerText)==false)
+                        event.target.classList.add('common_input_error');
+                    break;
+                }
+            }
+        });
+    }
+};
+/**
+ * Validate VPA
+ * @param {*} str 
+ * @returns 
+ */
+const isValidVPA = str => {
+    const regex = /^[a-z,0-9]{8}-[a-z,0-9]{4}-4[a-z,0-9]{3}-[89AB][a-z,0-9]{3}-[a-z,0-9]{12}$/;
+    return regex.test(str);
+};
+/**
  * Product update attributes
  */
 const product_update = async () =>{
@@ -148,7 +183,7 @@ const pay = async () =>{
             function_button_post:payment_request,
             function_button_delete:pay_cancel,
         }, '/common/component/app_data_display.js');
-
+        AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
 };
 /**
  * Sets framework
@@ -160,7 +195,7 @@ const pay = async () =>{
         {   Click: app_event_click,
             Change: null,
             KeyDown: null,
-            KeyUp: null,
+            KeyUp: app_event_keyup,
             Focus: null,
             Input:null});
 };

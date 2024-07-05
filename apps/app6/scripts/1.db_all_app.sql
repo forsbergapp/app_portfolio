@@ -183,7 +183,7 @@ INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_acc
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6059, null, null, <APP_ID/>,  6000, 6016, '{ "timestamp":{"default_text":"Timestamp", "length":null, "type":"TEXT", "lov":null}}');
 
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6060, null, null, <APP_ID/>,  6000, 6017, '{ "payment_method":{"default_text": "Payment method", "length":null, "type":"LOV", "lov":"PAYMENT_METHOD"}}');
-INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6061, null, null, <APP_ID/>,  6000, 6017, '{ "payment_id":{"default_text": "Payment id", "length":null, "type":"TEXT", "lov":null}}');
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6061, null, null, <APP_ID/>,  6000, 6017, '{ "payment_id":{"default_text": "Payment id (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)", "length":null, "type":"TEXT", "lov":null}}');
 
 
 --

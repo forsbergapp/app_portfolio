@@ -66,6 +66,15 @@ body {
 	display:inline-block;
 	border-radius: 4px;
 }
+.common_app_data_display_master_col1[data-key=payment_id],
+.common_app_data_display_master_col2[data-value=payment_id]{
+	display: block;
+	width: 100%;
+}
+.common_app_data_display_master_col1[data-key=payment_id]{
+	font-size: 0.8em;
+}
+
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
@@ -141,7 +150,7 @@ body {
 	margin-bottom:unset !important;
 }
 #common_dialogue_app_data_display .common_app_data_display_master_row{
-	height: 2em;
+	margin-bottom: 1em !important;
 }
 .common_app_data_display_master_row{
 	margin-bottom:unset !important;
@@ -215,6 +224,10 @@ body {
 	box-shadow: 0 0 35px 4px var(--common_app_color_white_transparent);
 }
 /* APP THEME COMMON*/
+.common_input_error{
+	border: 0.2em solid var(--common_app_color_blue3) !important;
+  	background-color: var(--common_app_color_blue2);
+}
 .common_select_dropdown_value.common_app_data_display_master_row_list{
 	background-color: var(--common_app_color_white);
 }
