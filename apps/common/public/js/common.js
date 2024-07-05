@@ -1055,8 +1055,13 @@ const lov_event = (event, lov) => {
             common_input_lov.innerText = row_lov.getAttribute('data-id') ?? '';
             common_input_lov.focus();
         }
-        if (common_lov_value)
+        if (common_lov_value){
+            /**@ts-ignore */
+            if (common_lov_value.parentNode?.classList.contains('common_app_data_display_master_row')){
+                common_lov_value.setAttribute('data-lov_value', row_lov.getAttribute('data-id') ?? '');
+            }
             common_lov_value.innerText = row_lov.getAttribute('data-value') ?? '';
+        }
         //dispatch event for either common_input lov if used or common_lov_value
         (common_input_lov ?? common_lov_value)?.dispatchEvent(new Event('input'));
         AppDocument.querySelector('#common_lov_close').click();
