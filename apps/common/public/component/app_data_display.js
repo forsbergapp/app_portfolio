@@ -59,7 +59,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                             class='common_app_data_display_master_col1'>${Object.values(master_row)[0].default_text}</div>
                                                     <div    data-value='${Object.keys(master_row)[0]}'
                                                             class='common_app_data_display_master_col2 ${Object.values(master_row)[0].type=='LOV'?'common_lov_value':''}'
-                                                            contentEditable='${props.mode=='READ'?'false':'true'}'></div>
+                                                            contentEditable='${(Object.values(master_row)[0].type=='LOV'||props.mode=='READ')?'false':'true'}'></div>
                                                     ${Object.values(master_row)[0].type=='LOV'?
                                                         `<div data-lov='${Object.values(master_row)[0].lov}' class='common_lov_button common_list_lov_click common_icon'></div>`:''
                                                     }
