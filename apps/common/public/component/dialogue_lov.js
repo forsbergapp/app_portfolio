@@ -12,9 +12,9 @@ const template = props =>` <div id='common_lov_form'>
                             </div>
                             <div id='common_lov_list' class='common_list_scrollbar <SPINNER/>'>
                             ${props.list.map((/**@type{*}*/list_row)=>
-                                `<div data-id='${list_row.id}' data-value='${list_row[props.lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
+                                `<div data-id='${props.lov_column_value=='text'?list_row.value:list_row.id}' data-value='${list_row[props.lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
                                     <div class='common_list_lov_col'>
-                                        <div>${list_row.id}</div>
+                                        <div>${props.lov_column_value=='text'?list_row.value:list_row.id}</div>
                                     </div>
                                     <div class='common_list_lov_col'>
                                         <div>${list_row[props.lov_column_value]}</div>
@@ -71,7 +71,7 @@ const component = async props => {
                 break;
             }
             default:{
-                lov_column_value = 'value';
+                lov_column_value = 'text';
                 path = '/server-db/app_settings';
                 query= `setting_type=${props.lov}`;
                 token_type = 'APP_DATA';
