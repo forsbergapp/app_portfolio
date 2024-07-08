@@ -13,7 +13,6 @@
 const template = props =>`  <div id='common_dialogue_user_menu_username'>${props.username}</div>
                             ${props.countdown==1?
                                 `<div id='common_dialogue_user_menu_token_countdown'>
-                                    <div id='common_dialogue_user_menu_token_countdown_icon' class='common_icon'></div>
                                     <div id='common_dialogue_user_menu_token_countdown_time'></div>
                                 </div>`:''
                             }

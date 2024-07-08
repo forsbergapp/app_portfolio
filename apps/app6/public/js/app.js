@@ -72,9 +72,7 @@ const app_event_keyup = event => {
         .then(()=>{
             switch(event_target_id){
                 case event.target.getAttribute('data-value')=='payment_id'?event_target_id:'':{
-                    event.target.classList.remove('common_input_error');
-                    if (isValidVPA(event.target.innerText)==false)
-                        event.target.classList.add('common_input_error');
+                    isValidVPA(event.target, event.target.innerText);
                     break;
                 }
             }
@@ -83,12 +81,20 @@ const app_event_keyup = event => {
 };
 /**
  * Validate VPA
- * @param {*} str 
- * @returns 
+ * @typedef {import('../../../types.js').AppEvent} appevent
+ * @param {appevent['target']} element
+ * @param {string} str
+ * @returns {boolean}
  */
-const isValidVPA = str => {
-    const regex = /^[a-z,0-9]{8}-[a-z,0-9]{4}-4[a-z,0-9]{3}-[89AB][a-z,0-9]{3}-[a-z,0-9]{12}$/;
-    return regex.test(str);
+const isValidVPA = (element, str) => {
+    element.classList.remove('common_input_error');
+    const regex = /^[a-z,0-9]{8}-[a-z,0-9]{4}-4[a-z,0-9]{3}-[89ab][a-z,0-9]{3}-[a-z,0-9]{12}$/;
+    if (regex.test(str))
+        return true;
+    else{
+        element.classList.add('common_input_error');
+        return false;
+    }
 };
 /**
  * Product update attributes
@@ -134,11 +140,27 @@ const product_update = async () =>{
      * Payment request
      */
 const payment_request = async () =>{
-    const price = AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price');
     const sku = AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
-    
-    common.show_message('INFO',null,null,null, `Paid ${price} for SKU ${sku}!`);
-    common.ComponentRemove('common_dialogue_app_data_display', true);
+    const payeeid_element = AppDocument.querySelectorAll('.common_app_data_display_master_row .common_app_data_display_master_col2[data-value=payment_id]')[0];
+    if (isValidVPA(payeeid_element, payeeid_element.innerText)){
+        const data = {
+            reference:      `SHOP SKU ${sku}`,
+            data_app_id:    common.COMMON_GLOBAL.app_id,
+            payeeid:        payeeid_element.innerText,
+            amount:         AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price'),
+            currency:       AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-currency_code]')[0].getAttribute('data-currency_code'),
+            message:        'Shop app'
+        };
+
+        const payment_request = await common.FFB('/app-function/PAYMENT_REQUEST_CREATE', null, 'POST', 'APP_DATA', data)
+                                        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
+                                        .catch((/**@type{Error}*/error)=>{throw error;});
+        common.show_message('INFO',null,null,null, `Requested ${payment_request.amount} ${payment_request.currency_symbol} for SKU ${sku}, message: ${payment_request.payment_request_message}!`);    
+        
+        common.ComponentRemove('common_dialogue_app_data_display', true);
+    }
+    else
+        common.show_message('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
 };
 /**
  * Pay cancel

@@ -36,6 +36,7 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PAYMENT_REQUEST','Payment request',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PAYMENT_REQUEST_METADATA','Payment request metadata',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PAYMENT_METADATA','Payment metadata',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','CURRENCY','Currency',NULL,NULL,NULL,NULL);
 
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PRODUCT_CATEGORY','Product category',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','BRAND','Brand',NULL,NULL,NULL,NULL);
@@ -102,6 +103,7 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, a
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6015, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PAYMENT_REQUEST'), '{"description":"Payment request"}');
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6016, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PAYMENT_REQUEST_METADATA'), '{"description":"Payment request metadata"}');
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6017, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PAYMENT_METADATA'), '{"description":"Payment metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6018, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'CURRENCY'), '{"description":"currencies"}');
 --
 --app data resource master
 --
@@ -184,6 +186,8 @@ INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_acc
 
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6060, null, null, <APP_ID/>,  6000, 6017, '{ "payment_method":{"default_text": "Payment method", "length":null, "type":"LOV", "lov":"PAYMENT_METHOD"}}');
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6061, null, null, <APP_ID/>,  6000, 6017, '{ "payment_id":{"default_text": "Payment id (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)", "length":null, "type":"TEXT", "lov":null}}');
+
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (6062, null, null, <APP_ID/>,  6000, 6018, '{ "currency_code":"APPEUR", "currency_symbol":"€", "currency_name": "App Euro", "conversion_rate":1, "decimal_places":2}');
 
 
 --

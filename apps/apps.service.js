@@ -936,17 +936,18 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
  * @param {number} app_id 
  * @param {string} resource_id 
  * @param {*} data 
+ * @param {string} ip
  * @param {string} locale
  * @param {import('../types.js').res|null} res
  * @returns 
  */
-const getFunction = async (app_id, resource_id, data, locale, res) => {
+const getFunction = async (app_id, resource_id, data, ip, locale, res) => {
     const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==resource_id)[0][4];
     if (module_path){
         try {
             const {default:RunFunction} = await import(`file://${process.cwd()}${module_path}`);
             /**@type{*} */
-            const function_data = await RunFunction(app_id, data, locale);
+            const function_data = await RunFunction(app_id, data, ip, locale);
             return function_data;            
         } catch (error) {
             LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getFunction()', COMMON.app_line(), error)

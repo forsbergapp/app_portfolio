@@ -26,7 +26,10 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'RESOURCE_TYPE','SERVICE','Service',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'RESOURCE_TYPE','PAGE','Page',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'RESOURCE_TYPE','OWNER','Owner',NULL,NULL,NULL,NULL);
+
 --settings used as attributes
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'RESOURCE_TYPE','CURRENCY','Currency',NULL,NULL,NULL,NULL);
+
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'ENTITY_TYPE','BANK','Bank',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'ENTITY_TYPE','CENTRALBANK','Central bank',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'ENTITY_TYPE','SETTLEMENT_SERVICE','Settlement service',NULL,NULL,NULL,NULL);
@@ -90,7 +93,7 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, a
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5003, <APP_ID/>, 5000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'MERCHANT'),   '{ "description":"Merchant info: Merchants ...", "status":"ONLINE"}');
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5004, <APP_ID/>, 5000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'TRANSACTION'),'{ "description":"Transaction info"}');
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5005, <APP_ID/>, 5000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'OWNER'),      '{ "description":"Owner info"}');
-
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5006, <APP_ID/>, 5000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'CURRENCY'),   '{ "description":"currencies"}');
 --
 -- app data resource master
 --
@@ -148,3 +151,5 @@ INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_acc
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (5046, null, null, <APP_ID/>,  5000, 5005, '{ "city":                {"default_text":"", "length":null, "type":"TEXT", "lov":""}}');
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (5047, null, null, <APP_ID/>,  5000, 5005, '{ "country":             {"default_text":"", "length":null, "type":"LOV", "lov":"COUNTRY"}}');
 INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (5048, null, null, <APP_ID/>,  5000, 5005, '{ "amount_initial":      {"default_text":"", "length":null, "type":"TEXT", "lov":""}}');
+
+INSERT INTO <DB_SCHEMA/>.app_data_resource_master (id, user_account_app_user_account_id, user_account_app_app_id, app_data_entity_resource_app_data_entity_app_id, app_data_entity_resource_app_data_entity_id, app_data_entity_resource_id, json_data) VALUES (5049, null, null, <APP_ID/>,  5000, 5006, '{ "currency_code":"APPEUR", "currency_symbol":"€", "currency_name": "App Euro", "conversion_rate":1, "decimal_places":2}');

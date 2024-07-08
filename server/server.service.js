@@ -493,6 +493,7 @@ const COMMON = {
                                                 /**@ts-ignore */
                                                 resource_id_get_string(), 
                                                 routesparameters.body, 
+                                                routesparameters.ip,
                                                 app_query?.get('lang_code'),
                                                 routesparameters.res).then(result=>iso_return_message(result, false)));
                         break;
