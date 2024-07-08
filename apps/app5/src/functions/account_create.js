@@ -1,4 +1,6 @@
 /** @module apps/app5 */
+
+/**@type{import('../../../../server/security.service')} */
 const {createSecret, createUUID} = await import(`file://${process.cwd()}/server/security.service.js`);
 
 const createBankAccountSecret = ()=>createSecret();
@@ -32,9 +34,11 @@ const createRandomTransactions = async (app_id, data)=>{
  * 
  * @param {number} app_id 
  * @param {*} data 
+ * @param {string} ip
+ * @param {string} locale
  * @returns {Promise.<import('../../../../types.js').db_result_app_data_resource_detail_post>}
  */
-const createBankAccount = async (app_id, data) =>{
+const createBankAccount = async (app_id, data, ip, locale) =>{
     /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
     const {post} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
     data.json_data = {
