@@ -2,17 +2,21 @@
 /**
  * @param {number} app_id
  * @param {*} data
+ * @param {string} ip
  * @param {string} locale
  * @returns {Promise.<import('../../../../types.js').db_result_app_data_resource_master_get[]>}
  */
-const product_get = async (app_id, data, locale) =>{
+const product_get = async (app_id, data, ip, locale) =>{
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
     
     /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
     const {get:DetailGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
 
-    const products = await MasterGet(app_id, data.resource_id, null, data.data_app_id, 'PRODUCT', data.entity_id, data.locale, true);
+    const products = await MasterGet(app_id, data.resource_id, null, data.data_app_id, 'PRODUCT', null, data.locale, true);
+
+    const currency = await MasterGet(app_id, null, null, data.data_app_id, 'CURRENCY', null, data.locale, true);
+
     /**@ts-ignore */
     for (const product of products.rows ?? products){
         product.sku = [];
@@ -30,6 +34,9 @@ const product_get = async (app_id, data, locale) =>{
                 }
             }
             product.sku_keys.push({key_name:'id', key_value:product_variant.id, key_type:'TEXT'});
+            //add currency to be displayed on each product variant
+            product.sku_keys.push({key_name:'currency_code', key_value:JSON.parse(currency[0].json_data).currency_code, key_type:'TEXT'});
+            product.sku_keys.push({key_name:'currency_symbol', key_value:JSON.parse(currency[0].json_data).currency_symbol, key_type:'TEXT'});
             product.sku.push(product.sku_keys);
         }
         //return placeholder for stock info
