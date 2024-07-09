@@ -282,7 +282,7 @@ const customer_create = async () => {
                             name            :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'name\']').innerHTML,
                             address         :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'address\']').innerHTML,
                             city            :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'city\']').innerHTML,
-                            country         :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').innerHTML
+                            country         :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'country\']').innerHTML
                         }
                     );
     init_secure();
