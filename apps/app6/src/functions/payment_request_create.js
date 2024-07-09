@@ -1,4 +1,4 @@
-/** @module apps/app5 */
+/** @module apps/app6 */
 /**
  * @param {number} app_id
  * @param {{reference:string,
@@ -15,10 +15,10 @@
  *                      tokentimestamp:number,
  *                      payment_request_id:string,
  *                      payment_request_message:string,
+ *                      merchant_name:string
  *                      amount:number,
- *                      currency_code:string,
  *                      currency_symbol:string,
- *                      merchant_name:string}>}
+ *                      countdown:string}[]>}
  */
 const payment_request_create = async (app_id, data, ip, locale) =>{
     const {default:jwt} = await import('jsonwebtoken');
@@ -43,7 +43,7 @@ const payment_request_create = async (app_id, data, ip, locale) =>{
     // use SECRET.PAYMENT_REQUEST_EXPIRE to set expire value
     const token = jwt.sign (access_token_claim, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_SECRET, {expiresIn: ConfigGetApp(app_id, app_id, 'SECRETS').PAYMENT_REQUEST_EXPIRE});
     
-    return {  token:                      token,
+    return [{  token:                      token,
               /**@ts-ignore */
               exp:                        jwt.decode(token, { complete: true }).payload.exp,
               /**@ts-ignore */
@@ -52,10 +52,10 @@ const payment_request_create = async (app_id, data, ip, locale) =>{
               tokentimestamp:             jwt.decode(token, { complete: true }).payload.tokentimestamp,
               payment_request_id:			    createUUID(),
               payment_request_message:	  'Check your bank app to authorize this payment',
+              merchant_name:              ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_NAME,
               amount:						          data.amount,
-              currency_code:              data.currency_code,
               currency_symbol:            await MasterGet(app_id, null, null, data.data_app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data).currency_symbol),
-              merchant_name:              ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_NAME
-          };
+              countdown:                  ''
+          }];
 };
 export default payment_request_create;
