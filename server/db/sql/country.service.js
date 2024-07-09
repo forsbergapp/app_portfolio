@@ -14,7 +14,9 @@ const getCountries = async (app_id, lang_code) => {
                          c.country_code "country_code",
                          c.flag_emoji "flag_emoji",
                          ct.text "text",
-                         cg.group_name "group_name"
+                         cg.group_name "group_name",
+                         c.country_code      "value",
+                         CONCAT(cg.group_name, CONCAT(' ', CONCAT(c.flag_emoji, CONCAT(' ', ct.text)))) "text_lov"
                     FROM <DB_SCHEMA/>.country  c,
                          <DB_SCHEMA/>.country_group cg,
                          <DB_SCHEMA/>.app_translation ct
