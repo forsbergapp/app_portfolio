@@ -152,12 +152,43 @@ const payment_request = async () =>{
             message:        'Shop app'
         };
 
-        const payment_request = await common.FFB('/app-function/PAYMENT_REQUEST_CREATE', null, 'POST', 'APP_DATA', data)
-                                        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                                        .catch((/**@type{Error}*/error)=>{throw error;});
-        common.show_message('INFO',null,null,null, `Requested ${payment_request.amount} ${payment_request.currency_symbol} for SKU ${sku}, message: ${payment_request.payment_request_message}!`);    
-        
-        common.ComponentRemove('common_dialogue_app_data_display', true);
+        await common.ComponentRender('common_dialogue_app_data_display', 
+            {
+                app_id:common.COMMON_GLOBAL.app_id,
+                display_type:'VERTICAL_KEY_VALUE',
+                dialogue:true,
+                master_path:'/app-function/PAYMENT_REQUEST_CREATE',
+                master_query:'',
+                master_body:data,
+                master_method:'POST',
+                master_token_type:'APP_DATA',
+                master_resource:'PAYMENT_REQUEST_METADATA',
+                detail_path:null,
+                detail_query:null,
+                detail_method:null,
+                detail_token_type:null,
+                detail_class:null,
+                new_resource:false,
+                mode:'READ',
+                timezone:common.COMMON_GLOBAL.user_timezone,
+                locale:common.COMMON_GLOBAL.user_locale,
+                button_print: false,
+                button_update: false,
+                button_post: false,
+                button_delete: true,
+                function_FFB:common.FFB,
+                function_button_print:null,
+                function_button_update:null,
+                function_button_post:null,
+                function_button_delete:pay_cancel
+            }, '/common/component/app_data_display.js');
+        AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
+            AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
+            AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').innerText;
+
+        common.user_session_countdown(  AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
+                                        AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_exp').getAttribute('data-value'),
+                                        true);
     }
     else
         common.show_message('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
