@@ -72,10 +72,10 @@ const getStatement = async (app_id, data, ip, locale) =>{
     const {get:EntityGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_entity.service.js`);
 
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
-    const {get:AccountMetadataGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
+    const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
 
     /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
-    const {get:CustomerAccountGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
+    const {get:DetailGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
 
     /**@type{import('../../../../server/db/sql/app_data_resource_detail_data.service.js')} */
     const {get:TransactionsGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
@@ -88,11 +88,11 @@ const getStatement = async (app_id, data, ip, locale) =>{
     const Entity            = await EntityGet(app_id, null, data.data_app_id, null)
                                         .then(result=>JSON.parse(result[0].json_data));
 
-    const AccountMetaData   = await AccountMetadataGet(app_id, null, null, data.data_app_id, 'ACCOUNT', null, null, true)
+    const AccountMetaData   = await MasterGet(app_id, null, null, data.data_app_id, 'ACCOUNT', null, null, true)
                                     .then(result=>result.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
-    const CustomerAccount   = await CustomerAccountGet(app_id, null, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, false)
+    const CustomerAccount   = await DetailGet(app_id, null, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, false)
                                         .then(result=>JSON.parse(result[0].json_data));
-    
+    const currency          = await MasterGet(app_id, null, null, data.data_app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data));
     //amount_deposit and amount_withdrawal from JSON.parse(json_data) column, each app is responsible for APP_DATA json_data content
     const balance = transactions.reduce((balance, current_row)=>balance += 
                                                                     /**@ts-ignore */
@@ -106,9 +106,9 @@ const getStatement = async (app_id, data, ip, locale) =>{
                     bank_account_iban	    :IBAN_compose(Entity.country_code, Entity.bank_id, CustomerAccount.bank_account_number, true),
                     bank_account_number     :CustomerAccount.bank_account_number,
                     /**@ts-ignore */
-                    currency                :AccountMetaData.filter((/**@type{*}*/row)=>'currency' in row)[0].currency.default_value,
+                    currency                :currency.currency_symbol,
                     /**@ts-ignore */
-                    currency_name           :AccountMetaData.filter((/**@type{*}*/row)=>'currency_name' in row)[0].currency_name.default_value,
+                    currency_name           :currency.currency_name,
                     bank_account_balance    :Number(balance)
             }];
 }; 

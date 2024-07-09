@@ -353,7 +353,7 @@
                                             "merchant_vpa":"<DEMO_VPA/>"
                                         },
                             "app_registry_update_app_id":6,
-                            "app_update_secret":[{"MERCHANT_ID":"DATE_NOW"}, {"MERCHANT_URL":""}, {"MERCHANT_API_SECRET":"SECRET"}, {"MERCHANT_PUBLIC_KEY":"PUBLIC_KEY"}, {"MERCHANT_PRIVATE_KEY":"PRIVATE_KEY"}, {"MERCHANT_VPA":"UUID"}],
+                            "app_update_secret":[{"MERCHANT_ID":"DATE_NOW"}, {"MERCHANT_NAME":"Shop"}, {"MERCHANT_URL":""}, {"MERCHANT_API_SECRET":"SECRET"}, {"MERCHANT_PUBLIC_KEY":"PUBLIC_KEY"}, {"MERCHANT_PRIVATE_KEY":"PRIVATE_KEY"}, {"MERCHANT_VPA":"UUID"}],
                             "resource_detail":[{"app_data_resource_master_id":"<MASTER_ID/>",
                                                 "app_data_entity_resource_id":5000,
                                                 "user_account_id"                                 : "<USER_ACCOUNT_ID/>",

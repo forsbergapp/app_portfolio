@@ -29,6 +29,10 @@ const payment_request_create = async (app_id, data, ip, locale) =>{
     /**@type{import('../../../../server/config.service.js')} */
     const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 
+    /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
+    const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
+
+
     const access_token_claim = {app_id:         data.data_app_id,
                                 payeeid:        data.payeeid,
                                 ip:             ip,
@@ -49,9 +53,9 @@ const payment_request_create = async (app_id, data, ip, locale) =>{
               payment_request_id:			    createUUID(),
               payment_request_message:	  'Check your bank app to authorize this payment',
               amount:						          data.amount,
-              currency_code:              'APPEUR',
-              currency_symbol:            '€',
-              merchant_name:              'SHOP App'
+              currency_code:              data.currency_code,
+              currency_symbol:            await MasterGet(app_id, null, null, data.data_app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data).currency_symbol),
+              merchant_name:              ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_NAME
           };
 };
 export default payment_request_create;
