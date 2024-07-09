@@ -170,6 +170,9 @@ body {
     box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
 }
 /* APP THEME COMMON*/
+.common_list_row_selected{
+	background-color: var(--common_app_color_white3);
+}
 .common_input{
 	border: 1px solid var(--common_app_color_gold);
 	background-color: var(--common_app_color_white);

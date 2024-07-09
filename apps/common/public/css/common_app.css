@@ -919,7 +919,7 @@ select {
 	display:block;
 	cursor:pointer;
 }
-.common_list_lov_col:nth-child(1){
+.common_list_lov_col1{
 	width:50px;
 	display:inline-block;
 	padding-left: 3px;
@@ -927,7 +927,7 @@ select {
 	margin: 1px;
 	border-radius: 4px
 }
-.common_list_lov_col:nth-child(2){
+.common_list_lov_col2{
 	width:150px;
 	display:inline-block;
 	padding-left: 3px;
@@ -935,6 +935,15 @@ select {
 	margin: 1px;
 	border-radius: 4px
 }
+#common_lov_list .common_list_lov_col1{
+	display:none;
+}
+#common_lov_list[data-lov=SERVER_LOG_FILES] .common_list_lov_col1,
+#common_lov_list[data-lov=APP_CATEGORY] .common_list_lov_col1,
+#common_lov_list[data-lov=APP_ROLE] .common_list_lov_col1{
+	display:inline-block;
+}
+
 /*profile search*/
 #common_profile_search{
 	z-index: 1;
@@ -1554,14 +1563,14 @@ select {
 		width:500px;
 		height:500px;
 	}
+	.common_dialogue_show1{
+		width:500px !important;
+	}
 	#common_profile_bio{
 		font-size: 0.7em;
 	}	
 	#common_dialogue_info_start_links, #common_dialogue_info_contact, #common_dialogue_info_app_copyright{
 		font-size: 14px;
-	}
-	#common_dialogue_user_edit{
-		width:500px;
 	}
 	.common_profile_detail_list{
 		height:5.6em;	
