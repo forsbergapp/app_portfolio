@@ -78,8 +78,11 @@ body {
 	font-size:unset !important;
 	margin-bottom: unset !important;
 }
-.common_app_data_display_buttons.css_spinner{
+.app_page_start_shop .common_app_data_display_buttons.css_spinner{
 	justify-self: center;
+	margin-left: unset !important;
+	margin-right: unset !important;
+	margin-inline-start: 50% !important;
 }
 .common_app_data_display_buttons{
 	position: unset !important;
@@ -222,6 +225,9 @@ body {
 .app_shop_div .css_spinner{
 	--common_app_color_background_spinner:var(--common_app_color_blue3);
 }
+.common_dialogue_content .css_spinner{
+	--common_app_color_background_spinner:var(--common_app_color_white);
+}
 .dialogue_content{
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1), 0 6px 20px 0 var(--common_app_color_shadow2);
 	background-color: var(--common_app_color_white1);
@@ -231,6 +237,27 @@ body {
 	box-shadow: 0 0 35px 4px var(--common_app_color_white_transparent);
 }
 /* APP THEME COMMON*/
+.common_app_data_display_master_col1[data-key=token],
+.common_app_data_display_master_col2.common_app_data_display_type_token,
+.common_app_data_display_master_col1[data-key=exp],
+.common_app_data_display_master_col2.common_app_data_display_type_exp,
+.common_app_data_display_master_col1[data-key=iat],
+.common_app_data_display_master_col2.common_app_data_display_type_iat,
+.common_app_data_display_master_col1[data-key=tokentimestamp],
+.common_app_data_display_master_col2.common_app_data_display_type_tokentimestamp,
+.common_app_data_display_master_col1[data-key=payment_request_id],
+.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id,
+.common_app_data_display_master_col1[data-key=currency_symbol],
+.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol,
+.common_app_data_display_master_col1[data-key=payment_request_message],
+.common_app_data_display_master_col1[data-key=countdown]{
+	display:none;
+}
+.common_app_data_display_master_col2.common_app_data_display_type_payment_request_message,
+.common_app_data_display_master_col2.common_app_data_display_type_countdown{
+	width: 100% !important;
+	text-align: center;
+}
 .common_input_error{
 	border: 0.2em solid var(--common_app_color_blue3) !important;
   	background-color: var(--common_app_color_blue2);

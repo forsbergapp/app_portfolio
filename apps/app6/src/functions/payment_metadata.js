@@ -1,4 +1,4 @@
-/** @module apps/app5 */
+/** @module apps/app6 */
 /**
  * @param {number} app_id
  * @param {*} data
