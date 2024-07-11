@@ -1772,10 +1772,14 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         //wait 1 second
         await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 1000);});
         try {
+            if (element.id)
+                element = AppDocument.querySelector(`#${element.id}`);
+            else
+                element = AppDocument.querySelector(`.${element.className.replaceAll(' ','.')}`);
             element.dispatchEvent(new Event('change'));
         } catch (error) {
             //element removed
-            null;
+            element.removeEventListener('change', event_function);
         }
     }
 };
