@@ -39,6 +39,17 @@ const app_event_click = event => {
                         AppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(2)';
                     break;
                 }
+                case ('common_lov_list' && AppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_method]'))?event_target_id:'' :{
+                    if( AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_method]').getAttribute('data-lov_value')=='VPA'){
+                        AppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='visible';
+                        AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='visible';
+                    }
+                    else{
+                        AppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
+                        AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
+                    }   
+                    break;
+                }
                 case 'common_toolbar_framework_js':{
                    framework_set(1);
                     break;
@@ -55,6 +66,7 @@ const app_event_click = event => {
         });
     }
 };
+
 /**
  * App event keyup
  * @param {import('../../../types.js').AppEvent} event 
@@ -236,6 +248,8 @@ const pay = async () =>{
             function_button_post:payment_request,
             function_button_delete:pay_cancel,
         }, '/common/component/app_data_display.js');
+        AppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
+        AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
         AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
 };
 /**
