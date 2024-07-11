@@ -123,7 +123,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                     if (result_password) {
                         if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
                                 app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
-                            const jwt_data = AuthorizeToken(app_id, {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
+                            const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER'});
                             data_body.access_token = jwt_data.token;
                             insertUserAccountLogon(app_id, user_account_id, data_body)
                             .then(()=>{
@@ -266,7 +266,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
             if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && result_signin[0] && (result_signin[0].app_role_id == 0 || result_signin[0].app_role_id == 1))||
                     app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
                 if (result_signin.length > 0) {        
-                    const jwt_data_exists = AuthorizeToken(app_id, {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
+                    const jwt_data_exists = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER'});
                     data_login.access_token = jwt_data_exists.token;
                     data_login.result = 1;
                     insertUserAccountLogon(app_id, user_account_id, data_login)
@@ -306,7 +306,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                     
                     service.create(app_id, data_user)
                     .then((/**@type{import('../../../types.js').db_result_user_account_create} */result_create)=>{
-                        const jwt_data_new = AuthorizeToken(app_id, {id:result_create.insertId, name:data_user.username ?? '', ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
+                        const jwt_data_new = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data_user.username ?? '', ip:ip, scope:'USER'});
                         data_login.access_token = jwt_data_new.token;
                         data_login.result = 1;
     
@@ -407,7 +407,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                                 data_body.verification_code, 
                                 data_body.email ?? '')
                 .then(()=>{
-                    const jwt_data = AuthorizeToken(app_id, {id:result_create.insertId, name:data.username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
+                    const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
                     resolve({
                         accessToken: jwt_data.token,
                         exp:jwt_data.exp,
@@ -420,7 +420,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                 .catch((/**@type{import('../../../types.js').error}*/error)=>reject(error));
             }
             else{
-                const jwt_data = AuthorizeToken(app_id, {id:result_create.insertId, name:data.username, ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
+                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
                 resolve({
                     accessToken: jwt_data.token,
                     exp:jwt_data.exp,
@@ -512,7 +512,7 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
                     });
             }
             else{
-                const jwt_data = AuthorizeToken(app_id, {id:resource_id, name:'', ip:ip, scope:'USER', endpoint:'APP_ACCESS'});
+                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:resource_id, name:'', ip:ip, scope:'USER'});
                 //return accessToken since PASSWORD_RESET is in progress
                 //email was verified and activated with id token, but now the password will be updated
                 //using accessToken and authentication code
