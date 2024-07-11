@@ -439,7 +439,7 @@
                     "APP_ACCESS_EXPIRE":"1h",
                     "MERCHANT_ID":"<MERCHANT_ID/>",
                     "MERCHANT_NAME":"<MERCHANT_NAME/>",
-                    "MERCHANT_API_URL":"app5.localhost/bff/app_external/v1/app-function/PAYMENT_REQUEST", 
+                    "MERCHANT_API_URL":[{"key":"PAYMENT_REQUEST_CREATE", "value":"app5.localhost/bff/app_data/v1/app-function/PAYMENT_REQUEST_CREATE"}, {"key":"PAYMENT_REQUEST_GET", "value":"app5.localhost/bff/app_data/v1/app-function/PAYMENT_REQUEST_GET"}], 
                     "MERCHANT_API_SECRET":"<API_SECRET/>", 
                     "MERCHANT_PUBLIC_KEY":"<PUBLIC_KEY/>",
                     "MERCHANT_PRIVATE_KEY":"<PRIVATE_KEY/>",

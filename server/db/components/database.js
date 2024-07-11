@@ -675,7 +675,7 @@ const install_db_get_files = async (json_type) =>{
             //loop json_data keys
             for (const key of Object.entries(resource.json_data)){
                 const value = value_set(key);
-                if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>secret_key[key[0].toUpperCase()]).length>0)
+                if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0].toUpperCase() in secret_key).length>0)
                     await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                         {   app_id:             resource.app_registry_update_app_id,
                             parameter_name:     key[0].toUpperCase(),
