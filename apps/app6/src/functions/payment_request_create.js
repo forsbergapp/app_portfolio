@@ -21,7 +21,6 @@
  *                      countdown:string}[]>}
  */
 const payment_request_create = async (app_id, data, ip, locale) =>{
-    const {default:jwt} = await import('jsonwebtoken');
     
     /**@type{import('../../../../server/security.service')} */
     const {createUUID} = await import(`file://${process.cwd()}/server/security.service.js`);
@@ -32,30 +31,29 @@ const payment_request_create = async (app_id, data, ip, locale) =>{
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
 
-
-    const access_token_claim = {app_id:         data.data_app_id,
-                                payeeid:        data.payeeid,
-                                ip:             ip,
-                                scope:          'USER',
-                                tokentimestamp: Date.now()};
+    /**@type{import('../../../../server/iam.service.js')} */
+    const {AuthorizeToken} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     // payment request uses ID Token and SECRET.APP_ID_SECRET  parameter since no user is logged in
     // use SECRET.PAYMENT_REQUEST_EXPIRE to set expire value
-    const token = jwt.sign (access_token_claim, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_SECRET, {expiresIn: ConfigGetApp(app_id, app_id, 'SECRETS').PAYMENT_REQUEST_EXPIRE});
+    const jwt_data = AuthorizeToken(data.data_app_id, 'APP_CUSTOM', {   id:             data.payeeid,
+                                                                        name:           '',
+                                                                        ip:             ip,
+                                                                        scope:          'APP_CUSTOM'}, ConfigGetApp(app_id, app_id, 'SECRETS').PAYMENT_REQUEST_EXPIRE);
     
-    return [{  token:                      token,
+    return [{  token:                   jwt_data.token,
               /**@ts-ignore */
-              exp:                        jwt.decode(token, { complete: true }).payload.exp,
+              exp:                      jwt_data.exp,
               /**@ts-ignore */
-              iat:                        jwt.decode(token, { complete: true }).payload.iat,
+              iat:                      jwt_data.iat,
               /**@ts-ignore */
-              tokentimestamp:             jwt.decode(token, { complete: true }).payload.tokentimestamp,
-              payment_request_id:			    createUUID(),
-              payment_request_message:	  'Check your bank app to authorize this payment',
-              merchant_name:              ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_NAME,
-              amount:						          data.amount,
-              currency_symbol:            await MasterGet(app_id, null, null, data.data_app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data).currency_symbol),
-              countdown:                  ''
+              tokentimestamp:           jwt_data.tokentimestamp,
+              payment_request_id:       createUUID(),
+              payment_request_message:	'Check your bank app to authorize this payment',
+              merchant_name:            ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_NAME,
+              amount:					data.amount,
+              currency_symbol:          await MasterGet(app_id, null, null, data.data_app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data).currency_symbol),
+              countdown:                ''
           }];
 };
 export default payment_request_create;

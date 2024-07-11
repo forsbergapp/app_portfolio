@@ -252,10 +252,10 @@
 /**
  * JWT token
  * @typedef {{  app_id:         number,
- *              id:             number|null,
+ *              id:             number|string|null,
  *              name:           string,
  *              ip:             string,
- *              scope:          'USER'|'APP',
+ *              scope:          'USER'|'APP'|'APP_CUSTOM',
  *              tokentimestamp: number}} access_token_claim_type
  * Apps - Email param data
  * @typedef {object} email_param_data

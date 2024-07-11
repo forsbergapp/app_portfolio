@@ -95,7 +95,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
                 result = 1;
             else
                 result = 0;
-            const jwt_data = AuthorizeToken(app_id, {id:null, name:username, ip:ip, scope:'USER', endpoint:'SYSTEMADMIN'});
+            const jwt_data = AuthorizeToken(app_id, 'SYSTEMADMIN', {id:null, name:username, ip:ip, scope:'USER'});
             /**@type{import('../types.js').iam_systemadmin_login_record} */
             const file_content = {	app_id:             app_id,
                                     username:		    username,
@@ -511,50 +511,65 @@ const AuthenticateResource = parameters =>  {
  * @returns {Promise.<string>}
  */
  const AuthorizeTokenApp = async (app_id, ip)=>{
-    const secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_SECRET;
-    const expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_EXPIRE;
-    const jsontoken_at = jwt.sign ({scope:'APP',
-                                    app_id:app_id,
-                                    ip:ip,
-                                    tokentimestamp: Date.now()}, secret, {expiresIn: expiresin});
+    const jwt_data = AuthorizeToken(app_id, 'APP_ID', { id: null, 
+                                                        ip:ip ?? '', 
+                                                        name:'', 
+                                                        scope:'APP'});
+
     /**@type{import('../types.js').iam_app_token_record} */
     const file_content = {	app_id:             app_id,
                             result:				1,
-                            app_token:   	    jsontoken_at,
+                            app_token:   	    jwt_data.token,
                             client_ip:          ip ?? '',
                             client_user_agent:  null,
                             client_longitude:   null,
                             client_latitude:    null,
                             date_created:       new Date().toISOString()};
-    return await file_append_log('IAM_APP_TOKEN', file_content, 'YYYYMMDD').then(()=>jsontoken_at);
+    return await file_append_log('IAM_APP_TOKEN', file_content, 'YYYYMMDD').then(()=>jwt_data.token);
  };
 /**
  * Authorize token
  * 
  * @param {number} app_id
- * @param {{id:number|null, 
+ * @param {'APP_ID'|'APP_ACCESS'|'SYSTEMADMIN'|'APP_CUSTOM'} endpoint
+ * @param {{id:number|string|null, 
  *          name:string, 
  *          ip:string, 
- *          scope:'USER', 
- *          endpoint:'APP_ACCESS'|'SYSTEMADMIN'}} claim
+ *          scope:'USER'|'APP'|'APP_CUSTOM'}} claim
+ * @param {string|null} app_custom_expire
  * @returns {{
  *              token:string, 
  *              exp:number,             //expires at
  *              iat:number,             //issued at
  *              tokentimestamp:number}}
  */
- const AuthorizeToken = (app_id, claim)=>{
+ const AuthorizeToken = (app_id, endpoint, claim, app_custom_expire=null)=>{
+
     let secret = '';
     let expiresin = '';
-    switch (claim.endpoint){
+    switch (endpoint){
+        //APP ID Token
+        case 'APP_ID':{
+            secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_SECRET;
+            expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_EXPIRE;
+            break;
+        }
+        //USER Access token
         case 'APP_ACCESS':{
             secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET;
             expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_EXPIRE;
             break;
         }
+        //USER Access token
         case 'SYSTEMADMIN':{
             secret = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '';
             expiresin = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_EXPIRE_ACCESS') ?? '';
+            break;
+        }
+        //APP custom token
+        case 'APP_CUSTOM':{
+            secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_SECRET;
+            expiresin = app_custom_expire ?? '';
             break;
         }
     }
