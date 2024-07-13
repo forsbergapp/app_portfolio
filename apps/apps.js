@@ -40,10 +40,11 @@ const getAppsAdmin = async (app_id, query) => service.getAppsAdmin(app_id, query
  * @param {number} app_id 
  * @param {string} resource_id
  * @param {*} data
+ * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
  * @param {import('../types.js').res} res 
  */
- const getFunction = async (app_id, resource_id, data, ip, locale, res) => service.getFunction(app_id, resource_id, data, ip, locale, res);
+ const getFunction = async (app_id, resource_id, data, user_agent, ip, locale, res) => service.getFunction(app_id, resource_id, data, user_agent, ip, locale, res);
 
 export{getApps, getAppsAdmin, getAppMain, getFunction};

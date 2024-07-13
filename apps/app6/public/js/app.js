@@ -153,14 +153,14 @@ const product_update = async () =>{
      */
 const payment_request = async () =>{
     const sku = AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
-    const payeeid_element = AppDocument.querySelectorAll('.common_app_data_display_master_row .common_app_data_display_master_col2[data-value=payment_id]')[0];
-    if (isValidVPA(payeeid_element, payeeid_element.innerText)){
+    const payerid_element = AppDocument.querySelectorAll('.common_app_data_display_master_row .common_app_data_display_master_col2[data-value=payment_id]')[0];
+    if (isValidVPA(payerid_element, payerid_element.innerText)){
         const data = {
             reference:      `SHOP SKU ${sku}`,
             data_app_id:    common.COMMON_GLOBAL.app_id,
-            payeeid:        payeeid_element.innerText,
+            payerid:        payerid_element.innerText,
             amount:         AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price'),
-            currency:       AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-currency_code]')[0].getAttribute('data-currency_code'),
+            currency_code:  AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-currency_code]')[0].getAttribute('data-currency_code'),
             message:        'Shop app'
         };
 

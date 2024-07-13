@@ -304,6 +304,24 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
 };
 
 /**
+ * 
+ * @param {'APP_EXTERNAL'} endpoint 
+ * @param {string} host 
+ * @param {string} user_agent 
+ * @param {string} accept_language 
+ * @param {string} ip 
+ * @param {*} body
+ * @param {import('../types.js').res} res
+ * @param {function} next
+ */
+const AuthenticateExternal = (endpoint, host, user_agent, accept_language, ip, body, res, next) => {
+    //add host, user_agent, accept_language and ip validation if needed
+    if (endpoint =='APP_EXTERNAL' && ('id' in body) && ('message' in body))
+        next();
+    else
+        not_authorized(res, 401, 'AuthenticateExternal');
+};
+/**
  * Authorize request
  * Controls if AUTHENTICATE_REQUEST_ENABLE=1 else skips all checks
  *  if ip is blocked return 403
@@ -596,6 +614,7 @@ export{ iam_decode,
         AuthenticateSystemadmin,
         AuthenticateSocket,
         AuthenticateUserCommon,
+        AuthenticateExternal,
         AuthenticateRequest,
         AuthenticateApp,
         AuthenticateResource,
