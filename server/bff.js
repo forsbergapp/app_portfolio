@@ -202,6 +202,19 @@ const fs = await import('node:fs');
     service.BFF(bff_parameters);
 };
 /**
+ * Backend for frontend (BFF) APP_EXTERNAL
+ * 
+ * @param {import('../types.js').req} req - Request
+ * @param {import('../types.js').res} res
+ */
+const BFF_app_external = (req, res) =>{
+    /**@type{import('../types.js').bff_parameters} */
+    const bff_parameters = {endpoint:'APP_EXTERNAL', 
+                            ...BFF_common(req, res)
+                            };
+    service.BFF(bff_parameters);
+};
+/**
  * Backend for frontend (BFF) ADMIN
  * 
  * @param {import('../types.js').req} req - Request
@@ -308,5 +321,5 @@ const BFF_iam_systemadmin = (req, res) =>{
     service.BFF(bff_parameters);
 };
 
-export{ BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, 
+export{ BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_app_external, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, 
         BFF_iam_systemadmin, BFF_iam_admin, BFF_iam_user, BFF_iam_provider};

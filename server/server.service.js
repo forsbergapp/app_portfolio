@@ -113,7 +113,7 @@ const COMMON = {
     //ROUTES MIDDLEWARE
     //apps
     /**@type{import('./bff.js')} */
-    const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, 
+    const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_app_external, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, 
             BFF_iam_systemadmin, BFF_iam_admin, BFF_iam_user, BFF_iam_provider} = await import(`file://${process.cwd()}/server/bff.js`);
     //auth
     /**@type{import('./iam.js')} */
@@ -131,17 +131,18 @@ const COMMON = {
     //URI syntax implemented:
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app_data/v1*').all          (iam.AuthenticateIdToken,                   BFF_app_data);
-    app.route('/bff/app_signup/v1*').post       (iam.AuthenticateIdTokenRegistration,       BFF_app_signup);
-    app.route('/bff/app_access/v1*').all        (iam.AuthenticateAccessToken,               BFF_app_access);
-    app.route('/bff/admin/v1*').all             (iam.AuthenticateAccessTokenAdmin,          BFF_admin);    
-    app.route('/bff/superadmin/v1*').all        (iam.AuthenticateAccessTokenSuperAdmin,     BFF_superadmin);
-    app.route('/bff/systemadmin/v1*').all       (iam.AuthenticateAccessTokenSystemAdmin,    BFF_systemadmin);
-    app.route('/bff/socket/v1*').get            (iam.AuthenticateSocket,                    BFF_socket);
-    app.route('/bff/iam_systemadmin/v1*').post  (iam.AuthenticateIAMSystemAdmin,            BFF_iam_systemadmin);
-    app.route('/bff/iam_admin/v1*').post        (iam.AuthenticateIAMAdmin,                  BFF_iam_admin);
-    app.route('/bff/iam_user/v1*').post         (iam.AuthenticateIAMUser,                   BFF_iam_user);
-    app.route('/bff/iam_provider/v1*').post     (iam.AuthenticateIAMProvider,               BFF_iam_provider);
+    app.route('/bff/app_data/v1*').all                  (iam.AuthenticateIdToken,                   BFF_app_data);
+    app.route('/bff/app_signup/v1*').post               (iam.AuthenticateIdTokenRegistration,       BFF_app_signup);
+    app.route('/bff/app_access/v1*').all                (iam.AuthenticateAccessToken,               BFF_app_access);
+    app.route('/bff/app_external/v1/app-function*').post (iam.AuthenticateExternal,                  BFF_app_external);
+    app.route('/bff/admin/v1*').all                     (iam.AuthenticateAccessTokenAdmin,          BFF_admin);    
+    app.route('/bff/superadmin/v1*').all                (iam.AuthenticateAccessTokenSuperAdmin,     BFF_superadmin);
+    app.route('/bff/systemadmin/v1*').all               (iam.AuthenticateAccessTokenSystemAdmin,    BFF_systemadmin);
+    app.route('/bff/socket/v1*').get                    (iam.AuthenticateSocket,                    BFF_socket);
+    app.route('/bff/iam_systemadmin/v1*').post          (iam.AuthenticateIAMSystemAdmin,            BFF_iam_systemadmin);
+    app.route('/bff/iam_admin/v1*').post                (iam.AuthenticateIAMAdmin,                  BFF_iam_admin);
+    app.route('/bff/iam_user/v1*').post                 (iam.AuthenticateIAMUser,                   BFF_iam_user);
+    app.route('/bff/iam_provider/v1*').post             (iam.AuthenticateIAMProvider,               BFF_iam_provider);
     
     //app asset, common asset, info page, report and app
     app.route('*').get                          (BFF_app);
@@ -480,19 +481,22 @@ const COMMON = {
                     }
                     case route({url:`/bff/app_data/v1/server-db/app_data_entity_resource/${resource_id_string}`, method:'GET', 
                                 resource_validate_app_data_app_id: getNumberValue(app_query?.get('data_app_id'))}):
-                    case route({url:`/bff/admin/v1/server-db/server-db/app_data_entity_resource/${resource_id_string}`, method:'GET'}):{
+                    case route({url:`/bff/admin/v1/server-db/app_data_entity_resource/${resource_id_string}`, method:'GET'}):{
                         resolve(db_app_data_entity.getEntityResource(routesparameters.app_id, resource_id_get_number(), app_query)
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
                     case route({url:`/bff/app_data/v1/app-function/${resource_id_string}`, method:'POST', 
                                 resource_validate_app_data_app_id: routesparameters.body.data_app_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_DATA'}):
+                    case route({url:`/bff/app_external/v1/app-function/${resource_id_string}`, method:'POST', 
+                                validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_EXTERNAL'}):
                     case route({url:`/bff/app_access/v1/app-function/${resource_id_string}`, method:'POST', 
                         resource_validate_app_data_app_id: routesparameters.body.data_app_id, resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_ACCESS'}):{
                         resolve(app.getFunction(routesparameters.app_id, 
                                                 /**@ts-ignore */
                                                 resource_id_get_string(), 
                                                 routesparameters.body, 
+                                                routesparameters.user_agent,
                                                 routesparameters.ip,
                                                 app_query?.get('lang_code'),
                                                 routesparameters.res).then(result=>iso_return_message(result, false)));

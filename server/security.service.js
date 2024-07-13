@@ -98,7 +98,7 @@ const PasswordCompare = async (password, compare_password) =>{
 const CreateKeyPair = async () => {
     return new Promise((resolve, reject)=>{
         generateKeyPair('rsa', {
-            modulusLength: 4096,
+            modulusLength: 8192,
             publicKeyEncoding: {
                     type: 'spki',
                     format: 'pem'
@@ -122,7 +122,7 @@ const CreateKeyPair = async () => {
  * @param {string} text 
  * @returns {string}
  */
-const PublicEncrypt = (publicKey, text) => publicEncrypt(publicKey,Buffer.from(text)).toString();
+const PublicEncrypt = (publicKey, text) => publicEncrypt(publicKey,Buffer.from(text)).toString('base64');
 /**
  * 
  * @param {string} privateKey 
@@ -131,6 +131,6 @@ const PublicEncrypt = (publicKey, text) => publicEncrypt(publicKey,Buffer.from(t
  */
 const PrivateDecrypt = (privateKey, text) => privateDecrypt(privateKey,
                                                             /**@ts-ignore */
-                                                            Buffer.from(text.toString('base64'), 'base64')).toString();
+                                                            Buffer.from(text, 'base64')).toString('utf-8');
 
 export {createUUID, createRequestId, createCorrelationId, createSecret, PasswordCreate, PasswordCompare, CreateKeyPair, PublicEncrypt, PrivateDecrypt };

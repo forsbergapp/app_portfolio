@@ -64,6 +64,13 @@ const AuthenticateAccessTokenAdmin = (req, res, next) => service.AuthenticateUse
 const AuthenticateAccessToken = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_ACCESS', req.headers.authorization, req.headers.host, req.ip, res, next);    
 
 /**
+ * Middleware authenticates external request
+ * @param {import('../types.js').req} req
+ * @param {import('../types.js').res} res
+ * @param {function} next
+ */
+const AuthenticateExternal = (req, res, next) => service.AuthenticateExternal('APP_EXTERNAL', req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.ip, req.body, res, next);    
+/**
  * Middleware authenticates socket used for EventSource
  * @param {import('../types.js').req} req
  * @param {import('../types.js').res} res
@@ -105,6 +112,6 @@ const AuthenticateIAMProvider = (req, res, next) => service.AuthenticateUserComm
 
 export{ AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
         AuthenticateIdToken, AuthenticateIdTokenRegistration,
-        AuthenticateAccessTokenSuperAdmin, AuthenticateAccessTokenAdmin, AuthenticateAccessToken,
+        AuthenticateAccessTokenSuperAdmin, AuthenticateAccessTokenAdmin, AuthenticateAccessToken, AuthenticateExternal,
         AuthenticateSocket,
         AuthenticateIAMSystemAdmin, AuthenticateIAMAdmin, AuthenticateIAMUser,AuthenticateIAMProvider};
