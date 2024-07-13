@@ -936,18 +936,19 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
  * @param {number} app_id 
  * @param {string} resource_id 
  * @param {*} data 
+ * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
  * @param {import('../types.js').res|null} res
  * @returns 
  */
-const getFunction = async (app_id, resource_id, data, ip, locale, res) => {
+const getFunction = async (app_id, resource_id, data, user_agent, ip, locale, res) => {
     const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==resource_id)[0][4];
     if (module_path){
         try {
             const {default:RunFunction} = await import(`file://${process.cwd()}${module_path}`);
             /**@type{*} */
-            const function_data = await RunFunction(app_id, data, ip, locale);
+            const function_data = await RunFunction(app_id, data, user_agent, ip, locale);
             return function_data;            
         } catch (error) {
             LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getFunction()', COMMON.app_line(), error)
@@ -969,6 +970,64 @@ const getFunction = async (app_id, resource_id, data, ip, locale, res) => {
         });
     }    
 };
+/**
+ * 
+ * @param {string} host 
+ * @param {string} method 
+ * @param {*} body 
+ * @param {string} user_agent 
+ * @param {string} ip 
+ * @param {string|null} authorization 
+ * @param {string} locale 
+ * @returns {Promise.<*>}
+ */
+
+const request_external = async (host, method, body, user_agent, ip, authorization, locale ) =>{
+    const https = await import('node:https');
+    const timeout_message = '🗺⛔?';
+    const timeout = 5000;
+    return new Promise((resolve, reject)=>{
+        const host_request = host.indexOf(':')>-1?host.substring(0,host.indexOf(':')):host.substring(0,host.indexOf('/'));
+        const port = host.indexOf(':')>-1?host.substring(host.indexOf(':'),host.indexOf('/')):443;
+        const path = host.substring(host.indexOf('/'));
+        const options = {
+            method: method,
+            timeout: timeout,
+            headers : {
+                'User-Agent': user_agent,
+                'Accept-Language': locale,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(JSON.stringify(body)),
+                'Authorization': authorization ?? '',
+                'X-Forwarded-For': ip
+            },
+            host: host_request,
+            port: port,
+            path: path,
+            rejectUnauthorized: false
+        };
+        
+        const request = https.request(options, res =>{
+            let responseBody = '';
+            res.setEncoding('utf8');
+            res.on('data', (chunk) =>{
+                responseBody += chunk;
+            });
+            res.on('end', ()=>{
+                resolve (responseBody);
+            });
+        });
+        if (method !='GET')
+            request.write(JSON.stringify(body));
+        request.on('error', error => {
+            reject('EXTERNAL URL ERROR: ' + error);
+        });
+        request.on('timeout', () => {
+            reject(timeout_message);
+        });
+        request.end();
+    });
+};
 
 export {/*APP functions */
         app_start, render_app_html,render_report_html ,render_app_with_data,
@@ -978,5 +1037,6 @@ export {/*APP functions */
         getReport, getInfo,getMaintenance,
         getApps, getAppsAdmin,
         getAppMain,
-        getFunction
+        getFunction,
+        request_external
 };
