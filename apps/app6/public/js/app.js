@@ -193,14 +193,17 @@ const payment_request = async () =>{
                 function_button_update:null,
                 function_button_post:null,
                 function_button_delete:pay_cancel
-            }, '/common/component/app_data_display.js');
-        AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
-            AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
-            AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').innerText;
-
-        common.user_session_countdown(  AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
-                                        AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_exp').getAttribute('data-value'),
-                                        true);
+            }, '/common/component/app_data_display.js')
+            .then(()=>{
+                AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
+                AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
+                AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').innerText;
+    
+                common.user_session_countdown(  AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
+                                                AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_exp').getAttribute('data-value'),
+                                                true);
+            })
+            .catch(()=>common.ComponentRemove('common_dialogue_app_data_display', true));
     }
     else
         common.show_message('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
