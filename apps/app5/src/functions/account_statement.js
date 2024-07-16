@@ -66,8 +66,9 @@ const IBAN_validate = iban => {
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
+ * @param {import('../../../../types.js').res} res
  */
-const getStatement = async (app_id, data, user_agent, ip, locale) =>{
+const getStatement = async (app_id, data, user_agent, ip, locale, res) =>{
 
     /**@type{import('../../../../server/db/sql/app_data_entity.service.js')} */
     const {get:EntityGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_entity.service.js`);
