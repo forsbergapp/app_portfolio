@@ -945,21 +945,10 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
 const getFunction = async (app_id, resource_id, data, user_agent, ip, locale, res) => {
     const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==resource_id)[0][4];
     if (module_path){
-        try {
-            const {default:RunFunction} = await import(`file://${process.cwd()}${module_path}`);
-            /**@type{*} */
-            const function_data = await RunFunction(app_id, data, user_agent, ip, locale);
-            return function_data;            
-        } catch (error) {
-            LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getFunction()', COMMON.app_line(), error)
-            .then(()=>{
-                if (res){
-                    res.statusCode = 500;
-                    res.statusMessage = 'SERVER FUNCTION ERROR';
-                }
-                return null;
-            });
-        }
+        const {default:RunFunction} = await import(`file://${process.cwd()}${module_path}`);
+        /**@type{*} */
+        const function_data = await RunFunction(app_id, data, user_agent, ip, locale, res);
+        return function_data;            
     }
     else{
         LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getFunction()', COMMON.app_line(), `Function ${resource_id} not found`)

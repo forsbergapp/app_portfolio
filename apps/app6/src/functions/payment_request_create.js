@@ -10,19 +10,20 @@
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
+ * @param {import('../../../../types.js').res} res
  * @returns {Promise.<{ token:string,
  *                      exp:number,
  *                      iat:number,
  *                      tokentimestamp:number,
  *                      payment_request_id:string,
  *                      payment_request_message:string,
- *                      payment_request_status:string,
+ *                      status:string,
  *                      merchant_name:string
  *                      amount:number,
  *                      currency_symbol:string,
  *                      countdown:string}[]>}
  */
-const payment_request_create = async (app_id, data, user_agent, ip, locale) =>{
+const payment_request_create = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/server.service.js')} */
     const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
@@ -66,36 +67,42 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale) =>{
         const body_encrypted = {id:    ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_ID,
                                 message:PublicEncrypt(ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_PUBLIC_KEY, JSON.stringify(body))};
         
-        const result = await request_external(url, 'POST', body_encrypted, user_agent, ip, null, locale );                    
+        const result_request_external = await request_external(url, 'POST', body_encrypted, user_agent, ip, null, locale ).then(result=>JSON.parse(result));
+        if (result_request_external.error){
+            res.statusCode = result_request_external.error.http;
+            throw '⛔';
+        }
+        else{
+            /**
+            * @type {{ token:string,
+            *          exp:number,
+            *          iat:number,
+            *          tokentimestamp:number,
+            *          payment_request_id:string,
+            *          status:string,
+            *          merchant_name:string
+            *          amount:number,
+            *          currency_symbol:string}}
+            */
+            const body_decrypted = JSON.parse(PrivateDecrypt(ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_PRIVATE_KEY, result_request_external.rows[0].message));
 
-        /**
-         * @type {{ token:string,
-        *          exp:number,
-        *          iat:number,
-        *          tokentimestamp:number,
-        *          payment_request_id:string,
-        *          payment_request_status:string,
-        *          merchant_name:string
-        *          amount:number,
-        *          currency_symbol:string}}
-        */
-        const body_decrypted = JSON.parse(PrivateDecrypt(ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_PRIVATE_KEY, JSON.parse(result).rows[0].message));
-
-        return [{   token:                  body_decrypted.token,
-                    exp:                    body_decrypted.exp,
-                    iat:                    body_decrypted.iat,
-                    tokentimestamp:         body_decrypted.tokentimestamp,
-                    payment_request_id:     body_decrypted.payment_request_id,
-                    payment_request_message:'Check your bank app to authorize this payment',
-                    payment_request_status: body_decrypted.payment_request_status,
-                    merchant_name:          ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_NAME,
-                    amount:			        body_decrypted.amount,
-                    currency_symbol:        currency.currency_symbol,
-                    countdown:              ''
-                }];
+            return [{   token:                  body_decrypted.token,
+                        exp:                    body_decrypted.exp,
+                        iat:                    body_decrypted.iat,
+                        tokentimestamp:         body_decrypted.tokentimestamp,
+                        payment_request_id:     body_decrypted.payment_request_id,
+                        payment_request_message:'Check your bank app to authorize this payment',
+                        status:                 body_decrypted.status,
+                        merchant_name:          ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_NAME,
+                        amount:			        body_decrypted.amount,
+                        currency_symbol:        currency.currency_symbol,
+                        countdown:              ''
+                    }];
+        }
     }
-	else		
-        throw '!';
-
+	else{
+        res.statusCode=400;
+        throw '⛔';
+    }
 };
 export default payment_request_create;

@@ -5,11 +5,12 @@
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
+ * @param {import('../../../../types.js').res} res
  * @returns {Promise.<[{stock:[  {key_name:string, key_value:string, key_type:string}, 
  *                              {key_name:string, key_value:string, key_type:string}, 
  *                              {key_name:string, key_value:string, key_type:string}]}]>}
  */
-const product_location_get = async (app_id, data, user_agent, ip, locale) =>{
+const product_location_get = async (app_id, data, user_agent, ip, locale, res) =>{
 
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);

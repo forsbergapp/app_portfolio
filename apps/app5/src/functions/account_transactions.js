@@ -7,8 +7,9 @@
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
+ * @param {import('../../../../types.js').res} res
  */
-const getTransacions = async (app_id, data, user_agent, ip, locale) =>{
+const getTransacions = async (app_id, data, user_agent, ip, locale, res) =>{
 
     /**@type{import('../../../../server/db/sql/app_data_resource_detail_data.service.js')} */
     const {get} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
