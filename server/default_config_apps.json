@@ -412,7 +412,8 @@
 			["FUNCTION","CUSTOMER_GET",      		"APP_ACCESS", "CUSTOMER get",           	"/apps/app5/src/functions/customer_get.js"],
 			["FUNCTION","PAYMENT_ACCEPT",			"APP_ACCESS", "PAYMENT accept",   			"/apps/app5/src/functions/payment_accept.js"],
 			["FUNCTION","PAYMENT_CANCEL",			"APP_ACCESS", "PAYMENT cancel",   			"/apps/app5/src/functions/payment_cancel.js"],
-			["FUNCTION","PAYMENT_REQUEST_CREATE",	"APP_DATA",	  "PAYMENT REQUEST create",   	"/apps/app5/src/functions/payment_request_create.js"]
+			["FUNCTION","PAYMENT_REQUEST_CREATE",	"APP_DATA",	  "PAYMENT REQUEST create",   	"/apps/app5/src/functions/payment_request_create.js"],
+            ["FUNCTION","PAYMENT_REQUEST_GET",	    "APP_DATA",	  "PAYMENT REQUEST get",   	    "/apps/app5/src/functions/payment_request_get.js"]
         ],
         "STATUS":"ONLINE"
     },

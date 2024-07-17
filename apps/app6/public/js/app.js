@@ -66,6 +66,44 @@ const app_event_click = event => {
         });
     }
 };
+/**
+ * App event change
+ * @param {import('../../../types.js').AppEvent} event 
+ * @returns {void}
+ */
+const app_event_change = event => {
+    if (event==null){
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+            app_event_change(event);
+        }, true);
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
+        common.common_event('change',event)
+        .then(()=>{
+            switch (event_target_id){
+                case (event.target.classList.contains('common_app_data_display_master_col2') && event.target.classList.contains('common_app_data_display_type_countdown'))?event_target_id:'':{
+                    //call every odd second
+                    if ( new Date().getSeconds() % 2){
+                        const payment_request_id = AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
+                    
+                        common.FFB('/app-function/PAYMENT_REQUEST_GET', null, 'POST', 'APP_DATA',   {
+                                                                                                    payment_request_id: payment_request_id
+                                                                                                    })
+                        .then((/**@type{*}*/result)=>{
+                            const status = JSON.parse(result).rows[0].status;
+                            if (status != 'PENDING'){
+                                common.ComponentRemove('common_dialogue_app_data_display', true);
+                                common.show_message('INFO', null, null, null,status, common.COMMON_GLOBAL.common_app_id);
+                            }
+                        });
+                    }
+                    break;
+                }
+            }
+        });
+    }
+};
 
 /**
  * App event keyup
@@ -263,7 +301,7 @@ const pay = async () =>{
  const framework_set = async (framework=null) => {
     await common.framework_set(framework,
         {   Click: app_event_click,
-            Change: null,
+            Change: app_event_change,
             KeyDown: null,
             KeyUp: app_event_keyup,
             Focus: null,
