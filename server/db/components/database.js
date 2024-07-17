@@ -594,6 +594,7 @@ const install_db_get_files = async (json_type) =>{
     
     //generate key pairs for each user that can be saved both in resource and apps.json.
     //Use same for all demo users since key creation can be slow
+    SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'})));
     const {publicKey, privateKey} = await CreateKeyPair();
     const demo_public_key = publicKey;
     const demo_private_key = privateKey;
