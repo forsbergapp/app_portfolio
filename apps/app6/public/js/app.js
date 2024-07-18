@@ -87,7 +87,7 @@ const app_event_change = event => {
                     if ( new Date().getSeconds() % 2){
                         const payment_request_id = AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
                     
-                        common.FFB('/app-function/PAYMENT_REQUEST_GET', null, 'POST', 'APP_DATA',   {
+                        common.FFB('/app-function/PAYMENT_REQUEST_GET_STATUS', null, 'POST', 'APP_DATA',   {
                                                                                                     payment_request_id: payment_request_id
                                                                                                     })
                         .then((/**@type{*}*/result)=>{
