@@ -401,19 +401,19 @@
                     "RENDER_FILES":[]
         },
         "MODULES":[
-            ["FUNCTION","ACCOUNT_METADATA",     	"APP_DATA",   "ACCOUNT metadata",           "/apps/app5/src/functions/account_metadata.js"],
-			["FUNCTION","CUSTOMER_METADATA",    	"APP_DATA",   "CUSTOMER metadata",          "/apps/app5/src/functions/customer_metadata.js"],
-			["FUNCTION","TRANSACTIONS_METADATA",	"APP_DATA",   "TRANSACTIONS metadata",   	"/apps/app5/src/functions/transactions_metadata.js"],
-			["FUNCTION","ACCOUNT_CREATE",       	"APP_ACCESS", "ACCOUNT create",            	"/apps/app5/src/functions/account_create.js"],
-			["FUNCTION","ACCOUNT_GET",       		"APP_ACCESS", "ACCOUNT get",            	"/apps/app5/src/functions/account_get.js"],
-			["FUNCTION","ACCOUNT_STATEMENT",    	"APP_ACCESS", "ACCOUNT get statement",     	"/apps/app5/src/functions/account_statement.js"],
-			["FUNCTION","ACCOUNT_TRANSACTIONS", 	"APP_ACCESS", "ACCOUNT get transactions",  	"/apps/app5/src/functions/account_transactions.js"],
-			["FUNCTION","CUSTOMER_CREATE",      	"APP_ACCESS", "CUSTOMER create",           	"/apps/app5/src/functions/customer_create.js"],
-			["FUNCTION","CUSTOMER_GET",      		"APP_ACCESS", "CUSTOMER get",           	"/apps/app5/src/functions/customer_get.js"],
-			["FUNCTION","PAYMENT_ACCEPT",			"APP_ACCESS", "PAYMENT accept",   			"/apps/app5/src/functions/payment_accept.js"],
-			["FUNCTION","PAYMENT_CANCEL",			"APP_ACCESS", "PAYMENT cancel",   			"/apps/app5/src/functions/payment_cancel.js"],
-			["FUNCTION","PAYMENT_REQUEST_CREATE",	"APP_DATA",	  "PAYMENT REQUEST create",   	"/apps/app5/src/functions/payment_request_create.js"],
-            ["FUNCTION","PAYMENT_REQUEST_GET",	    "APP_DATA",	  "PAYMENT REQUEST get",   	    "/apps/app5/src/functions/payment_request_get.js"]
+            ["FUNCTION","ACCOUNT_METADATA",     	"APP_DATA",     "ACCOUNT metadata",         "/apps/app5/src/functions/account_metadata.js"],
+			["FUNCTION","CUSTOMER_METADATA",    	"APP_DATA",     "CUSTOMER metadata",        "/apps/app5/src/functions/customer_metadata.js"],
+			["FUNCTION","TRANSACTIONS_METADATA",	"APP_DATA",     "TRANSACTIONS metadata",   	"/apps/app5/src/functions/transactions_metadata.js"],
+			["FUNCTION","ACCOUNT_CREATE",       	"APP_ACCESS",   "ACCOUNT create",           "/apps/app5/src/functions/account_create.js"],
+			["FUNCTION","ACCOUNT_GET",       		"APP_ACCESS",   "ACCOUNT get",            	"/apps/app5/src/functions/account_get.js"],
+			["FUNCTION","ACCOUNT_STATEMENT",    	"APP_ACCESS",   "ACCOUNT get statement",    "/apps/app5/src/functions/account_statement.js"],
+			["FUNCTION","ACCOUNT_TRANSACTIONS", 	"APP_ACCESS",   "ACCOUNT get transactions", "/apps/app5/src/functions/account_transactions.js"],
+			["FUNCTION","CUSTOMER_CREATE",      	"APP_ACCESS",   "CUSTOMER create",          "/apps/app5/src/functions/customer_create.js"],
+			["FUNCTION","CUSTOMER_GET",      		"APP_ACCESS",   "CUSTOMER get",           	"/apps/app5/src/functions/customer_get.js"],
+			["FUNCTION","PAYMENT_ACCEPT",			"APP_ACCESS",   "PAYMENT accept",   		"/apps/app5/src/functions/payment_accept.js"],
+			["FUNCTION","PAYMENT_CANCEL",			"APP_ACCESS",   "PAYMENT cancel",   		"/apps/app5/src/functions/payment_cancel.js"],
+			["FUNCTION","PAYMENT_REQUEST_CREATE",	"APP_EXTERNAL",	"PAYMENT REQUEST create",   "/apps/app5/src/functions/payment_request_create.js"],
+            ["FUNCTION","PAYMENT_REQUEST_GET",	    "APP_EXTERNAL",	"PAYMENT REQUEST get",   	"/apps/app5/src/functions/payment_request_get.js"]
         ],
         "STATUS":"ONLINE"
     },
