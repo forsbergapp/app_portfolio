@@ -9,7 +9,7 @@
 * @param {import('../../../../types.js').res} res
 * @returns {Promise.<{ status:string}[]>}
 */
-const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>{
+const payment_request_get_status = async (app_id, data, user_agent, ip, locale, res) =>{
 
    /**@type{import('../../../../server/config.service.js')} */
    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
@@ -20,7 +20,7 @@ const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>
    /**@type{import('../../../../server/security.service')} */
    const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`); 
    
-   const url = ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_API_URL.filter((/**@type{*}*/url)=>url.key=='PAYMENT_REQUEST_GET')[0].value;
+   const url = ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_API_URL.filter((/**@type{*}*/url)=>url.key=='PAYMENT_REQUEST_GET_STATUS')[0].value;
    
     /** 
      * @type {{ api_secret:           string,
@@ -50,4 +50,4 @@ const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>
                 }];
     }
 };
-export default payment_request_get;
+export default payment_request_get_status;
