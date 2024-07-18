@@ -325,7 +325,7 @@ const COMMON = {
                         ((params.validate_app_function && config_service.ConfigGetApp(routesparameters.app_id, routesparameters.app_id, 'MODULES')
                             .filter((/**@type{*}*/module)=> module[0]=='FUNCTION' && 
                                                             module[1].toUpperCase() == params.validate_app_function?.toUpperCase() && 
-                                                            module[2].toUpperCase() == params.validate_app_function_role?.toUpperCase())) || params.validate_app_function == null))
+                                                            module[2].toUpperCase() == params.validate_app_function_role?.toUpperCase()).length>0) || params.validate_app_function == null))
                         
                         if (params.resource_validate_type)
                             if (iam_service.AuthenticateResource({  app_id:routesparameters.app_id, 
