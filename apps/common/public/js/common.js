@@ -23,6 +23,7 @@ const COMMON_GLOBAL = {
     app_eventListeners:{original: HTMLElement.prototype.addEventListener, LEAFLET:[], REACT:[], VUE:[], OTHER:[]},
     app_function_exception:null,
     app_function_session_expired:null,
+    app_function_sse:null,
     info_link_policy_name:null,
     info_link_disclaimer_name:null,
     info_link_terms_name:null,
@@ -2810,6 +2811,10 @@ const show_broadcast = (broadcast_message) => {
 		case 'PROGRESS':{
 			show_message('PROGRESS', null, null, null, JSON.parse(AppWindow.atob(message)));
             break;
+        }
+        case 'APP_FUNCTION':{
+            if (COMMON_GLOBAL.app_function_sse)
+                COMMON_GLOBAL.app_function_sse(AppWindow.atob(message));
         }
     }
 };

@@ -90,6 +90,7 @@
  *              app_eventListeners:{original:function, LEAFLET:[*]|[], REACT:[*]|[], VUE:[*]|[], OTHER:[*]|[]},
  *              app_function_exception:function|null,
  *              app_function_session_expired:function|null,
+ *              app_function_sse:function|null,
  *              info_link_policy_name:string|null,
  *              info_link_disclaimer_name:string|null,
  *              info_link_terms_name:string|null,

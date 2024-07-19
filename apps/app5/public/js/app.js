@@ -288,6 +288,84 @@ const customer_create = async () => {
     init_secure();
 };
 /**
+ * 
+ * @param {1|0} status 
+ */
+const payment_request_update = async status => {
+    await common.FFB(   '/app-function/PAYMENT_REQUEST_UPDATE', 
+        null, 
+        'POST', 
+        'APP_ACCESS', 
+        {
+            data_app_id     :common.COMMON_GLOBAL.app_id,
+            user_account_id :common.COMMON_GLOBAL.user_account_id,
+            payment_request_id:AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value'),
+            status:status
+        })
+    .then(()=>status==1?common.show_message('INFO', null, null, null,'PAID!', common.COMMON_GLOBAL.common_app_id):null)
+    .finally(()=>common.ComponentRemove('common_dialogue_app_data_display', true));
+};
+const payment_request_accept = async () => {
+    payment_request_update(1);
+};
+const payment_request_cancel = async () => {
+    payment_request_update(0);
+};
+/**
+ * 
+ * @param {string} message 
+ */
+const show_payment_request = async message =>{
+    
+    //post button calling PAYMENT_REQUEST_UPDATE
+
+    await common.ComponentRender('common_dialogue_app_data_display', 
+        {
+            app_id:common.COMMON_GLOBAL.app_id,
+            display_type:'VERTICAL_KEY_VALUE',
+            dialogue:true,
+            master_path:'/app-function/PAYMENT_REQUEST_GET',
+            master_query:'',
+            master_body:{	
+                            data_app_id:common.COMMON_GLOBAL.app_id,
+                            user_account_id: common.COMMON_GLOBAL.user_account_id,
+                            payment_request_id: JSON.parse(message).payment_request_id
+                        },
+            master_method:'POST',
+            master_token_type:'APP_ACCESS',
+            master_resource:'PAYMENT_REQUEST_METADATA',
+            detail_path:null,
+            detail_query:null,
+            detail_method:null,
+            detail_token_type:null,
+            detail_class:null,
+            new_resource:false,
+            mode:'READ',
+            timezone:common.COMMON_GLOBAL.user_timezone,
+            locale:common.COMMON_GLOBAL.user_locale,
+            button_print: false,
+            button_update: false,
+            button_post: true,
+            button_delete: true,
+            function_FFB:common.FFB,
+            function_button_print:null,
+            function_button_update:null,
+            function_button_post:payment_request_accept,
+            function_button_delete:payment_request_cancel
+        }, '/common/component/app_data_display.js')
+        .then(()=>{
+            AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
+            AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
+            AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').innerText;
+
+            common.user_session_countdown(  AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
+                                            JSON.parse(message).exp,
+                                            true);
+        })
+        .catch(()=>common.ComponentRemove('common_dialogue_app_data_display', true));
+};
+
+/**
  * Init secure
  * @returns {void}
  */
@@ -327,6 +405,7 @@ const init_app = async () => {
 const init = parameters => {
     common.COMMON_GLOBAL.app_function_exception = app_exception;
     common.COMMON_GLOBAL.app_function_session_expired = user_logoff_app;
+    common.COMMON_GLOBAL.app_function_sse = show_payment_request;
     common.init_common(parameters).then(()=>{
         init_app();
     });

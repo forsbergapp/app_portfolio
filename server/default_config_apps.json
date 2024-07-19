@@ -413,7 +413,8 @@
 			["FUNCTION","PAYMENT_REQUEST_UPDATE",	    "APP_ACCESS",   "PAYMENT REQUEST update",       "/apps/app5/src/functions/payment_request_update.js"],
 			["FUNCTION","PAYMENT_REQUEST_CREATE",	    "APP_EXTERNAL",	"PAYMENT REQUEST create",       "/apps/app5/src/functions/payment_request_create.js"],
             ["FUNCTION","PAYMENT_REQUEST_GET_STATUS",	"APP_EXTERNAL",	"PAYMENT REQUEST get status",   "/apps/app5/src/functions/payment_request_get_status.js"],
-            ["FUNCTION","PAYMENT_REQUEST_GET",	        "APP_ACCESS",	"PAYMENT REQUEST get",   	    "/apps/app5/src/functions/payment_request_get.js"]
+            ["FUNCTION","PAYMENT_REQUEST_GET",	        "APP_ACCESS",	"PAYMENT REQUEST get",   	    "/apps/app5/src/functions/payment_request_get.js"],
+            ["FUNCTION","PAYMENT_REQUEST_METADATA",     "APP_DATA",   	"PAYMENT REQUEST metadata",     "/apps/app5/src/functions/payment_request_metadata.js"]
         ],
         "STATUS":"ONLINE"
     },
