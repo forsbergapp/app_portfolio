@@ -11,6 +11,9 @@
  */
 const payment_request_create = async (app_id, data, user_agent, ip, locale, res) =>{
    
+    /**@type{import('../../../../server/server.service.js')} */
+    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+    
     /**@type{import('../../../../server/config.service.js')} */
     const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 
@@ -75,10 +78,12 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                                 payeeid:        body_decrypted.payeeid,
                                                 payerid:        body_decrypted.payerid,
                                                 currency_code:  body_decrypted.currency_code,
-                                                amount:         body_decrypted.amount,
+                                                amount:         getNumberValue(body_decrypted.amount),
                                                 message:        body_decrypted.message,
-                                                timestamp:      jwt_data.tokentimestamp,
                                                 signature:      body_decrypted.signature,
+                                                timestamp:      jwt_data.tokentimestamp,
+                                                exp:            jwt_data.exp,
+                                                iat:            jwt_data.iat,
                                                 token:          jwt_data.token,
                                                 status:         'PENDING'
                                             };

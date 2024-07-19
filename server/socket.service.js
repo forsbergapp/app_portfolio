@@ -454,4 +454,4 @@ const SocketUpdateExpiredTokens = () =>{
     }
 };
 
-export {ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedList, SocketSendAdmin, ConnectedCount, SocketConnect, SocketCheckInterval};
+export {ClientSend, ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedList, SocketSendAdmin, ConnectedCount, SocketConnect, SocketCheckInterval};

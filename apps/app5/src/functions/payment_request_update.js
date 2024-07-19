@@ -54,7 +54,7 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
                                                                                     origin:payment_request.reference,
                                                                                     amount_deposit:null,
                                                                                     /**@ts-ignore */
-                                                                                    amount_withdrawal:payment_request.amount},
+                                                                                    amount_withdrawal:payment_request.amount *-1},
                                         user_account_id                         : data.user_account_id,
                                         data_app_id                             : data.data_app_id,
                                         app_data_resource_detail_id             : account_payer.id,
@@ -77,7 +77,7 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
                                                                                     
                                             user_account_id                         : account_payee.user_account_app_user_account_id,
                                             data_app_id                             : data.data_app_id,
-                                            app_data_resource_detail_id             : account_payer.id,
+                                            app_data_resource_detail_id             : account_payee.id,
                                             app_data_resource_master_attribute_id   : null
                                             };
                     //create CREDIT transaction PAYEEID resource TRANSACTION
@@ -91,7 +91,7 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
             status='CANCELLED';
 
         const data_payment_request = {  json_data                                       : JSON.parse(payment_request.json_data),
-                                        user_account_id                                 : data.user_account_id,
+                                        user_account_id                                 : null,
                                         data_app_id                                     : data.data_app_id,
                                         app_data_entity_resource_app_data_entity_id     : payment_request.app_data_entity_resource_app_data_entity_id,
                                         app_data_entity_resource_id                     : payment_request.app_data_entity_resource_id

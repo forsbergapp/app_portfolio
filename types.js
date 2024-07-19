@@ -669,7 +669,7 @@
  *              ip:string,
  *              user_agent:string}} socket_connect_list_no_res
  * 
- * @typedef {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'} socket_broadcast_type_all
+ * @typedef {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'} socket_broadcast_type_all
  * @typedef {'ALERT'|'CHAT'|'PROGRESS'} socket_broadcast_type_admin
  * Server Socket sort
  * @typedef {   'id'|

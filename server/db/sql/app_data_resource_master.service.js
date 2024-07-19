@@ -106,7 +106,7 @@ const post = async (app_id, data) => {
                         app_data_entity_resource_id                     = :app_data_entity_resource_id
                   WHERE id = :resource_id
                     AND ((user_account_app_user_account_id              = :user_account_id AND
-                          user_account_app_app_id                       = :user_account_app_id) OR :user_account_id IS NUL)
+                          user_account_app_app_id                       = :user_account_app_id) OR :user_account_id IS NULL)
                     AND (app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)`;
     const parameters = {resource_id                                     : resource_id,
                         json_data                                       : JSON.stringify(data.json_data),
