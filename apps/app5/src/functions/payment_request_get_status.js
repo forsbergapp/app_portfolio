@@ -9,17 +9,23 @@
 * @param {import('../../../../types.js').res} res
 * @returns {Promise.<{message:string}[]>}
 */
-const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>{
+const payment_request_get_status = async (app_id, data, user_agent, ip, locale, res) =>{
      
-   /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
-   const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
+    /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
+    const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
 
-   /**@type{import('../../../../server/security.service')} */
-   const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`);
+    /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
+    const {get:DetailGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
 
-   const merchant = await MasterGet(app_id, null, null, app_id, 'MERCHANT', null, locale, false)
+    /**@type{import('../../../../server/security.service')} */
+    const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`);
+    
+    /**@type{import('../../../../server/socket.service')} */
+    const {ClientSend, ConnectedGet} = await import(`file://${process.cwd()}/server/socket.service.js`);
+
+    const merchant = await MasterGet(app_id, null, null, app_id, 'MERCHANT', null, locale, false)
                            .then(result=>result.map(merchant=>JSON.parse(merchant.json_data)).filter(merchant=>merchant.merchant_id==data.id)[0]);
-   if (merchant){
+    if (merchant){
         /** 
         * @type {{ api_secret:           string,
         *          payment_request_id:   string}}
@@ -36,7 +42,30 @@ const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>
                     const data_return = {   status:                 payment_request.status
                     };
                     const data_encrypted = PublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
-                    return [{message:data_encrypted}];
+
+                    const account_payer =  await DetailGet(app_id, null, null, null, app_id, 'ACCOUNT', null, locale, false)
+                                                    /**@ts-ignore */
+                                                    .then(result=>result.filter(result=>result.bank_account_vpa == payment_request.payerid)[0]);
+                    if (account_payer){
+                        //if status is still pending then send server side event message to customer
+                        if (payment_request.status=='PENDING'){
+                            const customer = await MasterGet(app_id, account_payer.app_data_resource_master_id, null, app_id, 'CUSTOMER', null, locale, false).then(result=>result[0]);
+                            //check SOCKET connected list
+                            for (const user_connected of ConnectedGet(customer.user_account_app_user_account_id ?? 0)){
+                                const message = {
+                                    type: 'PAYMENT_REQUEST', 
+                                    payment_request_id:payment_request.payment_request_id, 
+                                    exp:payment_request.exp
+                                };
+                                ClientSend(user_connected.response, btoa(JSON.stringify(message)), 'APP_FUNCTION');    
+                            }
+                        }
+                        return [{message:data_encrypted}];
+                    }
+                    else{
+                        res.statusCode = 404;
+                        throw '⛔';    
+                    }
             }
             else{
                     res.statusCode = 404;
@@ -47,10 +76,10 @@ const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>
             res.statusCode = 404;
             throw '⛔';
         }
-   }
-   else{
+    }
+    else{
        res.statusCode = 404;
        throw '⛔';
-   }
+    }
 };
-export default payment_request_get;
+export default payment_request_get_status;
