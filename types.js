@@ -198,6 +198,8 @@
  * @property {function} set
  * @property {object}   req
  * @property {object}   req.query
+ * @property {string}   req.hostname
+ * @property {string}   req.protocol
  * @property {string}   req.query.iam
  * @property {{'sec-fetch-mode':string}}   req.headers - Used for EventSource
  */
