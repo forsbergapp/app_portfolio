@@ -11,6 +11,11 @@
 */
 const payment_request_get_status = async (app_id, data, user_agent, ip, locale, res) =>{
      
+    const {default:jwt} = await import('jsonwebtoken');
+
+    /**@type{import('../../../../server/config.service.js')} */
+    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
 
@@ -36,7 +41,13 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
             const payment_request = await MasterGet(app_id, null, null, app_id, 'PAYMENT_REQUEST', null, locale, true)
                                             .then(result=>result.map(payment_request=>JSON.parse(payment_request.json_data)).filter(payment_request=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0]);
             
-            if (payment_request && (((payment_request.exp ?? 0) * 1000) - Date.now())>0){
+            /**@type{{id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
+            const token_decoded = jwt.verify(payment_request.token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_SECRET);
+            
+            if (token_decoded.id == payment_request.payerid && 
+                token_decoded.scope == 'APP_CUSTOM' && 
+                token_decoded.ip == ip &&
+                payment_request && (((payment_request.exp ?? 0) * 1000) - Date.now())>0){
                     /**
                      * @type {{ status:string}}
                      */
