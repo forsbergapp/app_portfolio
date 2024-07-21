@@ -15,9 +15,13 @@
  *              locale:string,
  *              spinner:string,
  *              button_print:boolean,
+ *              button_print_icon_class:string,
  *              button_update:boolean,
+ *              button_update_icon_class:string,
  *              button_post:boolean,
- *              button_delete:boolean}} props_template
+ *              button_post_icon_class:string,
+ *              button_delete:boolean,
+ *              button_delete_icon_class:string}} props_template
  */
 /**
  *  Display types:
@@ -138,16 +142,16 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                             }
                             <div class='common_app_data_display_buttons ${props.spinner}'>
                                 ${props.button_print?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_dialogue_button common_icon' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_dialogue_button common_icon ${props.button_print_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_update?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_dialogue_button common_icon' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_dialogue_button common_icon ${props.button_update_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_post?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_dialogue_button common_icon' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_dialogue_button common_icon ${props.button_post_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_delete?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_dialogue_button common_icon' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_dialogue_button common_icon ${props.button_delete_icon_class ?? ''}' ></div>`:''
                                 }
                             </div>`;
 /**
@@ -174,9 +178,13 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *          timezone:string,
  *          locale:string,
  *          button_print: boolean,
+ *          button_print_icon_class:string,
  *          button_update: boolean,
+ *          button_update_icon_class:string,
  *          button_post: boolean,
+ *          button_post_icon_class:string,
  *          button_delete: boolean,
+ *          button_delete_icon_class:string,
  *          function_FFB:function,
  *          function_button_print:function,
  *          function_button_update:function,
@@ -298,9 +306,13 @@ const component = async props => {
                                 locale:props.locale,
                                 spinner:spinner,
                                 button_print:props.button_print,
+                                button_print_icon_class:props.button_print_icon_class,
                                 button_update:props.button_update,
+                                button_update_icon_class:props.button_update_icon_class,
                                 button_post:props.button_post,
-                                button_delete:props.button_delete});
+                                button_post_icon_class:props.button_post_icon_class,
+                                button_delete:props.button_delete,
+                                button_delete_icon_class:props.button_delete_icon_class});
         if (props.function_button_print)
             props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_print`)['data-function'] = props.function_button_print;
         if (props.function_button_update)
@@ -333,9 +345,13 @@ const component = async props => {
                                     locale:props.locale,
                                     spinner:spinner,
                                     button_print:false,
+                                    button_print_icon_class:props.button_print_icon_class,
                                     button_update:false,
+                                    button_update_icon_class:props.button_update_icon_class,
                                     button_post:false,
-                                    button_delete:false})
+                                    button_post_icon_class:props.button_post_icon_class,
+                                    button_delete:false,
+                                    button_delete_icon_class:props.button_delete_icon_class})
     };
 };
 export default component;
