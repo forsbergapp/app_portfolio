@@ -649,8 +649,8 @@ const install_db_get_files = async (json_type) =>{
              * @returns {string}
              */
             const value_set = key_name =>{
-                if (resource.app_update_secret && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>secret_key[key_name[0].toUpperCase()]).length>0)
-                    switch (resource.app_update_secret.filter((/**@type{*}*/secret_key)=>secret_key[key_name[0].toUpperCase()])[0][key_name[0].toUpperCase()]){
+                if (resource.app_update_secret && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key_name[0].toUpperCase() in secret_key)[0])
+                    switch (resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key_name[0].toUpperCase() in secret_key)[0][key_name[0].toUpperCase()]){
                         case 'DATE_NOW':
                             return Date.now().toString();
                         case 'DATE_NOW_PADSTART_16':
@@ -667,8 +667,12 @@ const install_db_get_files = async (json_type) =>{
                             return demo_private_key;
                         case 'USER_ACCOUNT_ID':
                             return demo_user.id.toString();
-                        default:
-                            return key_name[1];
+                        default:{
+                            //if value is array then replace string in the array
+                            return key_name[1].constructor===Array?JSON.parse(JSON.stringify(key_name[1]).replaceAll('<HOST/>', ConfigGet('SERVER','HOST') ?? '')):
+                                    key_name[1].replaceAll('<HOST/>', ConfigGet('SERVER','HOST') ?? '');
+                        }
+                            
                     }
                 else
                     return key_name[1];
