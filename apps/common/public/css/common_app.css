@@ -138,6 +138,9 @@
 .common_app_data_display_button_post::before{				content:var(--common_app_icon_add)}
 .common_app_data_display_button_delete::before{				content:var(--common_app_icon_delete)}
 .common_app_data_display_button_print::before{				content:var(--common_app_icon_print)}
+.common_data_display_icon_cancel::before{					content:var(--common_app_icon_cancel) !important}
+.common_data_display_icon_ok::before{						content:var(--common_app_icon_close) !important}
+
 body{
 	font-size: 16px;
 	margin: 0;
