@@ -473,10 +473,7 @@
             ["FUNCTION","PRODUCT_METADATA",                     "APP_DATA",   	"PRODUCT metadata",                 "/apps/app6/src/functions/product_metadata.js"],
             ["FUNCTION","PRODUCT_VARIANT_LOCATION_METADATA",    "APP_DATA",   	"PRODUCT variant location metadata","/apps/app6/src/functions/product_variant_location_metadata.js"],
             ["FUNCTION","PAYMENT_METADATA",                     "APP_DATA",   	"PAYMENT metadata",                 "/apps/app6/src/functions/payment_metadata.js"],
-            ["FUNCTION","ORDER_METADATA",     		            "APP_DATA",   	"ORDER metadata",                   "/apps/app6/src/functions/order_metadata.js"],
 			["FUNCTION","PAYMENT_REQUEST_METADATA",             "APP_DATA",   	"PAYMENT REQUEST metadata",         "/apps/app6/src/functions/payment_request_metadata.js"],
-			["FUNCTION","BUY",     					            "APP_DATA",   	"ORDER create, buy",                "/apps/app6/src/functions/buy.js"],
-			["FUNCTION","ORDER_UPDATE",       		            "APP_DATA",		"ORDER update",            	        "/apps/app6/src/functions/order_update.js"],
 			["FUNCTION","PAYMENT_REQUEST_CREATE",	            "APP_DATA",		"PAYMENT REQUEST create",           "/apps/app6/src/functions/payment_request_create.js"],
 			["FUNCTION","PAYMENT_REQUEST_GET_STATUS",		    "APP_DATA",		"PAYMENT REQUEST get status",       "/apps/app6/src/functions/payment_request_get_status.js"]
         ],
