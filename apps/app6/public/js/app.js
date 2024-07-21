@@ -96,7 +96,8 @@ const app_event_change = event => {
                                 common.ComponentRemove('common_dialogue_app_data_display', true);
                                 common.show_message('INFO', null, null, null,status, common.COMMON_GLOBAL.common_app_id);
                             }
-                        });
+                        })
+                        .catch(()=>common.ComponentRemove('common_dialogue_app_data_display', true));
                     }
                     break;
                 }
