@@ -35,58 +35,61 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
     if (customer && payment_request && (getNumberValue(data.status)==1 || getNumberValue(data.status)==0)){
         let status ='PENDING';
         if (getNumberValue(data.status)==1)
-            try {
-                const account_payer         =  await DetailGet(app_id, null, customer.id, data.user_account_id, data.data_app_id, 
-                                                                'ACCOUNT', null, locale, false).then(result=>result[0]);
-                const account_payer_saldo   =  await DetailDataGet(app_id, null, account_payer.id, data.user_account_id, data.data_app_id, 
-                                                                    'RESOURCE_TYPE', 'ACCOUNT', 'RESOURCE_TYPE', 'CUSTOMER', null, null, null, locale, false)
-                                                                    .then(result=>result.reduce((balance, current_row)=>balance += 
-                                                                                                    /**@ts-ignore */
-                                                                                                    (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0));
-                /**@ts-ignore */                                                
-                if ((account_payer_saldo - payment_request.amount) <0){
-                    status='NO FUNDS';
-                }
-                else{
-                    const data_debit = {json_data                               : { timestamp:new Date().toISOString(),
-                                                                                    logo:'',
-                                                                                    /**@ts-ignore */
-                                                                                    origin:payment_request.reference,
-                                                                                    amount_deposit:null,
-                                                                                    /**@ts-ignore */
-                                                                                    amount_withdrawal:payment_request.amount *-1},
-                                        user_account_id                         : data.user_account_id,
-                                        data_app_id                             : data.data_app_id,
-                                        app_data_resource_detail_id             : account_payer.id,
-                                        app_data_resource_master_attribute_id   : null
-                                        };
-                    //create DEBIT transaction PAYERID resource TRANSACTION
-                    await DetailDataPost(app_id, data_debit);
-
-                    const account_payee         =  await DetailGet(app_id, null, null, null, data.data_app_id, 
-                                                                    'ACCOUNT', null, locale, false)
-                                                            /**@ts-ignore */
-                                                            .then(result=>result.filter(account=>account.bank_account_vpa == payment_request.payeeid)[0]);
-                    const data_credit = {   json_data                               : { timestamp:new Date().toISOString(),
+            /**@ts-ignore */
+            if ((((payment_request.exp ?? 0) * 1000) - Date.now())<0)
+                status = 'EXPIRED';
+            else
+                try {
+                    const account_payer         =  await DetailGet(app_id, null, customer.id, data.user_account_id, data.data_app_id, 
+                                                                    'ACCOUNT', null, locale, false).then(result=>result[0]);
+                    const account_payer_saldo   =  await DetailDataGet(app_id, null, account_payer.id, data.user_account_id, data.data_app_id, 
+                                                                        'RESOURCE_TYPE', 'ACCOUNT', 'RESOURCE_TYPE', 'CUSTOMER', null, null, null, locale, false)
+                                                                        .then(result=>result.reduce((balance, current_row)=>balance += 
+                                                                                                        /**@ts-ignore */
+                                                                                                        (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0));
+                    /**@ts-ignore */                                                
+                    if ((account_payer_saldo - payment_request.amount) <0)
+                        status='NO FUNDS';
+                    else{
+                        const data_debit = {json_data                               : { timestamp:new Date().toISOString(),
                                                                                         logo:'',
                                                                                         /**@ts-ignore */
                                                                                         origin:payment_request.reference,
+                                                                                        amount_deposit:null,
                                                                                         /**@ts-ignore */
-                                                                                        amount_deposit:payment_request.amount,
-                                                                                        amount_withdrawal:null},
-                                                                                    
-                                            user_account_id                         : account_payee.user_account_app_user_account_id,
+                                                                                        amount_withdrawal:payment_request.amount *-1},
+                                            user_account_id                         : data.user_account_id,
                                             data_app_id                             : data.data_app_id,
-                                            app_data_resource_detail_id             : account_payee.id,
+                                            app_data_resource_detail_id             : account_payer.id,
                                             app_data_resource_master_attribute_id   : null
                                             };
-                    //create CREDIT transaction PAYEEID resource TRANSACTION
-                    await DetailDataPost(app_id, data_credit);
-                    status = 'PAID';
+                        //create DEBIT transaction PAYERID resource TRANSACTION
+                        await DetailDataPost(app_id, data_debit);
+
+                        const account_payee         =  await DetailGet(app_id, null, null, null, data.data_app_id, 
+                                                                        'ACCOUNT', null, locale, false)
+                                                                /**@ts-ignore */
+                                                                .then(result=>result.filter(account=>account.bank_account_vpa == payment_request.payeeid)[0]);
+                        const data_credit = {   json_data                               : { timestamp:new Date().toISOString(),
+                                                                                            logo:'',
+                                                                                            /**@ts-ignore */
+                                                                                            origin:payment_request.reference,
+                                                                                            /**@ts-ignore */
+                                                                                            amount_deposit:payment_request.amount,
+                                                                                            amount_withdrawal:null},
+                                                                                        
+                                                user_account_id                         : account_payee.user_account_app_user_account_id,
+                                                data_app_id                             : data.data_app_id,
+                                                app_data_resource_detail_id             : account_payee.id,
+                                                app_data_resource_master_attribute_id   : null
+                                                };
+                        //create CREDIT transaction PAYEEID resource TRANSACTION
+                        await DetailDataPost(app_id, data_credit);
+                        status = 'PAID';
+                    }
+                } catch (error) {
+                    status = 'FAILED';
                 }
-            } catch (error) {
-                status = 'FAILED';
-            }
         else
             status='CANCELLED';
 
