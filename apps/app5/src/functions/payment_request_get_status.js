@@ -27,11 +27,12 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
                            .then(result=>result.map(merchant=>JSON.parse(merchant.json_data)).filter(merchant=>merchant.merchant_id==data.id)[0]);
     if (merchant){
         /** 
-        * @type {{ api_secret:           string,
-        *          payment_request_id:   string}}
+        * @type {{  api_secret:             string,
+        *           payment_request_id:     string,
+        *           origin:                 string}}
         */
         const  body_decrypted = JSON.parse(PrivateDecrypt(merchant.merchant_private_key, data.message));
-        if (merchant.merchant_api_secret==body_decrypted.api_secret){
+        if (merchant.merchant_api_secret==body_decrypted.api_secret && merchant.merchant_url == body_decrypted.origin){
             const payment_request = await MasterGet(app_id, null, null, app_id, 'PAYMENT_REQUEST', null, locale, true)
                                             .then(result=>result.map(payment_request=>JSON.parse(payment_request.json_data)).filter(payment_request=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0]);
             

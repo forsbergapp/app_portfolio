@@ -37,7 +37,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     const {request_external} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
     /**@type{import('../../../../server/security.service')} */
-    const {createSecret, PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`); 
+    const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`); 
     
     const url = ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_API_URL.filter((/**@type{*}*/url)=>url.key=='PAYMENT_REQUEST_CREATE')[0].value;
     const currency = await MasterGet(app_id, null, null, data.data_app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data));
@@ -46,21 +46,21 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
         /** 
         * @type {{ api_secret:     string,
         *          reference:      string,
-        *          signature:      string,
         *          payeeid:        string,
         *          payerid:        string,
         *          currency_code:  string,
         *          amount:         number, 
-        *          message:        string}}
+        *          message:        string,
+        *          origin:         string}}
         */
         const body = {	api_secret:     ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_API_SECRET,
                         reference:      data.reference.substring(0,30),
-                        signature:      createSecret(),
                         payeeid:        ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_VPA, 
                         payerid:        data.payerid,
                         currency_code:  currency.currency_code,
                         amount:         getNumberValue(data.amount) ?? 0, 
-                        message:        data.message
+                        message:        data.message,
+                        origin:         res.req.protocol + '://' + res.req.hostname
         };
         //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
         //use general id and message keys so no info about what type of message is sent, only the receinving function should know

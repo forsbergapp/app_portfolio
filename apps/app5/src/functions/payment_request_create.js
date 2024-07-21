@@ -41,14 +41,14 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                             .then(result=>result.map(merchant=>JSON.parse(merchant.json_data)).filter(merchant=>merchant.merchant_id==data.id)[0]);
     if (merchant){
         /** 
-        * @type {{ api_secret:   string,
-        *          reference:      string,
-        *          signature:      string,
-        *          payeeid:        string,
-        *          payerid:        string,
-        *          currency_code:  string,
-        *          amount:         number, 
-        *          message:        string}}
+        * @type {{ api_secret:      string,
+        *          reference:       string,
+        *          payeeid:         string,
+        *          payerid:         string,
+        *          currency_code:   string,
+        *          amount:          number, 
+        *          message:         string,
+        *          origin:          string}}
         */
         const  body_decrypted = JSON.parse(PrivateDecrypt(merchant.merchant_private_key, data.message));
     
@@ -58,6 +58,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                                 .then(result=>result.map(account=>JSON.parse(account.json_data)).filter(account=>account.bank_account_vpa==body_decrypted.payerid)[0]);
         if (merchant.merchant_api_secret==body_decrypted.api_secret && 
             merchant.merchant_vpa == body_decrypted.payeeid && 
+            merchant.merchant_url == body_decrypted.origin && 
             merchant_bankaccount && 
             bankaccount_payer && 
             currency){
@@ -80,7 +81,6 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                                 currency_code:  body_decrypted.currency_code,
                                                 amount:         getNumberValue(body_decrypted.amount),
                                                 message:        body_decrypted.message,
-                                                signature:      body_decrypted.signature,
                                                 timestamp:      jwt_data.tokentimestamp,
                                                 exp:            jwt_data.exp,
                                                 iat:            jwt_data.iat,

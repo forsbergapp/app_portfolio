@@ -23,11 +23,13 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
    const url = ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_API_URL.filter((/**@type{*}*/url)=>url.key=='PAYMENT_REQUEST_GET_STATUS')[0].value;
    
     /** 
-     * @type {{ api_secret:           string,
-     *          payment_request_id:   string}}
+     * @type {{ api_secret:             string,
+     *          payment_request_id:     string,
+     *          origin:                 string}}
      */
     const body = {	api_secret:     ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_API_SECRET,
-                    payment_request_id: data.payment_request_id
+                    payment_request_id: data.payment_request_id,
+                    origin:         res.req.protocol + '://' + res.req.hostname
     };
     //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
     //use general id and message keys so no info about what type of message is sent, only the receinving function should know
