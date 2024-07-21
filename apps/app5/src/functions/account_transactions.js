@@ -12,12 +12,13 @@
 const getTransacions = async (app_id, data, user_agent, ip, locale, res) =>{
 
     /**@type{import('../../../../server/db/sql/app_data_resource_detail_data.service.js')} */
-    const {get} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
+    const {get:DetailDataGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
 
-    const transactions = await get(app_id, null, null, data.user_account_id, data.data_app_id, 
+    const transactions = await DetailDataGet(app_id, null, null, data.user_account_id, data.data_app_id, 
                                 'RESOURCE_TYPE', 'ACCOUNT', 
                                 'RESOURCE_TYPE', 'CUSTOMER', 
                                 null, null, null, null, false);
+    
     return transactions;
 }; 
 export default getTransacions;

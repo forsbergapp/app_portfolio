@@ -116,14 +116,14 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                             `
                                             <div class='common_app_data_display_detail_horizontal_row_title common_row ${props.detail_class}'>
                                                 ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
-                                                    `<div class='common_app_data_display_detail_col'>${detail_col[0]}</div>`).join('')
+                                                    `<div class='common_app_data_display_detail_col'>${detail_col[1].default_text}</div>`).join('')
                                                 }
                                             </div>
                                             `:''
                                         }
                                         <div class='common_app_data_display_detail_horizontal_row common_row ${props.detail_class}'>
                                             ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
-                                                `<div class='common_app_data_display_detail_col'>${props.function_format_value(detail_col[1], props.timezone, props.locale)}</div>`).join('')
+                                                `<div class='common_app_data_display_detail_col'>${props.function_format_value(detail_col[1].value, props.timezone, props.locale)}</div>`).join('')
                                             }
                                         </div>
                                         `).join('')
@@ -172,6 +172,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *          detail_body:string,
  *          detail_method:string,
  *          detail_token_type:string,
+ *          detail_resource:string,
  *          detail_class:string,
  *          new_resource:boolean,
  *          mode:'EDIT'|'READ',
@@ -289,6 +290,21 @@ const component = async props => {
                                             default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].default_text:key[0],
                                             type:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].type:key[0]
                                         };
+            }
+        }
+        if (props.detail_resource){
+            const detail_metadata = await props.function_FFB(   `/app-function/${props.detail_resource}`, 
+                                                            'fields=json_data', 
+                                                            'POST', 'APP_DATA', {data_app_id:props.app_id})
+                                            .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
+            for (const row of detail_rows){
+                for (const key of Object.entries(row)){
+                    for (const key_metadata of detail_metadata){
+                        if (Object.entries(key_metadata)[0][0] == key[0]){
+                            row[key[0]] = {value:key[1], default_text: Object.entries(key_metadata)[0][1].default_text};
+                        }
+                    }
+                }
             }
         }
             
