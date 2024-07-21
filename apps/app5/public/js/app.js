@@ -50,6 +50,7 @@ const app_event_click = event => {
                                                 detail_body: {user_account_id:common.COMMON_GLOBAL.user_account_id,data_app_id:common.COMMON_GLOBAL.app_id},
                                                 detail_method:'POST',
                                                 detail_token_type:'APP_ACCESS',
+                                                detail_resource:'TRANSACTION_METADATA',
                                                 detail_class:'bank_statement',
                                                 new_resource:false,
                                                 mode:'READ',
