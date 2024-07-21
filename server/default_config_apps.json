@@ -403,7 +403,7 @@
         "MODULES":[
             ["FUNCTION","ACCOUNT_METADATA",     	    "APP_DATA",     "ACCOUNT metadata",             "/apps/app5/src/functions/account_metadata.js"],
 			["FUNCTION","CUSTOMER_METADATA",        	"APP_DATA",     "CUSTOMER metadata",            "/apps/app5/src/functions/customer_metadata.js"],
-			["FUNCTION","TRANSACTIONS_METADATA",	    "APP_DATA",     "TRANSACTIONS metadata",   	    "/apps/app5/src/functions/transactions_metadata.js"],
+			["FUNCTION","TRANSACTION_METADATA",	        "APP_DATA",     "TRANSACTION metadata",   	    "/apps/app5/src/functions/transaction_metadata.js"],
 			["FUNCTION","ACCOUNT_CREATE",       	    "APP_ACCESS",   "ACCOUNT create",               "/apps/app5/src/functions/account_create.js"],
 			["FUNCTION","ACCOUNT_GET",       		    "APP_ACCESS",   "ACCOUNT get",            	    "/apps/app5/src/functions/account_get.js"],
 			["FUNCTION","ACCOUNT_STATEMENT",    	    "APP_ACCESS",   "ACCOUNT get statement",        "/apps/app5/src/functions/account_statement.js"],
