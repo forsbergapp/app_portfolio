@@ -1,6 +1,5 @@
 const template =`   <div id='app_top'>
                         <div id='app_top_logo'></div>
-                        <div id='app_construction'></div>
                         <div id='app_top_end'></div>
                     </div>
                     <div id='app_main'>

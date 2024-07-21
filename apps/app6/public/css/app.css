@@ -128,7 +128,7 @@ body {
 	margin-top:-70px;
 }
 #common_toolbar_framework{
-    bottom: 0px !important;
+    bottom: 0.5em !important;
     top: unset !important;
 	position: fixed !important;
 }

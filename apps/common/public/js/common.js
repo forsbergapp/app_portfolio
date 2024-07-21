@@ -1772,16 +1772,12 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         element.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
         //wait 1 second
         await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 1000);});
-        try {
-            if (element.id)
-                element = AppDocument.querySelector(`#${element.id}`);
-            else
-                element = AppDocument.querySelector(`.${element.className.replaceAll(' ','.')}`);
+        if (element.id)
+            element = AppDocument.querySelector(`#${element.id}`);
+        else
+            element = AppDocument.querySelector(`.${element.className.replaceAll(' ','.')}`);
+        if (element)
             element.dispatchEvent(new Event('change'));
-        } catch (error) {
-            //element removed
-            element.removeEventListener('change', event_function);
-        }
     }
 };
 /**
