@@ -98,7 +98,7 @@ const getStatement = async (app_id, data, user_agent, ip, locale, res) =>{
     //amount_deposit and amount_withdrawal from JSON.parse(json_data) column, each app is responsible for APP_DATA json_data content
     const balance = transactions.reduce((balance, current_row)=>balance += 
                                                                     /**@ts-ignore */
-                                                                    (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0);
+                                                                    (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0) ?? 0;
     return [{
                     //ENTITY ACCOUNT resource
                     title_sub	            :Entity.name,

@@ -367,13 +367,12 @@ select {
 	border-radius: 0px 0px 4px 4px;
 	font-size: 1.5em;
 	margin-inline-start: calc(50% - calc(1.5em * 3/2));
-	width: calc(1.5em * 3);
 }
 #common_toolbar_framework .common_icon{
 	cursor:pointer;
 	width: 1.25em;
 	text-align: center;
-	height: 30px !important;
+	height: 1.25em !important;
 }
 /* search*/
 .common_search_input{
