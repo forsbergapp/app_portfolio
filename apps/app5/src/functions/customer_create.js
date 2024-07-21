@@ -14,7 +14,7 @@ const customer_create = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {post:MasterPost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
     /**@type{import('./account_create.js')} */
-    const {createRandomTransactions, default:createBankAccount} = await import('./account_create.js');
+    const {default:createBankAccount} = await import('./account_create.js');
 
     const resource_customer = await get(app_id, null, app_id, 'CUSTOMER', null, null);
     
@@ -46,17 +46,8 @@ const customer_create = async (app_id, data, user_agent, ip, locale, res) =>{
                         app_data_resource_master_attribute_id       : null
     };
     //create ACCOUNT
-    const BankAccount = await createBankAccount(app_id, post_data_account);
+    await createBankAccount(app_id, post_data_account, user_agent, ip, locale, res);
 
-    //create ACCOUNT transactions (random demo transactions)
-    const post_data_transaction = {
-            user_account_id                         : data.user_account_id,
-            user_account_app_id                     : data.data_app_id,
-            data_app_id                             : data.data_app_id,
-            app_data_resource_detail_id             : BankAccount.insertId,
-            app_data_resource_master_attribute_id   : null
-    };
-    await createRandomTransactions(app_id, post_data_transaction);
     return Customer;
 };
 export default customer_create;

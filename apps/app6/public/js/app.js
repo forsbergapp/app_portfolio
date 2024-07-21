@@ -324,7 +324,6 @@ const init_app = async () => {
                                         function_show_message:common.show_message},
                                         '/component/page_start.js');
     product_update();
-    common.ComponentRender('app_construction', {}, '/common/component/construction.js');
     framework_set();
 };
 /**

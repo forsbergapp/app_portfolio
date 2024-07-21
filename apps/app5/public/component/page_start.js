@@ -1,14 +1,12 @@
 /**
  *  
- * @param {{text_get_bankaccount:string,
- *          text_account:string,
+ * @param {{text_account:string,
  *          text_statements:string,
  *          text_directpayment:string,
  *          text_iso:string}} props 
  * @returns 
  */
-const template = props => ` <div id='app_page_start_get_bankaccount'>${props.text_get_bankaccount}</div>
-                            <div id='app_page_start_divs'>
+const template = props => ` <div id='app_page_start_divs'>
                                 <div class='app_page_start_divs_row'>
                                     <div id='app_page_start_bank_account' class='app_page_start_bank_div app_bank_div'>${props.text_account}</div>
                                     <div id='app_page_start_bank_statements' class='app_page_start_bank_div app_bank_div'>${props.text_statements}</div>
@@ -29,8 +27,7 @@ const template = props => ` <div id='app_page_start_get_bankaccount'>${props.tex
 const component = async props => {
     props;
     /**
-     * @param {{text_get_bankaccount:string,
-     *          text_account:string,
+     * @param {{text_account:string,
      *          text_statements:string,
      *          text_directpayment:string,
      *          text_iso:string}} props_template
@@ -42,8 +39,7 @@ const component = async props => {
     return {
         props:  {function_post:null},
         data:   null,
-        template: render_template({ text_get_bankaccount:'GET BANK ACCOUNT',
-                                    text_account:'BANK ACCOUNT',
+        template: render_template({ text_account:'BANK ACCOUNT',
                                     text_statements:'BANK STATEMENTS',
                                     text_directpayment:'DIRECT PAYMENT',
                                     text_iso:'ISO STANDARDS'})

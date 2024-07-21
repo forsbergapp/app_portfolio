@@ -192,10 +192,7 @@ const app_event_click = event => {
                 }
                 /*Dialogue user start */
                 case 'common_user_start_login_button':{
-                    common.user_login()
-                    .then(()=>common.ComponentRemove('app_main_page'))
-                    .then(()=>init_secure())
-                    .catch(()=>null);
+                    user_login_app();
                     break;
                 }
                 
@@ -247,6 +244,42 @@ const app_event_change = event =>{
         });
     }
 };
+/**
+ * App event keyup
+ * @param {import('../../../types.js').AppEvent} event 
+ * @returns {void}
+ */
+const app_event_keyup = event => {
+    if (event==null){
+        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+            app_event_keyup(event);
+        }, true);
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
+        common.common_event('keyup',event)
+        .then(()=>{
+            switch(event_target_id){
+                case 'common_user_start_login_username':
+                case 'common_user_start_login_password':{
+                    if (event.code === 'Enter') {
+                        event.preventDefault();
+                        user_login_app();
+                    }
+                    break;
+                }
+
+            }
+        });
+    }
+};
+
+const user_login_app = () =>{
+    common.user_login()
+    .then(()=>common.ComponentRemove('app_main_page'))
+    .then(()=>init_secure())
+    .catch(()=>null);
+};
 const user_logoff_app = () =>{
     common.user_logoff()
     .then(()=>common.ComponentRemove('app_main_page'))
@@ -264,7 +297,7 @@ const framework_set = async (framework=null) => {
         {   Click: app_event_click,
             Change: app_event_change,
             KeyDown: null,
-            KeyUp: null,
+            KeyUp: app_event_keyup,
             Focus: null,
             Input:null});
 };
@@ -393,8 +426,7 @@ const init_app = async () => {
                                         '/common/component/user_account.js'))
     .then(()=> common.ComponentRender('app_main_page', 
                                         {},
-                                        '/component/page_start.js'))
-    .then(()=> common.ComponentRender('app_construction', {}, '/common/component/construction.js'));
+                                        '/component/page_start.js'));
    framework_set();
 };
 /**

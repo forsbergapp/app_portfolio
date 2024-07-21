@@ -203,9 +203,9 @@ const component = async props => {
      * @returns {string}
      */
     const format_value = (value, timezone, locale, short=true) => {
-        if (value)
+        if (value!=null)
             if (typeof value=='number')
-                return value.toLocaleString(locale ?? 'en').padStart(2,(0).toLocaleString(locale ?? 'en'));
+                return value==0?'0':value.toLocaleString(locale ?? 'en').padStart(2,(0).toLocaleString(locale ?? 'en'));
             else{
                 //ISO 8601 format
                 const isodate = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)+/g;
@@ -288,7 +288,7 @@ const component = async props => {
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
             render_template({   display_type:props.display_type,
                                 master_object:master_object,
-                                rows:props.detail_path?(Object.values(detail_rows[0])[0].constructor===Array?Object.values(detail_rows[0])[0]:detail_rows):[],
+                                rows:(props.detail_path && detail_rows.length>0)?(Object.values(detail_rows[0])[0].constructor===Array?Object.values(detail_rows[0])[0]:detail_rows):[],
                                 detail_class:props.detail_class,
                                 new_resource:props.new_resource,
                                 mode:props.mode,
