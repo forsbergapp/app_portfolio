@@ -35,7 +35,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
             const payment_request = await MasterGet(app_id, null, null, app_id, 'PAYMENT_REQUEST', null, locale, true)
                                             .then(result=>result.map(payment_request=>JSON.parse(payment_request.json_data)).filter(payment_request=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0]);
             
-            if (payment_request){
+            if (payment_request && (((payment_request.exp ?? 0) * 1000) - Date.now())>0){
                     /**
                      * @type {{ status:string}}
                      */
