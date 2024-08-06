@@ -13,11 +13,7 @@ const APP_GLOBAL = {
                             {'id':2,
                             'doc_title':'Data Model',
                             'doc_url':'/common/documents/data_model.webp',
-                            'doc_url_small':'/common/documents/data_model_small.webp'},
-                            {'id':3,
-                            'doc_title':'Property Management',
-                            'doc_url':'/common/documents/datamodel_pm.webp',
-                            'doc_url_small':'/common/documents/datamodel_pm_small.webp'}
+                            'doc_url_small':'/common/documents/data_model_small.webp'}
                             ]
 };
 Object.seal(APP_GLOBAL);
