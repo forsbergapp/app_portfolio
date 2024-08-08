@@ -113,20 +113,39 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_master TO
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_master TO app_portfolio_role_app_common;
 
 CREATE TABLE <DB_SCHEMA/>.app_data_stat (
-    id                                              INT NOT NULL AUTO_INCREMENT,
     json_data                                       TEXT,
     date_created                                    DATE,
-    app_id                                          INTEGER NOT NULL,
+    app_id                                          INTEGER,
     user_account_app_user_account_id                INTEGER,
     user_account_app_app_id                         INTEGER,
     app_data_resource_master_id                     INTEGER,
     app_data_entity_resource_id                     INTEGER NOT NULL,
     app_data_entity_resource_app_data_entity_app_id INTEGER NOT NULL,
     app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL,
-    CONSTRAINT app_data_stat_pk PRIMARY KEY (id)
+    user_account_id                                 INTEGER
 );
 
-ALTER TABLE <DB_SCHEMA/>.app_data_stat AUTO_INCREMENT=1000000;
+ALTER TABLE <DB_SCHEMA/>.app_data_stat
+    ADD CONSTRAINT arc_2 CHECK ( ( ( app_data_resource_master_id IS NOT NULL )
+                                   AND ( user_account_app_user_account_id IS NULL )
+                                   AND ( user_account_app_app_id IS NULL )
+                                   AND ( user_account_id IS NULL )
+                                   AND ( app_id IS NULL ) )
+                                 OR ( ( user_account_app_user_account_id IS NOT NULL )
+                                      AND ( user_account_app_app_id IS NOT NULL )
+                                      AND ( app_data_resource_master_id IS NULL )
+                                      AND ( user_account_id IS NULL )
+                                      AND ( app_id IS NULL ) )
+                                 OR ( ( user_account_id IS NOT NULL )
+                                      AND ( app_data_resource_master_id IS NULL )
+                                      AND ( user_account_app_user_account_id IS NULL )
+                                      AND ( user_account_app_app_id IS NULL )
+                                      AND ( app_id IS NULL ) )
+                                 OR ( ( app_id IS NOT NULL )
+                                      AND ( app_data_resource_master_id IS NULL )
+                                      AND ( user_account_app_user_account_id IS NULL )
+                                      AND ( user_account_app_app_id IS NULL )
+                                      AND ( user_account_id IS NULL ) ) );
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_stat TO app_portfolio_role_app_admin;
 
@@ -337,18 +356,10 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_translation TO app_port
 
 GRANT SELECT ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_common;
 
-ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
-                                                                                         language_id );
-
 ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
                                                             app_id,
                                                             language_id );
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
-                                                          app_object_app_id,
-                                                          language_id );
 
 ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_object_item_un UNIQUE ( app_object_item_object_item_name,
@@ -356,8 +367,17 @@ ALTER TABLE <DB_SCHEMA/>.app_translation
                                                                app_object_item_app_object_app_id,
                                                                language_id );
 
+ALTER TABLE <DB_SCHEMA/>.app_translation
+    ADD CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
+                                                          app_object_app_id,
+                                                          language_id );
+
 ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
                                                                                                  language_id );
+
+ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
+                                                                                         language_id );
+
 
 ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_country_un UNIQUE ( country_id,
                                                                                              language_id );
@@ -462,19 +482,6 @@ GRANT SELECT ON <DB_SCHEMA/>.locale TO app_portfolio_role_app_common;
 ALTER TABLE <DB_SCHEMA/>.locale ADD CONSTRAINT locale_language_id_country_id_un UNIQUE ( language_id,
                                                      country_id );
 
-CREATE TABLE <DB_SCHEMA/>.profile_search (
-    user_account_id    INTEGER,
-    search             VARCHAR(100) NOT NULL,
-    client_ip          VARCHAR(1000),
-    client_user_agent  VARCHAR(1000),
-    client_longitude   VARCHAR(100),
-    client_latitude    VARCHAR(100),
-    date_created       DATETIME NOT NULL
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.profile_search TO app_portfolio_role_app_admin;
-
-GRANT SELECT, INSERT ON <DB_SCHEMA/>.profile_search TO app_portfolio_role_app_common;
-	
 CREATE TABLE <DB_SCHEMA/>.user_account (
     id                    INT NOT NULL AUTO_INCREMENT,
     username              VARCHAR(100),
@@ -609,23 +616,23 @@ GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_like TO app_po
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_like TO app_portfolio_role_app_admin;
 
 CREATE TABLE <DB_SCHEMA/>.user_account_logon (
-    user_account_id    INTEGER,
     app_id             INTEGER NOT NULL,
     json_data          TEXT,
-    date_created       DATETIME NOT NULL
+    date_created       DATETIME NOT NULL,
+    user_account_id    INTEGER
 );
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_logon TO app_portfolio_role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_logon TO app_portfolio_role_app_admin;
 
 CREATE TABLE <DB_SCHEMA/>.user_account_view (
-    user_account_id       INTEGER,
-    user_account_id_view  INTEGER NOT NULL,
     client_ip             VARCHAR(1000),
     client_user_agent     VARCHAR(1000),
     client_longitude      VARCHAR(100),
     client_latitude       VARCHAR(100),
-    date_created          DATETIME NOT NULL
+    date_created          DATETIME NOT NULL,
+    user_account_id       INTEGER,
+    user_account_id_view  INTEGER NOT NULL
 );
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_view TO app_portfolio_role_app_common;
 
@@ -722,6 +729,11 @@ ALTER TABLE <DB_SCHEMA/>.app_data_stat
                                                                    user_account_app_app_id )
         REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
                                                     app_id )
+            ON DELETE CASCADE;
+
+ALTER TABLE <DB_SCHEMA/>.app_data_stat
+    ADD CONSTRAINT app_data_stat_user_account_fk FOREIGN KEY ( user_account_id )
+        REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_translation
@@ -835,11 +847,6 @@ ALTER TABLE <DB_SCHEMA/>.locale
 ALTER TABLE <DB_SCHEMA/>.locale
     ADD CONSTRAINT locale_language_fk FOREIGN KEY ( language_id )
         REFERENCES <DB_SCHEMA/>.language ( id );
-
-ALTER TABLE <DB_SCHEMA/>.profile_search
-    ADD CONSTRAINT profile_search_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES <DB_SCHEMA/>.user_account ( id )
-            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )

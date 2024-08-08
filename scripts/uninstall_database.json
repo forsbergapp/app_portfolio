@@ -39,7 +39,6 @@
         {"db": 5, "sql": "drop table app_setting_type"},
         {"db": 5, "sql": "drop table app"},
         {"db": 5, "sql": "drop table app_category"},
-        {"db": 5, "sql": "drop table profile_search"},
         {"db": 5, "sql": "drop table locale"},
         {"db": 5, "sql": "drop table language"},
         {"db": 5, "sql": "drop table identity_provider"},

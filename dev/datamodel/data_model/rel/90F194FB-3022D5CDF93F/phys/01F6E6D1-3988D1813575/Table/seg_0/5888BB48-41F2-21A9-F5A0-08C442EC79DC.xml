@@ -36,10 +36,10 @@
 <createdTime>2022-01-15 13:58:05 UTC</createdTime>
 <ownerDesignName>data_model_20220115</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_setting_preference_arabic_script_id" id="B97BF682-4952-79E1-650C-62182A095CF6">
+<ColumnProxy name="app_setting_preference_arabic_script_id" id="D3D79F48-6705-592A-EB97-3CF3003FB97D">
 <createdBy>admin</createdBy>
-<createdTime>2024-06-16 16:46:44 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
+<createdTime>2024-08-07 07:55:27 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
 <ColumnProxy name="app_id" id="E1FDA2F7-F988-CCCC-AC65-D887CE690DA0">
 <createdBy>admin</createdBy>
