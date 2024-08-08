@@ -16,7 +16,7 @@
 <createdTime>2021-04-07 00:02:25 UTC</createdTime>
 <ownerDesignName>data_model_20220115</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="user_account_id2" id="59C1796F-A44E-D342-C9C5-BCBF033024FF">
+<ColumnProxy name="user_account_id_follow" id="59C1796F-A44E-D342-C9C5-BCBF033024FF">
 <createdBy>admin</createdBy>
 <createdTime>2021-04-01 02:57:08 UTC</createdTime>
 <ownerDesignName>data_model_20220115</ownerDesignName>
@@ -28,15 +28,15 @@
 </ColumnProxy>
 </columnProxies>
 <foreignKeys>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_follow_user_account_FK" id="00662697-09A7-3B51-AD75-EAD0DE0C4A13">
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_follow_user_account_follow_FK" id="0A923BDE-493E-98EF-E8D0-097F4B1AC454">
 <createdBy>admin</createdBy>
-<createdTime>2024-06-16 16:46:44 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
+<createdTime>2024-08-08 16:02:29 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ForeignKey>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_follow_user_account_FKv1" id="21FDFF7C-16A1-400D-310E-69640E5AF1A5">
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_follow_user_account_FK" id="3CB447F8-64B4-9DD4-FD7A-5808A7C9E8E2">
 <createdBy>admin</createdBy>
-<createdTime>2024-06-16 16:46:44 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
+<createdTime>2024-08-08 16:02:29 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ForeignKey>
 </foreignKeys>
 <primaryKeys>

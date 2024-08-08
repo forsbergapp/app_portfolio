@@ -8,10 +8,9 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="user_account_id" id="86BAF25C-F31E-93EA-579F-B7486376E444">
+<Column name="user_account_id" id="90355919-B506-009F-56CC-3C8DA9303EA8">
 <createdBy>admin</createdBy>
-<createdTime>2022-07-12 00:08:41 UTC</createdTime>
-<generatorID>88F7DDD3-EE82-63AD-21AD-159DF665ED1C</generatorID>
+<createdTime>2024-08-08 16:06:55 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -20,7 +19,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="3DD393D1-5CD8-BA7C-5689-7156603411E6" referredColumn="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474"/>
+<colAssociation fkAssociation="3DD393D1-5CD8-BA7C-5689-7156603411E6" referredColumn="4E4186C5-8808-08CF-C4D6-DEBC77828116"/>
 </associations>
 </Column>
 <Column name="event_id" id="6EC2E9F1-895D-BAAE-33F9-5432DFFB59A9">
@@ -227,7 +226,7 @@
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="86BAF25C-F31E-93EA-579F-B7486376E444"/>
+<colUsage columnID="90355919-B506-009F-56CC-3C8DA9303EA8"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="4926C5EF-8A21-B9E7-56F2-103BAB12A8C3" name="user_account_event_event_status_FK">

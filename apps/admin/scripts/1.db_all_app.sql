@@ -6,22 +6,94 @@ INSERT INTO <DB_SCHEMA/>.app (id, app_category_id) VALUES (0, null);
 -- setting_type
 --
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('APP_THEME', 0);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('PAPER_SIZE', 0);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('TIMEZONE', 0);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('NUMBER_SYSTEM', 0);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('DIRECTION', 0);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('ARABIC_SCRIPT', 0);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('CALENDAR_TYPE', 0);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('CALENDAR_HIJRI_TYPE', 0);
+INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('DIRECTION', 0);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('MAP_STYLE', 0);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('DEVICE_TYPE', 0);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('MESSAGE', 0);
+INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('NUMBER_SYSTEM', 0);
+INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('RESOURCE_TYPE', 0);
+INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('TIMEZONE', 0);
+
+INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('CALENDAR_TYPE', 0);
+INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('DEVICE_TYPE', 0);
+INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('PAPER_SIZE', 0);
+
 --
 -- app setting with display data only
 --
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'APP_THEME','1','Light',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'APP_THEME','2','Dark',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'APP_THEME','3','Caffè Latte',NULL,NULL,NULL,NULL);
+
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'ARABIC_SCRIPT','font_arabic_sans','Arabic Sans',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'ARABIC_SCRIPT','font_arabic_kufi','Arabic Kufi',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'ARABIC_SCRIPT','font_arabic_nashk','Arabic Nashk',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'ARABIC_SCRIPT','font_arabic_nastaliq','Arabic Nastaliq',NULL,NULL,NULL,NULL);
+
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_HIJRI_TYPE','islamic','islamic',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_HIJRI_TYPE','islamic-umalqura','islamic-umalqura',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_HIJRI_TYPE','islamic-tbla','islamic-tbla',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_HIJRI_TYPE','islamic-civil','islamic-civil',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_HIJRI_TYPE','islamic-rgsa','islamic-rgsa',NULL,NULL,NULL,NULL);
+
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DIRECTION','ltr','🠆',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DIRECTION','rtl','🠄',NULL,NULL,NULL,NULL);
+
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MAP_STYLE','OpenStreetMap_Mapnik','OpenStreetMap_Mapnik','https://tile.openstreetmap.org/{z}/{x}/{y}.png',19,'© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MAP_STYLE','Esri.WorldImagery','Esri.WorldImagery','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',NULL,'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',NULL);
+
+--  db info/errors
+--	20100-20199
+--	db constraints info/error
+--	20200-20299
+--	app info/error
+--	20300-20399
+--	node rest api info/error
+--	20400-20499
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20100','👤 5-100!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20101','ABC!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20102','ABC!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20103','ABC!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20104','ABC!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20105','📧!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20106','🔑 10-100!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20107','👤🔑📧!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20108','ABC!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20200','📧⛝!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20201','👤⛝!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20203','👤⛝!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20300','⛔!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20305','⛔!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20306','⛔!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20307','⛝!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20308','⛝!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20400','?!',1,1,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20401','⛔!',1,1,NULL,NULL);
+
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','arab','arab',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','arabext','arabext',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','bali','bali',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','beng','beng',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','deva','deva',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','gujr','gujr',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','guru','guru',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','hanidec','hanidec',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','khmr','khmr',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','knda','knda',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','laoo','laoo',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','latn','latn',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','limb','limb',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','mlym','mlym',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','mong','mong',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','mymr','mymr',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','orya','orya',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','tamldec','tamldec',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','telu','telu',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','thai','thai',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','tibt','tibt',NULL,NULL,NULL,NULL);
+
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'RESOURCE_TYPE','PROFILE_SEARCH','Profile search',NULL,NULL,NULL,NULL);
 
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'TIMEZONE','Africa/Abidjan','Africa/Abidjan',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'TIMEZONE','Africa/Accra','Africa/Accra',NULL,NULL,NULL,NULL);
@@ -477,84 +549,30 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'TIMEZONE','Etc/Universal','Etc/Universal',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'TIMEZONE','Etc/Zulu','Etc/Zulu',NULL,NULL,NULL,NULL);
 
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','arab','arab',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','arabext','arabext',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','bali','bali',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','beng','beng',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','deva','deva',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','gujr','gujr',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','guru','guru',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','hanidec','hanidec',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','khmr','khmr',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','knda','knda',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','laoo','laoo',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','latn','latn',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','limb','limb',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','mlym','mlym',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','mong','mong',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','mymr','mymr',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','orya','orya',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','tamldec','tamldec',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','telu','telu',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','thai','thai',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','tibt','tibt',NULL,NULL,NULL,NULL);
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DIRECTION','ltr','🠆',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DIRECTION','rtl','🠄',NULL,NULL,NULL,NULL);
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'ARABIC_SCRIPT','font_arabic_sans','Arabic Sans',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'ARABIC_SCRIPT','font_arabic_kufi','Arabic Kufi',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'ARABIC_SCRIPT','font_arabic_nashk','Arabic Nashk',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'ARABIC_SCRIPT','font_arabic_nastaliq','Arabic Nastaliq',NULL,NULL,NULL,NULL);
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_HIJRI_TYPE','islamic','islamic',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_HIJRI_TYPE','islamic-umalqura','islamic-umalqura',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_HIJRI_TYPE','islamic-tbla','islamic-tbla',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_HIJRI_TYPE','islamic-civil','islamic-civil',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_HIJRI_TYPE','islamic-rgsa','islamic-rgsa',NULL,NULL,NULL,NULL);
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MAP_STYLE','OpenStreetMap_Mapnik','OpenStreetMap_Mapnik','https://tile.openstreetmap.org/{z}/{x}/{y}.png',19,'© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MAP_STYLE','Esri.WorldImagery','Esri.WorldImagery','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',NULL,'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',NULL);
-
---  db info/errors
---	20100-20199
---	db constraints info/error
---	20200-20299
---	app info/error
---	20300-20399
---	node rest api info/error
---	20400-20499
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20100','👤 5-100!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20101','ABC!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20102','ABC!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20103','ABC!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20104','ABC!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20105','📧!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20106','🔑 10-100!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20107','👤🔑📧!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20108','ABC!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20200','📧⛝!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20201','👤⛝!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20203','👤⛝!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20300','⛔!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20305','⛔!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20306','⛔!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20307','⛝!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20308','⛝!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20400','?!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20401','⛔!',1,1,NULL,NULL);
 --
 -- app setting with translation
 --
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'PAPER_SIZE','A4',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'PAPER_SIZE','Letter',NULL,NULL,NULL,NULL,NULL);
-
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_TYPE','GREGORIAN',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_TYPE','HIJRI',NULL,NULL,NULL,NULL,NULL);
 
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DEVICE_TYPE','PHONE_1','Phone 1080x2400',1080,2400,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DEVICE_TYPE','TABLET_1','Tablet 1800x1200',1800,1200,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DEVICE_TYPE','PC_1','PC 1920x1080',1920,1080,NULL,NULL);
+
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'PAPER_SIZE','A4',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'PAPER_SIZE','Letter',NULL,NULL,NULL,NULL,NULL);
+
+
+--
+-- app_data_entity
+--
+INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (0, 0, '{"description":"Entity info: Common", "name":"COMMON"}');
+
+--
+-- app_data_entity_resource
+--
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (0, <APP_ID/>, 0, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PROFILE_SEARCH'), '{"description":"profile search"}');
+
 --
 -- app_object
 --

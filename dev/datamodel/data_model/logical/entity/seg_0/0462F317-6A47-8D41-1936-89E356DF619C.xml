@@ -15,18 +15,6 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="id" id="EF4A1D92-CDEE-BDFC-478B-1A539746F77B">
-<createdBy>admin</createdBy>
-<createdTime>2024-03-04 17:30:43 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="json_data" id="34A0734E-B853-0ADA-91B7-01CA2D91495B">
 <createdBy>admin</createdBy>
 <createdTime>2024-02-25 20:48:07 UTC</createdTime>
@@ -67,6 +55,20 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="user_account_id" id="7AB862C1-AF81-796A-C311-D6B532469403">
+<createdBy>admin</createdBy>
+<createdTime>2024-08-07 07:33:53 UTC</createdTime>
+<generatorID>B0932B41-18C8-C5D8-1E22-60FB848DF4C3</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>A028F8AE-2874-B058-F3DA-38793B0FBE2F</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="user_account_app_user_account_id" id="2F158D9A-2057-DF29-4E57-F20737B7B382">
 <createdBy>admin</createdBy>
 <createdTime>2024-02-25 20:41:41 UTC</createdTime>
@@ -75,7 +77,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <referedAttribute>FB38BBDB-CCDF-8069-4526-413C4DEF28B2</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -90,7 +91,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <referedAttribute>A450D2E8-0215-7B42-8897-CE28E24D8445</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -105,7 +105,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <referedAttribute>FE50529D-BA36-7A16-2E52-490E60EB44C1</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -164,9 +163,6 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <pk>true</pk>
-<usedAttributes>
-<attributeRef>EF4A1D92-CDEE-BDFC-478B-1A539746F77B</attributeRef>
-</usedAttributes>
 </identifier>
 </identifiers>
 </Entity>

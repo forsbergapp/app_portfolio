@@ -8,15 +8,16 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="id" id="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474">
+<Column name="id" id="4E4186C5-8808-08CF-C4D6-DEBC77828116">
 <createdBy>admin</createdBy>
-<createdTime>2022-05-03 21:13:06 UTC</createdTime>
-<generatorID>A028F8AE-2874-B058-F3DA-38793B0FBE2F</generatorID>
+<createdTime>2024-08-08 15:58:57 UTC</createdTime>
+<generatorID>D11F114B-9052-FB23-A4E5-2A7EB6823540</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
 <autoIncrementColumn>true</autoIncrementColumn>
 <identityColumn>true</identityColumn>
 <defaultOntNull>true</defaultOntNull>
@@ -308,7 +309,7 @@
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474"/>
+<colUsage columnID="4E4186C5-8808-08CF-C4D6-DEBC77828116"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="0CEB15F4-8A9F-B811-B39A-72894A3218F1" name="user_account_email_UN">

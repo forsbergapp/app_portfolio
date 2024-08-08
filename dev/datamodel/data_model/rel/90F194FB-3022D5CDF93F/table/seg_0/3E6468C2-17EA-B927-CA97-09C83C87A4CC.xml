@@ -40,9 +40,10 @@
 <colAssociation fkAssociation="00AE32C0-DAA9-408A-BE00-061D2151B82E" referredColumn="43868C25-989C-738F-034A-317ED914BC36"/>
 </associations>
 </Column>
-<Column name="app_setting_type_app_setting_type_name" id="77ACE0CA-8F98-48CE-D9E3-B3E76D12F322">
+<Column name="app_setting_type_app_setting_type_name" id="53AE73B5-6855-4E67-32AB-2FE89C59A647">
 <createdBy>admin</createdBy>
-<createdTime>2023-12-06 16:19:39 UTC</createdTime>
+<createdTime>2024-08-08 15:58:57 UTC</createdTime>
+<generatorID>436E6A85-ECA5-D032-EB56-D775A73C9B14</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -154,7 +155,7 @@
 <indexState>Unique Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="77ACE0CA-8F98-48CE-D9E3-B3E76D12F322"/>
+<colUsage columnID="53AE73B5-6855-4E67-32AB-2FE89C59A647"/>
 <colUsage columnID="0021A792-4396-EFF6-89AA-EDE2C5ADC9AF"/>
 <colUsage columnID="D3EC005F-FFBA-2245-CA91-C52C7E0AEEAF"/>
 </indexColumnUsage>
@@ -167,7 +168,7 @@
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="77ACE0CA-8F98-48CE-D9E3-B3E76D12F322"/>
+<colUsage columnID="53AE73B5-6855-4E67-32AB-2FE89C59A647"/>
 <colUsage columnID="D3EC005F-FFBA-2245-CA91-C52C7E0AEEAF"/>
 </indexColumnUsage>
 </ind_PK_UK>
