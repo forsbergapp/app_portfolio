@@ -663,16 +663,26 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
         .then((/**@type{import('../../../types.js').db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
             if (query.get('search')){
                 //searching, return result
-                import(`file://${process.cwd()}/server/db/sql/profile_search.service.js`)
-                .then((/**@type{import('../sql/profile_search.service.js')} */{ insertProfileSearch }) => {
-                    /**@type{import('../../../types.js').db_parameter_profile_search_insertProfileSearch} */
-                    const data_insert = {   user_account_id:    data.user_account_id,
-                                            search:             query.get('search') ?? resource_id_name,
-                                            client_ip:          ip,
-                                            client_user_agent:  user_agent,
-                                            client_longitude:   query.get('client_longitude'),
-                                            client_latitude:    query.get('client_latitude')};
-                    insertProfileSearch(app_id, data_insert)
+                import(`file://${process.cwd()}/server/db/sql/app_data_stat.service.js`)
+                .then((/**@type{import('../sql/app_data_stat.service.js')} */{ post }) => {
+                    /**@type{import('../../../types.js').db_parameter_app_data_stat_post} */
+                    const data_insert = {json_data:                                         {   search:             query.get('search') ?? resource_id_number ?? resource_id_name,
+                                                                                                client_ip:          ip,
+                                                                                                client_user_agent:  user_agent,
+                                                                                                client_longitude:   query.get('client_longitude'),
+                                                                                                client_latitude:    query.get('client_latitude')},
+                                        //if user logged not logged in then save resource on app
+                                        app_id:                                             getNumberValue(query.get('id'))?null:app_id,
+                                        user_account_id:                                    null,
+                                        //save user account if logged in else set null in both user account app columns
+                                        user_account_app_user_account_id:                   getNumberValue(query.get('id')) ?? null,
+                                        user_account_app_app_id:                            getNumberValue(query.get('id'))?app_id:null,
+                                        app_data_resource_master_id:                        null,
+                                        app_data_entity_resource_id:                        0,  //PROFILE_SEARCH
+                                        app_data_entity_resource_app_data_entity_app_id:    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) ?? 0,
+                                        app_data_entity_resource_app_data_entity_id:        0   //COMMON
+                                        };
+                    post(app_id, data_insert)
                     .then(()=>{
                         resolve(clear_private(result_getProfileUser));
                     })

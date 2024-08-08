@@ -14,11 +14,12 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @returns {Promise.<import('../../../types.js').db_result_app_data_stat_get[]>}
  */
 const get = async (app_id, resource_id, data_app_id, resource_name_entity, locale) => {
-		const sql = `SELECT ads.id                                                  "id",
-                            ads.app_id                                              "app_id",
+		const sql = `SELECT ads.app_id                                              "app_id",
 							ads.json_data                                           "json_data",
                             ads.date_created                                        "date_created",
                             
+                            ads.user_account_id                                     "user_account_id",
+
                             ads.user_account_app_user_account_id                    "user_account_app_user_account_id",
                             ads.user_account_app_app_id                             "user_account_app_app_id",
 
@@ -60,9 +61,10 @@ const get = async (app_id, resource_id, data_app_id, resource_name_entity, local
  * @returns {Promise.<import('../../../types.js').db_result_app_data_stat_post[]>}
  */
 const post = async (app_id, data) => {
-    const sql = `INSERT INTO <DB_SCHEMA/>.app_data_stat (   app_id,
-                                                            json_data, 
+    const sql = `INSERT INTO <DB_SCHEMA/>.app_data_stat (   json_data, 
                                                             date_created,
+                                                            app_id,
+                                                            user_account_id,
                                                             user_account_app_user_account_id,
                                                             user_account_app_app_id,
                                                             app_data_resource_master_id,
@@ -71,6 +73,8 @@ const post = async (app_id, data) => {
                                                             app_data_entity_resource_app_data_entity_id)
                     VALUES( :json_data, 
                             :date_created,
+                            :app_id,
+                            :user_account_id,
                             :user_account_app_user_account_id,
                             :user_account_app_app_id,
                             :app_data_resource_master_id,
@@ -79,9 +83,11 @@ const post = async (app_id, data) => {
                             :app_data_entity_resource_app_data_entity_id)
 `;
     const parameters = {json_data:                                          JSON.stringify(data.json_data),
-                        user_account_app_user_account_id:                   data.user_account_app_user_account_id,
-                        user_account_app_app_id:                            data.user_account_app_app_id,
-                        app_data_resource_master_id:                        data.app_data_resource_master_id,
+                        app_id:                                             data.app_id ?? null,
+                        user_account_id:                                    data.user_account_id ?? null,
+                        user_account_app_user_account_id:                   data.user_account_app_user_account_id ?? null,
+                        user_account_app_app_id:                            data.user_account_app_app_id ?? null,
+                        app_data_resource_master_id:                        data.app_data_resource_master_id ?? null,
                         app_data_entity_resource_id:                        data.app_data_entity_resource_id,
                         app_data_entity_resource_app_data_entity_app_id:    data.app_data_entity_resource_app_data_entity_app_id,
                         app_data_entity_resource_app_data_entity_id:        data.app_data_entity_resource_app_data_entity_id

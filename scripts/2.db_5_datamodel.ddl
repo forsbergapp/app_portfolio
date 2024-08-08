@@ -113,16 +113,36 @@ CREATE TABLE <DB_SCHEMA/>.app_data_resource_master (
 UPDATE SQLITE_SEQUENCE SET seq = 1000000 WHERE name = 'app_data_resource_master';
 
 CREATE TABLE <DB_SCHEMA/>.app_data_stat (
-    id                                              INTEGER NOT NULL CONSTRAINT app_data_stat_pk PRIMARY KEY AUTOINCREMENT,
     json_data                                       TEXT,
     date_created                                    DATE,
-    app_id                                          INTEGER NOT NULL,
+    app_id                                          INTEGER,
     user_account_app_user_account_id                INTEGER,
     user_account_app_app_id                         INTEGER,
     app_data_resource_master_id                     INTEGER,
     app_data_entity_resource_id                     INTEGER NOT NULL,
     app_data_entity_resource_app_data_entity_app_id INTEGER NOT NULL,
     app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL,
+    user_account_id                                 INTEGER,
+    CONSTRAINT arc_2 CHECK ( ( ( app_data_resource_master_id IS NOT NULL )
+                                   AND ( user_account_app_user_account_id IS NULL )
+                                   AND ( user_account_app_app_id IS NULL )
+                                   AND ( user_account_id IS NULL )
+                                   AND ( app_id IS NULL ) )
+                                 OR ( ( user_account_app_user_account_id IS NOT NULL )
+                                      AND ( user_account_app_app_id IS NOT NULL )
+                                      AND ( app_data_resource_master_id IS NULL )
+                                      AND ( user_account_id IS NULL )
+                                      AND ( app_id IS NULL ) )
+                                 OR ( ( user_account_id IS NOT NULL )
+                                      AND ( app_data_resource_master_id IS NULL )
+                                      AND ( user_account_app_user_account_id IS NULL )
+                                      AND ( user_account_app_app_id IS NULL )
+                                      AND ( app_id IS NULL ) )
+                                 OR ( ( app_id IS NOT NULL )
+                                      AND ( app_data_resource_master_id IS NULL )
+                                      AND ( user_account_app_user_account_id IS NULL )
+                                      AND ( user_account_app_app_id IS NULL )
+                                      AND ( user_account_id IS NULL ) ) ),
     CONSTRAINT app_data_stat_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id,
                                                                            app_data_entity_resource_app_data_entity_id,
                                                                            app_data_entity_resource_id )
@@ -140,10 +160,11 @@ CREATE TABLE <DB_SCHEMA/>.app_data_stat (
                                                                    user_account_app_app_id )
         REFERENCES user_account_app ( user_account_id,
                                         app_id )
+            ON DELETE CASCADE,
+    CONSTRAINT app_data_stat_user_account_fk FOREIGN KEY ( user_account_id )
+        REFERENCES user_account ( id )
             ON DELETE CASCADE
 );
-
-UPDATE SQLITE_SEQUENCE SET seq = 1000000 WHERE name = 'app_data_stat';
 
 CREATE TABLE <DB_SCHEMA/>.app_data_translation (
     json_data                   TEXT,
@@ -340,18 +361,18 @@ CREATE TABLE <DB_SCHEMA/>.app_translation (
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL ) ) ),
-    CONSTRAINT app_translation_app_un UNIQUE ( app_id,language_id ),
     CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
                                                             app_id,
                                                             language_id ),
-    CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
-                                                          app_object_app_id,
-                                                          language_id ),
     CONSTRAINT app_translation_app_object_item_un UNIQUE ( app_object_item_object_item_name,
                                                                app_object_item_app_object_object_name,
                                                                app_object_item_app_object_app_id,
                                                                language_id ),
+    CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
+                                                          app_object_app_id,
+                                                          language_id ),
     CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id, language_id ),
+    CONSTRAINT app_translation_app_un UNIQUE ( app_id,language_id ),
     CONSTRAINT app_translation_country_un UNIQUE ( country_id, language_id ),
     CONSTRAINT app_translation_language_translation_un UNIQUE ( language_id_translation, language_id ),
     CONSTRAINT app_translation_app_category_fk FOREIGN KEY ( app_category_id )
@@ -450,19 +471,6 @@ CREATE TABLE <DB_SCHEMA/>.locale (
         REFERENCES language ( id )
 );
 
-CREATE TABLE <DB_SCHEMA/>.profile_search (
-    user_account_id    INTEGER,
-    search             VARCHAR(100) NOT NULL,
-    client_ip          VARCHAR(1000),
-    client_user_agent  VARCHAR(1000),
-    client_longitude   VARCHAR(100),
-    client_latitude    VARCHAR(100),
-    date_created       DATETIME NOT NULL,
-    CONSTRAINT profile_search_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
-            ON DELETE CASCADE
-);
-	
 CREATE TABLE <DB_SCHEMA/>.user_account (
     id                    INTEGER NOT NULL CONSTRAINT user_account_pk PRIMARY KEY AUTOINCREMENT,
     username              VARCHAR(100),
@@ -622,10 +630,10 @@ CREATE TABLE <DB_SCHEMA/>.user_account_like (
 );
 
 CREATE TABLE <DB_SCHEMA/>.user_account_logon (
-    user_account_id    INTEGER,
     app_id             INTEGER NOT NULL,
     json_data          TEXT,
     date_created       DATETIME NOT NULL,
+    user_account_id    INTEGER,
     CONSTRAINT user_account_logon_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id ),
     CONSTRAINT user_account_logon_user_account_fk FOREIGN KEY ( user_account_id )
@@ -634,13 +642,13 @@ CREATE TABLE <DB_SCHEMA/>.user_account_logon (
 );
 
 CREATE TABLE <DB_SCHEMA/>.user_account_view (
-    user_account_id       INTEGER,
-    user_account_id_view  INTEGER NOT NULL,
     client_ip             VARCHAR(1000),
     client_user_agent     VARCHAR(1000),
     client_longitude      VARCHAR(100),
     client_latitude       VARCHAR(100),
     date_created          DATETIME NOT NULL,
+    user_account_id       INTEGER,
+    user_account_id_view  INTEGER NOT NULL,
     CONSTRAINT user_account_view_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
             ON DELETE CASCADE,

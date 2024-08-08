@@ -21,7 +21,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="21E3CD89-373D-6E8B-DD1C-312DFC5020E6" referredColumn="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474"/>
+<colAssociation fkAssociation="21E3CD89-373D-6E8B-DD1C-312DFC5020E6" referredColumn="4E4186C5-8808-08CF-C4D6-DEBC77828116"/>
 </associations>
 </Column>
 <Column name="user_account_id_like" id="9A6D8178-954F-8A6C-5188-2CBF8B12602A">
@@ -36,7 +36,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="0E7F8981-923D-6105-E620-10EA9767C621" referredColumn="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474"/>
+<colAssociation fkAssociation="0E7F8981-923D-6105-E620-10EA9767C621" referredColumn="4E4186C5-8808-08CF-C4D6-DEBC77828116"/>
 </associations>
 </Column>
 <Column name="date_created" id="FCD36222-C46A-DB8C-3EDF-271FADF5CC32">

@@ -8,22 +8,6 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="user_account_id" id="902A5E0D-55F8-B287-EFF6-8422F2773A09">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<generatorID>A701AB16-1178-1303-E736-347660767868</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="216F9332-EA48-1D9A-3B9C-0E3FFEB625C5" referredColumn="AFFEC34F-44F6-08F1-AEE2-7D506F0FD474"/>
-</associations>
-</Column>
 <Column name="app_id" id="695C2535-A1A2-BBB5-E093-87602D0708C5">
 <createdBy>admin</createdBy>
 <createdTime>2022-01-15 13:58:05 UTC</createdTime>
@@ -61,6 +45,21 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="user_account_id" id="901784FE-EE6F-5FE9-2678-2103A721683C">
+<createdBy>admin</createdBy>
+<createdTime>2024-08-08 16:06:55 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="216F9332-EA48-1D9A-3B9C-0E3FFEB625C5" referredColumn="4E4186C5-8808-08CF-C4D6-DEBC77828116"/>
+</associations>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="0E91A430-54B3-F272-3577-209D5DA23CAE" name="user_account_logon_app_FK">
@@ -82,7 +81,7 @@
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="902A5E0D-55F8-B287-EFF6-8422F2773A09"/>
+<colUsage columnID="901784FE-EE6F-5FE9-2678-2103A721683C"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

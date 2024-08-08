@@ -8,22 +8,6 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="id" id="1E5CAED5-A99B-5382-D436-BBB96915E624">
-<createdBy>admin</createdBy>
-<createdTime>2024-03-04 17:31:42 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementColumn>true</autoIncrementColumn>
-<identityColumn>true</identityColumn>
-<autoIncrementStartWith>1000000</autoIncrementStartWith>
-<autoIncrementCycle>false</autoIncrementCycle>
-<autoIncrementDisableCache>false</autoIncrementDisableCache>
-<autoIncrementCache>30</autoIncrementCache>
-<autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
-</Column>
 <Column name="json_data" id="F4BF3D0A-EE5D-ECA1-1F28-DAB16C941E5B">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>
@@ -53,6 +37,7 @@
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>
 <generatorID>E8C1E7A6-BFB3-4E88-DB00-A14949AB2931</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
@@ -156,19 +141,31 @@
 <colAssociation fkAssociation="ABF7CEF5-385E-08B8-5F54-FD0AA1FF4DFF" referredColumn="004CF753-1DEA-BA1F-3AE9-1FEF2B157FAF"/>
 </associations>
 </Column>
+<Column name="user_account_id" id="D6B8CE4F-E0F0-968E-DD5D-C0853FB28648">
+<createdBy>admin</createdBy>
+<createdTime>2024-08-08 16:06:55 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9D8AE139-F106-10A6-6007-A9ED286B4D51" referredColumn="4E4186C5-8808-08CF-C4D6-DEBC77828116"/>
+</associations>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="410F9627-C0E0-259C-71A4-D1948F872F5B" name="app_data_stat_PK">
+<ind_PK_UK id="61BAE455-AFE1-2D65-0376-944343285E58" name="app_data_stat_PK">
 <createdBy>admin</createdBy>
-<createdTime>2024-06-16 16:46:44 UTC</createdTime>
+<createdTime>2024-08-08 15:58:57 UTC</createdTime>
 <generatorID>2A7222AC-4098-4A8E-5792-CF37B93F3ECF</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <pk>true</pk>
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="1E5CAED5-A99B-5382-D436-BBB96915E624"/>
-</indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="A8E70172-6B3C-7F54-D692-B1CFC0F538C0" name="app_data_stat_app_FK">
 <createdBy>admin</createdBy>
@@ -215,6 +212,17 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="B26841D0-DDDF-ECC3-4239-06C6E4B2F7BB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="21725B81-FB0E-8B36-272D-2C794312F90D" name="app_data_stat_user_account_FK">
+<createdBy>admin</createdBy>
+<createdTime>2024-08-07 07:55:27 UTC</createdTime>
+<generatorID>B0932B41-18C8-C5D8-1E22-60FB848DF4C3</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D6B8CE4F-E0F0-968E-DD5D-C0853FB28648"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>
