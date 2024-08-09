@@ -678,7 +678,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                                         user_account_app_user_account_id:                   getNumberValue(query.get('id')) ?? null,
                                         user_account_app_app_id:                            getNumberValue(query.get('id'))?app_id:null,
                                         app_data_resource_master_id:                        null,
-                                        app_data_entity_resource_id:                        0,  //PROFILE_SEARCH
+                                        app_data_entity_resource_id:                        1,  //PROFILE_SEARCH
                                         app_data_entity_resource_app_data_entity_app_id:    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) ?? 0,
                                         app_data_entity_resource_app_data_entity_id:        0   //COMMON
                                         };

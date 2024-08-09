@@ -974,6 +974,10 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	padding-inline-start: 5px;
 	text-align: start;
 }   
+.list_app_log_row {
+	display:grid;
+	grid-template-columns: 12em 9em 4em 7em 10em 30em 30em 9em 7em 7em 7em 12em 12em 12em 12em 50em 15em !important
+}
 .list_sort_click, .gps_click, .chat_click {
 	cursor:pointer;
 }
@@ -982,60 +986,6 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	margin-inline-end: 10px;
 }
 
-.list_app_log_col:nth-child(1){
-	width:40px;
-}
-.list_app_log_col:nth-child(2){
-	width:120px;
-}
-.list_app_log_col:nth-child(3){
-	width:90px;
-}
-.list_app_log_col:nth-child(4){
-	width:40px;
-}
-.list_app_log_col:nth-child(5){
-	width:70px;
-}
-.list_app_log_col:nth-child(6){
-	width:110px;
-}
-.list_app_log_col:nth-child(7){
-	width:460px;
-}
-.list_app_log_col:nth-child(8){
-	width:460px;
-}
-.list_app_log_col:nth-child(9){
-	width:70px;
-}
-.list_app_log_col:nth-child(10){
-	width:90px;
-}
-.list_app_log_col:nth-child(11){
-	width:70px;
-}
-.list_app_log_col:nth-child(12){
-	width:70px;
-}
-.list_app_log_col:nth-child(13){
-	width:120px;
-}
-.list_app_log_col:nth-child(14){
-	width:120px;
-}
-.list_app_log_col:nth-child(15){
-	width:120px;
-}
-.list_app_log_col:nth-child(16){
-	width:120px;
-}
-.list_app_log_col:nth-child(17){
-	width:600px;
-}
-.list_app_log_col:nth-child(18){
-	width:400px;
-}
 #list_app_pagination{
 	display: block;
 	margin-top: -10px;

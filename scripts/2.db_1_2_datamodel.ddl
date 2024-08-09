@@ -175,23 +175,6 @@ GRANT SELECT ON <DB_SCHEMA/>.app_device TO app_portfolio_role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_device TO app_portfolio_role_app_admin;
 
-CREATE TABLE <DB_SCHEMA/>.app_log (
-    id                           INT NOT NULL AUTO_INCREMENT,
-    json_data                    TEXT NOT NULL,
-    date_created                 DATETIME,
-	app_id                       INTEGER NOT NULL,
-	CONSTRAINT app_log_pk PRIMARY KEY ( id )
-);
-
-CREATE INDEX app_log_date_created_index ON
-    <DB_SCHEMA/>.app_log (
-        date_created
-    ASC );
-
-GRANT SELECT, INSERT ON <DB_SCHEMA/>.app_log TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_log TO app_portfolio_role_app_admin;
-
 CREATE TABLE <DB_SCHEMA/>.app_object (
     app_id       INTEGER NOT NULL,
     object_name  VARCHAR(100) NOT NULL,
@@ -753,11 +736,6 @@ ALTER TABLE <DB_SCHEMA/>.app_device
 ALTER TABLE <DB_SCHEMA/>.app_device
     ADD CONSTRAINT app_device_app_setting_fk FOREIGN KEY ( app_setting_id )
         REFERENCES <DB_SCHEMA/>.app_setting ( id );
-
-ALTER TABLE <DB_SCHEMA/>.app_log
-    ADD CONSTRAINT app_log_app_fk FOREIGN KEY ( app_id )
-        REFERENCES <DB_SCHEMA/>.app ( id )
-            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_object
     ADD CONSTRAINT app_object_app_fk FOREIGN KEY ( app_id )

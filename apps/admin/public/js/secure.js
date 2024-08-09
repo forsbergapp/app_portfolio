@@ -161,7 +161,7 @@ const show_charts = async () => {
             authorization_type = 'SYSTEMADMIN';
         }
         else{
-            path = '/server-db_admin/app_log-stat';
+            path = '/server-db_admin/app_data_stat-log-stat';
             query = `select_app_id=${app_id}&year=${year}&month=${month}`;
             authorization_type = 'APP_ACCESS';
         }
@@ -1482,7 +1482,7 @@ const show_list = async (list_div, query, sort, order_by) => {
                 break;
             }
             case 'list_app_log':{
-                path = '/server-db_admin/app_log';
+                path = '/server-db_admin/app_data_stat-log';
                 token_type = 'APP_ACCESS';
                 break;
             }
@@ -1551,9 +1551,6 @@ const show_list = async (list_div, query, sort, order_by) => {
                 case 'list_app_log':{
                     APP_GLOBAL.page_last = Math.floor(logs[0].total_rows/APP_GLOBAL.limit) * APP_GLOBAL.limit;
                     html = `<div class='list_app_log_row'>
-                                <div data-column='id' class='list_app_log_col list_sort_click list_title'>
-                                    ID
-                                </div>
                                 <div data-column='date_created' class='list_app_log_col list_sort_click list_title'>
                                     DATE
                                 </div>
@@ -1572,7 +1569,7 @@ const show_list = async (list_div, query, sort, order_by) => {
                                 <div data-column='app_module_request' class='list_app_log_col list_sort_click list_title'>
                                     MODULE REQUEST
                                 </div>
-                                <div data-column='app_module_request' class='list_app_log_col list_sort_click list_title'>
+                                <div data-column='app_module_result' class='list_app_log_col list_sort_click list_title'>
                                     MODULE RESULT
                                 </div>
                                 <div data-column='app_user_id' class='list_app_log_col list_sort_click list_title'>
@@ -1824,9 +1821,6 @@ const show_list = async (list_div, query, sort, order_by) => {
                         case 'list_app_log':{
                             html += `<div class='list_app_log_row'>
                                         <div class='list_app_log_col'>
-                                            ${log.id}
-                                        </div>
-                                        <div class='list_app_log_col'>
                                             ${log.date_created}
                                         </div>
                                         <div class='list_app_log_col common_wide_list_column'>
@@ -1860,7 +1854,7 @@ const show_list = async (list_div, query, sort, order_by) => {
                                         </div>
                                         <div class='list_app_log_col gps_click'
                                             data-latitude='${log.client_latitude ?? ''}'
-                                            data-longitude='${log.client_longitude ?? ''}'>>
+                                            data-longitude='${log.client_longitude ?? ''}'>
                                             ${log.client_longitude ?? ''}
                                         </div>
                                         <div class='list_app_log_col common_wide_list_column'>
@@ -2063,7 +2057,7 @@ const show_connected = async (sort='connection_date', order_by='desc') => {
  * @param {number} limit 
  * @returns{Promise.<void>}
  */
-const show_app_log = async (sort='id', order_by='desc', offset=0, limit=APP_GLOBAL.limit) => {
+const show_app_log = async (sort='date_created', order_by='desc', offset=0, limit=APP_GLOBAL.limit) => {
     const app_id = AppDocument.querySelector('#select_app_menu5').options[AppDocument.querySelector('#select_app_menu5').selectedIndex].value;
     const year = AppDocument.querySelector('#select_year_menu5').value;
     const month = AppDocument.querySelector('#select_month_menu5').value;
@@ -2130,7 +2124,7 @@ const page_navigation = (item) => {
     let sort = get_sort();
     const order_by = get_sort(1);
     if (sort =='')
-        sort = 'id';
+        sort = 'date_created';
     switch (item){
         case 'list_app_log_first':{
             APP_GLOBAL.page = 0;

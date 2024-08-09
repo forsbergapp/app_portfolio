@@ -211,10 +211,7 @@ const COMMON = {
     const db_app_resource = await import(`file://${process.cwd()}/server/db/components/app_data_resource.js`);
 
     /**@type{import('./db/components/app_data_stat.js')} */
-    const db_app_stat = await import(`file://${process.cwd()}/server/db/components/app_data_stat.js`);
-
-    /**@type{import('./db/components/app_log.js')} */
-    const db_app_log = await import(`file://${process.cwd()}/server/db/components/app_log.js`);
+    const db_app_data_stat = await import(`file://${process.cwd()}/server/db/components/app_data_stat.js`);
 
     /**@type{import('./db/components/app_object.js')} */
     const db_app_object = await import(`file://${process.cwd()}/server/db/components/app_object.js`);
@@ -572,8 +569,18 @@ const COMMON = {
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-db/app_data_stat', method:'GET'}):{
-                        resolve(db_app_stat.get(routesparameters.app_id, app_query)
+                        resolve(db_app_data_stat.get(routesparameters.app_id, app_query)
                                 .then(result=>iso_return_message(result, false)));
+                        break;
+                    }
+                    case route({url:'/bff/admin/v1/server-db_admin/app_data_stat-log', method:'GET'}):{
+                        resolve(db_app_data_stat.getLogs(routesparameters.app_id, app_query)
+                                    .then(result=>iso_return_message(result, false)));
+                        break;
+                    }
+                    case route({url:'/bff/admin/v1/server-db_admin/app_data_stat-log-stat', method:'GET'}):{
+                        resolve(db_app_data_stat.getStatUniqueVisitor(routesparameters.app_id, app_query)
+                                    .then(result=>iso_return_message(result, false)));
                         break;
                     }
                     case route({url:`/bff/app_access/v1/server-db/user_account-password/${resource_id_string}`, method:'PATCH', 
@@ -784,16 +791,6 @@ const COMMON = {
                     }
                     case route({url:'/bff/admin/v1/server-db_admin/app_category', method:'GET'}):{
                         resolve(db_app_category.getAppCategoryAdmin(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, false)));
-                        break;
-                    }
-                    case route({url:'/bff/admin/v1/server-db_admin/app_log', method:'GET'}):{
-                        resolve(db_app_log.getLogsAdmin(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, false)));
-                        break;
-                    }
-                    case route({url:'/bff/admin/v1/server-db_admin/app_log-stat', method:'GET'}):{
-                        resolve(db_app_log.getStatUniqueVisitorAdmin(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
