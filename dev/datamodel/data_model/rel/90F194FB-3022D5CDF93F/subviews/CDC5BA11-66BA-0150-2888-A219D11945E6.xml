@@ -683,52 +683,6 @@
 </FontObject>
 </fonts>
 </OView>
-<OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="4712657F-C660-872D-808A-3EEF6D219188" otype="Table" vid="E25A074B-6653-D409-1B8B-44B884521849">
-<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="298" y="1530" width="187" height="268"/>
-<useCustomFormat>true</useCustomFormat>
-<useDefaultColor>false</useDefaultColor>
-<backgroundColor>-11446785</backgroundColor>
-<foregroundColor>-1</foregroundColor>
-<fonts itemClass="oracle.dbtools.crest.model.design.FontObjectWr">
-<FontObject>
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-1</colorRGB>
-<foTypeID>1</foTypeID>
-</FontObject>
-<FontObject>
-<foType>Column</foType>
-<colorRGB>-1</colorRGB>
-<foTypeID>2</foTypeID>
-</FontObject>
-<FontObject>
-<foType>Not Null</foType>
-<colorRGB>-1</colorRGB>
-<foTypeID>10</foTypeID>
-</FontObject>
-<FontObject>
-<foType>PK Element</foType>
-<colorRGB>-1</colorRGB>
-<foTypeID>7</foTypeID>
-</FontObject>
-<FontObject>
-<foType>Datatype</foType>
-<colorRGB>-1</colorRGB>
-<foTypeID>5</foTypeID>
-</FontObject>
-<FontObject>
-<foType>FK Element</foType>
-<colorRGB>-1</colorRGB>
-<foTypeID>8</foTypeID>
-</FontObject>
-<FontObject>
-<foType>Key</foType>
-<colorRGB>-1</colorRGB>
-<foTypeID>6</foTypeID>
-</FontObject>
-</fonts>
-</OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="4D7C40F5-D1AF-6F08-4BB8-9506ED86F8DF" otype="Table" vid="9AE8C5E4-F62A-CB66-31EB-AF532F0D7D67">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
 <bounds x="637" y="595" width="234" height="162"/>
@@ -1978,15 +1932,6 @@
 <points>
 <point x="1157" y="1576"/>
 <point x="1098" y="1576"/>
-</points>
-</Connector>
-<Connector class="oracle.dbtools.crest.swingui.relational.TVFKRelation" oid="8F873190-E2B3-0B4A-2C76-7FF2C3E4A467" otype="FKIndexAssociation" vid_source="0862FB48-3D66-749A-9778-C69A79DF2435" vid_target="E25A074B-6653-D409-1B8B-44B884521849">
-<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<backgroundColor>-16777216</backgroundColor>
-<lineWidth>1</lineWidth>
-<points>
-<point x="208" y="1664"/>
-<point x="298" y="1664"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.relational.TVFKRelation" oid="914C10CC-F908-7A66-2CE2-2DF8184CDF4A" otype="FKIndexAssociation" vid_source="1697B40F-5546-203A-B4DC-4BABC49C642D" vid_target="001A19FC-6AD4-934A-6D24-5EE8D05CEB60">

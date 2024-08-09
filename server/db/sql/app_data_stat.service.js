@@ -72,7 +72,7 @@ const post = async (app_id, data) => {
                                                             app_data_entity_resource_app_data_entity_app_id,
                                                             app_data_entity_resource_app_data_entity_id)
                     VALUES( :json_data, 
-                            :date_created,
+                            CURRENT_TIMESTAMP,
                             :app_id,
                             :user_account_id,
                             :user_account_app_user_account_id,
@@ -94,4 +94,94 @@ const post = async (app_id, data) => {
                         };
     return await db_execute(app_id, sql, parameters);
 };
-export{get, post};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number|null} data_app_id 
+ * @param {number|null} year 
+ * @param {number|null} month 
+ * @param {string} sort 
+ * @param {string} order_by 
+ * @param {number|null} offset 
+ * @param {number|null} limit 
+ * @returns {Promise.<import('../../../types.js').db_result_app_data_stat_getLogs[]>}
+ */
+const getLogs = async (app_id, data_app_id, year, month, sort, order_by, offset, limit) => {
+    /**@type{import('../../../server/server.service.js')} */
+    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+    /**@type{import('../../../server/config.service.js')} */
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+    const sql = `SELECT app_id "app_id",
+                        json_data "json_data",
+                        date_created "date_created",
+                        count(*) over() "total_rows"
+                   FROM <DB_SCHEMA/>.app_data_stat
+                  WHERE ((app_id = :app_id) OR :app_id IS NULL)
+                    AND app_data_entity_resource_id = :app_data_entity_resource_id
+                    AND app_data_entity_resource_app_data_entity_app_id = :app_data_entity_resource_app_data_entity_app_id
+                    AND app_data_entity_resource_app_data_entity_id = :app_data_entity_resource_app_data_entity_id
+                    AND <DATE_PERIOD_YEAR/> = :year
+                    AND <DATE_PERIOD_MONTH/> = :month
+                  ORDER BY ${sort=='date_created'?'date_created':'app_id'} ${order_by} 
+                  <APP_PAGINATION_LIMIT_OFFSET/>`;
+    const parameters = {app_id:data_app_id,
+                        year:year,
+                        month:month,
+                        offset:offset,
+                        limit:limit,
+                        app_data_entity_resource_id: 0,
+                        app_data_entity_resource_app_data_entity_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                        app_data_entity_resource_app_data_entity_id : 0};
+    return await db_execute(app_id, sql, parameters, null,null);
+};
+/**
+* 
+* @param {number} app_id 
+* @param {number|null} data_app_id 
+* @param {number|null} year 
+* @param {number|null} month 
+* @returns {Promise.<import('../../../types.js').db_result_app_data_stat_getStatUniqueVisitor[]>}
+*/
+const getStatUniqueVisitor = async (app_id, data_app_id, year, month) => {
+    /**@type{import('../../../server/server.service.js')} */
+    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+    /**@type{import('../../../server/config.service.js')} */
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+    const sql = `SELECT t.chart "chart",
+                  t.app_id 		"app_id",
+                  :year_log 	"year",
+                  :month_log 	"month",
+                  t.day_log 	"day",
+                  json_data 	"json_data"
+             FROM (SELECT 1								chart,
+                          app_id,
+                          NULL 							day_log,
+                          json_data
+                     FROM <DB_SCHEMA/>.app_data_stat
+                    WHERE <DATE_PERIOD_YEAR/> =                             :year_log
+                      AND <DATE_PERIOD_MONTH/> =                            :month_log
+                      AND app_data_entity_resource_id =                     :app_data_entity_resource_id
+                      AND app_data_entity_resource_app_data_entity_app_id = :app_data_entity_resource_app_data_entity_app_id
+                      AND app_data_entity_resource_app_data_entity_id =     :app_data_entity_resource_app_data_entity_id
+                    UNION ALL
+                   SELECT 2								chart,
+                          NULL 							app_id,
+                          <DATE_PERIOD_DAY/> 			day_log,
+                          json_data
+                     FROM <DB_SCHEMA/>.app_data_stat
+                    WHERE ((app_id = :app_id_log) OR :app_id_log IS NULL)
+                      AND <DATE_PERIOD_YEAR/> =                             :year_log
+                      AND <DATE_PERIOD_MONTH/> =                            :month_log
+                      AND app_data_entity_resource_id =                     :app_data_entity_resource_id
+                      AND app_data_entity_resource_app_data_entity_app_id = :app_data_entity_resource_app_data_entity_app_id
+                      AND app_data_entity_resource_app_data_entity_id =     :app_data_entity_resource_app_data_entity_id) t
+            ORDER BY 1, 2`;
+    const parameters = {app_id_log: data_app_id,
+                        year_log: year,
+                        month_log: month,
+                        app_data_entity_resource_id: 0,
+                        app_data_entity_resource_app_data_entity_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                        app_data_entity_resource_app_data_entity_id : 0};
+    return await db_execute(app_id, sql, parameters, null, null);
+};
+export{get, post, getLogs, getStatUniqueVisitor};
