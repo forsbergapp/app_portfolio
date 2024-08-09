@@ -192,21 +192,6 @@ CREATE TABLE <DB_SCHEMA/>.app_device (
         REFERENCES app_setting ( id )
 );
 
-CREATE TABLE <DB_SCHEMA/>.app_log (
-    id                           INTEGER NOT NULL CONSTRAINT app_log_pk PRIMARY KEY AUTOINCREMENT,
-    json_data                    TEXT NOT NULL,
-    date_created                 DATETIME,
-	app_id                       INTEGER NOT NULL,
-    CONSTRAINT app_log_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id )
-            ON DELETE CASCADE
-);
-
-CREATE INDEX <DB_SCHEMA/>.app_log_date_created_index ON
-    app_log (
-        date_created
-    ASC );
-
 CREATE TABLE <DB_SCHEMA/>.app_object (
     app_id       INTEGER NOT NULL,
     object_name  VARCHAR(100) NOT NULL,

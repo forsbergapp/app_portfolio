@@ -450,27 +450,36 @@ const getAppBFF = async (app_id, app_parameters) =>{
                                                             module:             app});
     //if app admin then log, system does not log in database
     if (await app_start() && getNumberValue(ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LOG' in parameter)[0].APP_LOG) == 1){
-        /**@type{import('../server/db/sql/app_log.service.js')} */
-        const {createLog} = await import(`file://${process.cwd()}/server/db/sql/app_log.service.js`);
-        await createLog(app_id,
-                        app_id,
-                        {   
-                            app_module : 'APPS',
-                            app_module_type : app_module_type,
-                            app_module_request : app_parameters.param,
-                            app_module_result : result_geodata.place,
-                            app_user_id : null,
-                            user_language : client_locale(app_parameters.accept_language),
-                            user_timezone : result_geodata.timezone,
-                            user_number_system : null,
-                            user_platform : null,
-                            server_remote_addr : app_parameters.ip,
-                            server_user_agent : app_parameters.user_agent,
-                            server_http_host : app_parameters.host,
-                            server_http_accept_language : app_parameters.accept_language,
-                            client_latitude : result_geodata.latitude,
-                            client_longitude : result_geodata.longitude
-                        });
+        /**@type{import('../server/db/sql/app_data_stat.service.js')} */
+        const {post} = await import(`file://${process.cwd()}/server/db/sql/app_data_stat.service.js`);
+        const data_insert = {
+                        json_data:                                          {   
+                                                                                app_module : 'APPS',
+                                                                                app_module_type : app_module_type,
+                                                                                app_module_request : app_parameters.param,
+                                                                                app_module_result : result_geodata.place,
+                                                                                app_user_id : null,
+                                                                                user_language : client_locale(app_parameters.accept_language),
+                                                                                user_timezone : result_geodata.timezone,
+                                                                                user_number_system : null,
+                                                                                user_platform : null,
+                                                                                server_remote_addr : app_parameters.ip,
+                                                                                server_user_agent : app_parameters.user_agent,
+                                                                                server_http_host : app_parameters.host,
+                                                                                server_http_accept_language : app_parameters.accept_language,
+                                                                                client_latitude : result_geodata.latitude,
+                                                                                client_longitude : result_geodata.longitude
+                                                                            },
+                        app_id:                                             app_id,
+                        user_account_id:                                    null,
+                        user_account_app_user_account_id:                   null,
+                        user_account_app_app_id:                            null,
+                        app_data_resource_master_id:                        null,
+                        app_data_entity_resource_id:                        0,  //LOG
+                        app_data_entity_resource_app_data_entity_app_id:    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) ?? 0,
+                        app_data_entity_resource_app_data_entity_id:        0   //COMMON
+        };
+        await post(app_id, data_insert);
     }
     return app_with_init;
 };

@@ -1211,10 +1211,6 @@
  *              app_data_entity_resource_app_data_entity_app_id:    number,
  *              app_data_entity_resource_app_data_entity_id:        number}} db_parameter_app_data_stat_post
  * @typedef {db_result_insert} db_result_app_data_stat_post
- * 
- * 
- * 
- * APP LOG
  * @typedef {{  app_module:string,
  *              app_module_type : string,
  *              app_module_request : string|null,
@@ -1229,19 +1225,18 @@
  *              server_http_host : string,
  *              server_http_accept_language : string,
  *              client_latitude : string,
- *              client_longitude : string}} db_parameter_app_log_createLog
- * @typedef {   db_result_insert} db_result_app_log_createLog
+ *              client_longitude : string}} db_parameter_app_data_stat_createLog
  * @typedef {{  id:number,
  *              app_id:number,
  *              json_data:string,
  *              date_created:string,
- *              total_rows:number}} db_result_app_log_getLogsAdmin
+ *              total_rows:number}} db_result_app_data_stat_getLogs
  * @typedef {{  chart:number, 
  *              app_id:number, 
  *              year:number, 
  *              month:number, 
  *              day:number, 
- *              json_data:string}} db_result_app_log_getStatUniqueVisitorAdmin
+ *              json_data:string}} db_result_app_data_stat_getStatUniqueVisitor
  * APP OBJECTS
  * @typedef {{  object:string, 
  *              app_id:number, 
