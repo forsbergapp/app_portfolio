@@ -14,7 +14,6 @@ body {
 	margin: 0 auto;
 }
 #app_main_page{
-	width: 50%;
 	display: inline-block;
 	padding: 50px;
 }
@@ -117,6 +116,9 @@ body {
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
+	#app_main_page{
+		width: 50%;
+	}
 	#flat-cube{
 		top: 50px !important;
 		margin-inline-start: 390px !important;	
