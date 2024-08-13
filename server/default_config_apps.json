@@ -478,5 +478,52 @@
 			["FUNCTION","PAYMENT_REQUEST_GET_STATUS",		    "APP_DATA",		"PAYMENT REQUEST get status",       "/apps/app6/src/functions/payment_request_get_status.js"]
         ],
         "STATUS":"ONLINE"}
+    ,
+    {
+        "APP_ID": 7, 
+        "NAME": "Cube",           
+        "SUBDOMAIN": "app7",
+        "PATH": "/apps/app7/public",    
+        "LOGO":"/images/logo.png",     
+        "SHOWPARAM":1, 
+        "SECRETS":{ 
+                    "SERVICE_DB_DB1_APP_USER": "",
+                    "SERVICE_DB_DB1_APP_PASSWORD": "",
+                    "SERVICE_DB_DB2_APP_USER": "",
+                    "SERVICE_DB_DB2_APP_PASSWORD": "",
+                    "SERVICE_DB_DB3_APP_USER": "",
+                    "SERVICE_DB_DB3_APP_PASSWORD": "",
+                    "SERVICE_DB_DB4_APP_USER": "",
+                    "SERVICE_DB_DB4_APP_PASSWORD": "",
+                    "CLIENT_ID": "", 
+                    "CLIENT_SECRET":"", 
+                    "APP_ID_SECRET":"", 
+                    "APP_ID_EXPIRE":"2d", 
+                    "APP_ACCESS_SECRET":"", 
+                    "APP_ACCESS_EXPIRE":"1h"
+        },
+        "PARAMETERS":[
+                    {"TEXT_EDIT": "1"},
+                    {"COPYRIGHT": "©"},
+                    {"EMAIL": ""},
+                    {"LINK_TITLE": ""},
+                    {"LINK_URL": ""}
+        ],
+        "RENDER_CONFIG":{   
+                    "MANIFEST":false,
+                    "JS":"/js/app.js",
+                    "JS_SECURE":"",
+                    "JS_REPORT":"",
+                    "CSS": "/css/app.css",
+                    "CSS_REPORT": "",
+                    "FAVICON_32x32":"/images/favicon-32x32.png",
+                    "FAVICON_192x192":"/images/favicon-192x192.png",
+                    "RENDER_FILES":[]
+        },
+        "MODULES":[
+            ["FUNCTION","CUBE_TRAIN",     		                "APP_DATA",   	"Cube Train",                       "/apps/app7/src/functions/train.js"],
+            ["FUNCTION","CUBE_SCRAMBLE",     		            "APP_DATA",   	"Cube Scramble",                    "/apps/app7/src/functions/scramble.js"]
+        ],
+        "STATUS":"ONLINE"}
 ]
 }
