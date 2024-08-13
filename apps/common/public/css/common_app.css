@@ -515,7 +515,7 @@ select {
 }
 #common_dialogue_apps_list, #common_dialogue_info_app_menu_content_apps_list{
 	margin-top:10px;
-	height: 300px;
+	height: 350px;
     overflow-y: auto;
     overflow-x: hidden;
 	text-align: center;
