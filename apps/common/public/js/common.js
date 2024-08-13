@@ -3056,10 +3056,10 @@ const disable_textediting = () =>COMMON_GLOBAL.app_text_edit=='0';
 /**
  * Common events
  * @param {string} event_type 
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../types.js').AppEvent|null} event 
  * @returns {Promise.<void>}
  */
-const common_event = async (event_type,event) =>{
+const common_event = async (event_type,event=null) =>{
     if (event==null){
         AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{import('../../../types.js').AppEvent}*/event) => {
             common_event(event_type, event);
@@ -3813,7 +3813,8 @@ const framework_clean = () =>{
  *          KeyDown:function|null,
  *          KeyUp:function|null,
  *          Focus:function|null,
- *          Input:function|null}} events 
+ *          Input:function|null,
+ *          Other?:function|null}} events 
  * @returns {Promise.<void>}
  */
 const framework_set = async (framework, events) => {
@@ -3860,6 +3861,9 @@ const framework_set = async (framework, events) => {
     events.Input?null:events.Input = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('input', event));
     events.KeyDown?null:events.KeyDown = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('keydown', event));
     events.KeyUp?null:events.KeyUp = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('keyup', event));
+
+    events.Other?null:null;
+
     //app can override framework or use default javascript if Vue or React is not set
     if (framework ?? COMMON_GLOBAL.app_framework !=COMMON_GLOBAL.app_framework)
         COMMON_GLOBAL.app_framework = framework;
@@ -3947,17 +3951,21 @@ const framework_set = async (framework, events) => {
             break;
         }
         case 1:
-            default:{
-                //Javascript
-                events.Click();
-                events.Change();
-                events.Focus();
-                events.Input();
-                events.KeyDown();
-                events.KeyUp();
-                break;
-            }
+        default:{
+            //Javascript
+            events.Click();
+            events.Change();
+            events.Focus();
+            events.Input();
+            events.KeyDown();
+            events.KeyUp();
+            break;
+        }
     }
+    //set other events not use in common
+    if (events.Other)
+        events.Other();
+
     //replace Leaflet containers with the saved ones containing Leaflet objects and events if any Leaflet container used
     let index= 0;
     for (const leaflet_container of leaflet_containers){
@@ -3970,7 +3978,6 @@ const framework_set = async (framework, events) => {
     data_function.forEach(element =>AppDocument.querySelector(`#${element.id}`)['data-function'] = element.element_function);
     //add common events for all apps
     common_events_add();
-    
 };
 /**
  * Set useragent attributes

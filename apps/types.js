@@ -34,6 +34,9 @@
  * @property {function} stopPropagation
  * @property {string}   type
  * @property {number}   layerX
+ * @property {[*]}       touches
+ * @property {number}   clientX
+ * @property {number}   clientY
  * @property {{ id:                 string,
  *              blur:               function,
  *              focus:              function,
