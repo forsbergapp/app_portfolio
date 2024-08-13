@@ -429,7 +429,7 @@ RubiksCubeControls.prototype.nextMove = function() {
 	let counter = 0;
 	const timer_render = setInterval(() => {
 		counter ++;
-		if ((me.cube.turnSpeed +100) > counter *10)
+		if ((me.cube.turnSpeed*2) > counter *10)
 			me.cube.render();
 		else
 			clearInterval(timer_render);
