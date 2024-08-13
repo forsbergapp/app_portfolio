@@ -383,7 +383,7 @@ RubiksCubeControls.prototype.solve = function() {
 	let counter = 0;
 	const timer = setInterval(function() {
 		counter ++;
-		if(me.cube.turnSpeed * 45 < counter * 10){
+		if(me.cube.turnSpeed * 50 < counter * 10){
 			clearInterval(timer);
 		}
 		else
@@ -429,7 +429,7 @@ RubiksCubeControls.prototype.nextMove = function() {
 	let counter = 0;
 	const timer_render = setInterval(() => {
 		counter ++;
-		if (me.cube.turnSpeed > counter *10)
+		if ((me.cube.turnSpeed +100) > counter *10)
 			me.cube.render();
 		else
 			clearInterval(timer_render);
@@ -437,18 +437,10 @@ RubiksCubeControls.prototype.nextMove = function() {
 	
 };
 RubiksCubeControls.prototype.setWidth = function(width) {
-	const buttonWidth = width/8;	
-	const current = 0;
 
 	if(!this.solution || this.solution.length == 0){
 		this.overlay.style.display = 'none';
 	}
-	this.overlay.style.position = 'absolute';
-	this.overlay.style.left = 0;
-	this.overlay.style.right = 0;
-	this.overlay.style.top = 0;
-	this.overlay.style.bottom = 0;
-	this.overlay.style.backgroundColor = 'rgba(0,0,0,.5)'; 
 
 };
 //rubrik.js
@@ -1283,7 +1275,7 @@ RubiksCube.prototype.makeMove = function(move) {
 	const me = this;
 	const timer = setInterval(function() {
 		counter ++;
-		if(me.turnSpeed < counter * 10){
+		if((me.turnSpeed + 100) < counter * 10){
 			clearInterval(timer);
 		}
 		else
