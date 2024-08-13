@@ -3,7 +3,6 @@ html, body, #app {
 	height:100%;
 }
 body {
-	text-align: center;
 	font-size: 18px !important;
 }
 #app_logo{
@@ -15,7 +14,9 @@ body {
 }
 #app_main_page{
 	display: inline-block;
-	padding: 50px;
+	padding: 5px;
+	padding-top:50px;
+	text-align: center;
 }
 #cube{
 	display: block;
@@ -116,8 +117,12 @@ body {
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
+	body{
+		text-align: center;
+	}
 	#app_main_page{
 		width: 50%;
+		padding: 50px;
 	}
 	#flat-cube{
 		top: 50px !important;
