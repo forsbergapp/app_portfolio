@@ -102,11 +102,12 @@ body {
 	width: 100%;
 }
 #button_step_info {
-  	width: 350px;
-  	height: 3em;
+  	width:295px;
+  	height: 100px;
 	font-size: 1.5em;
 	position: absolute;
 	margin: 4px;
+	padding: 1em;
 }
 #button_controls .button_move, 
 #button_step_info,
