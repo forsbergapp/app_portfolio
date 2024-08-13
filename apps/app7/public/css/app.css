@@ -4,6 +4,7 @@ html, body, #app {
 }
 body {
 	text-align: center;
+	font-size: 18px !important;
 }
 #app_logo{
 	background-image: url('/images/logo.png');
@@ -77,7 +78,6 @@ body {
 	display:inline-block;
 	width: 15%;
 	border: 1px solid var(--common_app_color_black);
-	font-size: 1.5em; 
 	font-weight: bold;
 }
 #solve_progress{
@@ -97,13 +97,16 @@ body {
 	width:45%;
 	margin-top: 1em;
 }
-#button_step_info {
+#overlay{
 	display: inline-block;
-  	width: 30%;
-  	height: 30%;
-  	padding: 1em;
-  	margin-top: 0.5em;
+	width: 100%;
+}
+#button_step_info {
+  	width: 350px;
+  	height: 3em;
 	font-size: 1.5em;
+	position: absolute;
+	margin: 4px;
 }
 #button_controls .button_move, 
 #button_step_info,
@@ -167,6 +170,9 @@ body {
 #solve_speed .button_speed_selected
 {
 	color:var(--common_app_color_green) !important;
+}
+#overlay{
+	background-color : rgba(0,0,0,.5);
 }
 /* APP THEME COMMON*/
 .common_toolbar_selected{
