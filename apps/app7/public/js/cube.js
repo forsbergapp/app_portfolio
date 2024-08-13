@@ -408,7 +408,7 @@ RubiksCubeControls.prototype.updateStepButton = function() {
 		const move = this.solution[0];
 		const color = this.cube.getFaceColor(move.substr(0,1));
 		this.stepButtonInfo.style.backgroundColor = color;
-		const bgImg = move.length == 1 ? clock90 : move[1] == '\'' ? clock180 : counter90;
+		const bgImg = move.length == 1 ? clock90 : move[1] == '2' ? clock180 : counter90;
 		//this.stepButton.style.backgroundImage = bgImg;
 		this.stepButtonMove.innerText = bgImg;
 		if(this.stepButton.firstChild){
