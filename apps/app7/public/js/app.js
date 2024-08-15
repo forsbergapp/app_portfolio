@@ -55,7 +55,7 @@ const app_event_click = (event=null) => {
                         /**@ts-ignore */
                         sticker.setColor(APP_GLOBAL.cube.flatCube.getColor());
                         /**@ts-ignore */
-                        APP_GLOBAL.cube.flatCube.update();
+                        APP_GLOBAL.cube.flatCube.update(show_message_cube);
                     }
                     break;
                 }
@@ -70,6 +70,8 @@ const app_event_click = (event=null) => {
                     APP_GLOBAL.cube.customAffine = app_cube.makeIdentityAffine();
                     /**@ts-ignore */
                     APP_GLOBAL.controls.solve();
+                    /**@ts-ignore */
+                    APP_GLOBAL.cube.flatCube.update(show_message_cube);
                     break;
                 }
                 case 'button_L':
@@ -91,6 +93,8 @@ const app_event_click = (event=null) => {
                 case 'button_solve':{
                     /**@ts-ignore */
                     APP_GLOBAL.controls.solve();
+                    /**@ts-ignore */
+                    APP_GLOBAL.cube.flatCube.update(show_message_cube);
                     break;
                 }
                 case event.target.id.startsWith('button_solve_speed')?event_target_id:null:{
@@ -118,6 +122,8 @@ const app_event_click = (event=null) => {
                 case 'button_scramble':{
                     /**@ts-ignore */
                     APP_GLOBAL.controls.cube.scramble();
+                    /**@ts-ignore */
+                    APP_GLOBAL.cube.flatCube.update(show_message_cube);
                     break;
                 }
                 case 'common_toolbar_framework_js':{
@@ -173,34 +179,40 @@ const app_event_other = () => {
 		}
 	};
     AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousedown',(/**@type{import('../../../types.js').AppEvent}*/event) => {
-        if (event.target.id == 'cube')
+        if (event.target.classList.contains('cube_face'))
             onmousedown(event);
     });
     AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mouseup',(/**@type{import('../../../types.js').AppEvent}*/event) => {
-        if (event.target.id == 'cube')
+        if (event.target.classList.contains('cube_face'))
             onmouseup();
     });
     AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousemove',(/**@type{import('../../../types.js').AppEvent}*/event) => {
-        if (event.target.id == 'cube')
+        if (event.target.classList.contains('cube_face'))
             onmousemove(event);
     });
 
     AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchstart',(/**@type{import('../../../types.js').AppEvent}*/event) => {
-        if (event.target.id == 'cube')
+        if (event.target.classList.contains('cube_face'))
             onmousedown(event);
     });
     AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchend',(/**@type{import('../../../types.js').AppEvent}*/event) => {
-        if (event.target.id == 'cube')
+        if (event.target.classList.contains('cube_face'))
             onmouseup();
     });
     AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchcancel',(/**@type{import('../../../types.js').AppEvent}*/event) => {
-        if (event.target.id == 'cube')
+        if (event.target.classList.contains('cube_face'))
             onmouseup();
     });
     AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchmove',(/**@type{import('../../../types.js').AppEvent}*/event) => {
-        if (event.target.id == 'cube')
+        if (event.target.classList.contains('cube_face'))
             onmousemove(event);
     });
+};
+/**
+ * @param {string} message
+ */
+const show_message_cube = message =>{
+    common.show_message('INFO', null, null, null,message, common.COMMON_GLOBAL.common_app_id);
 };
 /**
  * Sets framework
@@ -216,12 +228,11 @@ const app_event_other = () => {
             Focus: null,
             Input:null,
             Other:app_event_other});
-    init_cube();
 };
 
 const init_cube = () => {
     /**@ts-ignore */
-    APP_GLOBAL.cube = new app_cube.RubiksCube('cube', APP_GLOBAL.width);
+    APP_GLOBAL.cube = new app_cube.RubiksCube( APP_GLOBAL.width);
     /**@ts-ignore */
     APP_GLOBAL.flatCube = new app_cube.FlatCube('flat-cube', APP_GLOBAL.width);
     /**@ts-ignore */
@@ -233,6 +244,7 @@ const init_cube = () => {
 
     APP_GLOBAL.cube.flatCube.update();
     APP_GLOBAL.cube.render();
+    
 };
 /**
  * Init app
@@ -241,6 +253,12 @@ const init_cube = () => {
 const init_app = async () => {
     AppDocument.body.className = 'app_theme1';
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
+    let html = '';
+    for (let i=0;i<156;i++){
+        html += `<path class='cube_face' id='cube_face_${i}'/>`;
+    }
+    document.querySelector('#cube').innerHTML = `<svg xmlns='http://www.w3.org/2000/svg'>${html}</svg>`;
+    init_cube();
     framework_set();
 };
 /**
