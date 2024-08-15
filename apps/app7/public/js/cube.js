@@ -5,8 +5,10 @@
  * Replaced event listeners with event delegation
  * Moved css to external css file and using responsive css
  * Replaced infinite loop on canvas element with setInterval
+ * Replaced canvas with svg
  * Replaced step button images with characters
  * Removed unused code
+ * Replaced saving DOM element in classes with querySelector
  * Added jsdoc, es-lint and typescript support
  */
 const WHITE='#ffffff', YELLOW='#ffff00' , GREEN='#009900' , BLUE='#006dbf', RED='#cc0000', ORANGE='#ff8000', CLEAR = '#000000';
@@ -38,15 +40,6 @@ const FlatCube = function(/**@type{string}*/containerId, /**@type{number}*/size)
 		this.container.appendChild(face.container);
 	}, this);
 
-	this.message = document.createElement('div');
-	this.message.style.position = 'absolute';
-	this.message.style.left = this.faceSize/8 + 'px';
-	this.message.style.top = this.faceSize*4.03 + 'px';
-	this.message.style.color = '#ff0000';
-	this.message.style.fontSize = this.faceSize/9 + 'px';
-	/**@ts-ignore */
-	this.container.appendChild(this.message);
-
 	this.picker = new FlatColorPicker(colors, this.faceSize/4);
 	
 	/**@ts-ignore */
@@ -54,14 +47,13 @@ const FlatCube = function(/**@type{string}*/containerId, /**@type{number}*/size)
 };
 
 
-FlatCube.prototype.update = function() {
-	if(this.message.firstChild){
-		this.message.removeChild(this.message.firstChild);
-	}
+FlatCube.prototype.update = function(function_show_message) {
+	const message = document.querySelector('#flatcube_message');
 	if(this.cube){
 		this.cube.updateColors();
 		if(!this.cube.isSolvable()){
-			this.message.appendChild(document.createTextNode(this.cube.solver.currentState));
+			if (typeof this.cube.solver.currentState=='string')
+				function_show_message(this.cube.solver.currentState);
 		}
 	}
 };
@@ -276,7 +268,8 @@ FlatSticker.prototype.setColor = function(color) {
 		}
 	};
 	color = getColorName(color);
-	this.container.className = `flatsticker ${color}`;
+	if (document.querySelector(`#${this.container.id}`))
+		document.querySelector(`#${this.container.id}`).className = `flatsticker ${color}`;
 };
 
 const FlatColorPicker = function(colors, size){
@@ -293,7 +286,6 @@ const FlatColorPicker = function(colors, size){
 	const lefts = [0,1,2,3,4,5];
 	for(let i=0; i<6; i++){
 		this.choices.push(new FlatSticker(i, 'flatcolorpicker', .25*size, .25*size + 1.29*lefts[i]*size, colors[i]));
-		//this.choices[this.choices.length-1].container.style.cursor = 'pointer';
 	}
 	this.choices.forEach(function(choice, i){
 		this.container.appendChild(choice.container);
@@ -304,9 +296,9 @@ FlatColorPicker.prototype.setSelection = function(index) {
 	this.selection = index;
 	this.choices.forEach(function(choice, i){
 		if(i == index)
-			choice.container.style.borderWidth = '3px';
+			document.querySelector(`#${choice.container.id}`).style.borderWidth = '3px';
 		else
-			choice.container.style.borderWidth = '1px';
+			document.querySelector(`#${choice.container.id}`).style.borderWidth = '1px';
 	}, this);
 };
 
@@ -354,41 +346,23 @@ const RubiksCubeControls = function(id, cube, width){
 	addButton('B2',counter90);
 
 	this.setProgress = function (data){
-		me.progress.style.width = data*100 + '%';
+		document.querySelector('#button_controls #solve_progress').style.width = data*100 + '%';
 		if(data == 1){
-			me.progress.style.width = '0%';
+			document.querySelector('#button_controls #solve_progress').style.width = '0%';
 		}
 	};
-
-	this.overlay = document.querySelector('#button_controls #overlay');
-
-	this.stepButtonInfo = document.querySelector('#button_controls #button_step_info');
-	this.stepButton = document.querySelector('#button_controls #button_step');
-	this.stepButtonMove = document.querySelector('#button_controls #button_step_move');
-
-	this.scrambleButton = document.querySelector('#button_controls #button_scramble');
-
-	this.progress = document.querySelector('#button_controls #solve_progress');
+	
 
 	if(width){
 		this.setWidth(width);
 	}
 };
 RubiksCubeControls.prototype.solve = function() {
-	this.progress.display = '';
+	document.querySelector('#button_controls #solve_progress').display = '';
 	const me = this;
 	this.cube.solve(function(data){
 		me.setProgress(data);
 	});
-	let counter = 0;
-	const timer = setInterval(function() {
-		counter ++;
-		if(me.cube.turnSpeed * 50 < counter * 10){
-			clearInterval(timer);
-		}
-		else
-			me.cube.render();
-	}, 10);
 	
 	this.setSolution('');
 };
@@ -396,10 +370,10 @@ RubiksCubeControls.prototype.setSolution = function(solution) {
 	if(solution.length > 0){
 		this.solution = solution.split(' ');
 		this.updateStepButton();
-		this.overlay.style.display = '';
+		document.querySelector('#button_controls #overlay').style.display = '';
 	} else {
 		this.solution = [];
-		this.overlay.style.display = 'none';
+		document.querySelector('#button_controls #overlay').style.display = 'none';
 	}
 };
 
@@ -407,14 +381,14 @@ RubiksCubeControls.prototype.updateStepButton = function() {
 	if(this.solution && this.solution.length > 0){
 		const move = this.solution[0];
 		const color = this.cube.getFaceColor(move.substr(0,1));
-		this.stepButtonInfo.style.backgroundColor = color;
+		document.querySelector('#button_controls #button_step_info').style.backgroundColor = color;
 		const bgImg = move.length == 1 ? clock90 : move[1] == '2' ? clock180 : counter90;
-		//this.stepButton.style.backgroundImage = bgImg;
-		this.stepButtonMove.innerText = bgImg;
-		if(this.stepButton.firstChild){
-			this.stepButton.removeChild(this.stepButton.firstChild);
+
+		document.querySelector('#button_controls #button_step_move').innerText = bgImg;
+		if(document.querySelector('#button_controls #button_step').firstChild){
+			document.querySelector('#button_controls #button_step').removeChild(document.querySelector('#button_controls #button_step').firstChild);
 		}
-		this.stepButton.appendChild(document.createTextNode(this.solution.length));
+		document.querySelector('#button_controls #button_step').appendChild(document.createTextNode(this.solution.length));
 	}
 };
 RubiksCubeControls.prototype.nextMove = function() {
@@ -423,7 +397,7 @@ RubiksCubeControls.prototype.nextMove = function() {
 	if(this.solution.length > 0){
 		this.updateStepButton();
 	} else {
-		this.overlay.style.display = 'none';
+		document.querySelector('#button_controls #overlay').style.display = 'none';
 	}
 	const me = this;
 	let counter = 0;
@@ -439,7 +413,7 @@ RubiksCubeControls.prototype.nextMove = function() {
 RubiksCubeControls.prototype.setWidth = function(width) {
 
 	if(!this.solution || this.solution.length == 0){
-		this.overlay.style.display = 'none';
+		document.querySelector('#button_controls #overlay').style.display = 'none';
 	}
 
 };
@@ -720,15 +694,7 @@ Face.prototype.distanceToCamera = function () {
 	const dz = (350 + 250) + (this.p0.z + this.p1.z + this.p2.z + this.p3.z ) * 0.25; 
 	this.distance = Math.sqrt(dx * dx + dy * dy + dz * dz); 
 }; 
-Face.prototype.draw = function () { 
-	const ctx = this.rubiks.ctx;
-	// ---- shape face ---- 
-	ctx.beginPath(); 
-	ctx.moveTo(this.p0.X, this.p0.Y); 
-	ctx.lineTo(this.p1.X, this.p1.Y); 
-	ctx.lineTo(this.p2.X, this.p2.Y); 
-	ctx.lineTo(this.p3.X, this.p3.Y); 
-	ctx.closePath(); 
+Face.prototype.draw = function (index) { 
 	// ---- light ---- 
 	this.normal.projection(); 
 	let light = ( 
@@ -739,12 +705,11 @@ Face.prototype.draw = function () {
 	const r = this.g = this.b = light;
 	light += (1-light)*.8;
 	const rgb = hexToRgb(this.color);
-	// ---- fill ---- 
-	ctx.fillStyle = 'rgba(' + 
-						Math.round(rgb.r*light) + ',' + 
-						Math.round(rgb.g*light) + ',' + 
-						Math.round(rgb.b*light) + ',' + rgb.a + ')'; 
-	ctx.fill(); 
+	const face = document.querySelector(`#cube_face_${index}`);
+	const style = `rgba(${Math.round(rgb.r*light)},${Math.round(rgb.g*light)},${Math.round(rgb.b*light)},${rgb.a})`;
+	face.style.fill = style;
+	face.setAttribute('d', `M${this.p0.X} ${this.p0.Y} L${this.p1.X} ${this.p1.Y} L${this.p2.X} ${this.p2.Y} L${this.p3.X} ${this.p3.Y} Z`);
+
 };
 Face.prototype.getRenderData = function(){
 	
@@ -1000,13 +965,9 @@ Cube.prototype.getRenderData = function(){
 
 	return result;
 };
-function RubiksCube(canvas, width){
-	this.canvas = document.getElementById(canvas);
+function RubiksCube(width){
 	this.turnSpeed = 250;
 	this.width = width;
-	this.canvas.width = width;
-	this.canvas.height = width;
-	this.ctx = this.canvas.getContext('2d');
 	this.blocks = [];
 	this.points = [];
 	this.faces = [];
@@ -1081,36 +1042,32 @@ RubiksCube.prototype.isSolvable = function(){
 };
 
 RubiksCube.prototype.scramble = function(num) {
-	const moves = 'u d f b l r'.split(' ');
-	const me = this;
-	if(this.rotating){
-		return;
+	if(this.isSolvable()){
+		const moves = 'u d f b l r'.split(' ');
+		const me = this;
+		if(this.rotating){
+			return;
+		}
+		num = num || 50;
+		// shift();
+		const turnSpeed = this.turnSpeed;
+		this.turnSpeed = 100;
+		for(let i=0; i<num; i++) {
+			const r = Math.random();
+			this.makeMove(moves[Math.floor(Math.random()*moves.length)] + (Math.random() > 1/2 ? '\'' : ''));
+		}
+		const checkAgain = function(){
+			setTimeout(function() {
+				if(me.queue.length == 0){
+					me.turnSpeed = turnSpeed;
+				} else {
+					checkAgain();
+				}
+				me.render();
+			}, 10);
+		};
+		checkAgain();
 	}
-	num = num || 50;
-	// shift();
-	const turnSpeed = this.turnSpeed;
-	this.turnSpeed = 100;
-	for(let i=0; i<num; i++) {
-		const r = Math.random();
-		this.makeMove(moves[Math.floor(Math.random()*moves.length)] + (Math.random() > 1/2 ? '\'' : ''));
-	}
-	const checkAgain = function(){
-		setTimeout(function() {
-			if(me.queue.length == 0){
-				me.turnSpeed = turnSpeed;
-			} else {
-				checkAgain();
-			}
-			me.render();
-		}, 10);
-	};
-	checkAgain();
-};
-
-RubiksCube.prototype.updateSize = function(size) {
-	this.width = size;
-	this.canvas.width = size;
-	this.canvas.height = size;
 };
 
 RubiksCube.prototype.updateColors = function() {
@@ -1151,10 +1108,8 @@ RubiksCube.prototype.render = function(){
 		return p1.distance - p0.distance; 
 	}); 
 
-	this.ctx.fillStyle = '#fafafa'; 
-	this.ctx.fillRect(0, 0, this.width, this.width);
 	for(let i=0; i<this.faces.length; i++){
-		this.faces[i].draw();
+		this.faces[i].draw(i);
 	}
 };
 
@@ -1681,6 +1636,7 @@ RubiksCubeSolver.prototype.getId = function(state) {
 // //----------------------------------------------------------------------
 
 RubiksCubeSolver.prototype.setState = function(cube) {
+	this.currentState = null;
 	cube = cube.split(' ');
 	if(cube.length != 20){
 		this.currentState = 'Not enough cubies provided';

@@ -1,6 +1,6 @@
 const template =`   <div id='app_main'>
                         <div id='app_main_page'>
-                            <canvas id='cube'>HTML5 CANVAS</canvas> 
+                            <div id='cube'></div> 
                             <div id='button_controls'>
                                 <div id='button_L' name='L' class='button_move cube_red'>↷</div>
                                 <div id='button_R' name='R' class='button_move cube_orange'>↷</div>
@@ -33,6 +33,7 @@ const template =`   <div id='app_main'>
                                 <div id='button_reset' class='common_dialogue_button'>Reset</div>
                             </div>
                             <div id='flat-cube'></div>
+                            <div id='flatcube_message'></div>
                         </div>
                     </div>`;
 /**
