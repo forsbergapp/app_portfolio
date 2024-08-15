@@ -1636,7 +1636,6 @@ RubiksCubeSolver.prototype.getId = function(state) {
 // //----------------------------------------------------------------------
 
 RubiksCubeSolver.prototype.setState = function(cube) {
-	this.currentState = null;
 	cube = cube.split(' ');
 	if(cube.length != 20){
 		this.currentState = 'Not enough cubies provided';

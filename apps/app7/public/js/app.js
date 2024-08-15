@@ -93,8 +93,6 @@ const app_event_click = (event=null) => {
                 case 'button_solve':{
                     /**@ts-ignore */
                     APP_GLOBAL.controls.solve();
-                    /**@ts-ignore */
-                    APP_GLOBAL.cube.flatCube.update(show_message_cube);
                     break;
                 }
                 case event.target.id.startsWith('button_solve_speed')?event_target_id:null:{
