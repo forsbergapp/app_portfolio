@@ -19,7 +19,17 @@ body {
 	text-align: center;
 }
 #cube{
-	display: block;
+	width: 360px;
+  	height: 360px;
+  	display: block;
+  	background-color: var(--common_app_color_white);
+}
+#cube svg{
+	width: 100%;
+	height: 100%;
+}
+.cube_face{
+	position: absolute;
 }
 #flat-cube{
 	position:absolute;
