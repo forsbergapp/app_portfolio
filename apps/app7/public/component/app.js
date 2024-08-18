@@ -32,8 +32,6 @@ const template =`   <div id='app_main'>
                                 <div id='button_scramble' class='common_dialogue_button'>Scramble</div>
                                 <div id='button_reset' class='common_dialogue_button'>Reset</div>
                             </div>
-                            <div id='flat-cube'></div>
-                            <div id='flatcube_message'></div>
                         </div>
                     </div>`;
 /**
