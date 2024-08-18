@@ -7,372 +7,37 @@
  * Replaced infinite loop on canvas element with setInterval
  * Replaced canvas with svg
  * Replaced step button images with characters
+ * Removed FlatCube, FlatFace FlatSticker, FlatColorPicker
  * Removed unused code
  * Replaced saving DOM element in classes with querySelector
  * Added jsdoc, es-lint and typescript support
  */
 const WHITE='#ffffff', YELLOW='#ffff00' , GREEN='#009900' , BLUE='#006dbf', RED='#cc0000', ORANGE='#ff8000', CLEAR = '#000000';
-const WHITE_class='cube_white', YELLOW_class='cube_yellow' , GREEN_class='cube_green' , BLUE_class='cube_blue', RED_class='cube_red', ORANGE_class='cube_orange';
 
-//flat.js
-const FlatCube = function(/**@type{string}*/containerId, /**@type{number}*/size){
-		
-	const colors = [GREEN_class,RED_class,WHITE_class,ORANGE_class,BLUE_class,YELLOW_class];
-
-	this.container = document.getElementById(containerId);
-
-	while(this.container?.firstChild){
-		this.container.removeChild(this.container.firstChild);
-	}
-	
-	this.faceSize = size/3 || 100;
-	
-	this.faces = [];
-
-	const tops = [0, 1, 1, 1, 2, 3];
-	const lefts = [1, 0, 1, 2, 1, 1];
-
-	for(let i=0; i<6; i++){
-		this.faces.push(new FlatFace(this, this.faceSize, tops[i]*this.faceSize, lefts[i]*this.faceSize, colors[i]));
-	}
-	this.faces.forEach(function(face){
-		/**@ts-ignore */
-		this.container.appendChild(face.container);
-	}, this);
-
-	this.picker = new FlatColorPicker(colors, this.faceSize/4);
-	
-	/**@ts-ignore */
-	this.container.appendChild(this.picker.container);
-};
-
-
-FlatCube.prototype.update = function(function_show_message) {
-	const message = document.querySelector('#flatcube_message');
-	if(this.cube){
-		this.cube.updateColors();
-		if(!this.cube.isSolvable()){
-			if (typeof this.cube.solver.currentState=='string')
-				function_show_message(this.cube.solver.currentState);
-		}
-	}
-};
-
-FlatCube.prototype.setColors = function(top, front, right, colors){
-	// var FRONT=4, TOP=1, BOTTOM=2, LEFT=0, RIGHT=5, BACK=3;
-
-	const stickers = this.getStickers(top, front, right);
-	colors.forEach(function(color, i){
-		color && stickers[i] && stickers[i].setColor(color);
-	});
-};
-
-FlatCube.prototype.getColors = function(top, front, right){
-	return this.getStickers(top,front,right).map(function(sticker){
-		return sticker && sticker.color;
-	});
-};
-
-FlatCube.prototype.getStickers = function(top, front, right){
-	const faceToIndex = {
-		'B':0,
-		'L':1,
-		'U':2,
-		'R':3,
-		'F':4,
-		'D':5,
-	};
-	const FRONT=4, TOP=1, BOTTOM=2, LEFT=0, RIGHT=5, BACK=3; 
-	
-	const me = this;
-	const colors = [null,null,null,null,null,null];
-	const getColor = function(face, sticker){
-		return me.faces[face].stickers[sticker];
-	};
-
-	const numFaces = Math.abs(top)+Math.abs(front)+Math.abs(right);
-	if(numFaces == 3){
-		if(top == 1 && right == 1 && front == 1){
-			colors[TOP] = getColor(2,8);
-			colors[FRONT] = getColor(4,2);
-			colors[RIGHT] = getColor(3,6);
-		}
-		else if(top == 1 && right == 1 && front == -1){
-			colors[TOP] = getColor(2,2);
-			colors[RIGHT] = getColor(3,0);
-			colors[BACK] = getColor(0,8);
-		}
-		else if(top == 1 && right == -1 && front == 1){
-			colors[TOP] = getColor(2,6);
-			colors[FRONT] = getColor(4,0);
-			colors[LEFT] = getColor(1,8);
-		}
-		else if(top == 1 && right == -1 && front == -1){
-			colors[TOP] = getColor(2,0);
-			colors[BACK] = getColor(0,6);
-			colors[LEFT] = getColor(1,2);
-		}
-		else if(top == -1 && right == 1 && front == 1){
-			colors[FRONT] = getColor(4,8);
-			colors[RIGHT] = getColor(3,8);
-			colors[BOTTOM] = getColor(5,2);
-		}
-		else if(top == -1 && right == 1 && front == -1){
-			colors[RIGHT] = getColor(3,2);
-			colors[BACK] = getColor(0,2);
-			colors[BOTTOM] = getColor(5,8);
-		}
-		else if(top == -1 && right == -1 && front == 1){
-			colors[FRONT] = getColor(4,6);
-			colors[LEFT] = getColor(1,6);
-			colors[BOTTOM] = getColor(5,0);
-		}
-		else if(top == -1 && right == -1 && front == -1){
-			colors[BACK] = getColor(0,0);
-			colors[LEFT] = getColor(1,0);
-			colors[BOTTOM] = getColor(5,6);
-		}
-	}
-	else if(numFaces == 2){
-		if(top == 1){
-			if(front == 1){
-				colors[FRONT] = getColor(4,1);
-				colors[TOP] = getColor(2,7);
-			}
-			else if(front == -1){
-				colors[BACK] = getColor(0,7);
-				colors[TOP] = getColor(2,1);
-			}
-			else if(right == 1){
-				colors[RIGHT] = getColor(3,3);
-				colors[TOP] = getColor(2,5);
-			}else if(right == -1){
-				colors[LEFT] = getColor(1,5);
-				colors[TOP] = getColor(2,3);
-			}
-		}
-		else if(top == -1){
-			if(front == 1){
-				colors[FRONT] = getColor(4,7);
-				colors[BOTTOM] = getColor(5,1);
-			}
-			else if(front == -1){
-				colors[BACK] = getColor(0,1);
-				colors[BOTTOM] = getColor(5,7);
-			}
-			else if(right == 1){
-				colors[RIGHT] = getColor(3,5);
-				colors[BOTTOM] = getColor(5,5);
-			}else if(right == -1){
-				colors[LEFT] = getColor(1,3);
-				colors[BOTTOM] = getColor(5,3);
-			}
-		}
-		else if(front == 1){
-			if(right==1){
-				colors[FRONT] = getColor(4,5);
-				colors[RIGHT] = getColor(3,7);
-			}else if(right==-1){
-				colors[FRONT] = getColor(4,3);
-				colors[LEFT] = getColor(1,7);
-			}
-		}
-		else if(front == -1){
-			if(right==1){
-				colors[BACK] = getColor(0,5); 
-				colors[RIGHT] = getColor(3,1);
-			}else if(right==-1){
-				colors[BACK] = getColor(0,3);
-				colors[LEFT] = getColor(1,1);
-			}
-		}
-	}
-	else if(numFaces == 1){
-		//center
-		if(top==1)
-			colors[TOP] = getColor(2,4);
-		else if(top== -1)
-			colors[BOTTOM] = getColor(5,4);
-		else if(front==1)
-			colors[FRONT] = getColor(4,4);
-		else if(front== -1)
-			colors[BACK] = getColor(0,4);
-		else if(right == 1)
-			colors[RIGHT] = getColor(3,4);
-		else if(right == -1)
-			colors[LEFT] = getColor(1,4);
-	}
-	return colors;
-};
-
-FlatCube.prototype.getColor = function() {
-	return this.picker.getColor();
-};
-
-const FlatFace = function(cube, size, top, left, color){
-	this.container = document.createElement('div');
-	// this.container.style.position = 'absolute';
-	// this.container.style.width = size + 'px';
-	// this.container.style.height = size + 'px';
-	this.container.id = `flatface_${color}`;
-	this.container.className = 'flatface';
-	this.container.style.top = top + 'px';
-	this.container.style.left = left + 'px';
-	this.cube = cube;
-	this.stickers = [];
-	const tops = [0, 0, 0, 1, 1, 1, 2, 2, 2];
-	const lefts = [0, 1, 2, 0, 1, 2, 0, 1, 2];
-	for(let i=0; i<9; i++){
-		const sticker = new FlatSticker(i, 'flatface', tops[i]*size/3, lefts[i]*size/3, color);
-		//const sticker = new FlatSticker(size/3, tops[i]*size/3, lefts[i]*size/3, color);
-		this.stickers.push(sticker);
-		this.container.appendChild(sticker.container);
-	}
-};
-
-const FlatSticker = function(index, name, top, left, color){
-//const FlatSticker = function(size, top, left, color){
-	this.container = document.createElement('div');
-	this.container.className = `flatsticker ${color}`;
-	this.container.id = `flatsticker_${name}_${color}_${index}`;
-
-	this.setColor(color);
-};
-
-FlatSticker.prototype.setColor = function(color) {
-	this.color = color;
-	//this.container.style.backgroundColor = color;
-	const getColorName = (color)=>{
-		switch (color){
-			case WHITE:{
-				return 'cube_white';
-			}
-			case BLUE:{
-				return 'cube_blue';
-			}
-			case GREEN:{
-				return 'cube_green';
-			}
-			case RED:{
-				return 'cube_red';
-			}
-			case ORANGE:{
-				return 'cube_orange';
-			}
-			case YELLOW:{
-				return 'cube_yellow';
-			}
-			default:{
-				return color;
-			}
-		}
-	};
-	color = getColorName(color);
-	if (document.querySelector(`#${this.container.id}`))
-		document.querySelector(`#${this.container.id}`).className = `flatsticker ${color}`;
-};
-
-const FlatColorPicker = function(colors, size){
-	const me = this;
-	size*=1.5;
-	this.container = document.createElement('div');
-	this.container.id = 'FlatColorPicker';
-	this.container.onclick = function(){me.setSelection(-1);};
-	this.size = size;
-	this.colors = colors;
-
-	this.choices = [];
-	const tops = [0,0,0,0,0,0];
-	const lefts = [0,1,2,3,4,5];
-	for(let i=0; i<6; i++){
-		this.choices.push(new FlatSticker(i, 'flatcolorpicker', .25*size, .25*size + 1.29*lefts[i]*size, colors[i]));
-	}
-	this.choices.forEach(function(choice, i){
-		this.container.appendChild(choice.container);
-	}, this);
-};
-
-FlatColorPicker.prototype.setSelection = function(index) {
-	this.selection = index;
-	this.choices.forEach(function(choice, i){
-		if(i == index)
-			document.querySelector(`#${choice.container.id}`).style.borderWidth = '3px';
-		else
-			document.querySelector(`#${choice.container.id}`).style.borderWidth = '1px';
-	}, this);
-};
-
-FlatColorPicker.prototype.getColor = function(){
-	return this.selection < 0 ? '' : this.colors[this.selection];
-};
 const clock90 =   '↷';
 const counter90 = '↶';
 const clock180 = '↷180°';
 
-const RubiksCubeControls = function(id, cube, width){
-	const me = this;
-
+/**
+ * @param {*} id
+ * @param {*} cube
+ */
+const RubiksCubeControls = function(id, cube){
 	this.cube = cube;
-
-	this.container = document.getElementById(id);
-
-	this.buttons = {};
-
-	this.cube.addUpdateCallback(function(){
-		for(const face in me.buttons){
-			const color = me.cube.getFaceColor(face.substr(0,1));
-		}
-	});
-
-	const addButton = function(name, background){
-		const color = me.cube.getFaceColor(name.substr(0,1));
-		const button = document.querySelector(`#button_controls #button_${name}`);
-
-		me.buttons[name] = button;
-
-	};
-
-	addButton('L',clock90);
-	addButton('R',clock90);
-	addButton('U',clock90);
-	addButton('D',clock90);
-	addButton('F',clock90);
-	addButton('B',clock90);
-	addButton('L2',counter90);
-	addButton('R2',counter90);
-	addButton('U2',counter90);
-	addButton('D2',counter90);
-	addButton('F2',counter90);
-	addButton('B2',counter90);
-
-	this.setProgress = function (data){
-		document.querySelector('#button_controls #solve_progress').style.width = data*100 + '%';
-		if(data == 1){
-			document.querySelector('#button_controls #solve_progress').style.width = '0%';
-		}
-	};
-	
-
-	if(width){
-		this.setWidth(width);
-	}
 };
-RubiksCubeControls.prototype.solve = function() {
-	document.querySelector('#button_controls #solve_progress').display = '';
-	const me = this;
-	this.cube.solve(function(data){
-		me.setProgress(data);
-	});
-	
-	this.setSolution('');
-};
+/**
+ * @param {*} solution
+ */
 RubiksCubeControls.prototype.setSolution = function(solution) {
 	if(solution.length > 0){
 		this.solution = solution.split(' ');
 		this.updateStepButton();
-		document.querySelector('#button_controls #overlay').style.display = '';
+		/**@ts-ignore */
+		document.querySelector('#button_controls #overlay').style.display = 'inline-block';
 	} else {
+		/**@ts-ignore */
 		this.solution = [];
+		/**@ts-ignore */
 		document.querySelector('#button_controls #overlay').style.display = 'none';
 	}
 };
@@ -381,13 +46,17 @@ RubiksCubeControls.prototype.updateStepButton = function() {
 	if(this.solution && this.solution.length > 0){
 		const move = this.solution[0];
 		const color = this.cube.getFaceColor(move.substr(0,1));
+		/**@ts-ignore */
 		document.querySelector('#button_controls #button_step_info').style.backgroundColor = color;
 		const bgImg = move.length == 1 ? clock90 : move[1] == '2' ? clock180 : counter90;
-
+		/**@ts-ignore */
 		document.querySelector('#button_controls #button_step_move').innerText = bgImg;
-		if(document.querySelector('#button_controls #button_step').firstChild){
+		
+		if(document.querySelector('#button_controls #button_step')?.firstChild){
+			/**@ts-ignore */
 			document.querySelector('#button_controls #button_step').removeChild(document.querySelector('#button_controls #button_step').firstChild);
 		}
+		/**@ts-ignore */
 		document.querySelector('#button_controls #button_step').appendChild(document.createTextNode(this.solution.length));
 	}
 };
@@ -396,52 +65,45 @@ RubiksCubeControls.prototype.nextMove = function() {
 	this.cube.makeMove(move);
 	if(this.solution.length > 0){
 		this.updateStepButton();
-	} else {
-		document.querySelector('#button_controls #overlay').style.display = 'none';
 	}
-	const me = this;
-	let counter = 0;
-	const timer_render = setInterval(() => {
-		counter ++;
-		if ((me.cube.turnSpeed*2) > counter *10)
-			me.cube.render();
-		else
-			clearInterval(timer_render);
-	}, 10);
-	
-};
-RubiksCubeControls.prototype.setWidth = function(width) {
-
-	if(!this.solution || this.solution.length == 0){
+	else {
+		/**@ts-ignore */
 		document.querySelector('#button_controls #overlay').style.display = 'none';
-	}
-
+	}	
 };
+
 //rubrik.js
 /**********************************
  * Utility Functions
  **********************************/
+/**
+ * @param {*} hex
+ */
 function hexToRgb(hex) {
 	if(hex.length == 7){
-	    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	    return result ? {
-	        r: parseInt(result[1], 16),
-	        g: parseInt(result[2], 16),
-	        b: parseInt(result[3], 16),
-	        a: 1
-	    } : null;
+		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16),
+			a: 1
+		} : null;
 	}
 	else if(hex.length == 9){
-	    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	    return result ? {
-	        r: parseInt(result[1], 16),
-	        g: parseInt(result[2], 16),
-	        b: parseInt(result[3], 16),
-	        a: parseInt(result[4], 16)/256
-	    } : null;
+		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16),
+			a: parseInt(result[4], 16)/256
+		} : null;
 	}
 }
-
+/**
+ * @param {*} x
+ * @param {*} y
+ * @param {*} z
+ */
 function makeRotationAffine(x,y,z){
 	return multiplyAffine(multiplyAffine(makeRotateAffineX(x),makeRotateAffineY(y)),makeRotateAffineZ(z));
 }
@@ -449,6 +111,8 @@ function makeRotationAffine(x,y,z){
 /**
  * Search an array for the first element that satisfies a given condition and
  * return that element.
+ * @param {*} arr
+ * @param {*} f
  */
 const arrayFind = function(arr, f) {
   const i = arrayFindIndex(arr, f);
@@ -459,8 +123,9 @@ const arrayFind = function(arr, f) {
 /**
  * Search an array for the first element that satisfies a given condition and
  * return its index.
+  * @param {*} arr
+ * @param {*} f
  */
-
 const arrayFindIndex = function(arr, f) {
   const l = arr.length;  // must be fixed during loop... see docs
   const arr2 = arr;
@@ -471,11 +136,6 @@ const arrayFindIndex = function(arr, f) {
   }
   return -1;
 };
-
-/**********************************
- * Variables
- **********************************/
-const xAutorotate = 0, yAutorotate = 0, zAutorotate = 0; 
 
 /************************************************************
  * MMMM    MMMM   OOOOOOOO   DDDDDDDD   EEEEEEEE  LL
@@ -489,15 +149,30 @@ const xAutorotate = 0, yAutorotate = 0, zAutorotate = 0;
  *  3D Translation Stuff
  *********************************/
 
-// This represents an affine 4x4 matrix, stored as a 3x4 matrix with the last
-// row implied as [0, 0, 0, 1].  This is to avoid generally unneeded work,
-// skipping part of the homogeneous coordinates calculations and the
-// homogeneous divide.  Unlike points, we use a constructor function instead
-// of object literals to ensure map sharing.  The matrix looks like:
-//  e0  e1  e2  e3
-//  e4  e5  e6  e7
-//  e8  e9  e10 e11
-//  0   0   0   1
+/** 
+ * This represents an affine 4x4 matrix, stored as a 3x4 matrix with the last
+ * row implied as [0, 0, 0, 1].  This is to avoid generally unneeded work,
+ * skipping part of the homogeneous coordinates calculations and the
+ * homogeneous divide.  Unlike points, we use a constructor function instead
+ * of object literals to ensure map sharing.  The matrix looks like:
+ *  e0  e1  e2  e3
+ *  e4  e5  e6  e7
+ *  e8  e9  e10 e11
+ *  0   0   0   1
+ * 
+ * @param {*} e0
+ * @param {*} e1
+ * @param {*} e2
+ * @param {*} e3
+ * @param {*} e4
+ * @param {*} e5
+ * @param {*} e6
+ * @param {*} e7
+ * @param {*} e8
+ * @param {*} e9
+ * @param {*} e10
+ * @param {*} e11
+ */
 function AffineMatrix(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11) {
 	this.e0  = e0;
 	this.e1  = e1;
@@ -513,8 +188,13 @@ function AffineMatrix(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11) {
 	this.e11 = e11;
 }
 
-// Matrix multiplication of AffineMatrix |a| x |b|.  This is unrolled,
-// and includes the calculations with the implied last row.
+/** 
+ * Matrix multiplication of AffineMatrix |a| x |b|.  This is unrolled,
+ * and includes the calculations with the implied last row.
+ *
+ * @param {*} a 
+ * @param {*} b
+ */
 function multiplyAffine(a, b) {
 	// Avoid repeated property lookups by accessing into the local frame.
 	const a0 = a.e0, a1 = a.e1, a2 = a.e2, a3 = a.e3, a4 = a.e4, a5 = a.e5;
@@ -536,6 +216,7 @@ function multiplyAffine(a, b) {
 		a8 * b3 + a9 * b7 + a10 * b11 + a11
 	);
 }
+
 function makeIdentityAffine() {
 	return new AffineMatrix(
 		1, 0, 0, 0,
@@ -543,7 +224,11 @@ function makeIdentityAffine() {
 		0, 0, 1, 0
 	);
 }
-// http://en.wikipedia.org/wiki/Rotation_matrix
+/**
+ * http://en.wikipedia.org/wiki/Rotation_matrix
+ * 
+ * @param {*} theta
+ */
 function makeRotateAffineX(theta) {
 	const s = Math.sin(theta);
 	const c = Math.cos(theta);
@@ -553,15 +238,23 @@ function makeRotateAffineX(theta) {
 		0, s,  c, 0
 	);
 }
+/**
+ * 
+ * @param {*} theta
+ */
 function makeRotateAffineY(theta) {
 	const s = Math.sin(theta);
 	const c = Math.cos(theta);
 	return new AffineMatrix(
-		 c, 0, s, 0,
-		 0, 1, 0, 0,
+		c, 0, s, 0,
+		0, 1, 0, 0,
 		-s, 0, c, 0
 	);
 }
+/**
+ * 
+ * @param {*} theta
+ */
 function makeRotateAffineZ(theta) {
 	const s = Math.sin(theta);
 	const c = Math.cos(theta);
@@ -572,20 +265,26 @@ function makeRotateAffineZ(theta) {
 	);
 }
 
-//  e0  e1  e2  e3
-//  e4  e5  e6  e7
-//  e8  e9  e10 e11
-//  0   0   0   1
+/**
+ *  e0  e1  e2  e3
+ *  e4  e5  e6  e7
+ *  e8  e9  e10 e11
+ *  0   0   0   1
 
-// a b c   x   (xa + yb + zc)
-// d e f * y = (xd + ye + zf) 
-// g h i   z   (xg + yh + zi)
+ *  a b c   x   (xa + yb + zc)
+ *  d e f * y = (xd + ye + zf) 
+ *  g h i   z   (xg + yh + zi)
 
-// j k l   (xa + yb + zc)
-// m n o * (xd + ye + zf)
-// p q r   (xg + yh + zi)
+ *  j k l   (xa + yb + zc)
+ *  m n o * (xd + ye + zf)
+ *  p q r   (xg + yh + zi)
+ * 
+ *  Transform the point |p| by the AffineMatrix |t|.
+ * 
+ * @param {*} t
+ * @param {*} p
+ */
 
-// Transform the point |p| by the AffineMatrix |t|.
 function transformPoint(t, p) {
 	return {
 		x: t.e0 * p.x + t.e1 * p.y + t.e2  * p.z + t.e3,
@@ -594,7 +293,10 @@ function transformPoint(t, p) {
 	};
 }
 
-// Average a list of points, returning a new "centroid" point.
+/**
+ *  Average a list of points, returning a new "centroid" point.
+ * @param {*} ps
+ */
 function averagePoints(ps) {
 	const avg = {x: 0, y: 0, z: 0};
 	for (var i = 0, il = ps.length; i < il; ++i) {
@@ -612,7 +314,9 @@ function averagePoints(ps) {
 
 	return avg;
 }
-
+/**
+ * @param {*} ps
+ */
 function averageUnRotatedPoints(ps) {
 	const avg = {x: 0, y: 0, z: 0};
 	for (var i = 0, il = ps.length; i < il; ++i) {
@@ -634,6 +338,12 @@ function averageUnRotatedPoints(ps) {
 /**********************************
  * 3D Point
  **********************************/
+/**
+ * @param {*} parent
+ * @param {*} xyz
+ * @param {*} project
+ * @param {*} rubiks
+ */
  const Point = function (parent, xyz, project, rubiks) { 
 	this.project = project; 
 	this.rubiks = rubiks;
@@ -669,8 +379,14 @@ Point.prototype.projection = function () {
 /**********************************
  * Face Object
  **********************************/
+/**
+ * @param {*} cube
+ * @param {*} index
+ * @param {*} normalVector
+ * @param {*} color
+ * @param {*} rubiks
+ */
 const Face = function (cube, index, normalVector, color, rubiks) { 
-	//CHANGED: added g and b variables
 	/*eslint-disable */
 	var g, b;
 	// ---- Rubiks Cube ----
@@ -694,6 +410,9 @@ Face.prototype.distanceToCamera = function () {
 	const dz = (350 + 250) + (this.p0.z + this.p1.z + this.p2.z + this.p3.z ) * 0.25; 
 	this.distance = Math.sqrt(dx * dx + dy * dy + dz * dz); 
 }; 
+/**
+ * @param {*} index
+ */
 Face.prototype.draw = function (index) { 
 	// ---- light ---- 
 	this.normal.projection(); 
@@ -706,8 +425,11 @@ Face.prototype.draw = function (index) {
 	light += (1-light)*.8;
 	const rgb = hexToRgb(this.color);
 	const face = document.querySelector(`#cube_face_${index}`);
+	/**@ts-ignore */
 	const style = `rgba(${Math.round(rgb.r*light)},${Math.round(rgb.g*light)},${Math.round(rgb.b*light)},${rgb.a})`;
+	/**@ts-ignore */
 	face.style.fill = style;
+	/**@ts-ignore */
 	face.setAttribute('d', `M${this.p0.X} ${this.p0.Y} L${this.p1.X} ${this.p1.Y} L${this.p2.X} ${this.p2.Y} L${this.p3.X} ${this.p3.Y} Z`);
 
 };
@@ -722,8 +444,11 @@ Face.prototype.getRenderData = function(){
 	//CHANGE: adds this. before g and b variables
 	let r = this.g = this.b;
 	const rgb = hexToRgb(this.color);
+	/**@ts-ignore */
 	r = Math.round(rgb.r*light).toString(16);
+	/**@ts-ignore */
 	this.g = Math.round(rgb.g*light).toString(16);
+	/**@ts-ignore */
 	this.b = Math.round(rgb.b*light).toString(16);
 	r = r.length == 1 ? '0' + r : r;
 	this.g = this.g.length == 1 ? '0' + this.g : this.g;
@@ -759,6 +484,14 @@ Face.prototype.getRenderData = function(){
 /**********************************
  * Cube Object
  **********************************/
+/**
+ * @param {*} x
+ * @param {*} y
+ * @param {*} z
+ * @param {*} w
+ * @param {*} rubiks
+ * @param {*} colors
+ */
 const Cube = function(x, y, z, w, rubiks, colors) { 
 	this.rubiks = rubiks;
 	// ---- create points ---- 
@@ -812,29 +545,19 @@ const Cube = function(x, y, z, w, rubiks, colors) {
 };
 
 RubiksCube.prototype.update = function(){
-	if(this.flatCube && !this.rotating){
-		this.blocks.forEach(function(block){
-			const p = block.getPosition();
-			const colors = block.getColors();
-			this.flatCube.setColors(
-				p.y < 0 ? 1 : p.y > 0 ? -1 : 0, 
-				p.x < 0 ? -1 : p.x > 0 ? 1 : 0, 
-				p.z < 0 ? -1 : p.z > 0 ? 1 : 0,
-				colors
-			);
-		}, this);
-	}
 	if(!this.rotating){
 		this.updateCallbacks.forEach(function(f){f();});
 	}
 };
 
-RubiksCube.prototype.addUpdateCallback = function(f){
-	this.updateCallbacks.push(f);
-};
-
+/**
+ * @param {*} colors
+ */
 Cube.prototype.updateColors = function(colors){
 	this.faces.forEach(function(face){
+		/**
+		 * @param{*} color
+		 */
 		const getColor = (color) => {
 			switch (color){
 				case 'cube_white':{
@@ -953,6 +676,7 @@ Cube.prototype.getRenderData = function(){
 		faces.push(this.faces[k]);
 	}
 	faces.sort(function (p0, p1) { 
+		/**@ts-ignore */
 		return p1.distance - p0.distance; 
 	}); 
 	// ---- painting faces ---- 
@@ -965,13 +689,18 @@ Cube.prototype.getRenderData = function(){
 
 	return result;
 };
+/**
+ * @param {*} width
+ */
 function RubiksCube(width){
 	this.turnSpeed = 250;
 	this.width = width;
 	this.blocks = [];
 	this.points = [];
 	this.faces = [];
+	/**@ts-ignore */
 	this.queue = [];
+	/**@ts-ignore */
 	this.moveHistory = [];
 	this.rotating = false;
 	this.rotating2 = false;
@@ -982,6 +711,7 @@ function RubiksCube(width){
 	this.cx = 0.6;
 	this.cy = 0.6;
 	this.cz = 0;
+	/**@ts-ignore */
 	this.updateCallbacks = [];
 	this.cameraAffine = makeRotationAffine(this.cameraX,this.cameraY,this.cameraZ);
 	this.customAffine = makeIdentityAffine();
@@ -1009,38 +739,16 @@ function RubiksCube(width){
 			}
 		}
 	}
-	this.solver = new RubiksCubeSolver();
 
 }
 
-RubiksCube.prototype.solve = function(progress) {
-	const me = this;
-	if(this.isSolvable()){
-		// this.makeMoves(this.solver.solve(this.getState(), progress));
-		this.solver.solveAsync(this.getState(), function(solution){
-			me.makeMoves(solution);
-		}, progress);
-	}
-};
-
-RubiksCube.prototype.getSolutionAsync = function(callback, progress) {
-	if(this.isSolvable()){
-		this.solver.solveAsync(this.getState(), callback, progress);
-	}
-	callback('');
-};
-
-RubiksCube.prototype.getSolution = function() {
-	if(this.isSolvable()){
-		return this.solver.solve(this.getState());
-	}
-	return '';
-};
-
 RubiksCube.prototype.isSolvable = function(){
-	return !this.rotating && this.solver.setState(this.getState());
+	return !this.rotating;
 };
 
+/**
+ * @param {*} num
+ */
 RubiksCube.prototype.scramble = function(num) {
 	if(this.isSolvable()){
 		const moves = 'u d f b l r'.split(' ');
@@ -1063,7 +771,6 @@ RubiksCube.prototype.scramble = function(num) {
 				} else {
 					checkAgain();
 				}
-				me.render();
 			}, 10);
 		};
 		checkAgain();
@@ -1076,6 +783,7 @@ RubiksCube.prototype.updateColors = function() {
 	}
 	this.blocks.forEach(function(block){
 		const p = block.getPosition();
+		/**@ts-ignore */
 		const colors = this.flatCube.getColors( 
 			p.y < 0 ? 1 : p.y > 0 ? -1 : 0, 
 			p.x < 0 ? -1 : p.x > 0 ? 1 : 0, 
@@ -1105,6 +813,7 @@ RubiksCube.prototype.render = function(){
 	});
 
 	this.faces.sort(function (p0, p1) { 
+		/**@ts-ignore */
 		return p1.distance - p0.distance; 
 	}); 
 
@@ -1121,12 +830,16 @@ RubiksCube.prototype.opposites = {
 	'R':'L',
 	'L':'R'
 };
-
+/**
+ * @param {*} face
+ * @param {*} d
+ */
 RubiksCube.prototype.rotateFace = function(face, d){
 	if(this.rotating)
 		return;
 	this.rotating = face;
 	const blocks = this.getBlocks(face);
+	/**@ts-ignore */
 	const rotations = [];
 	blocks.forEach(function(block){
 		rotations.push({
@@ -1145,16 +858,22 @@ RubiksCube.prototype.rotateFace = function(face, d){
 	const rotate = function(){
 		const p = Math.min((Date.now()-start)/duration, 1);
 		blocks.forEach(function(block, i){
-			if (face == 'F' || face == 'B' || face == 'Z')
+			if (face == 'F' || face == 'B' || face == 'Z'){
+				/**@ts-ignore */
 				block.rotateX = rotations[i].rotateX + d*(Math.PI/2)*p;
-			if(face == 'U' || face == 'D' || face == 'Y')
+			}	
+			if(face == 'U' || face == 'D' || face == 'Y'){
+				/**@ts-ignore */
 				block.rotateY = rotations[i].rotateY + d*(Math.PI/2)*p;
-			if (face == 'L' || face == 'R' || face == 'X')
+			}
+			if (face == 'L' || face == 'R' || face == 'X'){
+				/**@ts-ignore */
 				block.rotateZ = rotations[i].rotateZ + d*(Math.PI/2)*p;
+			}
+				
 		});
 		if(p >= 1){
 			clearInterval(timer_render);
-			timer_render = null;
 			for(let i=0; i<blocks.length; i++){
 				blocks[i].resetRotation();
 			}
@@ -1163,10 +882,13 @@ RubiksCube.prototype.rotateFace = function(face, d){
 			me.makeNextMove();
 		}
 	};
-	let timer_render = setInterval(() => {rotate();}, 10);
+	let timer_render = setInterval(() => {rotate();me.render()}, 10);
 };
-
+/**
+ * @param {*} face
+ */
 RubiksCube.prototype.getBlocks = function(face) {
+	/**@ts-ignore */
 	let result = [];
 	if(face == 'B'){
 		this.blocks.forEach(function(block){
@@ -1206,15 +928,21 @@ RubiksCube.prototype.getBlocks = function(face) {
 	} else if(face == 'X' || face == 'Y' || face == 'Z'){
 		result = this.blocks;
 	}
+	/**@ts-ignore */
 	return result;
 };
+/**
+ * @param {*} moves
+ */
 RubiksCube.prototype.makeMoves = function(moves) {
 	moves = moves.split(/\s/);
 	for(let i=0; i<moves.length; i++){
 		this.makeMove(moves[i]);
 	}
 };
-
+/**
+ * @param{*} move
+ */
 RubiksCube.prototype.makeMove = function(move) {
 	if(this.rotating){
 		this.queue.push(move);
@@ -1226,16 +954,6 @@ RubiksCube.prototype.makeMove = function(move) {
 		spin++;
 		move = move.substr(0,move.length-1);
 	}
-	let counter = 0;
-	const me = this;
-	const timer = setInterval(function() {
-		counter ++;
-		if((me.turnSpeed + 100) < counter * 10){
-			clearInterval(timer);
-		}
-		else
-			me.render();
-	}, 10);
 	switch(move.toLowerCase()){
 		case 'f':
 			this.rotateFace('F', -spin);
@@ -1299,9 +1017,13 @@ RubiksCube.prototype.makeNextMove = function() {
 		this.makeMove(this.queue.shift());
 	}
 };
-
+/**
+ * @param {*}face
+ */
 RubiksCube.prototype.getFaceColor = function(face){
-	
+	/**
+	 * @param {*} c
+	 */
 	function getOutside(c){
 		let index = -1;
 		let max = 0;
@@ -1326,100 +1048,104 @@ RubiksCube.prototype.getFaceColor = function(face){
 
 	switch(face){
 		case 'D':
-			return getOutside(arrayFind(this.blocks, function(block){
+			return getOutside(arrayFind(this.blocks, function(/**@type{*}*/block){
 				const p = block.getPosition();
 				return (p.x == 0 && p.y > 0 && p.z == 0);
 			}));
 		case 'U':
-			return getOutside(arrayFind(this.blocks, function(block){
+			return getOutside(arrayFind(this.blocks, function(/**@type{*}*/block){
 				const p = block.getPosition();
 				return (p.x == 0 && p.y < 0 && p.z == 0);
 			}));
 		case 'L':
-			return getOutside(arrayFind(this.blocks, function(block){
+			return getOutside(arrayFind(this.blocks, function(/**@type{*}*/block){
 				const p = block.getPosition();
 				return (p.x == 0 && p.y == 0 && p.z < 0);
 			}));
 		case 'R':
-			return getOutside(arrayFind(this.blocks, function(block){
+			return getOutside(arrayFind(this.blocks, function(/**@type{*}*/block){
 				const p = block.getPosition();
 				return (p.x == 0 && p.y == 0 && p.z > 0);
 			}));
 		case 'F':
-			return getOutside(arrayFind(this.blocks, function(block){
+			return getOutside(arrayFind(this.blocks, function(/**@type{*}*/block){
 				const p = block.getPosition();
 				return (p.x > 0 && p.y == 0 && p.z == 0);
 			}));
 		case 'B':
-			return getOutside(arrayFind(this.blocks, function(block){
+			return getOutside(arrayFind(this.blocks, function(/**@type{*}*/block){
 				const p = block.getPosition();
 				return (p.x < 0 && p.y == 0 && p.z == 0);
 			}));
 	}
 };
-// var faceNames = ['L', 'U', 'D', 'B', 'F', 'R'];
+
+/**
+ *  // var faceNames = ['L', 'U', 'D', 'B', 'F', 'R'];
+ * @param {*} position
+ */
 RubiksCube.prototype.getCubie = function(position){
 	const cubes = this.getBlocks(position[0]);
 	switch(position){
 		//Edge piece
 		case 'UF':
 		case 'DF':
-			return arrayFind(cubes, function(c){
+			return arrayFind(cubes, function(/**@type{*}*/c){
 				const p = c.getPosition();
 				return p.z == 0 && p.x > 0;
 			});
 		case 'UB':
 		case 'DB':
-			return arrayFind(cubes, function(c){
+			return arrayFind(cubes, function(/**@type{*}*/c){
 				const p = c.getPosition();
 				return p.z == 0 && p.x < 0;
 			});
 		case 'UR':
 		case 'DR':
-			return arrayFind(cubes, function(c){
+			return arrayFind(cubes, function(/**@type{*}*/c){
 				const p = c.getPosition();
 				return p.z > 0 && p.x == 0;
 			});
 		case 'UL':
 		case 'DL':
-			return arrayFind(cubes, function(c){
+			return arrayFind(cubes, function(/**@type{*}*/c){
 				const p = c.getPosition();
 				return p.z < 0 && p.x == 0;
 			});
 		case 'FR':
 		case 'BR':
-			return arrayFind(cubes, function(c){
+			return arrayFind(cubes, function(/**@type{*}*/c){
 				const p = c.getPosition();
 				return p.z > 0 && p.y == 0;
 			});
 		case 'FL':
 		case 'BL':
-			return arrayFind(cubes, function(c){
+			return arrayFind(cubes, function(/**@type{*}*/c){
 				const p = c.getPosition();
 				return p.z < 0 && p.y == 0;
 			});
 		//Corner Cubie
 		case 'UFR':
 		case 'DRF':
-			return arrayFind(cubes, function(c){
+			return arrayFind(cubes, function(/**@type{*}*/c){
 					const p = c.getPosition();
 					return p.z > 0 && p.x > 0;
 				});
 		case 'URB':
 		case 'DBR':
-			return arrayFind(cubes, function(c){
+			return arrayFind(cubes, function(/**@type{*}*/c){
 					const p = c.getPosition();
 					return p.z > 0 && p.x < 0;
 				});
 		case 'UBL':
 		case 'DLB':
-			return arrayFind(cubes, function(c){
+			return arrayFind(cubes, function(/**@type{*}*/c){
 					const p = c.getPosition();
 					return p.z < 0 && p.x < 0;
 				});
 		case 'ULF':
 		case 'DFL':
-			return arrayFind(cubes, function(c){
+			return arrayFind(cubes, function(/**@type{*}*/c){
 					const p = c.getPosition();
 					return p.z < 0 && p.x > 0;
 				});
@@ -1441,14 +1167,20 @@ RubiksCube.prototype.getState = function(){
 		'R':'z',
 		'L':'z'
 	};
+	/**
+	 * @param {*} c
+	 * @param {*} direction
+	 */
 	const getFaceColor = function(c, direction){
 		//direction is a string 'x', 'y', or 'z'
 		let result=null;
 		let max = 0;
-		c.faces.forEach(function(f){
+		c.faces.forEach(function(/**@type{*}*/f){
 			//CHANGE: add const
 			const p = averageUnRotatedPoints([f.p0,f.p1, f.p2, f.p3]);
+			/**@ts-ignore */
 			if(Math.abs(p[direction]) > max){
+				/**@ts-ignore */
 				max = Math.abs(p[direction]);
 				result = f.color;
 			}
@@ -1456,6 +1188,7 @@ RubiksCube.prototype.getState = function(){
 		return result;
 	};
 	this.faceNames.forEach(function(face){
+		/**@ts-ignore */
 		colorToFace[me.getFaceColor(face)] = face;
 	});
 	
@@ -1463,7 +1196,9 @@ RubiksCube.prototype.getState = function(){
 		const c = me.getCubie(cubicle);
 		let cubieName = '';
 		cubicle.split('').forEach(function(face){
+			/**@ts-ignore */
 			const color = getFaceColor(c, faceToDirection[face]);
+			/**@ts-ignore */
 			cubieName += colorToFace[color];
 		});
 		result += cubieName + ' ';
@@ -1471,411 +1206,5 @@ RubiksCube.prototype.getState = function(){
 	
 	return result.trim();
 };
-//solver.js
-// SSSSSSSS   OOOOOO   LL      VV    VV  EEEEEEE  RRRRRR
-// SS        OO    OO  LL      VV    VV  EE       RR   RR
-// SSSSSSSS  00    00  LL       VV  VV   EEEEEEE  RRRRR
-//       SS  00    00  LL        VVVV    EE       RR  RR
-// SSSSSSSS   000000   LLLLLL     VV     EEEEEEE  RR   RR
 
-/*
-  This is an implementation of Thistlewaite's algorithm in javascript:
-  (http://en.wikipedia.org/wiki/Optimal_solutions_for_Rubik's_Cube#Thistlethwaite.27s_algorithm)
-
-  The Rubik's cube has 20 cubicles, the cubicles are fixed positions on the cube where cubies reside
-  Each cubie is named after the cubicle it belongs in. A cubicle is named by the faces it has.
-  The faces are labeled as: {U: up, D: down, R: right, L: left, F: front, B: back}
-
-  To solve a cube you pass it a string of the current state of the cube that looks like:
-  UF UR UB UL DF DR DB DL FR FL BR BL UFR URB UBL ULF DRF DFL DLB DBR (<-- is an already solved cube)
-
-  The first 12 pairs correspond to the cubicle of the Rubik's cube
-  For a scrambled cube you put the cubie that is in the cubicle in the order presented above.
-  An example of a scramble cube is:
-  BR DF UR LB BD FU FL DL RD FR LU BU UBL FDR FRU BUR ULF LDF RDB DLB
-
- */
-
- /*The state of the Rubik's cube is the position of the cubies at each of the 20 non-center locations
-  * We number the cubies in the following order:
-  * 
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |  11 |  B  |  10 |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *  =======================================================
-  *  |     |     |     |     |     |     |     |     |     |
-  *  |     |     |     |  14 |  2  |  13 |     |     |     |
-  *  |     |     |     |     |     |     |     |     |     |
-  *  -------------------------------------------------------
-  *  |     |     |     |     |     |     |     |     |     |
-  *  |     |  L  |     |  3  |  U  |  1  |     |  R  |     |
-  *  |     |     |     |     |     |     |     |     |     |
-  *  -------------------------------------------------------
-  *  |     |     |     |     |     |     |     |     |     |
-  *  |     |     |     |  15 |  0  |  12 |     |     |     |
-  *  |     |     |     |     |     |     |     |     |     |
-  *  =======================================================
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |  9  |  F  |  8  |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    ===================
-  *                    |     |     |     |
-  *                    |  17 |  4  |  16 |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |  7  |  D  |  5  |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |  18 |  6  |  19 |
-  *                    |     |     |     |
-  *                    -------------------
-*/
-
-// /**********************************************************************
-//  * 
-//  * A cube 'state' is a Array<int> with 40 entries, the first 20
-//  * are a permutation of {0,...,19} and describe which cubie is at
-//  * a certain position (regarding the input ordering). The first
-//  * twelve are for edges, the last eight for corners.
-//  * 
-//  * The last 20 entries are for the orientations, each describing
-//  * how often the cubie at a certain position has been turned
-//  * counterclockwise away from the correct orientation. Again the
-//  * first twelve are edges, the last eight are corners. The values
-//  * are 0 or 1 for edges and 0, 1 or 2 for corners.
-//  * 
-//  **********************************************************************/
-//CHANGE: added const
-const RubiksCubeSolver = function(){
-	this.phase = 0;
-	this.currentState = null;
-	this.goalState = null;
-};
-
-RubiksCubeSolver.prototype.applyMove = function(move, inState) {
-	const affectedCubies = [
-		[0,  1,  2,  3,  0,  1,  2,  3],   // U
-		[4,  7,  6,  5,  4,  5,  6,  7],   // D
-		[0,  9,  4,  8,  0,  3,  5,  4],   // F
-		[2, 10,  6, 11,  2,  1,  7,  6],   // B
-		[3, 11,  7,  9,  3,  2,  6,  5],   // L
-		[1,  8,  5, 10,  1,  0,  4,  7],   // R
-	];
-	let turns = move % 3 + 1;
-	const face = Math.floor(move / 3);
-	const state = inState.slice();
-	while(turns--> 0){
-		const oldState = state.slice();
-		for(let i=0; i<8; i++ ){
-			const isCorner = i > 3;
-			const target = affectedCubies[face][i] + isCorner*12;
-			const killer = affectedCubies[face][(i&3)==3 ? i-3 : i+1] + isCorner*12;
-			const orientationDelta = (i<4) ? (face>1 && face<4) : (face<2) ? 0 : 2 - (i&1);
-			state[target] = oldState[killer];
-			state[target+20] = oldState[killer+20] + orientationDelta;
-			if(turns == 0)
-				 state[target+20] %= 2 + isCorner;
-		}
-	}
-	return state;
-};
-
-RubiksCubeSolver.prototype.inverse = function(move) {
-	return move + 2 - 2 * (move % 3);
-};
-
-RubiksCubeSolver.prototype.getId = function(state) {
-	//--- Phase 1: Edge orientations.
-	if(this.phase < 2)
-		return JSON.stringify(state.slice(20,32));
-	
-	//-- Phase 2: Corner orientations, E slice edges.
-	if(this.phase < 3){
-		var result = state.slice(31,40);
-		for(var e=0; e<12; e++)
-			result[0] |= (Math.floor(state[e] / 8)) << e;
-		return JSON.stringify(result);
-	}
-	
-	//--- Phase 3: Edge slices M and S, corner tetrads, overall parity.
-	if(this.phase < 4){
-		var result = [0,0,0];
-		for(var e=0; e<12; e++)
-			result[0] |= ((state[e] > 7) ? 2 : (state[e] & 1)) << (2*e);
-		for(let c=0; c<8; c++)
-			result[1] |= ((state[c+12]-12) & 5) << (3*c);
-		for(let i=12; i<20; i++)
-			for(let j=i+1; j<20; j++)
-				result[2] ^= state[i] > state[j];
-		return JSON.stringify(result);
-	}
-	
-	//--- Phase 4: The rest.
-	return JSON.stringify(state);
-};
-
-// //----------------------------------------------------------------------
-
-RubiksCubeSolver.prototype.setState = function(cube) {
-	cube = cube.split(' ');
-	if(cube.length != 20){
-		this.currentState = 'Not enough cubies provided';
-		return false;
-	}
-	//--- Prepare current (start) and goal state.
-	const goal = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
-	this.currentState = new Array(40);
-	this.goalState = new Array(40);
-	for(var i=0; i<40; i++){
-		this.currentState[i] = 0;
-		this.goalState[i] = 0;
-	}
-	for(var i=0; i<20; i++){
-		
-		//--- Goal state.
-		this.goalState[i] = i;
-		
-		//--- Current (start) state.
-		let cubie = cube[i];
-		while((this.currentState[i] = goal.indexOf(cubie)) == -1){
-			cubie = cubie.substr(1) + cubie[0];
-			this.currentState[i+20]++;
-			if(this.currentState[i+20] > 2){
-				this.currentState = 'Cannot solve: Invalid painting of cube.';
-				return false;
-			}
-		}
-		goal[goal.indexOf(cubie)] = '';
-	}
-	return this.verifyState();
-};
-
-RubiksCubeSolver.prototype.verifyState = function() {
-	if(!Array.isArray(this.currentState))
-		return false;
-	//orientation of edges
-	let sum = 0;
-	this.currentState.slice(20,32).forEach(function(edge){
-		sum+=edge;
-	});
-	if(sum % 2 != 0){
-		//edge orientation
-		this.currentState = 'Cannot solve: Edges not oriented correctly.';
-		return false;
-	}
-	sum = 0;
-	//orientation of corners
-	this.currentState.slice(32,40).forEach(function(edge){
-		sum+=edge;
-	});
-	if(sum % 3 != 0){
-		//corner orientation
-		this.currentState = 'Cannot solve: Corners not oriented correctly';
-		return false;
-	}
-
-    const getParity = function(a){
-    	let count = 0;
-		for(let i = 0; i<a.length; i++){
-			for(let j=0; j<i; j++){
-				if(a[j] > a[i]){
-					count++;
-					const temp = a[i];
-					a[i] = a[j];
-					a[j] = temp;
-				}
-			}
-		}
-		return count;
-    };
-	//check for parity
-	sum = 0;
-	       //edge parity
-	sum += getParity(this.currentState.slice(0,12));
-	       //corner parity
-	sum += getParity(this.currentState.slice(12,20));
-	if (sum % 2 != 0){
-		this.currentState = 'Cannot solve: Parity error only one set of corners or edges swapped.' ;
-		return false;
-	}
-
-	return true;
-};
-
-
-RubiksCubeSolver.prototype.solve = function(cube) {
-	this.solution = '';
-	this.phase = 0;  
-	
-	if(cube){
-		if(!this.setState(cube))
-			return false;
-	}
-	else if(!this.verifyState())
-		return false;
-
-	while(++this.phase < 5){
-		this.startPhase();
-	}
-	this.prepareSolution();
-	return this.solution;
-};
-
-RubiksCubeSolver.prototype.solveAsync = function(cube, callback, progress) {
-	this.solution = '';
-	this.phase = 1;
-	if(cube){
-		if(!this.setState(cube)){
-			callback(false);
-			return;
-		}
-	} else if(!this.verifyState()){
-		callback(false);
-		return;
-	}
-
-	const nextPhase = function(){
-		if(this.phase < 5){
-			this.startPhase();
-			progress && progress(this.phase/5);
-			this.phase++;
-			setTimeout(nextPhase.bind(this), 0);
-		} else {
-			progress && progress(1);
-			this.prepareSolution();
-			callback(this.solution);
-		}
-	};
-
-	nextPhase.bind(this)();
-};
-
-RubiksCubeSolver.prototype.startPhase = function() {
-	//--- Compute ids for current and goal state, skip phase if equal.
-	const currentId = this.getId(this.currentState), goalId = this.getId(this.goalState);
-	if(currentId == goalId)
-		return;
-	//--- Initialize the BFS queue.
-	const q = [];
-	q.push(this.currentState);
-	q.push(this.goalState);
-	
-	//--- Initialize the BFS tables.
-	const predecessor = {};
-	const direction = {}, lastMove = {};
-	direction[currentId] = 1;
-	direction[goalId] = 2;
-	
-	//--- Begin BFS search
-	while(1){
-		//--- Get state from queue, compute its ID and get its direction.
-		const oldState = q.shift();
-		var oldId = this.getId(oldState);
-		const oldDir = direction[oldId];
-		
-		//--- Apply all applicable moves to it and handle the new state.
-		const applicableMoves = [0, 262143, 259263, 74943, 74898];
-		for(let move=0; move<18; move++){
-			if(applicableMoves[this.phase] & (1 << move)){
-				
-				//--- Apply the move.
-				const newState = this.applyMove(move, oldState);
-				var newId = this.getId(newState);
-				const newDir = direction[newId];
-				
-				//--- Have we seen this state (id) from the other direction already?
-				//--- I.e. have we found a connection?
-				if( newDir  &&  newDir != oldDir ){
-					//--- Make oldId represent the forwards and newId the backwards search state.
-					if(oldDir > 1){
-						const temp = newId;
-						var newId = oldId;
-						var oldId = temp;
-						move = this.inverse(move);
-					}
-					
-					//--- Reconstruct the connecting algorithm.
-					const algorithm = [move];
-					while(oldId != currentId){ 
-						algorithm.unshift(lastMove[oldId]);
-						oldId = predecessor[ oldId ];
-					}
-					while(newId != goalId){
-						algorithm.push(this.inverse(lastMove[newId]));
-						newId = predecessor[newId];
-					}
-					
-					//--- append to the solution and apply the algorithm.
-					for(let i=0; i<algorithm.length; i++ ){
-						for(let j=0; j<algorithm[i]%3 + 1; j++)
-							this.solution += 'UDFBLR'[Math.floor(algorithm[i]/3)];
-						this.currentState = this.applyMove(algorithm[i], this.currentState);
-					}
-					
-					//--- Jump to the next this.phase.
-					return;
-				}
-				
-				//--- If we've never seen this state (id) before, visit it.
-				if(!newDir){
-					q.push(newState);
-					direction[newId] = direction[oldId];
-					lastMove[newId] = move;
-					predecessor[newId] = oldId;
-				}
-			}
-		}
-	}
-};
-
-RubiksCubeSolver.prototype.prepareSolution = function(){
-	let moves = this.solution.match(/(\w)\1*/g);
-	if(!moves){
-		this.solution = '';
-		return;
-	}
-	const opposites = {'F':'B','B':'F','T':'D','D':'T','R':'L','L':'R'};
-	let result = '';
-	for(let i=0; i<moves.length-2; i++){
-		if(moves[i][0] == moves[i+2][0] && opposites[moves[i+1][0]] == moves[i][0]){
-			const temp = moves[i+2];
-			moves[i+2] = moves[i+1];
-			moves[i+1] = temp;
-			i = 0;
-		}
-	}
-	moves = moves.join('').match(/(\w)\1*/g);
-	moves.forEach(function(move){
-		if(move.length % 4 == 1)
-			result += move[0];
-		else if(move.length % 4 == 2)
-			result += move[0] + '2';
-		else if(move.length % 4 == 3)
-			result += move[0] + '\'';
-		else if(move.length % 4 == 0)
-			return;
-		result += ' ';
-	});
-	this.solution = result.trim();
-};
-
-export {RubiksCube, FlatCube, RubiksCubeControls, FlatColorPicker, makeIdentityAffine, makeRotationAffine, makeRotateAffineX, makeRotateAffineY, multiplyAffine};
+export {RubiksCube, RubiksCubeControls, makeIdentityAffine, makeRotationAffine, makeRotateAffineX, makeRotateAffineY, multiplyAffine};

@@ -46,32 +46,8 @@ const app_event_click = (event=null) => {
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
-                case event.target.id.startsWith('flatsticker_flatface_cube')?event_target_id:null:{
-                    /**@ts-ignore */
-                    if(APP_GLOBAL.cube.flatCube.getColor()){
-                        /**@ts-ignore */
-                        const stickers = APP_GLOBAL.cube.flatCube.faces.filter(face=>event.target.id.startsWith('flatsticker_' + face.container.id))[0].stickers;
-                        const sticker = stickers.filter((/**@type{{container:{id:string}}}*/sticker)=>event.target.id == sticker.container.id)[0];
-                        /**@ts-ignore */
-                        sticker.setColor(APP_GLOBAL.cube.flatCube.getColor());
-                        /**@ts-ignore */
-                        APP_GLOBAL.cube.flatCube.update(show_message_cube);
-                    }
-                    break;
-                }
-                case event.target.id.startsWith('flatsticker_flatcolorpicker_cube')?event_target_id:null:{
-                    /**@ts-ignore */
-                    APP_GLOBAL.cube.flatCube.picker.setSelection(Number(event.target.id.slice(-1)));
-                    event.stopPropagation();
-                    break;
-                }
-                case 'button_reset':
-                    /**@ts-ignore */{
-                    APP_GLOBAL.cube.customAffine = app_cube.makeIdentityAffine();
-                    /**@ts-ignore */
-                    APP_GLOBAL.controls.solve();
-                    /**@ts-ignore */
-                    APP_GLOBAL.cube.flatCube.update(show_message_cube);
+                case 'button_reset':{
+                    init_cube();
                     break;
                 }
                 case 'button_L':
@@ -91,8 +67,7 @@ const app_event_click = (event=null) => {
                     break;
                 }
                 case 'button_solve':{
-                    /**@ts-ignore */
-                    APP_GLOBAL.controls.solve();
+                    solve();
                     break;
                 }
                 case event.target.id.startsWith('button_solve_speed')?event_target_id:null:{
@@ -103,11 +78,7 @@ const app_event_click = (event=null) => {
                     break;
                 }
                 case 'button_solved_step':{
-                    /**@ts-ignore */
-                    APP_GLOBAL.controls.cube.getSolutionAsync(function(solution){APP_GLOBAL.controls.setSolution(solution);},function(data){
-                        /**@ts-ignore */
-                        APP_GLOBAL.controls.setProgress(data);
-                    });
+                    solve(true);
                     break;
                 }
                 case 'button_step_info':
@@ -120,8 +91,6 @@ const app_event_click = (event=null) => {
                 case 'button_scramble':{
                     /**@ts-ignore */
                     APP_GLOBAL.controls.cube.scramble();
-                    /**@ts-ignore */
-                    APP_GLOBAL.cube.flatCube.update(show_message_cube);
                     break;
                 }
                 case 'common_toolbar_framework_js':{
@@ -207,6 +176,23 @@ const app_event_other = () => {
     });
 };
 /**
+ * @param {boolean} show_step
+ */
+const solve = (show_step=false) => {
+    if (APP_GLOBAL.cube.rotating == false){
+        common.FFB('/app-function/CUBE_SOLVE', null, 'POST', 'APP_DATA',
+            {   cube_currentstate: 	APP_GLOBAL.cube.getState(),
+                cube_goalstate: 	null})
+                .then(result=>{
+                    if (show_step)
+                        APP_GLOBAL.controls.setSolution(JSON.parse(result).rows[0].cube_solution);
+                    else
+                        APP_GLOBAL.cube.makeMoves(JSON.parse(result).rows[0].cube_solution);
+                })
+                .catch(error=>null);
+    }
+};
+/**
  * @param {string} message
  */
 const show_message_cube = message =>{
@@ -232,17 +218,8 @@ const init_cube = () => {
     /**@ts-ignore */
     APP_GLOBAL.cube = new app_cube.RubiksCube( APP_GLOBAL.width);
     /**@ts-ignore */
-    APP_GLOBAL.flatCube = new app_cube.FlatCube('flat-cube', APP_GLOBAL.width);
-    /**@ts-ignore */
-    APP_GLOBAL.controls = new app_cube.RubiksCubeControls('button_controls', APP_GLOBAL.cube, APP_GLOBAL.width);
-    /**@ts-ignore */
-    APP_GLOBAL.cube.flatCube = APP_GLOBAL.flatCube;
-    /**@ts-ignore */
-    APP_GLOBAL.flatCube.cube = APP_GLOBAL.cube;
-
-    APP_GLOBAL.cube.flatCube.update();
+    APP_GLOBAL.controls = new app_cube.RubiksCubeControls('button_controls', APP_GLOBAL.cube);
     APP_GLOBAL.cube.render();
-    
 };
 /**
  * Init app
@@ -255,6 +232,7 @@ const init_app = async () => {
     for (let i=0;i<156;i++){
         html += `<path class='cube_face' id='cube_face_${i}'/>`;
     }
+    /**@ts-ignore */
     document.querySelector('#cube').innerHTML = `<svg xmlns='http://www.w3.org/2000/svg'>${html}</svg>`;
     init_cube();
     framework_set();
