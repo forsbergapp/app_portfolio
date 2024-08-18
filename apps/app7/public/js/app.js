@@ -67,7 +67,7 @@ const app_event_click = (event=null) => {
                     break;
                 }
                 case 'button_solve':{
-                    solve();
+                    solve(event.target.id);
                     break;
                 }
                 case event.target.id.startsWith('button_solve_speed')?event_target_id:null:{
@@ -78,7 +78,7 @@ const app_event_click = (event=null) => {
                     break;
                 }
                 case 'button_solved_step':{
-                    solve(true);
+                    solve(event.target.id);
                     break;
                 }
                 case 'button_step_info':
@@ -176,20 +176,22 @@ const app_event_other = () => {
     });
 };
 /**
- * @param {boolean} show_step
+ * @param {string} button_id
  */
-const solve = (show_step=false) => {
+const solve = button_id => {
     if (APP_GLOBAL.cube.rotating == false){
+        AppDocument.querySelector(`#${button_id}`).classList.add('css_spinner');
         common.FFB('/app-function/CUBE_SOLVE', null, 'POST', 'APP_DATA',
             {   cube_currentstate: 	APP_GLOBAL.cube.getState(),
                 cube_goalstate: 	null})
                 .then(result=>{
-                    if (show_step)
-                        APP_GLOBAL.controls.setSolution(JSON.parse(result).rows[0].cube_solution);
-                    else
+                    AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner');
+                    if (button_id=='button_solve')
                         APP_GLOBAL.cube.makeMoves(JSON.parse(result).rows[0].cube_solution);
+                    else
+                        APP_GLOBAL.controls.setSolution(JSON.parse(result).rows[0].cube_solution);
                 })
-                .catch(error=>null);
+                .catch(()=>AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner'));
     }
 };
 /**
