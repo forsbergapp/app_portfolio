@@ -521,8 +521,7 @@
                     "RENDER_FILES":[]
         },
         "MODULES":[
-            ["FUNCTION","CUBE_TRAIN",     		                "APP_DATA",   	"Cube Train",                       "/apps/app7/src/functions/train.js"],
-            ["FUNCTION","CUBE_SCRAMBLE",     		            "APP_DATA",   	"Cube Scramble",                    "/apps/app7/src/functions/scramble.js"]
+            ["FUNCTION","CUBE_SOLVE",     		                "APP_DATA",   	"Cube Solve",                       "/apps/app7/src/functions/solve.js"]
         ],
         "STATUS":"ONLINE"}
 ]
