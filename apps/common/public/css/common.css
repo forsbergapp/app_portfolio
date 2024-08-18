@@ -136,6 +136,7 @@
     --common_app_icon_active:               '\f205';
     --common_app_icon_inactive:             '\f204';
     --common_app_icon_reload:				'↻';
+	--common_app_icon_reset:				'↺';
     --common_app_icon_sum:                  '∑';
     --common_app_icon_home:                 '\f015';
     --common_app_icon_type:                 '\f059';
@@ -217,6 +218,9 @@
     --common_app_icon_misc_prayer:              '\f683';
     --common_app_icon_misc_calling:             '🗣';
 	--common_app_icon_misc_ban:                 '\f05e';
+	--common_app_icon_misc_solve:               '💡';
+	--common_app_icon_misc_education:           '🎓';
+	--common_app_icon_misc_scramble:            '⤮';
 
 	--common_app_icon_infinite:                 '∞';
 
