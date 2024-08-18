@@ -33,7 +33,7 @@ RubiksCubeControls.prototype.setSolution = function(solution) {
 		this.solution = solution.split(' ');
 		this.updateStepButton();
 		/**@ts-ignore */
-		document.querySelector('#button_controls #overlay').style.display = 'inline-block';
+		document.querySelector('#button_controls #overlay').style.display = 'block';
 	} else {
 		/**@ts-ignore */
 		this.solution = [];
