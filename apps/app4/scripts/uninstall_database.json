@@ -13,7 +13,6 @@
            {"db": null, "sql": "DELETE FROM app_portfolio.app_object_item WHERE app_object_app_id = <APP_ID/>"},
            {"db": null, "sql": "DELETE FROM app_portfolio.app_object_item WHERE app_setting_type_app_id = <APP_ID/>"},
            {"db": null, "sql": "DELETE FROM app_portfolio.app_object WHERE app_id = <APP_ID/>"},
-           {"db": null, "sql": "DELETE FROM app_portfolio.app_log WHERE app_id = <APP_ID/>"},
            {"db": null, "sql": "DELETE FROM app_portfolio.app WHERE id = <APP_ID/>"}
        ]
    }
