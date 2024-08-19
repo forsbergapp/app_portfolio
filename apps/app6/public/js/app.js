@@ -336,7 +336,6 @@ const init_app = async () => {
  * @returns {void}
  */
 const init = (parameters) => {
-    AppDocument.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
     common.COMMON_GLOBAL.app_function_session_expired = null;
     common.init_common(parameters).then(()=>{
