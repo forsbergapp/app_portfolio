@@ -468,21 +468,6 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-
-                    case route({url:`/bff/app_data/v1/server-db/app_data_entity/${resource_id_string}`, method:'GET', 
-                                resource_validate_app_data_app_id:getNumberValue(app_query?.get('data_app_id'))}):
-                    case route({url:`/bff/admin/v1/server-db/app_data_entity/${resource_id_string}`, method:'GET'}):{
-                        resolve(db_app_data_entity.getEntity(routesparameters.app_id, resource_id_get_number(), app_query)
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:`/bff/app_data/v1/server-db/app_data_entity_resource/${resource_id_string}`, method:'GET', 
-                                resource_validate_app_data_app_id: getNumberValue(app_query?.get('data_app_id'))}):
-                    case route({url:`/bff/admin/v1/server-db/app_data_entity_resource/${resource_id_string}`, method:'GET'}):{
-                        resolve(db_app_data_entity.getEntityResource(routesparameters.app_id, resource_id_get_number(), app_query)
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
                     case route({url:`/bff/app_data/v1/app-function/${resource_id_string}`, method:'POST', 
                                 resource_validate_app_data_app_id: routesparameters.body.data_app_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_DATA'}):
                     case route({url:`/bff/app_external/v1/app-function/${resource_id_string}`, method:'POST', 
@@ -497,6 +482,16 @@ const COMMON = {
                                                 routesparameters.ip,
                                                 app_query?.get('lang_code'),
                                                 routesparameters.res).then(result=>iso_return_message(result, false)));
+                        break;
+                    }
+                    case route({url:`/bff/admin/v1/server-db/app_data_entity/${resource_id_string}`, method:'GET'}):{
+                        resolve(db_app_data_entity.getEntity(routesparameters.app_id, resource_id_get_number(), app_query)
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:`/bff/admin/v1/server-db/app_data_entity_resource/${resource_id_string}`, method:'GET'}):{
+                        resolve(db_app_data_entity.getEntityResource(routesparameters.app_id, resource_id_get_number(), app_query)
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_string}`, method:'GET'}):{
