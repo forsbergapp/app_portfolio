@@ -176,6 +176,19 @@ const app_event_other = () => {
     });
 };
 /**
+ * @param {string} result
+ */
+const shortest_solution = result =>{
+    /**
+     * @type{{cube_solution1:String,
+     *        cube_solution1_time:number,
+     *        cube_solution2:String,
+     *        cube_solution2_time:number}}
+     */
+    const cube_result = JSON.parse(result).rows[0];
+    return cube_result.cube_solution1.split(' ').length<cube_result.cube_solution2.split(' ').length?cube_result.cube_solution1:cube_result.cube_solution2;
+};
+/**
  * @param {string} button_id
  */
 const solve = button_id => {
@@ -187,18 +200,12 @@ const solve = button_id => {
                 .then(result=>{
                     AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner');
                     if (button_id=='button_solve')
-                        APP_GLOBAL.cube.makeMoves(JSON.parse(result).rows[0].cube_solution);
+                        APP_GLOBAL.cube.makeMoves(shortest_solution(result));
                     else
-                        APP_GLOBAL.controls.setSolution(JSON.parse(result).rows[0].cube_solution);
+                        APP_GLOBAL.controls.setSolution(shortest_solution(result));
                 })
                 .catch(()=>AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner'));
     }
-};
-/**
- * @param {string} message
- */
-const show_message_cube = message =>{
-    common.show_message('INFO', null, null, null,message, common.COMMON_GLOBAL.common_app_id);
 };
 /**
  * Sets framework
