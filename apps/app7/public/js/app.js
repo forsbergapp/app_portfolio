@@ -186,7 +186,8 @@ const shortest_solution = result =>{
      *        cube_solution2_time:number}}
      */
     const cube_result = JSON.parse(result).rows[0];
-    return cube_result.cube_solution1.split(' ').length<cube_result.cube_solution2.split(' ').length?cube_result.cube_solution1:cube_result.cube_solution2;
+    //return cube_result.cube_solution1.split(' ').length<cube_result.cube_solution2.split(' ').length?cube_result.cube_solution1:cube_result.cube_solution2;
+    return cube_result.cube_solution3;
 };
 /**
  * @param {string} button_id
