@@ -35,12 +35,36 @@ const template =`   <div id='app_main'>
                                         <div id='button_solve' class='common_dialogue_button'></div>
                                     </div>
                                     <div class='buttons_col'>
+                                        <div id='app_select_model' class='common_select'>
+                                            <div class='common_select_dropdown'>
+                                                <div class='common_select_dropdown_value' data-value='0'>🤖</div>
+                                                <div class='common_select_dropdown_icon common_icon'></div>
+                                            </div>
+                                            <div class='common_select_options'>
+                                                <div class='common_select_option' data-value='0'>🤖</div>
+                                                <div class='common_select_option' data-value='1'>👤</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='buttons_col'>
                                         <div id='button_solved_step' class='common_dialogue_button'></div>
                                     </div>
                                 </div>
                                 <div class='buttons_row'>
                                     <div class='buttons_col'>
                                         <div id='button_scramble' class='common_dialogue_button'></div>
+                                    </div>
+                                    <div class='buttons_col'>
+                                        <div id='app_select_temperature' class='common_select'>
+                                            <div class='common_select_dropdown'>
+                                                <div class='common_select_dropdown_value' data-value='0'>💡</div>
+                                                <div class='common_select_dropdown_icon common_icon'></div>
+                                            </div>
+                                            <div class='common_select_options'>
+                                                <div class='common_select_option' data-value='0'>💡</div>
+                                                <div class='common_select_option' data-value='1'>∞</div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class='buttons_col'>
                                         <div id='button_reset' class='common_dialogue_button'></div>

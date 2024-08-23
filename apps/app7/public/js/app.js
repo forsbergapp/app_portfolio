@@ -180,23 +180,34 @@ const app_event_other = () => {
  */
 const shortest_solution = result =>{
     /**
-     * @type{{cube_solution1:String,
-     *        cube_solution1_time:number,
-     *        cube_solution2:String,
-     *        cube_solution2_time:number}}
+     * @type{{cube_solution:string,
+     *        cube_solution_time:number,
+     *        cube_solution_length:number,
+     *        cube_solution_model:number}[]}
      */
-    const cube_result = JSON.parse(result).rows[0];
-    //return cube_result.cube_solution1.split(' ').length<cube_result.cube_solution2.split(' ').length?cube_result.cube_solution1:cube_result.cube_solution2;
-    return cube_result.cube_solution3;
+    const cube_result = JSON.parse(result).rows;
+    return cube_result[0].cube_solution;
 };
 /**
  * @param {string} button_id
  */
 const solve = button_id => {
+    /**
+     *  Solve parameters
+     * 
+     *  model               0=Robot, 1=Human
+     *  preamble            0=Singmaster notation
+     *  temperature         0=best solution, 1=all solutions for given model
+     *  cube current state  string of cube state
+     *  cube goalstate      empty to solve or to given cube state
+     */
     if (APP_GLOBAL.cube.rotating == false){
         AppDocument.querySelector(`#${button_id}`).classList.add('css_spinner');
         common.FFB('/app-function/CUBE_SOLVE', null, 'POST', 'APP_DATA',
-            {   cube_currentstate: 	APP_GLOBAL.cube.getState(),
+            {   model:              Number(AppDocument.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
+                preamble:           0,
+                temperature:        Number(AppDocument.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
+                cube_currentstate: 	APP_GLOBAL.cube.getState(),
                 cube_goalstate: 	null})
                 .then(result=>{
                     AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner');
