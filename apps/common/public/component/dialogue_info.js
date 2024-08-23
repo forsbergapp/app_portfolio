@@ -23,8 +23,7 @@
  *          img_datamodel_img_small:string,
  *          info_link_policy_name:string,
  *          info_link_disclaimer_name:string,
- *          info_link_terms_name:string,
- *          info_link_about_name:string}} props 
+ *          info_link_terms_name:string}} props 
  * @returns {string}
  */
 const template = props => ` 
@@ -88,7 +87,6 @@ const template = props => `
                                                 <div id='common_dialogue_info_info_link1' class='common_link'>${props.info_link_policy_name}</div>
                                                 <div id='common_dialogue_info_info_link2' class='common_link'>${props.info_link_disclaimer_name}</div>
                                                 <div id='common_dialogue_info_info_link3' class='common_link'>${props.info_link_terms_name}</div>
-                                                <div id='common_dialogue_info_info_link4' class='common_link'>${props.info_link_about_name}</div>
                                             </div>
                                         </div>
                                         <div id='common_dialogue_info_app_copyright'>${props.app_copyright}</div>
@@ -106,8 +104,7 @@ const template = props => `
  *          app_link_title:string,
  *          info_link_policy_name:string,
  *          info_link_disclaimer_name:string,
- *          info_link_terms_name:string,
- *          info_link_about_name:string}} props 
+ *          info_link_terms_name:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:null, 
  *                      template:string}>}
@@ -131,8 +128,7 @@ const component = async props => {
             img_datamodel_img_small:'/common/documents/data_model_small.webp',
             info_link_policy_name:props.info_link_policy_name,
             info_link_disclaimer_name:props.info_link_disclaimer_name,
-            info_link_terms_name:props.info_link_terms_name,
-            info_link_about_name:props.info_link_about_name
+            info_link_terms_name:props.info_link_terms_name
         });
     };
     return {

@@ -3235,13 +3235,6 @@ const common_event = async (event_type,event=null) =>{
                                                 content_type:null, 
                                                 iframe_content:null}, '/common/component/window_info.js');
                             break;
-                        }case 'common_dialogue_info_info_link4':{
-                            ComponentRender('common_window_info',
-                                            {   info:1,
-                                                url:COMMON_GLOBAL.info_link_about_url,
-                                                content_type:null, 
-                                                iframe_content:null}, '/common/component/window_info.js');
-                            break;
                         }
                         //dialogue app_data_display
                         case event.target.classList.contains('common_app_data_display_button_print')?event_target_id:'':
