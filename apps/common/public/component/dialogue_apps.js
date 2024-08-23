@@ -49,7 +49,6 @@ const template = props => `
  *          info_link_policy_name:string,
  *          info_link_disclaimer_name:string,
  *          info_link_terms_name:string,
- *          info_link_about_name:string,
  *          function_FFB:function,
  *          function_ComponentRender:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
@@ -75,8 +74,7 @@ const component = async props => {
                                                                 app_link_title:props.app_link_title,
                                                                 info_link_policy_name:props.info_link_policy_name,
                                                                 info_link_disclaimer_name:props.info_link_disclaimer_name,
-                                                                info_link_terms_name:props.info_link_terms_name,
-                                                                info_link_about_name:props.info_link_about_name
+                                                                info_link_terms_name:props.info_link_terms_name
                                                                 }, '/common/component/dialogue_info.js');
     };
     /**

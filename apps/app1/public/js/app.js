@@ -356,7 +356,6 @@ const get_apps = () => {
                                 info_link_policy_name:common.COMMON_GLOBAL.info_link_policy_name,
                                 info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
                                 info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name,
-                                info_link_about_name:common.COMMON_GLOBAL.info_link_about_name,
                                 function_FFB:common.FFB,
                                 function_ComponentRender:common.ComponentRender
                             },
