@@ -1,27 +1,42 @@
 # App portfolio
 
-	A platform to build your app portfolio in any language and regional settings.
-	With most necessary technology configured to get started and with less
-	third party libraries and module dependencies for performance and better maintainability
-	with code you have control over.
-	Microservice architecture using circuitbreaker and message queue.
-	Services included are batch, geolocation, mail and worldcities.
+	An app portfolio created as a reference platform and implemented with support of any language and regional settings.
+	Implemented with most necessary technology configured with less third party libraries and module dependencies 
+	for performance and better maintainability and with less obscure code.
+
+	All apps use pure Javascript (ES6+), Typescript, Vue, React, HTML and CSS without any build steps
+	All apps use Vue SFC pattern and realtime switchable framework between Vue, React and Javascipt.
+	All apps use common user access and any user data is saved in each app for the user.
+
+	Server renders basic app HTML using parameters.
+	Server uses secure REST API with authentication middleware that authenticates claims in access or id tokens and 
+	also authenticates request access to resources on user and app level.
+	Databases use common ANSI SQL with minium differences for all databases, 
+	Databases use centralized and conslidated common SQL parameter syntax and consolidated data validation in Javascript 
+	for all databases.
+
+	Implemented with many examples of implementation patterns 
+		- microservice architecture
+		- circuitbreaker
+		- message queue
+		- factory
+		- race condition
+		- file transaction management
+		- frontend for backend (FFB)
+		- backend for frontend (BFF)
+		- entity/resource datamodel using hybrid JSON storage concept with flexible and minimal data model design
+		- role based and secure app server functions (simplified version of Function as a Service and serverless functions model)
+		- ISO20022
+		- CD/CI
+		- batch cron pattern
+
 	Continuous deployment implemented using batch server with scheduled git pull requests and automatic restart 
 	of Node.js using pm2 managed processes.
 	Runs in Node.js using Express framework.
-
-	Apps are component structured and server-side rendered with database data popluation.
-	Secure REST API with authentication middleware, common ANSI SQL with minium differences for all databases, 
-	centralized common SQL parameter syntax and consolidated data validation in Javascript for all databases.
-	Apps are written using pure CSS, HTML and Javascript and ES6+ Javascript using
-	AJAX method and JSON, ECMAScript modules only in both client and server.
-	Apps third party modules included are Easy QRCode, Fontawesome icons, Leaflet map, sunposition calculations 
-	and regional functions. 
-
+	
 	Oracle SQL Developer Data model designed data model.
 	Databases supported are MariaDB, MySQL, Oracle, PostgreSQL and SQLite.
-	Centralized data model error handling of database errors, constraints errors and 
-	application errors and showed in users language.
+	Centralized data model error handling of database errors, constraints errors and application errors showed in users language.
 
 	A global support implemented in client with ALL Unicode characters supported by Noto Sans font
 	included different arabic scripts and different font heights (Nastaliq).
@@ -42,8 +57,8 @@
 	What
 	Create a web app platform with latest technology supporting any language and regional setting with the most optimized,
 	structured and most pragmatic and academic implementation in mind using years of empirical knowledge of full stack
-	development using Javascript, HTML, CSS as the most popular technology used for front end web development and using 
-	most popular open source or free SQL databases for back end development. The web app platform should be deployed on
+	development using Javascript, Typescript, Vue, React, HTML, CSS as the most popular technology used for front end web development 
+	and using most popular open source or free SQL databases for back end development. The web app platform should be deployed on
 	the popular Node.js that supports Javascript in the server.
 
 	How
@@ -51,34 +66,36 @@
 	Finding common factors in MariaDB, Mysql, PostgreSQL, Oracle and SQLite databases to implement easier maintainable REST API 
 	and datamodel.
 	Consolidate ideas from Angular, Vue, React, jQuery, Oracle Forms, Oracle Reports and Oracle APEX, existing log and 
-	monitor solutions, javascript frameworks to optimal structure and implementation.
+	monitor solutions, common implementation patterns, javascript frameworks to optimal structure and implementation.
 
 	Requirements
 
-	- all apps should be web apps with open source written in Javascript, HTML and CSS both for front end and back end 
+	- all apps should be web apps with open source written in Javascript, Typescript, HTML and CSS both for front end and back end 
 	  and using JSON and REST API between front end and back end
     - all apps should work on mobile, tablet and desktop computers
-	- all apps should use multi framework supporting pure Javascript, Vue and React without build step
-	- all apps should use typescript and JSDoc without build step
-	- all apps should be able to switch framework at any time allowing mixed framework rendered components simultaneously
-	  or let all apps be controlled by a server parameter to show a default framework only
+	- all apps should use multi framework supporting pure Javascript, Vue and React without build step and be switchable 
+	  at any time in the app allowing mixed framework rendered components simultaneously or let all apps be controlled by 
+	  a server parameter to show a default framework only
+	- all apps should use Typescript and JSDoc without build step
 	- all apps should mount the app and other components at start using Vue single file component (SFC) similar structure
-		and only render components when needed
+	  and only render components when needed
 	- all apps should be single page application (SPA)
 	- one app should be an installable Progressive Web App (PWA)
 	- all apps should use event delegation declaring events on app root level only
 	- any language, all unicode characters, any regional setting
-	- social network basic functionality with follow, like, follwed, liked and viewed including statistics
+	- social network basic functionality with follow, like, followed, liked and viewed including statistics
 	- Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js. Thirdparty javascript modules 
 	  should be converted from CommonJS to ECMAScript modules if necessary.
 	- report with pixel perfect design using css pt font size measurement and full unicode support
 	- apps created using server side rendering
 	- database and file logging
 	- microservice arquitecture
+	- frontend for backend (FFB) arquitecture
+	- backend for frontend (BFF) arquitecture
 	- MariaDB, MySQL, PostgreSQL, Oracle and SQLite databases supported with dynamic pool arquitecture
 	  and sql logging stratified per app
 	- MariaDB, MySQL and PostgreSQL installed as local installations and Docker as alternative
-	- database should support transactions with rollback and commit and be able to save images in the database
+	- database should support transactions with rollback and commit and be able to save images and JSON in the database
 	- database ER model and server datamodel using a database data model designer tool that can generate SQL from 
 	  the server data model
 	- dynamic app installation
@@ -95,15 +112,18 @@
 	- development environment should be configured with ESLint for basic code formatting
 	- development environment should be configured with Jasmine to provide test environment
 	- documentation of installation and development environment
-	- establish common app functionality with email code verification in user processes, user info with statistics, search users, QR Code on the user profile
-	- avoid semantic HTML in all apps if not necessary meaning all input, a, table, li, button, label, select or form elements should be replaced by div elements
-	  to avoid different obscure functionality, UI and CSS styles in different browsers.
+	- establish common app functionality with email code verification in user processes, user info with statistics, search users, 
+	  QR Code on the user profile
+	- avoid semantic HTML in all apps if not necessary meaning all input, a, table, li, button, label, select, form or canvas elements 
+	  should be replaced by div elements to avoid different obscure functionality, UI and CSS styles in different browsers.
 
 	Security requirements
 
 	- Content Security Policy against XSS
 	- SHA256 for REST API and Node.js crypto functions with server parameters for user passwords
-	- JSON web tokens with extra validation that checks at least token is authorized to correct userid, appid and ip.
+	- bank and shop apps are implemented with even higher encryption and security level than other apps
+	- JSON web tokens with claim validation
+	- REST API request resource validations on app and user level
 	- stateless app meaning cookies or localstorage should not be used in the browser, PWA should not cache files and just be installable
 	- textediting control on app level to block basic cut/copy/paste for apps that need higher security
 	- access control IP blocking,
@@ -120,6 +140,7 @@
 	Not included in the scope
 	
 	- Production features like
+	  - Rate limiter
 	  - Load balancer with for example popular NGINX for performance
 	  - Reverse Proxy server with for example popular NGINX for multiple application servers on the same host
 	  - Kubernetes
@@ -158,6 +179,8 @@
     www.praytimes.org
     Pray Times server version
     www.npmjs.com/package/praytimes
+	Simplemap, world city database
+	www.simplemaps.com	
     EasyQRCodeJS version
     www.github.com/ushelp/EasyQRCodeJS
 	Country Translations
@@ -171,33 +194,18 @@
 
 # Apps included
 
-	1.App 0 - Admin app
-	Single page web app (SPA). 
-	App monitors database, users and apps, can broadcast messages or remotely shutdown apps for maintenance, 
-	provides user statistics in graphs created by pure css, javascript and html, 
-	maintains apps and server parameters, displays server logs, monitors connected clients, installs and uninstalls
-	database, installs and uninstalls demo data. Supports MariaDB, MySQL, PostreSQL and Oracle databases.
+	App 0 - Admin app
+	App 1 - Start app
+	App 2 - Timetable app
+	App 3 - Presentation app
+	App 4 - Map app
+	App 5 - Bank app
+	App 6 - Shop app
+	App 7 - Cube app
 
-	2.App 1 - Main app to display your app portfolio.
-	Single page web app (SPA).
-	Social network functionality with profile, like, follow, view other user settings and statistics.
+	App 2 can be installed as Progressive web app (PWA).
 
-	3.App2 - Timetables app
-	Progressive web app (PWA) and a single page web app (SPA).
-	Worlds most advanced timetable calculation.
-	All known regional settings, all languagues and all countries supported.
-	Navigate in calendar per day, month or year in Gregorian or Hijri calendar type in realtime.
-	App can be used without registering but then settings can't be saved.
-	Map integration with automatic timezone and GPS lookup.
-	Timetables can be displayed with different themes using CSS3.
-	User interface and timetables can be displayed in any language
-	and translation of user interface is fetched from translation objects data model.
-	
-	Server generated reports with timetables are pixel perfect designed using pt font sizes
-	and timetable paper size supported are A4 and Letter.
-	Different application themes available from about dialogue.
-
-	Example of complexity of this application:
+	Example of complexity of full support of regional settings in app 2:
 	Use case:
 	A swedish timetable admin who only speaks english and swedish wants to help turkish user creating timetable 
 	in arabic and turkish including transliteration of arabic text and showing both gregorian and hijri calendar
@@ -214,59 +222,11 @@
 	User creates different timetables with different timezone settings according to chosen GPS
 	positions, that is looked up in the map in settings, in the same timetable.
 	User can keep track of local timezone in settings while working with other timezones.
-	User get swedish text messages and ui is in swedish and can see other languages in the timetable.
+	User get swedish app messages and ui is in swedish and can see other languages in the timetable.
 	User choose to display both transliteration and translation in the timetable.
 	User change the arabic timetable to show numbersystem deva and display second calendar on timetable.
 	User can preview any past or future timetable date period in Gregorian or Hijri and can print.
 	User copies encoded url (to secure privacy) in settings for day, month and year timetable to be shared.
-
-
-	4.App 3 - Presentation app
-	Single page web app (SPA).
-	Created to show how a simple app can be installed.
-	Includes diagram and data model of app portfolio and a data model for future project.
-
-	Data model supports:
-	- management of a property with multiple owners, multiple subtypes of properties, 
-	  owner of multiple properties, facility management and vechicle access management
-	- economic adminstration
-		- bills
-		- payments
-		- receipts for owners, contact groups representing one or more properties
-		- accounting ledger and journal, multicurrency support
-		- staff management
-		- salary
-		- quota calculations for condominum properties
-		- bank management
-	- investment of assets, real estate, currency, exchange tradable(stock, future, energy), 
-	  exchange cryptocurrency and basic stock exchange trading model
-	- contact management, in groups or shared ownerships, representation for owners, tenants, 
-	  guests
-	- booking reservation facility, network access management
-	- service management water, electricity, internet, phone lines etc
-	- board of directors management with reunion schedule
-
-	5.App 5 - Map app
-	Single page web app (SPA).
-	Map app with implemented client multiframework using pure Javascript, Vue and React
-	switcher. Vue and React are implemented without Babel and as ECMAScript modules to show
-	how pure Javascript solution without build step, transpiler or any Node.js module modifications.
-	
-	App 2 and admin app are both using Leaflet module with same logic although without Javascript 
-	framework switcher.
-
-	Uses Leaflet module to show maps with this functionality:
-	- current gps position with geodata displayed as popup on map
-	- Added custom functionality on Leaflet module with solutions for custom event integration
-	- Search any country and get all cities for given country using worldcities microservice
-	- Search free text using worldcities microservice
-	- My location button
-	- Fullscreen button
-	- Change layer button
-	- Double click on map to show info of selected place
-	- Move and zoom to any place on earth
-	- Scale info on map
-	- Toolbar to switch Javascript framework
 
 # Installation instructions
 
