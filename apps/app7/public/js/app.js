@@ -12,14 +12,26 @@ const app_cube = await import('./cube.js');
  * @typedef {{  cube:*,
  *              flatCube:*,
  *              controls:*,
- *              width:number}} type_APP_GLOBAL
+ *              width:number,
+ *              icon_robot:string,
+ *              icon_human:string,
+ *              icon_moves:string,
+ *              icon_time:string,
+ *              icon_solution:string,
+ *              icon_solution_list:string}} type_APP_GLOBAL
  */
 /**@type{type_APP_GLOBAL} */
 const APP_GLOBAL = {
     cube : {},
     flatCube: null,
     controls: null,
-    width : 360
+    width : 360,
+    icon_robot:'🤖',
+    icon_human:'👤',
+    icon_moves:'⤮',
+    icon_time: '⌛',
+    icon_solution:'💡',
+    icon_solution_list:'∞'
 };
 
 /**
@@ -176,9 +188,10 @@ const app_event_other = () => {
     });
 };
 /**
- * @param {string} result
+ * @param {string}  result
+ * @param {string}  button_id
  */
-const shortest_solution = result =>{
+const show_solution_result = (result, button_id) =>{
     /**
      * @type{{cube_solution:string,
      *        cube_solution_time:number,
@@ -186,7 +199,26 @@ const shortest_solution = result =>{
      *        cube_solution_model:number}[]}
      */
     const cube_result = JSON.parse(result).rows;
-    return cube_result[0].cube_solution;
+    if (cube_result.length>0){
+        const cube_result_lov = cube_result.map(row=>{return {
+            //use base64 for solution in id column
+            id:btoa(row.cube_solution), 
+            cube_solution: `${row.cube_solution_model==0?APP_GLOBAL.icon_robot:APP_GLOBAL.icon_human} 
+                            (${APP_GLOBAL.icon_moves}:${row.cube_solution_length}, ${APP_GLOBAL.icon_time}:${row.cube_solution_time}) - ${row.cube_solution}`}; 
+        });
+        /**
+        * @param {import('../../../types.js').AppEvent} event
+        */
+        const function_event = event => {
+            const solution = atob(common.element_row(event.target).getAttribute('data-id') ?? '');
+            if (button_id=='button_solve')
+                APP_GLOBAL.cube.makeMoves(solution);
+            else
+                APP_GLOBAL.controls.setSolution(solution);
+            common.lov_close();
+        };
+        common.lov_show({lov:'CUSTOM', lov_custom_list:cube_result_lov, lov_custom_value:'cube_solution', function_event:function_event});
+    }
 };
 /**
  * @param {string} button_id
@@ -211,10 +243,7 @@ const solve = button_id => {
                 cube_goalstate: 	null})
                 .then(result=>{
                     AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner');
-                    if (button_id=='button_solve')
-                        APP_GLOBAL.cube.makeMoves(shortest_solution(result));
-                    else
-                        APP_GLOBAL.controls.setSolution(shortest_solution(result));
+                    show_solution_result(result, button_id);
                 })
                 .catch(()=>AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner'));
     }
@@ -248,7 +277,10 @@ const init_cube = () => {
  */
 const init_app = async () => {
     AppDocument.body.className = 'app_theme1';
-    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
+    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {icon_robot:APP_GLOBAL.icon_robot, 
+                                                                icon_human:APP_GLOBAL.icon_human, 
+                                                                icon_solution:APP_GLOBAL.icon_solution,
+                                                                icon_solution_list:APP_GLOBAL.icon_solution_list}, '/component/app.js');
     let html = '';
     for (let i=0;i<156;i++){
         html += `<path class='cube_face' id='cube_face_${i}'/>`;

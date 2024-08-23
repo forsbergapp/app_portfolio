@@ -1067,7 +1067,7 @@ const lov_event = (event, lov) => {
         (common_input_lov ?? common_lov_value)?.dispatchEvent(new Event('input'));
         AppDocument.querySelector('#common_lov_close').click();
     };
-    lov_show(lov, lov_event_function);
+    lov_show({lov:lov, function_event:lov_event_function});
 };
 /**
  * Lov action fetches id and value, updates values and manages data-defaultValue
@@ -1125,14 +1125,18 @@ const lov_close = () => {
 };
 /**
  * Lov show
- * @param {string} lov 
- * @param {function} function_event
+ * @param {{lov:string, 
+ *          lov_custom_list?:{}[],
+ *          lov_custom_value?:string, 
+ *          function_event:function|null}} parameters
  * @returns {void} 
  */
-const lov_show = (lov, function_event) => {
-    ComponentRender('common_dialogue_lov', {lov:lov,
+const lov_show = parameters => {
+    ComponentRender('common_dialogue_lov', {lov:parameters.lov,
+                                            lov_custom_list:parameters.lov_custom_list,
+                                            lov_custom_value:parameters.lov_custom_value,
                                             function_FFB:FFB, 
-                                            function_event:function_event}, '/common/component/dialogue_lov.js');
+                                            function_event:parameters.function_event}, '/common/component/dialogue_lov.js');
         
 };
 /**

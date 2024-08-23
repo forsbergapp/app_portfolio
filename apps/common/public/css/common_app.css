@@ -1408,6 +1408,9 @@ select {
 	background:var(--common_app_color_background_spinner);
 	border-radius:50%;
 }
+.rtl .css_spinner::before{
+	transform: translate(50%, -50%) !important;
+}
 
 /*WINDOW INFO*/
 #common_window_info {
