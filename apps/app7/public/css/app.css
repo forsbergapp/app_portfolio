@@ -101,7 +101,8 @@ body {
 }
 #button_controls .buttons_row .buttons_col{
 	display: inline-block;
-	width:45%;
+	width:30%;
+	vertical-align: bottom;
 }
 #button_controls .buttons_row .buttons_col .common_dialogue_button{
 	width: 100%;
@@ -115,6 +116,8 @@ body {
 	display: none;
 	width: 100%;
 	margin-top: 20px;
+	z-index: 1;
+  	position: relative;
 }
 #button_step_info {
   	width:295px;
