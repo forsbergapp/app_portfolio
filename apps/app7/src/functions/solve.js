@@ -68,32 +68,36 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 				const solver2 = new cuberSolver2.RubiksCubeSolver();	
 				//use Thistlewaite algorithm to solve from solved to given state
 				const solver2_moves_from_solved = solver2.solve(data.cube_goalstate?data.cube_goalstate.join(' '):GOAL_SOLVE.join(' '), data.cube_currentstate.split(' '));
-				// Solve using Kociemba algorithm from calculated moves from solved using first Thistlewaite
-				const solution1 = cuberSolver1.solve(solver2_moves_from_solved, 'kociemba');
-				const timer2 = Date.now();
-				const solution2 = solver2.solve(data.cube_currentstate, data.cube_goalstate ?? GOAL_SOLVE);
-				const timer3 = Date.now();
-				if (data.temperature ==0){
-					//return best solution
-					/**@ts-ignore */
-					return [{	cube_solution:solution1.split(' ').length<solution2.split(' ').length?solution1:solution2, 
-								/**@ts-ignore */
-								cube_solution_time:solution1.split(' ').length<solution2.split(' ').length?timer2-timer1:timer3-timer2, 
-								/**@ts-ignore */
-								cube_solution_length:solution1.split(' ').length<solution2.split(' ').length?solution1.split(' ').length:solution2.split(' ').length, 
-								cube_solution_model:0}];
-				}
+				if (solver2_moves_from_solved=='')
+						return [];
 				else{
-					//return all solutions
-					return [{	cube_solution:solution1, 
-								cube_solution_time:timer2-timer1, 
-								cube_solution_length:solution1.split(' ').length,
-								cube_solution_model:0},
-							{	cube_solution:solution2, 
-								cube_solution_time:timer3-timer2, 
-								/**@ts-ignore */
-								cube_solution_length:solution2.split(' ').length,
-								cube_solution_model:0}];
+					// Solve using Kociemba algorithm from calculated moves from solved using first Thistlewaite
+					const solution1 = cuberSolver1.solve(solver2_moves_from_solved, 'kociemba');
+					const timer2 = Date.now();
+					const solution2 = solver2.solve(data.cube_currentstate, data.cube_goalstate ?? GOAL_SOLVE);
+					const timer3 = Date.now();
+					if (data.temperature ==0){
+						//return best solution
+						/**@ts-ignore */
+						return [{	cube_solution:solution1.split(' ').length<solution2.split(' ').length?solution1:solution2, 
+									/**@ts-ignore */
+									cube_solution_time:solution1.split(' ').length<solution2.split(' ').length?timer2-timer1:timer3-timer2, 
+									/**@ts-ignore */
+									cube_solution_length:solution1.split(' ').length<solution2.split(' ').length?solution1.split(' ').length:solution2.split(' ').length, 
+									cube_solution_model:0}];
+					}
+					else{
+						//return all solutions
+						return [{	cube_solution:solution1, 
+									cube_solution_time:timer2-timer1, 
+									cube_solution_length:solution1.split(' ').length,
+									cube_solution_model:0},
+								{	cube_solution:solution2, 
+									cube_solution_time:timer3-timer2, 
+									/**@ts-ignore */
+									cube_solution_length:solution2.split(' ').length,
+									cube_solution_model:0}];
+					}
 				}
 			}
 			case 1:{

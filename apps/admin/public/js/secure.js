@@ -2369,7 +2369,7 @@ const show_existing_logfiles = () => {
                                 nav_click('list_monitor_nav_server_log');
                                 common.lov_close();
                             };
-        common.lov_show('SERVER_LOG_FILES', function_event);
+        common.lov_show({lov:'SERVER_LOG_FILES', function_event:function_event});
     }
 };
 /**

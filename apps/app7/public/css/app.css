@@ -106,7 +106,7 @@ body {
 }
 #button_controls .buttons_row .buttons_col .common_dialogue_button{
 	width: 100%;
-	height: 30px;
+	
 	font-weight: bold;
 }
 #button_controls .buttons_row .buttons_col .common_dialogue_button.css_spinner{
@@ -183,6 +183,10 @@ body {
 	background-color : rgba(0,0,0,.5);
 }
 /* APP THEME COMMON*/
+#common_lov_list[data-lov='CUSTOM'] .common_list_lov_col2{
+	width:unset;
+	white-space: wrap;
+}
 .css_spinner::before {
 	background-color: var(--common_app_color_white) !important;
 }
@@ -198,6 +202,9 @@ body {
 .common_toolbar_button{
 	color: var(--common_app_color_black) !important;
 }
+.common_list_row_selected,
+.common_list_lov_row:hover,
+.common_list_lov_row:active,
 .common_dialogue_button:hover,
 .common_dialogue_button:active,
 .common_toolbar_button:hover,
