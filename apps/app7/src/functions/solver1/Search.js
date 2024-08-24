@@ -118,7 +118,7 @@ class Search {
   solve(settings) {
     this.initialize();
 
-    this.settings = { maxDepth: 22, // For the Kociemba solver.
+    this.settings = { maxDepth: 20, // For the Kociemba solver.
       lastMove: null,
       format: true,
       ...settings };

@@ -187,7 +187,7 @@ class PhaseOneSearch extends Search {
     /**@ts-ignore*/
     super(...args);
 
-    this.maxDepth = 22;
+    this.maxDepth = 20;
     this.solution = null;
   }
   /**@ts-ignore*/
@@ -242,7 +242,7 @@ export const phaseOne = new PhaseOneSearch(phaseOneTables);
  * @param {*} scramble
  * @param {*} maxDepth
  */
-const kociemba = (scramble, maxDepth = 22) => {
+const kociemba = (scramble, maxDepth = 20) => {
   if (Array.isArray(scramble)) {
     return phaseOne.solve({
       indexes: scramble,
