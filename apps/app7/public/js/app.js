@@ -242,10 +242,14 @@ const solve = button_id => {
                 cube_currentstate: 	APP_GLOBAL.cube.getState(),
                 cube_goalstate: 	null})
                 .then(result=>{
+                    common.ComponentRemove('common_dialogue_message', true);
                     AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner');
                     show_solution_result(result, button_id);
                 })
-                .catch(()=>AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner'));
+                .catch(()=>{
+                    common.ComponentRemove('common_dialogue_message', true);
+                    AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner');
+                });
     }
 };
 /**

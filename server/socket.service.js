@@ -341,6 +341,28 @@ const ClientAdd = (newClient) => {
     return {sent:0};
 };
 /**
+ * 
+ * Sends message to given app having the correct authorization_header
+ * Used for sending server side event from an app server function
+ * @param {number} app_id
+ * @param {string} iam
+ * @param {import('../types.js').socket_broadcast_type_all} message_type
+ * @param {string} message
+ * @returns {Promise.<{sent:number}>}
+ */
+const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =>{
+    /**@type{import('./iam.service.js')} */
+    const { iam_decode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+
+    const client = CONNECTED_CLIENTS.filter(client=>client.app_id == app_id && client.authorization_bearer == iam_decode(iam).get('authorization_bearer'));
+    if (client.length == 1){
+        ClientSend(client[0].response, message, message_type);
+        return {sent:1};
+    }
+    else
+        return {sent:0};
+};
+/**
  * Socket connected count
  * @param {number|null} identity_provider_id
  * @param {number|null} logged_in
@@ -454,4 +476,4 @@ const SocketUpdateExpiredTokens = () =>{
     }
 };
 
-export {ClientSend, ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedList, SocketSendAdmin, ConnectedCount, SocketConnect, SocketCheckInterval};
+export {ClientSend, ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedList, SocketSendAdmin, SocketSendAppServerFunction, ConnectedCount, SocketConnect, SocketCheckInterval};

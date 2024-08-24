@@ -183,6 +183,13 @@ body {
 	background-color : rgba(0,0,0,.5);
 }
 /* APP THEME COMMON*/
+#common_message_progressbar_wrap{
+	border-color: var(--common_app_color_blue1) !important;
+}
+#common_message_progressbar{
+	background-color: var(--common_app_color_blue1);
+}
+
 #common_lov_list[data-lov='CUSTOM'] .common_list_lov_col2{
 	width:unset;
 	white-space: wrap;
