@@ -1,11 +1,12 @@
 # App portfolio
 
-	An app portfolio created as a reference platform and implemented with support of any language and regional settings.
+	An app portfolio created as a reference platform and implemented with support for any language and regional settings.
 	Implemented with most necessary technology configured with less third party libraries and module dependencies 
 	for performance and better maintainability and with less obscure code.
 
 	All apps use pure Javascript (ES6+), Typescript, Vue, React, HTML and CSS without any build steps
 	All apps use Vue SFC pattern and realtime switchable framework between Vue, React and Javascipt.
+	All apps use mostly logographic UI compared to traditional phonemic UI
 	All apps use common user access and any user data is saved in each app for the user.
 
 	Server renders basic app HTML using parameters.
@@ -66,7 +67,7 @@
 	Finding common factors in MariaDB, Mysql, PostgreSQL, Oracle and SQLite databases to implement easier maintainable REST API 
 	and datamodel.
 	Consolidate ideas from Angular, Vue, React, jQuery, Oracle Forms, Oracle Reports and Oracle APEX, existing log and 
-	monitor solutions, common implementation patterns, javascript frameworks to optimal structure and implementation.
+	monitor solutions and common implementation patterns to optimal structure and implementation.
 
 	Requirements
 
@@ -202,31 +203,6 @@
 	App 5 - Bank app
 	App 6 - Shop app
 	App 7 - Cube app
-
-	App 2 can be installed as Progressive web app (PWA).
-
-	Example of complexity of full support of regional settings in app 2:
-	Use case:
-	A swedish timetable admin who only speaks english and swedish wants to help turkish user creating timetable 
-	in arabic and turkish including transliteration of arabic text and showing both gregorian and hijri calendar
-	in the same timetable. 
-	They live in India so local settings including number system Devanagari numerals (deva in navigator) should be used.
-	Header and footer will contain some chinese and urdu with Nastaliq to provide information to guests.
-	Timetable shall include all timezones in the current and displayed in the same timetable.
-
-	Use case in the app:
-	User works remotely and can choose swedish as user preference displaying message in swedish and seeing 
-	regional settings in swedish in left to right environment and local timezone.
-	User can design a timetable in bilanguage, first language arabic second turkish using right to left layout
-	showing result in timetable in right to left in arabic and turkish.
-	User creates different timetables with different timezone settings according to chosen GPS
-	positions, that is looked up in the map in settings, in the same timetable.
-	User can keep track of local timezone in settings while working with other timezones.
-	User get swedish app messages and ui is in swedish and can see other languages in the timetable.
-	User choose to display both transliteration and translation in the timetable.
-	User change the arabic timetable to show numbersystem deva and display second calendar on timetable.
-	User can preview any past or future timetable date period in Gregorian or Hijri and can print.
-	User copies encoded url (to secure privacy) in settings for day, month and year timetable to be shared.
 
 # Installation instructions
 
