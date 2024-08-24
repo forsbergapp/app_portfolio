@@ -3073,7 +3073,7 @@ const common_event = async (event_type,event=null) =>{
         switch (event_type){
             case 'click':{
                 //close all open div selects if not clicking inside a div select 
-                if (event.target.className.indexOf('common_select')<0){
+                if (typeof event.target.className=='string' && event.target.className.indexOf('common_select')<0){
                     AppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`).forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
                 }
 

@@ -299,7 +299,8 @@ function transformPoint(t, p) {
  */
 function averagePoints(ps) {
 	const avg = {x: 0, y: 0, z: 0};
-	for (var i = 0, il = ps.length; i < il; ++i) {
+	const il = ps.length;
+	for (let i = 0; i < il; ++i) {
 		const p = ps[i];
 		avg.x += p.x;
 		avg.y += p.y;
@@ -319,7 +320,8 @@ function averagePoints(ps) {
  */
 function averageUnRotatedPoints(ps) {
 	const avg = {x: 0, y: 0, z: 0};
-	for (var i = 0, il = ps.length; i < il; ++i) {
+	const il = ps.length;
+	for (let i = 0; i < il; ++i) {
 		const p = ps[i];
 		avg.x += p.xo;
 		avg.y += p.yo;
@@ -433,54 +435,7 @@ Face.prototype.draw = function (index) {
 	face.setAttribute('d', `M${this.p0.X} ${this.p0.Y} L${this.p1.X} ${this.p1.Y} L${this.p2.X} ${this.p2.Y} L${this.p3.X} ${this.p3.Y} Z`);
 
 };
-// Face.prototype.getRenderData = function(){
-	
-// 	this.normal.projection(); 
-// 	const light = ( 
-// 		false ? 
-// 		this.normal.y + this.normal.z * 0.5 : 
-// 		this.normal.z 
-// 	); 
-// 	//CHANGE: adds this. before g and b variables
-// 	let r = this.g = this.b;
-// 	const rgb = hexToRgb(this.color);
-// 	/**@ts-ignore */
-// 	r = Math.round(rgb.r*light).toString(16);
-// 	/**@ts-ignore */
-// 	this.g = Math.round(rgb.g*light).toString(16);
-// 	/**@ts-ignore */
-// 	this.b = Math.round(rgb.b*light).toString(16);
-// 	r = r.length == 1 ? '0' + r : r;
-// 	this.g = this.g.length == 1 ? '0' + this.g : this.g;
-// 	this.b = this.b.length == 1 ? '0' + this.b : this.b;
-// 	const fillColor = '#' + r + this.g + this.b;
-// 	return {
-// 		FillColor:fillColor,
-// 		StrokeColor:null,
-// 		LineWidth:null,
-// 		Actions:[
-// 			{
-// 				Action:'move',
-// 				x:this.p0.X,
-// 				y:this.p0.Y
-// 			},{
-// 				Action:'line',
-// 				x: this.p1.X, 
-// 				y:this.p1.Y
-// 			},{
-// 				Action:'line',
-// 				x: this.p2.X, 
-// 				y:this.p2.Y
-// 			},{
-// 				Action:'line',
-// 				x: this.p3.X, 
-// 				y:this.p3.Y
-// 			},{
-// 				Action:'close'
-// 			}
-// 		]
-// 	};
-// };
+
 /**********************************
  * Cube Object
  **********************************/
@@ -550,70 +505,6 @@ RubiksCube.prototype.update = function(){
 	}
 };
 
-// /**
-//  * @param {*} colors
-//  */
-// Cube.prototype.updateColors = function(colors){
-// 	this.faces.forEach(function(face){
-// 		/**
-// 		 * @param{*} color
-// 		 */
-// 		const getColor = (color) => {
-// 			switch (color){
-// 				case 'cube_white':{
-// 					return WHITE;
-// 				}
-// 				case 'cube_blue':{
-// 					return BLUE;
-// 				}
-// 				case 'cube_green':{
-// 					return GREEN;
-// 				}
-// 				case 'cube_red':{
-// 					return RED;
-// 				}
-// 				case 'cube_orange':{
-// 					return ORANGE;
-// 				}
-// 				case 'cube_yellow':{
-// 					return YELLOW;
-// 				}
-// 			}	
-// 		}
-// 		if(colors[0] && face.normal.zo == 1)
-// 			face.color = getColor(colors[0]);
-// 		else if(colors[1] && face.normal.yo == 1)
-// 			face.color = getColor(colors[1]);
-// 		else if(colors[2] && face.normal.yo == -1)
-// 			face.color = getColor(colors[2]);
-// 		else if(colors[3] && face.normal.xo == 1)
-// 			face.color = getColor(colors[3]);
-// 		else if(colors[4] && face.normal.xo == -1)
-// 			face.color = getColor(colors[4]);
-// 		else if(colors[5] && face.normal.zo == -1)
-// 			face.color = getColor(colors[5]);
-// 	});
-// };
-
-// Cube.prototype.getColors = function(){
-// 	const colors = [null,null,null,null,null,null];
-// 	this.faces.forEach(function(face){
-// 		if(face.normal.zo == 1)
-// 			colors[0] = face.color;
-// 		else if(face.normal.yo == 1)
-// 			colors[1] = face.color;
-// 		else if(face.normal.yo == -1)
-// 			colors[2] = face.color;
-// 		else if(face.normal.xo == 1)
-// 			colors[3] = face.color;
-// 		else if(face.normal.xo == -1)
-// 			colors[4] = face.color;
-// 		else if(face.normal.zo == -1)
-// 			colors[5] = face.color;
-// 	});
-// 	return colors;
-// };
-
 Cube.prototype.getPosition = function() {
 	const points = [];
 	for(let i=0; i<this.points.length; i++){
@@ -664,31 +555,7 @@ Cube.prototype.resetRotation = function() {
 	this.rotateZ = 0;
 	this.rotationAffine = makeIdentityAffine();
 };
-// Cube.prototype.getRenderData = function(){
-// 	const result = [];
-// 	const faces = [];
-// 	let j = 0, p; 
-// 	while ( p = this.points[j++] ) { 
-// 		p.projection(); 
-// 	}
-// 	for(let k=0; k<this.faces.length; k++){
-// 		this.faces[k].distanceToCamera();
-// 		faces.push(this.faces[k]);
-// 	}
-// 	faces.sort(function (p0, p1) { 
-// 		/**@ts-ignore */
-// 		return p1.distance - p0.distance; 
-// 	}); 
-// 	// ---- painting faces ---- 
-// 	j = 0; 
-// 	while ( f = faces[j++] ) { 
-// 		if (f.visible) { 
-// 			result.push(f.getRenderData());
-// 		} else break; 
-// 	}
 
-// 	return result;
-// };
 /**
  * @param {*} width
  */
@@ -774,25 +641,6 @@ RubiksCube.prototype.scramble = function(num) {
 			}, 10);
 		};
 		checkAgain();
-	}
-};
-
-RubiksCube.prototype.updateColors = function() {
-	if(this.rotating){
-		return;
-	}
-	this.blocks.forEach(function(block){
-		const p = block.getPosition();
-		/**@ts-ignore */
-		const colors = this.flatCube.getColors( 
-			p.y < 0 ? 1 : p.y > 0 ? -1 : 0, 
-			p.x < 0 ? -1 : p.x > 0 ? 1 : 0, 
-			p.z < 0 ? -1 : p.z > 0 ? 1 : 0
-		);
-		block.updateColors(colors);
-	}, this);
-	if(!this.rotating){
-		this.updateCallbacks.forEach(function(f){f();});
 	}
 };
 
