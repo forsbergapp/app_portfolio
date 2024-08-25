@@ -148,6 +148,69 @@
 	  - Automatic IP control integration with for example iptables
     - Social media monitoring
 
+
+# Apps included
+
+	App 0 - Admin app
+	Admin app for app admins and system admins with configuration, monitoring of live connections and logs, statistics, 
+	broadcast functions, database management, OS info, process info and user role management
+
+	App 1 - App portfolio app
+	Start app
+
+	App 2 - Timetable app
+	Timetable app using advanced CSS, complete regional and language settings, pixel perfect reports and map with gps functionality that integrates with microservices
+
+	App 3 - Presentation app
+	Presentation app that shows a simple app implementation
+
+	App 4 - Map app
+	World map that integrates with microservices
+
+	App 5 - Bank app
+	Bank app with core bank functionality using ISO standards and security in focus, integrates payment requests with merchants
+	bank account and uses server functions with factory pattern using entity/resource and json in data model concept
+
+	App 6 - Shop app
+	Shop app that shows a product with variants and stock info to buy, uses direct bank payment and external app server function pattern to communicate with bank app	
+
+	App 7 - Cube app
+	Cube solver app using generative AI pattern that uses robot or human model to solve current cube state
+	
+# Installation instructions
+
+1. Installation server
+
+	[docs/1.installation_server.md](docs/1.installation_server.md)
+
+2. Installation database
+
+	[docs/2.installation_database.md](docs/2.installation_database.md)
+
+3. Start Node.js
+	
+	[docs/3.start_nodejs.md](docs/3.start_nodejs.md)
+
+4. Server configuration
+
+	[docs/4.server_configuration.md](docs/4.server_configuration.md)
+
+5. Apps
+
+	[docs/5.apps.md](docs/5.apps.md)
+
+6. Configure development environment
+	
+	[docs/6.development.md](docs/6.development.md)
+
+7. Test
+	
+	[docs/7.test.md](docs/7.test.md)
+
+8. Typescript
+	
+	[docs/8.typescript_eslint.md](docs/8.typescript_eslint.md)
+
 # Providers
 
 	Oracle Cloud
@@ -193,52 +256,8 @@
 	Typescript
 	www.typescriptlang.org
 
-# Apps included
 
-	App 0 - Admin app
-	App 1 - Start app
-	App 2 - Timetable app
-	App 3 - Presentation app
-	App 4 - Map app
-	App 5 - Bank app
-	App 6 - Shop app
-	App 7 - Cube app
-
-# Installation instructions
-
-1. Installation server
-
-	[docs/1.installation_server.md](docs/1.installation_server.md)
-
-2. Installation database
-
-	[docs/2.installation_database.md](docs/2.installation_database.md)
-
-3. Start Node.js
-	
-	[docs/3.start_nodejs.md](docs/3.start_nodejs.md)
-
-4. Server configuration
-
-	[docs/4.server_configuration.md](docs/4.server_configuration.md)
-
-5. Apps
-
-	[docs/5.apps.md](docs/5.apps.md)
-
-6. Configure development environment
-	
-	[docs/6.development.md](docs/6.development.md)
-
-7. Test
-	
-	[docs/7.test.md](docs/7.test.md)
-
-8. Typescript
-	
-	[docs/8.typescript_eslint.md](docs/8.typescript_eslint.md)
-
-9. Issues
+# Issues
    
 	PM2 and NodeJS:
 
