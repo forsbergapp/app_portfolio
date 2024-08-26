@@ -65,7 +65,9 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 		
 		/**@type{import('../../../../server/socket.service')} */
 		const {SocketSendAppServerFunction} = await import(`file://${process.cwd()}/server/socket.service.js`);
-
+		//Only robot can solve to given goal state at the moment
+		if (data.cube_goalstate)
+			data.model = 0;
 		switch (data.model){
 			case 0:{
 				const timer1 = Date.now();
@@ -140,18 +142,26 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 					cs[29] + cs[5] + cs[31] + cs[20] + 'B' + cs[22] + cs[46] + cs[13] + cs[44]	//back
 				].join('').toLowerCase();  
 				let solution = cuberSolver3(cubstate_solver3, { partitioned: false });
-				/**@ts-ignore */
-				solution =  solution.toUpperCase().replaceAll('PRIME', '\'');	
-				const timer_finished = Date.now();
 				if (solution=='')
 					return [];
-				else
-					return [{	/**@ts-ignore */
-								cube_solution:solution, 
-								cube_solution_time:timer_finished-timer_start,
-								/**@ts-ignore */
-								cube_solution_length:solution.split(' ').length,
-								cube_solution_type:1}];
+				else{
+					//replace PRIME word with '
+					solution =  solution.toUpperCase().replaceAll('PRIME', '\'');
+					const timer_finished = Date.now();
+					//middle layer turns not supported
+					//M, E, S
+					if (solution.toUpperCase().indexOf('M')>-1 ||
+						solution.toUpperCase().indexOf('E')>-1 ||
+						solution.toUpperCase().indexOf('S')>-1)
+							throw ('Not supported');
+					else
+						return [{	/**@ts-ignore */
+							cube_solution:solution, 
+							cube_solution_time:timer_finished-timer_start,
+							/**@ts-ignore */
+							cube_solution_length:solution.split(' ').length,
+							cube_solution_type:1}];
+				}
 			}
 		}
 		
