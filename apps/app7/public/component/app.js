@@ -41,6 +41,9 @@ const template = props =>`<div id='app_main'>
                                             <div id='button_solve' class='common_dialogue_button'></div>
                                         </div>
                                         <div class='buttons_col'>
+                                            <div id='button_solve_cubestate' class='common_dialogue_button'></div>
+                                        </div>
+                                        <div class='buttons_col'>
                                             <div id='app_select_model' class='common_select'>
                                                 <div class='common_select_dropdown'>
                                                     <div class='common_select_dropdown_value' data-value='0'>${props.icon_robot}</div>
@@ -55,11 +58,15 @@ const template = props =>`<div id='app_main'>
                                         <div class='buttons_col'>
                                             <div id='button_solved_step' class='common_dialogue_button'></div>
                                         </div>
+                                        <div class='buttons_col'>
+                                            <div id='button_solved_step_cubestate' class='common_dialogue_button'></div>
+                                        </div>
                                     </div>
                                     <div class='buttons_row'>
                                         <div class='buttons_col'>
                                             <div id='button_scramble' class='common_dialogue_button'></div>
                                         </div>
+                                        <div class='buttons_col'></div>
                                         <div class='buttons_col'>
                                             <div id='app_select_temperature' class='common_select'>
                                                 <div class='common_select_dropdown'>
@@ -74,6 +81,9 @@ const template = props =>`<div id='app_main'>
                                         </div>
                                         <div class='buttons_col'>
                                             <div id='button_reset' class='common_dialogue_button'></div>
+                                        </div>
+                                        <div class='buttons_col'>
+                                            <div id='button_info' class='common_dialogue_button'></div>
                                         </div>
                                     </div>
                                 </div>
