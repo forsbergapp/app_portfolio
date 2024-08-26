@@ -78,8 +78,25 @@ const app_event_click = (event=null) => {
                     APP_GLOBAL.controls.cube.makeMove(event.target.getAttribute('name'));
                     break;
                 }
-                case 'button_solve':{
+                case 'button_solve':
+                case 'button_solved_step':{
                     solve(event.target.id);
+                    break;
+                }
+                case 'button_solve_cubestate':
+                case 'button_solved_step_cubestate':{
+                    const cubestate = prompt('?');
+                    /**@ts-ignore */
+                    if (cubestate && cubestate.split(' ').length==20)
+                        /**@ts-ignore */
+                        solve(event.target.id, cubestate.split(' '));
+                    else
+                        if (cubestate)
+                            common.show_message('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
+                    break;
+                }
+                case 'button_info':{
+                    common.show_message('INFO', null, null, null,APP_GLOBAL.cube.getState(), common.COMMON_GLOBAL.common_app_id);
                     break;
                 }
                 case event.target.id.startsWith('button_solve_speed')?event_target_id:null:{
@@ -87,10 +104,6 @@ const app_event_click = (event=null) => {
                     event.target.classList.add('button_speed_selected');
                     /**@ts-ignore */
                     APP_GLOBAL.controls.cube.turnSpeed = event.target.getAttribute('data-speed');
-                    break;
-                }
-                case 'button_solved_step':{
-                    solve(event.target.id);
                     break;
                 }
                 case 'button_step_info':
@@ -211,7 +224,7 @@ const show_solution_result = (result, button_id) =>{
         */
         const function_event = event => {
             const solution = atob(common.element_row(event.target).getAttribute('data-id') ?? '');
-            if (button_id=='button_solve')
+            if (button_id=='button_solve' || button_id=='button_solve_cubestate')
                 APP_GLOBAL.cube.makeMoves(solution);
             else
                 APP_GLOBAL.controls.setSolution(solution);
@@ -219,11 +232,15 @@ const show_solution_result = (result, button_id) =>{
         };
         common.lov_show({lov:'CUSTOM', lov_custom_list:cube_result_lov, lov_custom_value:'cube_solution', function_event:function_event});
     }
+    else
+        if (button_id=='button_solve_cubestate' || button_id=='button_solved_step_cubestate')
+            common.show_message('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
 };
 /**
  * @param {string} button_id
+ * @param {string|null} cube_goalstate
  */
-const solve = button_id => {
+const solve = (button_id, cube_goalstate=null) => {
     /**
      *  Solve parameters
      * 
@@ -240,7 +257,7 @@ const solve = button_id => {
                 preamble:           0,
                 temperature:        Number(AppDocument.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
                 cube_currentstate: 	APP_GLOBAL.cube.getState(),
-                cube_goalstate: 	null})
+                cube_goalstate: 	cube_goalstate})
                 .then(result=>{
                     common.ComponentRemove('common_dialogue_message', true);
                     AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner');
