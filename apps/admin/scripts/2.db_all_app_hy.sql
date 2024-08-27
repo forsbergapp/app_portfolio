@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,31,'{"name":"ադմին", "description":"Ադմինիստրատորի հավելված հավելվածների ադմինների և համակարգի ադմինների համար՝ կոնֆիգուրացիայով, կենդանի կապերի և տեղեկամատյանների մոնիտորինգով, վիճակագրությամբ, հեռարձակման գործառույթներ, տվյալների բազայի տեղեկատվություն, ՕՀ-ի մասին տեղեկատվություն, գործընթացի մասին տեղեկատվություն և օգտվողի դերի կառավարում"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,31,'{"name":"ադմին"}');
 --
 --  app_translation app_object_item
 --

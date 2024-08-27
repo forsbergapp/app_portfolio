@@ -3160,52 +3160,9 @@ const common_event = async (event_type,event=null) =>{
                                     AppWindow.open(app_url.innerHTML);
                             }
                             break;
-                        case 'common_dialogue_apps_info':{
-                            event.preventDefault();
-                            AppDocument.querySelector('#common_dialogue_info' ).style.visibility ='visible';
-                            AppDocument.querySelector('#common_dialogue_apps' ).style.visibility ='hidden';
-                            break;
-                        }
                         case 'common_dialogue_info_app_link':{
                             if (COMMON_GLOBAL.app_link_url)
                                 AppWindow.open(COMMON_GLOBAL.app_link_url,'_blank','');
-                            break;
-                        }
-                        //Dialogue info
-                        case 'common_dialogue_info_app_menu_apps':{
-                            AppDocument.querySelector('#common_dialogue_info_app_menu_content_apps' ).style.display ='block';
-                            AppDocument.querySelector('#common_dialogue_info_app_menu_content_info' ).style.display ='none';
-                            break;
-                        }
-                        case 'common_dialogue_info_app_menu_info':{
-                            AppDocument.querySelector('#common_dialogue_info_app_menu_content_apps' ).style.display ='none';
-                            AppDocument.querySelector('#common_dialogue_info_app_menu_content_info' ).style.display ='block';
-                            break;
-                        }
-                        case 'common_dialogue_info_info_diagram':
-                        case 'common_dialogue_info_info_diagram_img':{
-                            ComponentRender('common_window_info',
-                                            {   info:0,
-                                                url:AppDocument.querySelector('#common_dialogue_info_info_diagram_img').getAttribute('data-src'), 
-                                                content_type:null, 
-                                                iframe_content:null}, 
-                                            '/common/component/window_info.js');
-                            break;
-                        }
-                        case 'common_dialogue_info_info_datamodel':
-                        case 'common_dialogue_info_info_datamodel_img':{
-                            ComponentRender('common_window_info',
-                                            {   info:0,
-                                                url:AppDocument.querySelector('#common_dialogue_info_info_datamodel_img').getAttribute('data-src'),
-                                                content_type:null, 
-                                                iframe_content:null}, 
-                                            '/common/component/window_info.js');
-                            break;
-                        }
-                        case 'common_dialogue_info_home':{
-                            event.preventDefault();
-                            AppDocument.querySelector('#common_dialogue_info' ).style.visibility ='hidden';
-                            AppDocument.querySelector('#common_dialogue_apps' ).style.visibility ='visible';
                             break;
                         }
                         case 'common_dialogue_info_app_email':{

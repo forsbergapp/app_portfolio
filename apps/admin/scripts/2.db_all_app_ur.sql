@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,568,'{"name":"منتظم", "description":"ایپ ایڈمنز اور سسٹم ایڈمنز کے لیے ایڈمن ایپ کنفیگریشن، لائیو کنکشنز اور لاگز کی نگرانی، شماریات،براڈکاسٹ فنکشنز، ڈیٹا بیس کی معلومات، OS کی معلومات، عمل کی معلومات اور صارف کے کردار کا انتظام"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,568,'{"name":"منتظم"}');
 --
 --  app_translation app_object_item
 --
