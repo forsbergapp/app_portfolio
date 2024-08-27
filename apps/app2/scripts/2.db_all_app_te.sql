@@ -38,7 +38,7 @@ INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,531,'{"name":"కాలపట్టికలు", "description":"కాలపట్టికలు"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,531,'{"name":"కాలపట్టికలు"}');
 --
 -- app_translation app_setting
 --

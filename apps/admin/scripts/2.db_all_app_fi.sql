@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,162,'{"name":"järjestelmänvalvoja", "description":"Järjestelmänvalvojasovellus sovellusten järjestelmänvalvojille ja järjestelmänvalvojille määrityksellä, reaaliaikaisten yhteyksien ja lokien valvonnalla, tilastoilla, lähetystoiminnot, tietokantatiedot, käyttöjärjestelmätiedot, prosessitiedot ja käyttäjien roolien hallinta"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,162,'{"name":"Järjestelmänvalvoja"}');
 --
 --  app_translation app_object_item
 --

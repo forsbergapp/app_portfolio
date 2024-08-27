@@ -595,7 +595,6 @@
  * @property {string} CLIENT_ID
  * @property {config_apps_status} STATUS
  * @property {string} APP_NAME_TRANSLATION
- * @property {string} APP_DESCRIPTION
  * @property {string} APP_CATEGORY
  * @property {string} PROTOCOL
  * @property {string|null} HOST

@@ -648,7 +648,6 @@ const getApps = async (app_id, resource_id, lang_code) =>{
         app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
         app.APP_CATEGORY = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_category;
         app.APP_NAME_TRANSLATION = JSON.parse(apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_translation.toString()).name;
-        app.APP_DESCRIPTION = JSON.parse(apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_translation).description;
         const image = await fs.promises.readFile(`${process.cwd()}${app.LOGO}`);
         /**@ts-ignore */
         app.LOGO = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');

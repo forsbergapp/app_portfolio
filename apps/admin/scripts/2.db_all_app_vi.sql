@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,575,'{"name":"quản trị viên", "description":"Ứng dụng quản trị dành cho quản trị viên ứng dụng và quản trị viên hệ thống với cấu hình, giám sát các kết nối và nhật ký trực tiếp, số liệu thống kê, chức năng phát sóng, thông tin cơ sở dữ liệu, thông tin hệ điều hành, thông tin quy trình và quản lý vai trò người dùng"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,575,'{"name":"quản trị viên"}');
 --
 --  app_translation app_object_item
 --

@@ -38,15 +38,7 @@
 #common_dialogue_user_menu_preference_direction::before{	content:var(--common_app_icon_regional_direction)}
 #common_dialogue_user_menu_preference_arabic_script::before{content:var(--common_app_icon_regional_script)}
 
-#common_dialogue_apps_info::before{							content:var(--common_app_icon_info)}
-
-#common_dialogue_info_home::before{							content:var(--common_app_icon_home)}
-#common_dialogue_info_title1::before{						content:var(--common_app_icon_sky_cloud) ' ' var(--common_app_icon_misc_model)}
-#common_dialogue_info_title2::before{						content:var(--common_app_icon_database) ' ' var(--common_app_icon_misc_model)}
 #common_dialogue_info_contact_text::before{					content:var(--common_app_icon_email)}
-#common_dialogue_info_app_menu_apps::before{				content:var(--common_app_icon_apps)}
-#common_dialogue_info_app_menu_info::before{				content:var(--common_app_icon_info)}
-
 
 #common_user_verify_email_icon::before{						content:var(--common_app_icon_email)}
 #common_user_verify_cancel::before{							content:var(--common_app_icon_cancel)}
@@ -500,9 +492,6 @@ select {
     }
 }
 /*DIALOGUE APPS*/
-#common_dialogue_apps_info{
-	width: 100%;
-}
 #common_dialogue_apps{
 	overflow: hidden;
 }
@@ -580,54 +569,49 @@ select {
 	display:none;
 }
 /*DIALOGUE INFO*/
-#common_dialogue_info_app_page{
-	display: flex;
-	flex-direction: row;
-}
-#common_dialogue_info_app_menu{
-	width: 75px;
-	flex-direction: row;
-	border-inline-end:0.5px solid;
-}
-#common_dialogue_info_app_menu_space{
-	height: 200px;
-}
-#common_dialogue_info_app_menu_content_apps{
-	display: none;
-}
-#common_dialogue_info_app_menu_content_info{
-	display: block;
-}
-#common_dialogue_info_app_menu_content_info #common_dialogue_info_contact_text, #common_dialogue_info_app_email{
+#common_dialogue_apps #common_dialogue_info_contact_text, 
+#common_dialogue_apps #common_dialogue_info_app_email{
 	display: inline-block;
 }
 
-#common_dialogue_info_app_menu_content_info #common_dialogue_info_title1, #common_dialogue_info_title2{
+#common_dialogue_apps #common_dialogue_info_title1, 
+#common_dialogue_apps #common_dialogue_info_title2{
     height: 30px;
     margin: 0 auto;
 }
-#common_dialogue_info_app_menu_content_info #common_dialogue_info_start_links, #common_dialogue_info_contact, #common_dialogue_info_app_copyright{
+#common_dialogue_apps #common_dialogue_info_start_links, 
+#common_dialogue_apps #common_dialogue_info_contact, 
+#common_dialogue_apps #common_dialogue_info_app_copyright{
 	font-size: 11px;
-	width: 300px;
 }
-#common_dialogue_info_app_menu_content_info #common_dialogue_info_start_links #common_dialogue_info_app_link_row, #common_dialogue_info_info_link_row{
+#common_dialogue_apps #common_dialogue_info_start_links 
+#common_dialogue_apps #common_dialogue_info_app_link_row, 
+#common_dialogue_apps #common_dialogue_info_info_link_row{
 	text-align: center;
 	width: 100%;
 }
-#common_dialogue_info_app_menu_content_info #common_dialogue_info_app_link_row div, #common_dialogue_info_info_link_row div{
+#common_dialogue_apps #common_dialogue_info_app_link_row div, 
+#common_dialogue_apps #common_dialogue_info_info_link_row div{
 	display: inline-block;
 	margin:5px;
 }
-#common_dialogue_info_app_menu_content_info #common_dialogue_info_info_diagram_img, #common_dialogue_info_info_datamodel_img{
+#common_dialogue_apps #common_dialogue_info_info_diagram_img, 
+#common_dialogue_apps #common_dialogue_info_info_datamodel_img{
 	width: 113.77px;
 	height: 64px;
 }
-#common_dialogue_info_app_menu_content_info #common_dialogue_info_info_diagram, #common_dialogue_info_info_datamodel{
+#common_dialogue_apps #common_dialogue_info_info_diagram, 
+#common_dialogue_apps #common_dialogue_info_info_datamodel{
 	cursor:pointer;
 }
-
-#common_dialogue_apps.common_dialogue_show0,
-#common_dialogue_info.common_dialogue_show0{
+#common_dialogue_apps #common_dialogue_apps_info{
+	display: inline-block;
+	width: 100%;
+	position: fixed;
+	bottom: 1em;
+	inset-inline-start: 0px;
+}
+#common_dialogue_apps.common_dialogue_show0{
 	width: 350px;
 	height: calc(100% - 200px);
 }

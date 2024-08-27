@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,198,'{"name":"אדמין", "description":"אפליקציית ניהול למנהלי אפליקציה ומנהלי מערכת עם תצורה, ניטור של חיבורים ויומנים חיים, סטטיסטיקות, פונקציות שידור, מידע על מסד נתונים, מידע על מערכת ההפעלה, מידע על תהליך וניהול תפקידי משתמש"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,198,'{"name":"אדמין"}');
 --
 --  app_translation app_object_item
 --

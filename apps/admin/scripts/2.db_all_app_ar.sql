@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,25,'{"name":"مسؤل", "description":"تطبيق إداري لمشرفي التطبيق ومسؤولي النظام مع التكوين ومراقبة الاتصالات والسجلات الحية والإحصاءات ،وظائف البث ومعلومات قاعدة البيانات ومعلومات نظام التشغيل ومعلومات العملية وإدارة دور المستخدم"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,25,'{"name":"مسؤل"}');
 --
 --  app_translation app_object_item
 --

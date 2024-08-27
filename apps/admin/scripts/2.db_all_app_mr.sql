@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,338,'{"name":"प्रशासक", "description":"कॉन्फिगरेशनसह ऍप ऍडमिन आणि सिस्टम ऍडमिनसाठी ऍडमिन ऍप, लाइव्ह कनेक्शन आणि लॉगचे निरीक्षण, आकडेवारी, ब्रॉडकास्ट फंक्शन्स, डेटाबेस माहिती, OS माहिती, प्रक्रिया माहिती आणि वापरकर्ता भूमिका व्यवस्थापन"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,338,'{"name":"प्रशासक"}');
 --
 --  app_translation app_object_item
 --

@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,63,'{"name":"অ্যাডমিন", "description":"কনফিগারেশন, লাইভ সংযোগ এবং লগ পর্যবেক্ষণ, পরিসংখ্যান সহ অ্যাপ অ্যাডমিন এবং সিস্টেম অ্যাডমিনদের জন্য অ্যাডমিন অ্যাপ ব্রডকাস্ট ফাংশন, ডাটাবেস তথ্য, ওএস তথ্য, প্রক্রিয়া তথ্য এবং ব্যবহারকারীর ভূমিকা পরিচালনা"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,63,'{"name":"অ্যাডমিন"}');
 --
 --  app_translation app_object_item
 --

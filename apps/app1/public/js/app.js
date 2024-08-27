@@ -349,6 +349,7 @@ const get_apps = () => {
     common.ComponentRender('common_dialogue_apps',
                             {
                                 common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                app_id:common.COMMON_GLOBAL.app_id,
                                 app_copyright:common.COMMON_GLOBAL.app_copyright,
                                 app_email:common.COMMON_GLOBAL.app_email,
                                 app_link_url:common.COMMON_GLOBAL.app_link_url,
