@@ -367,6 +367,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
   }
 .box_title{
 	width: 95%;
+	height: 2em;
 }
 .box_title .common_icon{
 	height: 1.3em;
@@ -611,9 +612,6 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	overflow-x: auto;
 	margin-bottom: 10px;
 	border-radius: 4px;
-}
-#list_app_parameter{
-	height: 67%;
 }
 #list_apps_row_title, #list_app_parameter_row_title{
 	height: auto;
