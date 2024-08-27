@@ -1,14 +1,13 @@
 # App portfolio
 
 	An app portfolio created as a reference platform and implemented with support for any language and regional settings.
-	Implemented with most necessary technology configured with less third party libraries and module dependencies 
-	for performance and better maintainability and with less obscure code.
-
+	
 	All apps use pure Javascript (ES6+), Typescript, Vue, React, HTML and CSS without any build steps
 	All apps use Vue SFC pattern and realtime switchable framework between Vue, React and Javascipt.
 	All apps use mostly logographic UI compared to traditional phonemic UI
 	All apps use common user access and any user data is saved in each app for the user.
 
+	Implemented with less third party libraries and module dependencies for performance and better maintainability.
 	Server renders basic app HTML using parameters.
 	Server uses secure REST API with authentication middleware that authenticates claims in access or id tokens and 
 	also authenticates request access to resources on user and app level.
