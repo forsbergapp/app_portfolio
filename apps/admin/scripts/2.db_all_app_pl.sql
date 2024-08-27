@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,434,'{"name":"Admin", "description":"Aplikacja Admin dla administratorów aplikacji i administratorów systemu z konfiguracją, monitorowaniem połączeń i logów na żywo, statystykami, funkcje transmisji, informacje o bazie danych, informacje o systemie operacyjnym, informacje o procesach i zarządzanie rolami użytkowników"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,434,'{"name":"Admin"}');
 --
 --  app_translation app_object_item
 --

@@ -1,4 +1,4 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,224,'{"name":"店", "description":"店"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (<APP_ID/>,224,'{"name":"店"}');

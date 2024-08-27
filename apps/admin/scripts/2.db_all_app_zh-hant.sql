@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,546,'{"name":"行政", "description":"應用程序管理員和系統管理員的管理應用程序，具有配置、實時連接和日誌監控、統計信息、廣播功能、數據庫信息、操作系統信息、進程信息和用戶角色管理"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,546,'{"name":"行政"}');
 --
 --  app_translation app_object_item
 --

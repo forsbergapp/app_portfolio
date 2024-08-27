@@ -1,7 +1,7 @@
 --
 -- app_translation app
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,527,'{"name":"நிர்வாகம்", "description": "உள்ளமைவு, நேரடி இணைப்புகள் மற்றும் பதிவுகளை கண்காணித்தல், புள்ளிவிவரங்கள், பயன்பாட்டு நிர்வாகிகள் மற்றும் கணினி நிர்வாகிகளுக்கான நிர்வாகி பயன்பாடு ஒளிபரப்பு செயல்பாடுகள், தரவுத்தள தகவல், OS தகவல், செயல்முறை தகவல் மற்றும் பயனர் பங்கு மேலாண்மை"}');
+INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,527,'{"name":"நிர்வாகம்"}');
 --
 --  app_translation app_object_item
 --
