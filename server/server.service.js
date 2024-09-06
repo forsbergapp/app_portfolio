@@ -162,7 +162,9 @@ const COMMON = {
  */
  const serverRoutes = async (routesparameters) =>{
     /**@type{import('../microservice/microservice.service.js')} */
-    const {microservice_api_version, microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+    const {microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+    /**@type{import('../microservice/registry.service.js')} */
+    const {microservice_api_version}= await import(`file://${process.cwd()}/microservice/registry.service.js`);
 
     //server app object
     /**@type{import('../apps/apps.js')} */

@@ -6,4 +6,3 @@ logs/
 node_modules/
 microservice/config/
 microservice/data/
-microservice/temp/
