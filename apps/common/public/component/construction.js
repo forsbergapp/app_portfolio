@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/component/construction
+ */
+
 const template ='   <div id=\'common_construction\' class=\'common_icon\'></div>';
 /**
  * 

@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/dialogue_lov
+ */
+
+/**
  * 
  * @param {{list:*,
  *          lov:string,

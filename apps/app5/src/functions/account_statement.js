@@ -1,4 +1,6 @@
-/** @module apps/app5 */
+/**
+ * @module apps/app5/src/functions/account_statement
+ */
 
 /**
  * IBAN mod 97

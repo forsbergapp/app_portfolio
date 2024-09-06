@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3
+ */
+
 import { Solver } from './Solver.js';
 import { algorithmShortener } from './algorithm-shortener.js';
 

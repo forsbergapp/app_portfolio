@@ -1,4 +1,8 @@
 /**
+ * @module apps/app7/component/app
+ */
+
+/**
  * @param {{icon_robot:string,
  *          icon_human:string, 
  *          icon_solution:string,

@@ -1,4 +1,7 @@
-/** @module apps/app6 */
+/**
+ * @module apps/app6/src/functions/payment_request_get_status
+ */
+
 /**
  * @param {number} app_id
  * @param {{payment_request_id: string,

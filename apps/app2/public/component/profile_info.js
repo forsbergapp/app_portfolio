@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/component/profile_info
+ */
+
 const template =`   <div id='profile_info_user_settings'>
                         <div id='profile_main_btn_user_settings' class='common_link common_icon'></div>
                     </div>

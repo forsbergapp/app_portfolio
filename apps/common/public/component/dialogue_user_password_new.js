@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/component/dialogue_user_password_new
+ */
+
 const template =`   <div id='common_user_password_new_icon' class='common_icon'></div>
                     <div id='common_user_password_new_auth'><AUTH/></div>
                     <div class='common_password_container'>

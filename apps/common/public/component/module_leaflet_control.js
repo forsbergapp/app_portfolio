@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/module_leaflet_control
+ */
+
+/**
  * @typedef {{  id:number,
  *              display_data:string,
  *              value:string,

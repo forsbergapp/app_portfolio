@@ -1,3 +1,7 @@
+/** 
+ * @module apps/app7/app
+ * @access public
+ */
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 

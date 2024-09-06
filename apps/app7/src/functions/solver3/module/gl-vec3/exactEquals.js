@@ -1,4 +1,8 @@
-module.exports = exactEquals
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
+module.exports = exactEquals;
 
 /**
  * Returns whether or not the vectors exactly have the same elements in the same position (when compared with ===)
@@ -8,5 +12,5 @@ module.exports = exactEquals
  * @returns {Boolean} True if the vectors are equal, false otherwise.
  */
 function exactEquals(a, b) {
-  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2]
+  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
 }

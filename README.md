@@ -206,9 +206,9 @@
 	
 	[docs/7.test.md](docs/7.test.md)
 
-8. Typescript
+8. Typescript, JSDoc and ESLint
 	
-	[docs/8.typescript_eslint.md](docs/8.typescript_eslint.md)
+	[docs/8.typescript_jsdoc_eslint.md](docs/8.typescript_jsdoc_eslint.md)
 
 # Providers
 

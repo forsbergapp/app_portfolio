@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/models/cube
+ */
+
 import { Vector } from './Vector.js';
 import { Face } from './Face.js';
 

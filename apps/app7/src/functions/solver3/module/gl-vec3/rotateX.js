@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = rotateX;
 
 /**
@@ -9,20 +13,20 @@ module.exports = rotateX;
  * @returns {vec3} out
  */
 function rotateX(out, a, b, c){
-    var by = b[1]
-    var bz = b[2]
+    const by = b[1];
+    const bz = b[2];
 
     // Translate point to the origin
-    var py = a[1] - by
-    var pz = a[2] - bz
+    const py = a[1] - by;
+    const pz = a[2] - bz;
 
-    var sc = Math.sin(c)
-    var cc = Math.cos(c)
+    const sc = Math.sin(c);
+    const cc = Math.cos(c);
 
     // perform rotation and translate to correct position
-    out[0] = a[0]
-    out[1] = by + py * cc - pz * sc
-    out[2] = bz + py * sc + pz * cc
+    out[0] = a[0];
+    out[1] = by + py * cc - pz * sc;
+    out[2] = bz + py * sc + pz * cc;
 
-    return out
+    return out;
 }

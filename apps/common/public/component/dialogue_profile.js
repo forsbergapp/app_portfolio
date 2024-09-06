@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/dialogue_profile
+ */
+
+/**
  * @typedef { {profile_id:number|null,
  *             private:number|null}} result_profile
  * @typedef {{  id:number|null,

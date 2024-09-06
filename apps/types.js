@@ -1,3 +1,8 @@
+/** 
+ * Declaration of all types used in apps
+ * @module apps/types 
+ */
+
 /**
  * @typedef {{  body:{className:string, requestFullscreen:function, classList:{add:function, remove:function}},
  *              createElement:function,

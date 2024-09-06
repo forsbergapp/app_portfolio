@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/component/window_info
+ */
+
 const template =`   <div id='common_window_info_btn_close' class='common_toolbar_button common_icon'></div>
                     <div id='common_window_info_info'><INFO/></div>
                     <div id='common_window_info_toolbar'>

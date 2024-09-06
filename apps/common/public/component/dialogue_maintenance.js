@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/component/dialogue_maintenance
+ */
+
 const template =`   <div id='common_dialogue_maintenance_content' class='common_dialogue_content'>
                         <div id='common_maintenance_logo'></div>
                         <div id='common_maintenance_message'></div>

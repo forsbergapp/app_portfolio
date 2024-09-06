@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/component/settings_tab2
+ */
+
 const template =`   <div id='mapid'></div>
                     <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>

@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver1/scramblers/zbll
+ */
+
 import getScrambleForPieces from './scramblePieces.js';
 import { Edges, Corners } from '../cube.js';
 

@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver1/algorithms
+ */
+
 // Numeric representation of the different powers of moves.
 const powers = {
   '': 0,

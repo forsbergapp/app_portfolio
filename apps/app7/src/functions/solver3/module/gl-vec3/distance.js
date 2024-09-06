@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = distance;
 
 /**
@@ -8,8 +12,8 @@ module.exports = distance;
  * @returns {Number} distance between a and b
  */
 function distance(a, b) {
-    var x = b[0] - a[0],
+    const x = b[0] - a[0],
         y = b[1] - a[1],
-        z = b[2] - a[2]
-    return Math.sqrt(x*x + y*y + z*z)
+        z = b[2] - a[2];
+    return Math.sqrt(x*x + y*y + z*z);
 }

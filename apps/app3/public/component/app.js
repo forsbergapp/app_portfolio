@@ -1,3 +1,7 @@
+/**
+ * @module apps/app3/component/app
+ */
+
 const template =`   <div id='dialogue_documents' class='dialogue'>
                         <div id='dialogue_documents_content' class='dialogue_content'>
                             <div id='doc_list'></div>

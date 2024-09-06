@@ -1,3 +1,7 @@
+/** 
+ * Declaration of all types used in server
+ * @module server/types 
+ */
 /** BFF
  * @typedef {'APP'|'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SUPERADMIN'|'SYSTEMADMIN'|'SOCKET'|'IAM_SYSTEMADMIN'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|
  *           'SERVER_APP'|'SERVER_REPORT'|'SERVER_SOCKET'|'SERVER_MAIL'} endpoint_type

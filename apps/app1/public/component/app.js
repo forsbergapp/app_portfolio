@@ -1,3 +1,7 @@
+/**
+ * @module apps/app1/component/app
+ */
+
 const template =`   <div id="theme_background">
                         <div class="moon">
                             <div class="crater crater-1"></div>

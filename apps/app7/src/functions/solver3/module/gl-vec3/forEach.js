@@ -1,6 +1,10 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = forEach;
 
-var vec = require('./create')()
+const vec = require('./create')();
 
 /**
  * Perform some operation over an array of vec3s.
@@ -15,30 +19,30 @@ var vec = require('./create')()
  * @function
  */
 function forEach(a, stride, offset, count, fn, arg) {
-        var i, l
+        let i, l;
         if(!stride) {
-            stride = 3
+            stride = 3;
         }
 
         if(!offset) {
-            offset = 0
+            offset = 0;
         }
         
         if(count) {
-            l = Math.min((count * stride) + offset, a.length)
+            l = Math.min((count * stride) + offset, a.length);
         } else {
-            l = a.length
+            l = a.length;
         }
 
         for(i = offset; i < l; i += stride) {
-            vec[0] = a[i] 
-            vec[1] = a[i+1] 
-            vec[2] = a[i+2]
-            fn(vec, vec, arg)
-            a[i] = vec[0] 
-            a[i+1] = vec[1] 
-            a[i+2] = vec[2]
+            vec[0] = a[i]; 
+            vec[1] = a[i+1]; 
+            vec[2] = a[i+2];
+            fn(vec, vec, arg);
+            a[i] = vec[0]; 
+            a[i+1] = vec[1]; 
+            a[i+2] = vec[2];
         }
         
-        return a
+        return a;
 }

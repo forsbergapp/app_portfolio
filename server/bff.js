@@ -1,4 +1,4 @@
-/** @module apps */
+/** @module server/bff */
 
 /**@type{import('./bff.service.js')} */
 const service = await import('./bff.service.js');

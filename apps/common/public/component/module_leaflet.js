@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/module_leaflet
+ */
+
+/**
  * @typedef {{  doubleClickZoom:function,
  *              invalidateSize:function,
  *              removeLayer:function,

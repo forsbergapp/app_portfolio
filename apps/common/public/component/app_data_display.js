@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/app_data_display
+ */
+
+/**
 
  * 
  * @typedef {*} master_object_type

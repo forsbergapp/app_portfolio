@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = inverse;
 
 /**
@@ -8,8 +12,8 @@ module.exports = inverse;
  * @returns {vec3} out
  */
 function inverse(out, a) {
-  out[0] = 1.0 / a[0]
-  out[1] = 1.0 / a[1]
-  out[2] = 1.0 / a[2]
-  return out
+  out[0] = 1.0 / a[0];
+  out[1] = 1.0 / a[1];
+  out[2] = 1.0 / a[2];
+  return out;
 }

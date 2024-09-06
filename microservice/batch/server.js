@@ -1,4 +1,4 @@
-/** @module microservice/batch */
+/** @module microservice/batch/server */
 
 /**@type{import('./service.js')} */
 const service = await import('./service.js');

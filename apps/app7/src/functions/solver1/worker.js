@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver1/worker
+ */
+
 const { parentPort, workerData } = await import('node:worker_threads');
 /**@type{import('./index.js')} */
 const {default:cuberSolver1} = await import('./index.js');

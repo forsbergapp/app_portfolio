@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/dialogue_apps
+ */
+
+/**
  * @typedef {{  APP_ID:number,
  *              SUBDOMAIN:string,
  *              PROTOCOL:string,

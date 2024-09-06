@@ -1,3 +1,7 @@
+/**
+ * @module apps/app4/component/app
+ */
+
 const template ='   <div id=\'mapid\'></div>';
 /**
  * 

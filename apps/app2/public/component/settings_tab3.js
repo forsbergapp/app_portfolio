@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/component/settings_tab3
+ */
+
 const template =`   <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_design_theme_day' class='common_icon'></div>

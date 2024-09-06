@@ -1,4 +1,8 @@
 /**
+ * @module apps/app7/src/functions/solver3/module/combiner
+ */
+
+/**
  * Copied from array-element-combiner
  * removed debug functionality
  */

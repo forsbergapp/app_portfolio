@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver1/scramblers/3x3
+ */
+
 import {
   getPermutationFromIndex,
   getOrientationFromIndex,

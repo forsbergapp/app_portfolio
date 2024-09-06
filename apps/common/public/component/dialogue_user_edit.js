@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/component/dialogue_user_edit
+ */
+
 const template =`   <div id='common_user_edit_common'>
                         <div class='common_setting_horizontal_row'>
                             <div class='common_setting_horizontal_col'>
