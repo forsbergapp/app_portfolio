@@ -9,33 +9,30 @@ const path_common ='common';
 /**@type {import('../../../types.js').module_common} */
 const common = await import(path_common);
 
-/**@type {import('./cube.js')}*/
-const app_cube = await import('./cube.js');
-
 /**
  * @typedef {{  cube:*,
- *              flatCube:*,
- *              controls:*,
- *              width:number,
- *              icon_robot:string,
- *              icon_human:string,
- *              icon_moves:string,
- *              icon_time:string,
- *              icon_solution:string,
- *              icon_solution_list:string}} type_APP_GLOBAL
+ *              cube_controls:*,
+ *              cube_init:function,
+ *              cube_show_solution:function,
+ *              cube_solve:function,
+ *              cube_makeIdentityAffine:function,
+ *              cube_multiplyAffine:function,
+ *              cube_makeRotateAffineX:function,
+ *              cube_makeRotateAffineY:function,
+ *              width:number}} type_APP_GLOBAL
  */
 /**@type{type_APP_GLOBAL} */
 const APP_GLOBAL = {
-    cube : {},
-    flatCube: null,
-    controls: null,
-    width : 360,
-    icon_robot:'🤖',
-    icon_human:'👤',
-    icon_moves:'⤮',
-    icon_time: '⌛',
-    icon_solution:'💡',
-    icon_solution_list:'∞'
+    cube :{},
+    cube_controls:{},
+    cube_init:()=>null,
+    cube_show_solution:()=>null,
+    cube_solve:()=>null,
+    cube_makeIdentityAffine:()=>null,
+    cube_multiplyAffine:()=>null,
+    cube_makeRotateAffineX:()=>null,
+    cube_makeRotateAffineY:()=>null,
+    width : 360
 };
 
 /**
@@ -63,7 +60,9 @@ const app_event_click = (event=null) => {
         .then(()=>{
             switch (event_target_id){
                 case 'button_reset':{
-                    init_cube();
+                    const init_cube = APP_GLOBAL.cube_init();
+                    APP_GLOBAL.cube = init_cube.cube;
+                    APP_GLOBAL.cube_controls = init_cube.controls;
                     break;
                 }
                 case 'button_L':
@@ -78,22 +77,19 @@ const app_event_click = (event=null) => {
                 case 'button_D2':
                 case 'button_F2':
                 case 'button_B2':{
-                    /**@ts-ignore */
-                    APP_GLOBAL.controls.cube.makeMove(event.target.getAttribute('name'));
+                    APP_GLOBAL.cube_controls.cube.makeMove(event.target.getAttribute('name'));
                     break;
                 }
                 case 'button_solve':
                 case 'button_solved_step':{
-                    solve(event.target.id);
+                    APP_GLOBAL.cube_solve(APP_GLOBAL.cube, APP_GLOBAL.cube_controls, event.target.id);
                     break;
                 }
                 case 'button_solve_cubestate':
                 case 'button_solved_step_cubestate':{
                     const cubestate = prompt('?');
-                    /**@ts-ignore */
                     if (cubestate && cubestate.split(' ').length==20)
-                        /**@ts-ignore */
-                        solve(event.target.id, cubestate.split(' '));
+                        APP_GLOBAL.cube_solve(APP_GLOBAL.cube, APP_GLOBAL.cube_controls, event.target.id, cubestate.split(' '));
                     else
                         if (cubestate)
                             common.show_message('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
@@ -106,20 +102,17 @@ const app_event_click = (event=null) => {
                 case event.target.id.startsWith('button_solve_speed')?event_target_id:null:{
                     AppDocument.querySelectorAll('.button_solve_speed').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('button_speed_selected'));
                     event.target.classList.add('button_speed_selected');
-                    /**@ts-ignore */
-                    APP_GLOBAL.controls.cube.turnSpeed = event.target.getAttribute('data-speed');
+                    APP_GLOBAL.cube_controls.cube.turnSpeed = event.target.getAttribute('data-speed');
                     break;
                 }
                 case 'button_step_info':
                 case 'button_step':
                 case 'button_step_move':{
-                    /**@ts-ignore */
-                    APP_GLOBAL.controls.nextMove();
+                    APP_GLOBAL.cube_controls.nextMove();
                     break;
                 }
                 case 'button_scramble':{
-                    /**@ts-ignore */
-                    APP_GLOBAL.controls.cube.scramble();
+                    APP_GLOBAL.cube_controls.cube.scramble();
                     break;
                 }
                 case 'common_toolbar_framework_js':{
@@ -149,14 +142,14 @@ const app_event_other = () => {
 			e = e.touches[0];
 		}
 		APP_GLOBAL.cube.lastPos = {x:e.clientX,y:e.clientY};
-		APP_GLOBAL.cube.affinediff = app_cube.makeIdentityAffine();
+		APP_GLOBAL.cube.affinediff = APP_GLOBAL.cube_makeIdentityAffine();
         APP_GLOBAL.cube.render();
 	};
 	const onmouseup = function(){
 		if(APP_GLOBAL.cube.mouseDown){
 			APP_GLOBAL.cube.mouseDown = false;
 			if(APP_GLOBAL.cube.affinediff){
-				APP_GLOBAL.cube.customAffine = app_cube.multiplyAffine(APP_GLOBAL.cube.affinediff, APP_GLOBAL.cube.customAffine);
+				APP_GLOBAL.cube.customAffine = APP_GLOBAL.cube_multiplyAffine(APP_GLOBAL.cube.affinediff, APP_GLOBAL.cube.customAffine);
 			}
 			APP_GLOBAL.cube.affinediff = null;
             APP_GLOBAL.cube.render();
@@ -170,7 +163,7 @@ const app_event_other = () => {
 			}
 			const moved = {x:e.clientX - APP_GLOBAL.cube.lastPos.x, y:e.clientY-APP_GLOBAL.cube.lastPos.y};
 			APP_GLOBAL.cube.lastPos = {x:e.clientX,y:e.clientY};
-			APP_GLOBAL.cube.affinediff = app_cube.multiplyAffine(app_cube.multiplyAffine(app_cube.makeRotateAffineX(moved.y/100), app_cube.makeRotateAffineY(-moved.x/100)),APP_GLOBAL.cube.affinediff);
+			APP_GLOBAL.cube.affinediff = APP_GLOBAL.cube_multiplyAffine(APP_GLOBAL.cube_multiplyAffine(APP_GLOBAL.cube_makeRotateAffineX(moved.y/100), APP_GLOBAL.cube_makeRotateAffineY(-moved.x/100)),APP_GLOBAL.cube.affinediff);
             APP_GLOBAL.cube.render();
 		}
 	};
@@ -205,75 +198,6 @@ const app_event_other = () => {
     });
 };
 /**
- * @param {string}  result
- * @param {string}  button_id
- */
-const show_solution_result = (result, button_id) =>{
-    /**
-     * @type{{cube_solution:string,
-     *        cube_solution_time:number,
-     *        cube_solution_length:number,
-     *        cube_solution_model:number}[]}
-     */
-    const cube_result = JSON.parse(result).rows;
-    if (cube_result.length>0){
-        const cube_result_lov = cube_result.map(row=>{return {
-            //use base64 for solution in id column
-            id:btoa(row.cube_solution), 
-            cube_solution: `${row.cube_solution_model==0?APP_GLOBAL.icon_robot:APP_GLOBAL.icon_human} 
-                            (${APP_GLOBAL.icon_moves}:${row.cube_solution_length}, ${APP_GLOBAL.icon_time}:${row.cube_solution_time}) - ${row.cube_solution}`}; 
-        });
-        /**
-        * @param {import('../../../types.js').AppEvent} event
-        */
-        const function_event = event => {
-            const solution = atob(common.element_row(event.target).getAttribute('data-id') ?? '');
-            if (button_id=='button_solve' || button_id=='button_solve_cubestate')
-                APP_GLOBAL.cube.makeMoves(solution);
-            else
-                APP_GLOBAL.controls.setSolution(solution);
-            common.lov_close();
-        };
-        common.lov_show({lov:'CUSTOM', lov_custom_list:cube_result_lov, lov_custom_value:'cube_solution', function_event:function_event});
-    }
-    else
-        if (button_id=='button_solve_cubestate' || button_id=='button_solved_step_cubestate')
-            common.show_message('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
-};
-/**
- * @param {string} button_id
- * @param {string|null} cube_goalstate
- */
-const solve = (button_id, cube_goalstate=null) => {
-    /**
-     *  Solve parameters
-     * 
-     *  model               0=Robot, 1=Human
-     *  preamble            0=Singmaster notation
-     *  temperature         0=best solution, 1=all solutions for given model
-     *  cube current state  string of cube state
-     *  cube goalstate      empty to solve or to given cube state
-     */
-    if (APP_GLOBAL.cube.rotating == false){
-        AppDocument.querySelector(`#${button_id}`).classList.add('css_spinner');
-        common.FFB('/app-function/CUBE_SOLVE', null, 'POST', 'APP_DATA',
-            {   model:              Number(AppDocument.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
-                preamble:           0,
-                temperature:        Number(AppDocument.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
-                cube_currentstate: 	APP_GLOBAL.cube.getState(),
-                cube_goalstate: 	cube_goalstate})
-                .then(result=>{
-                    common.ComponentRemove('common_dialogue_message', true);
-                    AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner');
-                    show_solution_result(result, button_id);
-                })
-                .catch(()=>{
-                    common.ComponentRemove('common_dialogue_message', true);
-                    AppDocument.querySelector(`#${button_id}`).classList.remove('css_spinner');
-                });
-    }
-};
-/**
  * Sets framework
  * @param {number|null} framework 
  * @returns {Promise.<void>}
@@ -289,30 +213,41 @@ const solve = (button_id, cube_goalstate=null) => {
             Other:app_event_other});
 };
 
-const init_cube = () => {
-    /**@ts-ignore */
-    APP_GLOBAL.cube = new app_cube.RubiksCube( APP_GLOBAL.width);
-    /**@ts-ignore */
-    APP_GLOBAL.controls = new app_cube.RubiksCubeControls('button_controls', APP_GLOBAL.cube);
-    APP_GLOBAL.cube.render();
-};
 /**
  * Init app
  * @returns {Promise.<void>}
  */
 const init_app = async () => {
     AppDocument.body.className = 'app_theme1';
-    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {icon_robot:APP_GLOBAL.icon_robot, 
-                                                                icon_human:APP_GLOBAL.icon_human, 
-                                                                icon_solution:APP_GLOBAL.icon_solution,
-                                                                icon_solution_list:APP_GLOBAL.icon_solution_list}, '/component/app.js');
-    let html = '';
-    for (let i=0;i<156;i++){
-        html += `<path class='cube_face' id='cube_face_${i}'/>`;
-    }
-    /**@ts-ignore */
-    document.querySelector('#cube').innerHTML = `<svg xmlns='http://www.w3.org/2000/svg'>${html}</svg>`;
-    init_cube();
+    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
+    await common.ComponentRender('app_main_page', 
+                                    {cube_width:APP_GLOBAL.width,
+                                    common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                    function_element_row:common.element_row,
+                                    function_lov_show:common.lov_show,
+                                    function_lov_close:common.lov_close,
+                                    function_show_message:common.show_message,
+                                    function_ComponentRemove:common.ComponentRemove,
+                                    function_FFB:common.FFB
+                                }, '/component/cube.js')
+            .then((/**@type{{   cube_init:                  function, 
+                                cube_show_solution:         function,
+                                cube_solve:                 function,
+                                cube_makeIdentityAffine:    function,
+                                cube_multiplyAffine:        function,
+                                cube_makeRotateAffineX:     function,
+                                cube_makeRotateAffineY:     function}}*/data)=>{
+                APP_GLOBAL.cube_init =                  data.cube_init;
+                APP_GLOBAL.cube_show_solution =         data.cube_show_solution;
+                APP_GLOBAL.cube_solve =                 data.cube_solve;
+                APP_GLOBAL.cube_makeIdentityAffine =    data.cube_makeIdentityAffine;
+                APP_GLOBAL.cube_multiplyAffine =        data.cube_multiplyAffine;
+                APP_GLOBAL.cube_makeRotateAffineX =     data.cube_makeRotateAffineX;
+                APP_GLOBAL.cube_makeRotateAffineY =     data.cube_makeRotateAffineY;
+                const init_cube = APP_GLOBAL.cube_init();
+                APP_GLOBAL.cube = init_cube.cube;
+                APP_GLOBAL.cube_controls = init_cube.controls;
+            });
     framework_set();
 };
 /**
