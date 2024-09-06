@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/app_report
+ */
+
 /** 
  * @typedef {object} 	type_settings_report
  * @property {string}	locale

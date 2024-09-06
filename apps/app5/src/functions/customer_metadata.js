@@ -1,4 +1,7 @@
-/** @module apps/app5 */
+/**
+ * @module apps/app5/src/functions/customer_metadata
+ */
+
 /**
  * @param {number} app_id
  * @param {*} data

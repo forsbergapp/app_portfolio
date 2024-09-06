@@ -1,3 +1,7 @@
+/**
+ * @module apps/default_PWA/sw
+ */
+
 self.addEventListener('install', () => {
     return null;
 });

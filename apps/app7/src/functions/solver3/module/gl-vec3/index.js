@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = {
   EPSILON: require('./epsilon')
   , create: require('./create')
@@ -44,4 +48,4 @@ module.exports = {
   , rotateY: require('./rotateY')
   , rotateZ: require('./rotateZ')
   , forEach: require('./forEach')
-}
+};

@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver1/search
+ */
+
 import { parseAlgorithm, formatAlgorithm, invertAlgorithm } from './algorithms.js';
 import PruningTable from './PruningTable.js';
 import { allMoves } from './cube.js';

@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/component/app
+ */
+
 const template =`   <div id='toolbar_top'>
                         <div id='app_user_account'></div>
                         <div id='toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>

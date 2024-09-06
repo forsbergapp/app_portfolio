@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/component/dialogue_loading
+ */
+
 const template ='   <div id=\'dialogue_loading_content\'></div>';
 /**
  * 

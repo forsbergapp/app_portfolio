@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/profile_search_list
+ */
+
+/**
  * @typedef {{id:number, avatar:string, provider_image:string, username:string}} record_type
  */
 /**

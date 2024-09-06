@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/algorithm-shortener
+ */
+
 //import combiner from 'array-element-combiner';
 const combiner = await import('./module/combiner/index.js');
 

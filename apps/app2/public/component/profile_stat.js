@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/component/profile_stat
+ */
+
 const template =`   <div id='profile_stat_app2'>
                     <div id='profile_stat_row2'>
                         <div id='profile_stat_row2_1' class='common_link common_icon'></div>

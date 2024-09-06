@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver1/cube
+ */
+
 import { parseAlgorithm } from './algorithms.js';
 import { rotateParts } from './tools.js';
 

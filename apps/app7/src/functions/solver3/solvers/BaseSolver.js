@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/solvers/basesolver
+ */
+
 import { RubiksCube } from '../models/RubiksCube.js';
 import { transformNotations } from '../utils/index.js';
 

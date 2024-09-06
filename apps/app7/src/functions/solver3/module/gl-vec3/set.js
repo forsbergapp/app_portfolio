@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = set;
 
 /**
@@ -10,8 +14,8 @@ module.exports = set;
  * @returns {vec3} out
  */
 function set(out, x, y, z) {
-    out[0] = x
-    out[1] = y
-    out[2] = z
-    return out
+    out[0] = x;
+    out[1] = y;
+    out[2] = z;
+    return out;
 }

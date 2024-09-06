@@ -1,4 +1,4 @@
-/** @module apps */
+/** @module server/apps */
 
 /**@type{import('../server/config.service.js')} */
 const {CheckFirstTime, ConfigGet, ConfigGetAppHost, ConfigGetApp, ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);

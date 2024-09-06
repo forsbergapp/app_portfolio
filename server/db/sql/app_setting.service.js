@@ -1,4 +1,4 @@
-/** @module server/db/sql */
+/** @module server/db/sql/app_setting */
 
 /**@type{import('../../db/common.service.js')} */
 const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);

@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = lerp;
 
 /**
@@ -10,11 +14,11 @@ module.exports = lerp;
  * @returns {vec3} out
  */
 function lerp(out, a, b, t) {
-    var ax = a[0],
+    const ax = a[0],
         ay = a[1],
-        az = a[2]
-    out[0] = ax + t * (b[0] - ax)
-    out[1] = ay + t * (b[1] - ay)
-    out[2] = az + t * (b[2] - az)
-    return out
+        az = a[2];
+    out[0] = ax + t * (b[0] - ax);
+    out[1] = ay + t * (b[1] - ay);
+    out[2] = az + t * (b[2] - az);
+    return out;
 }

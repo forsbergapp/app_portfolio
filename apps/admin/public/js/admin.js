@@ -1,3 +1,7 @@
+/**
+ * Admin app
+ * @module apps/admin/admin
+ */
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 

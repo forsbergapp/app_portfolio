@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = transformMat3;
 
 /**
@@ -9,9 +13,9 @@ module.exports = transformMat3;
  * @returns {vec3} out
  */
 function transformMat3(out, a, m) {
-    var x = a[0], y = a[1], z = a[2]
-    out[0] = x * m[0] + y * m[3] + z * m[6]
-    out[1] = x * m[1] + y * m[4] + z * m[7]
-    out[2] = x * m[2] + y * m[5] + z * m[8]
-    return out
+    const x = a[0], y = a[1], z = a[2];
+    out[0] = x * m[0] + y * m[3] + z * m[6];
+    out[1] = x * m[1] + y * m[4] + z * m[7];
+    out[2] = x * m[2] + y * m[5] + z * m[8];
+    return out;
 }

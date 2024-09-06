@@ -4,8 +4,14 @@
         "dictionaries": ["jsdoc"]
     },
     "source": {
-        "includePattern": ".+\\.js$",
-        "excludePattern": "(.git/|.vscode/|.well_known/|config/|docs/|logs/|node_modules/)"
+        "include": ["."],
+        "exclude": [".git",
+                    ".vscode",
+                    ".well_known",
+                    "apps/common/public/modules",
+                    "config", "data", "dev", "docs", "logs", "node_modules", "scripts"],
+        "includePattern": ".+\\.js",
+        "excludePattern": ""
     },
     "plugins": ["plugins/markdown"],
     "recurseDepth": 10,

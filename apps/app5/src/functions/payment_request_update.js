@@ -1,4 +1,7 @@
-/** @module apps/app5 */
+/**
+ * @module apps/app5/src/functions/payment_request_update
+ */
+
 /**
  * @param {number} app_id
  * @param {{data_app_id:number,

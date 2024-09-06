@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/app
+ */
+
+/**
  * 
  * @param {{font_default:boolean|null,
  *          font_arabic:boolean|null,

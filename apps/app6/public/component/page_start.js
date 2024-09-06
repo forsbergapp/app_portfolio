@@ -1,4 +1,8 @@
 /**
+ * @module apps/app6/component/page_start
+ */
+
+/**
  * @returns {string}
  */
 const template = () => ` <div id='app_page_start_shop' class='app_page_start_shop app_shop_div'>

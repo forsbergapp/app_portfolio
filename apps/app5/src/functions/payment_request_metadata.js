@@ -1,4 +1,7 @@
-/** @module apps/app5 */
+/**
+ * @module apps/app5/src/functions/payment_request_metadata
+ */
+
 /**
  * @param {number} app_id
  * @param {*} data

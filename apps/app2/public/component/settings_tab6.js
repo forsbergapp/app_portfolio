@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/component/settings_tab6
+ */
+
 const template =`   <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>

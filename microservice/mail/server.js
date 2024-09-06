@@ -1,4 +1,4 @@
-/** @module microservice/mail */
+/** @module microservice/mail/server */
 
 /**@type{import('./service.js')} */
 const service = await import('./service.js');

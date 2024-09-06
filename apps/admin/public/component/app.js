@@ -1,3 +1,7 @@
+/**
+ * @module apps/admin/component/app
+ */
+
 const template ='   <div id=\'admin_secure\'></div>';
 /**
  * 

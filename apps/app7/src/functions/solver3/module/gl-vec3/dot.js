@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = dot;
 
 /**
@@ -8,5 +12,5 @@ module.exports = dot;
  * @returns {Number} dot product of a and b
  */
 function dot(a, b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }

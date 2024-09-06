@@ -1,3 +1,7 @@
+/**
+ * @module apps/admin/component/dialogue_send_broadcast
+ */
+
 const template =`   <div id='send_broadcast_form'>
                         <div id='send_broadcast_title' class='common_icon'></div>
                         <div id="select_broadcast_type" class="common_select <ADMIN_CLASS/>">

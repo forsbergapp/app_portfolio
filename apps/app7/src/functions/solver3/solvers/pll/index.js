@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/solvers/pll
+ */
+
 import { BaseSolver } from '../BaseSolver.js';
 import {
 	getFaceOfMove, getRotationFromTo, getDirectionFromFaces

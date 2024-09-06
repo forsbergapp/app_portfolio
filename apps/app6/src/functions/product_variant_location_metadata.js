@@ -1,4 +1,6 @@
-/** @module apps/app6 */
+/**
+ * @module apps/app6/src/functions/product_variant_location_metadata
+ */
 /**
  * @param {number} app_id
  * @param {*} data

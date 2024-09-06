@@ -1,4 +1,8 @@
 /**
+ * @module apps/app5/component/page_secure
+ */
+
+/**
  *  
  * @param {{customer:[]}} props 
  * @returns 

@@ -1,4 +1,6 @@
-/** @module apps/app5 */
+/**
+ * @module apps/app5/src/functions/account_create
+ */
 
 /**@type{import('../../../../server/security.service')} */
 const {createSecret, createUUID} = await import(`file://${process.cwd()}/server/security.service.js`);
