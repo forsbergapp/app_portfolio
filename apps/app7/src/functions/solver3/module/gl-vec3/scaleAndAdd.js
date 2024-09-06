@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = scaleAndAdd;
 
 /**
@@ -10,8 +14,8 @@ module.exports = scaleAndAdd;
  * @returns {vec3} out
  */
 function scaleAndAdd(out, a, b, scale) {
-    out[0] = a[0] + (b[0] * scale)
-    out[1] = a[1] + (b[1] * scale)
-    out[2] = a[2] + (b[2] * scale)
-    return out
+    out[0] = a[0] + (b[0] * scale);
+    out[1] = a[1] + (b[1] * scale);
+    out[2] = a[2] + (b[2] * scale);
+    return out;
 }

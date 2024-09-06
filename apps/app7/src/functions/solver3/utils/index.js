@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/utils
+ */
+
 //import cross from 'gl-vec3/cross';
 /**@ts-ignore */
 const {default:{cross}} = await import('../module/gl-vec3/index.js');

@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = length;
 
 /**
@@ -7,8 +11,8 @@ module.exports = length;
  * @returns {Number} length of a
  */
 function length(a) {
-    var x = a[0],
+    const x = a[0],
         y = a[1],
-        z = a[2]
-    return Math.sqrt(x*x + y*y + z*z)
+        z = a[2];
+    return Math.sqrt(x*x + y*y + z*z);
 }

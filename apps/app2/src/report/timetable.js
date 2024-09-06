@@ -1,4 +1,4 @@
-/** @module apps/app2 */
+/** @module apps/app2/src/report/timetable */
 
 /**@type{import('../../../../server/server.service')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);

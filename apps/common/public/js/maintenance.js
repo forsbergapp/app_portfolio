@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/maintenance
+ */
+
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 

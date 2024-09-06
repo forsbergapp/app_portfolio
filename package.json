@@ -16,7 +16,7 @@
   },
   "scripts": {
     "test": "jasmine --config=test/jasmine.json",
-    "jsdoc": "jsdoc -c jsdoc.json"
+    "jsdoc": "jsdoc -c jsdoc.json --verbose"
   },
   "keywords": [],
   "author": "",
@@ -35,7 +35,6 @@
     "@types/sqlite3": "^3.1.11",
     "eslint": "^8.49.0",
     "jasmine": "^5.1.0",
-    "jsdoc": "^4.0.2",
-    "typescript": "^5.2.2"
+    "jsdoc": "^4.0.3"
   }
 }

@@ -1,3 +1,7 @@
+/**
+ * @module apps/app1/component/app_theme
+ */
+
 const template =`   <div id="app_themes">
                         <div id="app_theme_checkbox" class="toggle checked">
                             <div class="toggle-button">

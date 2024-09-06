@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/component/dialogue_user_verify
+ */
+
 const template =`
                 <div id='common_user_verify_email_icon' class='common_icon'></div>
                 <div id='common_user_verify_email'><TITLE/></div>

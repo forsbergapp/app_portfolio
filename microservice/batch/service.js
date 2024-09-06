@@ -1,4 +1,4 @@
-/** @module microservice/batch */
+/** @module microservice/batch/service */
 
 /**@type{import('../../microservice/microservice.service.js')} */
 const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);

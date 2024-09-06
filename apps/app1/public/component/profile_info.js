@@ -1,3 +1,7 @@
+/**
+ * @module apps/app1/component/profile_info
+ */
+
 const template ='   <div id=\'profile_info_apps\'></div>';
 /**
  * 

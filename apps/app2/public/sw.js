@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/sw
+ */
+
 self.addEventListener('install', () => {
     return null;
 });

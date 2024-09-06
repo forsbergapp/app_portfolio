@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/common
+ */
+
 /**@type{import('../../../types.js').AppDocument} */
  const AppDocument = document;
 /**@type{import('../../../types.js').AppWindow} */

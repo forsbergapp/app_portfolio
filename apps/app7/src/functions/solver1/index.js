@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver1
+ */
+
 import crossSolver, { CrossSearch } from './solvers/crossSolver.js';
 import EOLineSolver, { EOLineSearch } from './solvers/EOLineSolver.js';
 import firstBlockSolver, { FirstBlockSearch } from './solvers/firstBlockSolver.js';

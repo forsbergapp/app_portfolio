@@ -1,3 +1,7 @@
+/**
+ * @module apps/app5/component/app
+ */
+
 const template =`   <div id='app_top'>
                         <div id='app_top_logo'></div>
                         <div id='app_top_usermenu'></div>

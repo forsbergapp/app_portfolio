@@ -1,3 +1,7 @@
+/**
+ * @module apps/admin/component/admin_secure
+ */
+
 const template =`       <div id='dialogues'>
                             <div id='dialogue_send_broadcast' class='common_dialogue common_dialogue_content'></div>
                         </div>

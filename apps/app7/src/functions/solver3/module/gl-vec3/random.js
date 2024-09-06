@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = random;
 
 /**
@@ -8,14 +12,14 @@ module.exports = random;
  * @returns {vec3} out
  */
 function random(out, scale) {
-    scale = scale || 1.0
+    scale = scale || 1.0;
 
-    var r = Math.random() * 2.0 * Math.PI
-    var z = (Math.random() * 2.0) - 1.0
-    var zScale = Math.sqrt(1.0-z*z) * scale
+    const r = Math.random() * 2.0 * Math.PI;
+    const z = (Math.random() * 2.0) - 1.0;
+    const zScale = Math.sqrt(1.0-z*z) * scale;
 
-    out[0] = Math.cos(r) * zScale
-    out[1] = Math.sin(r) * zScale
-    out[2] = z * scale
-    return out
+    out[0] = Math.cos(r) * zScale;
+    out[1] = Math.sin(r) * zScale;
+    out[2] = z * scale;
+    return out;
 }

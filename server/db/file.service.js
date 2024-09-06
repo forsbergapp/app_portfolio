@@ -1,4 +1,4 @@
-/** @module server/db */
+/** @module server/db/file */
 
 const fs = await import('node:fs');
 

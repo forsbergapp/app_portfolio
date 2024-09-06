@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/solvers/oll
+ */
+
 import { RubiksCube } from '../../models/RubiksCube.js';
 import { BaseSolver } from '../BaseSolver.js';
 import { getDirectionFromFaces } from '../../utils/index.js';

@@ -1,4 +1,8 @@
-module.exports = ceil
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
+module.exports = ceil;
 
 /**
  * Math.ceil the components of a vec3
@@ -8,8 +12,8 @@ module.exports = ceil
  * @returns {vec3} out
  */
 function ceil(out, a) {
-  out[0] = Math.ceil(a[0])
-  out[1] = Math.ceil(a[1])
-  out[2] = Math.ceil(a[2])
-  return out
+  out[0] = Math.ceil(a[0]);
+  out[1] = Math.ceil(a[1]);
+  out[2] = Math.ceil(a[2]);
+  return out;
 }

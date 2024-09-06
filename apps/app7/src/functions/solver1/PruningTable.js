@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver1/pruningtable
+ */
+
 import { cartesian } from './tools.js';
 
 /**

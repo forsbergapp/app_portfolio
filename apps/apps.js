@@ -1,4 +1,4 @@
-/** @module apps */
+/** @module server/apps */
 
 /**@type{import('./apps.service')} */
 const service = await import(`file://${process.cwd()}/apps/apps.service.js`);

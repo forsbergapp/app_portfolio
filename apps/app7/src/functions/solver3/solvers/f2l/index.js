@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/solvers/f2l
+ */
+
 import { RubiksCube } from '../../models/RubiksCube.js';
 import { F2LBaseSolver } from './F2LBaseSolver.js';
 import { Case1Solver } from './cases/case-1.js';

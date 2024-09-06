@@ -1,4 +1,4 @@
-/** @module microservice/mail */
+/** @module microservice/mail/service */
 
 /**@type{import('../../microservice/microservice.service.js')} */
 const { getNumberValue, ConfigServices } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);

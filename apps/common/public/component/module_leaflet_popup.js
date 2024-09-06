@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/module_leaflet_popup
+ */
+
+/**
  * 
  * @param {{country:string,
  *          city:string,

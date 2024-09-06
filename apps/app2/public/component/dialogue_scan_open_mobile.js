@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/component/dialogue_scan_open_mobile
+ */
+
 const template =` <div id='scan_open_mobile_qrcode'></div>
                   <div id='scan_open_mobile_title1' class='common_icon'></div>
                   <div id='scan_open_mobile_close' class='common_dialogue_button common_icon' ></div>`;

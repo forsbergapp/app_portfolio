@@ -1,3 +1,7 @@
+/**
+ * @module apps/app2/component/dialogue_info
+ */
+
 const template =`   <div id='about_logo'></div>
                     <div id='app_copyright'><APP_COPYRIGHT/></div>
                     <div id='app_link' class='common_link'></div>

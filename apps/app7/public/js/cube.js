@@ -1,4 +1,8 @@
 /**
+ * @module apps/app7/cube
+ */
+
+/**
  * Original code https://github.com/stringham/rubiks-solver
  * Changes
  * Converted to one javascript module

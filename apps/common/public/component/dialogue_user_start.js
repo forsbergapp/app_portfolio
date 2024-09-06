@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/dialogue_user_start
+ */
+
+/**
  * @typedef {{id:number, provider_name:string}} provider_type
  */
 /**

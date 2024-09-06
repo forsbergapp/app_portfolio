@@ -1,4 +1,6 @@
-/** @module apps/app7 */
+/**
+ * @module apps/app7/src/functions/solve
+ */
 
 const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
 

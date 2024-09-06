@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/component/broadcast
+ */
+
 const template =`<div id='common_broadcast_info'>
                     <div id='common_broadcast_banner'>
                         <div id='common_broadcast_header'>

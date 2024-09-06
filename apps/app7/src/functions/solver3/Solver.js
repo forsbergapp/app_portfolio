@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3
+ */
+
 import { RubiksCube } from './models/RubiksCube.js';
 import { CrossSolver } from './solvers/cross/index.js';
 import { F2LSolver } from './solvers/f2l/index.js';

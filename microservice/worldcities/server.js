@@ -1,4 +1,4 @@
-/** @module microservice/worldcities */
+/** @module microservice/worldcities/server */
 
 /**@type{import('./service.js')} */
 const service = await import('./service.js');

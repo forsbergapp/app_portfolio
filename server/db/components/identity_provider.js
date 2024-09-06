@@ -1,4 +1,4 @@
-/** @module server/db/components */
+/** @module server/db/components/identity_provider */
 
 /**@type{import('../sql/identity_provider.service.js')} */
 const service = await import(`file://${process.cwd()}/server/db/sql/identity_provider.service.js`);

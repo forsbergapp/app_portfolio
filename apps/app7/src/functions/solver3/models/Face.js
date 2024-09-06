@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/models/face
+ */
+
 import { Vector } from './Vector.js';
 
 const faceToNormal = {

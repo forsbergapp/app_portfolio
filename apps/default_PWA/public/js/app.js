@@ -1,3 +1,7 @@
+/**
+ * @module apps/default_PWA/app
+ */
+
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 

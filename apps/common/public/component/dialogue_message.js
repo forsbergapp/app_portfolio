@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/dialogue_message
+ */
+
+/**
  * @typedef {{"error":{
  *               "http":number, 
  *               "code":number|null,

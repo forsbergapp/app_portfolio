@@ -1,4 +1,6 @@
-/** @module apps/app6 */
+/**
+ * @module apps/app6/src/functions/product_get
+ */
 /**
  * @param {number} app_id
  * @param {*} data

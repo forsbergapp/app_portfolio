@@ -1,4 +1,4 @@
-/** @module apps */
+/** @module server/bff */
 
 /**@type{import('./server.service.js')} */
 const {response_send_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);

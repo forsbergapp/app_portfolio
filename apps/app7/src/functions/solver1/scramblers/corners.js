@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver1/scramblers/corners
+ */
+
 import getScrambleForPieces from './scramblePieces.js';
 
 const getScramble = () => getScrambleForPieces(

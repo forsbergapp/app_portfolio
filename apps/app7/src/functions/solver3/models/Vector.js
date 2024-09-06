@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/models/vector
+ */
+
 // import angle from 'gl-vec3/angle';
 // import cross from 'gl-vec3/cross';
 // import rotateX from 'gl-vec3/rotateX';

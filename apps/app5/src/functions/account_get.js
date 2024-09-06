@@ -1,4 +1,6 @@
-/** @module apps/app5 */
+/**
+ * @module apps/app5/src/functions/account_get
+ */
 /**
  * @param {number} app_id
  * @param {*} data

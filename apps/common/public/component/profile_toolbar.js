@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/component/profile_toolbar
+ */
+
 const template ='   <div id=\'common_profile_btn_top\' class=\'common_toolbar_button common_icon\' ></div>';
 /**
  * 

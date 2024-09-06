@@ -1,4 +1,8 @@
 /**
+ * @module apps/app5/component/page_start
+ */
+
+/**
  *  
  * @param {{text_account:string,
  *          text_statements:string,

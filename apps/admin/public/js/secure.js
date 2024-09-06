@@ -1,3 +1,7 @@
+/**
+ * @module apps/admin/secure
+ */
+
 /**@type{import('../../../types.js').AppDocument} */
  const AppDocument = document;
 /**@type{import('../../../types.js').AppWindow} */

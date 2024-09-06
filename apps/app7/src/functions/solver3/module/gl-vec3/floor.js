@@ -1,4 +1,8 @@
-module.exports = floor
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
+module.exports = floor;
 
 /**
  * Math.floor the components of a vec3
@@ -8,8 +12,8 @@ module.exports = floor
  * @returns {vec3} out
  */
 function floor(out, a) {
-  out[0] = Math.floor(a[0])
-  out[1] = Math.floor(a[1])
-  out[2] = Math.floor(a[2])
-  return out
+  out[0] = Math.floor(a[0]);
+  out[1] = Math.floor(a[1]);
+  out[2] = Math.floor(a[2]);
+  return out;
 }

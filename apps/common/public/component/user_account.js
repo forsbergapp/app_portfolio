@@ -1,3 +1,6 @@
+/**
+ * @module apps/common/component/user_account
+ */
 const template =`   <div id='common_user_menu'>
                         <div id='common_user_menu_logged_in'>
                             <div id='common_user_menu_avatar'>

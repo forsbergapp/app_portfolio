@@ -1,4 +1,4 @@
-/** @module server/db/sql */
+/** @module server/db/sql/database */
 
 /**
  * 

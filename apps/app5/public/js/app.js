@@ -1,3 +1,7 @@
+/**
+ * @module apps/app5/app
+ */
+
 /**@type{import('../../../types.js').AppDocument} */
 const AppDocument = document;
 

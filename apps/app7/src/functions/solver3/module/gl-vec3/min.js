@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = min;
 
 /**
@@ -9,8 +13,8 @@ module.exports = min;
  * @returns {vec3} out
  */
 function min(out, a, b) {
-    out[0] = Math.min(a[0], b[0])
-    out[1] = Math.min(a[1], b[1])
-    out[2] = Math.min(a[2], b[2])
-    return out
+    out[0] = Math.min(a[0], b[0]);
+    out[1] = Math.min(a[1], b[1]);
+    out[2] = Math.min(a[2], b[2]);
+    return out;
 }

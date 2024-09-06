@@ -1,3 +1,7 @@
+/**
+ * @module apps/default_PWA/component/app
+ */
+
 const template =`   <div id='dialogue_documents' class='dialogue'>
                         <div id='dialogue_documents_content' class='dialogue_content'>
                             <div id='app_logo'></div>

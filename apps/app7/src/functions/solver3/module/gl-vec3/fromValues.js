@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/module/gl-vec3
+ */
+
 module.exports = fromValues;
 
 /**
@@ -9,9 +13,9 @@ module.exports = fromValues;
  * @returns {vec3} a new 3D vector
  */
 function fromValues(x, y, z) {
-    var out = new Float32Array(3)
-    out[0] = x
-    out[1] = y
-    out[2] = z
-    return out
+    const out = new Float32Array(3);
+    out[0] = x;
+    out[1] = y;
+    out[2] = z;
+    return out;
 }

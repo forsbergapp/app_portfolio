@@ -1,3 +1,7 @@
+/**
+ * @module apps/app7/src/functions/solver3/models/rubikscube
+ */
+
 import { Cubie } from './Cubie.js';
 import { algorithmShortener } from '../algorithm-shortener.js';
 import {

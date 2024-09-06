@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/dialogue_user_menu
+ */
+
+/**
  * @typedef {object} AppEvent
  */
 

@@ -1,3 +1,7 @@
+/**
+ * @module apps/common/component/profile_info_apps
+ */
+
 const template =`   <div id='common_profile_info_cloud'>
                     <div id='common_profile_main_btn_cloud' class='common_link common_icon'></div>
                     </div>`;

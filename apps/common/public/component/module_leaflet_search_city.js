@@ -1,4 +1,8 @@
 /**
+ * @module apps/common/component/module_leaflet_search_city
+ */
+
+/**
  * @typedef {{id:number, city:string, admin_name:string, country:string, lat:string, lng:string}} record_type
  */
 /**
