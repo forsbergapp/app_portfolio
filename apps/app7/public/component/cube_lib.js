@@ -1,5 +1,6 @@
 /**
- * @module apps/app7/cube
+ * Cube component library
+ * @module apps/app7/cube/cube_lib
  */
 
 /**
