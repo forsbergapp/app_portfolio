@@ -1,6 +1,6 @@
 /**
  * Cube component library
- * @module apps/app7/cube/cube_lib
+ * @module apps/app7/component/cube_lib
  */
 
 /**
