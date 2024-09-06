@@ -3,9 +3,10 @@
 /**@type{import('./service.js')} */
 const service = await import('./service.js');
 /**@type{import('../../microservice/microservice.service.js')} */
-const { resource_id_string, resource_id_get_string, route, getNumberValue, return_result, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
-/**@type{import('../../server/iam.service.js')} */
-const { AuthenticateApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
+const { resource_id_string, resource_id_get_string, route, getNumberValue, return_result, AuthenticateApp} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+/**@type{import('../../microservice/registry.service.js')} */
+const { MicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+
 /**
  * Starts the server
  */

@@ -3,7 +3,10 @@
 /**@type{import('./service.js')} */
 const service = await import('./service.js');
 /**@type{import('../../microservice/microservice.service.js')} */
-const { return_result, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const { return_result } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+/**@type{import('../../microservice/registry.service.js')} */
+const { MicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+
 
 /**
  * Starts the server

@@ -1,7 +1,7 @@
 /** @module microservice/worldcities/service */
 
-/**@type{import('../../microservice/microservice.service.js')} */
-const {ConfigServices} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+/**@type{import('../../microservice/registry.service.js')} */
+const {ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.service.js`);
 
 /**
  * @typedef {{  city:       string,
@@ -63,19 +63,20 @@ const getCityRandom = async () => {
  * 
  * @param {string} search 
  * @param {number} limit 
- * @returns 
+ * @returns Promise.<{list_header:{total_count:number, offset:number, count:number}, rows:type_city[]}>
  */
 const getCitySearch = async (search, limit) => {
     /**@type{type_city[]} */
     let cities = await getService();
     /**
      * Filter searched and limit records 
+     * Search without diacritics and use lower case
+     * Uses localcompare as collation method when sorting
      * @param {string} col 
      * @param {string} search 
-     * @returns 
+     * @returns {boolean}
      */
     const match = (col, search) =>{
-        //compare without diacritics and use lower case
         const col_check = col.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
         const search_check = search.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();            
         return col_check.search(search_check)>-1;
