@@ -1,4 +1,4 @@
-/** @module server/config */
+/** @module server/config/service */
 
 /**@type{import('./db/file.service.js')} */
 const {SLASH, file_get, file_update, file_get_cached, file_set_cache_all, file_create, create_config_and_logs_dir} = await import(`file://${process.cwd()}/server/db/file.service.js`);

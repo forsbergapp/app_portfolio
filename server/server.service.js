@@ -1,4 +1,4 @@
-/** @module server */
+/** @module server/server/service */
 
 /**
  * Sends ISO 20022 error format
@@ -78,7 +78,39 @@ const COMMON = {
 };
 
 /**
- * server Express
+ * 
+ *  Gets Express app with following settings in this order
+ *
+ *	1.Middleware	compression and JSON maximum size setting
+ *	
+ *  2.Routes	
+ *	path	                            method	middleware                                  controller          comment
+ *	*	                                all	                                                BFF_init	        logs EventSource and response when closed, 
+ *                                                                                                              authenticates request and will end request if not passing controls,
+ *                                                                                                              sets headers, 
+ *                                                                                                              returns disallow for robots.txt and empty favicon.ico
+ *	*	                                get	                                                BFF_start	        redirects naked domain, http to https if enabled 
+ *							                                                                                    and to admin subdomain if first time, 
+ *							                                                                                    responds to SSL verification if enabled
+ *  /bff/app_data/v1*                   all     iam.AuthenticateIdToken                     BFF_app_data
+ *  /bff/app_signup/v1*                 post    iam.AuthenticateIdTokenRegistration         BFF_app_signup
+ *  /bff/app_access/v1*                 all     iam.AuthenticateAccessToken                 BFF_app_access
+ *  /bff/app_external/v1/app-function*  post    iam.AuthenticateExternal                    BFF_app_external
+ *  /bff/admin/v1*                      all     iam.AuthenticateAccessTokenAdmin            BFF_admin
+ *  /bff/superadmin/v1*                 all     iam.AuthenticateAccessTokenSuperAdmin       BFF_superadmin
+ *  /bff/systemadmin/v1*                all     iam.AuthenticateAccessTokenSystemAdmin      BFF_systemadmin
+ *  /bff/socket/v1*                     get     iam.AuthenticateSocket                      BFF_socket
+ *  /bff/iam_systemadmin/v1*            post    iam.AuthenticateIAMSystemAdmin              BFF_iam_systemadmin
+ *  /bff/iam_admin/v1*                  post    iam.AuthenticateIAMAdmin                    BFF_iam_admin
+ *  /bff/iam_user/v1*                   post    iam.AuthenticateIAMUser                     BFF_iam_user
+ *  /bff/iam_provider/v1*               post    iam.AuthenticateIAMProvider                 BFF_iam_provider
+ *	*	                                get	                                                BFF_app		        app asset
+ *							                                                                                    common asset
+ *							                                                                                    info page
+ *							                                                                                    report and app
+ *	
+ * 3.Middleware error logging
+ * 
  * @async
  * @returns {Promise<import('../types.js').express>} app
  */
@@ -169,10 +201,6 @@ const COMMON = {
     //server app object
     /**@type{import('../apps/apps.js')} */
     const app = await import(`file://${process.cwd()}/apps/apps.js`);
-
-    //server iam object
-    /**@type{import('./iam.js')} */
-    const iam = await import(`file://${process.cwd()}/server/iam.js`);
 
     //server iam service
     /**@type{import('./iam.service.js')} */
@@ -922,7 +950,7 @@ const COMMON = {
                         break;
                     }
                     case route({url:'/bff/iam_systemadmin/v1/server-iam/login', method:'POST'}):{
-                        resolve(iam.AuthenticateSystemadmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
+                        resolve(iam_service.AuthenticateSystemadmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
                     case route({url:'/bff/iam_admin/v1/server-iam/login', method:'POST'}):

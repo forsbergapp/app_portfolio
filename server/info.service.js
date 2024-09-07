@@ -1,4 +1,4 @@
-/** @module server/info */
+/** @module server/info/service */
 
 /**
  * 
