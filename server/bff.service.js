@@ -1,11 +1,17 @@
-/** @module server/bff */
+/** @module server/bff/service */
 
 /**@type{import('./server.service.js')} */
-const {response_send_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {responsetime, response_send_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('./config.service.js')} */
-const {ConfigGet, ConfigGetAppHost} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigGetAppHost, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+
 /**@type{import('./log.service.js')} */
-const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/log.service.js`);
+const {LogRequestI, LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/log.service.js`);
+/**@type{import('./iam.service.js')} */
+const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
+/**@type{import('./security.service.js')} */
+const {createUUID, createRequestId, createCorrelationId}= await import(`file://${process.cwd()}/server/security.service.js`);
+const fs = await import('node:fs');
 
 /**
  * 
@@ -36,6 +42,133 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
     });
 };
 
+/**
+ * Backend for frontend (BFF) init for all methods
+ * 
+ * Logs if the request is from EventSource
+ * Logs when the response is closed
+ * Authenticates the request
+ * Sets header values on both on the response and on the request
+ * Checks robots.txt and favicon.ico
+ * Returns a reason if response should be closed
+ * 
+ * @param {import('../types.js').req} req
+ * @param {import('../types.js').res} res
+ * @returns Promise.<{  reason:'ROBOT'|'FAVICON'|'REQUEST'|null}>
+ */
+const BFF_init = async (req, res) =>{
+    if (req.headers.accept == 'text/event-stream'){
+        //Eventsource, log since response is open and log again when closing
+        LogRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', responsetime(res));
+    }
+    res.on('close',()=>{	
+        //eventsource response time will be time connected until disconnected
+        LogRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', responsetime(res)).then(() => {
+            // do not return any StatusMessage to client, this is only used for logging purpose
+            res.statusMessage = '';
+            res.end();
+        });
+    });
+    //access control that stops request if not passing controls
+    /**@type{import('../types.js').authenticate_request}*/
+    const result = await AuthenticateRequest(req.ip, req.headers.host, req.method, req.headers['user-agent'], req.headers['accept-language'], req.path)
+                        .catch((/**@type{import('../types.js').error}*/error)=>{return { statusCode: 500, statusMessage: error};});
+    if (result != null){
+        res.statusCode = result.statusCode;
+        res.statusMessage = 'access control: ' + result.statusMessage;
+        res.write('⛔');
+        return {reason:'REQUEST'};
+    }
+    else{
+        //set headers
+        res.setHeader('X-Response-Time', process.hrtime());
+        req.headers['X-Request-Id'] =  createUUID().replaceAll('-','');
+        if (req.headers.authorization)
+            req.headers['X-Correlation-Id'] = createRequestId();
+        else
+            req.headers['X-Correlation-Id'] = createCorrelationId(req.hostname +  req.ip + req.method);
+        res.setHeader('Access-Control-Max-Age','5');
+        res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+        if (ConfigGet('SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1')
+            res.setHeader('content-security-policy', await ConfigFileGet('IAM_POLICY', false).then((/**@type{*}*/row)=>row['content-security-policy']));
+        res.setHeader('cross-origin-opener-policy','same-origin');
+        res.setHeader('cross-origin-resource-policy',	'same-origin');
+        res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
+        res.setHeader('strict-transport-security', `max-age=${180 * 24 * 60 * 60}; includeSubDomains`);
+        res.setHeader('x-content-type-options', 'nosniff');
+        res.setHeader('x-dns-prefetch-control', 'off');
+        res.setHeader('x-download-options', 'noopen');
+        res.setHeader('x-frame-options', 'SAMEORIGIN');
+        res.setHeader('x-permitted-cross-domain-policies', 'none');
+        res.setHeader('x-xss-protection', '0');
+        res.removeHeader('X-Powered-By');
+        //check robots.txt
+        if (req.originalUrl=='/robots.txt'){
+            res.type('text/plain');
+            res.write('User-agent: *\nDisallow: /');
+            return {reason:'ROBOT'};
+        }
+        else{
+            //browser favorite icon to ignore
+            if (req.originalUrl=='/favicon.ico'){
+                res.write('');
+                return {reason:'FAVICON'};
+            }
+            else{
+                return {reason:null};
+            }
+        }
+    }
+};
+/**
+ * Backend for frontend (BFF) start for get method
+ * 
+ * If first time, when no admin exists, then redirect everything to admin
+ * Checks if SSL verification using Letsencrypt is enabled when validating domain
+ * and sends requested verifcation file
+ * Redirects naked domain to www except for localhost
+ * Redirects from http to https if https is enabled
+ * 
+ * @param {import('../types.js').req} req
+ * @param {import('../types.js').res} res
+ * @returns Promise.<{reason:'REDIRECT'|'SEND'|null,redirect:string}>
+ */
+const BFF_start = async (req, res) =>{
+    const check_redirect = () =>{
+        //redirect naked domain to www except for localhost
+        if (req.headers.host.startsWith(ConfigGet('SERVER','HOST') ?? '') && req.headers.host.indexOf('localhost')==-1)
+            if (req.protocol=='http' && ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
+                return {reason:'REDIRECT', redirect:`https://www.${req.headers.host}${req.originalUrl}`};
+            else
+                return {reason:'REDIRECT', redirect:`http://www.${req.headers.host}${req.originalUrl}`};
+        else{
+            //redirect from http to https if https is enabled
+            if (req.protocol=='http' && ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
+                return {reason:'REDIRECT', redirect:`https://${req.headers.host}${req.originalUrl}`};
+            else
+                return {reason:null, redirect:null};
+        }
+    };
+    //if first time, when no system admin exists, then redirect everything to admin
+    if (CheckFirstTime() && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
+        return {reason:'REDIRECT', redirect:`http://admin.${ConfigGet('SERVER','HOST')}`};
+    else{
+        //check if SSL verification using letsencrypt is enabled when validating domains
+        if (ConfigGet('SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
+            if (req.originalUrl.startsWith(ConfigGet('SERVER', 'HTTPS_SSL_VERIFICATION_PATH') ?? '')){
+                res.type('text/plain');
+                res.write(await fs.promises.readFile(`${process.cwd()}${req.originalUrl}`, 'utf8'));
+                return {reason:'SEND', redirect:null};
+            }
+            else
+                check_redirect();
+        }
+        else
+            check_redirect();
+    }
+    return {reason:null, redirect:null};
+};
 /**
  * Backend for frontend (BFF) called from client
  * 
@@ -190,4 +323,4 @@ const BFF_log_error = (app_id, bff_parameters, service, error) =>{
         }
     });
 };
-export{response_send_error, BFF, BFF_server};
+export{response_send_error, BFF_init, BFF_start, BFF, BFF_server};
