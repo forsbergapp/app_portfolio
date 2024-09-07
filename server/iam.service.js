@@ -1,4 +1,4 @@
-/** @module server/iam */
+/** @module server/iam/service */
 
 /**@type{import('./server.service.js')} */
 const {response_send_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);

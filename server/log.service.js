@@ -1,4 +1,4 @@
-/** @module server/log */
+/** @module server/log/service */
 
 /**@type{import('./config.service.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);

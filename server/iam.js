@@ -1,19 +1,10 @@
-/** @module server/iam */
+/** 
+ * Middleware functions for REST API
+ * @module server/iam 
+ */
 
 /**@type{import('./iam.service.js')} */
 const service = await import(`file://${process.cwd()}/server/iam.service.js`);
-
-/**
- * Middleware authenticates system admin login
- * @param {number} app_id 
- * @param {string} iam
- * @param {string} authorization 
- * @param {string} ip 
- * @param {string} user_agent
- * @param {string} accept_language
- * @param {import('../types.js').res} res 
- */
-const AuthenticateSystemadmin = (app_id, iam, authorization, ip, user_agent, accept_language, res) => service.AuthenticateSystemadmin(app_id, iam, authorization, ip, user_agent, accept_language, res);
 
 /**
  * Middleware authenticates system admin token
@@ -110,7 +101,7 @@ const AuthenticateIAMUser = (req, res, next) => service.AuthenticateUserCommon(r
  */
 const AuthenticateIAMProvider = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'AUTH_PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
-export{ AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
+export{ AuthenticateAccessTokenSystemAdmin, 
         AuthenticateIdToken, AuthenticateIdTokenRegistration,
         AuthenticateAccessTokenSuperAdmin, AuthenticateAccessTokenAdmin, AuthenticateAccessToken, AuthenticateExternal,
         AuthenticateSocket,
