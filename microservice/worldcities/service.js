@@ -4,35 +4,8 @@
 const {ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.service.js`);
 
 /**
- * @typedef {{  city:       string,
- *              city_ascii: string,
- *              lat:        string,
- *              lng:        string,
- *              country:    string,
- *              iso2:       string,
- *              iso3:       string,
- *              admin_name: string,
- *              capital:    string
- *              population: number,
- *              id:         number}} type_city
- */
-/**
- * Database content:
- *        {
- *           "city":         [city with diacritics],
- *           "city_ascii":   [city_ascii],
- *           "lat":          [latitude],
- *           "lng":          [longitude],					
- *           "country":      [country],			
- *           "iso2":         [countrycode 2 letters],
- *           "iso3":         [countrycode 3 letters],
- *           "admin_name":   [admin name],
- *           "capital":      [admin, minor, primary, ''],
- *           "population":   [count],
- *           "id":           [id]
- *		} 
- * 
- * @returns {Promise.<type_city[]>}
+ * Get file with cities 
+ * @returns {Promise.<import('./types.js').type_city[]>}  
  */
 const getService = async () => {
     const fs = await import('node:fs');
@@ -66,7 +39,7 @@ const getCityRandom = async () => {
  * @returns Promise.<{list_header:{total_count:number, offset:number, count:number}, rows:type_city[]}>
  */
 const getCitySearch = async (search, limit) => {
-    /**@type{type_city[]} */
+    /**@type{import('./types.js').type_city[]} */
     let cities = await getService();
     /**
      * Filter searched and limit records 
