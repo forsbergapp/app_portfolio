@@ -359,6 +359,7 @@ const AuthenticateExternal = (endpoint, host, user_agent, accept_language, ip, b
      */
     const block_ip_control = async (ip_v4) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
+            /**@type{import('./../types.js').server_config_iam_blockip} */
             const ranges = await ConfigFileGet('IAM_BLOCKIP');
             //check if IP is blocked
             if ((ip_v4.match(/\./g)||[]).length==3){
@@ -383,6 +384,7 @@ const AuthenticateExternal = (endpoint, host, user_agent, accept_language, ip, b
      */
     const safe_user_agents = async (client_user_agent) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
+            /**@type{import('./../types.js').server_config_iam_useragent} */
             const {user_agents} = await ConfigFileGet('IAM_USERAGENT');
             for (const user_agent of user_agents){
                 if (user_agent.user_agent == client_user_agent)

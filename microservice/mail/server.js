@@ -34,7 +34,7 @@ const startserver = async () =>{
 							app_query.get('email_to') && 
 							app_query.get('email_subject') &&
 							app_query.get('email_html')){
-							/**@type{import('../../types.js').microservice_mail_data} */
+							/**@type{import('./types.js').microservice_mail_data} */
 							const data = {
 								/**@ts-ignore */
 								email_host:         app_query.get('email_host'),

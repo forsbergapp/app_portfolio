@@ -90,8 +90,11 @@ const BFF_init = async (req, res) =>{
         res.setHeader('Access-Control-Max-Age','5');
         res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-        if (ConfigGet('SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1')
-            res.setHeader('content-security-policy', await ConfigFileGet('IAM_POLICY', false).then((/**@type{*}*/row)=>row['content-security-policy']));
+        if (ConfigGet('SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1'){
+            /**@type{import('./../types.js').server_config_iam_policy}*/
+            const iam_policy = await ConfigFileGet('IAM_POLICY', false);
+            res.setHeader('content-security-policy', iam_policy['content-security-policy']);
+        }
         res.setHeader('cross-origin-opener-policy','same-origin');
         res.setHeader('cross-origin-resource-policy',	'same-origin');
         res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
