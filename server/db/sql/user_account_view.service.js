@@ -6,8 +6,8 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
 /**
  * 
  * @param {number} app_id 
- * @param {import('../../../types.js').db_parameter_user_account_view_insertUserAccountView} data 
- * @returns {Promise.<import('../../../types.js').db_result_user_account_view_insertUserAccountView>}
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_view_insertUserAccountView} data 
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_view_insertUserAccountView>}
  */
 const insertUserAccountView = async (app_id, data) => {
 		const sql = `INSERT INTO <DB_SCHEMA/>.user_account_view(

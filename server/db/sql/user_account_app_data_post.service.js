@@ -6,8 +6,8 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
 /**
  * 
  * @param {number} app_id 
- * @param {import('../../../types.js').db_parameter_user_account_app_data_post_createUserPost} data 
- * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_createUserPost>}
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_app_data_post_createUserPost} data 
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_data_post_createUserPost>}
  */
 const createUserPost = async (app_id, data) => {
 		const sql = `INSERT INTO <DB_SCHEMA/>.user_account_app_data_post(
@@ -33,7 +33,7 @@ const createUserPost = async (app_id, data) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_getUserPost[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_data_post_getUserPost[]>}
  */
 const getUserPost = async (app_id, id) => {
 		const sql = `SELECT	id "id",
@@ -52,7 +52,7 @@ const getUserPost = async (app_id, id) => {
  * 
  * @param {number} app_id 
  * @param {number|null} id 
- * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_getUserPostsByUserId[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[]>}
  */
 const getUserPostsByUserId = async (app_id, id) => {
 		const sql = `SELECT	id "id",
@@ -76,7 +76,7 @@ const getUserPostsByUserId = async (app_id, id) => {
  * @param {number} app_id 
  * @param {number} id 
  * @param {number|null} id_current_user 
- * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_getProfileUserPosts[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_data_post_getProfileUserPosts[]>}
  */
 const getProfileUserPosts = async (app_id, id, id_current_user) => {
 		const sql = `SELECT us.id "id",
@@ -111,7 +111,7 @@ const getProfileUserPosts = async (app_id, id, id_current_user) => {
  * @param {number} app_id 
  * @param {number} id 
  * @param {number|null} detailchoice 
- * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_getProfileUserPostDetail[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail[]>}
  */
 const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
 		const sql = `SELECT detail "detail", 
@@ -176,7 +176,7 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<import('../../../types.js').db_result_user_account_data_post_getProfileStatLike[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_data_post_getProfileStatLike[]>}
  */
  const getProfileStatLike = async (app_id, id) => {
 	const sql = ` SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
@@ -206,7 +206,7 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
  * 
  * @param {number} app_id 
  * @param {number|null} statchoice 
- * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_getProfileStatPost[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_data_post_getProfileStatPost[]>}
  */
 const getProfileStatPost = async (app_id, statchoice) => {
 		const sql = `SELECT top "top", 
@@ -272,9 +272,9 @@ const getProfileStatPost = async (app_id, statchoice) => {
 /**
  * 
  * @param {number} app_id 
- * @param {import('../../../types.js').db_parameter_user_account_app_data_post_updateUserPost} data 
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_app_data_post_updateUserPost} data 
  * @param {number} id 
- * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_updateUserPost>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_data_post_updateUserPost>}
  */
 const updateUserPost = async (app_id, data, id) => {
 		const sql = `UPDATE <DB_SCHEMA/>.user_account_app_data_post
@@ -299,7 +299,7 @@ const updateUserPost = async (app_id, data, id) => {
  * @param {number} app_id 
  * @param {number} id 
  * @param {number} user_account_id
- * @returns {Promise.<import('../../../types.js').db_result_user_account_app_data_post_deleteUserPost>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_data_post_deleteUserPost>}
  */
 const deleteUserPost = async (app_id, id, user_account_id) => {
 		const sql = `DELETE FROM <DB_SCHEMA/>.user_account_app_data_post

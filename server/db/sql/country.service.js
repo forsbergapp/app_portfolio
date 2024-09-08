@@ -7,7 +7,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * 
  * @param {number} app_id 
  * @param {string} lang_code 
- * @returns {Promise.<import('../../../types.js').db_result_country_getCountries[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_country_getCountries[]>}
  */
 const getCountries = async (app_id, lang_code) => {
      const sql = `SELECT c.id "id",

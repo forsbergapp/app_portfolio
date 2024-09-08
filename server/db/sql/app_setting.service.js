@@ -10,7 +10,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {number} app_id 
  * @param {string} lang_code 
  * @param {string|null} app_setting_type_name 
- * @returns {Promise.<import('../../../types.js').db_result_app_setting_getSettings[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_setting_getSettings[]>}
  */
 const getSettings = async (app_id, lang_code, app_setting_type_name) => {
      if (app_setting_type_name=='')
@@ -73,7 +73,7 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
  * @param {number|null} data_app_id 
  * @param {string} app_setting_type_name 
  * @param {*} value 
- * @returns {Promise.<import('../../../types.js').db_result_app_setting_getSettingDisplayData[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_setting_getSettingDisplayData[]>}
  */
 const getSettingDisplayData = async (app_id, data_app_id, app_setting_type_name, value=null) => {
      const sql = `SELECT s.id                                         "id", 

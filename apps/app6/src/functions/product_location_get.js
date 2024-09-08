@@ -7,7 +7,7 @@
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
- * @param {import('../../../../types.js').res} res
+ * @param {import('../../../../types.js').server_server_res} res
  * @returns {Promise.<[{stock:[  {key_name:string, key_value:string, key_type:string}, 
  *                              {key_name:string, key_value:string, key_type:string}, 
  *                              {key_name:string, key_value:string, key_type:string}]}]>}
