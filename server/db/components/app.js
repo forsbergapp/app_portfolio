@@ -12,7 +12,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {*} query
  */
 const getAppsAdmin = (app_id, query) => service.getAppsAdmin(app_id, query.get('lang_code'))
-                                            .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
 /**
  * 
  * @param {number} app_id 
@@ -20,9 +20,9 @@ const getAppsAdmin = (app_id, query) => service.getAppsAdmin(app_id, query.get('
  * @param {*} data 
  */
 const updateAdmin = (app_id, resource_id, data) =>{
-    /**@type{import('../../../types.js').db_parameter_app_updateAppAdmin} */
+    /**@type{import('../../../types.js').server_db_sql_parameter_app_updateAppAdmin} */
     const body = {	app_category_id:getNumberValue(data.app_category_id)};
     return service.updateAppAdmin(app_id, resource_id, body)
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
 };
 export {getAppsAdmin, updateAdmin};

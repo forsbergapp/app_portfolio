@@ -3,7 +3,7 @@
 /**
  * 
  * Info about operating system and process
- * @returns {Promise.<import('../types.js').server_info>}
+ * @returns {Promise.<import('../types.js').server_info_result_Info>}
  */
  const Info = async () => {
     const os = await import('node:os');

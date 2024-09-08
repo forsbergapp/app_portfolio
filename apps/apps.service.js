@@ -71,8 +71,8 @@ const client_locale = (accept_language) =>{
  * @param {string|null} component
  */ 
 const render_files = (app_id, type, component=null) => {
-    /**@type{import('../types.js').config_apps_render_files[]} */
-    const files = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{import('../types.js').config_apps_render_files}*/filetype)=>filetype[0]==type && (filetype[1] == component || component == null));
+    /**@type{import('../types.js').server_config_apps_render_files[]} */
+    const files = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{import('../types.js').server_config_apps_render_files}*/filetype)=>filetype[0]==type && (filetype[1] == component || component == null));
     let app ='';
     files.forEach(file => {
         if (app=='')
@@ -123,7 +123,7 @@ const render_app_with_data = (app, data)=>{
  * @returns {Promise<string>}
  */
 const render_app_html = async (app_id) =>{
-    /**@type{import('../types.js').config_apps_render_config} */
+    /**@type{import('../types.js').server_config_apps_render_config} */
     const app_config = ConfigGetApp(app_id, app_id, 'RENDER_CONFIG');
     /** @type {[string, string][]} */
     const render_variables = [];
@@ -131,7 +131,7 @@ const render_app_html = async (app_id) =>{
     return new Promise((resolve)=>{
         //list config files and return only tag and file content
         /**@type {[string, string][]} */
-        const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{import('../types.js').config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{import('../types.js').config_apps_render_files}*/row)=> {return [row[2],row[4]];} );        
+        const common_files = ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_CONFIG').RENDER_FILES.filter((/**@type{import('../types.js').server_config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{import('../types.js').server_config_apps_render_files}*/row)=> {return [row[2],row[4]];} );        
         
         const app = render_app_with_data(render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'APP_COMMON'), common_files);
         
@@ -176,7 +176,7 @@ const render_app_html = async (app_id) =>{
  * Gets module with application name, app service parameters
  * 
  * @async
- * @param {import('../types.js').app_info} app_info - app info configuration
+ * @param {import('../types.js').server_apps_app_info} app_info - app info configuration
  * @returns {Promise.<string|null>}
  */
 const get_module_with_initBFF = async (app_info) => {
@@ -191,7 +191,7 @@ const get_module_with_initBFF = async (app_info) => {
      */
     const return_with_parameters = (module, app_parameters, first_time)=>{
         if (module){
-            /**@type{import('../types.js').app_service_parameters} */
+            /**@type{import('../types.js').server_apps_app_service_parameters} */
             const app_service_parameters = {   
                 app_id: app_info.app_id,
                 app_logo:ConfigGetApp(app_info.app_id, app_info.app_id, 'LOGO'),
@@ -250,8 +250,8 @@ const get_module_with_initBFF = async (app_info) => {
  * Creates email
  * @async
  * @param {number} app_id                       - Application id
- * @param {import('../types.js').email_param_data} data         - Email param data
- * @returns {Promise<import('../types.js').email_return_data>}  - Email return data
+ * @param {import('../types.js').server_apps_email_param_data} data         - Email param data
+ * @returns {Promise<import('../types.js').server_apps_email_return_createMail>}  - Email return data
  */
 const createMail = async (app_id, data) =>{
     return new Promise((resolve, reject) => {
@@ -355,12 +355,12 @@ const getInfo = async (app_id, info) => {
             .then((/**@type{string}*/app)=>{
                 resolve(app);
             })
-            .catch((/**@type{import('../types.js').error}*/err)=>reject(err));
+            .catch((/**@type{import('../types.js').server_server_error}*/err)=>reject(err));
         };
         if (param!=null && ConfigGetApp(app_id, app_id, 'SHOWPARAM') == 1){
             import(`file://${process.cwd()}/server/db/sql/user_account.service.js`).then(({getProfileUser}) => {
                 getProfileUser(app_id, null, param, null, null)
-                .then((/**@type{import('../types.js').db_result_user_account_getProfileUser[]}*/result)=>{
+                .then((/**@type{import('../types.js').server_db_sql_result_user_account_getProfileUser[]}*/result)=>{
                     if (result[0])
                         main(app_id);
                     else{
@@ -368,7 +368,7 @@ const getInfo = async (app_id, info) => {
                         resolve (null);
                     }
                 })
-                .catch((/**@type{import('../types.js').error}*/error)=>{
+                .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
                     reject(error);
                 });
             });
@@ -506,11 +506,11 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid) => {
             query_parameters += ',';
     });
     query_parameters += '}';
-    /** @type {import('../types.js').report_query_parameters}*/
+    /** @type {import('../types.js').server_apps_report_query_parameters}*/
     const query_parameters_obj = JSON.parse(query_parameters);
 
     const report_common_html = render_report_html(app_id);
-    /**@type{import('../types.js').report_create_parameters} */
+    /**@type{import('../types.js').server_apps_report_create_parameters} */
     const data = {  app_id:         app_id,
                     reportid:       reportid,
                     ip:             ip,
@@ -534,7 +534,7 @@ const getReport = async (app_id, ip, user_agent, accept_language, reportid) => {
 /**
  * 
  * @param {number} app_id 
- * @param {import('../types.js').endpoint_type} endpoint
+ * @param {import('../types.js').server_bff_endpoint_type} endpoint
  * @param {string} ip 
  * @param {string} user_agent 
  * @param {string} accept_language
@@ -544,7 +544,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
     /**@type{import('../server/bff.service.js')} */
     const { BFF_server } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
-    /**@type{import('../types.js').bff_parameters}*/
+    /**@type{import('../types.js').server_bff_parameters}*/
     const parameters = {endpoint:endpoint,
                         host:null,
                         url:'/geolocation/ip',
@@ -571,7 +571,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
         result_geodata.timezone =   JSON.parse(result_gps).geoplugin_timezone;
     }
     else{
-        /**@type{import('../types.js').bff_parameters}*/
+        /**@type{import('../types.js').server_bff_parameters}*/
         const parameters = {endpoint:endpoint,
                             host:null,
                             url:'/worldcities/city-random',
@@ -585,7 +585,7 @@ const getAppGeodata = async (app_id, endpoint, ip, user_agent, accept_language) 
                             accept_language:accept_language,
                             /**@ts-ignore */
                             res:null};
-        const result_city = await BFF_server(app_id, parameters).catch((/**@type{import('../types.js').error}*/error)=>{throw error;});
+        const result_city = await BFF_server(app_id, parameters).catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
         result_geodata.latitude =   JSON.parse(result_city).lat;
         result_geodata.longitude=   JSON.parse(result_city).lng;
         result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
@@ -632,9 +632,9 @@ const getApps = async (app_id, resource_id, lang_code) =>{
     const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
 
     const apps_db =  await getApp(app_id, resource_id, lang_code);
-    const apps_registry = ConfigGetApps().filter((/**@type{import('../types.js').config_apps_record}*/app)=>app.APP_ID==resource_id || resource_id == null);
-    /**@type{import('../types.js').config_apps_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{import('../types.js').config_apps_record} */app, /**@type {import('../types.js').config_apps_record}*/current)=>
+    const apps_registry = ConfigGetApps().filter((/**@type{import('../types.js').server_config_apps_record}*/app)=>app.APP_ID==resource_id || resource_id == null);
+    /**@type{import('../types.js').server_config_apps_with_db_columns[]}*/
+    const apps = apps_registry.reduce(( /**@type{import('../types.js').server_config_apps_record} */app, /**@type {import('../types.js').server_config_apps_record}*/current)=>
                                         app.concat({APP_ID:current.APP_ID,
                                                     NAME:current.NAME,
                                                     SUBDOMAIN:current.SUBDOMAIN,
@@ -668,8 +668,8 @@ const getApps = async (app_id, resource_id, lang_code) =>{
 
     const apps_db =  await getAppsAdmin(app_id, lang_code);
     const apps_registry = ConfigGetApps();
-    /**@type{import('../types.js').config_apps_admin_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{import('../types.js').config_apps_record} */app, /**@type {import('../types.js').config_apps_record}*/current)=> 
+    /**@type{import('../types.js').server_config_apps_admin_with_db_columns[]}*/
+    const apps = apps_registry.reduce(( /**@type{import('../types.js').server_config_apps_record} */app, /**@type {import('../types.js').server_config_apps_record}*/current)=> 
                                         app.concat({ID:current.APP_ID,
                                                     NAME:current.NAME,
                                                     SUBDOMAIN:current.SUBDOMAIN,
@@ -691,7 +691,7 @@ const getApps = async (app_id, resource_id, lang_code) =>{
  * @param {number} app_id
  * @param {string} url 
  * @param {string} basepath 
- * @param {import('../types.js').res} res 
+ * @param {import('../types.js').server_server_res} res 
  */
 const getAssetFile = (app_id, url, basepath, res) =>{
     return new Promise((resolve, reject)=>{
@@ -845,7 +845,7 @@ const getAssetFile = (app_id, url, basepath, res) =>{
  * @param {string} accept_language
  * @param {string} url
  * @param {string} reportid
- * @param {import('../types.js').res|null} res
+ * @param {import('../types.js').server_server_res|null} res
  */
 const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, res) =>{
     const host_no_port = host.substring(0,host.indexOf(':')==-1?host.length:host.indexOf(':'));
@@ -913,7 +913,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                     res.statusCode = 301;
                                 resolve(app_result);
                             })
-                            .catch((/**@type{import('../types.js').error}*/err)=>{
+                            .catch((/**@type{import('../types.js').server_server_error}*/err)=>{
                                 LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF() and LogAppI()', COMMON.app_line(), err)
                                 .then(()=>{
                                     res.statusCode = 500;
@@ -922,7 +922,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                 });
                             });
                         })
-                        .catch((/**@type{import('../types.js').error}*/err)=>{
+                        .catch((/**@type{import('../types.js').server_server_error}*/err)=>{
                             LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getAppBFF()', COMMON.app_line(), err)
                             .then(()=>{
                                 res.statusCode = 500;
@@ -947,7 +947,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
- * @param {import('../types.js').res|null} res
+ * @param {import('../types.js').server_server_res|null} res
  * @returns 
  */
 const getFunction = async (app_id, resource_id, data, user_agent, ip, locale, res) => {

@@ -68,7 +68,7 @@ const IBAN_validate = iban => {
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
- * @param {import('../../../../types.js').res} res
+ * @param {import('../../../../types.js').server_server_res} res
  */
 const getStatement = async (app_id, data, user_agent, ip, locale, res) =>{
 

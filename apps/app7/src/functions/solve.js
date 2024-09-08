@@ -36,7 +36,7 @@ const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
- * @param {import('../../../../types.js').res} res
+ * @param {import('../../../../types.js').server_server_res} res
  * @returns {Promise.<{	cube_solution:string|null, 
  *						cube_solution_time:number|null,
  *						cube_solution_length:number|null,

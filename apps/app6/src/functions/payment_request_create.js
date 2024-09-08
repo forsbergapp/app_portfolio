@@ -12,7 +12,7 @@
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
- * @param {import('../../../../types.js').res} res
+ * @param {import('../../../../types.js').server_server_res} res
  * @returns {Promise.<{ token:string,
  *                      exp:number,
  *                      iat:number,

@@ -6,7 +6,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
 /**
  * 
  * @param {number} app_id 
- * @returns {Promise.<import('../../../types.js').db_result_identity_provider_getIdentityProviders[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_identity_provider_getIdentityProviders[]>}
  */
 const getIdentityProviders = async app_id => {
 		const sql = `SELECT id "id",

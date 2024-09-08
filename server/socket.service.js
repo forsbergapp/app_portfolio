@@ -9,7 +9,7 @@ const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.s
 /**@type{import('./iam.service.js')} */
 const {expired_token} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-/**@type{import('../types.js').socket_connect_list[]} */
+/**@type{import('../types.js').server_socket_connected_list[]} */
 let CONNECTED_CLIENTS = [];
 
 /**
@@ -29,7 +29,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
     /**@type{import('./bff.service.js')} */
     const { BFF_server } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
-    /**@type{import('../types.js').bff_parameters}*/
+    /**@type{import('../types.js').server_bff_parameters}*/
     const parameters = {endpoint:'SERVER_SOCKET',
                         host:null,
                         url:'/geolocation/ip',
@@ -65,9 +65,9 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
 /**
  * Socket client send
  * Used by EventSource and closes connection
- * @param {import('../types.js').res} res
+ * @param {import('../types.js').server_server_res} res
  * @param {string} message
- * @param {import('../types.js').socket_broadcast_type_all} message_type
+ * @param {import('../types.js').server_socket_broadcast_type_all} message_type
  * @returns {void}
  */
  const ClientSend = (res, message, message_type) => {
@@ -78,7 +78,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
 /**
  * Socket client connect
  * Used by EventSource and leaves connection open
- * @param {import('../types.js').res} res
+ * @param {import('../types.js').server_server_res} res
  * @returns {void}
  */
  const ClientConnect = (res) => {
@@ -88,7 +88,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
 /**
  * Socket client close
  * Used by EventSource and closes connection
- * @param {import('../types.js').res} res
+ * @param {import('../types.js').server_server_res} res
  * @param {number} client_id
  * @returns {void}
  */
@@ -100,7 +100,7 @@ const ClientOnClose = (res, client_id) => {
 };
 /**
  * Socket client add
- * @param {import('../types.js').socket_connect_list} newClient
+ * @param {import('../types.js').server_socket_connected_list} newClient
  * @returns {void}
  */
 const ClientAdd = (newClient) => {
@@ -119,7 +119,7 @@ const ClientAdd = (newClient) => {
  * @param {string} ip
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
- * @param {import('../types.js').res} res
+ * @param {import('../types.js').server_server_res} res
  * @returns {Promise.<void>}
  */
  const ConnectedUpdate = async (app_id, client_id, user_account_id, system_admin, authorization_bearer, token_access, token_systemadmin, ip, headers_user_agent, headers_accept_language, res) => {
@@ -155,7 +155,7 @@ const ClientAdd = (newClient) => {
 /**
  * Socket check connected
  * @param {number} user_account_id
- * @returns {import('../types.js').socket_connect_list[]}
+ * @returns {import('../types.js').server_socket_connected_list[]}
  */
  const ConnectedGet = user_account_id => {
     return CONNECTED_CLIENTS.filter(client => client.user_account_id == user_account_id);
@@ -166,7 +166,7 @@ const ClientAdd = (newClient) => {
  * @param {number|null} app_id
  * @param {number|null} client_id
  * @param {number|null} client_id_current
- * @param {import('../types.js').socket_broadcast_type_all} broadcast_type
+ * @param {import('../types.js').server_socket_broadcast_type_all} broadcast_type
  * @param {string} broadcast_message
  * @returns {{sent:number}}
  */
@@ -207,16 +207,16 @@ const ClientAdd = (newClient) => {
  * @param {number|null} year
  * @param {number|null} month
  * @param {string} order_by
- * @param {import('../types.js').sort_socket} sort
+ * @param {import('../types.js').server_socket_connected_list_sort} sort
  * @param {number} dba
- * @returns {Promise.<import('../types.js').socket_connect_list_no_res[]>}
+ * @returns {Promise.<import('../types.js').server_socket_connected_list_no_res[]>}
  */
  const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba) => {
     
     /**@type{import('../apps/apps.service.js')} */
     const { app_start } = await import(`file://${process.cwd()}/apps/apps.service.js`);
     //filter    
-    /**@type{import('../types.js').socket_connect_list_no_res[]} */
+    /**@type{import('../types.js').server_socket_connected_list_no_res[]} */
     let connected_clients_no_res =[];
     for (const client of CONNECTED_CLIENTS)
         //return keys without response
@@ -244,7 +244,7 @@ const ClientAdd = (newClient) => {
     });
     /**
      * Sort
-     * @param {import('../types.js').sort_socket} sort
+     * @param {import('../types.js').server_socket_connected_list_sort} sort
      */
     const sort_and_return = (sort) =>{
         let order_by_num = 0;
@@ -288,7 +288,7 @@ const ClientAdd = (newClient) => {
             if (client.system_admin=='')
                 if (await app_start()==true){    
                     await getUserRoleAdmin(app_id, client.user_account_id, dba)
-                    .then((/**@type{import('../types.js').db_result_user_account_getUserRoleAdmin[]}*/result_app_role)=>{
+                    .then((/**@type{import('../types.js').server_db_sql_result_user_account_getUserRoleAdmin[]}*/result_app_role)=>{
                         if (result_app_role[0]){
                             client.app_role_id = result_app_role[0].app_role_id;
                             client.app_role_icon = result_app_role[0].icon;
@@ -310,7 +310,7 @@ const ClientAdd = (newClient) => {
  * @param {number|null} app_id
  * @param {number|null} client_id
  * @param {number|null} client_id_current
- * @param {string} broadcast_type
+ * @param {import('../types.js').server_socket_broadcast_type_admin} broadcast_type
  * @param {string} broadcast_message
  * @returns {{sent:number}}
  */
@@ -346,7 +346,7 @@ const ClientAdd = (newClient) => {
  * Used for sending server side event from an app server function
  * @param {number} app_id
  * @param {string} iam
- * @param {import('../types.js').socket_broadcast_type_all} message_type
+ * @param {import('../types.js').server_socket_broadcast_type_app_function} message_type
  * @param {string} message
  * @returns {Promise.<{sent:number}>}
  */
@@ -393,7 +393,7 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
  * @param {string} ip
- * @param {import('../types.js').res} response
+ * @param {import('../types.js').server_server_res} response
  * @returns {Promise.<void>}
  */
  const SocketConnect = async (  app_id, 
@@ -416,7 +416,7 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
         ClientOnClose(response, client_id);
     
         const connectUserData =  await getConnectedUserData(app_id, user_account_id, ip, headers_user_agent, headers_accept_language);
-        /**@type{import('../types.js').socket_connect_list} */
+        /**@type{import('../types.js').server_socket_connected_list} */
         const newClient = {
                             id:                     client_id,
                             app_id:                 app_id,

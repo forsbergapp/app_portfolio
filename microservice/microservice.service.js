@@ -61,7 +61,7 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  * Get number value from request key
  * returns number or null for numbers
  * so undefined and '' are avoided sending arguement to service functions
- * @param {import('../types.js').req_id_number} param
+ * @param {import('../types.js').server_server_req_id_number} param
  * @returns {number|null}
  */
  const getNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
@@ -71,7 +71,7 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  * @param {number} code 
  * @param {string|null} error 
  * @param {*} result 
- * @param {import('../types.js').res_microservice} res
+ * @param {import('../types.js').microservice_res} res
  */
  const return_result = (code, error, result, res)=>{
     res.statusCode = code;

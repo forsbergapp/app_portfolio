@@ -9,5 +9,5 @@ const service = await import(`file://${process.cwd()}/server/db/sql/app_object.s
  * @param {*} query
  */
 const getObjects = (app_id, query) => service.getObjects(app_id, query.get('data_lang_code'), query.get('object_name'), query.get('object_item_name') ?? null)
-                                        .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+                                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
 export {getObjects};

@@ -20,7 +20,7 @@ const getEntity = (app_id, resource_id, query) => service.get(  app_id,
                                                                 resource_id, 
                                                                 getNumberValue(query.get('data_app_id')), 
                                                                 query.get('lang_code'))
-                                                    .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+                                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
@@ -34,6 +34,6 @@ const getEntityResource = (app_id, resource_id, query) => app_data_entity_resour
                                                                                         query.get('resource_name'), 
                                                                                         getNumberValue(query.get('entity_id')), 
                                                                                         query.get('lang_code'))
-                                                            .catch((/**@type{import('../../../types.js').error}*/error)=>{throw error;});
+                                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
 
 export{getEntity, getEntityResource};

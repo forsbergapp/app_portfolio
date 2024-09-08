@@ -4,9 +4,9 @@
 /**@type{import('../server/db/file.service.js')} */
 const {file_get} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
-const CONFIG = await file_get('MICROSERVICE_CONFIG').then((/**@type{import('../types.js').db_file_result_file_get}*/file)=>file.file_content);
+const CONFIG = await file_get('MICROSERVICE_CONFIG').then((/**@type{import('../types.js').server_db_file_result_file_get}*/file)=>file.file_content);
 
-const CONFIG_SERVICES = await file_get('MICROSERVICE_SERVICES').then((/**@type{import('../types.js').db_file_result_file_get}*/file)=>file.file_content?file.file_content.SERVICES:null);
+const CONFIG_SERVICES = await file_get('MICROSERVICE_SERVICES').then((/**@type{import('../types.js').server_db_file_result_file_get}*/file)=>file.file_content?file.file_content.SERVICES:null);
 
 /**
  * Reads config services

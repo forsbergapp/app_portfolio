@@ -28,12 +28,12 @@ const InfoSpaceSum = (app_id) =>service.InfoSpaceSum(app_id, DBA);
 /**
   * Install get files
   * @param {'install'|'uninstall'} json_type 
-  * @returns {Promise.<import('../../../types.js').database_script_files>}
+  * @returns {Promise.<import('../../../types.js').server_db_database_script_files>}
   */
 const install_db_get_files = async (json_type) =>{
     const fs = await import('node:fs');
     let app_id = 1;
-    /**@type{import('../../../types.js').database_script_files} */
+    /**@type{import('../../../types.js').server_db_database_script_files} */
     const files = [
        //add main script with id 0 and without app_id
        [0, `/scripts/${json_type}_database.json`, null],
@@ -76,6 +76,7 @@ const install_db_get_files = async (json_type) =>{
 
     let count_statements = 0;
     let count_statements_optional = 0;
+    /**@type{import('../../../types.js').server_db_database_install_result} */
     const install_result = [];
     const password_tag = '<APP_PASSWORD/>';
     let change_system_admin_pool=true;
@@ -121,7 +122,7 @@ const install_db_get_files = async (json_type) =>{
         const install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
         const install_obj = JSON.parse(install_json);
         //filter for current database or for all databases and optional rows
-        install_obj.install = install_obj.install.filter((/**@type{import('../../../types.js').install_database_script|import('../../../types.js').install_database_app_script}*/row) =>  
+        install_obj.install = install_obj.install.filter((/**@type{import('../../../types.js').server_db_database_install_database_script|import('../../../types.js').server_db_database_install_database_app_script}*/row) =>  
             row.db == db_use || row.db == null);
         
         for (const install_row of install_obj.install){
@@ -174,7 +175,7 @@ const install_db_get_files = async (json_type) =>{
                             if (sql.toUpperCase().includes('CREATE DATABASE')){
                                 //remove database name in dba pool
                                 await pool_close(null, db_use, DBA);
-                                /**@type{import('../../../types.js').db_pool_parameters} */
+                                /**@type{import('../../../types.js').server_db_db_pool_parameters} */
                                 const json_data = {
                                         use:                       db_use,
                                         pool_id:                   null,
@@ -205,7 +206,7 @@ const install_db_get_files = async (json_type) =>{
                                 if (change_system_admin_pool == true){
                                 //add database name in dba pool
                                 await pool_close(null, db_use, DBA);
-                                /**@type{import('../../../types.js').db_pool_parameters} */
+                                /**@type{import('../../../types.js').server_db_db_pool_parameters} */
                                 const json_data = {
                                     use:                       db_use,
                                     pool_id:                   null,
@@ -246,7 +247,7 @@ const install_db_get_files = async (json_type) =>{
         }
         if (install_obj.users){
             let sql_and_pw = null;
-            for (const users_row of install_obj.users.filter((/**@type{import('../../../types.js').install_database_app_user_script}*/row) => row.db == db_use || row.db == null)){
+            for (const users_row of install_obj.users.filter((/**@type{import('../../../types.js').server_db_database_install_database_app_user_script}*/row) => row.db == db_use || row.db == null)){
                 switch (file[0]){
                     case 1:{
                         const app_admin_username = 'app_portfolio_app_admin';
@@ -297,19 +298,20 @@ const install_db_get_files = async (json_type) =>{
  /**
   * Install db check
   * @param {number} app_id
-  * @returns {Promise.<{installed: number}>}
+  * @returns {Promise.<import('../../../types.js').server_db_database_install_db_check>}
   */
  const InstalledCheck = async (app_id)=>{
     return service.InstalledCheck(app_id, DBA)
     .catch(()=>{
-        return [{installed: 0}];
+       const not_installed = [{installed: 0}];
+        return not_installed;
     });
  }; 
  /**
   * Uninstall database installation
   * @param {number} app_id
   * @param {*} query
-  * @returns {Promise.<{'info': {}[]}>}
+  * @returns {Promise.<import('../../../types.js').server_db_database_install_uninstall_result>} 
   */
  const Uninstall = async (app_id, query)=> {
     /**@type{import('../../config.service.js')} */
@@ -335,12 +337,12 @@ const install_db_get_files = async (json_type) =>{
         SocketSendSystemAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]})));
         install_count++;
         const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
-        const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{import('../../../types.js').uninstall_database_script|import('../../../types.js').uninstall_database_app_script}*/row) => row.db == db_use);
+        const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{import('../../../types.js').server_db_database_uninstall_database_script|import('../../../types.js').server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
         for (const sql_row of uninstall_sql){
             if (db_use==3 && sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                 //add database name in dba pool
                 await pool_close(null, db_use, DBA);
-                /**@type{import('../../../types.js').db_pool_parameters} */
+                /**@type{import('../../../types.js').server_db_db_pool_parameters} */
                 const json_data = {
                     use:                       db_use,
                     pool_id:                   null,
@@ -428,12 +430,12 @@ const install_db_get_files = async (json_type) =>{
     const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
 
     const fs = await import('node:fs');
-
+    /**@type{import('../../../types.js').server_db_database_install_result} */
     const install_result = [];
     install_result.push({'start': new Date().toISOString()});
     const fileBuffer = await fs.promises.readFile(`${process.cwd()}/scripts/demo/demo.json`, 'utf8');
-    /**@type{[import('../../../types.js').demo_user]}*/
-    const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
+    /**@type{[import('../../../types.js').server_db_database_demo_user]}*/
+    const demo_users = JSON.parse(fileBuffer.toString()).server_db_database_demo_users;
     //create social records
     const social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'POSTS_LIKE', 'POSTS_VIEW', 'POSTS_VIEW_ANONYMOUS'];
     let email_index = 1000;
@@ -448,17 +450,17 @@ const install_db_get_files = async (json_type) =>{
     install_count++;
     /**
      * Create demo users
-     * @param {[import('../../../types.js').demo_user]} demo_users 
+     * @param {[import('../../../types.js').server_db_database_demo_user]} demo_users 
      * @returns {Promise.<void>}
      */
     const create_users = async (demo_users) =>{
             /**
              * 
-             * @param {import('../../../types.js').demo_user} demo_user
+             * @param {import('../../../types.js').server_db_database_demo_user} demo_user
              * @returns 
              */
             const create_update_id = async demo_user=>{
-            /**@type{import('../../../types.js').db_parameter_user_account_create}*/
+            /**@type{import('../../../types.js').server_db_sql_parameter_user_account_create}*/
                 const data_create = {   username:               demo_user.username,
                                         bio:                    demo_user.bio,
                                         avatar:                 demo_user.avatar,
@@ -481,7 +483,7 @@ const install_db_get_files = async (json_type) =>{
                                         admin:                  1
                                     };
                 return await create(app_id, data_create)
-                                .catch((/**@type{import('../../../types.js').error}*/err)=> {
+                                .catch((/**@type{import('../../../types.js').server_server_error}*/err)=> {
                                     throw err;
                                 });
             };
@@ -499,12 +501,12 @@ const install_db_get_files = async (json_type) =>{
     const create_user_account_app = async (app_id, user_account_id) =>{
         return new Promise((resolve, reject) => {
             createUserAccountApp(app_id, user_account_id)
-            .then((/**@type{import('../../../types.js').db_result_user_account_app_createUserAccountApp}*/result)=>{
+            .then(result=>{
                 if (result.affectedRows == 1)
                     records_user_account_app++;
                 resolve(null);
             })
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -512,18 +514,18 @@ const install_db_get_files = async (json_type) =>{
     /**
      * Create user post
      * @param {number} user_account_post_app_id 
-     * @param {import('../../../types.js').db_parameter_user_account_app_data_post_createUserPost} data 
+     * @param {import('../../../types.js').server_db_sql_parameter_user_account_app_data_post_createUserPost} data 
      * @returns {Promise.<null>}
      */
     const create_user_post = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
             createUserPost(user_account_post_app_id, data)
-            .then((/**@type{import('../../../types.js').db_result_user_account_app_data_post_createUserPost}*/result)=>{
+            .then(result=>{
                 if (result.affectedRows == 1)
                             records_user_account_app_data_post++;
                         resolve(null);
             })
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -538,12 +540,12 @@ const install_db_get_files = async (json_type) =>{
     const create_resource_master = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
             MasterResourcePost(user_account_post_app_id, data)
-            .then((/**@type{import('../../../types.js').db_result_app_data_resource_master_post}*/result)=>{
+            .then(result=>{
                 if (result.affectedRows == 1)
                     records_user_account_resource_master++;
                 resolve(result.insertId);
             })
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -557,12 +559,12 @@ const install_db_get_files = async (json_type) =>{
     const create_resource_detail = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
             DetailResourcePost(user_account_post_app_id, data)
-            .then((/**@type{import('../../../types.js').db_result_app_data_resource_detail_post}*/result)=>{
+            .then(result=>{
                 if (result.affectedRows == 1)
                     records_user_account_resource_detail++;
                 resolve(result.insertId);
             })
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -577,12 +579,12 @@ const install_db_get_files = async (json_type) =>{
     const create_resource_detail_data = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
             DetailDataResourcePost(user_account_post_app_id, data)
-            .then((/**@type{import('../../../types.js').db_result_app_data_resource_detail_data_post}*/result)=>{
+            .then(result=>{
                 if (result.affectedRows == 1)
                     records_user_account_resource_detail_data++;
                 resolve(result.insertId);
             })
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -751,12 +753,12 @@ const install_db_get_files = async (json_type) =>{
     const create_likeuser = async (app_id, id, id_like ) =>{
         return new Promise((resolve, reject) => {
             user_account_like.like(app_id, id, id_like)
-            .then((/**@type{import('../../../types.js').db_result_user_account_like_like}*/result) => {
+            .then(result => {
                 if (result.affectedRows == 1)
                     records_user_account_like++;
                 resolve(null);
             })
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -764,18 +766,18 @@ const install_db_get_files = async (json_type) =>{
     /**
      * Create user account view
      * @param {number} app_id 
-     * @param {import('../../../types.js').db_parameter_user_account_view_insertUserAccountView} data 
+     * @param {import('../../../types.js').server_db_sql_parameter_user_account_view_insertUserAccountView} data 
      * @returns {Promise.<null>}
      */
     const create_user_account_view = async (app_id, data ) =>{
         return new Promise((resolve, reject) => {
             insertUserAccountView(app_id, data)
-            .then((/**@type{import('../../../types.js').db_result_user_account_view_insertUserAccountView}*/result) => {
+            .then(result => {
                 if (result.affectedRows == 1)
                         records_user_account_view++;
                 resolve(null);
             })
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -790,12 +792,12 @@ const install_db_get_files = async (json_type) =>{
     const create_user_account_follow = async (app_id, id, id_follow ) =>{
         return new Promise((resolve, reject) => {
             user_account_follow.follow(app_id, id, id_follow)
-            .then((/**@type{import('../../../types.js').db_result_user_account_follow_follow}*/result)=>{
+            .then(result=>{
                 if (result.affectedRows == 1)
                     records_user_account_follow++;
                 resolve(null);
             })
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -810,19 +812,19 @@ const install_db_get_files = async (json_type) =>{
     const create_user_account_app_data_post_like = async (app_id, user1, user2 ) =>{
         return new Promise((resolve, reject) => {
             getUserPostsByUserId(app_id, user1)
-            .then((/**@type{import('../../../types.js').db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_posts)=>{
+            .then(result_posts=>{
                 const random_posts_index = Math.floor(1 + Math.random() * result_posts.length - 1 );
                 user_account_app_data_post_like.like(app_id, user2, result_posts[random_posts_index].id)
-                .then((/**@type{import('../../../types.js').db_result_user_account_app_data_post_like_like}*/result) => {
+                .then(result => {
                     if (result.affectedRows == 1)
                         records_user_account_app_data_post_like++;
                     resolve(null);
                 })
-                .catch((/**@type{import('../../../types.js').error}*/error)=>{
+                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                     reject(error);
                 });
             })
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -838,7 +840,7 @@ const install_db_get_files = async (json_type) =>{
     const create_user_account_app_data_post_view = async (app_id, user1, user2 , social_type) =>{
         return new Promise((resolve, reject) => {
             getUserPostsByUserId(app_id, user1)
-            .then((/**@type{import('../../../types.js').db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_posts)=>{
+            .then(result_posts=>{
                 //choose random post from user
                         const random_index = Math.floor(1 + Math.random() * result_posts.length -1);
                         let user_account_id;
@@ -853,16 +855,16 @@ const install_db_get_files = async (json_type) =>{
                                                     client_longitude: null,
                                                     client_latitude: null
                                                             })
-                    .then((/**@type{import('../../../types.js').db_result_user_account_app_data_post_view_insertUserPostView}*/result)=>{
+                    .then(result=>{
                         if (result.affectedRows == 1)
                                 records_user_account_app_data_post_view++;
                             resolve(null);
                     })
-                    .catch((/**@type{import('../../../types.js').error}*/error)=>{
+                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                         reject(error);
                     });
             })
-            .catch((/**@type{import('../../../types.js').error}*/error)=>{
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -991,7 +993,7 @@ const DemoUninstall = async (app_id, query)=> {
                             if (deleted_user == result_demo_users.length)
                                 return null;
                         })
-                        .catch((/**@type{import('../../../types.js').error}*/error)=>{
+                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                             throw error;
                         });
                     }
@@ -1001,7 +1003,7 @@ const DemoUninstall = async (app_id, query)=> {
                     LogServerI(`Demo uninstall count: ${deleted_user}`);
                     resolve({info: [{'count': deleted_user}]});
                 })
-                .catch((/**@type{import('../../../types.js').error}*/error)=>{
+                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
                     reject(error);
                 });
             }
@@ -1010,7 +1012,7 @@ const DemoUninstall = async (app_id, query)=> {
                 resolve({info: [{'count': result_demo_users.length}]});
             }
         })
-        .catch((/**@type{import('../../../types.js').error}*/error)=>{
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
             reject(error);
         });
     });
@@ -1033,7 +1035,7 @@ const DemoUninstall = async (app_id, query)=> {
     const {pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     
     return new Promise ((resolve, reject)=>{
-       /**@type{import('../../../types.js').db_pool_parameters} */
+       /**@type{import('../../../types.js').server_db_db_pool_parameters} */
        const dbparameters = {
           use:                       db_use,
           pool_id:                   pool_id,
@@ -1063,7 +1065,7 @@ const DemoUninstall = async (app_id, query)=> {
           LogServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
           resolve(result);
        })
-       .catch((/**@type{import('../../../types.js').error}*/error)=>{
+       .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
           LogServerE('Starting pool error: ' + error);
           reject(error);
        });

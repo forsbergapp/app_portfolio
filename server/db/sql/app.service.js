@@ -12,7 +12,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number} app_id 
  * @param {number|null} id 
  * @param {string} lang_code 
- * @returns {Promise.<import('../../../types.js').db_result_app_getApp[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_getApp[]>}
  */
 const getApp = async (app_id, id,lang_code) => {
 		const sql = `SELECT	id "id",
@@ -57,7 +57,7 @@ const getApp = async (app_id, id,lang_code) => {
  * 
  * @param {number} app_id 
  * @param {string|null} lang_code 
- * @returns {Promise.<import('../../../types.js').db_result_app_getAppsAdmin[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_getAppsAdmin[]>}
  */
 const getAppsAdmin = async (app_id, lang_code) => {
 		const sql = `SELECT	a.id "id",
@@ -83,7 +83,7 @@ const getAppsAdmin = async (app_id, lang_code) => {
 /**
  * 
  * @param {number} app_id 
- * @returns {Promise.<import('../../../types.js').db_result_app_getAppsAdminId[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_getAppsAdminId[]>}
  */
 const getAppsAdminId = async (app_id) => {
 	const sql = `SELECT a.id "id"
@@ -96,8 +96,8 @@ const getAppsAdminId = async (app_id) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {import('../../../types.js').db_parameter_app_updateAppAdmin} data
- * @returns {Promise.<import('../../../types.js').db_result_app_updateAppAdmin[]>}
+ * @param {import('../../../types.js').server_db_sql_parameter_app_updateAppAdmin} data
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_updateAppAdmin[]>}
  */
 const updateAppAdmin = async (app_id, id, data) => {
 		const sql = `UPDATE <DB_SCHEMA/>.app
