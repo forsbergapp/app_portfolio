@@ -698,7 +698,7 @@
 
 /**
  * Server - Config IAM user agent
- * @typedef {{ user_agent:[{Name:string, 
+ * @typedef {{ user_agents:[{Name:string, 
  *                          user_agent:string}]}} server_config_iam_useragent
  */
 
@@ -2079,29 +2079,6 @@
  */
 
 /** 
- * Microservice geolocation
- * @typedef  {object}       microservice_geolocation_data
- * @property {string}       latitude
- * @property {string}       longitude
- * @property {string|null}  ip
- */
-
-/**
- * Microservice mail
- * @typedef  {{
- *              email_host:         string,
- *              email_port:         number,
- *              email_secure:       boolean,
- *              email_auth_user:    string,
- *              email_auth_pass:    string,
- *              from:               string,
- *              to:                 string,
- *              subject:            string,
- *              html:               string
- *              }}       microservice_mail_data
- */
-
-/** 
  * MicroService Config
  * @typedef {{  PATH_DATA                                   : string,
  *              PATH_TEMP                                   : string,
@@ -2179,88 +2156,5 @@
  *              start:string,
  *              result:*}}  microservice_message_queue_error
  */
-
-/** 
- * Not used
- * @typedef{object}         NOT_USED_server_log_log_parameters
- * @property{string}        SERVICE_LOG_SCOPE_REQUEST
- * @property{string}        SERVICE_LOG_SCOPE_SERVER
- * @property{string}        SERVICE_LOG_SCOPE_SERVICE
- * @property{string}        SERVICE_LOG_SCOPE_APP
- * @property{string}        SERVICE_LOG_SCOPE_DB
- * @property{string}        SERVICE_LOG_REQUEST_LEVEL
- * @property{string}        SERVICE_LOG_SERVICE_LEVEL
- * @property{string}        SERVICE_LOG_DB_LEVEL
- * @property{string}        SERVICE_LOG_LEVEL_VERBOSE
- * @property{string}        SERVICE_LOG_LEVEL_ERROR
- * @property{string}        SERVICE_LOG_LEVEL_INFO
- * @property{string}        SERVICE_LOG_FILE_INTERVAL
- */
-
-/**
- * Not used
- * @typedef {Object} NOT_USED_server_apps_req_app_parameters
- * @property {string} ip
- * @property {string} method
- * @property {string} headers_user_agent
- * @property {string} headers_accept_language
- * @property {string} headers_host
- * @property {object} body
- */
-
-/**
- * Not used
- * @typedef {Object} NOT_USED_server_log_req_log_parameters
- * @property {string} host
- * @property {string} ip
- * @property {string} protocol
- * @property {string} httpVersion
- * @property {string} originalUrl
- * @property {string} method
- * @property {{ 'X-Request-Id':string,
-*              'X-Correlation-Id':string,
-*              'user-agent':string,
-*              'accept-language':string,
-*              referer:string }} headers
-* @property {object} socket
-* @property {string} socket.bytesRead
-* @property {string} socket.bytesWritten
-* 
-*/
-
-/**
- * Not used
- * 
- * @typedef {object} NOT_USED_server_apps_module_config
- * @property {string} module_type       - APP or REPORT
- * @property {string|null} params       - parameter in url used by SHOW_PROFILE parameter in apps.json
- * @property {string|null} reportid     - REPORT
- * @property {number|null} uid_view     - REPORT
- * @property {string|null} reportname   - REPORT
- * @property {string|null} url          - REPORT
- * @property {string} ip                - ip address
- * @property {string} method            - request method
- * @property {string} user_agent        - request user agent
- * @property {string} accept_language   - request accept language
- * @property {string} host              - request host
- */
-
-/**
- * Apps - App render common info settings
- * @typedef {object} NOT_USED_server_apps_render_common_settings
- * @property {server_db_sql_result_app_setting_getSettings[]} settings - db result
- * @property {string} user_timezones        - HTML option format
- * @property {string} user_directions       - HTML option format
- * @property {string} user_arabic_scripts   - HTML option format
- */
-
-/**
- * Microservice worldcities
- * @typedef  {object}       NOT_USED_microservice_worldcities_data
- * @property {number}       limit
- * @property {string}       search
- * @property {string}       country
- */
-
 
 export {};

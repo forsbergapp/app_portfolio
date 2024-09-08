@@ -7,6 +7,7 @@ const { route, getNumberValue, return_result, AuthenticateApp } = await import(`
 /**@type{import('../../microservice/registry.service.js')} */
 const { MicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.service.js`);
 
+
 /**
  * Starts the server
  */
@@ -18,7 +19,7 @@ const startserver = async () =>{
 		const URI_query = Buffer.from(req.url.substring(req.url.indexOf('?')), 'base64').toString('utf-8');
 		const URI_path = req.url.substring(0, req.url.indexOf('?'));
 		const app_query = new URLSearchParams(URI_query);
-		/**@type{import('../../types.js').microservice_geolocation_data} */
+		/**@type{import('./types.js').microservice_geolocation_data} */
 		const data = {	latitude:	app_query.get('latitude') ?? '',
 						longitude:	app_query.get('longitude') ?? '',
 						ip: 		app_query.get('ip')};

@@ -157,7 +157,6 @@ const ConfigGet = (config_group, parameter) => {
         for (const config_parameter_row of file_get_cached('SERVER')[config_group]){
             for (const key of Object.keys(config_parameter_row)){
                 if (key==parameter){
-                    /**@ts-ignore */
                     return config_parameter_row[key];
                 }
             }
