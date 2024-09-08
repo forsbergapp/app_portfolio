@@ -5,7 +5,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**@type{import('../../../../server/db/sql/user_account_app_data_post_view.service.js')} */
 const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
 /**
- * App types
+ * App type report settings
  * 
  * @typedef {object} 	type_settings_report
  * @property {string}	locale
@@ -61,6 +61,7 @@ const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sq
  *												- YEAR:	month with less info
  */
 /**
+ * App type column title
  * @typedef {object}	type_column_titles
  * @property {string}	day
  * @property {string}	weekday
@@ -83,7 +84,7 @@ const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sq
  * @property {string}	notes
  */
 /**
- * Times
+ * App type times
  * @typedef	{{[index: string]:number}}	type_times
  * @property{number}	day
  * @property{number}	fajr
@@ -94,6 +95,7 @@ const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sq
  * @property{number}	midnight
  */
 /**
+ * App type day user account data post
  * @typedef {object}	type_day_user_account_app_data_posts
  * @property {string}	description
  * @property {string}	regional_language_locale
@@ -108,7 +110,9 @@ const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sq
  * @property {string}	prayer_time_format
  * @property {string}	prayer_hijri_date_adjustment
  */
-/**@type{{	app_copyright:string,
+/**
+ * App type global report
+ * @typedef{{	app_copyright:string,
  * 			session_currentDate:Date,
  * 			session_currentHijriDate:[number, number],
  * 			module_praytimes_methods:{[index:string]:{	name:string,
@@ -186,7 +190,12 @@ const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sq
  *								coltitle_isha_iqamat: string,
  *								coltitle_midnight: string,
  *								coltitle_notes: string}
- * 			}} */
+ * 			}}  type_app_global_report
+ */
+
+ /**
+  *  @type {type_app_global_report}
+  */
 const REPORT_GLOBAL = {
     app_copyright:'',
     session_currentDate:new Date(),

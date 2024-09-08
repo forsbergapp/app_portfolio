@@ -5,12 +5,30 @@
 const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
 
 /**
+ * App type model robot
  * @typedef {0} model_robot
+ */
+
+/**
+ * App type model human
  * @typedef {1} model_human
+ */
+
+/**
+ * App type notation singmaster
  * @typedef {0} notation_singmaster
+ */
+
+/**
+ * App type solution one
  * @typedef {0} solution_one
+ */
+
+/**
+ * App type solution all
  * @typedef {1} solution_all
  */
+
 /**
  * 
  * Solves Rubiks cube using generative AI pattern
@@ -49,17 +67,17 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 		//https://en.wikipedia.org/wiki/Optimal_solutions_for_the_Rubik's_Cube
 		//https://en.wikipedia.org/wiki/CFOP_method
 
+		//solver 1
 		// Source: https://github.com/torjusti/cubesolver
 		//algorithm:Kociemba
-		///**@type{import('./solver1/index.js')} */
-		//const {default:cuberSolver1} = await import('./solver1/index.js');
 
+		//solver 2
 		//Source:https://github.com/stringham/rubiks-solver
 		//algorithm: Thistlewaite
 		/**@type{import('./solver2/index.js')} */
 		const cuberSolver2 = await import('./solver2/index.js');
 
-
+		//solver 3
 		//Source:https://github.com/slammayjammay/rubiks-cube-solver
 		//algorithm: CFOP / Fridrich method  (Cross – F2L – OLL – PLL)
 		/**@type{import('./solver3/index.js')} */
@@ -95,21 +113,16 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 								resolve(result);
 							});
 						});
-					};
-					/**@ts-ignore */
+					};					
 					const solution1 = await solve1(solver2_moves_from_solved);
 					await SocketSendAppServerFunction(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:3, total:4, text:''})));
-					//const solution1 = cuberSolver1.solve(solver2_moves_from_solved, 'kociemba');
 					const timer2 = Date.now();
 					const solution2 = solver2.solve(data.cube_currentstate, data.cube_goalstate ?? GOAL_SOLVE);
 					const timer3 = Date.now();
 					if (data.temperature ==0){
 						//return best solution
-						/**@ts-ignore */
 						return [{	cube_solution:solution1.split(' ').length<solution2.split(' ').length?solution1:solution2, 
-									/**@ts-ignore */
 									cube_solution_time:solution1.split(' ').length<solution2.split(' ').length?timer2-timer1:timer3-timer2, 
-									/**@ts-ignore */
 									cube_solution_length:solution1.split(' ').length<solution2.split(' ').length?solution1.split(' ').length:solution2.split(' ').length, 
 									cube_solution_model:0}];
 					}
@@ -121,7 +134,6 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 									cube_solution_model:0},
 								{	cube_solution:solution2, 
 									cube_solution_time:timer3-timer2, 
-									/**@ts-ignore */
 									cube_solution_length:solution2.split(' ').length,
 									cube_solution_model:0}];
 					}
@@ -143,26 +155,25 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 					cs[32] + cs[7] + cs[34] + cs[23] + 'L' + cs[19] + cs[43] + cs[15] + cs[41],	//left
 					cs[29] + cs[5] + cs[31] + cs[20] + 'B' + cs[22] + cs[46] + cs[13] + cs[44]	//back
 				].join('').toLowerCase();  
-				let solution = cuberSolver3(cubstate_solver3, { partitioned: false });
-				if (solution=='')
+				const solution = cuberSolver3(cubstate_solver3, { partitioned: false });
+				if (solution.solution_string=='')
 					return [];
 				else{
 					//replace PRIME word with '
-					solution =  solution.toUpperCase().replaceAll('PRIME', '\'');
+					solution.solution_string =  solution.solution_string.toUpperCase().replaceAll('PRIME', '\'');
 					const timer_finished = Date.now();
 					//middle layer turns not supported
 					//M, E, S
-					if (solution.toUpperCase().indexOf('M')>-1 ||
-						solution.toUpperCase().indexOf('E')>-1 ||
-						solution.toUpperCase().indexOf('S')>-1)
+					if (solution.solution_string.toUpperCase().indexOf('M')>-1 ||
+						solution.solution_string.toUpperCase().indexOf('E')>-1 ||
+						solution.solution_string.toUpperCase().indexOf('S')>-1)
 							throw ('Not supported');
 					else
-						return [{	/**@ts-ignore */
-							cube_solution:solution, 
+						return [{	
+							cube_solution:solution.solution_string, 
 							cube_solution_time:timer_finished-timer_start,
-							/**@ts-ignore */
-							cube_solution_length:solution.split(' ').length,
-							cube_solution_type:1}];
+							cube_solution_length:solution.solution_string.split(' ').length,
+							cube_solution_model:1}];
 				}
 			}
 		}

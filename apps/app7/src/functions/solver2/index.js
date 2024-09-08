@@ -118,7 +118,7 @@ RubiksCubeSolver.prototype.applyMove = function(move, inState) {
 	while(turns--> 0){
 		const oldState = state.slice();
 		for(let i=0; i<8; i++ ){
-			const isCorner = i > 3;
+			const isCorner = (i > 3)==true?1:0;
 			const target = affectedCubies[face][i] + isCorner*12;
 			const killer = affectedCubies[face][(i&3)==3 ? i-3 : i+1] + isCorner*12;
 			const orientationDelta = (i<4) ? (face>1 && face<4) : (face<2) ? 0 : 2 - (i&1);
@@ -147,21 +147,38 @@ RubiksCubeSolver.prototype.getId = function(state) {
 	//-- Phase 2: Corner orientations, E slice edges.
 	if(this.phase < 3){
 		const result = state.slice(31,40);
-		for(let e=0; e<12; e++)
+		for(let e=0; e<12; e++){
+			//Bitwise OR assignment
+			//https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Bitwise_OR_assignment
+			//left shift operator
+			//https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Left_shift
 			result[0] |= (Math.floor(state[e] / 8)) << e;
+		}
 		return JSON.stringify(result);
 	}
-	
 	//--- Phase 3: Edge slices M and S, corner tetrads, overall parity.
 	if(this.phase < 4){
 		const result = [0,0,0];
-		for(let e=0; e<12; e++)
+		for(let e=0; e<12; e++){
+			//Bitwise OR assignment
+			//https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Bitwise_OR_assignment
+			//left shift operator
+			//https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Left_shift
 			result[0] |= ((state[e] > 7) ? 2 : (state[e] & 1)) << (2*e);
-		for(let c=0; c<8; c++)
+		}
+		for(let c=0; c<8; c++){
+			//Bitwise OR assignment
+			//https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Bitwise_OR_assignment
+			//left shift operator
+			//https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Left_shift
 			result[1] |= ((state[c+12]-12) & 5) << (3*c);
+		}
 		for(let i=12; i<20; i++)
-			for(let j=i+1; j<20; j++)
-				result[2] ^= state[i] > state[j];
+			for(let j=i+1; j<20; j++){
+				//Bitwise XOR assignment
+				//https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Bitwise_XOR_assignment
+				result[2] ^= (state[i] > state[j])==true?1:0;
+			}
 		return JSON.stringify(result);
 	}
 	
@@ -205,11 +222,9 @@ RubiksCubeSolver.prototype.setState = function(cube, cube_goal) {
 };
 
 RubiksCubeSolver.prototype.verifyState = function() {
-	if(!Array.isArray(this.currentState))
-		return false;
 	//orientation of edges
 	let sum = 0;
-	this.currentState.slice(20,32).forEach(function(edge){
+	this.currentState.slice(20,32).forEach(function(/**@type{number}*/edge){
 		sum+=edge;
 	});
 	if(sum % 2 != 0){
@@ -218,7 +233,7 @@ RubiksCubeSolver.prototype.verifyState = function() {
 	}
 	sum = 0;
 	//orientation of corners
-	this.currentState.slice(32,40).forEach(function(edge){
+	this.currentState.slice(32,40).forEach(function(/**@type{number}*/edge){
 		sum+=edge;
 	});
 	if(sum % 3 != 0){
@@ -258,17 +273,16 @@ RubiksCubeSolver.prototype.verifyState = function() {
 /**
  * @param {*} cube_currentstate
  * @param {*} cube_goalstate
+ * @returns {string}
  */
 RubiksCubeSolver.prototype.solve = function(cube_currentstate, cube_goalstate) {
 	this.solution = '';
 	this.phase = 0;  
 	
-	if(cube_currentstate){
-		if(!this.setState(cube_currentstate, cube_goalstate))
-			return false;
-	}
-	else if(!this.verifyState())
-		return false;
+	if(cube_currentstate)
+		this.setState(cube_currentstate, cube_goalstate);
+	else 
+		this.verifyState();
 
 	while(++this.phase < 5){
 		this.startPhase();
@@ -299,7 +313,7 @@ RubiksCubeSolver.prototype.startPhase = function() {
 	while(1){
 		//--- Get state from queue, compute its ID and get its direction.
 		const oldState = q.shift();
-		var oldId = this.getId(oldState);
+		let oldId = this.getId(oldState);
 		/**@ts-ignore */
 		const oldDir = direction[oldId];
 		
@@ -310,7 +324,7 @@ RubiksCubeSolver.prototype.startPhase = function() {
 				
 				//--- Apply the move.
 				const newState = this.applyMove(move, oldState);
-				var newId = this.getId(newState);
+				let newId = this.getId(newState);
 				/**@ts-ignore */
 				const newDir = direction[newId];
 				
@@ -320,8 +334,8 @@ RubiksCubeSolver.prototype.startPhase = function() {
 					//--- Make oldId represent the forwards and newId the backwards search state.
 					if(oldDir > 1){
 						const temp = newId;
-						var newId = oldId;
-						var oldId = temp;
+						newId = oldId;
+						oldId = temp;
 						move = this.inverse(move);
 					}
 					
