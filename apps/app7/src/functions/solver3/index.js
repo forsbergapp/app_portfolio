@@ -23,17 +23,21 @@ export { algorithmShortener } from './algorithm-shortener.js';
 
 /**
  * @param {string} cubeState - The string representing a cube state.
- * @param {object} options
+ * @param {{partitioned:boolean}} options
  * @prop {boolean} options.partitioned - Whether to separate moves according to
  * phase.
+ * @returns {{	solution_string:string,
+ * 			 	solution_partitioned:{}}}
  */
-export default (cubeState, options = {}) => {
+export default (cubeState, options = {partitioned:false}) => {
 	const solver = new Solver(cubeState, options);
 	solver.solve();
 
 	if (options.partitioned) {
-		return solver.getPartitions();
+		return {solution_string:'',
+				solution_partitioned:solver.getPartitions()};
 	} else {
-		return algorithmShortener(solver.getMoves());
+		return {solution_string:algorithmShortener(solver.getMoves()), 
+				solution_partitioned:{}};
 	}
 };
