@@ -138,7 +138,7 @@ const BFF_start = async (req, res) =>{
     const check_redirect = () =>{
         //redirect naked domain to www except for localhost
         if (req.headers.host.startsWith(ConfigGet('SERVER','HOST') ?? '') && req.headers.host.indexOf('localhost')==-1)
-            if (req.protocol=='http' && ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
+            if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
                 return {reason:'REDIRECT', redirect:`https://www.${req.headers.host}${req.originalUrl}`};
             else
                 return {reason:'REDIRECT', redirect:`http://www.${req.headers.host}${req.originalUrl}`};
@@ -162,12 +162,11 @@ const BFF_start = async (req, res) =>{
                 return {reason:'SEND', redirect:null};
             }
             else
-                check_redirect();
+                return check_redirect();
         }
         else
-            check_redirect();
+            return check_redirect();
     }
-    return {reason:null, redirect:null};
 };
 /**
  * Backend for frontend (BFF) called from client
