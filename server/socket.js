@@ -14,7 +14,7 @@ const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js
  * @param {string} ip
  * @param {string} user_agent
  * @param {string} accept_language
- * @param {import('../types.js').res} res
+ * @param {import('../types.js').server_server_res} res
  * @returns 
  */
  const ConnectedUpdate = (app_id, iam, ip, user_agent, accept_language, res) => service.ConnectedUpdate(app_id, 
@@ -97,7 +97,7 @@ const ConnectedCount = (query) => service.ConnectedCount(   getNumberValue(query
  * @param {string} ip  
  * @param {string} user_agent 
  * @param {string} accept_language 
- * @param {import('../types.js').res} res
+ * @param {import('../types.js').server_server_res} res
  */
 const SocketConnect = (app_id, iam, ip, user_agent, accept_language, res) => service.SocketConnect( app_id, 
                                                                                                     getNumberValue(iam_decode(iam).get('user_id')),

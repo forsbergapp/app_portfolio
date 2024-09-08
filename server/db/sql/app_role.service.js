@@ -7,7 +7,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * 
  * @param {number} app_id 
  * @param {number|null} id 
- * @returns {Promise.<import('../../../types.js').db_result_app_role_getAppRoleAdmin[]>}
+ * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_role_getAppRoleAdmin[]>}
  */
 const getAppRoleAdmin = async (app_id, id) => {
         const sql = `SELECT ar.id "id",

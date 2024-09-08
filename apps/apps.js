@@ -25,7 +25,7 @@ const getAppsAdmin = async (app_id, query) => service.getAppsAdmin(app_id, query
  * @param {string} accept_language 
  * @param {string} url
  * @param {*} query 
- * @param {import('../types.js').res} res 
+ * @param {import('../types.js').server_server_res} res 
  */
  const getAppMain = async (ip, host, user_agent, accept_language, url, query, res) => service.getAppMain(   ip, 
                                                                                                             host, 
@@ -43,7 +43,7 @@ const getAppsAdmin = async (app_id, query) => service.getAppsAdmin(app_id, query
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
- * @param {import('../types.js').res} res 
+ * @param {import('../types.js').server_server_res} res 
  */
  const getFunction = async (app_id, resource_id, data, user_agent, ip, locale, res) => service.getFunction(app_id, resource_id, data, user_agent, ip, locale, res);
 

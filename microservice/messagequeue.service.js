@@ -25,7 +25,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         const write_file = async (file, message, result) =>{
             file_append_log(file==0?'MESSAGE_QUEUE_ERROR':file==1?'MESSAGE_QUEUE_PUBLISH':file==2?'MESSAGE_QUEUE_CONSUME':'MESSAGE_QUEUE_ERROR', 
                             file==0?{message_id: new Date().toISOString(), message:   message, result:result}:message??{})
-            .catch((/**@type{import('../types.js').error}*/error)=>{throw error;});
+            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
         };
         try {
             switch (message_type) {
@@ -38,7 +38,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                     .then(()=>{
                         resolve (MessageQueue(service, 'CONSUME', null, new_message_id));
                     })
-                    .catch((/**@type{import('../types.js').error}*/error)=>{
+                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
                         reject(error);
                     });
                     break;
@@ -78,7 +78,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                     .then(()=>{
                                         resolve (null);
                                     })
-                                    .catch((/**@type{import('../types.js').error}*/error)=>{
+                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
                                         write_file(0, message_consume, error)
                                         .then(()=>{
                                             reject (error);
@@ -88,12 +88,12 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                         });
                                     });
                                 })
-                                .catch((/**@type{import('../types.js').error}*/error)=>{
+                                .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
                                     write_file(0, message_consume, error)
                                     .then(()=>{
                                         reject (error);
                                     })
-                                    .catch((/**@type{import('../types.js').error}*/error)=>{
+                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
                                         reject(error);
                                     });
                                 });
@@ -101,7 +101,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                             }
                         }
                     })
-                    .catch((/**@type{import('../types.js').error}*/error)=>{
+                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
                         write_file(0, message, error).then(()=>{
                             reject(message);
                         });
@@ -115,7 +115,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                     });
                 }
             }
-        } catch (/**@type{import('../types.js').error}*/error){
+        } catch (/**@type{import('../types.js').server_server_error}*/error){
             write_file(0, message, error).then(()=>{
                 reject(message);
             });
