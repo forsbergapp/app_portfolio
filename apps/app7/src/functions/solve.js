@@ -5,31 +5,6 @@
 const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
 
 /**
- * App type model robot
- * @typedef {0} model_robot
- */
-
-/**
- * App type model human
- * @typedef {1} model_human
- */
-
-/**
- * App type notation singmaster
- * @typedef {0} notation_singmaster
- */
-
-/**
- * App type solution one
- * @typedef {0} solution_one
- */
-
-/**
- * App type solution all
- * @typedef {1} solution_all
- */
-
-/**
  * 
  * Solves Rubiks cube using generative AI pattern
  * Model: 		Robot
@@ -45,20 +20,12 @@ const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 
  * 
  * Returns Singmaster notation with moves, time, length and model for each solution
  * @param {number} app_id
- * @param {{model: 				model_robot|model_human,
- *			preamble:			notation_singmaster,
- *			temperature:		solution_one|solution_all,
- *			cube_currentstate:	string,
- * 			cube_goalstate:		[]|null,
- * 			client_id: 			number}} data
+ * @param {import('./types.js').APP_FUNCTION_cube_solve_data} data
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
  * @param {import('../../../../types.js').server_server_res} res
- * @returns {Promise.<{	cube_solution:string|null, 
- *						cube_solution_time:number|null,
- *						cube_solution_length:number|null,
- *						cube_solution_model:model_robot|model_human}[]>}
+ * @returns {Promise.<import('./types.js').APP_FUNCTION_cube_solve_return[]>}
  */
 const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 	if ((data.model ==0 || data.model ==1) && data.preamble == 0 && (data.temperature == 0 || data.temperature == 1) && 

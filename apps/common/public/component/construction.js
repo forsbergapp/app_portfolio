@@ -14,13 +14,13 @@ const template ='   <div id=\'common_construction\' class=\'common_icon\'></div>
  */
 const component = async props => {
     props;
-    const render_template = async () =>{
+    const render_template = () =>{
         return template;
     };
     return {
         props:  {function_post:null},
         data:   null,
-        template: await render_template()
+        template: render_template()
     };
 };
 export default component;

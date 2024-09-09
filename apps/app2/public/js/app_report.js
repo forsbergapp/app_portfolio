@@ -2,188 +2,6 @@
  * @module apps/app2/app_report
  */
 
-/** 
- * @typedef {object} 	type_settings_report
- * @property {string}	locale
- * @property {string}	timezone
- * @property {string}	number_system
- * @property {string}	direction
- * @property {string}	second_locale
- * @property {string}	coltitle
- * @property {string}	arabic_script
- * @property {string}	calendartype
- * @property {string}	calendar_hijri_type
- * @property {string}	place
- * @property {number|null}	gps_lat
- * @property {number|null}	gps_long
- * @property {string}	theme_day
- * @property {string}	theme_month
- * @property {string}	theme_year
- * @property {string}	highlight
- * @property {number}	show_weekday
- * @property {number}	show_calendartype
- * @property {number}	show_notes
- * @property {number}	show_gps
- * @property {number}	show_timezone
- * @property {string}	header_img_src
- * @property {string}	footer_img_src
- * @property {string}	header_txt1
- * @property {string}	header_txt2
- * @property {string}	header_txt3
- * @property {string|null}	header_align
- * @property {string}	footer_txt1
- * @property {string}	footer_txt2
- * @property {string}	footer_txt3
- * @property {string|null}	footer_align
- * @property {string}	method
- * @property {string}	asr
- * @property {string}	highlat
- * @property {string}	format
- * @property {number}	hijri_adj
- * @property {string}	iqamat_fajr
- * @property {string}	iqamat_dhuhr
- * @property {string}	iqamat_asr
- * @property {string}	iqamat_maghrib
- * @property {string}	iqamat_isha
- * @property {number}	show_imsak
- * @property {number}	show_sunset
- * @property {number}	show_midnight
- * @property {number}	show_fast_start_end
- * @property {string}	timetable_class
- * @property {string}	timetable_month			- class to add for month
- * @property {string}	timetable_year_month	- class to add for year
- * @property {string}	reporttype_year_month	- MONTH:default, normal month with more info, 
- *												- YEAR:	month with less info
- * @property {string}	ui_navigation_left
- * @property {string}	ui_navigation_right
- * 
- * @typedef {object}	type_column_titles
- * @property {string}	day
- * @property {string}	weekday
- * @property {string}	weekday_tr
- * @property {string}	caltype
- * @property {string}	imsak
- * @property {string}	fajr
- * @property {string}	fajr_iqamat
- * @property {string}	sunrise
- * @property {string}	dhuhr
- * @property {string}	dhuhr_iqamat
- * @property {string}	asr
- * @property {string}	asr_iqamat
- * @property {string}	sunset
- * @property {string}	maghrib
- * @property {string}	maghrib_iqamat
- * @property {string}	isha
- * @property {string}	isha_iqamat
- * @property {string}	midnight
- * @property {string}	notes
- * 
- * Times
- * @typedef	{{[index: string]:number}}	type_times
- * @property{number}	day
- * @property{number}	fajr
- * @property{number}	dhuhr
- * @property{number}	asr
- * @property{number}	maghrib
- * @property{number}	isha
- * @property{number}	midnight
- * 
- * @typedef {object}	type_day_user_account_app_data_posts
- * @property {string}	description
- * @property {string}	regional_language_locale
- * @property {string}	regional_timezone
- * @property {string}	regional_number_system
- * @property {string}	regional_calendar_hijri_type
- * @property {number|null}	gps_lat_text
- * @property {number|null}	gps_long_text
- * @property {string}	prayer_method
- * @property {string}	prayer_asr_method
- * @property {string}	prayer_high_latitude_adjustment
- * @property {string}	prayer_time_format
- * @property {number}	prayer_hijri_date_adjustment
- * 
- * @typedef {{	
- * 			app_copyright:string,
- * 			session_currentDate:Date,
- * 			session_currentHijriDate:[number, number],
- * 			CommonModulePrayTimes_methods:{[index:string]:{	name:string,
- *														params:{fajr:string, 
- *																isha:string|null, 
- *																maghrib:string|null, 
- *																midnight:string|null
- *															}
- *													}
- *									},
- * 			regional_def_calendar_lang:string,
- * 			regional_def_locale_ext_prefix:string,
- * 			regional_def_locale_ext_number_system:string,
- * 			regional_def_locale_ext_calendar:string,
- * 			regional_def_calendar_type_greg:string,
- * 			regional_def_calendar_number_system:string,
- * 			first_language:{[key: string]:string,
- * 							coltitle_transliteration_imsak: string,
- *							coltitle_transliteration_fajr: string,
- *							coltitle_transliteration_fajr_iqamat: string,
- *							coltitle_transliteration_sunrise: string,
- *							coltitle_transliteration_dhuhr: string,
- *							coltitle_transliteration_dhuhr_iqamat: string,
- *							coltitle_transliteration_asr: string,
- *							coltitle_transliteration_asr_iqamat: string,
- *							coltitle_transliteration_sunset: string,
- *							coltitle_transliteration_maghrib: string,
- *							coltitle_transliteration_maghrib_iqamat: string,
- *							coltitle_transliteration_isha: string,
- *							coltitle_transliteration_isha_iqamat: string,
- *							coltitle_transliteration_midnight: string,
- *							timetable_title: string,
- *							coltitle_day: string,
- *							coltitle_weekday: string,
- *							coltitle_weekday_tr: string,
- *							coltitle_caltype_hijri: string,
- *							coltitle_caltype_gregorian: string,
- *							coltitle_imsak: string,
- *							coltitle_fajr: string,
- *							coltitle_fajr_iqamat: string,
- *							coltitle_sunrise: string,
- *							coltitle_dhuhr: string,
- *							coltitle_dhuhr_iqamat: string,
- *							coltitle_asr: string,
- *							coltitle_asr_iqamat: string,
- *							coltitle_sunset: string,
- *							coltitle_maghrib: string,
- *							coltitle_maghrib_iqamat: string,
- *							coltitle_isha: string,
- *							coltitle_isha_iqamat: string,
- *							coltitle_midnight: string,
- *							coltitle_notes: string,
- *							timezone_text: string,
- *							gps_lat_text: string,
- *							gps_long_text: string},
- * 			second_language:{	[key: string]:string,
- *								timetable_title: string,
- *								coltitle_day: string,
- *								coltitle_weekday: string,
- *								coltitle_weekday_tr: string,
- *								coltitle_caltype_hijri: string,
- *								coltitle_caltype_gregorian: string,
- *								coltitle_imsak: string,
- *								coltitle_fajr: string,
- *								coltitle_fajr_iqamat: string,
- *								coltitle_sunrise: string,
- *								coltitle_dhuhr: string,
- *								coltitle_dhuhr_iqamat: string,
- *								coltitle_asr: string,
- *								coltitle_asr_iqamat: string,
- *								coltitle_sunset: string,
- *								coltitle_maghrib: string,
- *								coltitle_maghrib_iqamat: string,
- *								coltitle_isha: string,
- *								coltitle_isha_iqamat: string,
- *								coltitle_midnight: string,
- *								coltitle_notes: string}
- * 			}} type_REPORT_GLOBAL
- */
-
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
@@ -192,7 +10,7 @@ const path_prayTimes ='PrayTimes';
 /**@type {import('../../../common_types.js').CommonModulePrayTimes} */
 const {default:prayTimes} = await import(path_prayTimes);
 
-/**@type{type_REPORT_GLOBAL} */
+/**@type{import('./types.js').APP_REPORT_GLOBAL} */
 const REPORT_GLOBAL = {
 	app_copyright:'',
 	session_currentDate:new Date(),
@@ -397,7 +215,7 @@ const getNumberString = (numbersystem, number) => {
  * @param {string} 		locale 
  * @param {string|null} second_locale 
  * @param {string} 		first_locale 
- * @returns {type_column_titles}
+ * @returns {import('./types.js').APP_REPORT_column_titles}
  */
 const getColumnTitles = (transliteration = 0, calendartype, locale, second_locale, first_locale) => {
 	const coltitle = {day: '',
@@ -709,7 +527,7 @@ const show_col = (timetable, col, value, col_data) => {
 /**
  * Timetable headers
  * @param {number} reporttype
- * @param {type_settings_report} settings 
+ * @param {import('./types.js').APP_REPORT_settings} settings 
  * @returns {string}
  */
 const timetable_headers = (reporttype, settings) => {
@@ -900,11 +718,11 @@ const calculateIqamat = (option, calculated_time) => {
 };
 /**
  * Make a timetable month row
- * @param {type_times} data 
- * @param {type_column_titles} columns 
+ * @param {import('./types.js').APP_REPORT_times} data 
+ * @param {import('./types.js').APP_REPORT_column_titles} columns 
  * @param {number} year 
  * @param {number} month 
- * @param {type_settings_report} settings 
+ * @param {import('./types.js').APP_REPORT_settings} settings 
  * @param {[number, number, number]|null} date 
  * @returns {string}
  */
@@ -1062,7 +880,7 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 };
 /**
  * Timetable month
- * @param {type_settings_report} settings 
+ * @param {import('./types.js').APP_REPORT_settings} settings 
  * @param {string|null} item_id
  * @param {string} year_class 
  * @returns {string}
@@ -1284,8 +1102,8 @@ const displayMonth = (settings, item_id, year_class='') => {
 /**
  * Timetable header row
  * @param {number} 				report_type 
- * @param {type_column_titles} 	col_titles 
- * @param {type_settings_report}settings
+ * @param {import('./types.js').APP_REPORT_column_titles} 	col_titles 
+ * @param {import('./types.js').APP_REPORT_settings}settings
  * @returns {string}
  */
  const create_header_row = (report_type, col_titles, settings) => {
@@ -1338,9 +1156,9 @@ const displayMonth = (settings, item_id, year_class='') => {
 };
 /**
  * Timetable day
- * @param {type_settings_report} settings 
+ * @param {import('./types.js').APP_REPORT_settings} settings 
  * @param {string|null} item_id
- * @param {type_day_user_account_app_data_posts[]} user_settings 
+ * @param {import('./types.js').APP_REPORT_day_user_account_app_data_posts[]} user_settings 
  * @returns {string}
  */
 const displayDay = (settings, item_id, user_settings) => {
@@ -1504,7 +1322,7 @@ const displayDay = (settings, item_id, user_settings) => {
 };
 /**
  * Timetable month
- * @param {type_settings_report} settings 
+ * @param {import('./types.js').APP_REPORT_settings} settings 
  * @param {string|null} item_id
  * @returns {string}
  */
