@@ -3,12 +3,9 @@
  */
 
 /**
-
- * 
- * @typedef {*} master_object_type
  * 
  * @typedef {{  display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
- *              master_object:master_object_type,
+ *              master_object:import('./../../../common_types.js').CommonMasterObjectType,
  *              rows:[],
  *              detail_class:string,
  *              new_resource:boolean,
@@ -160,7 +157,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                             </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
  *          display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL'

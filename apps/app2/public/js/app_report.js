@@ -106,7 +106,7 @@
  * 			app_copyright:string,
  * 			session_currentDate:Date,
  * 			session_currentHijriDate:[number, number],
- * 			module_praytimes_methods:{[index:string]:{	name:string,
+ * 			CommonModulePrayTimes_methods:{[index:string]:{	name:string,
  *														params:{fajr:string, 
  *																isha:string|null, 
  *																maghrib:string|null, 
@@ -185,11 +185,11 @@
  */
 
 const path_common ='common';
-/**@type {import('../../../types.js').module_common} */
+/**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 
 const path_prayTimes ='PrayTimes';
-/**@type {import('../../../types.js').module_prayTimes} */
+/**@type {import('../../../common_types.js').CommonModulePrayTimes} */
 const {default:prayTimes} = await import(path_prayTimes);
 
 /**@type{type_REPORT_GLOBAL} */
@@ -197,7 +197,7 @@ const REPORT_GLOBAL = {
 	app_copyright:'',
 	session_currentDate:new Date(),
 	session_currentHijriDate:[0,0],
-	module_praytimes_methods:{},
+	CommonModulePrayTimes_methods:{},
 	regional_def_calendar_lang:'',
 	regional_def_locale_ext_prefix:'',
 	regional_def_locale_ext_number_system:'',
@@ -536,7 +536,7 @@ const set_prayer_method = async(methods) => {
 		for (const method of methods){
 			const prayer_value = set_prayer_value(method.data2, method.data3,method.data4,method.data5);			
 			//ES6 object spread 
-			Object.assign(REPORT_GLOBAL.module_praytimes_methods, 
+			Object.assign(REPORT_GLOBAL.CommonModulePrayTimes_methods, 
 				{[method.value.toUpperCase()]:{
 					name:  method.display_data,
 					params: { 	...prayer_value.fajr,
@@ -590,33 +590,33 @@ const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri
 const setMethod_praytimes = (settings_method, settings_asr, settings_highlat) => {
 	prayTimes.setMethod(settings_method);
 	//use methods without modifying original code
-	if (REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib && 
-		REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight)
+	if (REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.maghrib && 
+		REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.midnight)
 		prayTimes.adjust( { asr:      settings_asr,
 							highLats: settings_highlat,
-							fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
-							isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha,
-							maghrib:  REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib,
-							midnight: REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight} );
+							fajr:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.fajr,
+							isha:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.isha,
+							maghrib:  REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.maghrib,
+							midnight: REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.midnight} );
 	else
-		if (REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib)
+		if (REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.maghrib)
 			prayTimes.adjust( { asr:      settings_asr,
 								highLats: settings_highlat,
-								fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
-								isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha,
-								maghrib:  REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib} );
+								fajr:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.fajr,
+								isha:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.isha,
+								maghrib:  REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.maghrib} );
 		else
-			if (REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight)
+			if (REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.midnight)
 				prayTimes.adjust( { asr:      settings_asr,
 									highLats: settings_highlat,
-									fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
-									isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha,
-									midnight: REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight} );
+									fajr:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.fajr,
+									isha:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.isha,
+									midnight: REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.midnight} );
 			else
 				prayTimes.adjust( { asr:      settings_asr,
 									highLats: settings_highlat,
-									fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
-									isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha} );
+									fajr:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.fajr,
+									isha:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.isha} );
 };
 /**
  * Get style for header and footer

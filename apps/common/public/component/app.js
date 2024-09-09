@@ -227,7 +227,7 @@ const template = props =>`  <div id='common_toolbar_framework'>
                             </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          font_default:boolean|null,
  *          font_arabic:boolean|null,

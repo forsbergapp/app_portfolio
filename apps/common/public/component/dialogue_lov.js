@@ -32,7 +32,7 @@ const template = props =>`  <div id='common_lov_form'>
                         </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          lov:string,
  *          lov_custom_list?:{}[],

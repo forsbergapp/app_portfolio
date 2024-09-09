@@ -18,7 +18,7 @@ const template =`   <div id='common_user_password_new_icon' class='common_icon'>
                     </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          auth:string,
  *          translation_new_password:string,

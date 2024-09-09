@@ -24,7 +24,7 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
                         `;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          timezone_text:string,
  *          latitude:string,

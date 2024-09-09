@@ -2,13 +2,13 @@
  * @module apps/common/common
  */
 
-/**@type{import('../../../types.js').AppDocument} */
- const AppDocument = document;
-/**@type{import('../../../types.js').AppWindow} */
-const AppWindow = window;
+/**@type{import('../../../common_types.js').CommonAppDocument} */
+ const CommonAppDocument = document;
+/**@type{import('../../../common_types.js').CommonAppWindow} */
+const CommonAppWindow = window;
 
  
-/**@type{import('../../../types.js').type_COMMON_GLOBAL} */
+/**@type{import('../../../common_types.js').CommonGlobal} */
 const COMMON_GLOBAL = {
     common_app_id:0,
     app_id:null,
@@ -23,7 +23,7 @@ const COMMON_GLOBAL = {
     app_rest_api_version:null,
     app_root:'app_root',
     app_div:'app',
-    app_console:{warn:AppWindow.console.warn, info:AppWindow.console.info, error:AppWindow.console.error},
+    app_console:{warn:CommonAppWindow.console.warn, info:CommonAppWindow.console.info, error:CommonAppWindow.console.error},
     app_eventListeners:{original: HTMLElement.prototype.addEventListener, LEAFLET:[], REACT:[], VUE:[], OTHER:[]},
     app_function_exception:null,
     app_function_session_expired:null,
@@ -106,7 +106,7 @@ const COMMON_GLOBAL = {
 };
 Object.seal(COMMON_GLOBAL);
 
-/**@type{import('../../../types.js').type_ICONS} */
+/**@type{import('../../../common_types.js').CommonIcons} */
 const ICONS = {
     app_maintenance:          '⚒',
     app_alert:                '🚨',
@@ -219,7 +219,7 @@ const typewatch = (function_name, ...parameter) =>{
             }
         }
     clearTimeout(timer);
-    timer = AppWindow.setTimeout(() => {
+    timer = CommonAppWindow.setTimeout(() => {
         function_name(...parameter);
     }, type_delay);
 };
@@ -229,7 +229,7 @@ const typewatch = (function_name, ...parameter) =>{
  * @returns {string}
  */
 const toBase64 = str => {
-    return AppWindow.btoa(unescape(encodeURIComponent(str)));
+    return CommonAppWindow.btoa(unescape(encodeURIComponent(str)));
 };	
 /**
  * Convert base64 to string
@@ -237,7 +237,7 @@ const toBase64 = str => {
  * @returns {string}
  */
 const fromBase64 = (str) => {
-    return decodeURIComponent(escape(AppWindow.atob(str)));
+    return decodeURIComponent(escape(CommonAppWindow.atob(str)));
 };
 /**
  * Translate ui
@@ -247,10 +247,7 @@ const fromBase64 = (str) => {
 const common_translate_ui = async lang_code => {
     //translate objects
     const app_objects_json = await FFB('/server-db/app_object', `data_lang_code=${lang_code}&object_name=APP`, 'GET', 'APP_DATA', null);
-    /**
-     * @typedef {   'USERNAME'|'EMAIL'|'NEW_EMAIL'|'BIO'|'PASSWORD'|'PASSWORD_CONFIRM'|'PASSWORD_REMINDER'|'NEW_PASSWORD_CONFIRM'|'NEW_PASSWORD'|'CONFIRM_QUESTION'} translation_key
-     */
-    /**@type{{object_name:string,object_item_name:translation_key, id:string, text:string}[]} */
+    /**@type{{object_name:string,object_item_name:import('../../../common_types.js').CommonTranslationkey, id:string, text:string}[]} */
     const app_objects = JSON.parse(app_objects_json).rows;
     for (const app_object of app_objects){
         switch (app_object.object_name){
@@ -262,7 +259,7 @@ const common_translate_ui = async lang_code => {
             }
             case 'APP_LOV':{
                 //translate items in select lists in current app
-                const select_element = AppDocument.querySelector('#' + app_object.object_item_name.toLowerCase());
+                const select_element = CommonAppDocument.querySelector('#' + app_object.object_item_name.toLowerCase());
                 if (select_element)
                     for (let option_element = 0; option_element < select_element.options.length; option_element++){
                         if (select_element.options[option_element].id == app_object.id)
@@ -372,7 +369,7 @@ const recreate_img = img_item => {
     const parentnode = img_item.parentNode;
     const id = img_item.id;
     const alt = img_item.alt;
-    const img = AppDocument.createElement('img');
+    const img = CommonAppDocument.createElement('img');
 
     parentnode?parentnode.removeChild(img_item):null;
     img.id = id;
@@ -398,7 +395,7 @@ const convert_image = async (image_url, image_width, image_height) => {
             //to allow any image url source, uncomment:
             //img.crossOrigin = 'Anonymous';
             img.onload = (el) => {
-                const elem = AppDocument.createElement('canvas');
+                const elem = CommonAppDocument.createElement('canvas');
                 elem.width = image_width;
                 elem.height = image_height;
                 const ctx = elem.getContext('2d');
@@ -429,7 +426,7 @@ const set_avatar = (avatar, item) => {
  */
 const show_image = async (item_img, item_input, image_width, image_height) => {
     return new Promise((resolve)=>{
-        const file = AppDocument.querySelector('#' + item_input).files[0];
+        const file = CommonAppDocument.querySelector('#' + item_input).files[0];
         const reader = new FileReader();
     
         const allowedExtensions = [COMMON_GLOBAL.image_file_allowed_type1,
@@ -452,7 +449,7 @@ const show_image = async (item_img, item_input, image_width, image_height) => {
                 resolve(null);
             }
             else {
-                reader.onloadend = /**@type{import('../../../types.js').AppEvent}*/event => {
+                reader.onloadend = /**@type{import('../../../common_types.js').CommonAppEvent}*/event => {
                     if (event.target)
                         convert_image(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
                             item_img.src = srcEncoded;
@@ -504,7 +501,7 @@ const input_control = (dialogue, validate_items) =>{
         if (typeof validate=='object')
             div = validate;
         else{
-            div = AppDocument.createElement('div');
+            div = CommonAppDocument.createElement('div');
             div.innerHTML = validate;
         }
         //remove any html
@@ -695,22 +692,22 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
  * @returns {void}
  */
  const common_theme_update_from_body = () => {
-    AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value = AppDocument.body.className[9];
+    CommonAppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value = CommonAppDocument.body.className[9];
 };
 /**
  * Common theme update body class from preferences
  * @returns {void}
  */
  const common_preferences_update_body_class_from_preferences = () => {
-    const class_app_theme = AppDocument.body.className.split(' ')[0] ?? '';
+    const class_app_theme = CommonAppDocument.body.className.split(' ')[0] ?? '';
     const class_direction = COMMON_GLOBAL.user_direction;
     const class_arabic_script = COMMON_GLOBAL.user_arabic_script;
-    AppDocument.body.className = '';
-    AppDocument.body.classList.add(class_app_theme);
+    CommonAppDocument.body.className = '';
+    CommonAppDocument.body.classList.add(class_app_theme);
     if (class_direction)
-        AppDocument.body.classList.add(class_direction);
+        CommonAppDocument.body.classList.add(class_direction);
     if (class_arabic_script)
-        AppDocument.body.classList.add(class_arabic_script);
+        CommonAppDocument.body.classList.add(class_arabic_script);
 };
 
 /**
@@ -805,15 +802,10 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
  * @returns {Promise.<*>}
  */
 const ComponentRender = async (div,props, component_path) => {
-    /**
-     * @typedef  {{ props:{function_post:function|null, function_error:function|null}, 
-     *              data:*,
-     *              template:string|null}} component_type
-     */
     const {default:component_function} = await import(component_path);
     //add document (less type errors), framework and mountdiv to props
-    /**@type{component_type}*/
-    const component = await component_function({...props, ...{ common_document:AppDocument,
+    /**@type{import('../../../common_types.js').CommonComponentResult}*/
+    const component = await component_function({...props, ...{ common_document:CommonAppDocument,
                                                 common_mountdiv:div}})
                                                 .catch((/**@type{Error}*/error)=>{
                                                     div?ComponentRemove(div, true):null;
@@ -827,49 +819,49 @@ const ComponentRender = async (div,props, component_path) => {
             case 2:{
                 //Vue
                 const path_vue = 'Vue';
-                /**@type {import('../../../types.js').module_vue} */
+                /**@type {import('../../../common_types.js').CommonModuleVue} */
                 const Vue = await import(path_vue);
                 //Use tempmount div to be able to return pure HTML
-                AppDocument.querySelector(`#${div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
+                CommonAppDocument.querySelector(`#${div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
                 Vue.createApp({
                     data(){return {};},
                     template: component.template,
                     methods:{}
                 }).mount('#tempmount');
-                AppDocument.querySelector(`#${div}`).innerHTML = AppDocument.querySelector('#tempmount').innerHTML;
+                CommonAppDocument.querySelector(`#${div}`).innerHTML = CommonAppDocument.querySelector('#tempmount').innerHTML;
                 break;
             }
             case 3:{
                 //React
                 const path_react = 'React';
-                /**@type {import('../../../types.js').module_react} */
+                /**@type {import('../../../common_types.js').CommonModuleReact} */
                 const React = await import(path_react).then(module=>module.React);
                 const path_reactDOM = 'ReactDOM';
-                /**@type {import('../../../types.js').module_reactDOM} */
+                /**@type {import('../../../common_types.js').CommonModuleReactDOM} */
                 const ReactDOM = await import(path_reactDOM).then(module=>module.ReactDOM);
                 
                 //convert HTML template to React component
-                const div_template = AppDocument.createElement('div');
+                const div_template = CommonAppDocument.createElement('div');
                 div_template.innerHTML = component.template;
                 const result_component = React.createElement(div_template.nodeName.toLowerCase(), 
                                                         { id: div_template.id, className: div_template.className}, 
                                                         html2reactcomponent(React.createElement, div_template.children));
 
-                AppDocument.querySelector(`#${div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
+                CommonAppDocument.querySelector(`#${div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
                 //use inner tempmount div to remove React events
-                const application = ReactDOM.createRoot(AppDocument.querySelector(`#${div} #tempmount`));
+                const application = ReactDOM.createRoot(CommonAppDocument.querySelector(`#${div} #tempmount`));
                 application.render( result_component);
                 await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 200);});
                 //React shows warning Invalid DOM property `class`. Did you mean `className`?
                 //because a div with empty class is created inside tempmount, ignore
                 //Return the inner first div.innerHTML created by React to return pure HTML
-                AppDocument.querySelector(`#${div}`).innerHTML = AppDocument.querySelector(`#${div} #tempmount >div`).innerHTML;
+                CommonAppDocument.querySelector(`#${div}`).innerHTML = CommonAppDocument.querySelector(`#${div} #tempmount >div`).innerHTML;
                 break;
             }
             case 1:
             default:{
                 //Default Javascript
-                AppDocument.querySelector(`#${div}`).innerHTML = component.template;
+                CommonAppDocument.querySelector(`#${div}`).innerHTML = component.template;
             }
         }
         //post function
@@ -890,7 +882,7 @@ const ComponentRender = async (div,props, component_path) => {
  * @param {boolean} remove_modal
  */
 const ComponentRemove = (div, remove_modal=false) => {
-    const APPDIV = AppDocument.querySelector(`#${div}`);
+    const APPDIV = CommonAppDocument.querySelector(`#${div}`);
     APPDIV.innerHTML = '';
     if (div.indexOf('dialogue')>-1){
         APPDIV.classList.remove('common_dialogue_show0');
@@ -898,9 +890,9 @@ const ComponentRemove = (div, remove_modal=false) => {
         APPDIV.classList.remove('common_dialogue_show2');
         APPDIV.classList.remove('common_dialogue_show3');
         if (remove_modal){
-            if (AppDocument.querySelector('#app .common_dialogues_modal'))
-                AppDocument.querySelector('#app .common_dialogues_modal').classList.remove('common_dialogues_modal');
-            AppDocument.querySelector('#common_app #common_dialogues').classList.remove('common_dialogues_modal');
+            if (CommonAppDocument.querySelector('#app .common_dialogues_modal'))
+                CommonAppDocument.querySelector('#app .common_dialogues_modal').classList.remove('common_dialogues_modal');
+            CommonAppDocument.querySelector('#common_app #common_dialogues').classList.remove('common_dialogues_modal');
         }
     }
 };
@@ -927,10 +919,10 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
         case 'VERIFY':
             {    
                 ComponentRender('common_dialogue_user_verify', {user_verification_type:user_verification_type,
-                                                                username_login:AppDocument.querySelector('#common_user_start_login_username').innerHTML,
-                                                                password_login:AppDocument.querySelector('#common_user_start_login_password').innerHTML,
-                                                                username_signup:AppDocument.querySelector('#common_user_start_signup_username').innerHTML,
-                                                                password_signup:AppDocument.querySelector('#common_user_start_signup_password').innerHTML,
+                                                                username_login:CommonAppDocument.querySelector('#common_user_start_login_username').innerHTML,
+                                                                password_login:CommonAppDocument.querySelector('#common_user_start_login_password').innerHTML,
+                                                                username_signup:CommonAppDocument.querySelector('#common_user_start_signup_username').innerHTML,
+                                                                password_signup:CommonAppDocument.querySelector('#common_user_start_signup_password').innerHTML,
                                                                 title: title,
                                                                 function_data_function:click_cancel_event}, '/common/component/dialogue_user_verify.js');
                 ComponentRemove('common_dialogue_user_start');
@@ -1034,7 +1026,7 @@ const dialogue_password_new_clear = () => {
 };
 /**
  * LOV event
- * @param {import('../../../types.js').AppEvent} event
+ * @param {import('../../../common_types.js').CommonAppEvent} event
  * @param {'APP_CATEGORY'|'APP_ROLE'} lov
  */
 const lov_event = (event, lov) => {
@@ -1046,7 +1038,7 @@ const lov_event = (event, lov) => {
      *  common_input_value = data-value
      * app data row for users should not show technical details
      *  common_input_value = data-value
-     * @param {import('../../../types.js').AppEvent} event_lov 
+     * @param {import('../../../common_types.js').CommonAppEvent} event_lov 
      */
     const lov_event_function = event_lov => {
         //setting values from LOV
@@ -1069,13 +1061,13 @@ const lov_event = (event, lov) => {
         }
         //dispatch event for either common_input lov if used or common_lov_value
         (common_input_lov ?? common_lov_value)?.dispatchEvent(new Event('input'));
-        AppDocument.querySelector('#common_lov_close').click();
+        CommonAppDocument.querySelector('#common_lov_close').click();
     };
     lov_show({lov:lov, function_event:lov_event_function});
 };
 /**
  * Lov action fetches id and value, updates values and manages data-defaultValue
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @param {string} lov 
  * @param {string|null} old_value
  * @param {string} path 
@@ -1148,7 +1140,7 @@ const lov_show = parameters => {
  * @param {string} text_filter 
  */
 const lov_filter = text_filter => {
-    const rows = AppDocument.querySelectorAll('.common_list_lov_row');
+    const rows = CommonAppDocument.querySelectorAll('.common_list_lov_row');
     for (const row of rows) {
         row.classList.remove ('common_list_lov_row_hide');
         row.classList.remove ('common_list_row_selected');
@@ -1173,7 +1165,7 @@ const lov_filter = text_filter => {
 const zoom_info = (zoomvalue = null) => {
     let old;
     let old_scale;
-    const div = AppDocument.querySelector('#common_window_info_info');
+    const div = CommonAppDocument.querySelector('#common_window_info_info');
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
     if (zoomvalue == null) {
@@ -1192,7 +1184,7 @@ const zoom_info = (zoomvalue = null) => {
  */
 const move_info = (move1=null, move2=null) => {
     let old;
-    const div = AppDocument.querySelector('#common_window_info_info');
+    const div = CommonAppDocument.querySelector('#common_window_info_info');
     if (move1==null || move2==null) {
         div.style.transformOrigin = '50% 50%';
     } else {
@@ -1207,20 +1199,20 @@ const move_info = (move1=null, move2=null) => {
  * @returns {void}
  */
 const show_hide_window_info_toolbar = () => {
-    if (AppDocument.querySelector('#common_window_info_toolbar').style.display=='flex' ||
-        AppDocument.querySelector('#common_window_info_toolbar').style.display=='')
-        AppDocument.querySelector('#common_window_info_toolbar').style.display='none';
+    if (CommonAppDocument.querySelector('#common_window_info_toolbar').style.display=='flex' ||
+        CommonAppDocument.querySelector('#common_window_info_toolbar').style.display=='')
+        CommonAppDocument.querySelector('#common_window_info_toolbar').style.display='none';
     else
-        AppDocument.querySelector('#common_window_info_toolbar').style.display='flex';
+        CommonAppDocument.querySelector('#common_window_info_toolbar').style.display='flex';
 };
 /**
  * Close window info
  */
 const close_window = () =>{
     ComponentRemove('common_window_info');
-    AppDocument.querySelector('#common_window_info').style.visibility = 'hidden'; 
-    if (AppDocument.fullscreenElement)
-        AppDocument.exitFullscreen();
+    CommonAppDocument.querySelector('#common_window_info').style.visibility = 'hidden'; 
+    if (CommonAppDocument.fullscreenElement)
+        CommonAppDocument.exitFullscreen();
 };
 
 /**
@@ -1260,7 +1252,7 @@ const profile_stat = async (statchoice, app_rest_url = null, function_user_click
  */
 const profile_detail = (detailchoice, fetch_detail, click_function=null) => {
     let path;
-    const profile_detail_list = AppDocument.querySelector('#common_profile_detail_list');
+    const profile_detail_list = CommonAppDocument.querySelector('#common_profile_detail_list');
     profile_detail_list.innerHTML = '';
     profile_detail_list.classList.add('css_spinner');
     switch (detailchoice){
@@ -1290,12 +1282,12 @@ const profile_detail = (detailchoice, fetch_detail, click_function=null) => {
     if (COMMON_GLOBAL.user_account_id || 0 !== 0) {
         if (detailchoice==0){
             //show only other app specific hide common
-            AppDocument.querySelector('#common_profile_detail').style.display = 'none';
+            CommonAppDocument.querySelector('#common_profile_detail').style.display = 'none';
         }
         else
-            AppDocument.querySelector('#common_profile_detail').style.display = 'block';
+            CommonAppDocument.querySelector('#common_profile_detail').style.display = 'block';
         if (fetch_detail){
-            FFB(`${path}/${AppDocument.querySelector('#common_profile_id').innerHTML}`, `detailchoice=${detailchoice}`, 
+            FFB(`${path}/${CommonAppDocument.querySelector('#common_profile_id').innerHTML}`, `detailchoice=${detailchoice}`, 
                 'GET', 'APP_ACCESS', null)
             .then(result=>{
                 let html = '';
@@ -1303,7 +1295,7 @@ const profile_detail = (detailchoice, fetch_detail, click_function=null) => {
                 let delete_div ='';
                 for (const list_item of JSON.parse(result)) {
                     if (detailchoice==5 && typeof list_item.id =='undefined'){
-                        if (AppDocument.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
+                        if (CommonAppDocument.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
                             delete_div = `<div class='common_profile_detail_list_app_delete common_icon'>${''}</div>`;
                         html += 
                         //Apps list
@@ -1348,7 +1340,7 @@ const profile_detail = (detailchoice, fetch_detail, click_function=null) => {
                 }
                 profile_detail_list.classList.remove('css_spinner');
                 profile_detail_list.innerHTML = html;
-                AppDocument.querySelector('#common_profile_detail_list')['data-function'] = click_function;
+                CommonAppDocument.querySelector('#common_profile_detail_list')['data-function'] = click_function;
             })
             .catch(()=>profile_detail_list.classList.remove('css_spinner'));
         }
@@ -1361,15 +1353,15 @@ const profile_detail = (detailchoice, fetch_detail, click_function=null) => {
  * @returns {void}
  */
 const search_profile = click_function => {
-    AppDocument.querySelector('#common_profile_search_input').classList.remove('common_input_error');
-    AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
-    if (AppDocument.querySelector('#common_profile_search_input').innerText==''){
-        AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-        AppDocument.querySelector('#common_profile_search_input').classList.add('common_input_error');
+    CommonAppDocument.querySelector('#common_profile_search_input').classList.remove('common_input_error');
+    CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
+    if (CommonAppDocument.querySelector('#common_profile_search_input').innerText==''){
+        CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+        CommonAppDocument.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
     else{
-        const searched_username = AppDocument.querySelector('#common_profile_search_input').innerText;
-        if (input_control(null,{check_valid_list_elements:[[AppDocument.querySelector('#common_profile_search_input'),null]]})==false)
+        const searched_username = CommonAppDocument.querySelector('#common_profile_search_input').innerText;
+        if (input_control(null,{check_valid_list_elements:[[CommonAppDocument.querySelector('#common_profile_search_input'),null]]})==false)
             return;
         ComponentRender('common_profile_search_list_wrap',
                         {
@@ -1382,10 +1374,10 @@ const search_profile = click_function => {
                             function_FFB:FFB
                         },
                         '/common/component/profile_search_list.js')
-        .then(()=>AppDocument.querySelector('#common_profile_search_list').innerHTML==''?
-                        AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none':null)
+        .then(()=>CommonAppDocument.querySelector('#common_profile_search_list').innerHTML==''?
+                        CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none':null)
         .catch(()=>{
-            AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+            CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         });
     }
 };
@@ -1426,7 +1418,7 @@ const profile_show = async (user_account_id_other = null, username = null) => {
  */
 const profile_update_stat = async () => {
     return new Promise((resolve, reject) => {
-        const profile_id = AppDocument.querySelector('#common_profile_id');
+        const profile_id = CommonAppDocument.querySelector('#common_profile_id');
         //get updated stat for given user
         FFB(`/server-db/user_account-profile/${profile_id.innerHTML}`, 
             `id=${profile_id.innerHTML}&client_latitude=${COMMON_GLOBAL.client_latitude}&client_longitude=${COMMON_GLOBAL.client_longitude}`, 
@@ -1434,11 +1426,11 @@ const profile_update_stat = async () => {
             'APP_DATA', null)
         .then(result=>{
             const user_stat = JSON.parse(result)[0];
-            AppDocument.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
-            AppDocument.querySelector('#common_profile_info_following_count').innerHTML = user_stat.count_following;
-            AppDocument.querySelector('#common_profile_info_followers_count').innerHTML = user_stat.count_followed;
-            AppDocument.querySelector('#common_profile_info_likes_count').innerHTML = user_stat.count_likes;
-            AppDocument.querySelector('#common_profile_info_liked_count').innerHTML = user_stat.count_liked;
+            CommonAppDocument.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
+            CommonAppDocument.querySelector('#common_profile_info_following_count').innerHTML = user_stat.count_following;
+            CommonAppDocument.querySelector('#common_profile_info_followers_count').innerHTML = user_stat.count_followed;
+            CommonAppDocument.querySelector('#common_profile_info_likes_count').innerHTML = user_stat.count_likes;
+            CommonAppDocument.querySelector('#common_profile_info_liked_count').innerHTML = user_stat.count_liked;
             resolve({id : user_stat.id});
         })
         .catch(err=>reject(err));
@@ -1446,7 +1438,7 @@ const profile_update_stat = async () => {
 };
 /**
  * List key event
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @param {string} module 
  * @param {function|null} event_function 
  * @returns {void}
@@ -1461,15 +1453,15 @@ const list_key_event = (event, module, event_function=null) => {
         }
         case 'ArrowUp':
         case 'ArrowDown':{
-            const rows = module=='lov'? AppDocument.querySelectorAll(`.common_${list_name}_row:not(.common_${list_name}_row_hide)`):
-                                        AppDocument.querySelectorAll(`.common_${list_name}_list_row`);
+            const rows = module=='lov'? CommonAppDocument.querySelectorAll(`.common_${list_name}_row:not(.common_${list_name}_row_hide)`):
+                                        CommonAppDocument.querySelectorAll(`.common_${list_name}_list_row`);
             /**
              * Focus item
              * @param {HTMLElement} element 
              */
             const focus_item = (element) =>{
                 element.focus();
-                AppDocument.querySelector(`#common_${search_input}_input`).focus();
+                CommonAppDocument.querySelector(`#common_${search_input}_input`).focus();
             };
             if (Object.entries(rows).filter(row=>row[1].classList.contains('common_list_row_selected')).length>0){
                 let i=0;
@@ -1523,7 +1515,7 @@ const list_key_event = (event, module, event_function=null) => {
         case 'Enter':{
             //enter
             if (module == 'lov'){
-                const rows = AppDocument.querySelectorAll(`.common_${list_name}_row`);
+                const rows = CommonAppDocument.querySelectorAll(`.common_${list_name}_row`);
                 for (const row of rows) {
                     if (row.classList.contains('common_list_row_selected')){
                         //event on row is set in app when calling lov, dispatch it!
@@ -1533,7 +1525,7 @@ const list_key_event = (event, module, event_function=null) => {
                 }   
             }
             else{
-                const rows = AppDocument.querySelectorAll(`.common_${list_name}_list_row`);
+                const rows = CommonAppDocument.querySelectorAll(`.common_${list_name}_list_row`);
                 for (let i = 0; i <= rows.length -1; i++) {
                     if (rows[i].classList.contains('common_list_row_selected')){
                         /*Show profile and leave searchresult so user can go back to searchresult again*/
@@ -1568,8 +1560,8 @@ const list_key_event = (event, module, event_function=null) => {
         default:{
             if (module=='lov'){
                 //if db call will be implemented, add delay
-                //typewatch(lov_filter, AppDocument.querySelector(`#common_${search_input}_input`).innerText); 
-                lov_filter(AppDocument.querySelector(`#common_${search_input}_input`).innerText); 
+                //typewatch(lov_filter, CommonAppDocument.querySelector(`#common_${search_input}_input`).innerText); 
+                lov_filter(CommonAppDocument.querySelector(`#common_${search_input}_input`).innerText); 
             }
             else
                 if (module=='profile')
@@ -1599,18 +1591,18 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         spinner_item = 'common_user_start_login_system_admin_button';
         current_dialogue = 'common_dialogue_user_start';
         // ES6 object spread operator for user variables
-        json_data = {   username:  encodeURI(AppDocument.querySelector('#common_user_start_login_system_admin_username').innerHTML),
-                        password:  encodeURI(AppDocument.querySelector('#common_user_start_login_system_admin_password').innerHTML),
+        json_data = {   username:  encodeURI(CommonAppDocument.querySelector('#common_user_start_login_system_admin_username').innerHTML),
+                        password:  encodeURI(CommonAppDocument.querySelector('#common_user_start_login_system_admin_password').innerHTML),
                         ...get_uservariables()
         };
         path = '/server-iam/login';
         tokentype = 'IAM_SYSTEMADMIN';
-        if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
+        if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_start'),
                         {
-                        username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
-                        password: AppDocument.querySelector('#common_user_start_login_system_admin_password'),
-                        password_confirm: AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm')?
-                                            AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm'):
+                        username: CommonAppDocument.querySelector('#common_user_start_login_system_admin_username'),
+                        password: CommonAppDocument.querySelector('#common_user_start_login_system_admin_password'),
+                        password_confirm: CommonAppDocument.querySelector('#common_user_start_login_system_admin_password_confirm')?
+                                            CommonAppDocument.querySelector('#common_user_start_login_system_admin_password_confirm'):
                                                 null
                         })==false)
             throw 'ERROR';
@@ -1642,7 +1634,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                             provider_id:            provider_data.profile_id,
                             provider_first_name:    provider_data.profile_first_name,
                             provider_last_name:     provider_data.profile_last_name,
-                            provider_image:         profile_image?AppWindow.btoa(profile_image):null,
+                            provider_image:         profile_image?CommonAppWindow.btoa(profile_image):null,
                             provider_image_url:     provider_data.profile_image_url,
                             provider_email:         provider_data.profile_email,
                             ...get_uservariables()
@@ -1653,31 +1645,31 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         else{
             // ES6 object spread operator for user variables
             json_data = {   username:  encodeURI(username_verify?
-                                            AppDocument.querySelector(`#${username_verify}`).innerHTML:
-                                                AppDocument.querySelector('#common_user_start_login_username').innerHTML),
+                                            CommonAppDocument.querySelector(`#${username_verify}`).innerHTML:
+                                                CommonAppDocument.querySelector('#common_user_start_login_username').innerHTML),
                             password:  encodeURI(password_verify?
-                                            AppDocument.querySelector(`#${password_verify}`).innerHTML:
-                                                AppDocument.querySelector('#common_user_start_login_password').innerHTML),
+                                            CommonAppDocument.querySelector(`#${password_verify}`).innerHTML:
+                                                CommonAppDocument.querySelector('#common_user_start_login_password').innerHTML),
                             ...get_uservariables()
             };
             path = '/server-iam/login';
             tokentype = 'IAM_USER';
-            if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
+            if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_start'),
                             {
                             username: username_verify?
-                                            AppDocument.querySelector(`#${username_verify}`):
-                                                AppDocument.querySelector('#common_user_start_login_username'),
+                                            CommonAppDocument.querySelector(`#${username_verify}`):
+                                                CommonAppDocument.querySelector('#common_user_start_login_username'),
                             password: password_verify?
-                                            AppDocument.querySelector(`#${password_verify}`):
-                                                AppDocument.querySelector('#common_user_start_login_password')
+                                            CommonAppDocument.querySelector(`#${password_verify}`):
+                                                CommonAppDocument.querySelector('#common_user_start_login_password')
                             })==false)
                 throw 'ERROR';
             
         }            
     }
-    AppDocument.querySelector(`#${spinner_item}`).classList.add('css_spinner');
+    CommonAppDocument.querySelector(`#${spinner_item}`).classList.add('css_spinner');
     const result_iam = await FFB(path, null, 'POST', tokentype, json_data).catch(err=>{
-                        AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+                        CommonAppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
                         throw err;
                     });
     if (system_admin){
@@ -1686,7 +1678,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
         COMMON_GLOBAL.token_timestamp = JSON.parse(result_iam).tokentimestamp;
-        AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+        CommonAppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
         ComponentRemove(current_dialogue, true);
         
         return {avatar: null};
@@ -1705,14 +1697,14 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
 
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
             //set avatar or emptyif not in admin app
-            set_avatar(provider_id?login_data.provider_image:login_data.avatar ?? null, AppDocument.querySelector('#common_user_menu_avatar_img'));
-            AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-            AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
+            set_avatar(provider_id?login_data.provider_image:login_data.avatar ?? null, CommonAppDocument.querySelector('#common_user_menu_avatar_img'));
+            CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+            CommonAppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
         }
 
         const result = await FFB(`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
                         .catch(err=>{
-                            AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+                            CommonAppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
                             throw err;
                         });
         const user_account_app = JSON.parse(result)[0];
@@ -1741,7 +1733,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             throw 'ERROR';
         }
         else{
-            AppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
+            CommonAppDocument.querySelector(`#${spinner_item}`).classList.remove('css_spinner');
             ComponentRemove(current_dialogue, true);
             ComponentRemove('common_dialogue_profile', true);
             return {avatar: provider_id?login_data.provider_image:login_data.avatar};
@@ -1781,9 +1773,9 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         //wait 1 second
         await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 1000);});
         if (element.id)
-            element = AppDocument.querySelector(`#${element.id}`);
+            element = CommonAppDocument.querySelector(`#${element.id}`);
         else
-            element = AppDocument.querySelector(`.${element.className.replaceAll(' ','.')}`);
+            element = CommonAppDocument.querySelector(`.${element.className.replaceAll(' ','.')}`);
         if (element)
             element.dispatchEvent(new Event('change'));
     }
@@ -1797,9 +1789,9 @@ const user_logoff = async () => {
     FFB('/server-iam/user/logoff', null, 'POST', 'APP_DATA', null)
     .then(()=>{
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
-            AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
-            AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-            set_avatar(null, AppDocument.querySelector('#common_user_menu_avatar_img')); 
+            CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
+            CommonAppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+            set_avatar(null, CommonAppDocument.querySelector('#common_user_menu_avatar_img')); 
             close_window();
             ComponentRemove('common_dialogue_user_edit');
             dialogue_password_new_clear();
@@ -1840,37 +1832,37 @@ const user_logoff = async () => {
  */
 const user_update = async () => {
     return new Promise(resolve=>{
-        const username = AppDocument.querySelector('#common_user_edit_input_username').innerHTML;
-        const bio = AppDocument.querySelector('#common_user_edit_input_bio').innerHTML;
-        const avatar = AppDocument.querySelector('#common_user_edit_avatar_img').src;
-        const new_email = AppDocument.querySelector('#common_user_edit_input_new_email').innerHTML;
+        const username = CommonAppDocument.querySelector('#common_user_edit_input_username').innerHTML;
+        const bio = CommonAppDocument.querySelector('#common_user_edit_input_bio').innerHTML;
+        const avatar = CommonAppDocument.querySelector('#common_user_edit_avatar_img').src;
+        const new_email = CommonAppDocument.querySelector('#common_user_edit_input_new_email').innerHTML;
     
         let path;
         let json_data;
             
         
-        if (AppDocument.querySelector('#common_user_edit_local').style.display == 'block') {
-            if (input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
+        if (CommonAppDocument.querySelector('#common_user_edit_local').style.display == 'block') {
+            if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_edit'),
                             {
-                            username: AppDocument.querySelector('#common_user_edit_input_username'),
-                            password: AppDocument.querySelector('#common_user_edit_input_password'),
-                            password_confirm: AppDocument.querySelector('#common_user_edit_input_password_confirm'),
-                            password_confirm_reminder: AppDocument.querySelector('#common_user_edit_input_password_reminder'),
-                            password_new: AppDocument.querySelector('#common_user_edit_input_password_new'),
-                            password_new_confirm: AppDocument.querySelector('#common_user_edit_input_password_new_confirm'),
-                            bio: AppDocument.querySelector('#common_user_edit_input_bio'),
-                            email: AppDocument.querySelector('#common_user_edit_input_email')
+                            username: CommonAppDocument.querySelector('#common_user_edit_input_username'),
+                            password: CommonAppDocument.querySelector('#common_user_edit_input_password'),
+                            password_confirm: CommonAppDocument.querySelector('#common_user_edit_input_password_confirm'),
+                            password_confirm_reminder: CommonAppDocument.querySelector('#common_user_edit_input_password_reminder'),
+                            password_new: CommonAppDocument.querySelector('#common_user_edit_input_password_new'),
+                            password_new_confirm: CommonAppDocument.querySelector('#common_user_edit_input_password_new_confirm'),
+                            bio: CommonAppDocument.querySelector('#common_user_edit_input_bio'),
+                            email: CommonAppDocument.querySelector('#common_user_edit_input_email')
                             })==false)
                 return null;
 
-            const email = AppDocument.querySelector('#common_user_edit_input_email').innerHTML;    
-            const password = AppDocument.querySelector('#common_user_edit_input_password').innerHTML;
-            const password_new = AppDocument.querySelector('#common_user_edit_input_password_new').innerHTML;
-            const password_reminder = AppDocument.querySelector('#common_user_edit_input_password_reminder').innerHTML;
+            const email = CommonAppDocument.querySelector('#common_user_edit_input_email').innerHTML;    
+            const password = CommonAppDocument.querySelector('#common_user_edit_input_password').innerHTML;
+            const password_new = CommonAppDocument.querySelector('#common_user_edit_input_password_new').innerHTML;
+            const password_reminder = CommonAppDocument.querySelector('#common_user_edit_input_password_reminder').innerHTML;
         
             json_data = {   username:           username,
                             bio:                bio,
-                            private:            Number(AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
+                            private:            Number(CommonAppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
                             password:           password,
                             password_new:       password_new,
                             password_reminder:  password_reminder,
@@ -1881,32 +1873,32 @@ const user_update = async () => {
                         };
             path = `/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
         } else {
-            if (input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
+            if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_edit'),
                             {
-                            bio: AppDocument.querySelector('#common_user_edit_input_bio')
+                            bio: CommonAppDocument.querySelector('#common_user_edit_input_bio')
                             })==false)
                 return null;
-            json_data = {   provider_id:    AppDocument.querySelector('#common_user_edit_provider_id').innerHTML,
+            json_data = {   provider_id:    CommonAppDocument.querySelector('#common_user_edit_provider_id').innerHTML,
                             username:       username,
                             bio:            bio,
-                            private:        Number(AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
+                            private:        Number(CommonAppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
                         };
             path = `/server-db/user_account-common/${COMMON_GLOBAL.user_account_id ?? ''}`;
         }
-        AppDocument.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
+        CommonAppDocument.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
         //update user using REST API
         FFB(path, null, 'PATCH', 'APP_ACCESS', json_data)
         .then(result=>{
-            AppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
+            CommonAppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             const user_update = JSON.parse(result);
-            set_avatar(avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
+            set_avatar(avatar, CommonAppDocument.querySelector('#common_user_menu_avatar_img'));
             if (user_update.sent_change_email == 1){
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, null);
             }
             else
                 ComponentRemove('common_dialogue_user_edit', true);
         })
-        .catch(()=>AppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner'))
+        .catch(()=>CommonAppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner'))
         .finally(()=>resolve(null));
     });
 };
@@ -1915,28 +1907,28 @@ const user_update = async () => {
  * @returns {void}
  */
 const user_signup = () => {
-    const email = AppDocument.querySelector('#common_user_start_signup_email').innerHTML;
-    if (input_control(AppDocument.querySelector('#common_dialogue_user_start'),
+    const email = CommonAppDocument.querySelector('#common_user_start_signup_email').innerHTML;
+    if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_start'),
                             {
-                            username: AppDocument.querySelector('#common_user_start_signup_username'),
-                            password: AppDocument.querySelector('#common_user_start_signup_password'),
-                            password_confirm: AppDocument.querySelector('#common_user_start_signup_password_confirm'),
-                            password_confirm_reminder: AppDocument.querySelector('#common_user_start_signup_password_reminder'),
-                            email: AppDocument.querySelector('#common_user_start_signup_email')
+                            username: CommonAppDocument.querySelector('#common_user_start_signup_username'),
+                            password: CommonAppDocument.querySelector('#common_user_start_signup_password'),
+                            password_confirm: CommonAppDocument.querySelector('#common_user_start_signup_password_confirm'),
+                            password_confirm_reminder: CommonAppDocument.querySelector('#common_user_start_signup_password_reminder'),
+                            email: CommonAppDocument.querySelector('#common_user_start_signup_email')
                             })==true){
-        const json_data = { username:           AppDocument.querySelector('#common_user_start_signup_username').innerHTML,
-                            password:           AppDocument.querySelector('#common_user_start_signup_password').innerHTML,
-                            password_reminder:  AppDocument.querySelector('#common_user_start_signup_password_reminder').innerHTML,
+        const json_data = { username:           CommonAppDocument.querySelector('#common_user_start_signup_username').innerHTML,
+                            password:           CommonAppDocument.querySelector('#common_user_start_signup_password').innerHTML,
+                            password_reminder:  CommonAppDocument.querySelector('#common_user_start_signup_password_reminder').innerHTML,
                             email:              email,
                             active:             0,
                             ...get_uservariables()
                             };
         
-        AppDocument.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
+        CommonAppDocument.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
     
         FFB('/server-db/user_account-signup', null, 'POST', 'APP_SIGNUP', json_data)
         .then(result=>{
-            AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
+            CommonAppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
             const signup = JSON.parse(result);
             COMMON_GLOBAL.token_at = signup.accessToken;
             COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
@@ -1945,7 +1937,7 @@ const user_signup = () => {
             COMMON_GLOBAL.user_account_id = parseInt(signup.id);
             show_common_dialogue('VERIFY', 'SIGNUP', email, null);
         })
-        .catch(()=>AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner'));
+        .catch(()=>CommonAppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner'));
     }
 };
 /**
@@ -1959,29 +1951,29 @@ const user_signup = () => {
 const user_verify_check_input = async (item, nextField, login_function) => {
     return new Promise((resolve, reject)=>{
         let json_data;
-        const verification_type = parseInt(AppDocument.querySelector('#common_user_verify_data_verification_type').innerHTML);
+        const verification_type = parseInt(CommonAppDocument.querySelector('#common_user_verify_data_verification_type').innerHTML);
         //only accept 0-9
         if (item.innerHTML.length==1 && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(item.innerHTML) > -1)
-            if (nextField == '' || (AppDocument.querySelector('#common_user_verify_verification_char1').innerHTML != '' &&
-                    AppDocument.querySelector('#common_user_verify_verification_char2').innerHTML != '' &&
-                    AppDocument.querySelector('#common_user_verify_verification_char3').innerHTML != '' &&
-                    AppDocument.querySelector('#common_user_verify_verification_char4').innerHTML != '' &&
-                    AppDocument.querySelector('#common_user_verify_verification_char5').innerHTML != '' &&
-                    AppDocument.querySelector('#common_user_verify_verification_char6').innerHTML != '')) {
+            if (nextField == '' || (CommonAppDocument.querySelector('#common_user_verify_verification_char1').innerHTML != '' &&
+                    CommonAppDocument.querySelector('#common_user_verify_verification_char2').innerHTML != '' &&
+                    CommonAppDocument.querySelector('#common_user_verify_verification_char3').innerHTML != '' &&
+                    CommonAppDocument.querySelector('#common_user_verify_verification_char4').innerHTML != '' &&
+                    CommonAppDocument.querySelector('#common_user_verify_verification_char5').innerHTML != '' &&
+                    CommonAppDocument.querySelector('#common_user_verify_verification_char6').innerHTML != '')) {
                 //last field, validate entered code
-                const verification_code = parseInt(AppDocument.querySelector('#common_user_verify_verification_char1').innerHTML +
-                    AppDocument.querySelector('#common_user_verify_verification_char2').innerHTML +
-                    AppDocument.querySelector('#common_user_verify_verification_char3').innerHTML +
-                    AppDocument.querySelector('#common_user_verify_verification_char4').innerHTML +
-                    AppDocument.querySelector('#common_user_verify_verification_char5').innerHTML +
-                    AppDocument.querySelector('#common_user_verify_verification_char6').innerHTML);
-                AppDocument.querySelector('#common_user_verify_email_icon').classList.add('css_spinner');
-                AppDocument.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
-                AppDocument.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
-                AppDocument.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
-                AppDocument.querySelector('#common_user_verify_verification_char4').classList.remove('common_input_error');
-                AppDocument.querySelector('#common_user_verify_verification_char5').classList.remove('common_input_error');
-                AppDocument.querySelector('#common_user_verify_verification_char6').classList.remove('common_input_error');
+                const verification_code = parseInt(CommonAppDocument.querySelector('#common_user_verify_verification_char1').innerHTML +
+                    CommonAppDocument.querySelector('#common_user_verify_verification_char2').innerHTML +
+                    CommonAppDocument.querySelector('#common_user_verify_verification_char3').innerHTML +
+                    CommonAppDocument.querySelector('#common_user_verify_verification_char4').innerHTML +
+                    CommonAppDocument.querySelector('#common_user_verify_verification_char5').innerHTML +
+                    CommonAppDocument.querySelector('#common_user_verify_verification_char6').innerHTML);
+                CommonAppDocument.querySelector('#common_user_verify_email_icon').classList.add('css_spinner');
+                CommonAppDocument.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
+                CommonAppDocument.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
+                CommonAppDocument.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
+                CommonAppDocument.querySelector('#common_user_verify_verification_char4').classList.remove('common_input_error');
+                CommonAppDocument.querySelector('#common_user_verify_verification_char5').classList.remove('common_input_error');
+                CommonAppDocument.querySelector('#common_user_verify_verification_char6').classList.remove('common_input_error');
     
                 //activate user
                 json_data = {   verification_code:  verification_code,
@@ -1990,7 +1982,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                             };
                 FFB(`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PUT', 'APP_DATA', json_data)
                 .then(result=>{
-                    AppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
+                    CommonAppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     const user_activate = JSON.parse(result).items[0];
                     if (user_activate.affectedRows == 1) {
                         const resolve_function = () => {
@@ -2030,29 +2022,29 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                         
                     } 
                     else{
-                        AppDocument.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
-                        AppDocument.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
-                        AppDocument.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
-                        AppDocument.querySelector('#common_user_verify_verification_char4').classList.add('common_input_error');
-                        AppDocument.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
-                        AppDocument.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
+                        CommonAppDocument.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
+                        CommonAppDocument.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
+                        CommonAppDocument.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
+                        CommonAppDocument.querySelector('#common_user_verify_verification_char4').classList.add('common_input_error');
+                        CommonAppDocument.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
+                        CommonAppDocument.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
                         //code not valid
                         show_message('ERROR', '20306', null, null, null, COMMON_GLOBAL.common_app_id);
                         reject('ERROR');
                     }
                 })
                 .catch(err=>{
-                    AppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
+                    CommonAppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     reject(err);
                 });
             } else{
                 //not last, next!
-                AppDocument.querySelector('#' + nextField).focus();
+                CommonAppDocument.querySelector('#' + nextField).focus();
                 resolve(null);
             }
         else{
             //remove anything else than 0-9
-            AppDocument.querySelector('#' + item.id).innerHTML = '';
+            CommonAppDocument.querySelector('#' + item.id).innerHTML = '';
             resolve(null);
         }
     });
@@ -2066,13 +2058,13 @@ const user_verify_check_input = async (item, nextField, login_function) => {
  */
 const user_delete = async (choice=null, function_delete_event ) => {
     return new Promise((resolve, reject)=>{
-        const password = AppDocument.querySelector('#common_user_edit_input_password').innerHTML;
+        const password = CommonAppDocument.querySelector('#common_user_edit_input_password').innerHTML;
         switch (choice){
             case null:{
-                if (AppDocument.querySelector('#common_user_edit_local').style.display == 'block' &&
-                    input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
+                if (CommonAppDocument.querySelector('#common_user_edit_local').style.display == 'block' &&
+                    input_control(CommonAppDocument.querySelector('#common_dialogue_user_edit'),
                                     {
-                                        password: AppDocument.querySelector('#common_user_edit_input_password')
+                                        password: CommonAppDocument.querySelector('#common_user_edit_input_password')
                                     })==false)
                     resolve(null);
                 else{
@@ -2083,16 +2075,16 @@ const user_delete = async (choice=null, function_delete_event ) => {
             }
             case 1:{
                 ComponentRemove('common_dialogue_message');
-                AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
+                CommonAppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
                 const json_data = { password: password};
     
                 FFB(`/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'DELETE', 'APP_ACCESS', json_data)
                 .then(()=>{
-                    AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
+                    CommonAppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
                     resolve({deleted: 1});
                 })
                 .catch(err=>{
-                    AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
+                    CommonAppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
                     reject(err);});
                 break;
             }
@@ -2109,11 +2101,11 @@ const user_delete = async (choice=null, function_delete_event ) => {
  */
 const user_function = function_name => {
     return new Promise((resolve, reject)=>{
-        const user_id_profile = AppDocument.querySelector('#common_profile_id').innerHTML;
+        const user_id_profile = CommonAppDocument.querySelector('#common_profile_id').innerHTML;
         let method;
         let path;
         const json_data = { user_account_id: user_id_profile};
-        const check_div = AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`);
+        const check_div = CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`);
         if (check_div.children[0].style.display == 'block') {
             path = `/server-db/user_account_${function_name.toLowerCase()}/${COMMON_GLOBAL.user_account_id ?? ''}`;
             method = 'POST';
@@ -2126,15 +2118,15 @@ const user_function = function_name => {
         else {
             FFB(path, null, method, 'APP_ACCESS', json_data)
             .then(()=> {
-                if (AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
+                if (CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
                     //follow/like
-                    AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
-                    AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
+                    CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
+                    CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
                 }
                 else{
                     //unfollow/unlike
-                    AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
-                    AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
+                    CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
+                    CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
                 }
                 resolve(null);
             })
@@ -2160,7 +2152,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
             FFB(`/server-db/user_account_app/${user_account_id}`, `delete_app_id=${app_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
                 //execute event and refresh app list
-                AppDocument.querySelector('#common_profile_main_btn_cloud').click();
+                CommonAppDocument.querySelector('#common_profile_main_btn_cloud').click();
             })
             .catch(()=>null);
             break;
@@ -2174,25 +2166,25 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
  * @returns {Promise.<void>}
  */
 const user_forgot = async () => {
-    const email = AppDocument.querySelector('#common_user_start_forgot_email').innerHTML;
+    const email = CommonAppDocument.querySelector('#common_user_start_forgot_email').innerHTML;
     const json_data = { email: email,
                         ...get_uservariables()
                     };
-    if (input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
+    if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_edit'),
                     {
-                    email: AppDocument.querySelector('#common_user_start_forgot_email')
+                    email: CommonAppDocument.querySelector('#common_user_start_forgot_email')
                     })==true){
-        AppDocument.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
+        CommonAppDocument.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
         FFB('/server-db/user_account-forgot', null, 'POST', 'APP_DATA', json_data)
         .then(result=>{
-            AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
+            CommonAppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
             const forgot = JSON.parse(result);
             if (forgot.sent == 1){
                 COMMON_GLOBAL.user_account_id = parseInt(forgot.id);
                 show_common_dialogue('VERIFY', 'FORGOT', email, null);
             }
         })
-        .catch(()=>AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner'));
+        .catch(()=>CommonAppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner'));
     }
 };
 /**
@@ -2200,26 +2192,26 @@ const user_forgot = async () => {
  * @returns {void}
  */
 const updatePassword = () => {
-    const password_new = AppDocument.querySelector('#common_user_password_new').innerHTML;
-    const user_password_new_auth = AppDocument.querySelector('#common_user_password_new_auth').innerHTML;
+    const password_new = CommonAppDocument.querySelector('#common_user_password_new').innerHTML;
+    const user_password_new_auth = CommonAppDocument.querySelector('#common_user_password_new_auth').innerHTML;
     const json_data = { password_new:   password_new,
                         auth:           user_password_new_auth,
                         ...get_uservariables()
                      };
-    if (input_control(AppDocument.querySelector('#common_dialogue_user_edit'),
+    if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_edit'),
                      {
-                     password: AppDocument.querySelector('#common_user_password_new'),
-                     password_confirm: AppDocument.querySelector('#common_user_password_new_confirm'),
+                     password: CommonAppDocument.querySelector('#common_user_password_new'),
+                     password_confirm: CommonAppDocument.querySelector('#common_user_password_new_confirm'),
                      
                      })==true){
-        AppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
+        CommonAppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
         FFB(`/server-db/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data)
         .then(()=>{
-            AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
+            CommonAppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
             dialogue_password_new_clear();
             show_common_dialogue('LOGIN');
         })
-        .catch(()=>AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner'));
+        .catch(()=>CommonAppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner'));
     }    
 };
 /**
@@ -2228,10 +2220,10 @@ const updatePassword = () => {
  */
 const user_preference_save = async () => {
     if (COMMON_GLOBAL.user_account_id != null){
-        const select_locale =           AppDocument.querySelector('#common_dialogue_user_menu_user_locale_select');
-        const select_timezone =         AppDocument.querySelector('#common_dialogue_user_menu_user_timezone_select');
-        const select_direction =        AppDocument.querySelector('#common_dialogue_user_menu_user_direction_select');
-        const select_arabic_script =    AppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select');
+        const select_locale =           CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select');
+        const select_timezone =         CommonAppDocument.querySelector('#common_dialogue_user_menu_user_timezone_select');
+        const select_direction =        CommonAppDocument.querySelector('#common_dialogue_user_menu_user_direction_select');
+        const select_arabic_script =    CommonAppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select');
         const json_data =
             {  
                 preference_locale: select_locale.value,
@@ -2276,10 +2268,10 @@ const user_preferences_set_default_globals = (preference) => {
  */
 const create_qr = async (div, url) => {
     const path_easy_qrcode = 'easy.qrcode';
-    /**@type {import('../../../types.js').module_easy_qrcode} */
+    /**@type {import('../../../common_types.js').CommonModuleEasyQRCode} */
     const {QRCode} = await import(path_easy_qrcode);
-    AppDocument.querySelector('#' + div).innerHTML='';
-    new QRCode(AppDocument.querySelector('#' + div), {
+    CommonAppDocument.querySelector('#' + div).innerHTML='';
+    new QRCode(CommonAppDocument.querySelector('#' + div), {
         text: url,
         width: COMMON_GLOBAL['module_easy.qrcode_width'],
         height: COMMON_GLOBAL['module_easy.qrcode_height'],
@@ -2302,7 +2294,7 @@ const create_qr = async (div, url) => {
 const map_init = async (mount_div, longitude, latitude, doubleclick_event, search_event_function) => {
     COMMON_GLOBAL.module_leaflet_session_map = null;
     
-    /** @type {import('../../../types.js').type_map_layer[]}*/
+    /** @type {import('../../../common_types.js').CommonModuleLeafletMapLayer[]}*/
     const map_layers = await FFB('/server-db/app_settings_display', `data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
     .then((/**@type{string}*/result)=>JSON.parse(result).rows)
     .catch((/**@type{Error}*/error)=>error);
@@ -2320,16 +2312,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
     COMMON_GLOBAL.module_leaflet_map_styles =   map_layer_array;
     /**
      * 
-     * @typedef {{  doubleClickZoom:function,
-     *              invalidateSize:function,
-     *              removeLayer:function,
-     *              setView:function,
-     *              flyTo:function,
-     *              setZoom:function,
-     *              getZoom:function}} type_map_data
-     * @type {{ library_Leaflet:*,
-     *          module_map: type_map_data,
-     *          leaflet_container:string}}
+     * @type {import('../../../common_types.js').CommonModuleLeafletData}
      */
     const leaflet_data = await ComponentRender(mount_div, 
                         {   
@@ -2402,7 +2385,7 @@ const map_country = lang_code =>{
  * @returns {void}
  */
 const map_city = country_code =>{
-    const select_cities = AppDocument.querySelector('#common_module_leaflet_select_city');
+    const select_cities = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
     //set default option
     select_cities.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
     if (country_code!=null){
@@ -2419,7 +2402,7 @@ const map_city = country_code =>{
  */
 const map_city_empty = () =>{
     //remove old city list:      
-    const select_city = AppDocument.querySelector('#common_module_leaflet_select_city');
+    const select_city = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
     const old_groups = select_city.querySelectorAll('optgroup');
     for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
         select_city.removeChild(old_groups[old_index]);
@@ -2431,14 +2414,14 @@ const map_city_empty = () =>{
  * @returns {void}
  */
 const map_toolbar_reset = ()=>{
-    const select_country = AppDocument.querySelector('#common_module_leaflet_select_country');
+    const select_country = CommonAppDocument.querySelector('#common_module_leaflet_select_country');
     select_country.selectedIndex = 0;
     map_city_empty();
-    AppDocument.querySelector('#common_module_leaflet_search_input').innerHTML ='';
-    AppDocument.querySelector('#common_module_leaflet_search_list').innerHTML ='';
-    if (AppDocument.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+    CommonAppDocument.querySelector('#common_module_leaflet_search_input').innerHTML ='';
+    CommonAppDocument.querySelector('#common_module_leaflet_search_list').innerHTML ='';
+    if (CommonAppDocument.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
         map_control_toggle_expand('search');
-    if (AppDocument.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
+    if (CommonAppDocument.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
         map_control_toggle_expand('layer');
 };
 /**
@@ -2467,15 +2450,15 @@ const map_show_search_on_map = async data =>{
  */
 const map_control_toggle_expand = async item =>{
     let style_display;
-    if (AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
-        AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display ==''){
+    if (CommonAppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
+        CommonAppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display ==''){
             style_display = 'block';
             if (item == 'search')
-                AppDocument.querySelector('#common_module_leaflet_select_country').innerHTML = await map_country(COMMON_GLOBAL.user_locale);
+                CommonAppDocument.querySelector('#common_module_leaflet_select_country').innerHTML = await map_country(COMMON_GLOBAL.user_locale);
         }
     else
         style_display = 'none';
-    AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
+    CommonAppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
 };
 /**
  * Map resize
@@ -2573,7 +2556,7 @@ const map_setstyle = mapstyle => {
  */
 const map_update = async (parameters) => {
     const path_regional ='regional';
-    /**@type {import('../../../types.js').module_regional} */
+    /**@type {import('../../../common_types.js').CommonModuleRegional} */
     const {getTimezone} = await import(path_regional);
     return new Promise((resolve)=> {
         /**
@@ -2683,7 +2666,7 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
         case 'IAM_USER':{
             //user,admin or system admin login
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            authorization_basic = `Basic ${AppWindow.btoa(json_data.username + ':' + json_data.password)}`;
+            authorization_basic = `Basic ${CommonAppWindow.btoa(json_data.username + ':' + json_data.password)}`;
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && authorization_type == 'IAM_USER')
                 service_path = `${COMMON_GLOBAL.rest_resource_bff}/iam_admin`;
             else
@@ -2780,16 +2763,16 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
  * @returns {void}
  */
 const show_broadcast = (broadcast_message) => {
-    broadcast_message = AppWindow.atob(broadcast_message);
+    broadcast_message = CommonAppWindow.atob(broadcast_message);
     const broadcast_type = JSON.parse(broadcast_message).broadcast_type;
     const message = JSON.parse(broadcast_message).broadcast_message;
     switch (broadcast_type){
         case 'MAINTENANCE':{
-            if (AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`))
+            if (CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`))
                 location.href = '/';
             else
                 if (message)
-                    show_maintenance(AppWindow.atob(message));
+                    show_maintenance(CommonAppWindow.atob(message));
             break;
         }
         case 'SESSION_EXPIRED':{
@@ -2797,28 +2780,28 @@ const show_broadcast = (broadcast_message) => {
             break;
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL.service_socket_client_ID =    JSON.parse(AppWindow.atob(message)).client_id;
-            COMMON_GLOBAL.client_latitude =             JSON.parse(AppWindow.atob(message)).latitude==''?COMMON_GLOBAL.client_latitude:JSON.parse(AppWindow.atob(message)).latitude;
-            COMMON_GLOBAL.client_longitude =            JSON.parse(AppWindow.atob(message)).longitude==''?COMMON_GLOBAL.client_longitude:JSON.parse(AppWindow.atob(message)).longitude;
-            COMMON_GLOBAL.client_place =                JSON.parse(AppWindow.atob(message)).place==''?COMMON_GLOBAL.client_place:JSON.parse(AppWindow.atob(message)).place;
-            COMMON_GLOBAL.client_timezone =             JSON.parse(AppWindow.atob(message)).timezone==''?COMMON_GLOBAL.client_timezone:JSON.parse(AppWindow.atob(message)).timezone;
+            COMMON_GLOBAL.service_socket_client_ID =    JSON.parse(CommonAppWindow.atob(message)).client_id;
+            COMMON_GLOBAL.client_latitude =             JSON.parse(CommonAppWindow.atob(message)).latitude==''?COMMON_GLOBAL.client_latitude:JSON.parse(CommonAppWindow.atob(message)).latitude;
+            COMMON_GLOBAL.client_longitude =            JSON.parse(CommonAppWindow.atob(message)).longitude==''?COMMON_GLOBAL.client_longitude:JSON.parse(CommonAppWindow.atob(message)).longitude;
+            COMMON_GLOBAL.client_place =                JSON.parse(CommonAppWindow.atob(message)).place==''?COMMON_GLOBAL.client_place:JSON.parse(CommonAppWindow.atob(message)).place;
+            COMMON_GLOBAL.client_timezone =             JSON.parse(CommonAppWindow.atob(message)).timezone==''?COMMON_GLOBAL.client_timezone:JSON.parse(CommonAppWindow.atob(message)).timezone;
             break;
         }
         case 'CHAT':
         case 'ALERT':{
-            if (AppDocument.querySelector('#common_dialogue_maintenance'))
-                ComponentRender('common_broadcast', {message:AppWindow.atob(message)}, '/maintenance/component/broadcast.js');
+            if (CommonAppDocument.querySelector('#common_dialogue_maintenance'))
+                ComponentRender('common_broadcast', {message:CommonAppWindow.atob(message)}, '/maintenance/component/broadcast.js');
             else
-                ComponentRender('common_broadcast', {message:AppWindow.atob(message)}, '/common/component/broadcast.js');
+                ComponentRender('common_broadcast', {message:CommonAppWindow.atob(message)}, '/common/component/broadcast.js');
             break;
         }
 		case 'PROGRESS':{
-			show_message('PROGRESS', null, null, null, JSON.parse(AppWindow.atob(message)));
+			show_message('PROGRESS', null, null, null, JSON.parse(CommonAppWindow.atob(message)));
             break;
         }
         case 'APP_FUNCTION':{
             if (COMMON_GLOBAL.app_function_sse)
-                COMMON_GLOBAL.app_function_sse(AppWindow.atob(message));
+                COMMON_GLOBAL.app_function_sse(CommonAppWindow.atob(message));
         }
     }
 };
@@ -2836,7 +2819,7 @@ const show_maintenance = (message, init=null) => {
                         '/maintenance/component/dialogue_maintenance.js');
     }
     else
-        AppDocument.querySelector('#common_maintenance_footer').innerHTML = message ?? '';
+        CommonAppDocument.querySelector('#common_maintenance_footer').innerHTML = message ?? '';
 };
 /**
  * Socket reconnect
@@ -2854,7 +2837,7 @@ const connectOnline = async () => {
     .then((result_eventsource)=>{
         COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
         if (COMMON_GLOBAL.service_socket_eventsource){
-            COMMON_GLOBAL.service_socket_eventsource.onmessage = (/**@type{import('../../../types.js').AppEventEventSource}*/event) => {
+            COMMON_GLOBAL.service_socket_eventsource.onmessage = (/**@type{import('../../../common_types.js').CommonAppEventEventSource}*/event) => {
                 show_broadcast(event.data);
             };
             COMMON_GLOBAL.service_socket_eventsource.onerror = () => {
@@ -2874,7 +2857,7 @@ const connectOnline = async () => {
  */
 const checkOnline = (div_icon_online, user_account_id) => {
     FFB(`/server-socket/socket-status/${user_account_id}`, null, 'GET', 'APP_DATA', null)
-    .then(result=>AppDocument.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
+    .then(result=>CommonAppDocument.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
 };
 /**
  * Get place from GPS
@@ -2984,7 +2967,7 @@ const get_cities = async countrycode => {
 const worldcities_search = async (event_function) =>{
     ComponentRender('common_module_leaflet_search_list_wrap',
                         {
-                            search:AppDocument.querySelector('#common_module_leaflet_search_input').innerText,
+                            search:CommonAppDocument.querySelector('#common_module_leaflet_search_input').innerText,
                             function_click_function:event_function,
                             function_FFB:FFB
                         },
@@ -3064,12 +3047,12 @@ const disable_textediting = () =>COMMON_GLOBAL.app_text_edit=='0';
 /**
  * Common events
  * @param {string} event_type 
- * @param {import('../../../types.js').AppEvent|null} event 
+ * @param {import('../../../common_types.js').CommonAppEvent|null} event 
  * @returns {Promise.<void>}
  */
 const common_event = async (event_type,event=null) =>{
     if (event==null){
-        AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             common_event(event_type, event);
         });
     }
@@ -3078,7 +3061,7 @@ const common_event = async (event_type,event=null) =>{
             case 'click':{
                 //close all open div selects if not clicking inside a div select 
                 if (typeof event.target.className=='string' && event.target.className.indexOf('common_select')<0){
-                    AppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`).forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
+                    CommonAppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`).forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
                 }
 
                 if (event.target.classList.contains('common_switch')){
@@ -3094,19 +3077,19 @@ const common_event = async (event_type,event=null) =>{
                         case event.target.parentNode.classList.contains('common_select_dropdown_icon')?event_target_id:'':
                         case event.target.classList.contains('common_select_dropdown_value')?event_target_id:'':
                         case event.target.classList.contains('common_select_dropdown_icon')?event_target_id:'':{
-                            AppDocument.querySelector(`#${event_target_id} .common_select_options`).style.display = 
-                                AppDocument.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
+                            CommonAppDocument.querySelector(`#${event_target_id} .common_select_options`).style.display = 
+                                CommonAppDocument.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
                             break;
                         }
                         case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
-                            AppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
-                            AppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
+                            CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
+                            CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
                             event.target.parentNode.parentNode.style.display = 'none';
                             break;
                         }
                         case event.target.classList.contains('common_select_option')?event_target_id:'':{
-                            AppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
-                            AppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
+                            CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
+                            CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
                             event.target.parentNode.style.display = 'none';
                             break;
                         }
@@ -3115,11 +3098,11 @@ const common_event = async (event_type,event=null) =>{
                         case 'common_user_start_login_system_admin':
                         case 'common_user_start_signup':
                         case 'common_user_start_forgot':{
-                            AppDocument.querySelectorAll('#common_user_start_nav > div').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('common_user_start_selected'));
-                            AppDocument.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
+                            CommonAppDocument.querySelectorAll('#common_user_start_nav > div').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('common_user_start_selected'));
+                            CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
                             
-                            AppDocument.querySelectorAll('#common_dialogue_user_start .common_user_start_form').forEach((/**@type{HTMLElement}*/form)=>form.style.display='none');
-                            AppDocument.querySelector(`#${event_target_id}_form`).style.display='inline-block';
+                            CommonAppDocument.querySelectorAll('#common_dialogue_user_start .common_user_start_form').forEach((/**@type{HTMLElement}*/form)=>form.style.display='none');
+                            CommonAppDocument.querySelector(`#${event_target_id}_form`).style.display='inline-block';
     
                             break;
                         }
@@ -3133,8 +3116,8 @@ const common_event = async (event_type,event=null) =>{
                         }
                         //dialogue message
                         case 'common_message_close':{
-                            if (AppDocument.querySelector('#common_message_close')['data-function'])
-                                AppDocument.querySelector('#common_message_close')['data-function']();
+                            if (CommonAppDocument.querySelector('#common_message_close')['data-function'])
+                                CommonAppDocument.querySelector('#common_message_close')['data-function']();
                             ComponentRemove('common_dialogue_message',true);
                             break;
                         }
@@ -3152,8 +3135,8 @@ const common_event = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_profile_search_icon':{
-                            AppDocument.querySelector('#common_profile_search_input').focus();
-                            AppDocument.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                            CommonAppDocument.querySelector('#common_profile_search_input').focus();
+                            CommonAppDocument.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                             break;
                         }
                         //Dialogue apps
@@ -3161,16 +3144,16 @@ const common_event = async (event_type,event=null) =>{
                             if (event.target.className == 'common_dialogue_apps_app_logo'){
                                 const app_url = element_row(event.target).querySelector('.common_dialogue_apps_app_url');
                                 if (app_url)
-                                    AppWindow.open(app_url.innerHTML);
+                                    CommonAppWindow.open(app_url.innerHTML);
                             }
                             break;
                         case 'common_dialogue_info_app_link':{
                             if (COMMON_GLOBAL.app_link_url)
-                                AppWindow.open(COMMON_GLOBAL.app_link_url,'_blank','');
+                                CommonAppWindow.open(COMMON_GLOBAL.app_link_url,'_blank','');
                             break;
                         }
                         case 'common_dialogue_info_app_email':{
-                            AppWindow.open(`mailto:${COMMON_GLOBAL.app_email}`,'_blank','');
+                            CommonAppWindow.open(`mailto:${COMMON_GLOBAL.app_email}`,'_blank','');
                             break;
                         }
                         case 'common_dialogue_info_info_link1':{
@@ -3202,8 +3185,8 @@ const common_event = async (event_type,event=null) =>{
                         case event.target.classList.contains('common_app_data_display_button_update')?event_target_id:'':
                         case event.target.classList.contains('common_app_data_display_button_post')?event_target_id:'':
                         case event.target.classList.contains('common_app_data_display_button_delete')?event_target_id:'':{
-                            if (AppDocument.querySelector(`#${event_target_id}`)['data-function'])
-                                    AppDocument.querySelector(`#${event_target_id}`)['data-function']();
+                            if (CommonAppDocument.querySelector(`#${event_target_id}`)['data-function'])
+                                    CommonAppDocument.querySelector(`#${event_target_id}`)['data-function']();
                             break;
                         }
                         //window info
@@ -3240,10 +3223,10 @@ const common_event = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_window_info_toolbar_btn_fullscreen':{
-                            if (AppDocument.fullscreenElement)
-                                AppDocument.exitFullscreen();
+                            if (CommonAppDocument.fullscreenElement)
+                                CommonAppDocument.exitFullscreen();
                             else
-                                AppDocument.body.requestFullscreen();
+                                CommonAppDocument.body.requestFullscreen();
                             break;
                         }
                         case 'common_dialogue_user_menu_log_in':{
@@ -3285,11 +3268,11 @@ const common_event = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_user_edit_btn_avatar_img':{
-                            AppDocument.querySelector('#common_user_edit_input_avatar_img').click();
+                            CommonAppDocument.querySelector('#common_user_edit_input_avatar_img').click();
                             break;
                         }
                         case 'common_user_edit_input_avatar_img':{
-                            show_image(AppDocument.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
+                            show_image(CommonAppDocument.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
                             break;
                         }
                         case 'common_user_edit_btn_user_update':{
@@ -3304,8 +3287,8 @@ const common_event = async (event_type,event=null) =>{
                         //search list
                         case 'common_profile_search_list':{
                             if (event.target.classList.contains('common_profile_search_list_username')){
-                                if (AppDocument.querySelector('#common_profile_search_list')['data-function']){
-                                    AppDocument.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                                if (CommonAppDocument.querySelector('#common_profile_search_list')['data-function']){
+                                    CommonAppDocument.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                                 }
                                 else
                                     await profile_show(Number(element_row(event.target).getAttribute('data-user_account_id')),null);
@@ -3322,26 +3305,26 @@ const common_event = async (event_type,event=null) =>{
                             if (event.target.classList.contains('common_profile_stat_list_username')||
                                 event.target.classList.contains('common_profile_detail_list_username')){
                                 //execute function from inparameter or use default when not specified
-                                if (AppDocument.querySelector(`#${element_id(event.target)}`)['data-function'])
-                                    AppDocument.querySelector(`#${element_id(event.target)}`)['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                                if (CommonAppDocument.querySelector(`#${element_id(event.target)}`)['data-function'])
+                                    CommonAppDocument.querySelector(`#${element_id(event.target)}`)['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                                 else
                                     await profile_show(Number(element_row(event.target).getAttribute('data-user_account_id')),null);
                             }
                             else{
                                 //app list
                                 if (event.target.classList.contains('common_profile_detail_list_app_name')){
-                                    AppWindow.open(element_row(event.target).getAttribute('data-url') ?? '', '_blank');
+                                    CommonAppWindow.open(element_row(event.target).getAttribute('data-url') ?? '', '_blank');
                                 }
                                 else
-                                    if (AppDocument.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id &&
+                                    if (CommonAppDocument.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id &&
                                         event.target.parentNode.classList.contains('common_profile_detail_list_app_delete')){
                                             await user_account_app_delete(null, 
-                                                                    AppDocument.querySelector('#common_profile_id').innerHTML,
+                                                                    CommonAppDocument.querySelector('#common_profile_id').innerHTML,
                                                                     Number(element_row(event.target).getAttribute('data-app_id')),
                                                                     () => { 
                                                                         ComponentRemove('common_dialogue_message');
                                                                         user_account_app_delete(1, 
-                                                                                                AppDocument.querySelector('#common_profile_id').innerHTML, 
+                                                                                                CommonAppDocument.querySelector('#common_profile_id').innerHTML, 
                                                                                                 Number(element_row(event.target).getAttribute('data-app_id')), 
                                                                                                 null);
                                                                     });
@@ -3356,21 +3339,21 @@ const common_event = async (event_type,event=null) =>{
                         }
                         //module leaflet
                         case 'common_module_leaflet_search_icon':{
-                            AppDocument.querySelector('#common_module_leaflet_search_input').focus();
-                            AppDocument.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                            CommonAppDocument.querySelector('#common_module_leaflet_search_input').focus();
+                            CommonAppDocument.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                             break;
                         }
                         case 'common_module_leaflet_control_search_button':{
-                            if (AppDocument.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
+                            if (CommonAppDocument.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
                                 map_control_toggle_expand('layer');
                             map_control_toggle_expand('search');
                             break;
                         }
                         case 'common_module_leaflet_control_fullscreen_id':{
-                            if (AppDocument.fullscreenElement)
-                                AppDocument.exitFullscreen();
+                            if (CommonAppDocument.fullscreenElement)
+                                CommonAppDocument.exitFullscreen();
                             else
-                                AppDocument.querySelector('.leaflet-container').requestFullscreen();
+                                CommonAppDocument.querySelector('.leaflet-container').requestFullscreen();
                             break;
                         }
                         case 'common_module_leaflet_control_my_location_id':{
@@ -3385,16 +3368,16 @@ const common_event = async (event_type,event=null) =>{
                                             marker_id:COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                             to_method:COMMON_GLOBAL.module_leaflet_jumpto
                                         });
-                                const select_country = AppDocument.querySelector('#common_module_leaflet_select_country');
+                                const select_country = CommonAppDocument.querySelector('#common_module_leaflet_select_country');
                                 select_country.selectedIndex = 0;
-                                const select_city = AppDocument.querySelector('#common_module_leaflet_select_city');
+                                const select_city = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
                                 select_city.selectedIndex = 0;
                                 map_toolbar_reset();
                             }
                             break;
                         }
                         case 'common_module_leaflet_control_layer_button':{
-                            if (AppDocument.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+                            if (CommonAppDocument.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
                                 map_toolbar_reset();
                             map_control_toggle_expand('layer');
                             break;
@@ -3407,8 +3390,8 @@ const common_event = async (event_type,event=null) =>{
                                                 latitude: element_row(event.target).getAttribute('data-latitude') ?? '',
                                                 longitude: element_row(event.target).getAttribute('data-longitude') ?? ''
                                             };
-                                if (AppDocument.querySelector('#common_module_leaflet_search_list')['data-function']){
-                                    AppDocument.querySelector('#common_module_leaflet_search_list')['data-function'](data);
+                                if (CommonAppDocument.querySelector('#common_module_leaflet_search_list')['data-function']){
+                                    CommonAppDocument.querySelector('#common_module_leaflet_search_list')['data-function'](data);
                                     map_toolbar_reset();
                                 }
                                 else
@@ -3423,15 +3406,15 @@ const common_event = async (event_type,event=null) =>{
                         case 'common_profile_main_btn_liked_heart':
                         case 'common_profile_main_btn_liked_users':
                         case 'common_profile_main_btn_cloud':{    
-                            AppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                            AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                            CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                             break;
                         }
                         case 'common_toolbar_framework_js':
                         case 'common_toolbar_framework_vue':
                         case 'common_toolbar_framework_react':{
-                            AppDocument.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
-                            AppDocument.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
+                            CommonAppDocument.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
+                            CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
                             break;
                         }    
                         //dialogue lov
@@ -3440,7 +3423,7 @@ const common_event = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_lov_search_icon':{
-                            lov_filter(AppDocument.querySelector('#common_lov_search_input').innerHTML);
+                            lov_filter(CommonAppDocument.querySelector('#common_lov_search_input').innerHTML);
                             break;
                         }
                         case 'common_lov_close':{
@@ -3448,7 +3431,7 @@ const common_event = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_lov_list':{
-                            AppDocument.querySelector('#common_lov_list')['data-function'](event);
+                            CommonAppDocument.querySelector('#common_lov_list')['data-function'](event);
                             break;
                         }        
                         default:{
@@ -3473,14 +3456,14 @@ const common_event = async (event_type,event=null) =>{
                         //commented at the moment
                         //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
                         await user_preference_save();
-                        AppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').innerHTML = await get_locales_options();
-                        AppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').value = COMMON_GLOBAL.user_locale;
+                        CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').innerHTML = await get_locales_options();
+                        CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').value = COMMON_GLOBAL.user_locale;
                         break;
                     }
                     case 'common_dialogue_user_menu_user_timezone_select':{
                         COMMON_GLOBAL.user_timezone = event.target.value;
                         await user_preference_save().then(()=>{
-                            if (AppDocument.querySelector('#common_dialogue_user_edit').innerHTML !='') {
+                            if (CommonAppDocument.querySelector('#common_dialogue_user_edit').innerHTML !='') {
                                 ComponentRender('common_dialogue_user_edit', 
                                     {   user_account_id:COMMON_GLOBAL.user_account_id,
                                         common_app_id:COMMON_GLOBAL.common_app_id,
@@ -3507,9 +3490,9 @@ const common_event = async (event_type,event=null) =>{
                     }
                     case 'common_dialogue_user_menu_user_direction_select':{
                         if(event.target.value=='rtl')
-                            AppDocument.body.classList.add('rtl');
+                            CommonAppDocument.body.classList.add('rtl');
                         else
-                            AppDocument.body.classList.remove('rtl');
+                            CommonAppDocument.body.classList.remove('rtl');
                         COMMON_GLOBAL.user_direction = event.target.value;  
                         await user_preference_save();
                         break;
@@ -3559,7 +3542,7 @@ const common_event = async (event_type,event=null) =>{
                 if (event.target.classList.contains('common_password')){
                     if (event.target.innerText.indexOf('\n')>-1)
                         event.target.innerText = event.target.innerText.replace('\n','');
-                    AppDocument.querySelector(`#${event.target.id}_mask`).innerText = 
+                    CommonAppDocument.querySelector(`#${event.target.id}_mask`).innerText = 
                         event.target.innerText.replace(event.target.innerText, '*'.repeat(LengthWithoutDiacrites(event.target.innerText)));
                 }
                 else
@@ -3569,7 +3552,7 @@ const common_event = async (event_type,event=null) =>{
                                 event.preventDefault();
                                 await user_forgot().then(()=>{
                                     //unfocus
-                                    AppDocument.querySelector('#common_user_start_forgot_email').blur();
+                                    CommonAppDocument.querySelector('#common_user_start_forgot_email').blur();
                                 });
                             }
                             break;
@@ -3619,7 +3602,7 @@ const common_event = async (event_type,event=null) =>{
 };
 /**
  * Disable copy cut paste
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  */
  const disable_copy_paste_cut = event => {
     if (disable_textediting()){
@@ -3637,7 +3620,7 @@ const common_event = async (event_type,event=null) =>{
 };
 /**
  * Disable common input textediting
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  */
 const disable_common_input = event => {
     if (disable_textediting())
@@ -3648,20 +3631,20 @@ const disable_common_input = event => {
 };
 /**
  * Hide user menu and search
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  */
  const hide_user_menu_and_search = event => {
     if (event.key === 'Escape') {
         event.preventDefault();
         //hide use menu dropdown
-        if (AppDocument.querySelector('#common_dialogue_user_menu').innerHTML !='')
+        if (CommonAppDocument.querySelector('#common_dialogue_user_menu').innerHTML !='')
             ComponentRemove('common_dialogue_user_menu', true);
-        if (AppDocument.querySelector('#common_profile_input_row')){
+        if (CommonAppDocument.querySelector('#common_profile_input_row')){
             //hide search
-            const x = AppDocument.querySelector('#common_profile_input_row'); 
+            const x = CommonAppDocument.querySelector('#common_profile_input_row'); 
             if (x.style.visibility == 'visible') {
                 x.style.visibility = 'hidden';
-                AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+                CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
             } 
         }
     }
@@ -3672,13 +3655,13 @@ const disable_common_input = event => {
  */
 const common_events_add = () => {
     //only works on document level:
-    AppDocument.addEventListener('keydown', hide_user_menu_and_search, false);
+    CommonAppDocument.addEventListener('keydown', hide_user_menu_and_search, false);
 
-    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('copy', disable_copy_paste_cut, false);
-    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('paste', disable_copy_paste_cut, false);
-    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('cut', disable_copy_paste_cut, false);
-    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('mousedown', disable_copy_paste_cut, false);
-    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('touchstart', disable_common_input, false);
+    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('copy', disable_copy_paste_cut, false);
+    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('paste', disable_copy_paste_cut, false);
+    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('cut', disable_copy_paste_cut, false);
+    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('mousedown', disable_copy_paste_cut, false);
+    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('touchstart', disable_common_input, false);
 
 };
 /**
@@ -3686,13 +3669,13 @@ const common_events_add = () => {
  * @returns {void}
  */
 const common_events_remove = () => {
-    AppDocument.removeEventListener('keydown', hide_user_menu_and_search);
+    CommonAppDocument.removeEventListener('keydown', hide_user_menu_and_search);
 
-    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('copy', disable_copy_paste_cut);
-    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('paste', disable_copy_paste_cut);
-    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('cut', disable_copy_paste_cut);
-    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('mousedown', disable_copy_paste_cut);
-    AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('touchstart', disable_common_input);
+    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('copy', disable_copy_paste_cut);
+    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('paste', disable_copy_paste_cut);
+    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('cut', disable_copy_paste_cut);
+    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('mousedown', disable_copy_paste_cut);
+    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('touchstart', disable_common_input);
 
 };
 
@@ -3737,14 +3720,14 @@ const set_app_parameters = (common_parameters) => {
 };
 const framework_clean = () =>{
     //remove Reacts objects
-    delete AppWindow.ReactDOM;
-    delete AppWindow.React;
+    delete CommonAppWindow.ReactDOM;
+    delete CommonAppWindow.React;
 
     //remove react key
-    for (const key of Object.keys(AppDocument)){
+    for (const key of Object.keys(CommonAppDocument)){
         if (key.startsWith('_react')){
             /**@ts-ignore */
-            delete AppDocument[key];
+            delete CommonAppDocument[key];
         }
     }
     if (COMMON_GLOBAL.app_eventListeners.REACT.length>0){
@@ -3755,12 +3738,12 @@ const framework_clean = () =>{
     }
     //remove Vue objects
     COMMON_GLOBAL.app_eventListeners.VUE = [];
-    delete AppWindow.__VUE_DEVTOOLS_HOOK_REPLAY__;
-    delete AppWindow.__VUE_HMR_RUNTIME__;
-    delete AppWindow.__VUE__;
-    const app_root_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
-    if (AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`))
-        app_root_element.innerHTML = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`).innerHTML;
+    delete CommonAppWindow.__VUE_DEVTOOLS_HOOK_REPLAY__;
+    delete CommonAppWindow.__VUE_HMR_RUNTIME__;
+    delete CommonAppWindow.__VUE__;
+    const app_root_element = CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
+    if (CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`))
+        app_root_element.innerHTML = CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`).innerHTML;
     app_root_element.removeAttribute('data-v-app');
     delete app_root_element.__vue_app_;
     delete app_root_element.__vue_node;
@@ -3781,14 +3764,14 @@ const framework_clean = () =>{
  * @returns {Promise.<void>}
  */
 const framework_set = async (framework, events) => {
-    const app_root_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
-    const app_element = AppDocument.querySelector(`#${COMMON_GLOBAL.app_div}`);
-    const common_app_element = AppDocument.querySelector('#common_app');
+    const app_root_element = CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
+    const app_element = CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_div}`);
+    const common_app_element = CommonAppDocument.querySelector('#common_app');
 
     //get all select and selectedIndex
     /**@type{{id:string,index:number}[]} */
     let select_selectedindex = [];
-    AppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} select`).forEach((/**@type{HTMLSelectElement}*/select) =>{
+    CommonAppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} select`).forEach((/**@type{HTMLSelectElement}*/select) =>{
         if (select_selectedindex.length>0)
             select_selectedindex.push({id:select.id, index:select.selectedIndex});
         else
@@ -3797,7 +3780,7 @@ const framework_set = async (framework, events) => {
     //get all ellements with data-function
     /**@type{{id:string,element_function:function}[]} */
     const data_function = [];
-    AppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} div`).forEach((/**@type{HTMLElement}*/element) =>{
+    CommonAppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} div`).forEach((/**@type{HTMLElement}*/element) =>{
         /**@ts-ignore */
         if (element['data-function']){
             /**@ts-ignore */
@@ -3805,7 +3788,7 @@ const framework_set = async (framework, events) => {
         }
     });
     //save Leaflet containers with special event management and saved objects on elements if any Leaflet container used
-    const leaflet_containers = AppDocument.querySelectorAll('.leaflet-container');
+    const leaflet_containers = CommonAppDocument.querySelectorAll('.leaflet-container');
 
     //remove common listeners
     common_events_remove();
@@ -3818,12 +3801,12 @@ const framework_set = async (framework, events) => {
     framework_clean();
 
     //set default function if anyone missing
-    events.Change?null:events.Change = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('change', event));
-    events.Click?null:events.Click = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('click', event));
-    events.Focus?null:events.Focus = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('focus', event));
-    events.Input?null:events.Input = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('input', event));
-    events.KeyDown?null:events.KeyDown = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('keydown', event));
-    events.KeyUp?null:events.KeyUp = ((/**@type{import('../../../types.js').AppEvent}*/event)=>common_event('keyup', event));
+    events.Change?null:events.Change = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('change', event));
+    events.Click?null:events.Click = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('click', event));
+    events.Focus?null:events.Focus = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('focus', event));
+    events.Input?null:events.Input = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('input', event));
+    events.KeyDown?null:events.KeyDown = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('keydown', event));
+    events.KeyUp?null:events.KeyUp = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('keyup', event));
 
     events.Other?null:null;
 
@@ -3834,39 +3817,39 @@ const framework_set = async (framework, events) => {
         case 2:{
             //Vue
             const path_vue = 'Vue';
-            /**@type {import('../../../types.js').module_vue} */
+            /**@type {import('../../../common_types.js').CommonModuleVue} */
             const Vue = await import(path_vue);
             Vue.createApp({
                 data() {
                         return {};
                         },
                         template: `<div id='${COMMON_GLOBAL.app_root}_vue'
-                                        @change ='AppEventChange($event)'
-                                        @click  ='AppEventClick($event)'
-                                        @input  ='AppEventInput($event)' 
-                                        @focus  ='AppEventFocus($event)' 
-                                        @keydown='AppEventKeyDown($event)' 
-                                        @keyup  ='AppEventKeyUp($event)'>
+                                        @change ='CommonAppEventChange($event)'
+                                        @click  ='CommonAppEventClick($event)'
+                                        @input  ='CommonAppEventInput($event)' 
+                                        @focus  ='CommonAppEventFocus($event)' 
+                                        @keydown='CommonAppEventKeyDown($event)' 
+                                        @keyup  ='CommonAppEventKeyUp($event)'>
                                         ${app_element.outerHTML}
                                         ${common_app_element.outerHTML}
                                     </div>`,
                         methods:{
-                            AppEventChange: (/**@type{import('../../../types.js').AppEvent}*/event) => {
+                            CommonAppEventChange: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
                                 events.Change?events.Change(event):null;
                             },
-                            AppEventClick: (/**@type{import('../../../types.js').AppEvent}*/event) => {
+                            CommonAppEventClick: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
                                 events.Click?events.Click(event):null;
                             },
-                            AppEventInput: (/**@type{import('../../../types.js').AppEvent}*/event) => {
+                            CommonAppEventInput: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
                                 events.Input?events.Input(event):null;
                             },
-                            AppEventFocus: (/**@type{import('../../../types.js').AppEvent}*/event) => {
+                            CommonAppEventFocus: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
                                 events.Focus?(event):events.Focus;
                             },
-                            AppEventKeyDown: (/**@type{import('../../../types.js').AppEvent}*/event) => {
+                            CommonAppEventKeyDown: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
                                 events.KeyDown?events.KeyDown(event):null;
                             },
-                            AppEventKeyUp: (/**@type{import('../../../types.js').AppEvent}*/event) => {
+                            CommonAppEventKeyUp: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
                                 events.KeyUp?events.KeyUp(event):null;
                             }
                         }
@@ -3876,10 +3859,10 @@ const framework_set = async (framework, events) => {
         case 3:{
             //React
             const path_react = 'React';
-            /**@type {import('../../../types.js').module_react} */
+            /**@type {import('../../../common_types.js').CommonModuleReact} */
             const React = await import(path_react).then(module=>module.React);
             const path_reactDOM = 'ReactDOM';
-            /**@type {import('../../../types.js').module_reactDOM} */
+            /**@type {import('../../../common_types.js').CommonModuleReactDOM} */
             const ReactDOM = await import(path_reactDOM).then(module=>module.ReactDOM);
 
             const App = () => {
@@ -3887,7 +3870,7 @@ const framework_set = async (framework, events) => {
                 //return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
                 //Using pure Javascript
                 //convert HTML template to React component
-                const div_template = AppDocument.createElement('div');
+                const div_template = CommonAppDocument.createElement('div');
                 div_template.id = COMMON_GLOBAL.app_root;
                 div_template.innerHTML = `  ${app_element.outerHTML}
                                             ${common_app_element.outerHTML}`;
@@ -3932,13 +3915,13 @@ const framework_set = async (framework, events) => {
     //replace Leaflet containers with the saved ones containing Leaflet objects and events if any Leaflet container used
     let index= 0;
     for (const leaflet_container of leaflet_containers){
-        AppDocument.querySelectorAll('.leaflet-container')[index].replaceWith(leaflet_container);
+        CommonAppDocument.querySelectorAll('.leaflet-container')[index].replaceWith(leaflet_container);
         index++;
     }
     //update all select with selectedIndex since copying outerHTML does not include setting correct selectedIndex
-    select_selectedindex.forEach(select =>AppDocument.querySelector(`#${select.id}`).selectedIndex = select.index);
+    select_selectedindex.forEach(select =>CommonAppDocument.querySelector(`#${select.id}`).selectedIndex = select.index);
     //update all elements with data-function since copying outerHTML does not include data-function
-    data_function.forEach(element =>AppDocument.querySelector(`#${element.id}`)['data-function'] = element.element_function);
+    data_function.forEach(element =>CommonAppDocument.querySelector(`#${element.id}`)['data-function'] = element.element_function);
     //add common events for all apps
     common_events_add();
 };
@@ -3948,14 +3931,14 @@ const framework_set = async (framework, events) => {
  */
  const setUserAgentAttibutes = () => {
     if (navigator.userAgent.toLowerCase().indexOf('firefox')>-1)
-        AppDocument.querySelector(':root').style.setProperty('--common_app_useragent_fix_margin_top', '-5px');
+        CommonAppDocument.querySelector(':root').style.setProperty('--common_app_useragent_fix_margin_top', '-5px');
  };
 /**
  * Set custom framework functionality overriding console messages and save info about events created
  * @returns {void}
  */
 const custom_framework = () => {
-    COMMON_GLOBAL.app_eventListeners.original = AppDocument.addEventListener;
+    COMMON_GLOBAL.app_eventListeners.original = CommonAppDocument.addEventListener;
     /**
      * 
      * @param {*} stack 
@@ -3991,8 +3974,8 @@ const custom_framework = () => {
     }
 
     //set custom event on both HTMLElement and document level
-    AppDocument.addEventListener = custom_event;
-    AppWindow.addEventListener = custom_event;
+    CommonAppDocument.addEventListener = custom_event;
+    CommonAppWindow.addEventListener = custom_event;
     HTMLElement.prototype.addEventListener = custom_event;
 
     /**
@@ -4012,10 +3995,10 @@ const custom_framework = () => {
      const console_info = (...parameters) => COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.info(...parameters):null;
 
     //Vue uses console.warn, show or hide from any framework 
-    AppWindow.console.warn = console_warn;
+    CommonAppWindow.console.warn = console_warn;
     //React uses console.info and error, show or hide from any framework
-    AppWindow.console.info = console_info;
-    AppWindow.console.error = console_error;
+    CommonAppWindow.console.info = console_info;
+    CommonAppWindow.console.error = console_error;
 };
 /**
  * Init common
@@ -4046,8 +4029,8 @@ const init_common = async (parameters) => {
         if (COMMON_GLOBAL.app_id ==null)
             set_app_service_parameters(decoded_parameters.app_service);
         if (COMMON_GLOBAL.app_framework==0){
-            AppDocument.querySelector('#common_toolbar_framework').classList.add('show');
-            AppDocument.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
+            CommonAppDocument.querySelector('#common_toolbar_framework').classList.add('show');
+            CommonAppDocument.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
         }
             
         connectOnline();

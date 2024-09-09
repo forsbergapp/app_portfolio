@@ -2,13 +2,13 @@
  * @module apps/admin/secure
  */
 
-/**@type{import('../../../types.js').AppDocument} */
- const AppDocument = document;
-/**@type{import('../../../types.js').AppWindow} */
-const AppWindow = window;
+/**@type{import('../../../common_types.js').CommonAppDocument} */
+ const CommonAppDocument = document;
+/**@type{import('../../../common_types.js').CommonAppWindow} */
+const CommonAppWindow = window;
 
 const common_path ='common';
-/**@type {import('../../../types.js').module_common} */
+/**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(common_path);
 
 /**
@@ -63,13 +63,13 @@ const list_generate = amount =>{
  * @returns {void}
  */
 const show_menu = menu => {
-    AppDocument.querySelectorAll('.menuitem').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('menuitem_selected'));
-    AppDocument.querySelectorAll('.main_content').forEach((/**@type{HTMLElement}*/content) => {
+    CommonAppDocument.querySelectorAll('.menuitem').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('menuitem_selected'));
+    CommonAppDocument.querySelectorAll('.main_content').forEach((/**@type{HTMLElement}*/content) => {
         content.innerHTML = '';
         content.style.display='none';
     });
-    AppDocument.querySelector(`#menu_${menu}_content`).style.display='block';
-    AppDocument.querySelector(`#menu_${menu}`).classList.add('menuitem_selected');
+    CommonAppDocument.querySelector(`#menu_${menu}_content`).style.display='block';
+    CommonAppDocument.querySelector(`#menu_${menu}`).classList.add('menuitem_selected');
     const current_year = new Date().getFullYear();
     const yearvalues =   `<option value="${current_year}">${current_year}</option>
                         <option value="${current_year -1}">${current_year-1}</option>
@@ -137,21 +137,21 @@ const show_menu = menu => {
 const show_charts = async () => {
     if (admin_token_has_value()){
         //chart 1 shows for all apps, app id used for chart 2
-        const app_id = AppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
-        const year = AppDocument.querySelector('#select_year_menu1').value;
-        const month = AppDocument.querySelector('#select_month_menu1').value;
+        const app_id = CommonAppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
+        const year = CommonAppDocument.querySelector('#select_year_menu1').value;
+        const month = CommonAppDocument.querySelector('#select_month_menu1').value;
         const select_system_admin_stat = common.COMMON_GLOBAL.system_admin!=null?
-                                            AppDocument.querySelector('#select_system_admin_stat'):null;
+                                            CommonAppDocument.querySelector('#select_system_admin_stat'):null;
         const system_admin_statGroup = common.COMMON_GLOBAL.system_admin!=null?
                                             select_system_admin_stat.options[select_system_admin_stat.selectedIndex].parentNode.label:null;
         const system_admin_statValues = common.COMMON_GLOBAL.system_admin!=null?
-                                            { value: AppDocument.querySelector('#select_system_admin_stat').value,
+                                            { value: CommonAppDocument.querySelector('#select_system_admin_stat').value,
                                                 unique:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('unique'),
                                                 statGroup:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('statGroup')
                                             }:{value:0, unique:0, statGroup:0};
 
-        AppDocument.querySelector('#graphBox').classList.add('common_icon','css_spinner');
-        AppDocument.querySelector('#graphBox').innerHTML='';
+        CommonAppDocument.querySelector('#graphBox').classList.add('common_icon','css_spinner');
+        CommonAppDocument.querySelector('#graphBox').innerHTML='';
         let path;
         let query;
         let authorization_type;
@@ -218,9 +218,9 @@ const show_charts = async () => {
                     if (system_admin_statGroup=='REQUEST')
                         legend_text_chart1 = stat.statValue;
                     else
-                        legend_text_chart1 = SearchAndGetText(AppDocument.querySelector('#select_system_admin_stat'), stat.statValue);
+                        legend_text_chart1 = SearchAndGetText(CommonAppDocument.querySelector('#select_system_admin_stat'), stat.statValue);
                 else{
-                    legend_text_chart1 = Array.from(AppDocument.querySelectorAll('#select_app_menu1 .common_select_option')).filter(app=>parseInt(app.getAttribute('data-value'))==stat.app_id)[0].innerHTML;
+                    legend_text_chart1 = Array.from(CommonAppDocument.querySelectorAll('#select_app_menu1 .common_select_option')).filter(app=>parseInt(app.getAttribute('data-value'))==stat.app_id)[0].innerHTML;
                 }
                     
                 html += `<div class='box_legend_row'>
@@ -267,8 +267,8 @@ const show_charts = async () => {
             let box2_legend = '';
             if (common.COMMON_GLOBAL.system_admin!=null){
                 //as system admin you can filter http codes and application
-                legend_text_chart2 = AppDocument.querySelector('#select_system_admin_stat').options[AppDocument.querySelector('#select_system_admin_stat').selectedIndex].text;
-                const legend_text_chart2_apps = AppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').innerHTML;
+                legend_text_chart2 = CommonAppDocument.querySelector('#select_system_admin_stat').options[CommonAppDocument.querySelector('#select_system_admin_stat').selectedIndex].text;
+                const legend_text_chart2_apps = CommonAppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').innerHTML;
                 box2_legend = ` <div id='box2_legend_row' class='box_legend_row'>
                                     <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
                                     <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
@@ -279,7 +279,7 @@ const show_charts = async () => {
                 
             else{
                 // as admin you can filter application
-                legend_text_chart2 = AppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').innerHTML;
+                legend_text_chart2 = CommonAppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').innerHTML;
                 box2_legend = ` <div id='box2_legend_row' class='box_legend_row'>
                                     <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
                                     <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
@@ -291,7 +291,7 @@ const show_charts = async () => {
             else
                 box_title_class = 'admin';
 
-            AppDocument.querySelector('#graphBox').innerHTML =  
+            CommonAppDocument.querySelector('#graphBox').innerHTML =  
                 `<div id='box1'>
                     <div id='box1_title' class='box_title ${box_title_class} common_icon'></div>
                     <div id='box1_chart' class='box_chart'>${box1_chart}</div>
@@ -302,9 +302,9 @@ const show_charts = async () => {
                     <div id='box2_chart' class='box_chart'>${box2_chart}</div>
                     <div id='box2_legend' class='box_legend'>${box2_legend}</div>
                 </div>`;
-            AppDocument.querySelector('#graphBox').classList.remove('common_icon','css_spinner');
+            CommonAppDocument.querySelector('#graphBox').classList.remove('common_icon','css_spinner');
         })
-        .catch(()=>AppDocument.querySelector('#graphBox').classList.remove('common_icon','css_spinner')); 
+        .catch(()=>CommonAppDocument.querySelector('#graphBox').classList.remove('common_icon','css_spinner')); 
     }
 };
 /**
@@ -339,16 +339,16 @@ const show_start = async (yearvalues) =>{
                 for (const status_code of Object.entries(result_obj.status_codes)){
                     html += `<option value='${status_code[0]}' statGroup=''>${status_code[0]} - ${status_code[1]}</option>`;
                 }
-                AppDocument.querySelector('#menu_1_content').classList.remove('common_icon', 'css_spinner');
+                CommonAppDocument.querySelector('#menu_1_content').classList.remove('common_icon', 'css_spinner');
                 resolve(html);
             })
             .catch(()=>{
-                AppDocument.querySelector('#menu_1_content').classList.remove('common_icon', 'css_spinner');
+                CommonAppDocument.querySelector('#menu_1_content').classList.remove('common_icon', 'css_spinner');
                 resolve(null);
             });
         });
     };
-    AppDocument.querySelector('#menu_1_content').innerHTML = 
+    CommonAppDocument.querySelector('#menu_1_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
                 <div id='menu_1_row_sample'>
                     <select id='select_system_admin_stat'>${common.COMMON_GLOBAL.system_admin!=null?await get_system_admin_stat():''}</select>
@@ -371,15 +371,15 @@ const show_start = async (yearvalues) =>{
                 </div>
             </div>`;
     if (common.COMMON_GLOBAL.system_admin!=null){
-        AppDocument.querySelector('#menu_1_maintenance').style.display = 'inline-block';
-        AppDocument.querySelector('#select_system_admin_stat').style.display = 'inline-block';
+        CommonAppDocument.querySelector('#menu_1_maintenance').style.display = 'inline-block';
+        CommonAppDocument.querySelector('#select_system_admin_stat').style.display = 'inline-block';
     }
     else{
-        AppDocument.querySelector('#menu_1_maintenance').style.display = 'none';
-        AppDocument.querySelector('#select_system_admin_stat').style.display = 'none';
+        CommonAppDocument.querySelector('#menu_1_maintenance').style.display = 'none';
+        CommonAppDocument.querySelector('#select_system_admin_stat').style.display = 'none';
     }    
-    AppDocument.querySelector('#select_year_menu1').selectedIndex = 0;
-    AppDocument.querySelector('#select_month_menu1').selectedIndex = new Date().getMonth();
+    CommonAppDocument.querySelector('#select_year_menu1').selectedIndex = 0;
+    CommonAppDocument.querySelector('#select_month_menu1').selectedIndex = new Date().getMonth();
 
     if (common.COMMON_GLOBAL.system_admin!=null)
         check_maintenance();
@@ -447,19 +447,19 @@ const sendBroadcast = () => {
     let broadcast_type ='';
     let client_id;
     let app_id;
-    const broadcast_message = AppDocument.querySelector('#send_broadcast_message').innerHTML;
+    const broadcast_message = CommonAppDocument.querySelector('#send_broadcast_message').innerHTML;
 
     if (broadcast_message==''){
         common.show_message('INFO', null, null, 'message_text', '!', common.COMMON_GLOBAL.app_id);
     }
     else{
-        if (AppDocument.querySelector('#client_id').innerHTML==''){
-            app_id = AppDocument.querySelector('#select_app_broadcast').options[AppDocument.querySelector('#select_app_broadcast').selectedIndex].value;
+        if (CommonAppDocument.querySelector('#client_id').innerHTML==''){
+            app_id = CommonAppDocument.querySelector('#select_app_broadcast').options[CommonAppDocument.querySelector('#select_app_broadcast').selectedIndex].value;
             client_id = '';
-            broadcast_type = AppDocument.querySelector('#select_broadcast_type .common_select_dropdown_value').getAttribute('data-value');
+            broadcast_type = CommonAppDocument.querySelector('#select_broadcast_type .common_select_dropdown_value').getAttribute('data-value');
         }
         else{
-            client_id = AppDocument.querySelector('#client_id').innerHTML;
+            client_id = CommonAppDocument.querySelector('#client_id').innerHTML;
             app_id = '';
             broadcast_type = 'CHAT';
         }
@@ -468,7 +468,7 @@ const sendBroadcast = () => {
                             client_id:          client_id==''?null:client_id,
                             client_id_current:  common.COMMON_GLOBAL.service_socket_client_ID,
                             broadcast_type:     broadcast_type, 
-                            broadcast_message:  AppWindow.btoa(broadcast_message)};
+                            broadcast_message:  CommonAppWindow.btoa(broadcast_message)};
         let path='';
         let token_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
@@ -511,35 +511,35 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
         switch (dialogue_type){
             case 'CHAT':{
                 //hide and set INFO, should not be able to send MAINTENANCE message here
-                AppDocument.querySelector('#select_broadcast_type').style.display='none';
+                CommonAppDocument.querySelector('#select_broadcast_type').style.display='none';
                 //hide app selection
-                AppDocument.querySelector('#select_app_broadcast').style.display='none';
+                CommonAppDocument.querySelector('#select_app_broadcast').style.display='none';
                 //show client id
-                AppDocument.querySelector('#client_id_label').style.display = 'inline-block';
-                AppDocument.querySelector('#client_id').style.display = 'inline-block';
-                AppDocument.querySelector('#client_id').innerHTML = client_id;
+                CommonAppDocument.querySelector('#client_id_label').style.display = 'inline-block';
+                CommonAppDocument.querySelector('#client_id').style.display = 'inline-block';
+                CommonAppDocument.querySelector('#client_id').innerHTML = client_id;
                 break;
             }
             case 'APP':{
                 //hide and set INFO, should not be able to send MAINTENANCE message here
-                AppDocument.querySelector('#select_broadcast_type').style.display='none';
+                CommonAppDocument.querySelector('#select_broadcast_type').style.display='none';
                 //show app selection
-                AppDocument.querySelector('#select_app_broadcast').style.display='block';
+                CommonAppDocument.querySelector('#select_app_broadcast').style.display='block';
                 //hide client id
-                AppDocument.querySelector('#client_id_label').style.display = 'none';
-                AppDocument.querySelector('#client_id').style.display = 'none';
-                AppDocument.querySelector('#client_id').innerHTML = '';
+                CommonAppDocument.querySelector('#client_id_label').style.display = 'none';
+                CommonAppDocument.querySelector('#client_id').style.display = 'none';
+                CommonAppDocument.querySelector('#client_id').innerHTML = '';
                 break;
             }
             case 'ALL':{
                 //show broadcast type and INFO
-                AppDocument.querySelector('#select_broadcast_type').style.display='inline-block';
+                CommonAppDocument.querySelector('#select_broadcast_type').style.display='inline-block';
                 //show app selection
-                AppDocument.querySelector('#select_app_broadcast').style.display='block';
+                CommonAppDocument.querySelector('#select_app_broadcast').style.display='block';
                 //hide client id
-                AppDocument.querySelector('#client_id_label').style.display = 'none';
-                AppDocument.querySelector('#client_id').style.display = 'none';
-                AppDocument.querySelector('#client_id').innerHTML = '';
+                CommonAppDocument.querySelector('#client_id_label').style.display = 'none';
+                CommonAppDocument.querySelector('#client_id').style.display = 'none';
+                CommonAppDocument.querySelector('#client_id').innerHTML = '';
                 break;
             }
         }
@@ -550,23 +550,23 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
  * @returns{void}
  */
 const set_broadcast_type = () => {
-    switch (AppDocument.querySelector('#select_broadcast_type .common_select_dropdown_value').getAttribute('data-value')){
+    switch (CommonAppDocument.querySelector('#select_broadcast_type .common_select_dropdown_value').getAttribute('data-value')){
         case 'ALERT':{
             //show app selection
-            AppDocument.querySelector('#select_app_broadcast').style.display='block';
+            CommonAppDocument.querySelector('#select_app_broadcast').style.display='block';
             //hide client id
-            AppDocument.querySelector('#client_id_label').style.display = 'none';
-            AppDocument.querySelector('#client_id').style.display = 'none';
-            AppDocument.querySelector('#client_id').innerHTML = '';
+            CommonAppDocument.querySelector('#client_id_label').style.display = 'none';
+            CommonAppDocument.querySelector('#client_id').style.display = 'none';
+            CommonAppDocument.querySelector('#client_id').innerHTML = '';
             break;
         }
         case 'MAINTENANCE':{
             //hide app selection
-            AppDocument.querySelector('#select_app_broadcast').style.display='none';
+            CommonAppDocument.querySelector('#select_app_broadcast').style.display='none';
             //hide client id
-            AppDocument.querySelector('#client_id_label').style.display = 'none';
-            AppDocument.querySelector('#client_id').style.display = 'none';
-            AppDocument.querySelector('#client_id').innerHTML = '';
+            CommonAppDocument.querySelector('#client_id_label').style.display = 'none';
+            CommonAppDocument.querySelector('#client_id').style.display = 'none';
+            CommonAppDocument.querySelector('#client_id').innerHTML = '';
             break;
         }
     }
@@ -580,9 +580,9 @@ const check_maintenance = async () => {
         await common.FFB('/server-config/config/SERVER', 'config_group=METADATA&parameter=MAINTENANCE', 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             if (JSON.parse(result).data==1)
-                AppDocument.querySelector('#menu_1_checkbox_maintenance').classList.add('checked');
+                CommonAppDocument.querySelector('#menu_1_checkbox_maintenance').classList.add('checked');
             else
-                AppDocument.querySelector('#menu_1_checkbox_maintenance').classList.remove('checked');
+                CommonAppDocument.querySelector('#menu_1_checkbox_maintenance').classList.remove('checked');
         })
         .catch(()=>null);
     }
@@ -594,7 +594,7 @@ const check_maintenance = async () => {
 const set_maintenance = () => {
     if (admin_token_has_value()){
         let check_value;
-        if (AppDocument.querySelector('#menu_1_checkbox_maintenance').classList.contains('checked'))
+        if (CommonAppDocument.querySelector('#menu_1_checkbox_maintenance').classList.contains('checked'))
             check_value = 1;
         else
             check_value = 0;
@@ -607,7 +607,7 @@ const set_maintenance = () => {
   * @returns{Promise.<void>}
  */
 const count_users = async () => {
-    AppDocument.querySelector('#menu_2_content').innerHTML =
+    CommonAppDocument.querySelector('#menu_2_content').innerHTML =
                `<div id='menu_2_content' class='main_content'>
                     <div id='menu_2_content_widget1' class='widget'>
                         <div id='list_user_stat_row_title' class='list_user_stat_row'>
@@ -632,11 +632,11 @@ const count_users = async () => {
         .catch((/**@type{Error}*/err)=>{throw err;});
     };
     if (admin_token_has_value()){
-        AppDocument.querySelector('#list_user_stat').classList.add('common_icon', 'css_spinner');
-        AppDocument.querySelector('#list_user_stat').innerHTML = '';
+        CommonAppDocument.querySelector('#list_user_stat').classList.add('common_icon', 'css_spinner');
+        CommonAppDocument.querySelector('#list_user_stat').innerHTML = '';
         const user_stat = await common.FFB('/server-db_admin/user_account-stat', null, 'GET', 'APP_ACCESS', null)
         .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-        .catch(()=>AppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner'));
+        .catch(()=>CommonAppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner'));
         
         let html='';
         let i=0;
@@ -660,8 +660,8 @@ const count_users = async () => {
                     <div class='list_user_stat_col'></div>
                     <div class='list_user_stat_col'>${await get_count('',0).then(result=>result.count_connected)}</div>
                 </div>`;
-        AppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner');
-        AppDocument.querySelector('#list_user_stat').innerHTML = html;
+        CommonAppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner');
+        CommonAppDocument.querySelector('#list_user_stat').innerHTML = html;
     }
 };
 /**
@@ -669,7 +669,7 @@ const count_users = async () => {
  * @returns {void}
  */
 const show_users = () =>{
-    AppDocument.querySelector('#menu_3_content').innerHTML = 
+    CommonAppDocument.querySelector('#menu_3_content').innerHTML = 
             `<div id='menu_3_content_widget1' class='widget'>
                 <div id='list_user_account_title' class='common_icon'></div>
                 <div class='list_search'>
@@ -696,15 +696,15 @@ const show_users = () =>{
  */
 const search_users = (sort='username', order_by='asc', focus=true) => {
 
-    if (common.input_control(null,{check_valid_list_elements:[[AppDocument.querySelector('#list_user_account_search_input'),100]]})==false)
+    if (common.input_control(null,{check_valid_list_elements:[[CommonAppDocument.querySelector('#list_user_account_search_input'),100]]})==false)
         return;
 
-    AppDocument.querySelector('#list_user_account').classList.add('common_icon', 'css_spinner');
-    AppDocument.querySelector('#list_user_account').innerHTML = '';
+    CommonAppDocument.querySelector('#list_user_account').classList.add('common_icon', 'css_spinner');
+    CommonAppDocument.querySelector('#list_user_account').innerHTML = '';
     let search_user='*';
     //show all records if no search criteria
-    if (AppDocument.querySelector('#list_user_account_search_input').innerText!='')
-        search_user = encodeURI(AppDocument.querySelector('#list_user_account_search_input').innerText);
+    if (CommonAppDocument.querySelector('#list_user_account_search_input').innerText!='')
+        search_user = encodeURI(CommonAppDocument.querySelector('#list_user_account_search_input').innerText);
     common.FFB('/server-db_admin/user_account', `search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div class='list_user_account_row'>
@@ -831,38 +831,38 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
                 </div>
             </div>`;
         }
-        AppDocument.querySelector('#list_user_account').classList.remove('common_icon', 'css_spinner');
-        AppDocument.querySelector('#list_user_account').innerHTML = html;
-        AppDocument.querySelector(`#list_user_account .list_title[data-column='${sort}']`).classList.add(order_by);
+        CommonAppDocument.querySelector('#list_user_account').classList.remove('common_icon', 'css_spinner');
+        CommonAppDocument.querySelector('#list_user_account').innerHTML = html;
+        CommonAppDocument.querySelector(`#list_user_account .list_title[data-column='${sort}']`).classList.add(order_by);
     
         if (focus==true){
             //set focus at start
             //set focus first column in first row
             //this will trigger to show detail records
-            if (AppDocument.querySelectorAll('#list_user_account .list_edit')[0].getAttribute('readonly')==true){
-                AppDocument.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', false);
-                AppDocument.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                AppDocument.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', true);
+            if (CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].getAttribute('readonly')==true){
+                CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', false);
+                CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].focus();
+                CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', true);
             }
             else
-                AppDocument.querySelectorAll('#list_user_account .list_edit')[0].focus();
+                CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].focus();
                 
         }
         else{
             //trigger focus event on first row set focus back again to search field
-            AppDocument.querySelectorAll('#list_user_account .list_edit')[0].focus();
-            AppDocument.querySelector('#list_user_account_search_input').focus();
+            CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].focus();
+            CommonAppDocument.querySelector('#list_user_account_search_input').focus();
         }
     })
-    .catch(()=>AppDocument.querySelector('#list_user_account').classList.remove('common_icon', 'css_spinner'));
+    .catch(()=>CommonAppDocument.querySelector('#list_user_account').classList.remove('common_icon', 'css_spinner'));
 };
 /**
  * Show user account logon
  * @param {number} user_account_id 
  */
 const show_user_account_logon = async (user_account_id) => {
-    AppDocument.querySelector('#list_user_account_logon').classList.add('common_icon', 'css_spinner');
-    AppDocument.querySelector('#list_user_account_logon').innerHTML = '';
+    CommonAppDocument.querySelector('#list_user_account_logon').classList.add('common_icon', 'css_spinner');
+    CommonAppDocument.querySelector('#list_user_account_logon').innerHTML = '';
     common.FFB('/server-db_admin/user_account_logon', `data_user_account_id=${user_account_id}&data_app_id=''`, 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
         let html = `<div id='list_user_account_logon_row_title' class='list_user_account_logon_row'>
@@ -908,17 +908,17 @@ const show_user_account_logon = async (user_account_id) => {
                 </div>
             </div>`;
         }
-        AppDocument.querySelector('#list_user_account_logon').classList.remove('common_icon', 'css_spinner');
-        AppDocument.querySelector('#list_user_account_logon').innerHTML = html;
+        CommonAppDocument.querySelector('#list_user_account_logon').classList.remove('common_icon', 'css_spinner');
+        CommonAppDocument.querySelector('#list_user_account_logon').innerHTML = html;
     })
-    .catch(()=>AppDocument.querySelector('#list_user_account_logon').classList.remove('common_icon', 'css_spinner'));
+    .catch(()=>CommonAppDocument.querySelector('#list_user_account_logon').classList.remove('common_icon', 'css_spinner'));
 };
 /**
  * Show apps
  * @returns{Promise.<void>}
  */
 const show_apps = async () => {
-    AppDocument.querySelector('#menu_4_content').innerHTML = 
+    CommonAppDocument.querySelector('#menu_4_content').innerHTML = 
     `<div id='menu_4_content_widget1' class='widget'>
          <div id='list_apps_title' class='common_icon'></div>
          <div id='list_apps' class='common_list_scrollbar common_icon css_spinner'></div>
@@ -968,13 +968,13 @@ const show_apps = async () => {
                 </div>
             </div>`;
         }
-        AppDocument.querySelector('#list_apps').classList.remove('common_icon', 'css_spinner');
-        AppDocument.querySelector('#list_apps').innerHTML = html;
+        CommonAppDocument.querySelector('#list_apps').classList.remove('common_icon', 'css_spinner');
+        CommonAppDocument.querySelector('#list_apps').innerHTML = html;
         //set focus first column in first row
         //this will trigger to show detail records
-        AppDocument.querySelectorAll('#list_apps .list_edit')[0].focus();
+        CommonAppDocument.querySelectorAll('#list_apps .list_edit')[0].focus();
     })
-    .catch(()=>AppDocument.querySelector('#list_apps').classList.remove('common_icon', 'css_spinner'));
+    .catch(()=>CommonAppDocument.querySelector('#list_apps').classList.remove('common_icon', 'css_spinner'));
 };
 /**
  * 
@@ -982,9 +982,9 @@ const show_apps = async () => {
  * @returns{void}
  */
 const show_app_parameter = (app_id) => {
-    AppDocument.querySelector('#list_app_parameter').classList.add('common_icon', 'css_spinner');
-    AppDocument.querySelector('#apps_save').style.display = 'none';
-    AppDocument.querySelector('#list_app_parameter').innerHTML = '';
+    CommonAppDocument.querySelector('#list_app_parameter').classList.add('common_icon', 'css_spinner');
+    CommonAppDocument.querySelector('#apps_save').style.display = 'none';
+    CommonAppDocument.querySelector('#list_app_parameter').innerHTML = '';
 
     common.FFB(`/server-config/config-apps/${app_id}`, 'key=PARAMETERS', 'GET', 'APP_ACCESS', null)
     .then((/**@type{string}*/result)=>{
@@ -1011,11 +1011,11 @@ const show_app_parameter = (app_id) => {
                 </div>
             </div>`;
         }
-        AppDocument.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner');
-        AppDocument.querySelector('#apps_save').style.display = 'inline-block';
-        AppDocument.querySelector('#list_app_parameter').innerHTML = html;
+        CommonAppDocument.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner');
+        CommonAppDocument.querySelector('#apps_save').style.display = 'inline-block';
+        CommonAppDocument.querySelector('#list_app_parameter').innerHTML = html;
     })
-    .catch(()=>AppDocument.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner'));
+    .catch(()=>CommonAppDocument.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner'));
 };
 /**
  * Button save
@@ -1025,7 +1025,7 @@ const button_save = async (item) => {
     switch (item){
         case 'apps_save':{
             //save changes in list_apps
-            let x = AppDocument.querySelectorAll('.list_apps_row');
+            let x = CommonAppDocument.querySelectorAll('.list_apps_row');
             for (const record of x){
                 if (record.getAttribute('data-changed-record')=='1'){
                     await update_record('app',
@@ -1052,7 +1052,7 @@ const button_save = async (item) => {
                 }
             }
             //save changes in list_app_parameter
-            x = AppDocument.querySelectorAll('.list_app_parameter_row');
+            x = CommonAppDocument.querySelectorAll('.list_app_parameter_row');
             for (const record of x){
                 if (record.getAttribute('data-changed-record')=='1'){
                     await update_record('app_parameter',
@@ -1082,7 +1082,7 @@ const button_save = async (item) => {
         }
         case 'users_save':{
             //save changes in list_user_account
-            const x = AppDocument.querySelectorAll('.list_user_account_row');
+            const x = CommonAppDocument.querySelectorAll('.list_user_account_row');
             for (const record of x){
                 if (record.getAttribute('data-changed-record')=='1'){
                     await update_record('user_account',
@@ -1114,10 +1114,10 @@ const button_save = async (item) => {
             const config_create_server_json = () => {
                 /**@type{object[]} */
                 const config_json = [];
-                AppDocument.querySelectorAll('#list_config .list_config_group').forEach((/**@type{HTMLElement}*/e_group) => 
+                CommonAppDocument.querySelectorAll('#list_config .list_config_group').forEach((/**@type{HTMLElement}*/e_group) => 
                     {
                         let config_group='';
-                        AppDocument.querySelectorAll(`#${e_group.id} .list_config_row`).forEach((/**@type{HTMLElement}*/e_row) => 
+                        CommonAppDocument.querySelectorAll(`#${e_group.id} .list_config_row`).forEach((/**@type{HTMLElement}*/e_row) => 
                                 {
                                     config_group += `{"${e_row.children[0].children[0].innerHTML}": ${JSON.stringify(e_row.children[1].children[0].innerHTML)}, 
                                                       "COMMENT": ${JSON.stringify(e_row.children[2].children[0].innerHTML)}}`;
@@ -1136,14 +1136,14 @@ const button_save = async (item) => {
                             SERVICE_LOG:        config_json[4]
                         };
             };
-            const file = AppDocument.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16).toUpperCase();
+            const file = CommonAppDocument.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16).toUpperCase();
             //file:'SERVER', 'APPS', 'IAM_BLOCKIP', 'IAM_POLICY', 'IAM_USERAGENT', 'IAM_USER', 'MICROSERVICE_CONFIG', 'MICROSERVICE_SERVICES'
-            const json_data = { config:    file=='SERVER'?config_create_server_json():JSON.parse(AppDocument.querySelector('#list_config_edit').innerHTML)};
+            const json_data = { config:    file=='SERVER'?config_create_server_json():JSON.parse(CommonAppDocument.querySelector('#list_config_edit').innerHTML)};
 
-            AppDocument.querySelector('#' + item).classList.add('css_spinner');
+            CommonAppDocument.querySelector('#' + item).classList.add('css_spinner');
             common.FFB(`/server-config/config/${file}`, null, 'PUT', 'SYSTEMADMIN', json_data)
-            .then(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'))
-            .catch(()=>AppDocument.querySelector('#' + item).classList.remove('css_spinner'));
+            .then(()=>CommonAppDocument.querySelector('#' + item).classList.remove('css_spinner'))
+            .catch(()=>CommonAppDocument.querySelector('#' + item).classList.remove('css_spinner'));
             break;
         }
     }
@@ -1181,7 +1181,7 @@ const update_record = async (table,
         let json_data;
         let token_type = '';
         let method = '';
-        AppDocument.querySelector('#' + button).classList.add('css_spinner');
+        CommonAppDocument.querySelector('#' + button).classList.add('css_spinner');
         switch (table){
             case 'user_account':{
                 json_data = {   app_role_id:        parameters.user_account.app_role_id,
@@ -1221,8 +1221,8 @@ const update_record = async (table,
         }
         await common.FFB(path, null, method, token_type, json_data)
         .then(()=>{ row_element.setAttribute('data-changed-record', '0');
-                    AppDocument.querySelector('#' + button).classList.remove('css_spinner');})
-        .catch(()=>AppDocument.querySelector('#' + button).classList.remove('css_spinner'));
+                    CommonAppDocument.querySelector('#' + button).classList.remove('css_spinner');})
+        .catch(()=>CommonAppDocument.querySelector('#' + button).classList.remove('css_spinner'));
     }
 };
 
@@ -1232,7 +1232,7 @@ const update_record = async (table,
  * @returns{Promise.<void>}
  */
 const show_monitor = async (yearvalues) =>{
-    AppDocument.querySelector('#menu_5_content').innerHTML = 
+    CommonAppDocument.querySelector('#menu_5_content').innerHTML = 
         `<div id='menu_5_content_widget1' class='widget'>
             <div id='list_monitor_nav' class='list_nav'>
                 <div id='list_monitor_nav_connected' class='list_nav_list list_button common_icon'></div>
@@ -1281,9 +1281,9 @@ const show_monitor = async (yearvalues) =>{
             <div id='mapid'></div>
         </div>`;
     if (common.COMMON_GLOBAL.system_admin!=null)
-        AppDocument.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_list_hide');
+        CommonAppDocument.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_list_hide');
     else
-        AppDocument.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_list_hide');
+        CommonAppDocument.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_list_hide');
     
     //both admin and system admin:
     const monitor_apps =  await get_apps();
@@ -1315,8 +1315,8 @@ const show_monitor = async (yearvalues) =>{
     const result_limit = await common.FFB(`/server-config/config-apps/${common.COMMON_GLOBAL.app_id}`, query, 'GET', token_type, null).catch(()=> null);
     APP_GLOBAL.limit = parseInt(JSON.parse(result_limit)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS);
 
-    AppDocument.querySelector('#list_row_sample').classList.remove('common_icon','css_spinner');
-    AppDocument.querySelector('#list_row_sample').innerHTML = 
+    CommonAppDocument.querySelector('#list_row_sample').classList.remove('common_icon','css_spinner');
+    CommonAppDocument.querySelector('#list_row_sample').innerHTML = 
                         `<select id='select_logscope5'>${monitor_log_data.logscope_level_options}</select>
                          <select id='select_app_menu5'>${monitor_apps}</select>
                          <select id='select_year_menu5'>${monitor_years}</select>
@@ -1325,39 +1325,39 @@ const show_monitor = async (yearvalues) =>{
                          <div id='filesearch_menu5' class='common_dialogue_button common_icon'></div>`;
     if (common.COMMON_GLOBAL.system_admin!=null){
         //server log
-        AppDocument.querySelector('#select_day_menu5').selectedIndex = new Date().getDate() -1;
+        CommonAppDocument.querySelector('#select_day_menu5').selectedIndex = new Date().getDate() -1;
         
-        AppDocument.querySelector('#menu5_row_parameters_col1_1').style.display = 'none';
-        AppDocument.querySelector('#menu5_row_parameters_col1_0').style.display = 'none';
-        AppDocument.querySelector('#menu5_row_parameters_col2_1').style.display = 'none';
-        AppDocument.querySelector('#menu5_row_parameters_col2_0').style.display = 'none';
-        AppDocument.querySelector('#menu5_row_parameters_col3_1').style.display = 'none';
-        AppDocument.querySelector('#menu5_row_parameters_col3_0').style.display = 'none';
+        CommonAppDocument.querySelector('#menu5_row_parameters_col1_1').style.display = 'none';
+        CommonAppDocument.querySelector('#menu5_row_parameters_col1_0').style.display = 'none';
+        CommonAppDocument.querySelector('#menu5_row_parameters_col2_1').style.display = 'none';
+        CommonAppDocument.querySelector('#menu5_row_parameters_col2_0').style.display = 'none';
+        CommonAppDocument.querySelector('#menu5_row_parameters_col3_1').style.display = 'none';
+        CommonAppDocument.querySelector('#menu5_row_parameters_col3_0').style.display = 'none';
         if (monitor_log_data.parameters.REQUEST_LEVEL==1 ||monitor_log_data.parameters.REQUEST_LEVEL==2)
-                AppDocument.querySelector('#menu5_row_parameters_col1_1').style.display = 'inline-block';
+                CommonAppDocument.querySelector('#menu5_row_parameters_col1_1').style.display = 'inline-block';
             else
-                AppDocument.querySelector('#menu5_row_parameters_col1_0').style.display = 'inline-block';
+                CommonAppDocument.querySelector('#menu5_row_parameters_col1_0').style.display = 'inline-block';
             if (monitor_log_data.parameters.SERVICE_LEVEL==1 || monitor_log_data.parameters.SERVICE_LEVEL==2)
-                AppDocument.querySelector('#menu5_row_parameters_col2_1').style.display = 'inline-block';
+                CommonAppDocument.querySelector('#menu5_row_parameters_col2_1').style.display = 'inline-block';
             else
-                AppDocument.querySelector('#menu5_row_parameters_col2_0').style.display = 'inline-block';
+                CommonAppDocument.querySelector('#menu5_row_parameters_col2_0').style.display = 'inline-block';
             if (monitor_log_data.parameters.DB_LEVEL==1 || monitor_log_data.parameters.DB_LEVEL==2)
-                AppDocument.querySelector('#menu5_row_parameters_col3_1').style.display = 'inline-block';
+                CommonAppDocument.querySelector('#menu5_row_parameters_col3_1').style.display = 'inline-block';
             else
-                AppDocument.querySelector('#menu5_row_parameters_col3_0').style.display = 'inline-block';
+                CommonAppDocument.querySelector('#menu5_row_parameters_col3_0').style.display = 'inline-block';
         if (APP_GLOBAL.service_log_file_interval=='1M')
-            AppDocument.querySelector('#select_day_menu5').style.display = 'none';
+            CommonAppDocument.querySelector('#select_day_menu5').style.display = 'none';
         else
-            AppDocument.querySelector('#select_day_menu5').style.display = 'inline-block';
+            CommonAppDocument.querySelector('#select_day_menu5').style.display = 'inline-block';
     }
     else{
         //app log
-        AppDocument.querySelector('#select_logscope5').style.display = 'none';
-        AppDocument.querySelector('#select_day_menu5').style.display = 'none';
-        AppDocument.querySelector('#filesearch_menu5').style.display = 'none';
+        CommonAppDocument.querySelector('#select_logscope5').style.display = 'none';
+        CommonAppDocument.querySelector('#select_day_menu5').style.display = 'none';
+        CommonAppDocument.querySelector('#filesearch_menu5').style.display = 'none';
     }
-    AppDocument.querySelector('#select_year_menu5').selectedIndex = 0;
-    AppDocument.querySelector('#select_month_menu5').selectedIndex = new Date().getMonth();
+    CommonAppDocument.querySelector('#select_year_menu5').selectedIndex = 0;
+    CommonAppDocument.querySelector('#select_month_menu5').selectedIndex = new Date().getMonth();
 
     
     if (common.COMMON_GLOBAL.system_admin==null)
@@ -1391,69 +1391,69 @@ const show_monitor = async (yearvalues) =>{
  */
 const nav_click = (item_id) => {
     const reset_monitor = () => {
-        AppDocument.querySelector('#list_monitor_nav_connected').classList.remove('list_nav_selected_tab');
-        AppDocument.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_selected_tab');
-        AppDocument.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_monitor_nav_connected').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_selected_tab');
     };
     const reset_config = () => {
-        AppDocument.querySelector('#list_config_nav_server').classList.remove('list_nav_selected_tab');
-        AppDocument.querySelector('#list_config_nav_iam_blockip').classList.remove('list_nav_selected_tab');
-        AppDocument.querySelector('#list_config_nav_iam_useragent').classList.remove('list_nav_selected_tab');
-        AppDocument.querySelector('#list_config_nav_iam_policy').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_config_nav_server').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_config_nav_iam_blockip').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_config_nav_iam_useragent').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_config_nav_iam_policy').classList.remove('list_nav_selected_tab');
     };
     
     switch (item_id){
         //MONITOR
         case 'list_monitor_nav_connected':{
             reset_monitor();
-            AppDocument.querySelector('#list_connected_form').style.display='flex';
-            AppDocument.querySelector('#list_app_log_form').style.display='none';
-            AppDocument.querySelector('#list_server_log_form').style.display='none';
-            AppDocument.querySelector('#list_monitor_nav_connected').classList.add('list_nav_selected_tab');
+            CommonAppDocument.querySelector('#list_connected_form').style.display='flex';
+            CommonAppDocument.querySelector('#list_app_log_form').style.display='none';
+            CommonAppDocument.querySelector('#list_server_log_form').style.display='none';
+            CommonAppDocument.querySelector('#list_monitor_nav_connected').classList.add('list_nav_selected_tab');
             show_connected();
             break;
         }
         case 'list_monitor_nav_app_log':{
             reset_monitor();
-            AppDocument.querySelector('#list_connected_form').style.display='none';
-            AppDocument.querySelector('#list_app_log_form').style.display='flex';
-            AppDocument.querySelector('#list_server_log_form').style.display='none';
-            AppDocument.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
+            CommonAppDocument.querySelector('#list_connected_form').style.display='none';
+            CommonAppDocument.querySelector('#list_app_log_form').style.display='flex';
+            CommonAppDocument.querySelector('#list_server_log_form').style.display='none';
+            CommonAppDocument.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
             APP_GLOBAL.page = 0;
             show_app_log();
             break;
         }
         case 'list_monitor_nav_server_log':{
             reset_monitor();
-            AppDocument.querySelector('#list_connected_form').style.display='none';
-            AppDocument.querySelector('#list_app_log_form').style.display='none';
-            AppDocument.querySelector('#list_server_log_form').style.display='block';
-            AppDocument.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
-            show_server_logs('logdate', 'desc', AppDocument.querySelector('#list_server_log_search_input').innerText);
+            CommonAppDocument.querySelector('#list_connected_form').style.display='none';
+            CommonAppDocument.querySelector('#list_app_log_form').style.display='none';
+            CommonAppDocument.querySelector('#list_server_log_form').style.display='block';
+            CommonAppDocument.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
+            show_server_logs('logdate', 'desc', CommonAppDocument.querySelector('#list_server_log_search_input').innerText);
             break;
         }
         //SERVER CONFIG
         case 'list_config_nav_server':{
             reset_config();
-            AppDocument.querySelector('#list_config_nav_server').classList.add('list_nav_selected_tab');
+            CommonAppDocument.querySelector('#list_config_nav_server').classList.add('list_nav_selected_tab');
             show_config('SERVER');
             break;
         }
         case 'list_config_nav_iam_blockip':{
             reset_config();
-            AppDocument.querySelector('#list_config_nav_iam_blockip').classList.add('list_nav_selected_tab');
+            CommonAppDocument.querySelector('#list_config_nav_iam_blockip').classList.add('list_nav_selected_tab');
             show_config('IAM_BLOCKIP');
             break;
         }
         case 'list_config_nav_iam_useragent':{
             reset_config();
-            AppDocument.querySelector('#list_config_nav_iam_useragent').classList.add('list_nav_selected_tab');
+            CommonAppDocument.querySelector('#list_config_nav_iam_useragent').classList.add('list_nav_selected_tab');
             show_config('IAM_USERAGENT');
             break;
         }
         case 'list_config_nav_iam_policy':{
             reset_config();
-            AppDocument.querySelector('#list_config_nav_iam_policy').classList.add('list_nav_selected_tab');
+            CommonAppDocument.querySelector('#list_config_nav_iam_policy').classList.add('list_nav_selected_tab');
             show_config('IAM_POLICY');
             break;
         }
@@ -1491,14 +1491,14 @@ const show_list = async (list_div, query, sort, order_by) => {
                 break;
             }
             case 'list_server_log':{
-                logscope = AppDocument.querySelector('#select_logscope5')[AppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
+                logscope = CommonAppDocument.querySelector('#select_logscope5')[CommonAppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
                 path = '/server-log/log';
                 token_type = 'SYSTEMADMIN';
                 break;
             }
         }
-        AppDocument.querySelector('#' + list_div).classList.add('css_spinner');
-        AppDocument.querySelector('#' + list_div).innerHTML = '';
+        CommonAppDocument.querySelector('#' + list_div).classList.add('css_spinner');
+        CommonAppDocument.querySelector('#' + list_div).innerHTML = '';
         common.FFB(path, query, 'GET', token_type, null)
         .then((/**@type{string}*/result)=>{
             logs = JSON.parse(result).rows;
@@ -2030,12 +2030,12 @@ const show_list = async (list_div, query, sort, order_by) => {
                         }
                     }
                 }
-                AppDocument.querySelector('#' + list_div).classList.remove('css_spinner');
-                AppDocument.querySelector('#' + list_div).innerHTML = html;
-                AppDocument.querySelector(`#${list_div} .list_title[data-column='${sort}']`).classList.add(order_by);
+                CommonAppDocument.querySelector('#' + list_div).classList.remove('css_spinner');
+                CommonAppDocument.querySelector('#' + list_div).innerHTML = html;
+                CommonAppDocument.querySelector(`#${list_div} .list_title[data-column='${sort}']`).classList.add(order_by);
             }  
         })
-        .catch(()=>AppDocument.querySelector('#' + list_div).classList.remove('css_spinner'));   
+        .catch(()=>CommonAppDocument.querySelector('#' + list_div).classList.remove('css_spinner'));   
     }
 };
 /**
@@ -2044,9 +2044,9 @@ const show_list = async (list_div, query, sort, order_by) => {
  * @param {string} order_by
  */
 const show_connected = async (sort='connection_date', order_by='desc') => {
-    const app_id = AppDocument.querySelector('#select_app_menu5').options[AppDocument.querySelector('#select_app_menu5').selectedIndex].value;
-    const year = AppDocument.querySelector('#select_year_menu5').value;
-    const month = AppDocument.querySelector('#select_month_menu5').value;
+    const app_id = CommonAppDocument.querySelector('#select_app_menu5').options[CommonAppDocument.querySelector('#select_app_menu5').selectedIndex].value;
+    const year = CommonAppDocument.querySelector('#select_year_menu5').value;
+    const month = CommonAppDocument.querySelector('#select_month_menu5').value;
     show_list('list_connected', 
               `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${APP_GLOBAL.limit}`, 
               sort,
@@ -2062,9 +2062,9 @@ const show_connected = async (sort='connection_date', order_by='desc') => {
  * @returns{Promise.<void>}
  */
 const show_app_log = async (sort='date_created', order_by='desc', offset=0, limit=APP_GLOBAL.limit) => {
-    const app_id = AppDocument.querySelector('#select_app_menu5').options[AppDocument.querySelector('#select_app_menu5').selectedIndex].value;
-    const year = AppDocument.querySelector('#select_year_menu5').value;
-    const month = AppDocument.querySelector('#select_month_menu5').value;
+    const app_id = CommonAppDocument.querySelector('#select_app_menu5').options[CommonAppDocument.querySelector('#select_app_menu5').selectedIndex].value;
+    const year = CommonAppDocument.querySelector('#select_year_menu5').value;
+    const month = CommonAppDocument.querySelector('#select_month_menu5').value;
     show_list('list_app_log', 
               `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`, 
               sort,
@@ -2077,7 +2077,7 @@ const show_app_log = async (sort='date_created', order_by='desc', offset=0, limi
  */
 const get_sort = (order_by=0) => {
     const sort = '';
-    for (const col_title of AppDocument.querySelectorAll('#list_app_log .list_title')){
+    for (const col_title of CommonAppDocument.querySelectorAll('#list_app_log .list_title')){
         if (col_title.classList.contains('asc'))
             if (order_by==0)
                 return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
@@ -2109,7 +2109,7 @@ const list_sort_click = (list, sortcolumn, order_by) => {
             break;
         }
         case 'list_server_log':{
-            show_server_logs(sortcolumn, order_by, AppDocument.querySelector('#list_server_log_search_input').innerText);
+            show_server_logs(sortcolumn, order_by, CommonAppDocument.querySelector('#list_server_log_search_input').innerText);
             break;
         }
         case 'list_user_account':{
@@ -2292,23 +2292,23 @@ const get_log_parameters = async () => {
  */
 const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
     if (search != null){
-        if (common.input_control(null,{check_valid_list_elements:[[AppDocument.querySelector('#list_server_log_search_input'),100]]})==false)
+        if (common.input_control(null,{check_valid_list_elements:[[CommonAppDocument.querySelector('#list_server_log_search_input'),100]]})==false)
             return;
     }
-    const logscope = AppDocument.querySelector('#select_logscope5')[AppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
-    const loglevel = AppDocument.querySelector('#select_logscope5')[AppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_level');
-    const year = AppDocument.querySelector('#select_year_menu5').value;
-    const month= AppDocument.querySelector('#select_month_menu5').value;
-    const day  = AppDocument.querySelector('#select_day_menu5').value;
+    const logscope = CommonAppDocument.querySelector('#select_logscope5')[CommonAppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
+    const loglevel = CommonAppDocument.querySelector('#select_logscope5')[CommonAppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_level');
+    const year = CommonAppDocument.querySelector('#select_year_menu5').value;
+    const month= CommonAppDocument.querySelector('#select_month_menu5').value;
+    const day  = CommonAppDocument.querySelector('#select_day_menu5').value;
     let app_id_filter='';
     if (logscope=='APP' || logscope=='SERVICE' || logscope=='SERVER-DB'){
         //show app filter and use it
-        AppDocument.querySelector('#select_app_menu5').style.display = 'inline-block';
-        app_id_filter = `select_app_id=${AppDocument.querySelector('#select_app_menu5').options[AppDocument.querySelector('#select_app_menu5').selectedIndex].value}&`;
+        CommonAppDocument.querySelector('#select_app_menu5').style.display = 'inline-block';
+        app_id_filter = `select_app_id=${CommonAppDocument.querySelector('#select_app_menu5').options[CommonAppDocument.querySelector('#select_app_menu5').selectedIndex].value}&`;
     }
     else{
         //no app filter for request
-        AppDocument.querySelector('#select_app_menu5').style.display = 'none';
+        CommonAppDocument.querySelector('#select_app_menu5').style.display = 'none';
         app_id_filter = 'select_app_id=&';
     }
     let url_parameters;
@@ -2330,7 +2330,7 @@ const show_existing_logfiles = () => {
     if (admin_token_has_value()){
         /**
          * Event for LOV
-         * @param {import('../../../types.js').AppEvent} event 
+         * @param {import('../../../common_types.js').CommonAppEvent} event 
          */
         const function_event = event => {
                                 //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
@@ -2359,16 +2359,16 @@ const show_existing_logfiles = () => {
                                         }
                                     }
                                 };
-                                setlogscopelevel(AppDocument.querySelector('#select_logscope5'),
+                                setlogscopelevel(CommonAppDocument.querySelector('#select_logscope5'),
                                                 logscope, 
                                                 loglevel);
                                 //year
-                                AppDocument.querySelector('#select_year_menu5').value = year;
+                                CommonAppDocument.querySelector('#select_year_menu5').value = year;
                                 //month
-                                AppDocument.querySelector('#select_month_menu5').value = month;
+                                CommonAppDocument.querySelector('#select_month_menu5').value = month;
                                 //day if applicable
                                 if (APP_GLOBAL.service_log_file_interval=='1D')
-                                    AppDocument.querySelector('#select_day_menu5').value = day;
+                                    CommonAppDocument.querySelector('#select_day_menu5').value = day;
 
                                 nav_click('list_monitor_nav_server_log');
                                 common.lov_close();
@@ -2381,7 +2381,7 @@ const show_existing_logfiles = () => {
  * @returns {void}
  */
 const show_server_config = () =>{
-    AppDocument.querySelector('#menu_6_content').innerHTML = 
+    CommonAppDocument.querySelector('#menu_6_content').innerHTML = 
         `<div id='menu_6_content_widget1' class='widget'>
             <div id='list_config_nav' class='list_nav'>
                 <div id='list_config_nav_server'        class='list_nav_list list_button common_icon'></div>
@@ -2403,24 +2403,24 @@ const show_server_config = () =>{
  * @returns{Promise.<void>}
  */
 const show_config = async file => {
-    AppDocument.querySelector('#list_config').innerHTML = '';
-    AppDocument.querySelector('#list_config_edit').innerHTML = '';
+    CommonAppDocument.querySelector('#list_config').innerHTML = '';
+    CommonAppDocument.querySelector('#list_config_edit').innerHTML = '';
     if (file=='SERVER'){
-        AppDocument.querySelector('#list_config').classList.add('common_icon','css_spinner');
-        AppDocument.querySelector('#list_config').style.display = 'flex';
-        AppDocument.querySelector('#list_config_edit').style.display = 'none';
+        CommonAppDocument.querySelector('#list_config').classList.add('common_icon','css_spinner');
+        CommonAppDocument.querySelector('#list_config').style.display = 'flex';
+        CommonAppDocument.querySelector('#list_config_edit').style.display = 'none';
     }
     else{
-        AppDocument.querySelector('#list_config_edit').classList.add('common_icon','css_spinner');
-        AppDocument.querySelector('#list_config_edit').style.display = 'flex';
-        AppDocument.querySelector('#list_config').style.display = 'none';
+        CommonAppDocument.querySelector('#list_config_edit').classList.add('common_icon','css_spinner');
+        CommonAppDocument.querySelector('#list_config_edit').style.display = 'flex';
+        CommonAppDocument.querySelector('#list_config').style.display = 'none';
     }
 
     await common.FFB(`/server-config/config/${file}`, 'saved=1', 'GET', 'SYSTEMADMIN', null)
     .then((/**@type{string}*/result)=>{
         const config = JSON.parse(result).data;
         let i = 0;
-        AppDocument.querySelector('#list_config_edit').contentEditable = 'true';
+        CommonAppDocument.querySelector('#list_config_edit').contentEditable = 'true';
         switch (file){
             case 'SERVER':{
                 let html = `<div id='list_config_row_title' class='list_config_row'>
@@ -2455,23 +2455,23 @@ const show_config = async file => {
                     html += '</div>';
                     
                 }
-                AppDocument.querySelector('#list_config').classList.remove('common_icon','css_spinner');
-                AppDocument.querySelector('#list_config').innerHTML = html;
+                CommonAppDocument.querySelector('#list_config').classList.remove('common_icon','css_spinner');
+                CommonAppDocument.querySelector('#list_config').innerHTML = html;
                 
                 //set focus first column in first row
-                AppDocument.querySelectorAll('#list_config .common_input')[0].focus();
+                CommonAppDocument.querySelectorAll('#list_config .common_input')[0].focus();
                 break;
             }
             default:{
-                AppDocument.querySelector('#list_config_edit').classList.remove('common_icon','css_spinner');
-                AppDocument.querySelector('#list_config_edit').innerHTML = JSON.stringify(config, undefined, 2);
+                CommonAppDocument.querySelector('#list_config_edit').classList.remove('common_icon','css_spinner');
+                CommonAppDocument.querySelector('#list_config_edit').innerHTML = JSON.stringify(config, undefined, 2);
                 break;
             }
         }
     })
     .catch(()=>{
-            AppDocument.querySelector('#list_config').classList.remove('common_icon','css_spinner');
-            AppDocument.querySelector('#list_config_edit').classList.add('common_icon','css_spinner');});
+            CommonAppDocument.querySelector('#list_config').classList.remove('common_icon','css_spinner');
+            CommonAppDocument.querySelector('#list_config_edit').classList.add('common_icon','css_spinner');});
 };
 /**
  * Executes installation rest API and presents the result
@@ -2485,18 +2485,18 @@ const show_config = async file => {
  * @returns {void}
  */
 const installation_function = (id, db_icon, path, query, method, tokentype, data) => {
-    AppDocument.querySelector(`#${id}`).classList.add('css_spinner');
+    CommonAppDocument.querySelector(`#${id}`).classList.add('css_spinner');
     common.FFB(path, query, method, tokentype, data)
     .then((/**@type{string}*/result)=>{
-        AppDocument.querySelector(`#${id}`).classList.remove('css_spinner');
+        CommonAppDocument.querySelector(`#${id}`).classList.remove('css_spinner');
         if (db_icon!=null)
             if (db_icon)
-                AppDocument.querySelector('#install_db_icon').classList.add('installed');
+                CommonAppDocument.querySelector('#install_db_icon').classList.add('installed');
             else
-                AppDocument.querySelector('#install_db_icon').classList.remove('installed');
+                CommonAppDocument.querySelector('#install_db_icon').classList.remove('installed');
         common.show_message('LOG', null, null, null, JSON.parse(result).info, common.COMMON_GLOBAL.common_app_id);
     })
-    .catch(()=>AppDocument.querySelector(`#${id}`).classList.remove('css_spinner'));
+    .catch(()=>CommonAppDocument.querySelector(`#${id}`).classList.remove('css_spinner'));
 };
 /**
  * Installs DB
@@ -2504,7 +2504,7 @@ const installation_function = (id, db_icon, path, query, method, tokentype, data
  */
 const db_install = () =>{
     common.ComponentRemove('common_dialogue_message');
-    const optional = Number(AppDocument.querySelector('#install_db_country_language_translations').classList.contains('checked'));
+    const optional = Number(CommonAppDocument.querySelector('#install_db_country_language_translations').classList.contains('checked'));
     installation_function(  'install_db_button_install', true, 
                             '/server-db_admin/database', 
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}&optional=${optional}`, 
@@ -2527,9 +2527,9 @@ const db_uninstall = () =>{
 const demo_install = () =>{
     if (common.input_control(null,
                         {
-                            check_valid_list_elements:[[AppDocument.querySelector('#install_demo_password'),null]]
+                            check_valid_list_elements:[[CommonAppDocument.querySelector('#install_demo_password'),null]]
                         })==true){
-        const json_data = {demo_password: AppDocument.querySelector('#install_demo_password').innerHTML};
+        const json_data = {demo_password: CommonAppDocument.querySelector('#install_demo_password').innerHTML};
         installation_function(  'install_demo_button_install', null, 
                                 '/server-db_admin/database-demo', 
                                 `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
@@ -2552,7 +2552,7 @@ const demo_uninstall = () =>{
  */
 const show_installation = () =>{
     if (common.COMMON_GLOBAL.system_admin!=null){
-        AppDocument.querySelector('#menu_7_content').innerHTML =
+        CommonAppDocument.querySelector('#menu_7_content').innerHTML =
             `<div id='menu_7_content_widget1' class='widget'>
                 <div id='install_db'>
                     <div id='install_db_icon' class='common_icon'></div>
@@ -2566,18 +2566,18 @@ const show_installation = () =>{
                     </div>
                 </div>
             </div>`;
-        AppDocument.querySelector('#install_db_icon').classList.add('css_spinner');
+        CommonAppDocument.querySelector('#install_db_icon').classList.add('css_spinner');
         common.FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
-            AppDocument.querySelector('#install_db_icon').classList.remove('css_spinner');
-            AppDocument.querySelector('#install_db_icon').classList.remove('installed');
+            CommonAppDocument.querySelector('#install_db_icon').classList.remove('css_spinner');
+            CommonAppDocument.querySelector('#install_db_icon').classList.remove('installed');
             if (JSON.parse(result)[0].installed == 1)
-                AppDocument.querySelector('#install_db_icon').classList.add('installed');
+                CommonAppDocument.querySelector('#install_db_icon').classList.add('installed');
             })
-        .catch(()=>AppDocument.querySelector('#install_db_icon').classList.remove('css_spinner'));
+        .catch(()=>CommonAppDocument.querySelector('#install_db_icon').classList.remove('css_spinner'));
     }
     else{
-        AppDocument.querySelector('#menu_7_content').innerHTML =
+        CommonAppDocument.querySelector('#menu_7_content').innerHTML =
             `<div id='menu_7_content_widget2' class='widget'>
                 <div id='install_demo'>
                     <div id='install_demo_demo_users_icon' class='common_icon'></div>
@@ -2603,7 +2603,7 @@ const show_installation = () =>{
 const show_db_info = () => {
     if (admin_token_has_value()){
         const size = '(Mb)';
-        AppDocument.querySelector('#menu_8_content').innerHTML = 
+        CommonAppDocument.querySelector('#menu_8_content').innerHTML = 
                 `<div id='menu_8_content_widget1' class='widget'>
                     <div id='menu_8_db_info1'></div>
                 </div>
@@ -2611,12 +2611,12 @@ const show_db_info = () => {
                     <div id='menu_8_db_info_space_title' class='common_icon'></div>
                     <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                 </div>`;
-        AppDocument.querySelector('#menu_8_db_info1').classList.add('css_spinner');
+        CommonAppDocument.querySelector('#menu_8_db_info1').classList.add('css_spinner');
         common.FFB('/server-db_admin/database', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             const database = JSON.parse(result)[0];
-            AppDocument.querySelector('#menu_8_db_info1').classList.remove('css_spinner');
-            AppDocument.querySelector('#menu_8_db_info1').innerHTML = 
+            CommonAppDocument.querySelector('#menu_8_db_info1').classList.remove('css_spinner');
+            CommonAppDocument.querySelector('#menu_8_db_info1').innerHTML = 
                     `<div id='menu_8_db_info_database_title' class='common_icon'></div>          <div id='menu_8_db_info_database_data'>${database.database_use}</div>
                         <div id='menu_8_db_info_name_title' class='common_icon'></div>              <div id='menu_8_db_info_name_data'>${database.database_name}</div>
                         <div id='menu_8_db_info_version_title' class='common_icon'></div>           <div id='menu_8_db_info_version_data'>${database.version}</div>
@@ -2624,7 +2624,7 @@ const show_db_info = () => {
                         <div id='menu_8_db_info_host_title' class='common_icon'></div>              <div id='menu_8_db_info_host_data'>${database.hostname}</div>
                         <div id='menu_8_db_info_connections_title' class='common_icon'></div>       <div id='menu_8_db_info_connections_data'>${database.connections}</div>
                         <div id='menu_8_db_info_started_title' class='common_icon'></div>           <div id='menu_8_db_info_started_data'>${database.started}</div>`;
-            AppDocument.querySelector('#menu_8_db_info_space_detail').classList.add('css_spinner');
+            CommonAppDocument.querySelector('#menu_8_db_info_space_detail').classList.add('css_spinner');
             common.FFB('/server-db_admin/database-space', null, 'GET', 'SYSTEMADMIN', null)
             .then((/**@type{string}*/result)=>{
                 let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
@@ -2644,12 +2644,12 @@ const show_db_info = () => {
                         <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.pct_used)}</div>
                     </div>`;
                 }
-                AppDocument.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner');
-                AppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
+                CommonAppDocument.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner');
+                CommonAppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
                 common.FFB('/server-db_admin/database-spacesum', null, 'GET', 'SYSTEMADMIN', null)
                 .then((/**@type{string}*/result)=>{
                     const databaseInfoSpaceSum = JSON.parse(result)[0];
-                    AppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML += 
+                    CommonAppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML += 
                         `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
                             <div id='menu_8_info_space_db_sum' class='menu_8_db_info_space_detail_col'></div>
                             <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceSum.total_size)}</div>
@@ -2659,9 +2659,9 @@ const show_db_info = () => {
                         </div>`;
                 });
             })
-            .catch(()=>AppDocument.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner'));
+            .catch(()=>CommonAppDocument.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner'));
         })
-        .catch(()=>AppDocument.querySelector('#menu_8_db_info1').classList.remove('css_spinner'));
+        .catch(()=>CommonAppDocument.querySelector('#menu_8_db_info1').classList.remove('css_spinner'));
     }
 };
 /**
@@ -2670,7 +2670,7 @@ const show_db_info = () => {
  */
 const show_server_info = () => {
     if (admin_token_has_value()){
-        AppDocument.querySelector('#menu_10_content').innerHTML = 
+        CommonAppDocument.querySelector('#menu_10_content').innerHTML = 
                 `<div id='menu_10_content_widget1' class='widget'>
                     <div id='menu_10_os_title' class='common_icon'></div>
                     <div id='menu_10_os_info'></div>
@@ -2679,8 +2679,8 @@ const show_server_info = () => {
                     <div id='menu_10_process_title' class='common_icon'></div>
                     <div id='menu_10_process_info'></div>
                 </div>`;
-        AppDocument.querySelector('#menu_10_os_info').classList.add('css_spinner');
-        AppDocument.querySelector('#menu_10_process_info').classList.add('css_spinner');
+        CommonAppDocument.querySelector('#menu_10_os_info').classList.add('css_spinner');
+        CommonAppDocument.querySelector('#menu_10_process_info').classList.add('css_spinner');
         common.FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
         .then((/**@type{string}*/result)=>{
             /**
@@ -2703,9 +2703,9 @@ const show_server_info = () => {
                 return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
             };
             const server_info = JSON.parse(result);
-            AppDocument.querySelector('#menu_10_os_info').classList.remove('css_spinner');
-            AppDocument.querySelector('#menu_10_process_info').classList.remove('css_spinner');
-            AppDocument.querySelector('#menu_10_os_info').innerHTML = 
+            CommonAppDocument.querySelector('#menu_10_os_info').classList.remove('css_spinner');
+            CommonAppDocument.querySelector('#menu_10_process_info').classList.remove('css_spinner');
+            CommonAppDocument.querySelector('#menu_10_os_info').innerHTML = 
                        `<div id='menu_10_os_info_hostname_title'>${'HOSTNAME'}</div><div id='menu_10_os_info_hostname_data'>${server_info.os.hostname}</div>
                         <div id='menu_10_os_info_cpus_title'>${'CPUS'}</div><div id='menu_10_os_info_cpus_data'>${server_info.os.cpus.length}</div>
                         <div id='menu_10_os_info_arch_title'>${'ARCH'}</div><div id='menu_10_os_info_arch_data'>${server_info.os.arch}</div>
@@ -2720,7 +2720,7 @@ const show_server_info = () => {
                         <div id='menu_10_os_info_tmpdir_title'>${'TMPDIR'}</div><div id='menu_10_os_info_tmpdir_data'>${server_info.os.tmpdir}</div>
                         <div id='menu_10_os_info_userinfo_username_title'>${'USERNAME'}</div><div id='menu_10_os_info_userinfo_username_data'>${server_info.os.userinfo.username}</div>
                         <div id='menu_10_os_info_userinfo_homedir_title'>${'USER HOMEDIR'}</div><div id='menu_10_os_info_userinfo_homedir_data'>${server_info.os.userinfo.homedir}</div>`;
-            AppDocument.querySelector('#menu_10_process_info').innerHTML =     
+            CommonAppDocument.querySelector('#menu_10_process_info').innerHTML =     
                        `<div id='menu_10_process_info_memoryusage_rss_title'>${'MEMORY RSS'}</div><div id='menu_10_process_info_memoryusage_rss_data'>${server_info.process.memoryusage_rss}</div>
                         <div id='menu_10_process_info_memoryusage_heaptotal_title'>${'MEMORY HEAPTOTAL'}</div><div id='menu_10_process_info_memoryusage_heaptotal_data'>${server_info.process.memoryusage_heaptotal}</div>
                         <div id='menu_10_process_info_memoryusage_heapused_title'>${'MEMORY HEAPUSED'}</div><div id='menu_10_process_info_memoryusage_heapused_data'>${server_info.process.memoryusage_heapused}</div>
@@ -2733,8 +2733,8 @@ const show_server_info = () => {
                         <div id='menu_10_process_info_start_arg_1_title'>${'START ARG 1'}</div><div id='menu_10_process_info_start_arg_1_data'>${server_info.process.start_arg_1}</div>`;
         })
         .catch(()=>{
-                AppDocument.querySelector('#menu_10_os_info').classList.remove('css_spinner');
-                AppDocument.querySelector('#menu_10_process_info').classList.remove('css_spinner');});
+                CommonAppDocument.querySelector('#menu_10_os_info').classList.remove('css_spinner');
+                CommonAppDocument.querySelector('#menu_10_process_info').classList.remove('css_spinner');});
     }
 };
 /**
@@ -2746,7 +2746,7 @@ const admin_token_has_value = () => !(common.COMMON_GLOBAL.token_at=='' && commo
 /**
  * App events
  * @param {string} event_type 
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @param {string} event_target_id 
  * @param {HTMLElement|null} event_list_title 
  * @returns {void}
@@ -2768,8 +2768,8 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case 'list_user_search_icon':{
-                    AppDocument.querySelector('#list_user_account_search_input').focus();
-                    AppDocument.querySelector('#list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                    CommonAppDocument.querySelector('#list_user_account_search_input').focus();
+                    CommonAppDocument.querySelector('#list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                     break;
                 }
                 case 'users_save':{
@@ -2781,8 +2781,8 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case 'list_server_log_search_icon':{
-                    AppDocument.querySelector('#list_server_log_search_input').focus();
-                    AppDocument.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                    CommonAppDocument.querySelector('#list_server_log_search_input').focus();
+                    CommonAppDocument.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                     break;
                 }
                 case 'list_monitor_nav_connected':
@@ -2886,7 +2886,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 case 'select_app_menu5':
                 case 'select_year_menu5':
                 case 'select_month_menu5':{
-                    nav_click(AppDocument.querySelector('#list_monitor_nav .list_nav_selected_tab').id);
+                    nav_click(CommonAppDocument.querySelector('#list_monitor_nav .list_nav_selected_tab').id);
                     break;
                 }
                 case 'select_logscope5':
@@ -2963,7 +2963,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.typewatch(show_server_logs, 'logdate', 'desc', AppDocument.querySelector('#list_server_log_search_input').innerText);
+                        common.typewatch(show_server_logs, 'logdate', 'desc', CommonAppDocument.querySelector('#list_server_log_search_input').innerText);
                     break;
                 }
             }
@@ -3015,14 +3015,14 @@ const init = () => {
         common.COMMON_GLOBAL.module_leaflet_popup_offset		        =-25;
     }
     for (let i=1;i<=10;i++){
-        AppDocument.querySelector(`#menu_${i}`).style.display='none';
+        CommonAppDocument.querySelector(`#menu_${i}`).style.display='none';
     }
     if (common.COMMON_GLOBAL.system_admin!=null){
-        AppDocument.querySelector('#menu_secure').classList.add('system_admin');
+        CommonAppDocument.querySelector('#menu_secure').classList.add('system_admin');
         show_menu(1);
     }
     else{
-        AppDocument.querySelector('#menu_secure').classList.add('admin');
+        CommonAppDocument.querySelector('#menu_secure').classList.add('admin');
         show_menu(1);
         common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
     }
