@@ -1,6 +1,5 @@
 /** 
  * @module apps/app7/app
- * @access public
  */
 /**@type{import('../../../common_types.js').CommonAppDocument} */
 const CommonAppDocument = document;
@@ -9,19 +8,7 @@ const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 
-/**
- * @typedef {{  cube:*,
- *              cube_controls:*,
- *              cube_init:function,
- *              cube_show_solution:function,
- *              cube_solve:function,
- *              cube_makeIdentityAffine:function,
- *              cube_multiplyAffine:function,
- *              cube_makeRotateAffineX:function,
- *              cube_makeRotateAffineY:function,
- *              width:number}} type_APP_GLOBAL
- */
-/**@type{type_APP_GLOBAL} */
+/**@type{import('./types.js').APP_GLOBAL} */
 const APP_GLOBAL = {
     cube :{},
     cube_controls:{},

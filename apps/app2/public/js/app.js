@@ -5,125 +5,7 @@
 /**@type{import('../../../common_types.js').CommonAppDocument} */
 const CommonAppDocument = document;
 
-/**
- * @typedef {{
- *          id:number,
- *          description: string,
- *          regional_language_locale: string,
- *          regional_timezone: string,
- *          regional_number_system: string,
- *          regional_layout_direction: string,
- *          regional_second_language_locale: string,
- *          regional_column_title: string,
- *          regional_arabic_script: string,
- *          regional_calendar_type: string,
- *          regional_calendar_hijri_type: string,
- *          gps_popular_place_id: number|null,
- *          gps_lat_text: number|null,
- *          gps_long_text: number|null,
- *          design_theme_day_id: string,
- *          design_theme_month_id: string,
- *          design_theme_year_id: string,
- *          design_paper_size: string,
- *          design_row_highlight: string,
- *          design_column_weekday_checked: number,
- *          design_column_calendartype_checked: number,
- *          design_column_notes_checked: number,
- *          design_column_gps_checked: number,
- *          design_column_timezone_checked: number,
- *          image_header_image_img: string,
- *          image_footer_image_img: string,
- *          text_header_1_text: string,
- *          text_header_2_text: string,
- *          text_header_3_text: string,
- *          text_header_align: string|null,
- *          text_footer_1_text: string,
- *          text_footer_2_text: string,
- *          text_footer_3_text: string,
- *          text_footer_align: string|null,
- *          prayer_method: string,
- *          prayer_asr_method: string,
- *          prayer_high_latitude_adjustment: string,
- *          prayer_time_format: string,
- *          prayer_hijri_date_adjustment: number,
- *          prayer_fajr_iqamat: string,
- *          prayer_dhuhr_iqamat: string,
- *          prayer_asr_iqamat: string,
- *          prayer_maghrib_iqamat: string,
- *          prayer_isha_iqamat: string,
- *          prayer_column_imsak_checked: number,
- *          prayer_column_sunset_checked: number,
- *          prayer_column_midnight_checked: number,
- *          prayer_column_fast_start_end: number
- *      }} json_data_user_setting
- * 
- * @typedef {{id:string|null, app_id:number|null, app_setting_type_name:string, value:string, data2:string, data3:string, data4:string, data5:string, text:string}} type_place
- * 
- * @typedef {{
- *          app_default_startup_page:number,
- *          app_report_timetable:string,
- *          regional_default_direction:string,
- *          regional_default_locale_second:string,
- *          regional_default_coltitle:string,
- *          regional_default_arabic_script:string,
- *          regional_default_calendartype:string,
- *          regional_default_calendar_hijri_type:string,
- *          gps_default_place_id:number,
- *          gps_module_leaflet_container:string,
- *          gps_module_leaflet_qibbla_title:string,
- *          gps_module_leaflet_qibbla_text_size:number,
- *          gps_module_leaflet_qibbla_lat:number,
- *          gps_module_leaflet_qibbla_long:number,
- *          gps_module_leaflet_qibbla_color:string,
- *          gps_module_leaflet_qibbla_width:number,
- *          gps_module_leaflet_qibbla_opacity:number,
- *          gps_module_leaflet_qibbla_old_title:string,
- *          gps_module_leaflet_qibbla_old_text_size:number,
- *          gps_module_leaflet_qibbla_old_lat:number,
- *          gps_module_leaflet_qibbla_old_long:number,
- *          gps_module_leaflet_qibbla_old_color:string,
- *          gps_module_leaflet_qibbla_old_width:number,
- *          gps_module_leaflet_qibbla_old_opacity:number,
- *          design_default_theme_day:string,
- *          design_default_theme_month:string,
- *          design_default_theme_year:string,
- *          design_default_papersize:string,
- *          design_default_highlight_row:string,
- *          design_default_show_weekday:boolean,
- *          design_default_show_calendartype:boolean,
- *          design_default_show_notes:boolean,
- *          design_default_show_gps:boolean,
- *          design_default_show_timezone:boolean,
- *          image_default_report_header_src:string,
- *          image_default_report_footer_src:string,
- *          image_header_footer_width:number,
- *          image_header_footer_height:number,
- *          text_default_reporttitle1:string,
- *          text_default_reporttitle2:string,
- *          text_default_reporttitle3:string,
- *          text_default_reportfooter1:string,
- *          text_default_reportfooter2:string,
- *          text_default_reportfooter3:string,
- *          prayer_default_method:string,
- *          prayer_default_asr:string,
- *          prayer_default_highlatitude:string,
- *          prayer_default_timeformat:string,
- *          prayer_default_hijri_adjustment:number,
- *          prayer_default_iqamat_title_fajr:string,
- *          prayer_default_iqamat_title_dhuhr:string,
- *          prayer_default_iqamat_title_asr:string,
- *          prayer_default_iqamat_title_maghrib:string,
- *          prayer_default_iqamat_title_isha:string,
- *          prayer_default_show_imsak:boolean,
- *          prayer_default_show_sunset:boolean,
- *          prayer_default_show_midnight:boolean,
- *          prayer_default_show_fast_start_end:number,
- *          timetable_type:number,
- *          places:type_place[]|null,
- *          user_settings:json_data_user_setting[],
- *          SettingsTimesIntervalId:number|null
- *          }} type_APP_GLOBAL
- */
+
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
@@ -136,7 +18,7 @@ const path_regional ='regional';
 /**@type {import('../../../common_types.js').CommonModuleRegional} */
 const {getTimezone} = await import(path_regional);
 
-/**@type{json_data_user_setting} */
+/**@type{import('./types.js').APP_json_data_user_setting} */
 const user_settings_empty = {   id:0,
                                 description: '',
                                 regional_language_locale: '',
@@ -190,7 +72,7 @@ const user_settings_empty = {   id:0,
                                 prayer_column_midnight_checked: 0,
                                 prayer_column_fast_start_end: 0};
 
-/**@type{type_APP_GLOBAL} */
+/**@type{import('./types.js').APP_GLOBAL} */
 const APP_GLOBAL = {
     app_default_startup_page:0,
     app_report_timetable:'',
@@ -292,7 +174,7 @@ const printTimetable = async () => {
 };
 /**
  * Get report settings
- * @returns {import('./app_report.js').type_settings_report}
+ * @returns {import('./types.js').APP_REPORT_settings}
  */
 const getReportSettings = () => {
     const setting_global = APP_GLOBAL.user_settings[CommonAppDocument.querySelector('#setting_select_user_setting').selectedIndex];
@@ -362,7 +244,7 @@ const getReportSettings = () => {
  * Timetable update
  * @param {number} timetable_type 
  * @param {string|null} item_id 
- * @param {import('./app_report.js').type_settings_report} settings 
+ * @param {import('./types.js').APP_REPORT_settings} settings 
  * @returns {Promise.<void>}
  */
 const update_timetable_report = async (timetable_type = 0, item_id = null, settings) => {
@@ -370,7 +252,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
     switch (timetable_type){
         //create timetable month or day or year if they are visible instead
         case 0:{
-            /**@type{import('./app_report.js').type_day_user_account_app_data_posts[]} */
+            /**@type{import('./types.js').APP_REPORT_day_user_account_app_data_posts[]} */
             const current_user_settings =[];
             for (const setting of APP_GLOBAL.user_settings){
                 current_user_settings.push(

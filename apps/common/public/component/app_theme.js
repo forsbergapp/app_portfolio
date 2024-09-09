@@ -18,7 +18,7 @@ const template =`   <select id='common_dialogue_user_menu_app_select_theme'>
  */
 const component = async props => {
     
-    const render_template = async () =>{
+    const render_template = () =>{
         return template;
     };
     const post_component = async () =>{
@@ -28,7 +28,7 @@ const component = async props => {
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: await render_template()
+        template: render_template()
     };
 };
 export default component;
