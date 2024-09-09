@@ -9,7 +9,7 @@ const template = () => ` <div id='app_page_start_shop' class='app_page_start_sho
                             </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
  *          timezone:string,

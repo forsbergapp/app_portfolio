@@ -177,7 +177,7 @@ const template =`   <div class='setting_horizontal_row'>
                     </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          AppMethod:string,
  *          AppMethodAsr:string,

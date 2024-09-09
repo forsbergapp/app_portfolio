@@ -2,11 +2,11 @@
  * @module apps/app5/app
  */
 
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
+/**@type{import('../../../common_types.js').CommonAppDocument} */
+const CommonAppDocument = document;
 
 const path_common ='common';
-/**@type {import('../../../types.js').module_common} */
+/**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 /**
  * App exception function
@@ -18,12 +18,12 @@ const app_exception = (error) => {
 };
 /**
  * App event click
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_click(event);
         });
     }
@@ -35,8 +35,8 @@ const app_event_click = event => {
                 case 'tab1':
                 case 'tab2':
                 case 'tab3':{
-                    AppDocument.querySelectorAll('.app_page_secure_tab').forEach((/**@type{HTMLElement}*/element)=>element.classList.remove('active'));
-                    AppDocument.querySelector(`#${event_target_id}`).classList.add('active');
+                    CommonAppDocument.querySelectorAll('.app_page_secure_tab').forEach((/**@type{HTMLElement}*/element)=>element.classList.remove('active'));
+                    CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('active');
                     switch (event_target_id){
                         case 'tab1':{
                             common.ComponentRender('app_page_secure_tab_content', 
@@ -221,12 +221,12 @@ const app_event_click = event => {
 };
 /**
  * App event change
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_change = event =>{
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_change(event);
         });
     }
@@ -241,7 +241,7 @@ const app_event_change = event =>{
                 }
                 case 'common_dialogue_user_menu_user_arabic_script_select':
                 case 'common_dialogue_user_menu_app_select_theme':{
-                    AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
+                    CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
                     common.common_preferences_update_body_class_from_preferences();
                     break;
                 }
@@ -251,12 +251,12 @@ const app_event_change = event =>{
 };
 /**
  * App event keyup
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_keyup = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_keyup(event);
         }, true);
     }
@@ -308,7 +308,7 @@ const framework_set = async (framework=null) => {
 };
 
 const customer_create = async () => {
-    AppDocument.querySelector('.common_app_data_display_button_post').classList.add('css_spinner');
+    CommonAppDocument.querySelector('.common_app_data_display_button_post').classList.add('css_spinner');
     await common.FFB(   '/app-function/CUSTOMER_CREATE', 
                         null, 
                         'POST', 
@@ -316,11 +316,11 @@ const customer_create = async () => {
                         {
                             user_account_id :common.COMMON_GLOBAL.user_account_id,
                             data_app_id     :common.COMMON_GLOBAL.app_id,
-                            customer_type   :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').innerHTML,
-                            name            :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'name\']').innerHTML,
-                            address         :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'address\']').innerHTML,
-                            city            :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'city\']').innerHTML,
-                            country         :AppDocument.querySelector('#app_page_secure_tab_content [data-value=\'country\']').innerHTML
+                            customer_type   :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').innerHTML,
+                            name            :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'name\']').innerHTML,
+                            address         :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'address\']').innerHTML,
+                            city            :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'city\']').innerHTML,
+                            country         :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'country\']').innerHTML
                         }
                     );
     init_secure();
@@ -337,7 +337,7 @@ const payment_request_update = async status => {
         {
             data_app_id     :common.COMMON_GLOBAL.app_id,
             user_account_id :common.COMMON_GLOBAL.user_account_id,
-            payment_request_id:AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value'),
+            payment_request_id:CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value'),
             status:status
         })
     .then((result)=>status==1?common.show_message('INFO', null, null, null,JSON.parse(result).rows[0].status, common.COMMON_GLOBAL.common_app_id):null)
@@ -354,7 +354,7 @@ const payment_request_cancel = async () => {
  * @param {string} message 
  */
 const show_payment_request = async message =>{
-    if (AppDocument.querySelector('#common_dialogue_app_data_display .common_app_data_display_master_col1[data-key=amount]'))
+    if (CommonAppDocument.querySelector('#common_dialogue_app_data_display .common_app_data_display_master_col1[data-key=amount]'))
         null;
     else
         await common.ComponentRender('common_dialogue_app_data_display', 
@@ -394,11 +394,11 @@ const show_payment_request = async message =>{
                 function_button_delete:payment_request_cancel
             }, '/common/component/app_data_display.js')
             .then(()=>{
-                AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
-                AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
-                AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').innerText;
+                CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
+                CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
+                CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').innerText;
 
-                common.user_session_countdown(  AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
+                common.user_session_countdown(  CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
                                                 JSON.parse(message).exp,
                                                 true);
             })
@@ -426,7 +426,7 @@ const init_secure = () => {
  * @returns {Promise.<void>}
  */
 const init_app = async () => {
-    AppDocument.body.className = 'app_theme1';
+    CommonAppDocument.body.className = 'app_theme1';
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
     .then(()=> common.ComponentRender('app_top_usermenu', 
                                         {},

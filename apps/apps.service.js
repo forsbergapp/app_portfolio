@@ -687,6 +687,31 @@ const getApps = async (app_id, resource_id, lang_code) =>{
     return apps;
 };
 /**
+ * Gets asset file
+ *  Supported
+ *  .css files
+ *  .js files       
+ *                  modifies at request:
+ *                  /modules/react/react-dom.development.js
+ *                      makes ECMAScript module adding export
+ *                  /modules/react/react.development.js
+ *                      makes ECMAScript module adding export
+ *                  /modules/PrayTimes/PrayTimes.js
+ *                      makes ECMAScript module adding export
+ *                  /modules/leaflet/leaflet-src.esm.js
+ *                      removes sourceMappingURL
+ *                  /modules/easy.qrcode/easy.qrcode.js
+ *                      makes ECMAScript module adding variables, canvas2svg, minimal modifications and export
+ *                  /modules/easy.qrcode/canvas2svg.js
+ *                      makes ECMAScript module adding minimal modifications and export
+ *                  /apps/common_types.js
+ *                      used to display common_types.js since developer path is different
+ *  .html files
+ *  .webp files
+ *  .png files
+ *  .woff2 files
+ *  .ttf files
+ *  .json
  * 
  * @param {number} app_id
  * @param {string} url 
@@ -774,9 +799,9 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                         });
                         break;
                     }
-                    case '/apps/types.js':{
+                    case '/apps/common_types.js':{
                         //in development another path is used, return correct path in app
-                        resolve({STATIC:true, SENDFILE:`${process.cwd()}/apps/types.js`});
+                        resolve({STATIC:true, SENDFILE:`${process.cwd()}/apps/common_types.js`});
                         break;
                     }
                     default:
@@ -872,7 +897,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
             case (url.toLowerCase().startsWith('/component')):
             case (url.toLowerCase().startsWith('/images')):
             case (url.toLowerCase().startsWith('/js')):
-            case (url == '/apps/types.js'):
+            case (url == '/apps/common_types.js'): //
             case (url == '/manifest.json'):
             case (url == '/sw.js'):{
                 return await getAssetFile(app_id, url, ConfigGetApp(app_id, app_id,'PATH'), res).catch(()=>null);

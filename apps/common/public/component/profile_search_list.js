@@ -3,12 +3,9 @@
  */
 
 /**
- * @typedef {{id:number, avatar:string, provider_image:string, username:string}} record_type
- */
-/**
  * 
  * @param {{
- *          records:record_type[],
+ *          records:import('../../../common_types.js').CommonProfileSearchRecord[],
  *          function_list_image_format_src:function}
  *          } props 
  * @returns {string}
@@ -32,7 +29,7 @@ const template = props =>`  <div id='common_profile_search_list' <SPINNER_CLASS/
                             </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          user_account_id:number,
  *          searched_username:string,
@@ -51,7 +48,7 @@ const component = async props => {
     /**
      * 
      * @param {{
-     *          records:record_type[],
+     *          records:import('../../../common_types.js').CommonProfileSearchRecord[],
      *          function_list_image_format_src:function}} props 
      * @returns {string}
      */

@@ -2,11 +2,11 @@
  * @module apps/common/maintenance
  */
 
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
+/**@type{import('../../../common_types.js').CommonAppDocument} */
+const CommonAppDocument = document;
 
 const path_common ='common';
-/**@type {import('../../../types.js').module_common} */
+/**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 /**
  * App exception function
@@ -21,8 +21,8 @@ const app_exception = () => {
  * @returns {void}
  */
 const init = parameters => {
-    AppDocument.title = '⚒';
-    AppDocument.querySelector('#common_broadcast').addEventListener('click', (/**@type{import('../../../types.js').AppEvent}*/event) => {
+    CommonAppDocument.title = '⚒';
+    CommonAppDocument.querySelector('#common_broadcast').addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
         const event_target_id = common.element_id(event.target);
         if (event_target_id=='common_broadcast_close')
             common.ComponentRemove('common_broadcast');

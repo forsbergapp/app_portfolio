@@ -2,11 +2,11 @@
  * Admin app
  * @module apps/admin/admin
  */
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
+/**@type{import('../../../common_types.js').CommonAppDocument} */
+const CommonAppDocument = document;
 
 const path_common ='common';
-/**@type {import('../../../types.js').module_common} */
+/**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 const path_app_secure ='app_secure';
 /**
@@ -33,7 +33,7 @@ const admin_logoff_app = () => {
  */
 const admin_login = async () => {
     let system_admin = false;
-    if (AppDocument.querySelector('#common_user_start_nav .common_user_start_selected').id == 'common_user_start_login_system_admin')
+    if (CommonAppDocument.querySelector('#common_user_start_nav .common_user_start_selected').id == 'common_user_start_login_system_admin')
         system_admin = true;
     
     await common.user_login(system_admin)
@@ -43,15 +43,15 @@ const admin_login = async () => {
             common.ComponentRender('app_user_account', {},'/common/component/user_account.js')
             .then(()=>{
                 if (system_admin){
-                    AppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
-                    AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
-                    AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+                    CommonAppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
+                    CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
+                    CommonAppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
                 }
                 else{
                     //set avatar or empty
-                    common.set_avatar(result.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
-                    AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-                    AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
+                    common.set_avatar(result.avatar, CommonAppDocument.querySelector('#common_user_menu_avatar_img'));
+                    CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+                    CommonAppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
                 }
                 app_secure.init();
             });
@@ -61,12 +61,12 @@ const admin_login = async () => {
 };
 /**
  * Event click
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
@@ -77,11 +77,11 @@ const app_event_click = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'menu_open':{
-                    AppDocument.querySelector('#menu').style.display = 'block';
+                    CommonAppDocument.querySelector('#menu').style.display = 'block';
                     break;
                 }
                 case 'menu_close': {
-                    AppDocument.querySelector('#menu').style.display = 'none';
+                    CommonAppDocument.querySelector('#menu').style.display = 'none';
                     break;
                 }
                 case 'menu_1':
@@ -220,12 +220,12 @@ const app_event_click = event => {
 };
 /**
  * Event change
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_change = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_change(event);
         });
     }
@@ -235,12 +235,12 @@ const app_event_change = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'common_dialogue_user_menu_user_locale_select':{
-                    common.common_translate_ui((/**@type{import('../../../types.js').AppEvent}*/event.target.value));
+                    common.common_translate_ui((/**@type{import('../../../common_types.js').CommonAppEvent}*/event.target.value));
                     break;
                 }
                 case 'common_dialogue_user_menu_user_arabic_script_select':
                 case 'common_dialogue_user_menu_app_select_theme':{
-                    AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
+                    CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
                     common.common_preferences_update_body_class_from_preferences();
                     break;
                 }
@@ -254,12 +254,12 @@ const app_event_change = event => {
 };
 /**
  * Event keyup
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_keyup = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_keyup(event);
         });
     }
@@ -288,12 +288,12 @@ const app_event_keyup = event => {
 };
 /**
  * Event keydown
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_keydown = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keydown',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keydown',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_keydown(event);
         });
     }
@@ -307,12 +307,12 @@ const app_event_keydown = event => {
 };
 /**
  * Event input
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_input = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('input',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('input',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_input(event);
         }, true);
     }
@@ -326,12 +326,12 @@ const app_event_input = event => {
 };
 /**
  * Event focus
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_focus = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('focus',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('focus',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_focus(event);
         }, true);
     }
@@ -399,7 +399,7 @@ const init_app = async (parameters) => {
  * @returns {Promise.<void>}
  */
 const init = async parameters => {        
-    AppDocument.body.className = 'app_theme1';
+    CommonAppDocument.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = admin_exception;
     common.COMMON_GLOBAL.app_function_session_expired = admin_logoff_app;
     

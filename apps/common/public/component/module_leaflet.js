@@ -2,26 +2,12 @@
  * @module apps/common/component/module_leaflet
  */
 
-/**
- * @typedef {{  doubleClickZoom:function,
- *              invalidateSize:function,
- *              removeLayer:function,
- *              setView:function,
- *              flyTo:function,
- *              setZoom:function,
- *              getZoom:function}} type_map_data
- * 
- * @typedef {{  library_Leaflet:*,
- *              module_map: type_map_data,
- *              leaflet_container:string}} leaflet_data
- */
-
 const template =`   <link media="all" rel="stylesheet" href="<CSS_URL/>" type="text/css"/>
                     <div id='<LEAFLET_CONTAINER/>'></div>`;
 
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          longitude:string,
  *          latitude:string,
@@ -32,12 +18,12 @@ const template =`   <link media="all" rel="stylesheet" href="<CSS_URL/>" type="t
  *          function_get_place_from_gps:function,
  *          function_map_update:function}} props 
 * @returns {Promise.<{ props:{function_post:null}, 
-*                      data:   leaflet_data,
+*                      data:   import('../../../common_types.js').CommonModuleLeafletData,
 *                      template:null}>}
 */
 const component = async props => {
     const path_leaflet ='leaflet';
-    /**@type {import('../../../types.js').module_leaflet} */
+    /**@type {import('../../../common_types.js').CommonModuleLeaflet} */
     const Leaflet = await import(path_leaflet);
     const LEAFLET_CONTAINER = 'leaflet';
     
@@ -46,7 +32,7 @@ const component = async props => {
      * @param {string} longitude 
      * @param {string} latitude 
      * @param {function|null} doubleclick_event 
-     * @returns {Promise.<type_map_data>}
+     * @returns {Promise.<import('../../../common_types.js').CommonModuleLeafletMapData>}
      */
     const map_init = async (longitude, latitude, doubleclick_event) => {
         return await new Promise((resolve)=>{
@@ -62,7 +48,7 @@ const component = async props => {
             }
             else{
                 /**
-                 * @param{import('../../../types.js').AppEventLeaflet} e
+                 * @param{import('../../../common_types.js').CommonModuleLeafletEvent} e
                  */
                 const default_dbl_click_event = e => {
                     if (e.originalEvent.target.id == LEAFLET_CONTAINER){

@@ -2,11 +2,11 @@
  * @module apps/app4/app
  */
 
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
+/**@type{import('../../../common_types.js').CommonAppDocument} */
+const CommonAppDocument = document;
 
 const path_common ='common';
-/**@type {import('../../../types.js').module_common} */
+/**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 
 const APP_GLOBAL = {
@@ -23,12 +23,12 @@ const app_exception = (error) => {
 };
 /**
  * App event click
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_click = event =>{
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_click(event);
         });
     }
@@ -107,12 +107,12 @@ const app_event_click = event =>{
 };
 /**
  * App event change
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
  const app_event_change = event =>{
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_change(event);
         });
     }
@@ -122,7 +122,7 @@ const app_event_click = event =>{
         .then(()=>{
             switch (event_target_id){
                 case 'common_dialogue_user_menu_app_select_theme':{
-                    AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
+                    CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
                     common.common_preferences_update_body_class_from_preferences();
                     break;
                 }
@@ -131,7 +131,7 @@ const app_event_click = event =>{
                     break;
                 }
                 case 'common_dialogue_user_menu_user_arabic_script_select':{
-                    AppDocument.body.className = 'app_theme' + AppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
+                    CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
                     common.common_preferences_update_body_class_from_preferences();
                     break;
                 }
@@ -160,7 +160,7 @@ const app_event_click = event =>{
  */
 const init_map = async ()=>{
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
-    AppDocument.querySelector('#mapid').outerHTML = '<div id="mapid"></div>';
+    CommonAppDocument.querySelector('#mapid').outerHTML = '<div id="mapid"></div>';
     common.map_init(APP_GLOBAL.module_leaflet_map_container,
                                 common.COMMON_GLOBAL.client_longitude,
                                 common.COMMON_GLOBAL.client_latitude,
@@ -198,7 +198,7 @@ const init_app = async () =>{
  * @returns {void}
  */
 const init = parameters => {
-    AppDocument.body.className = 'app_theme1';
+    CommonAppDocument.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
     common.COMMON_GLOBAL.app_function_session_expired = common.user_logoff;
     common.init_common(parameters).then(()=>{

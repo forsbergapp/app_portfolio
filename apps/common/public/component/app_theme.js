@@ -9,7 +9,7 @@ const template =`   <select id='common_dialogue_user_menu_app_select_theme'>
                     </select>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          function_app_theme_update:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 

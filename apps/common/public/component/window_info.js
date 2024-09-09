@@ -16,11 +16,11 @@ const template =`   <div id='common_window_info_btn_close' class='common_toolbar
                     <iframe id='common_window_info_content' scrolling='auto' <IFRAME_CLASS/> src=<CONTENT/> ></iframe>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          url:string,
  *          content_type:string,
- *          frame:import('../../../types.js').AppDocument|null,
+ *          frame:import('../../../common_types.js').CommonAppDocument|null,
  *          iframe_content:string,
  *          iframe_class:string,
  *          info:number}} props 

@@ -2,11 +2,11 @@
  * @module apps/app6/app
  */
 
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
+/**@type{import('../../../common_types.js').CommonAppDocument} */
+const CommonAppDocument = document;
 
 const path_common ='common';
-/**@type {import('../../../types.js').module_common} */
+/**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 /**
  * App exception function
@@ -18,12 +18,12 @@ const app_exception = (error) => {
 };
 /**
  * App event click
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_click(event);
         });
     }
@@ -37,20 +37,20 @@ const app_event_click = event => {
                     break;
                 }
                 case 'tshirt':{
-                    if (AppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform == 'scale(2)')
-                        AppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(1)';
+                    if (CommonAppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform == 'scale(2)')
+                        CommonAppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(1)';
                     else
-                        AppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(2)';
+                        CommonAppDocument.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(2)';
                     break;
                 }
-                case ('common_lov_list' && AppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_method]'))?event_target_id:'' :{
-                    if( AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_method]').getAttribute('data-lov_value')=='VPA'){
-                        AppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='visible';
-                        AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='visible';
+                case ('common_lov_list' && CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_method]'))?event_target_id:'' :{
+                    if( CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_method]').getAttribute('data-lov_value')=='VPA'){
+                        CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='visible';
+                        CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='visible';
                     }
                     else{
-                        AppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
-                        AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
+                        CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
+                        CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
                     }   
                     break;
                 }
@@ -72,12 +72,12 @@ const app_event_click = event => {
 };
 /**
  * App event change
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_change = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_change(event);
         }, true);
     }
@@ -89,7 +89,7 @@ const app_event_change = event => {
                 case (event.target.classList.contains('common_app_data_display_master_col2') && event.target.classList.contains('common_app_data_display_type_countdown'))?event_target_id:'':{
                     //call every odd second
                     if ( new Date().getSeconds() % 2){
-                        const payment_request_id = AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
+                        const payment_request_id = CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
                     
                         common.FFB('/app-function/PAYMENT_REQUEST_GET_STATUS', null, 'POST', 'APP_DATA',   {
                                                                                                     payment_request_id: payment_request_id
@@ -112,12 +112,12 @@ const app_event_change = event => {
 
 /**
  * App event keyup
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_keyup = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_keyup(event);
         }, true);
     }
@@ -136,8 +136,7 @@ const app_event_keyup = event => {
 };
 /**
  * Validate VPA
- * @typedef {import('../../../types.js').AppEvent} appevent
- * @param {appevent['target']} element
+ * @param {import('../../../common_types.js').CommonAppEvent['target']} element
  * @param {string} str
  * @returns {boolean}
  */
@@ -155,11 +154,11 @@ const isValidVPA = (element, str) => {
  * Product update attributes
  */
 const product_update = async () =>{
-    AppDocument.querySelector('#tshirt').style.fill = AppDocument.querySelector('.common_select_dropdown_value.common_app_data_display_master_row_list [data-product_color]').getAttribute('data-product_color');
+    CommonAppDocument.querySelector('#tshirt').style.fill = CommonAppDocument.querySelector('.common_select_dropdown_value.common_app_data_display_master_row_list [data-product_color]').getAttribute('data-product_color');
 
-    const product_variant_id = AppDocument.querySelectorAll('.common_app_data_display_master_row[id] .common_select_dropdown_value .common_app_data_display_master_col_list[data-id]')[0].getAttribute('data-id');
+    const product_variant_id = CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id] .common_select_dropdown_value .common_app_data_display_master_col_list[data-id]')[0].getAttribute('data-id');
 
-    await common.ComponentRender(AppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].id, 
+    await common.ComponentRender(CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].id, 
         {
             app_id:common.COMMON_GLOBAL.app_id,
             display_type:'VERTICAL_KEY_VALUE',
@@ -188,22 +187,22 @@ const product_update = async () =>{
             function_button_post:null,
             function_button_delete:null
         }, '/common/component/app_data_display.js');
-    AppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].innerHTML = AppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[2].innerHTML;
+    CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].innerHTML = CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[2].innerHTML;
     
 };
 /**
      * Payment request
      */
 const payment_request = async () =>{
-    const sku = AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
-    const payerid_element = AppDocument.querySelectorAll('.common_app_data_display_master_row .common_app_data_display_master_col2[data-value=payment_id]')[0];
+    const sku = CommonAppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
+    const payerid_element = CommonAppDocument.querySelectorAll('.common_app_data_display_master_row .common_app_data_display_master_col2[data-value=payment_id]')[0];
     if (isValidVPA(payerid_element, payerid_element.innerText)){
         const data = {
             reference:      `SHOP SKU ${sku}`,
             data_app_id:    common.COMMON_GLOBAL.app_id,
             payerid:        payerid_element.innerText,
-            amount:         AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price'),
-            currency_code:  AppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-currency_code]')[0].getAttribute('data-currency_code'),
+            amount:         CommonAppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price'),
+            currency_code:  CommonAppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-currency_code]')[0].getAttribute('data-currency_code'),
             message:        'Shop app'
         };
 
@@ -239,12 +238,12 @@ const payment_request = async () =>{
                 function_button_delete:pay_cancel
             }, '/common/component/app_data_display.js')
             .then(()=>{
-                AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
-                AppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
-                AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').innerText;
+                CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
+                CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
+                CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').innerText;
     
-                common.user_session_countdown(  AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
-                                                AppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_exp').getAttribute('data-value'),
+                common.user_session_countdown(  CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
+                                                CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_exp').getAttribute('data-value'),
                                                 true);
             })
             .catch(()=>common.ComponentRemove('common_dialogue_app_data_display', true));
@@ -297,9 +296,9 @@ const pay = async () =>{
             function_button_post:payment_request,
             function_button_delete:pay_cancel,
         }, '/common/component/app_data_display.js');
-        AppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
-        AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
-        AppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
+        CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
+        CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
+        CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
 };
 /**
  * Sets framework
@@ -320,7 +319,7 @@ const pay = async () =>{
  * @returns {Promise.<void>}
  */
 const init_app = async () => {
-    AppDocument.body.className = 'app_theme1';
+    CommonAppDocument.body.className = 'app_theme1';
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
     await common.ComponentRender('app_main_page', 
                                         {app_id:common.COMMON_GLOBAL.app_id,

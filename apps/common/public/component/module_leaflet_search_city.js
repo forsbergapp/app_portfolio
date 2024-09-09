@@ -3,12 +3,9 @@
  */
 
 /**
- * @typedef {{id:number, city:string, admin_name:string, country:string, lat:string, lng:string}} record_type
- */
-/**
  * 
  * @param {{
- *          records:record_type[]}
+ *          records:import('../../../common_types.js').CommonMicroserviceWorldcitiesRecordType[]}
  *          } props 
  * @returns {string}
  */
@@ -35,7 +32,7 @@ const template = props =>`  <div id='common_module_leaflet_search_list' <SPINNER
                             </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          search:string,
  *          function_click_function:function,
@@ -50,7 +47,7 @@ const component = async props => {
     /**
      * 
      * @param {{
-     *          records:record_type[]}} props 
+     *          records:import('../../../common_types.js').CommonMicroserviceWorldcitiesRecordType[]}} props 
      * @returns {string}
      */
     const render_template = props =>{

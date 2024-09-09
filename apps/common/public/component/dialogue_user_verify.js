@@ -19,7 +19,7 @@ const template =`
                 <div id='common_user_verify_cancel' class='common_dialogue_button common_icon'></div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          user_verification_type:string,
  *          username_login:string,

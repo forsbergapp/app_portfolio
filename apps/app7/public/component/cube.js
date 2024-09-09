@@ -99,7 +99,7 @@ const template = props =>`  <div id='cube'></div>
 *           function_show_message:function,
 *           function_ComponentRemove:function,
 *           function_FFB:function,
-*           common_document:import('../../../types.js').AppDocument,
+*           common_document:import('../../../common_types.js').CommonAppDocument,
 *           common_mountdiv:string}} props 
 * @returns {Promise.<{  props:{function_post:function}, 
 *                       data:{  cube_init:                  function, 
@@ -166,7 +166,7 @@ const component = async props => {
             });
             /**
              * Start cube moves if button solve clicked or show cube step by step cube moves
-            * @param {import('../../../types.js').AppEvent} event
+            * @param {import('../../../common_types.js').CommonAppEvent} event
             * @returns {void}
             */
             const function_event = event => {

@@ -3,25 +3,13 @@
  */
 
 /**
- * @typedef {{  id:number,
- *              display_data:string,
- *              value:string,
- *              data:string,
- *              data2:string,
- *              data3:string,
- *              data4:string,
- *              session_map_layer:*}} type_map_layer_array
- * @typedef {{id:number, value:string, display_data:string}} countries_type
- */
-
-/**
  * 
  * @param {{
  *          current_group_name:string,
- *          countries:countries_type[],
+ *          countries:import('../../../common_types.js').CommonCountryType[],
  *          longitude : string, 
  *          latitude : string,
- *          map_layers:type_map_layer_array[]}} props 
+ *          map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[]}} props 
  * @returns 
  */
 const template = props =>` <div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='<TITLE_SEARCH/>' role='button'>
@@ -75,14 +63,14 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
                         </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          data_app_id:number,
  *          locale:string,
  *          longitude:string,
  *          latitude:string,
  *          map_layer:string,
- *          map_layers:type_map_layer_array[],
+ *          map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[],
  *          module_leaflet_container:string,
  *          function_FFB:function,
  *          function_search_event:function,
@@ -93,10 +81,9 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      template:null}>}
  */
 const component = async props => {
-    
     /**
      * 
-     * @param {countries_type[]} countries 
+     * @param {import('../../../common_types.js').CommonCountryType[]} countries 
      * @returns 
      */
     const render_template = (countries) =>{

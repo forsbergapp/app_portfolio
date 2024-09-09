@@ -43,7 +43,7 @@ const template =`   <div id='mapid'></div>
                     </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          AppPlaces:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 

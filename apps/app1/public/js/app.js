@@ -2,11 +2,11 @@
  * @module apps/app1/app
  */
 
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
+/**@type{import('../../../common_types.js').CommonAppDocument} */
+const CommonAppDocument = document;
  
 const path_common ='common';
- /**@type {import('../../../types.js').module_common} */
+ /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 
 /**
@@ -14,26 +14,26 @@ const common = await import(path_common);
  * @returns {void}
  */
 const show_hide_apps_dialogue = () => {
-    if (AppDocument.querySelector('#dialogue_start_content').style.visibility=='visible' ||
-        AppDocument.querySelector('#dialogue_start_content').style.visibility==''){
-        AppDocument.querySelector('#dialogue_start_content').style.visibility='hidden';
-        AppDocument.querySelector('#dialogue_info_content').style.visibility='hidden';
-        AppDocument.querySelector('#common_profile_btn_top').style.visibility='hidden';
+    if (CommonAppDocument.querySelector('#dialogue_start_content').style.visibility=='visible' ||
+        CommonAppDocument.querySelector('#dialogue_start_content').style.visibility==''){
+        CommonAppDocument.querySelector('#dialogue_start_content').style.visibility='hidden';
+        CommonAppDocument.querySelector('#dialogue_info_content').style.visibility='hidden';
+        CommonAppDocument.querySelector('#common_profile_btn_top').style.visibility='hidden';
     }
     else{
-        AppDocument.querySelector('#dialogue_start_content').style.visibility='visible';
-        AppDocument.querySelector('#dialogue_info_content').style.visibility='visible';
-        AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
+        CommonAppDocument.querySelector('#dialogue_start_content').style.visibility='visible';
+        CommonAppDocument.querySelector('#dialogue_info_content').style.visibility='visible';
+        CommonAppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
     }
 };
 /**
  * App event click
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_click = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
@@ -180,12 +180,12 @@ const app_event_click = event => {
 };
 /**
  * App event change
- * @param {import('../../../types.js').AppEvent} event 
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
 const app_event_change = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change', (/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_change(event);
         }, true);
     }
@@ -208,12 +208,12 @@ const app_event_change = event => {
 };
 /**
  * App event keyup
- * @param {import('../../../types.js').AppEvent} event
+ * @param {import('../../../common_types.js').CommonAppEvent} event
  * @returns {void} 
  */
 const app_event_keyup = event => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup', (/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_keyup(event);
         });
     }
@@ -240,12 +240,12 @@ const app_event_keyup = event => {
                 case 'common_user_verify_verification_char3':
                 case 'common_user_verify_verification_char4':
                 case 'common_user_verify_verification_char5':{
-                    common.user_verify_check_input( AppDocument.querySelector(`#${event_target_id}`), 
+                    common.user_verify_check_input( CommonAppDocument.querySelector(`#${event_target_id}`), 
                                                     'common_user_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), user_login_app);
                     break;
                 }
                 case 'common_user_verify_verification_char6':{
-                    common.user_verify_check_input(AppDocument.querySelector(`#${event_target_id}`), '', user_login_app);
+                    common.user_verify_check_input(CommonAppDocument.querySelector(`#${event_target_id}`), '', user_login_app);
                     break;
                 }
             }
@@ -259,21 +259,21 @@ const app_event_keyup = event => {
  */
 const app_theme_update = (toggle_theme=false) => {
     let theme = '';
-    if(AppDocument.querySelector('#app_theme_checkbox').classList.contains('checked')){
+    if(CommonAppDocument.querySelector('#app_theme_checkbox').classList.contains('checked')){
         theme = 'app_theme_sun';
         if (toggle_theme){
-            AppDocument.querySelector('#app_theme_checkbox').classList.remove('checked');
+            CommonAppDocument.querySelector('#app_theme_checkbox').classList.remove('checked');
             theme = 'app_theme_moon';
         }
     }
     else{
         theme = 'app_theme_moon';
         if (toggle_theme){
-            AppDocument.querySelector('#app_theme_checkbox').classList.add('checked');
+            CommonAppDocument.querySelector('#app_theme_checkbox').classList.add('checked');
             theme = 'app_theme_sun';
         }
     }    
-    AppDocument.body.className = theme;
+    CommonAppDocument.body.className = theme;
     common.common_preferences_update_body_class_from_preferences();
 };
 /**
@@ -281,21 +281,21 @@ const app_theme_update = (toggle_theme=false) => {
  * @returns {void}
  */
  const app_theme_update_from_body = () => {
-    if (AppDocument.body.className.split(' ')[0] == 'app_theme_sun')
-        AppDocument.querySelector('#app_theme_checkbox').classList.add('checked');
+    if (CommonAppDocument.body.className.split(' ')[0] == 'app_theme_sun')
+        CommonAppDocument.querySelector('#app_theme_checkbox').classList.add('checked');
     else
-        AppDocument.querySelector('#app_theme_checkbox').classList.remove('checked');
+        CommonAppDocument.querySelector('#app_theme_checkbox').classList.remove('checked');
 };
 /**
  * App preference post mount
  * @returns {void}
  */
  const app_preferences_post_mount = () => {
-    AppDocument.body.className ='';
-    if (AppDocument.querySelector('#app_theme_checkbox').classList.contains('checked'))
-        AppDocument.body.className = 'app_theme_sun';
+    CommonAppDocument.body.className ='';
+    if (CommonAppDocument.querySelector('#app_theme_checkbox').classList.contains('checked'))
+        CommonAppDocument.body.className = 'app_theme_sun';
     else
-        AppDocument.body.className = 'app_theme_moon';
+        CommonAppDocument.body.className = 'app_theme_moon';
     common.common_preferences_update_body_class_from_preferences();
     app_theme_update_from_body();
 };
@@ -442,7 +442,7 @@ const init_app = async (parameters) => {
  * @returns {void}
  */
 const init = parameters => {
-    AppDocument.body.className = 'app_theme_sun';
+    CommonAppDocument.body.className = 'app_theme_sun';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
     common.COMMON_GLOBAL.app_function_session_expired = user_logoff_app;
     common.init_common(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{

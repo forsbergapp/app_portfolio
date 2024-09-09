@@ -22,7 +22,7 @@ const template =`   <div id='send_broadcast_form'>
                     </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          system_admin:boolean,
  *          apps:string}} props 
