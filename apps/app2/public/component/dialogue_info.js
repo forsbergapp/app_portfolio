@@ -12,7 +12,7 @@ const template =`   <div id='about_logo'></div>
                     <div id='info_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          about_logo:string,
  *          app_copyright:string,

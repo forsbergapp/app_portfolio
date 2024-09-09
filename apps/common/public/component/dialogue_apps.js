@@ -3,16 +3,7 @@
  */
 
 /**
- * @typedef {{  APP_ID:number,
- *              SUBDOMAIN:string,
- *              PROTOCOL:string,
- *              HOST:string,
- *              PORT:string,
- *              LOGO:string,
- *              NAME:string,
- *              APP_CATEGORY:string
- *              APP_NAME_TRANSLATION:string}} app_record_type
- * @param {{apps:app_record_type[],
+ * @param {{apps:import('../../../common_types.js').CommonAppRecord[],
  *          app_copyright:string,
  *          app_email:string,
  *          app_link_url:string,
@@ -66,7 +57,7 @@ const template = props => `
 
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          common_app_id:number,
  *          app_id:number,

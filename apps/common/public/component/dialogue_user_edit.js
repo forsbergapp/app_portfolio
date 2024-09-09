@@ -185,7 +185,7 @@ const template =`   <div id='common_user_edit_common'>
                     <div id='common_user_edit_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          user_account_id:number,
  *          common_app_id:number,

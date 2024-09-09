@@ -2,32 +2,6 @@
  * @module apps/common/component/dialogue_profile
  */
 
-/**
- * @typedef { {profile_id:number|null,
- *             private:number|null}} result_profile
- * @typedef {{  id:number|null,
- *              bio:string|null,
- *              private:number|null,
- *              friends:number|null,
- *              user_level:string|null,
- *              date_created:string|null,
- *              username:string|null, 
- *              avatar:string|null,
- *              identity_provider_id:number|null,
- *              provider_id:string|null,
- *              provider_first_name:string|null,
- *              provider_last_name:string|null,
- *              provider_image:string|null,
- *              provider_image_url:string|null,
- *              count_following:number|null,
- *              count_followed:number|null,
- *              count_likes:number|null,
- *              count_liked:number|null,
- *              count_views:number|null,
- *              followed:number|null,
- *              liked:number|null}} profile_user
- * @typedef {{id:number, username:string, avatar:string|null, provider_image: string|null, count:number}}   top_profile_records
- */
 const profile_empty = { id:null, 
                         bio:null, 
                         private:null, 
@@ -53,8 +27,8 @@ const profile_empty = { id:null,
 /**
  * 
  * @param {{tab:string,
- *          info_profile:profile_user,
- *          top_profile_records:top_profile_records[]|[],
+ *          info_profile:import('../../../common_types.js').CommonProfileUser,
+ *          top_profile_records:import('../../../common_types.js').CommonProfileTopRecord[]|[],
  *          top_function_list_image_format_src:function,
  *          info_function_format_json_date:function}} props 
  * @returns 
@@ -174,7 +148,7 @@ const template = props =>
 
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          tab:string,
  *          info_user_account_id:number,
@@ -195,7 +169,8 @@ const template = props =>
  *          function_FFB:function,
  *          }} props 
  * @returns {Promise.<{ props:{function_post:function}, 
- *                      data:   result_profile|null,
+ *                      data:   {   profile_id:number|null,
+ *                                  private:number|null}|null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -312,8 +287,8 @@ const component = async props => {
     };
     /**
      * div common_profile_main_stat_row2 and common_profile_stat_row2 used for app components
-     * @param {profile_user} profile
-     * @param {top_profile_records[]|[]} top_profile_records
+     * @param {import('../../../common_types.js').CommonProfileUser} profile
+     * @param {import('../../../common_types.js').CommonProfileTopRecord[]|[]} top_profile_records
      * @returns {string}
      */
     const render_template = (profile, top_profile_records) =>{

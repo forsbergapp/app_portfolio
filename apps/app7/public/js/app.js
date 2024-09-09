@@ -2,11 +2,11 @@
  * @module apps/app7/app
  * @access public
  */
-/**@type{import('../../../types.js').AppDocument} */
-const AppDocument = document;
+/**@type{import('../../../common_types.js').CommonAppDocument} */
+const CommonAppDocument = document;
 
 const path_common ='common';
-/**@type {import('../../../types.js').module_common} */
+/**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 
 /**
@@ -45,12 +45,12 @@ const app_exception = (error) => {
 };
 /**
  * App event click
- * @param {import('../../../types.js').AppEvent|null} event 
+ * @param {import('../../../common_types.js').CommonAppEvent|null} event 
  * @returns {void}
  */
 const app_event_click = (event=null) => {
     if (event==null){
-        AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_click(event);
         });
     }
@@ -100,7 +100,7 @@ const app_event_click = (event=null) => {
                     break;
                 }
                 case event.target.id.startsWith('button_solve_speed')?event_target_id:null:{
-                    AppDocument.querySelectorAll('.button_solve_speed').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('button_speed_selected'));
+                    CommonAppDocument.querySelectorAll('.button_solve_speed').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('button_speed_selected'));
                     event.target.classList.add('button_speed_selected');
                     APP_GLOBAL.cube_controls.cube.turnSpeed = event.target.getAttribute('data-speed');
                     break;
@@ -136,7 +136,7 @@ const app_event_click = (event=null) => {
  * @returns {void}
  */
 const app_event_other = () => {
-    const onmousedown = function(/**@type{import('../../../types.js').AppEvent}*/e){
+    const onmousedown = function(/**@type{import('../../../common_types.js').CommonAppEvent}*/e){
 		APP_GLOBAL.cube.mouseDown = true;
 		if(e.touches && e.touches.length > 0){
 			e = e.touches[0];
@@ -155,7 +155,7 @@ const app_event_other = () => {
             APP_GLOBAL.cube.render();
 		}
 	};
-	const onmousemove = function(/**@type{import('../../../types.js').AppEvent}*/e){
+	const onmousemove = function(/**@type{import('../../../common_types.js').CommonAppEvent}*/e){
 		if(APP_GLOBAL.cube.mouseDown){
 			e.preventDefault();
 			if(e.touches && e.touches.length > 0){
@@ -167,32 +167,32 @@ const app_event_other = () => {
             APP_GLOBAL.cube.render();
 		}
 	};
-    AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousedown',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+    CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousedown',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmousedown(event);
     });
-    AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mouseup',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+    CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mouseup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmouseup();
     });
-    AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousemove',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+    CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousemove',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmousemove(event);
     });
 
-    AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchstart',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+    CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchstart',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmousedown(event);
     });
-    AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchend',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+    CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchend',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmouseup();
     });
-    AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchcancel',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+    CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchcancel',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmouseup();
     });
-    AppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchmove',(/**@type{import('../../../types.js').AppEvent}*/event) => {
+    CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchmove',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmousemove(event);
     });
@@ -218,7 +218,7 @@ const app_event_other = () => {
  * @returns {Promise.<void>}
  */
 const init_app = async () => {
-    AppDocument.body.className = 'app_theme1';
+    CommonAppDocument.body.className = 'app_theme1';
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
     await common.ComponentRender('app_main_page', 
                                     {cube_width:APP_GLOBAL.width,

@@ -3,15 +3,6 @@
  */
 
 /**
- * @typedef {{"error":{
- *               "http":number, 
- *               "code":number|null,
- *               "text":string, 
- *               "developer_text":string|null,
- *               "more_info":string|null}}} error_message_ISO20022
- */
-/**
- * 
  * @param {{message:*,
  *          message_type:string,
  *          message_title_font_class:string|null,
@@ -58,7 +49,7 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
                             </div>`;
 /**
  * 
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          text_class:string,
  *          message_type:string,
@@ -97,7 +88,7 @@ const component = async props => {
         
         switch (props.message_type){
             case 'ERROR_BFF':{
-                /**@type{error_message_ISO20022} */
+                /**@type{import('../../../common_types.js').CommonErrorMessageISO20022} */
                 const message_iso = JSON.parse(props.message);
                 render_message(message_iso.error.text, 'common_font_normal');
                 props.common_document.querySelector('#common_message_close')['data-function'] = function_close;

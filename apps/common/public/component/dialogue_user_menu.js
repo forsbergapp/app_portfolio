@@ -3,10 +3,6 @@
  */
 
 /**
- * @typedef {object} AppEvent
- */
-
-/**
  * 
  * @param {{locales:{locale:string, text:string}[],
  *          settings:{id:number, app_setting_type_name:string, value:string, display_data:string}[],
@@ -76,7 +72,7 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
                             </div>`;
 /**
  * div common_dialogue_user_menu_app_theme used to show optional component app_theme.js
- * @param {{common_document:import('../../../types.js').AppDocument,
+ * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
  *          user_account_id:number,
