@@ -49,24 +49,24 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 		//algorithm: CFOP / Fridrich method  (Cross – F2L – OLL – PLL)
 		/**@type{import('./solver3/index.js')} */
 		const {default:cuberSolver3} = await import('./solver3/index.js');
-		
-		/**@type{import('../../../../server/socket.service')} */
-		const {SocketSendAppServerFunction} = await import(`file://${process.cwd()}/server/socket.service.js`);
 		//Only robot can solve to given goal state at the moment
 		if (data.cube_goalstate)
 			data.model = 0;
 		switch (data.model){
 			case 0:{
+				//Model robot can be slow, send PROGRESS using server side event				
+				/**@type{import('../../../../server/socket.service')} */
+				const {SocketSendAppServerFunction} = await import(`file://${process.cwd()}/server/socket.service.js`);
+
 				const timer1 = Date.now();
 				const solver2 = new cuberSolver2.RubiksCubeSolver();	
 				//use Thistlewaite algorithm to solve from solved to given state
 				
-				await SocketSendAppServerFunction(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:1, total:4, text:''})));
 				const solver2_moves_from_solved = solver2.solve(data.cube_goalstate?data.cube_goalstate.join(' '):GOAL_SOLVE.join(' '), data.cube_currentstate.split(' '));
 				if (solver2_moves_from_solved=='')
 						return [];
 				else{
-					await SocketSendAppServerFunction(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:2, total:4, text:''})));
+					await SocketSendAppServerFunction(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:1, total:3, text:''})));
 					// Solve using Kociemba algorithm from calculated moves from solved using first Thistlewaite
 					/**
 					 * @param {string} moves
@@ -82,7 +82,7 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 						});
 					};					
 					const solution1 = await solve1(solver2_moves_from_solved);
-					await SocketSendAppServerFunction(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:3, total:4, text:''})));
+					await SocketSendAppServerFunction(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:2, total:3, text:''})));
 					const timer2 = Date.now();
 					const solution2 = solver2.solve(data.cube_currentstate, data.cube_goalstate ?? GOAL_SOLVE);
 					const timer3 = Date.now();
@@ -107,7 +107,6 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 				}
 			}
 			case 1:{
-				await SocketSendAppServerFunction(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:1, total:2, text:''})));
 				//convert cubestate to correct format
 				//solved cube:
 				//0-1 2-3 4-5 6-7 8-9 10-11 12-13 14-15 16-17 18-19 20-21 22-23 24-25-26 27-28-29 30-31-32 33-34-35 36-37-38 39-40-41 42-43-44 45-46-47
