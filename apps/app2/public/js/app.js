@@ -5,6 +5,8 @@
 /**@type{import('../../../common_types.js').CommonAppDocument} */
 const CommonAppDocument = document;
 
+/**@type{import('../../../common_types.js').CommonAppWindow} */
+const CommonAppWindow = window;
 
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
@@ -169,7 +171,7 @@ const printTimetable = async () => {
                                                     url:null, 
                                                     content_type:null, 
                                                     iframe_content:html,
-                                                    frame:window.frames.document, 
+                                                    frame:CommonAppWindow.frames.document, 
                                                     mobile_function:common.mobile}, '/common/component/window_info.js');
 };
 /**
@@ -723,7 +725,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             {
                 //Update report date and time for current locale, report timezone format
                 APP_GLOBAL.SettingsTimesIntervalId?clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;                
-                APP_GLOBAL.SettingsTimesIntervalId = window.setInterval(settingsTimesShow, 1000);
+                APP_GLOBAL.SettingsTimesIntervalId = CommonAppWindow.setInterval(settingsTimesShow, 1000);
                 break;
             }
         case 'GPS_MAP':
@@ -1485,7 +1487,7 @@ const user_settings_delete = (choice=null) => {
  * @returns {Promise.<void>}
  */
 const set_default_settings = async () => {
-    common.COMMON_GLOBAL.user_locale = navigator.language.toLowerCase();
+    common.COMMON_GLOBAL.user_locale = CommonAppWindow.navigator.language.toLowerCase();
     const select_user_settings = CommonAppDocument.querySelector('#setting_select_user_setting');
     select_user_settings.innerHTML = '<option></option>';
     select_user_settings.options[0].text = common.COMMON_GLOBAL.client_place;
@@ -1828,7 +1830,7 @@ const app_event_click = event => {
                 //info dialogue
                 case 'app_link':{
                     if (common.COMMON_GLOBAL.app_link_url)
-                        window.open(common.COMMON_GLOBAL.app_link_url,'_blank','');
+                        CommonAppWindow.open(common.COMMON_GLOBAL.app_link_url,'_blank','');
                     break;
                 }
                 case 'info_link1':{
@@ -2463,11 +2465,11 @@ const app_event_keyup = event => {
  * @returns {void}
  */
 const serviceworker = () => {
-    if (!window.Promise) {
-        window.Promise = Promise;
+    if (!CommonAppWindow.Promise) {
+        CommonAppWindow.Promise = Promise;
     }
-    if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js', {scope: '/'});
+    if('serviceWorker' in CommonAppWindow.navigator) {
+        CommonAppWindow.navigator.serviceWorker.register('/sw.js', {scope: '/'});
     }
 };
 /**
@@ -2860,7 +2862,7 @@ const settings_load = async (tab_selected) => {
         case 1:{
             //show settings times
             APP_GLOBAL.SettingsTimesIntervalId?clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;                
-            APP_GLOBAL.SettingsTimesIntervalId = window.setInterval(settingsTimesShow, 1000);
+            APP_GLOBAL.SettingsTimesIntervalId = CommonAppWindow.setInterval(settingsTimesShow, 1000);
             break;
         }
         case 2:{
@@ -3068,14 +3070,14 @@ const init_app = async parameters => {
 	const methods = await settings_method();
     app_report.set_prayer_method(methods).then(() => {
         //show dialogue about using mobile and scan QR code after 5 seconds
-        setTimeout(() => {show_dialogue('SCAN');}, 5000);
+        CommonAppWindow.setTimeout(() => {show_dialogue('SCAN');}, 5000);
         set_default_settings().then(() => {
             settings_translate(true).then(() => {
                 settings_translate(false).then(() => {
                     const show_start = async () => {
                         //show default startup
                         await toolbar_button(APP_GLOBAL.app_default_startup_page);
-                        const user = window.location.pathname.substring(1);
+                        const user = CommonAppWindow.location.pathname.substring(1);
                         if (user !='') {
                             //show profile for user entered in url
                             profile_show_app(null, user);
@@ -3084,7 +3086,7 @@ const init_app = async parameters => {
                     show_start().then(() => {
                         dialogue_loading(0);
                         serviceworker();
-                        if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
+                        if (common.COMMON_GLOBAL.user_locale != CommonAppWindow.navigator.language.toLowerCase())
                             common.common_translate_ui(common.COMMON_GLOBAL.user_locale)
                             .then(()=>framework_set());
                         else

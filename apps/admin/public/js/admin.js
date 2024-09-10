@@ -5,6 +5,9 @@
 /**@type{import('../../../common_types.js').CommonAppDocument} */
 const CommonAppDocument = document;
 
+/**@type{import('../../../common_types.js').CommonAppWindow} */
+const CommonAppWindow = window;
+
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
@@ -389,7 +392,7 @@ const init_app = async (parameters) => {
             if (parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'])
                 common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];
         }
-        if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
+        if (common.COMMON_GLOBAL.user_locale != CommonAppWindow.navigator.language.toLowerCase())
             common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
    framework_set();
 };
