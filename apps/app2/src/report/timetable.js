@@ -4,6 +4,16 @@
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../../../../server/db/sql/user_account_app_data_post_view.service.js')} */
 const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
+
+const fs = await import('node:fs');
+/**@ts-ignore */
+const path = import.meta.dirname.replaceAll('\\', '/');
+//Import module with ECMA Script module syntax using fs and Base 64
+const prayTimes_source = await fs.promises.readFile(`${path}/PrayTimes.js`)
+									.then(result=>result.toString().replace('var prayTimes = new PrayTimes();','export default new PrayTimes();'))
+									.catch(error=>{throw error;});
+const {default:prayTimes} = await import('data:text/javascript;base64,' + btoa(prayTimes_source));
+
  /**
   *  @type {import('../types.js').APP_REPORT_GLOBAL}
   */
@@ -536,21 +546,17 @@ const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri
 	
 };
 /**
- * Set method praytimes
- * @param {*} prayTimes 
+ * Set method praytimes 
  * @param {string} settings_method
  * @param {string} settings_asr 
  * @param {string} settings_highlat 
  */
-const setMethod_praytimes = (prayTimes, settings_method, settings_asr, settings_highlat) => {
-	/*client version uses this:
+const setMethod_praytimes = (settings_method, settings_asr, settings_highlat) => {
     prayTimes.setMethod(settings_method);
-    */
-    prayTimes.prototype.init(settings_method);
 	//use methods without modifying original code
 	if (REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.maghrib && 
 		REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.midnight)
-		prayTimes.prototype.adjust({asr:      settings_asr,
+		prayTimes.adjust({asr:      settings_asr,
 									highLats: settings_highlat,
 									fajr:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.fajr,
 									isha:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.isha,
@@ -558,20 +564,20 @@ const setMethod_praytimes = (prayTimes, settings_method, settings_asr, settings_
 									midnight: REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.midnight} );
 	else
 		if (REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.maghrib)
-			prayTimes.prototype.adjust({asr:      settings_asr,
+			prayTimes.adjust({asr:      settings_asr,
 										highLats: settings_highlat,
 										fajr:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.fajr,
 										isha:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.isha,
 										maghrib:  REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.maghrib} );
 		else
 			if (REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.midnight)
-				prayTimes.prototype.adjust({asr:      settings_asr,
+				prayTimes.adjust({asr:      settings_asr,
 											highLats: settings_highlat,
 											fajr:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.fajr,
 											isha:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.isha,
 											midnight: REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.midnight} );
 			else
-				prayTimes.prototype.adjust({asr:      settings_asr,
+				prayTimes.adjust({asr:      settings_asr,
 											highLats: settings_highlat,
 											fajr:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.fajr,
 											isha:     REPORT_GLOBAL.CommonModulePrayTimes_methods[settings_method].params.isha} );
@@ -739,7 +745,7 @@ const localTime = (value, locale, format, hours=null, minutes=null) =>{
 	/* 	Intl.DateTimeFormat is about same speed than localtime.toLocaleTimeString
 		although result can vary within about halv second testing speed on year timetable
 
-		times from prayTimes.prototype.getTime are returned with 24 hours format and minutes in decimals using Float format
+		times from prayTimes.getTime are returned with 24 hours format and minutes in decimals using Float format
 
 		using toLocaleString that is about 7 times faster than Intl.DateTimeFormat and toLocaleTimeString
 		however toLocaleTimeString is needed for format 12h since dayPeriod should be locale adjusted
@@ -1293,7 +1299,7 @@ const displayDay = (prayTimes, settings, user_account_app_data_posts) => {
 								user_gps_latitude, user_gps_longitude, user_format, user_hijri_adjustment, user_place) =>{
 			let day_html = '';
 			const timezone_offset = getTimezoneOffset(user_timezone);
-			times = prayTimes.prototype.getTimes(REPORT_GLOBAL.session_currentDate, [user_gps_latitude, user_gps_longitude], timezone_offset, 0, 'Float');
+			times = prayTimes.getTimes(REPORT_GLOBAL.session_currentDate, [user_gps_latitude, user_gps_longitude], timezone_offset, 0, 'Float');
 
 			const show_col_data = {	year: 					REPORT_GLOBAL.session_currentDate.getFullYear(),
 									month: 					REPORT_GLOBAL.session_currentDate.getMonth(),
@@ -1337,8 +1343,7 @@ const displayDay = (prayTimes, settings, user_account_app_data_posts) => {
 
 		let html = '';
 		for (const user_account_app_data_post of user_account_app_data_posts){	
-			setMethod_praytimes(prayTimes, 
-								user_account_app_data_post.prayer_method, 
+			setMethod_praytimes(user_account_app_data_post.prayer_method, 
 								user_account_app_data_post.prayer_asr_method, 
 								user_account_app_data_post.prayer_high_latitude_adjustment);
 			
@@ -1484,12 +1489,12 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 	const data = getDatesAndTitle();
 	// get start date and end date for both gregorian and hijri
 	const timetable_data = ()=>{
-		setMethod_praytimes(prayTimes, settings.method, settings.asr, settings.highlat);
+		setMethod_praytimes(settings.method, settings.asr, settings.highlat);
 
 		let month_html='';
 		//DATA
 		while (data.date < data.endDate) {
-			const times = prayTimes.prototype.getTimes(data.date, [settings.gps_lat, settings.gps_long], timezone_offset, 0, 'Float');
+			const times = prayTimes.getTimes(data.date, [settings.gps_lat, settings.gps_long], timezone_offset, 0, 'Float');
 			if (settings.calendartype=='GREGORIAN')
 				times.day = data.date.getDate();
 			else
@@ -1775,43 +1780,40 @@ const timetable = async (timetable_parameters) => {
 			timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
 			.then((user_account_app_data_post)=>{
 				timetable_translate_settings(timetable_parameters.app_id, user_account_app_data_post.locale, user_account_app_data_post.second_locale).then(() => {
-					const path_praytimes ='praytimes';
-					import(path_praytimes).then(({default: prayTimes}) => {
-						//set current date for report month
-						REPORT_GLOBAL.session_currentDate = new Date();
-						REPORT_GLOBAL.session_currentHijriDate = [0,0];
-						//get Hijri date from initial Gregorian date
-						REPORT_GLOBAL.session_currentHijriDate[0] = 
-							parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
-												REPORT_GLOBAL.session_currentDate.getMonth(),
-												REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-						REPORT_GLOBAL.session_currentHijriDate[1] = 
-							//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
-							parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
-												REPORT_GLOBAL.session_currentDate.getMonth(),
-												REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
-						set_prayer_method(timetable_parameters.app_id).then(() => {
-							if (reporttype==0){
-								timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
-								.then((user_account_app_data_posts_parameters)=>{
-									
-									resolve({	report:displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters),
-												papersize:user_account_app_data_post.papersize
-											});
-								})
-								.catch(()=>resolve({report:'', papersize:''}));
+					//set current date for report month
+					REPORT_GLOBAL.session_currentDate = new Date();
+					REPORT_GLOBAL.session_currentHijriDate = [0,0];
+					//get Hijri date from initial Gregorian date
+					REPORT_GLOBAL.session_currentHijriDate[0] = 
+						parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+											REPORT_GLOBAL.session_currentDate.getMonth(),
+											REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+					REPORT_GLOBAL.session_currentHijriDate[1] = 
+						//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
+						parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+											REPORT_GLOBAL.session_currentDate.getMonth(),
+											REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+					set_prayer_method(timetable_parameters.app_id).then(() => {
+						if (reporttype==0){
+							timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
+							.then((user_account_app_data_posts_parameters)=>{
+								
+								resolve({	report:displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters),
+											papersize:user_account_app_data_post.papersize
+										});
+							})
+							.catch(()=>resolve({report:'', papersize:''}));
+						}
+						else
+							if (reporttype==1){
+								resolve({	report:displayMonth(prayTimes, user_account_app_data_post),
+											papersize:user_account_app_data_post.papersize});
 							}
-							else
-								if (reporttype==1){
-									resolve({	report:displayMonth(prayTimes, user_account_app_data_post),
+							else 
+								if (reporttype==2){
+									resolve({	report:displayYear(prayTimes, user_account_app_data_post),
 												papersize:user_account_app_data_post.papersize});
 								}
-								else 
-									if (reporttype==2){
-										resolve({	report:displayYear(prayTimes, user_account_app_data_post),
-													papersize:user_account_app_data_post.papersize});
-									}
-						});
 					});
 				});
 			}) 
