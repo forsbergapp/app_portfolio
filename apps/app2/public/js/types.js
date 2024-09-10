@@ -121,8 +121,7 @@
  *          prayer_default_show_fast_start_end:number,
  *          timetable_type:number,
  *          places:APP_place[]|null,
- *          user_settings:APP_json_data_user_setting[],
- *          SettingsTimesIntervalId:number|null
+ *          user_settings:APP_json_data_user_setting[]
  *          }} APP_GLOBAL
  */
 

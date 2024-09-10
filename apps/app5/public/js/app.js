@@ -399,8 +399,7 @@ const show_payment_request = async message =>{
                 CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').innerText;
 
                 common.user_session_countdown(  CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
-                                                JSON.parse(message).exp,
-                                                true);
+                                                JSON.parse(message).exp);
             })
             .catch(()=>common.ComponentRemove('common_dialogue_app_data_display', true));
 };
