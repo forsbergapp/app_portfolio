@@ -238,10 +238,6 @@
 	www.leafletjs.com
 	Geoplugin Geolocation
 	www.geoplugin.com
-	Pray Times client version
-    www.praytimes.org
-    Pray Times server version
-    www.npmjs.com/package/praytimes
 	Simplemap, world city database
 	www.simplemaps.com	
     EasyQRCodeJS version
