@@ -5,6 +5,9 @@
 /**@type{import('../../../common_types.js').CommonAppDocument} */
 const CommonAppDocument = document;
 
+/**@type{import('../../../common_types.js').CommonAppWindow} */
+const CommonAppWindow = window;
+
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
@@ -17,11 +20,11 @@ const common = await import(path_common);
     common.show_message('EXCEPTION', null, null, null, error);
 };
 const serviceworker = () => {
-    if (!window.Promise) {
-        window.Promise = Promise;
+    if (!CommonAppWindow.Promise) {
+        CommonAppWindow.Promise = Promise;
     }
-    if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js', {scope: '/'});
+    if('serviceWorker' in CommonAppWindow.navigator) {
+        CommonAppWindow.navigator.serviceWorker.register('/sw.js', {scope: '/'});
     }
 };
 /**

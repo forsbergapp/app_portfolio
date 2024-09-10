@@ -4,6 +4,9 @@
 /**@type{import('../../../common_types.js').CommonAppDocument} */
 const CommonAppDocument = document;
 
+/**@type{import('../../../common_types.js').CommonAppWindow} */
+const CommonAppWindow = window;
+
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
@@ -74,7 +77,7 @@ const app_event_click = (event=null) => {
                 }
                 case 'button_solve_cubestate':
                 case 'button_solved_step_cubestate':{
-                    const cubestate = prompt('?');
+                    const cubestate = CommonAppWindow.prompt('?');
                     if (cubestate && cubestate.split(' ').length==20)
                         APP_GLOBAL.cube_solve(APP_GLOBAL.cube, APP_GLOBAL.cube_controls, event.target.id, cubestate.split(' '));
                     else
