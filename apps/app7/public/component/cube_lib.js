@@ -3,6 +3,9 @@
  * @module apps/app7/component/cube_lib
  */
 
+/**@type{import('../../../common_types.js').CommonAppWindow} */
+const CommonAppWindow = window;
+
 /**
  * Original code https://github.com/stringham/rubiks-solver
  * Changes
@@ -637,7 +640,7 @@ RubiksCube.prototype.scramble = function(num) {
 			this.makeMove(moves[Math.floor(Math.random()*moves.length)] + (Math.random() > 1/2 ? '\'' : ''));
 		}
 		const checkAgain = function(){
-			setTimeout(function() {
+			CommonAppWindow.setTimeout(function() {
 				if(me.queue.length == 0){
 					me.turnSpeed = turnSpeed;
 				} else {
@@ -726,7 +729,7 @@ RubiksCube.prototype.rotateFace = function(face, d){
 				
 		});
 		if(p >= 1){
-			clearInterval(timer_render);
+			CommonAppWindow.clearInterval(timer_render);
 			for(let i=0; i<blocks.length; i++){
 				blocks[i].resetRotation();
 			}
@@ -735,7 +738,7 @@ RubiksCube.prototype.rotateFace = function(face, d){
 			me.makeNextMove();
 		}
 	};
-	let timer_render = setInterval(() => {rotate();me.render()}, 10);
+	let timer_render = CommonAppWindow.setInterval(() => {rotate();me.render()}, 10);
 };
 /**
  * @param {*} face

@@ -2,6 +2,9 @@
  * @module apps/common/component/window_info
  */
 
+/**@type{import('../../../common_types.js').CommonAppWindow} */
+const CommonAppWindow = window;
+
 const template =`   <div id='common_window_info_btn_close' class='common_toolbar_button common_icon'></div>
                     <div id='common_window_info_info'><INFO/></div>
                     <div id='common_window_info_toolbar'>
@@ -122,7 +125,7 @@ const component = async props => {
             props.common_document.querySelector('#common_window_info_content').contentWindow.document.write(props.iframe_content);
             props.frame?props.frame.querySelector('#common_window_info_content').focus():null;
             //await delay to avoid browser render error
-            await new Promise ((resolve)=>{setTimeout(()=> {props.common_document.querySelector('#common_window_info_content').contentWindow.print();
+            await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> {props.common_document.querySelector('#common_window_info_content').contentWindow.print();
                                                             resolve(null);}, 100);})
             .then(()=>props.common_document.querySelector('#common_window_info').innerHTML='');
         }

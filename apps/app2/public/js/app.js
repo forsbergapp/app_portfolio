@@ -611,7 +611,7 @@ const toolbar_button = async (choice) => {
  */
 const openTab = async (tab_selected) => {
     //remove interval in tab 1 regional
-    APP_GLOBAL.SettingsTimesIntervalId?clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;
+    APP_GLOBAL.SettingsTimesIntervalId?CommonAppWindow.clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;
 
     //remove Leaflet listeners if any one used
     if (common.COMMON_GLOBAL.app_eventListeners.LEAFLET.length>0){
@@ -724,7 +724,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
         case 'REGIONAL_TIMEZONE':
             {
                 //Update report date and time for current locale, report timezone format
-                APP_GLOBAL.SettingsTimesIntervalId?clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;                
+                APP_GLOBAL.SettingsTimesIntervalId?CommonAppWindow.clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;                
                 APP_GLOBAL.SettingsTimesIntervalId = CommonAppWindow.setInterval(settingsTimesShow, 1000);
                 break;
             }
@@ -2861,8 +2861,7 @@ const settings_load = async (tab_selected) => {
     switch (tab_selected){
         case 1:{
             //show settings times
-            APP_GLOBAL.SettingsTimesIntervalId?clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;                
-            APP_GLOBAL.SettingsTimesIntervalId = CommonAppWindow.setInterval(settingsTimesShow, 1000);
+            component_setting_update('REGIONAL', 'TIMEZONE');
             break;
         }
         case 2:{
