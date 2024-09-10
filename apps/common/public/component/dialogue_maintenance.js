@@ -2,6 +2,9 @@
  * @module apps/common/component/dialogue_maintenance
  */
 
+/**@type{import('../../../common_types.js').CommonAppWindow} */
+const CommonAppWindow = window;
+
 const template =`   <div id='common_dialogue_maintenance_content' class='common_dialogue_content'>
                         <div id='common_maintenance_logo'></div>
                         <div id='common_maintenance_message'></div>
@@ -26,7 +29,7 @@ const component = async props => {
             location.reload();
         else{
             props.common_document.querySelector('#common_maintenance_countdown').innerHTML = remaining;
-            setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
+            CommonAppWindow.setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
         }
     };    
     const render_template = () =>{

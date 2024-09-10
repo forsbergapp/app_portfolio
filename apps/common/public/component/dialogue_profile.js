@@ -2,6 +2,9 @@
  * @module apps/common/component/dialogue_profile
  */
 
+/**@type{import('../../../common_types.js').CommonAppWindow} */
+const CommonAppWindow = window;
+
 const profile_empty = { id:null, 
                         bio:null, 
                         private:null, 
@@ -234,7 +237,7 @@ const component = async props => {
                 props.common_document.querySelector('#common_profile_like .common_like').style.display = 'none';
             } 
             if (props.info_user_account_id ==null)
-                setTimeout(()=> {props.info_function_show_common_dialogue('LOGIN');}, 2000);
+                CommonAppWindow.setTimeout(()=> {props.info_function_show_common_dialogue('LOGIN');}, 2000);
             else
                 props.info_function_checkOnline('common_profile_avatar_online_status', profile.id);
             profile = { id:null, 
