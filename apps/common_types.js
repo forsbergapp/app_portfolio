@@ -7,7 +7,7 @@
  * 
  * DOM Document Object Model types (contains what is used)
  *  CommonAppDocument
- *  CommonAppEvent (events only used on DOM, third party libraries might use events on window in BOM)
+ *  CommonAppEvent
  * 
  * Common app types
  *  CommonGlobal
@@ -51,19 +51,29 @@
 /**
  * Type CommonAppWindow
  * @typedef {{  console:{ warn:function,
-*                      info:function,
-*                      error:function},
-*              atob:function,
-*              btoa:function,
-*              setTimeout:function,
-*              open:function,
-*              addEventListener:function,
-*              ReactDOM?:*,
-*              React?:*,
-*              __VUE_DEVTOOLS_HOOK_REPLAY__?:*,
-*              __VUE_HMR_RUNTIME__?:*,
-*              __VUE__?:*}} CommonAppWindow
-*/
+ *                      info:function,
+ *                      error:function},
+ *              atob:function,
+ *              btoa:function,
+ *              setTimeout:function,
+ *              setInterval:function,
+ *              open:function,
+ *              addEventListener:function,  //used to override default function with custom function to keep track of third party libraries
+ *              EventSource:*,
+ *              navigator:{language:string, userAgent:string, serviceWorker:{register:function}},
+ *              location:{pathname:string},
+ *              Intl:{DateTimeFormat()      :{resolvedOptions(): Intl.ResolvedDateTimeFormatOptions},
+ *                    NumberFormat()        :{resolvedOptions(): Intl.ResolvedNumberFormatOptions},
+ *                    DateTimeFormatOptions?:Intl.DateTimeFormatOptions},
+ *              prompt:function,
+ *              frames:{document:CommonAppDocument},
+ *              Promise:function,
+ *              ReactDOM?:*,
+ *              React?:*,
+ *              __VUE_DEVTOOLS_HOOK_REPLAY__?:*,
+ *              __VUE_HMR_RUNTIME__?:*,
+ *              __VUE__?:*}} CommonAppWindow
+ */
 
 /**
  * Type CommonAppDocument
@@ -80,6 +90,9 @@
 
 /**
  * Type CommonAppEvent
+ * 
+ * events only used on DOM, third party libraries might use events on window in BOM
+ * 
  * @typedef {object}    CommonAppEvent
  * @property {object}   clipboardData
  * @property {function} clipboardData.getData 

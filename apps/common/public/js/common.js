@@ -2,12 +2,14 @@
  * @module apps/common/common
  */
 
-/**@type{import('../../../common_types.js').CommonAppDocument} */
- const CommonAppDocument = document;
+
 /**@type{import('../../../common_types.js').CommonAppWindow} */
 const CommonAppWindow = window;
 
- 
+/**@type{import('../../../common_types.js').CommonAppDocument} */
+ const CommonAppDocument = document;
+
+
 /**@type{import('../../../common_types.js').CommonGlobal} */
 const COMMON_GLOBAL = {
     common_app_id:0,
@@ -296,7 +298,7 @@ const format_json_date = (db_date, short) => {
         //in ISO 8601 format
         //JSON returns format 2020-08-08T05:15:28Z
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-        /**@type{Intl.DateTimeFormatOptions} */
+        /**@type{import('../../../common_types.js').CommonAppWindow['Intl']['DateTimeFormatOptions']} */ 
         let options;
         if (short)
             options = {
@@ -334,7 +336,7 @@ const format_json_date = (db_date, short) => {
  * @returns {boolean}
  */
 const mobile = () =>{
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(CommonAppWindow.navigator.userAgent));
 };
 /**
  * Image format
@@ -528,7 +530,8 @@ const input_control = (dialogue, validate_items) =>{
         result = false;
     };
     if (dialogue)
-        dialogue.querySelectorAll('.common_input_error').forEach(element=>element.classList.remove('common_input_error'));
+        dialogue.querySelectorAll('.common_input_error')
+            .forEach(element=>element.classList.remove('common_input_error'));
 
     if (validate_items.check_valid_list_elements)
         for (const element of validate_items.check_valid_list_elements){
@@ -655,10 +658,10 @@ const getUserAgentPlatform = useragent =>{
  *              client_place:string}}
  */
 const get_uservariables = () => {
-    return {    user_language:      navigator.language,
-                user_timezone:      Intl.DateTimeFormat().resolvedOptions().timeZone,
-                user_number_system: Intl.NumberFormat().resolvedOptions().numberingSystem,
-                user_platform:      getUserAgentPlatform(navigator.userAgent),
+    return {    user_language:      CommonAppWindow.navigator.language,
+                user_timezone:      CommonAppWindow.Intl.DateTimeFormat().resolvedOptions().timeZone,
+                user_number_system: CommonAppWindow.Intl.NumberFormat().resolvedOptions().numberingSystem,
+                user_platform:      getUserAgentPlatform(CommonAppWindow.navigator.userAgent),
                 client_latitude:    COMMON_GLOBAL.client_latitude,
                 client_longitude:   COMMON_GLOBAL.client_longitude,
                 client_place:       COMMON_GLOBAL.client_place
@@ -2242,11 +2245,11 @@ const user_preference_save = async () => {
 const user_preferences_set_default_globals = (preference) => {
     switch (preference){
         case 'LOCALE':{
-            COMMON_GLOBAL.user_locale         = navigator.language.toLowerCase();
+            COMMON_GLOBAL.user_locale         = CommonAppWindow.navigator.language.toLowerCase();
             break;
         }
         case 'TIMEZONE':{
-            COMMON_GLOBAL.user_timezone       = COMMON_GLOBAL.client_timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+            COMMON_GLOBAL.user_timezone       = COMMON_GLOBAL.client_timezone ?? CommonAppWindow.Intl.DateTimeFormat().resolvedOptions().timeZone;
             break;
         }
         case 'DIRECTION':{
@@ -2688,7 +2691,7 @@ const FFB = async (path, query, method, authorization_type, json_data=null) => {
     const url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${path}?parameters=${encodedparameters}&iam=${iam}`;
 
     if (authorization_type=='SOCKET'){
-        return new EventSource(url);
+        return new CommonAppWindow.EventSource(url);
     }
     else{
         //add options to fetch
@@ -3035,7 +3038,7 @@ const set_app_service_parameters = async parameters => {
     COMMON_GLOBAL.translate_items = parameters.translate_items;
 
     COMMON_GLOBAL.user_locale                = parameters.locale;
-    COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+    COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? CommonAppWindow.Intl.DateTimeFormat().resolvedOptions().timeZone;
     COMMON_GLOBAL.user_direction             = '';
     COMMON_GLOBAL.user_arabic_script         = '';  
 };
@@ -3452,9 +3455,9 @@ const common_event = async (event_type,event=null) =>{
                     //define globals and save settings here, in apps define what should happen when changing
                     case 'common_dialogue_user_menu_user_locale_select':{
                         COMMON_GLOBAL.user_locale = event.target.value;
-                        //change navigator.language, however when logging out default navigator.language will be set
+                        //change CommonAppWindow.navigator.language, however when logging out default CommonAppWindow.navigator.language will be set
                         //commented at the moment
-                        //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+                        //Object.defineProperties(CommonAppWindow.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
                         await user_preference_save();
                         CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').innerHTML = await get_locales_options();
                         CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').value = COMMON_GLOBAL.user_locale;
@@ -3930,7 +3933,7 @@ const framework_set = async (framework, events) => {
  * @returns {void}
  */
  const setUserAgentAttibutes = () => {
-    if (navigator.userAgent.toLowerCase().indexOf('firefox')>-1)
+    if (CommonAppWindow.navigator.userAgent.toLowerCase().indexOf('firefox')>-1)
         CommonAppDocument.querySelector(':root').style.setProperty('--common_app_useragent_fix_margin_top', '-5px');
  };
 /**
@@ -3959,23 +3962,24 @@ const custom_framework = () => {
         }
     };
     /**
-     * 
+     * Custom function used to replace default addEventListener function
+     * to keep track of framework events so they can be removed when necessary
      * @param  {...any} eventParameters 
-     * @returns 
+     * @returns {void}
      */
     function custom_event (...eventParameters) {   
         COMMON_GLOBAL.app_eventListeners[module(Error().stack)]
             /**@ts-ignore */
             .push([this, eventParameters[0], eventParameters[1], eventParameters[2]]);
-        return COMMON_GLOBAL.app_eventListeners.original.apply(
+        COMMON_GLOBAL.app_eventListeners.original.apply(
                 /**@ts-ignore */
                 this, 
                 arguments);
     }
 
-    //set custom event on both HTMLElement and document level
-    CommonAppDocument.addEventListener = custom_event;
+    //set custom event on both window, document and HTMLElement level
     CommonAppWindow.addEventListener = custom_event;
+    CommonAppDocument.addEventListener = custom_event;
     HTMLElement.prototype.addEventListener = custom_event;
 
     /**
