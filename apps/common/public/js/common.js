@@ -220,7 +220,7 @@ const typewatch = (function_name, ...parameter) =>{
                 break;
             }
         }
-    clearTimeout(timer);
+    CommonAppWindow.clearTimeout(timer);
     timer = CommonAppWindow.setTimeout(() => {
         function_name(...parameter);
     }, type_delay);
@@ -854,7 +854,7 @@ const ComponentRender = async (div,props, component_path) => {
                 //use inner tempmount div to remove React events
                 const application = ReactDOM.createRoot(CommonAppDocument.querySelector(`#${div} #tempmount`));
                 application.render( result_component);
-                await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 200);});
+                await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 200);});
                 //React shows warning Invalid DOM property `class`. Did you mean `className`?
                 //because a div with empty class is created inside tempmount, ignore
                 //Return the inner first div.innerHTML created by React to return pure HTML
@@ -1774,7 +1774,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         const seconds = Math.floor((time_left % (1000 * 60)) / 1000);
         element.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
         //wait 1 second
-        await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 1000);});
+        await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 1000);});
         if (element.id)
             element = CommonAppDocument.querySelector(`#${element.id}`);
         else
@@ -2283,7 +2283,7 @@ const create_qr = async (div, url) => {
         drawer: 'svg'
     });
     //executing await promise 1 ms results in QRCode rendered
-    await new Promise ((resolve)=>{setTimeout(()=> resolve(null),1);});
+    await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null),1);});
 };
 /**
  * Map init
