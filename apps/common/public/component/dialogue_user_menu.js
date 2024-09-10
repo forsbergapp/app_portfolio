@@ -156,7 +156,7 @@ const component = async props => {
         await adjust_logged_out_logged_in();
         if (props.token_exp && props.token_iat){
             const element_id = 'common_dialogue_user_menu_token_countdown_time';
-            props.function_user_session_countdown(props.common_document.querySelector(`#${element_id}`), props.token_exp, true);
+            props.function_user_session_countdown(props.common_document.querySelector(`#${element_id}`), props.token_exp);
         }   
     };
     /**

@@ -144,8 +144,7 @@ const APP_GLOBAL = {
     //session variables
     timetable_type:0,
     places:null,
-    user_settings:[user_settings_empty],
-    SettingsTimesIntervalId:null
+    user_settings:[user_settings_empty]
 };
 Object.seal(APP_GLOBAL);
 /**
@@ -517,10 +516,14 @@ const get_align = (al,ac,ar) => {
 };
 /**
  * Show settings times for users timezone and timetable timezone
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const settingsTimesShow = () => {
-    //user timezone
+const settingsTimesShow = async () => {
+    const element_setting_select_locale         = CommonAppDocument.querySelector('#setting_select_locale');
+    const element_setting_current_date          = CommonAppDocument.querySelector('#setting_current_date_time_display');
+    const element_setting_select_report_timezone= CommonAppDocument.querySelector('#setting_select_report_timezone');
+    const element_setting_report_data_time      = CommonAppDocument.querySelector('#setting_report_date_time_display');
+    
     /**@type{Intl.DateTimeFormatOptions} */
     const options = {
         timeZone: common.COMMON_GLOBAL.user_timezone,
@@ -533,13 +536,17 @@ const settingsTimesShow = () => {
         second: '2-digit',
         timeZoneName: 'long'
     };
-    CommonAppDocument.querySelector('#setting_current_date_time_display').innerHTML = new Date().toLocaleTimeString(common.COMMON_GLOBAL.user_locale, options);    
-    // timetable timezone
-    const select = CommonAppDocument.querySelector('#setting_select_report_timezone');
-    if (select && select.selectedIndex>0){
-        options.timeZone = select[select.selectedIndex].value;
-        CommonAppDocument.querySelector('#setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(CommonAppDocument.querySelector('#setting_select_locale').value, options);
+    if (element_setting_current_date){     
+        element_setting_current_date.innerHTML = new Date().toLocaleTimeString(common.COMMON_GLOBAL.user_locale, options);    
+        if (element_setting_select_report_timezone && element_setting_select_report_timezone.selectedIndex>0){
+            options.timeZone = element_setting_select_report_timezone[element_setting_select_report_timezone.selectedIndex].value;
+            element_setting_report_data_time.innerHTML = new Date().toLocaleTimeString(element_setting_select_locale.value, options);
+        }
+        //wait 1 second
+        await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 1000);});            
+        settingsTimesShow();
     }
+    
 };
 /**
  * Toolbar button
@@ -610,9 +617,6 @@ const toolbar_button = async (choice) => {
  * @param {number} tab_selected 
  */
 const openTab = async (tab_selected) => {
-    //remove interval in tab 1 regional
-    APP_GLOBAL.SettingsTimesIntervalId?CommonAppWindow.clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;
-
     //remove Leaflet listeners if any one used
     if (common.COMMON_GLOBAL.app_eventListeners.LEAFLET.length>0){
         for (const listener of common.COMMON_GLOBAL.app_eventListeners.LEAFLET){
@@ -723,9 +727,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
     switch (setting_tab + '_' + setting_type) {
         case 'REGIONAL_TIMEZONE':
             {
-                //Update report date and time for current locale, report timezone format
-                APP_GLOBAL.SettingsTimesIntervalId?CommonAppWindow.clearInterval(APP_GLOBAL.SettingsTimesIntervalId):null;                
-                APP_GLOBAL.SettingsTimesIntervalId = CommonAppWindow.setInterval(settingsTimesShow, 1000);
+                settingsTimesShow();
                 break;
             }
         case 'GPS_MAP':
@@ -2278,7 +2280,6 @@ const app_event_change = event => {
                 }
                 case 'setting_select_report_timezone':{
                     settings_update('REGIONAL');
-                    component_setting_update('REGIONAL', 'TIMEZONE');
                     break;
                 }
                 case 'setting_select_report_numbersystem':

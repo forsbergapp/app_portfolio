@@ -1749,38 +1749,33 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
  * and then event listener will automatically be removed
  * @param {HTMLElement} element
  * @param {number} token_exp
- * @param {boolean} add_event
+ * @param {function|null} app_function
  * @returns {Promise.<void>}
  */
- const user_session_countdown = async (element, token_exp, add_event=false) => {
-    /**
-     * 
-     * @returns {void}
-     */
-    const event_function = () => {user_session_countdown(element, token_exp);};
-    if (add_event){
-        element.addEventListener('change', event_function, false);
-    }
-    const time_left = ((token_exp ?? 0) * 1000) - (Date.now());
-    if (time_left < 0){
-        element.innerHTML ='';
-        element.classList.add('common_user_session_expired');
-        element.removeEventListener('change', event_function);
-    }
-    else{
-        const days = Math.floor(time_left / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((time_left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((time_left % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((time_left % (1000 * 60)) / 1000);
-        element.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        //wait 1 second
-        await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 1000);});
-        if (element.id)
-            element = CommonAppDocument.querySelector(`#${element.id}`);
-        else
-            element = CommonAppDocument.querySelector(`.${element.className.replaceAll(' ','.')}`);
-        if (element)
-            element.dispatchEvent(new Event('change'));
+ const user_session_countdown = async (element, token_exp, app_function=null) => {
+
+    if (element.id)
+        element = CommonAppDocument.querySelector(`#${element.id}`);
+    else
+        element = CommonAppDocument.querySelector(`.${element.className.replaceAll(' ','.')}`);
+    if (element){
+        const time_left = ((token_exp ?? 0) * 1000) - (Date.now());
+        if (time_left < 0){
+            element.innerHTML ='';
+            element.classList.add('common_user_session_expired');
+        }
+        else{
+            const days = Math.floor(time_left / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((time_left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((time_left % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((time_left % (1000 * 60)) / 1000);
+            element.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            //run app function if any
+            app_function?app_function():null;
+            //wait 1 second
+            await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 1000);});            
+            user_session_countdown(element, token_exp, app_function);
+        }
     }
 };
 /**

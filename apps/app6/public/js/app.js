@@ -71,46 +71,6 @@ const app_event_click = event => {
     }
 };
 /**
- * App event change
- * @param {import('../../../common_types.js').CommonAppEvent} event 
- * @returns {void}
- */
-const app_event_change = event => {
-    if (event==null){
-        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_change(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.element_id(event.target);
-        common.common_event('change',event)
-        .then(()=>{
-            switch (event_target_id){
-                case (event.target.classList.contains('common_app_data_display_master_col2') && event.target.classList.contains('common_app_data_display_type_countdown'))?event_target_id:'':{
-                    //call every odd second
-                    if ( new Date().getSeconds() % 2){
-                        const payment_request_id = CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
-                    
-                        common.FFB('/app-function/PAYMENT_REQUEST_GET_STATUS', null, 'POST', 'APP_DATA',   {
-                                                                                                    payment_request_id: payment_request_id
-                                                                                                    })
-                        .then((/**@type{*}*/result)=>{
-                            const status = JSON.parse(result).rows[0].status;
-                            if (status != 'PENDING'){
-                                common.ComponentRemove('common_dialogue_app_data_display', true);
-                                common.show_message('INFO', null, null, null,status, common.COMMON_GLOBAL.common_app_id);
-                            }
-                        })
-                        .catch(()=>common.ComponentRemove('common_dialogue_app_data_display', true));
-                    }
-                    break;
-                }
-            }
-        });
-    }
-};
-
-/**
  * App event keyup
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
@@ -191,8 +151,29 @@ const product_update = async () =>{
     
 };
 /**
-     * Payment request
-     */
+ * Get payment request status
+ * @returns {void}
+ */
+const payment_request_status = ()=>{
+    if ( new Date().getSeconds() % 2){
+        const payment_request_id = CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
+    
+        common.FFB('/app-function/PAYMENT_REQUEST_GET_STATUS', null, 'POST', 'APP_DATA',   {
+                                                                                    payment_request_id: payment_request_id
+                                                                                    })
+        .then((/**@type{*}*/result)=>{
+            const status = JSON.parse(result).rows[0].status;
+            if (status != 'PENDING'){
+                common.ComponentRemove('common_dialogue_app_data_display', true);
+                common.show_message('INFO', null, null, null,status, common.COMMON_GLOBAL.common_app_id);
+            }
+        })
+        .catch(()=>common.ComponentRemove('common_dialogue_app_data_display', true));
+    }
+};
+/**
+ * Payment request
+ */
 const payment_request = async () =>{
     const sku = CommonAppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
     const payerid_element = CommonAppDocument.querySelectorAll('.common_app_data_display_master_row .common_app_data_display_master_col2[data-value=payment_id]')[0];
@@ -244,7 +225,7 @@ const payment_request = async () =>{
     
                 common.user_session_countdown(  CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
                                                 CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_exp').getAttribute('data-value'),
-                                                true);
+                                                payment_request_status);
             })
             .catch(()=>common.ComponentRemove('common_dialogue_app_data_display', true));
     }
@@ -308,7 +289,7 @@ const pay = async () =>{
  const framework_set = async (framework=null) => {
     await common.framework_set(framework,
         {   Click: app_event_click,
-            Change: app_event_change,
+            Change: null,
             KeyDown: null,
             KeyUp: app_event_keyup,
             Focus: null,
