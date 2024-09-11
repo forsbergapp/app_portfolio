@@ -1,3 +1,6 @@
+/**
+ * @module apps/app2/report/lib_praytimes
+ */
 //--------------------- Copyright Block ----------------------
 /* 
 
@@ -29,7 +32,6 @@ http://praytimes.org/manual
 
 Calculation Formulas: 
 http://praytimes.org/calculation
-
 
 
 //------------------------ User Interface -------------------------
@@ -64,7 +66,7 @@ function PrayTimes(method) {
 
 
 	//------------------------ Constants --------------------------
-	var
+	let
 	
 	// Time Names
 	timeNames = {
@@ -179,24 +181,23 @@ function PrayTimes(method) {
 	
 	
 	// set methods defaults
-	var defParams = defaultParams;
+	const defParams = defaultParams;
 	for (var i in methods) {
 		var params = methods[i].params;
-		for (var j in defParams)
+		for (const j in defParams)
 			if ((typeof(params[j]) == 'undefined'))
 				params[j] = defParams[j];
-	};
+	}
 
 	// initialize settings
 	calcMethod = methods[method] ? method : calcMethod;
 	var params = methods[calcMethod].params;
-	for (var id in params)
+	for (const id in params)
 		setting[id] = params[id];
 
 	// init time offsets
 	for (var i in timeNames)
 		offset[i] = 0;
-
 		
 	
 	//----------------------- Public Functions ------------------------
@@ -214,14 +215,14 @@ function PrayTimes(method) {
 
 	// set calculating parameters
 	adjust: function(params) {
-		for (var id in params)
+		for (const id in params)
 			setting[id] = params[id];
 	},
 
 
 	// set time offsets
 	tune: function(timeOffsets) {
-		for (var i in timeOffsets)
+		for (const i in timeOffsets)
 			offset[i] = timeOffsets[i];
 	},
 
@@ -266,10 +267,10 @@ function PrayTimes(method) {
 		suffixes = suffixes || timeSuffixes;
 
 		time = DMath.fixHour(time+ 0.5/ 60);  // add 0.5 minutes to round
-		var hours = Math.floor(time); 
-		var minutes = Math.floor((time- hours)* 60);
-		var suffix = (format == '12h') ? suffixes[hours < 12 ? 0 : 1] : '';
-		var hour = (format == '24h') ? this.twoDigitsFormat(hours) : ((hours+ 12 -1)% 12+ 1);
+		const hours = Math.floor(time); 
+		const minutes = Math.floor((time- hours)* 60);
+		const suffix = (format == '12h') ? suffixes[hours < 12 ? 0 : 1] : '';
+		const hour = (format == '24h') ? this.twoDigitsFormat(hours) : ((hours+ 12 -1)% 12+ 1);
 		return hour+ ':'+ this.twoDigitsFormat(minutes)+ (suffix ? ' '+ suffix : '');
 	},
 
@@ -279,17 +280,17 @@ function PrayTimes(method) {
 
 	// compute mid-day time
 	midDay: function(time) {
-		var eqt = this.sunPosition(jDate+ time).equation;
-		var noon = DMath.fixHour(12- eqt);
+		const eqt = this.sunPosition(jDate+ time).equation;
+		const noon = DMath.fixHour(12- eqt);
 		return noon;
 	},
 
 
 	// compute the time at which sun reaches a specific angle below horizon
 	sunAngleTime: function(angle, time, direction) {
-		var decl = this.sunPosition(jDate+ time).declination;
-		var noon = this.midDay(time);
-		var t = 1/15* DMath.arccos((-DMath.sin(angle)- DMath.sin(decl)* DMath.sin(lat))/ 
+		const decl = this.sunPosition(jDate+ time).declination;
+		const noon = this.midDay(time);
+		const t = 1/15* DMath.arccos((-DMath.sin(angle)- DMath.sin(decl)* DMath.sin(lat))/ 
 				(DMath.cos(decl)* DMath.cos(lat)));
 		return noon+ (direction == 'ccw' ? -t : t);
 	},
@@ -297,8 +298,8 @@ function PrayTimes(method) {
 
 	// compute asr time 
 	asrTime: function(factor, time) { 
-		var decl = this.sunPosition(jDate+ time).declination;
-		var angle = -DMath.arccot(factor+ DMath.tan(Math.abs(lat- decl)));
+		const decl = this.sunPosition(jDate+ time).declination;
+		const angle = -DMath.arccot(factor+ DMath.tan(Math.abs(lat- decl)));
 		return this.sunAngleTime(angle, time);
 	},
 
@@ -306,17 +307,17 @@ function PrayTimes(method) {
 	// compute declination angle of sun and equation of time
 	// Ref: http://aa.usno.navy.mil/faq/docs/SunApprox.php
 	sunPosition: function(jd) {
-		var D = jd - 2451545.0;
-		var g = DMath.fixAngle(357.529 + 0.98560028* D);
-		var q = DMath.fixAngle(280.459 + 0.98564736* D);
-		var L = DMath.fixAngle(q + 1.915* DMath.sin(g) + 0.020* DMath.sin(2*g));
+		const D = jd - 2451545.0;
+		const g = DMath.fixAngle(357.529 + 0.98560028* D);
+		const q = DMath.fixAngle(280.459 + 0.98564736* D);
+		const L = DMath.fixAngle(q + 1.915* DMath.sin(g) + 0.020* DMath.sin(2*g));
 
-		var R = 1.00014 - 0.01671* DMath.cos(g) - 0.00014* DMath.cos(2*g);
-		var e = 23.439 - 0.00000036* D;
+		const R = 1.00014 - 0.01671* DMath.cos(g) - 0.00014* DMath.cos(2*g);
+		const e = 23.439 - 0.00000036* D;
 
-		var RA = DMath.arctan2(DMath.cos(e)* DMath.sin(L), DMath.cos(L))/ 15;
-		var eqt = q/15 - DMath.fixHour(RA);
-		var decl = DMath.arcsin(DMath.sin(e)* DMath.sin(L));
+		const RA = DMath.arctan2(DMath.cos(e)* DMath.sin(L), DMath.cos(L))/ 15;
+		const eqt = q/15 - DMath.fixHour(RA);
+		const decl = DMath.arcsin(DMath.sin(e)* DMath.sin(L));
 
 		return {declination: decl, equation: eqt};
 	},
@@ -328,11 +329,11 @@ function PrayTimes(method) {
 		if (month <= 2) {
 			year -= 1;
 			month += 12;
-		};
-		var A = Math.floor(year/ 100);
-		var B = 2- A+ Math.floor(A/ 4);
+		}
+		const A = Math.floor(year/ 100);
+		const B = 2- A+ Math.floor(A/ 4);
 
-		var JD = Math.floor(365.25* (year+ 4716))+ Math.floor(30.6001* (month+ 1))+ day+ B- 1524.5;
+		const JD = Math.floor(365.25* (year+ 4716))+ Math.floor(30.6001* (month+ 1))+ day+ B- 1524.5;
 		return JD;
 	},
 
@@ -343,16 +344,16 @@ function PrayTimes(method) {
 	// compute prayer times at given julian date
 	computePrayerTimes: function(times) {
 		times = this.dayPortion(times);
-		var params  = setting;
+		const params  = setting;
 		
-		var imsak   = this.sunAngleTime(this.eval(params.imsak), times.imsak, 'ccw');
-		var fajr    = this.sunAngleTime(this.eval(params.fajr), times.fajr, 'ccw');
-		var sunrise = this.sunAngleTime(this.riseSetAngle(), times.sunrise, 'ccw');  
-		var dhuhr   = this.midDay(times.dhuhr);
-		var asr     = this.asrTime(this.asrFactor(params.asr), times.asr);
-		var sunset  = this.sunAngleTime(this.riseSetAngle(), times.sunset);;
-		var maghrib = this.sunAngleTime(this.eval(params.maghrib), times.maghrib);
-		var isha    = this.sunAngleTime(this.eval(params.isha), times.isha);
+		const imsak   = this.sunAngleTime(this.eval(params.imsak), times.imsak, 'ccw');
+		const fajr    = this.sunAngleTime(this.eval(params.fajr), times.fajr, 'ccw');
+		const sunrise = this.sunAngleTime(this.riseSetAngle(), times.sunrise, 'ccw');  
+		const dhuhr   = this.midDay(times.dhuhr);
+		const asr     = this.asrTime(this.asrFactor(params.asr), times.asr);
+		const sunset  = this.sunAngleTime(this.riseSetAngle(), times.sunset);
+		const maghrib = this.sunAngleTime(this.eval(params.maghrib), times.maghrib);
+		const isha    = this.sunAngleTime(this.eval(params.isha), times.isha);
 
 		return {
 			imsak: imsak, fajr: fajr, sunrise: sunrise, dhuhr: dhuhr, 
@@ -364,13 +365,13 @@ function PrayTimes(method) {
 	// compute prayer times 
 	computeTimes: function() {
 		// default times
-		var times = { 
+		let times = { 
 			imsak: 5, fajr: 5, sunrise: 6, dhuhr: 12, 
 			asr: 13, sunset: 18, maghrib: 18, isha: 18
 		};
 
 		// main iterations
-		for (var i=1 ; i<=numIterations ; i++) 
+		for (let i=1 ; i<=numIterations ; i++) 
 			times = this.computePrayerTimes(times);
 
 		times = this.adjustTimes(times);
@@ -387,8 +388,8 @@ function PrayTimes(method) {
 
 	// adjust times 
 	adjustTimes: function(times) {
-		var params = setting;
-		for (var i in times)
+		const params = setting;
+		for (const i in times)
 			times[i] += timeZone- lng/ 15;
 			
 		if (params.highLats != 'None')
@@ -408,7 +409,7 @@ function PrayTimes(method) {
 
 	// get asr shadow factor
 	asrFactor: function(asrParam) {
-		var factor = {Standard: 1, Hanafi: 2}[asrParam];
+		const factor = {Standard: 1, Hanafi: 2}[asrParam];
 		return factor || this.eval(asrParam);
 	},
 
@@ -417,14 +418,14 @@ function PrayTimes(method) {
 	riseSetAngle: function() {
 		//var earthRad = 6371009; // in meters
 		//var angle = DMath.arccos(earthRad/(earthRad+ elv));
-		var angle = 0.0347* Math.sqrt(elv); // an approximation
+		const angle = 0.0347* Math.sqrt(elv); // an approximation
 		return 0.833+ angle;
 	},
 
 
 	// apply offsets to the times
 	tuneTimes: function(times) {
-		for (var i in times)
+		for (const i in times)
 			times[i] += offset[i]/ 60; 
 		return times;
 	},
@@ -432,7 +433,7 @@ function PrayTimes(method) {
 
 	// convert times to given time format
 	modifyFormats: function(times) {
-		for (var i in times)
+		for (const i in times)
 			times[i] = this.getFormattedTime(times[i], timeFormat); 
 		return times;
 	},
@@ -440,8 +441,8 @@ function PrayTimes(method) {
 
 	// adjust times for locations in higher latitudes
 	adjustHighLats: function(times) {
-		var params = setting;
-		var nightTime = this.timeDiff(times.sunset, times.sunrise); 
+		const params = setting;
+		const nightTime = this.timeDiff(times.sunset, times.sunrise); 
 
 		times.imsak = this.adjustHLTime(times.imsak, times.sunrise, this.eval(params.imsak), nightTime, 'ccw');
 		times.fajr  = this.adjustHLTime(times.fajr, times.sunrise, this.eval(params.fajr), nightTime, 'ccw');
@@ -454,8 +455,8 @@ function PrayTimes(method) {
 	
 	// adjust a time for higher latitudes
 	adjustHLTime: function(time, base, angle, night, direction) {
-		var portion = this.nightPortion(angle, night);
-		var timeDiff = (direction == 'ccw') ? 
+		const portion = this.nightPortion(angle, night);
+		const timeDiff = (direction == 'ccw') ? 
 			this.timeDiff(time, base):
 			this.timeDiff(base, time);
 		if (isNaN(time) || timeDiff > portion) 
@@ -466,8 +467,8 @@ function PrayTimes(method) {
 	
 	// the night portion used for adjusting times in higher latitudes
 	nightPortion: function(angle, night) {
-		var method = setting.highLats;
-		var portion = 1/2 // MidNight
+		const method = setting.highLats;
+		let portion = 1/2; // MidNight
 		if (method == 'AngleBased')
 			portion = 1/60* angle;
 		if (method == 'OneSeventh')
@@ -478,7 +479,7 @@ function PrayTimes(method) {
 
 	// convert hours to day portions 
 	dayPortion: function(times) {
-		for (var i in times)
+		for (const i in times)
 			times[i] /= 24;
 		return times;
 	},
@@ -489,9 +490,9 @@ function PrayTimes(method) {
 
 	// get local time zone
 	getTimeZone: function(date) {
-		var year = date[0];
-		var t1 = this.gmtOffset([year, 0, 1]);
-		var t2 = this.gmtOffset([year, 6, 1]);
+		const year = date[0];
+		const t1 = this.gmtOffset([year, 0, 1]);
+		const t2 = this.gmtOffset([year, 6, 1]);
 		return Math.min(t1, t2);
 	},
 
@@ -504,10 +505,10 @@ function PrayTimes(method) {
 
 	// GMT offset for a given date
 	gmtOffset: function(date) {
-		var localDate = new Date(date[0], date[1]- 1, date[2], 12, 0, 0, 0);
-		var GMTString = localDate.toGMTString();
-		var GMTDate = new Date(GMTString.substring(0, GMTString.lastIndexOf(' ')- 1));
-		var hoursDiff = (localDate- GMTDate) / (1000* 60* 60);
+		const localDate = new Date(date[0], date[1]- 1, date[2], 12, 0, 0, 0);
+		const GMTString = localDate.toGMTString();
+		const GMTDate = new Date(GMTString.substring(0, GMTString.lastIndexOf(' ')- 1));
+		const hoursDiff = (localDate- GMTDate) / (1000* 60* 60);
 		return hoursDiff;
 	},
 
@@ -537,8 +538,7 @@ function PrayTimes(method) {
 		return (num <10) ? '0'+ num : num;
 	}
 	
-}}
-
+};}
 
 
 //---------------------- Degree-Based Math Class -----------------------
@@ -567,12 +567,11 @@ var DMath = {
 		a = a- b* (Math.floor(a/ b));
 		return (a < 0) ? a+ b : a;
 	}
-}
+};
 
 
 //---------------------- Init Object -----------------------
 
-
-var prayTimes = new PrayTimes();
-
-
+//modified to ECMASCript module
+//var prayTimes = new PrayTimes();
+export default new PrayTimes();
