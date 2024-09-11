@@ -976,12 +976,10 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
  * @returns 
  */
 const getFunction = async (app_id, resource_id, data, user_agent, ip, locale, res) => {
-    const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==resource_id)[0][4];
-    if (module_path){
-        const {default:RunFunction} = await import(`file://${process.cwd()}${module_path}`);
-        /**@type{*} */
-        const function_data = await RunFunction(app_id, data, user_agent, ip, locale, res);
-        return function_data;            
+    const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==resource_id);
+    if (module_path[0]){
+        const {default:RunFunction} = await import(`file://${process.cwd()}${module_path[0][4]}`);
+        return await RunFunction(app_id, data, user_agent, ip, locale, res);
     }
     else{
         LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getFunction()', COMMON.app_line(), `Function ${resource_id} not found`)
@@ -1004,21 +1002,19 @@ const getFunction = async (app_id, resource_id, data, user_agent, ip, locale, re
  * @returns 
  */
 const getModule = async (app_id, resource_id, data, user_agent, ip, locale, res) => {
-    const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='MODULE' && file[1]==resource_id)[0][4];
-    const {default:RunFunction} = await import(`file://${process.cwd()}${module_path}`);
-    return new Promise(resolve=>{
-        if (module_path){
-            RunFunction(app_id, data, user_agent, ip, locale, res).then((/**@type{*} */module)=>resolve({STATIC:true, SENDFILE:module, SENDCONTENT:null}));
-        }
-        else{
-            LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getModule()', COMMON.app_line(), `Module ${resource_id} not found`)
-            .then(()=>{
-                if (res)
-                    res.statusCode = 404;
-                resolve(null);
-            });
-        }
-    });
+    const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='MODULE' && file[1]==resource_id);
+    if (module_path[0]){
+        const {default:RunFunction} = await import(`file://${process.cwd()}${module_path[0][4]}`);
+        return await RunFunction(app_id, data, user_agent, ip, locale, res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
+    }
+    else{
+        LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getModule()', COMMON.app_line(), `Module ${resource_id} not found`)
+        .then(()=>{
+            if (res)
+                res.statusCode = 404;
+            return {STATIC:true, SENDFILE:null, SENDCONTENT:''};
+        });
+    }
 };
 
 /**
