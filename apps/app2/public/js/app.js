@@ -162,26 +162,19 @@ Object.seal(APP_GLOBAL);
  * @returns {Promise.<void>}
  */
 const printTimetable = async () => {
-    const whatToPrint = CommonAppDocument.querySelector('#paper');
-	const html = `<!DOCTYPE html>
-			<html>
-			<head>
-				<meta charset='UTF-8'>
-				<title></title>
-                <link rel='stylesheet' type='text/css' href=${CommonAppDocument.querySelector('#app_link_app_report_css').attributes['href'].nodeValue} />
-                <link rel='stylesheet' type='text/css' href=${CommonAppDocument.querySelector('#common_link_common_css').attributes['href'].nodeValue} />
-			</head>
-			<body id="printbody">
-				${whatToPrint.outerHTML}
-			</body>
-			</html>`;
-	
+    //use app component to get HTML
+    const component_print = '/component/print.js';
+    const {default:component_function} = await import(component_print);
+    /**@type{import('../../../common_types.js').CommonComponentResult}*/
+    const {template} = await component_function({   common_document:CommonAppDocument, 
+                                                    html:CommonAppDocument.querySelector('#paper').outerHTML});
     await common.ComponentRender('common_window_info', {  info:3,
                                                     url:null, 
                                                     content_type:null, 
-                                                    iframe_content:html,
+                                                    iframe_content:template,
                                                     frame:CommonAppWindow.frames.document, 
                                                     mobile_function:common.mobile}, '/common/component/window_info.js');
+    
 };
 /**
  * Get report settings
