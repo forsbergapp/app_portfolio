@@ -1199,7 +1199,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
 	--app_theme_main_select_color: var(--common_app_color_white2);
 	--app_theme_main_select_color2: var(--common_app_color_green);
-	--app_theme_main_select_color3: var(--common_app_color_red);
+	--app_theme_main_select_color3: var(--common_app_color_black);
 	--app_theme_main_select_color4: var(--common_app_color_blue1);
 	--app_theme_main_border_color: var(--common_app_color_white2);
 	--app_theme_main_border_color2: var(--common_app_color_blue2);
@@ -1272,7 +1272,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
 	--app_theme_main_select_color: var(--common_app_color_white2);
 	--app_theme_main_select_color2: var(--common_app_color_green);
-	--app_theme_main_select_color3: var(--common_app_color_red);
+	--app_theme_main_select_color3: var(--common_app_color_black);
 	--app_theme_main_select_color4: var(--common_app_color_dark);
 	--app_theme_main_border_color: var(--common_app_color_white2);
 	--app_theme_main_border_color2: var(--common_app_color_blue2);
@@ -1345,7 +1345,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
 	--app_theme_main_select_color: var(--common_app_color_white2);
 	--app_theme_main_select_color2: var(--common_app_color_green);
-	--app_theme_main_select_color3: var(--common_app_color_red);
+	--app_theme_main_select_color3: var(--common_app_color_black);
 	--app_theme_main_select_color4: var(--common_app_color_cafe_latte);
 	--app_theme_main_border_color: var(--common_app_color_white2);
 	--app_theme_main_border_color2: var(--common_app_color_blue2);
@@ -1607,10 +1607,10 @@ body{
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
 .common_like {
-    color: var(--common_app_color_red) !important;
+    color: var(--common_app_color_blue1) !important;
 }
 .common_unlike{
-	color: var(--common_app_color_red) !important;
+	color: var(--common_app_color_blue1) !important;
 }
 /*SECURE*/
 .common_list_row_selected{

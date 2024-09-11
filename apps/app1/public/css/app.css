@@ -455,7 +455,7 @@ div.ray8 {
 	--app_theme_main_branding_color6: var(--common_app_color_gold);
 	--app_theme_main_branding_color7: var(--common_app_color_yellow);
 	--app_theme_main_branding_color8: var(--common_app_color_dark);
-	--app_theme_main_branding_color9: var(--common_app_color_lightred);
+	--app_theme_main_branding_color9: var(--common_app_color_light);
 	--app_theme_main_branding_color10: var(--common_app_color_white);
 	--app_theme_main_branding_color11: var(--common_app_color_lightgreen);
 	--app_theme_main_branding_color12: var(--common_app_color_lightyellow);
@@ -534,7 +534,7 @@ div.ray8 {
 	--app_theme_main_branding_color6: var(--common_app_color_gold);
 	--app_theme_main_branding_color7: var(--common_app_color_yellow);
 	--app_theme_main_branding_color8: var(--common_app_color_dark);
-	--app_theme_main_branding_color9: var(--common_app_color_lightred);
+	--app_theme_main_branding_color9: var(--common_app_color_light);
 	--app_theme_main_branding_color10: var(--common_app_color_white);
 	--app_theme_main_branding_color11: var(--common_app_color_lightgreen);
 	--app_theme_main_branding_color12: var(--common_app_color_lightyellow);
@@ -832,10 +832,10 @@ border-left: 12px solid var(--app_theme_sun_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
 .common_like {
-    color: var(--common_app_color_red) !important;
+    color: var(--common_app_color_blue1) !important;
 }
 .common_unlike{
-	color: var(--common_app_color_red) !important;
+	color: var(--common_app_color_blue1) !important;
 }
 #common_window_info_toolbar{
 	background: var(--app_theme_dialogue_background_color);
