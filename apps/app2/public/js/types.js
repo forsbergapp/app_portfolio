@@ -121,7 +121,12 @@
  *          prayer_default_show_fast_start_end:number,
  *          timetable_type:number,
  *          places:APP_place[]|null,
- *          user_settings:APP_json_data_user_setting[]
+ *          user_settings:APP_json_data_user_setting[],
+ *          lib_prayTimes:import('../../../common_types.js').CommonModulePrayTimes|null,
+ *          lib_timetable:{ set_prayer_method:function, REPORT_GLOBAL:*, 
+ *                          displayDay:function, 
+ *                          displayMonth:function, 
+ *                          displayYear:function}
  *          }} APP_GLOBAL
  */
 

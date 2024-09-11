@@ -173,32 +173,6 @@ const getTimezoneDate = timezone =>{
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})));
     return new Date(utc.setHours(  utc.getHours() + getTimezoneOffset(timezone)));
 };
-/**
- * Get Gregorian date from Hijri date
- * The epoch of Hijri calendar for 1 Muharram, AH 1
- * The civil and the Friday epoch will be used here
- * @param {*} HijriDate 
- * @param {*} adjustment 
- * @returns {[number, number, number]}      [year, month, day]
- */
-const getGregorian = (HijriDate, adjustment) =>{
-    const DAY = 86400000; // a day in milliseconds
-    const UNIX_EPOCH_JULIAN_DATE = 2440587.5; // January 1, 1970 GMT
-
-    //const hijri_epoch_julian_astronomical 	= 1948439;	//Gregorian: Thursday 15 July 622
-	const hijri_epoch_julian_civil 		    = 1948440;	//Gregorian: Friday 16 July 622	
-
-    const year =  parseInt(HijriDate[0]);
-    const month = parseInt(HijriDate[1]);
-    const day =   parseInt(HijriDate[2]);
-    //calculate julian date
-    let julian_day = Math.floor(((11*year+3)/30)+(354*year)+(30*month)-((month-1)/2)+day+hijri_epoch_julian_civil-385);
-    //adjust day with +- given number of days
-    julian_day = julian_day + parseInt(adjustment);
-    return [new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getFullYear(),
-            new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getMonth() + 1,
-            new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getDate()];
-};
 
 let timer = 0;
 /**
@@ -4046,7 +4020,7 @@ const init_common = async (parameters) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS,
        /* MISC */
-       element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, 
+       element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, typewatch, toBase64, fromBase64, 
        common_translate_ui, get_locales_options, 
        mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,

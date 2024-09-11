@@ -696,8 +696,6 @@ const getApps = async (app_id, resource_id, lang_code) =>{
  *                      makes ECMAScript module adding export
  *                  /modules/react/react.development.js
  *                      makes ECMAScript module adding export
- *                  /modules/PrayTimes/PrayTimes.js
- *                      makes ECMAScript module adding export
  *                  /modules/leaflet/leaflet-src.esm.js
  *                      removes sourceMappingURL
  *                  /modules/easy.qrcode/easy.qrcode.js
@@ -751,13 +749,6 @@ const getAssetFile = (app_id, url, basepath, res) =>{
                                 modulefile = modulefile + 'export {React}';
                             }
                             
-                            resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
-                        });
-                        break;
-                    }
-                    case '/modules/PrayTimes/PrayTimes.js':{
-                        fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8').then((modulefile)=>{
-                            modulefile = modulefile.replace(  'var prayTimes = new PrayTimes();','export default new PrayTimes();');
                             resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
                         });
                         break;
@@ -920,6 +911,15 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                     return report_result.report;
                                 });
             }
+            case (url.toLowerCase().startsWith('/app-module/')):{
+                return await getModule( app_id, 
+                                        url.substring(url.lastIndexOf('/') + 1), 
+                                        null, 
+                                        user_agent, 
+                                        ip, 
+                                        accept_language, 
+                                        res);
+            }
             case (url == '/'):
             case ((ConfigGetApp(app_id, app_id, 'SHOWPARAM') == 1 && url.substring(1) !== '')):{
                 return new Promise((resolve, reject)=>{
@@ -992,6 +992,35 @@ const getFunction = async (app_id, resource_id, data, user_agent, ip, locale, re
         });
     }    
 };
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} resource_id 
+ * @param {*} data 
+ * @param {string} user_agent
+ * @param {string} ip
+ * @param {string} locale
+ * @param {import('../types.js').server_server_res|null} res
+ * @returns 
+ */
+const getModule = async (app_id, resource_id, data, user_agent, ip, locale, res) => {
+    const module_path = ConfigGetApps(app_id, 'MODULES')[0].MODULES.filter((/**@type{*}*/file)=>file[0]=='MODULE' && file[1]==resource_id)[0][4];
+    const {default:RunFunction} = await import(`file://${process.cwd()}${module_path}`);
+    return new Promise(resolve=>{
+        if (module_path){
+            RunFunction(app_id, data, user_agent, ip, locale, res).then((/**@type{*} */module)=>resolve({STATIC:true, SENDFILE:module, SENDCONTENT:null}));
+        }
+        else{
+            LogAppE(app_id, COMMON.app_filename(import.meta.url), 'getModule()', COMMON.app_line(), `Module ${resource_id} not found`)
+            .then(()=>{
+                if (res)
+                    res.statusCode = 404;
+                resolve(null);
+            });
+        }
+    });
+};
+
 /**
  * 
  * @param {string} host 

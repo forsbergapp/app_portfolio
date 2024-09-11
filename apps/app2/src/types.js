@@ -10,7 +10,7 @@
  * @property {string}	second_locale
  * @property {string}	coltitle
  * @property {string}	arabic_script
- * @property {string}	calendartype
+ * @property {'GREGORIAN'|'HIJRI'}	calendartype
  * @property {string}	calendar_hijri_type
  * @property {string}	place
  * @property {number}	gps_lat
@@ -54,6 +54,8 @@
  * @property {string}	timetable_year_month	- class to add for year
  * @property {string}	reporttype_year_month	- MONTH:default, normal month with more info, 
  *												- YEAR:	month with less info
+ * @property {'toolbar_btn_left'|null}	ui_navigation_left      - used in app client
+ * @property {'toolbar_btn_right'|null}	ui_navigation_right     - used in app client
  */
 
 /**
