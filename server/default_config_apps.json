@@ -257,7 +257,7 @@
                     "MANIFEST":true,
                     "JS":"/js/app.js",     
                     "JS_SECURE":"",                     
-                    "JS_REPORT":"/js/app_report.js",   
+                    "JS_REPORT":"",
                     "CSS": "/css/app.css",   
                     "CSS_REPORT": "/css/app_report.css", 
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
@@ -265,7 +265,10 @@
                     "RENDER_FILES":[]
         },
         "MODULES":[
-            ["REPORT",  "TIMETABLE",    null,   "/apps/app2/src/report/timetable.js"]
+            ["REPORT",  "TIMETABLE",            null,                               "/apps/app2/src/report/timetable.js"],
+            ["MODULE",  "MODULE_LIB_PRAYTIMES", "APP_DATA", "Module praytimes",     "/apps/app2/src/modules/module_lib_praytimes.js"],
+            ["MODULE",  "MODULE_LIB_TIMETABLE", "APP_DATA", "Module timetable",     "/apps/app2/src/modules/module_lib_timetable.js"]
+
         ],
         "STATUS":"ONLINE"
     },

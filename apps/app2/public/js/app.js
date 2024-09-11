@@ -12,13 +12,16 @@ const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 
-const path_app_report ='app_report';
-/**@type {import('./app_report.js')}*/
-const app_report = await import(path_app_report);
-
 const path_regional ='regional';
 /**@type {import('../../../common_types.js').CommonModuleRegional} */
 const {getTimezone} = await import(path_regional);
+
+const path_praytimes = '/app-module/MODULE_LIB_PRAYTIMES';
+const {default:prayTimes}= await import(path_praytimes);
+
+const path_lib_timetable = '/app-module/MODULE_LIB_TIMETABLE';
+const lib_timetable = await import(path_lib_timetable);
+
 
 /**@type{import('./types.js').APP_json_data_user_setting} */
 const user_settings_empty = {   id:0,
@@ -144,8 +147,15 @@ const APP_GLOBAL = {
     //session variables
     timetable_type:0,
     places:null,
-    user_settings:[user_settings_empty]
-};
+    user_settings:[user_settings_empty],
+    //lib
+    lib_prayTimes:null,
+    lib_timetable:{ set_prayer_method:()=>null, 
+                    REPORT_GLOBAL:null, 
+                    displayDay:()=>null, 
+                    displayMonth:()=>null, 
+                    displayYear:()=>null}
+    };
 Object.seal(APP_GLOBAL);
 /**
  * Print timetable
@@ -272,17 +282,17 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                 prayer_hijri_date_adjustment : setting.prayer_hijri_date_adjustment
                 });
             }
-            CommonAppDocument.querySelector('#paper').innerHTML = app_report.displayDay(settings, item_id, current_user_settings);
+            CommonAppDocument.querySelector('#paper').innerHTML = APP_GLOBAL.lib_timetable.displayDay(APP_GLOBAL.lib_prayTimes, settings, item_id, current_user_settings);
             break;
         }
         //1=create timetable month
         case 1:{
-            CommonAppDocument.querySelector('#paper').innerHTML = app_report.displayMonth(settings, item_id);
+            CommonAppDocument.querySelector('#paper').innerHTML = APP_GLOBAL.lib_timetable.displayMonth(APP_GLOBAL.lib_prayTimes, settings, item_id);
             break;
         }
         //2=create timetable year
         case 2:{
-            CommonAppDocument.querySelector('#paper').innerHTML = app_report.displayYear(settings, item_id);
+            CommonAppDocument.querySelector('#paper').innerHTML = APP_GLOBAL.lib_timetable.displayYear(APP_GLOBAL.lib_prayTimes, settings, item_id);
             break;
         }
         default:{
@@ -465,34 +475,34 @@ const settings_translate = async (first=true) => {
         .then((/**@type{string}*/result)=>{
             for (const app_object_item of JSON.parse(result).rows){
                 if (first==true)
-                    app_report.REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
+                    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
                 else
-                    app_report.REPORT_GLOBAL.second_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
+                    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
             }
             //if translating first language and second language is not used
             if (first == true &&
                 APP_GLOBAL.user_settings[CommonAppDocument.querySelector('#setting_select_user_setting').selectedIndex].regional_second_language_locale =='0'){
-                app_report.REPORT_GLOBAL.second_language.timetable_title= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_day= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_weekday= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_weekday_tr= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_caltype_hijri= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_caltype_gregorian= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_imsak= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_fajr= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_fajr_iqamat= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_sunrise= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_dhuhr= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_dhuhr_iqamat= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_asr= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_asr_iqamat= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_sunset= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_maghrib= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_maghrib_iqamat= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_isha= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_isha_iqamat= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_midnight= '';
-                app_report.REPORT_GLOBAL.second_language.coltitle_notes= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.timetable_title= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_day= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_weekday= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_weekday_tr= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_caltype_hijri= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_caltype_gregorian= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_imsak= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_fajr= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_fajr_iqamat= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_sunrise= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_dhuhr= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_dhuhr_iqamat= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_asr= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_asr_iqamat= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_sunset= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_maghrib= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_maghrib_iqamat= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_isha= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_isha_iqamat= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_midnight= '';
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_notes= '';
             }
         })
         .catch(()=>null);
@@ -791,7 +801,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
 
                 map_show_qibbla();
                 APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone;
-                app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
                 settings_update('GPS');    
                 break;
             }
@@ -932,16 +942,16 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
 
                 CommonAppDocument.querySelector('#setting_method_param_fajr').innerHTML = '';
                 CommonAppDocument.querySelector('#setting_method_param_isha').innerHTML = '';
-                if (typeof app_report.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr == 'string')
+                if (typeof APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                CommonAppDocument.querySelector('#setting_method_param_fajr').innerHTML = 'Fajr:' + app_report.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr + suffix;
-                if (typeof app_report.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha == 'string')
+                CommonAppDocument.querySelector('#setting_method_param_fajr').innerHTML = 'Fajr:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr + suffix;
+                if (typeof APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                CommonAppDocument.querySelector('#setting_method_param_isha').innerHTML = 'Isha:' + app_report.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
+                CommonAppDocument.querySelector('#setting_method_param_isha').innerHTML = 'Isha:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
                 break;
             }
     }
@@ -2248,7 +2258,7 @@ const app_event_click = event => {
                     CommonAppDocument.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
                     //set qibbla
                     map_show_qibbla();
-                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(CommonAppDocument.querySelector('#setting_select_report_timezone').value);
+                    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(CommonAppDocument.querySelector('#setting_select_report_timezone').value);
                     settings_update('GPS');
                     break;
                 }       
@@ -2878,7 +2888,7 @@ const settings_load = async (tab_selected) => {
                     //Update GPS position
                     component_setting_update('GPS', 'POSITION');
                     const timezone = getTimezone(   event.latlng.lat, event.latlng.lng);
-                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
+                    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
                 }   
             };
             await common.map_init(APP_GLOBAL.gps_module_leaflet_container,
@@ -2900,6 +2910,9 @@ const settings_load = async (tab_selected) => {
  * @returns {Promise.<void>}
  */
 const init_app = async parameters => {
+    APP_GLOBAL.lib_prayTimes = prayTimes;
+    APP_GLOBAL.lib_timetable = lib_timetable;
+
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
     .then(()=>common.ComponentRender('app_profile_search', {}, '/common/component/profile_search.js'))
     .then(()=>common.ComponentRender('app_profile_toolbar', {}, '/common/component/profile_toolbar.js'))
@@ -2908,24 +2921,24 @@ const init_app = async parameters => {
     //set papersize
     zoom_paper();
     //set app and report globals
-    app_report.REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright ?? '';
+    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright ?? '';
     for (const parameter of parameters.app) {
         if (parameter['APP_DEFAULT_STARTUP_PAGE'])
             APP_GLOBAL.app_default_startup_page = parseInt(parameter['APP_DEFAULT_STARTUP_PAGE']);
         if (parameter['APP_REPORT_TIMETABLE'])
             APP_GLOBAL.app_report_timetable = parameter['APP_REPORT_TIMETABLE']; 
         if (parameter['REGIONAL_DEFAULT_CALENDAR_LANG'])
-            app_report.REPORT_GLOBAL.regional_def_calendar_lang = parameter['REGIONAL_DEFAULT_CALENDAR_LANG'];
+            APP_GLOBAL.lib_timetable.REPORT_GLOBAL.regional_def_calendar_lang = parameter['REGIONAL_DEFAULT_CALENDAR_LANG'];
         if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'])
-            app_report.REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'];
+            APP_GLOBAL.lib_timetable.REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'];
         if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'])
-            app_report.REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'];
+            APP_GLOBAL.lib_timetable.REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'];
         if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'])
-            app_report.REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'];
+            APP_GLOBAL.lib_timetable.REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'];
         if (parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'])
-            app_report.REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
+            APP_GLOBAL.lib_timetable.REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
         if (parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'])
-            app_report.REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
+            APP_GLOBAL.lib_timetable.REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
         if (parameter['REGIONAL_DEFAULT_DIRECTION'])
             APP_GLOBAL.regional_default_direction = parameter['REGIONAL_DEFAULT_DIRECTION'];
         if (parameter['REGIONAL_DEFAULT_LOCALE_SECOND'])
@@ -3055,20 +3068,20 @@ const init_app = async parameters => {
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone
     if (common.COMMON_GLOBAL.client_timezone)
-        app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(common.COMMON_GLOBAL.client_timezone);
+        APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(common.COMMON_GLOBAL.client_timezone);
     else
-        app_report.REPORT_GLOBAL.session_currentDate = new Date();
-    app_report.REPORT_GLOBAL.session_currentHijriDate = [0,0];
+        APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = new Date();
+    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentHijriDate = [0,0];
     //get Hijri date from initial Gregorian date
-    app_report.REPORT_GLOBAL.session_currentHijriDate[0] = parseInt(new Date(app_report.REPORT_GLOBAL.session_currentDate.getFullYear(),
-        app_report.REPORT_GLOBAL.session_currentDate.getMonth(),
-        app_report.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-    app_report.REPORT_GLOBAL.session_currentHijriDate[1] = parseInt(new Date(app_report.REPORT_GLOBAL.session_currentDate.getFullYear(),
-        app_report.REPORT_GLOBAL.session_currentDate.getMonth(),
-        app_report.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentHijriDate[0] = parseInt(new Date(APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate.getFullYear(),
+        APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate.getMonth(),
+        APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentHijriDate[1] = parseInt(new Date(APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate.getFullYear(),
+        APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate.getMonth(),
+        APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
 
 	const methods = await settings_method();
-    app_report.set_prayer_method(methods).then(() => {
+    APP_GLOBAL.lib_timetable.set_prayer_method(methods).then(() => {
         //show dialogue about using mobile and scan QR code after 5 seconds
         CommonAppWindow.setTimeout(() => {show_dialogue('SCAN');}, 5000);
         set_default_settings().then(() => {
