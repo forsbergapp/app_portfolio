@@ -12,7 +12,7 @@ const fs = await import('node:fs');
 /**@ts-ignore */
 const path = import.meta.dirname.replaceAll('\\', '/');
 //Import module with ECMA Script module syntax using fs and Base 64
-const prayTimes_source = await fs.promises.readFile(`${path}/PrayTimes.js`)
+const prayTimes_source = await fs.promises.readFile(`${path}/lib_PrayTimes.js`)
 									.then(result=>result.toString().replace('var prayTimes = new PrayTimes();','export default new PrayTimes();'))
 									.catch(error=>{throw error;});
 /**@type {import('../../../common_types.js').CommonModulePrayTimes} */
