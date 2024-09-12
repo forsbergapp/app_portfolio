@@ -64,11 +64,6 @@ const list_generate = amount =>{
  */
 const show_menu = menu => {
     CommonAppDocument.querySelectorAll('.menuitem').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('menuitem_selected'));
-    CommonAppDocument.querySelectorAll('.main_content').forEach((/**@type{HTMLElement}*/content) => {
-        content.innerHTML = '';
-        content.style.display='none';
-    });
-    CommonAppDocument.querySelector(`#menu_${menu}_content`).style.display='block';
     CommonAppDocument.querySelector(`#menu_${menu}`).classList.add('menuitem_selected');
     const current_year = new Date().getFullYear();
     const yearvalues =   `<option value="${current_year}">${current_year}</option>
@@ -339,16 +334,16 @@ const show_start = async (yearvalues) =>{
                 for (const status_code of Object.entries(result_obj.status_codes)){
                     html += `<option value='${status_code[0]}' statGroup=''>${status_code[0]} - ${status_code[1]}</option>`;
                 }
-                CommonAppDocument.querySelector('#menu_1_content').classList.remove('common_icon', 'css_spinner');
+                CommonAppDocument.querySelector('#menu_content').classList.remove('common_icon', 'css_spinner');
                 resolve(html);
             })
             .catch(()=>{
-                CommonAppDocument.querySelector('#menu_1_content').classList.remove('common_icon', 'css_spinner');
+                CommonAppDocument.querySelector('#menu_content').classList.remove('common_icon', 'css_spinner');
                 resolve(null);
             });
         });
     };
-    CommonAppDocument.querySelector('#menu_1_content').innerHTML = 
+    CommonAppDocument.querySelector('#menu_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
                 <div id='menu_1_row_sample'>
                     <select id='select_system_admin_stat'>${common.COMMON_GLOBAL.system_admin!=null?await get_system_admin_stat():''}</select>
@@ -607,9 +602,8 @@ const set_maintenance = () => {
   * @returns{Promise.<void>}
  */
 const count_users = async () => {
-    CommonAppDocument.querySelector('#menu_2_content').innerHTML =
-               `<div id='menu_2_content' class='main_content'>
-                    <div id='menu_2_content_widget1' class='widget'>
+    CommonAppDocument.querySelector('#menu_content').innerHTML =
+                    `<div id='menu_2_content_widget1' class='widget'>
                         <div id='list_user_stat_row_title' class='list_user_stat_row'>
                             <div id='list_user_stat_col_title1' class='list_user_stat_col common_icon'></div>
                             <div id='list_user_stat_col_title2' class='list_user_stat_col common_icon'></div>
@@ -617,8 +611,7 @@ const count_users = async () => {
                             <div id='list_user_stat_col_title4' class='list_user_stat_col common_icon'></div>
                         </div>
                         <div id='list_user_stat' class='common_list_scrollbar'></div>
-                    </div>
-                </div>`;
+                    </div>`;
     /**
      * Count users for given provider and if logged in or not
      * @param {string|null} identity_provider_id 
@@ -669,7 +662,7 @@ const count_users = async () => {
  * @returns {void}
  */
 const show_users = () =>{
-    CommonAppDocument.querySelector('#menu_3_content').innerHTML = 
+    CommonAppDocument.querySelector('#menu_content').innerHTML = 
             `<div id='menu_3_content_widget1' class='widget'>
                 <div id='list_user_account_title' class='common_icon'></div>
                 <div class='list_search'>
@@ -918,7 +911,7 @@ const show_user_account_logon = async (user_account_id) => {
  * @returns{Promise.<void>}
  */
 const show_apps = async () => {
-    CommonAppDocument.querySelector('#menu_4_content').innerHTML = 
+    CommonAppDocument.querySelector('#menu_content').innerHTML = 
     `<div id='menu_4_content_widget1' class='widget'>
          <div id='list_apps_title' class='common_icon'></div>
          <div id='list_apps' class='common_list_scrollbar common_icon css_spinner'></div>
@@ -1232,7 +1225,7 @@ const update_record = async (table,
  * @returns{Promise.<void>}
  */
 const show_monitor = async (yearvalues) =>{
-    CommonAppDocument.querySelector('#menu_5_content').innerHTML = 
+    CommonAppDocument.querySelector('#menu_content').innerHTML = 
         `<div id='menu_5_content_widget1' class='widget'>
             <div id='list_monitor_nav' class='list_nav'>
                 <div id='list_monitor_nav_connected' class='list_nav_list list_button common_icon'></div>
@@ -2381,7 +2374,7 @@ const show_existing_logfiles = () => {
  * @returns {void}
  */
 const show_server_config = () =>{
-    CommonAppDocument.querySelector('#menu_6_content').innerHTML = 
+    CommonAppDocument.querySelector('#menu_content').innerHTML = 
         `<div id='menu_6_content_widget1' class='widget'>
             <div id='list_config_nav' class='list_nav'>
                 <div id='list_config_nav_server'        class='list_nav_list list_button common_icon'></div>
@@ -2552,7 +2545,7 @@ const demo_uninstall = () =>{
  */
 const show_installation = () =>{
     if (common.COMMON_GLOBAL.system_admin!=null){
-        CommonAppDocument.querySelector('#menu_7_content').innerHTML =
+        CommonAppDocument.querySelector('#menu_content').innerHTML =
             `<div id='menu_7_content_widget1' class='widget'>
                 <div id='install_db'>
                     <div id='install_db_icon' class='common_icon'></div>
@@ -2577,7 +2570,7 @@ const show_installation = () =>{
         .catch(()=>CommonAppDocument.querySelector('#install_db_icon').classList.remove('css_spinner'));
     }
     else{
-        CommonAppDocument.querySelector('#menu_7_content').innerHTML =
+        CommonAppDocument.querySelector('#menu_content').innerHTML =
             `<div id='menu_7_content_widget2' class='widget'>
                 <div id='install_demo'>
                     <div id='install_demo_demo_users_icon' class='common_icon'></div>
@@ -2603,7 +2596,7 @@ const show_installation = () =>{
 const show_db_info = () => {
     if (admin_token_has_value()){
         const size = '(Mb)';
-        CommonAppDocument.querySelector('#menu_8_content').innerHTML = 
+        CommonAppDocument.querySelector('#menu_content').innerHTML = 
                 `<div id='menu_8_content_widget1' class='widget'>
                     <div id='menu_8_db_info1'></div>
                 </div>
@@ -2670,7 +2663,7 @@ const show_db_info = () => {
  */
 const show_server_info = () => {
     if (admin_token_has_value()){
-        CommonAppDocument.querySelector('#menu_10_content').innerHTML = 
+        CommonAppDocument.querySelector('#menu_content').innerHTML = 
                 `<div id='menu_10_content_widget1' class='widget'>
                     <div id='menu_10_os_title' class='common_icon'></div>
                     <div id='menu_10_os_info'></div>
