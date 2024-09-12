@@ -426,7 +426,7 @@ const get_apps = async () => {
         .then((/**@type{string}*/result)=>{
             const apps = JSON.parse(result).rows;
             for (const app of apps) {
-                options += `<div class='common_select_option' data-value='${app.APP_ID}'>${app.APP_ID} - ${app.NAME}</div>`;
+                options += `<option value='${app.APP_ID}'>${app.APP_ID} - ${app.NAME}</option>`;
             }
             resolve(options);
         })
