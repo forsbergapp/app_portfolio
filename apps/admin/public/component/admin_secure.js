@@ -24,16 +24,7 @@ const template =`       <div id='dialogues'>
                             </div>
                         </div>
                         <div id='main'>
-                            <div id='menu_1_content' class='main_content'></div>
-                            <div id='menu_2_content' class='main_content'></div>
-                            <div id='menu_3_content' class='main_content'></div>
-                            <div id='menu_4_content' class='main_content'></div>
-                            <div id='menu_5_content' class='main_content'></div>
-                            <div id='menu_6_content' class='main_content'></div>
-                            <div id='menu_7_content' class='main_content'></div>
-                            <div id='menu_8_content' class='main_content'></div>
-                            <div id='menu_9_content' class='main_content'></div>
-                            <div id='menu_10_content' class='main_content'></div>
+                            <div id='menu_content'></div>
                         </div>`;
 /**
  * 

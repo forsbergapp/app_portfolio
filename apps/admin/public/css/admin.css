@@ -262,7 +262,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	text-align:center;
 }
 
-.main_content{
+#menu_content{
 	height: 85%;
 }
 .widget{
@@ -1173,7 +1173,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 		margin-inline-start:150px
 		}
 
-	.main_content{
+	#menu_content{
 		width: 75%;
 		height:90%;
 		margin:20px;
