@@ -81,7 +81,7 @@ const show_menu = menu => {
         }
         //USER STAT
         case 2:{
-            count_users();
+            common.ComponentRender('menu_content', {function_FFB:common.FFB}, '/component/menu_user_stat.js');
             break;    
         }
         //USERS
@@ -595,66 +595,6 @@ const set_maintenance = () => {
             check_value = 0;
         const json_data = {maintenance:check_value};
         common.FFB('/server-config/config/SERVER', null, 'PUT', 'SYSTEMADMIN', json_data).catch(()=>null);
-    }
-};
-/**
- * Display stat of users
-  * @returns{Promise.<void>}
- */
-const count_users = async () => {
-    CommonAppDocument.querySelector('#menu_content').innerHTML =
-                    `<div id='menu_2_content_widget1' class='widget'>
-                        <div id='list_user_stat_row_title' class='list_user_stat_row'>
-                            <div id='list_user_stat_col_title1' class='list_user_stat_col common_icon'></div>
-                            <div id='list_user_stat_col_title2' class='list_user_stat_col common_icon'></div>
-                            <div id='list_user_stat_col_title3' class='list_user_stat_col common_icon'></div>
-                            <div id='list_user_stat_col_title4' class='list_user_stat_col common_icon'></div>
-                        </div>
-                        <div id='list_user_stat' class='common_list_scrollbar'></div>
-                    </div>`;
-    /**
-     * Count users for given provider and if logged in or not
-     * @param {string|null} identity_provider_id 
-     * @param {number} logged_in 
-     * @returns{Promise.<{count_connected:number}>}
-     */
-    const get_count = async (identity_provider_id, logged_in) => {
-        return await common.FFB('/server-socket/socket-stat', 
-                                `identity_provider_id=${identity_provider_id}&logged_in=${logged_in}`, 'GET', 'APP_ACCESS', null)
-        .then((/**@type{string}*/result)=>JSON.parse(result))
-        .catch((/**@type{Error}*/err)=>{throw err;});
-    };
-    if (admin_token_has_value()){
-        CommonAppDocument.querySelector('#list_user_stat').classList.add('common_icon', 'css_spinner');
-        CommonAppDocument.querySelector('#list_user_stat').innerHTML = '';
-        const user_stat = await common.FFB('/server-db_admin/user_account-stat', null, 'GET', 'APP_ACCESS', null)
-        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-        .catch(()=>CommonAppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner'));
-        
-        let html='';
-        let i=0;
-        for (const user of user_stat){
-            html +=  `<div id='list_user_stat_row_${i}' class='list_user_stat_row'>
-                            <div class='list_user_stat_col'>${user.identity_provider_id ?? ''}</div>
-                            <div class='list_user_stat_col'>
-                                <div class='${user.provider_name==null?'list_user_start_common_logo':''}'>${user.provider_name==null?'':user.provider_name}</div>
-                            </div>
-                            <div class='list_user_stat_col'>${user.count_users}</div>
-                            <div class='list_user_stat_col'>${await get_count(user.identity_provider_id ?? '',1).then(result=>result.count_connected)}</div>
-                        </div>`;
-            i++;
-        }
-        //count not logged in
-        html += `<div id='list_user_stat_row_not_connected' class='list_user_stat_row'>
-                    <div class='list_user_stat_col'></div>
-                    <div class='list_user_stat_col'>
-                        <div id='list_user_stat_not_connected_icon' class='common_icon'></div>
-                    </div>
-                    <div class='list_user_stat_col'></div>
-                    <div class='list_user_stat_col'>${await get_count('',0).then(result=>result.count_connected)}</div>
-                </div>`;
-        CommonAppDocument.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner');
-        CommonAppDocument.querySelector('#list_user_stat').innerHTML = html;
     }
 };
 /**
