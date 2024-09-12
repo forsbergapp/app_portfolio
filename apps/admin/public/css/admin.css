@@ -1129,6 +1129,11 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 }
 
 /* COMMON */
+#common_toolbar_framework{
+	margin-inline-start: 0px !important;
+	bottom:0px !important;
+	top: unset !important;
+}
 #common_dialogue_user_start{
 	height: auto !important;
 	text-align: center;
