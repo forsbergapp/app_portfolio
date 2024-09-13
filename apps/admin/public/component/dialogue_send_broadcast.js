@@ -6,18 +6,9 @@
  */
 const template = props => ` <div id='send_broadcast_form'>
                                 <div id='send_broadcast_title' class='common_icon'></div>
-                                <div id='select_broadcast_type' class='common_select ${props.admin_class}'>
-                                    <div class='common_select_dropdown'>
-                                        <div class='common_select_dropdown_value' data-value='ALERT'></div>
-                                        <div class='common_select_dropdown_icon common_icon'></div>
-                                    </div>
-                                    <div class='common_select_options'>
-                                        <div class='common_select_option' data-value='ALERT'></div>
-                                        <div class='common_select_option' data-value='MAINTENANCE'></div>
-                                    </div>
-                                </div>
+                                <div id='select_broadcast_type' class='${props.admin_class}'></div>
                                 <div id='client_id_label' class='common_icon'></div><div id='client_id'></div>
-                                <div id='select_app_broadcast' class='common_select'></div>
+                                <div id='select_app_broadcast'></div>
                                 <div id='send_broadcast_message' contentEditable='true'></div>
                                 <div id='send_broadcast_send' class='common_dialogue_button common_icon' ></div>
                                 <div id='send_broadcast_close' class='common_dialogue_button common_icon' ></div>
@@ -38,6 +29,20 @@ const component = async props => {
     props.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
 
     const post_component =() =>{
+        // select broadcast type
+        props.function_ComponentRender('select_broadcast_type', 
+            {
+              default_data_value:'ALERT',
+              options:[{VALUE:'ALERT', TEXT:''}, {VALUE:'MAINTENANCE', TEXT:''}],
+              path:'',
+              query:'',
+              method:'',
+              authorization_type:'',
+              column_value:'VALUE',
+              column_text:'TEXT',
+              function_FFB:props.function_FFB
+            }, '/common/component/select.js');
+        // select apps
         props.function_ComponentRender('select_app_broadcast', 
             {
               default_value:'∞',

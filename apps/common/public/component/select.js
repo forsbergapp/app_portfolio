@@ -4,13 +4,14 @@
 /**
  * Displays stat of users
  * @param {{spinner:string,
+ *           default_data_value:string,
  *           default_value:string,
  *           options:[{value:string, text:string}]|[],
  *           column_value:string,
  *           column_text:string}} props
  */
 const template = props => ` <div class='common_select_dropdown'>
-                                <div class='common_select_dropdown_value' data-value=''>${props.default_value}</div>
+                                <div class='common_select_dropdown_value' data-value='${props.default_data_value}'>${props.default_value}</div>
                                 <div class='common_select_dropdown_icon common_icon'></div>
                             </div>
                             <div class='common_select_options ${props.spinner}'>
@@ -23,7 +24,9 @@ const template = props => ` <div class='common_select_dropdown'>
 * 
 * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
 *          common_mountdiv:string,
+*          default_data_value:string,
 *          default_value:string,
+*          options:string|null,
 *          path:string,
 *          query:string,
 *          method:string,
@@ -38,11 +41,13 @@ const template = props => ` <div class='common_select_dropdown'>
 const component = async props => {
 
     const post_component = async () =>{
-       /**@type{[{value:string, text:string}]} */
-       const options = await props.function_FFB(props.path, props.query, props.method, props.authorization_type, null)
-                               .then((/**@type{string}*/result)=>JSON.parse(result).rows);
-
+        // use static values or fetch options
+        /**@type{[{value:string, text:string}]} */
+        const options = props.options?props.options:await props.function_FFB(props.path, props.query, props.method, props.authorization_type, null)
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+        props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_select');
        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({   spinner:'',
+                                                                                                        default_data_value:props.default_data_value,
                                                                                                         default_value:props.default_value,
                                                                                                         options:options,
                                                                                                         column_value:props.column_value,
@@ -51,6 +56,7 @@ const component = async props => {
    };
    /**
     * @param {{ spinner:string,
+    *           default_data_value:string,
     *           default_value:string,
     *           options:[{value:string, text:string}]|[],
     *           column_value:string,
@@ -58,7 +64,8 @@ const component = async props => {
     */
    const render_template = template_props =>{
        return template({    spinner:template_props.spinner,
-                            default_value:template_props.default_value,
+                            default_data_value:template_props.default_data_value ?? '',
+                            default_value:template_props.default_value ?? '',
                             options:template_props.options,
                             column_value:template_props.column_value,
                             column_text:template_props.column_text
@@ -68,6 +75,7 @@ const component = async props => {
        props:  {function_post:post_component},
        data:   null,
        template: render_template({  spinner:'css_spinner',
+                                    default_data_value:props.default_data_value,
                                     default_value:props.default_value,
                                     options:[],
                                     column_value:props.column_value,
