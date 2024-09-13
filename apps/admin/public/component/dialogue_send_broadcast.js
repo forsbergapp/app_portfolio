@@ -46,6 +46,7 @@ const component = async props => {
         props.function_ComponentRender('select_app_broadcast', 
             {
               default_value:'∞',
+              options:[{APP_ID:'', NAME:'∞'}],
               path:'/server-config/config-apps/',
               query:'key=NAME',
               method:'GET',
