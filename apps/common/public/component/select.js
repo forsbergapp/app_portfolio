@@ -26,7 +26,7 @@ const template = props => ` <div class='common_select_dropdown'>
 *          common_mountdiv:string,
 *          default_data_value:string,
 *          default_value:string,
-*          options:string|null,
+*          options:[{value:string, text:string}],
 *          path:string,
 *          query:string,
 *          method:string,
@@ -41,18 +41,19 @@ const template = props => ` <div class='common_select_dropdown'>
 const component = async props => {
 
     const post_component = async () =>{
-        // use static values or fetch options
-        /**@type{[{value:string, text:string}]} */
-        const options = props.options?props.options:await props.function_FFB(props.path, props.query, props.method, props.authorization_type, null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+        // add first static option first if any then add fetched options
+        const ffb_options = props.path?await props.function_FFB(props.path, props.query, props.method, props.authorization_type, null)
+                                    .then((/**@type{string}*/result)=>JSON.parse(result).rows):[];
+        /**@type{[{value:string, text:string}]|[]} */
+        const options = props.options?props.options.concat(ffb_options):ffb_options;
         props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_select');
-       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({   spinner:'',
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:'',
                                                                                                         default_data_value:props.default_data_value,
                                                                                                         default_value:props.default_value,
                                                                                                         options:options,
                                                                                                         column_value:props.column_value,
                                                                                                         column_text:props.column_text
-                                                                                                   });
+                                                                                                    });
    };
    /**
     * @param {{ spinner:string,
