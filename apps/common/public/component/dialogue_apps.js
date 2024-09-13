@@ -68,8 +68,7 @@ const template = props => `
  *          info_link_policy_name:string,
  *          info_link_disclaimer_name:string,
  *          info_link_terms_name:string,
- *          function_FFB:function,
- *          function_ComponentRender:function}} props 
+ *          function_FFB:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
