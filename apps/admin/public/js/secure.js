@@ -449,7 +449,7 @@ const sendBroadcast = () => {
     }
     else{
         if (CommonAppDocument.querySelector('#client_id').innerHTML==''){
-            app_id = CommonAppDocument.querySelector('#select_app_broadcast').options[CommonAppDocument.querySelector('#select_app_broadcast').selectedIndex].value;
+            app_id = CommonAppDocument.querySelector('#select_app_broadcast .common_select_dropdown_value').getAttribute('data-value');
             client_id = '';
             broadcast_type = CommonAppDocument.querySelector('#select_broadcast_type .common_select_dropdown_value').getAttribute('data-value');
         }
@@ -500,7 +500,8 @@ const closeBroadcast = () => {
 const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
     common.ComponentRender('dialogue_send_broadcast', {
                                                         system_admin:common.COMMON_GLOBAL.system_admin,
-                                                        apps: await get_apps()
+                                                        function_ComponentRender:common.ComponentRender,
+                                                        function_FFB:common.FFB
                                                         }, '/component/dialogue_send_broadcast.js')
     .then(()=>{
         switch (dialogue_type){
