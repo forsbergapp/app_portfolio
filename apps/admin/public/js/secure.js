@@ -37,7 +37,7 @@ const delete_globals = () => {
 };
 
 /**
- * Rounds a number with 2 dceimals
+ * Rounds a number with 2 decimals
  * @param {number} num 
  * @returns number
  */
@@ -106,12 +106,12 @@ const show_menu = menu => {
         }
         //INSTALLATION
         case 7:{
-            show_installation();
+            common.ComponentRender('menu_content', {system_admin:common.COMMON_GLOBAL.system_admin, function_FFB:common.FFB}, '/component/menu_installation.js');
             break;
         }
         //DATABASE
         case 8:{
-            show_db_info();
+            common.ComponentRender('menu_content', {function_roundOff:roundOff, function_FFB:common.FFB}, '/component/menu_db_info.js');
             break;
         }
         //BACKUP/RESTORE
@@ -2479,124 +2479,6 @@ const demo_uninstall = () =>{
                             '/server-db_admin/database-demo', 
                             `?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
                             'DELETE', 'APP_ACCESS', null);
-};
-/**
- * Show installation
- * @returns {void}
- */
-const show_installation = () =>{
-    if (common.COMMON_GLOBAL.system_admin!=null){
-        CommonAppDocument.querySelector('#menu_content').innerHTML =
-            `<div id='menu_7_content_widget1' class='widget'>
-                <div id='install_db'>
-                    <div id='install_db_icon' class='common_icon'></div>
-                    <div id='install_db_button_row'>
-                        <div id='install_db_button_install' class='common_dialogue_button common_icon'></div>
-                        <div id='install_db_button_uninstall' class='common_dialogue_button common_icon'></div>
-                    </div>
-                    <div id='install_db_input'>
-                        <div id='install_db_country_language_translations_icon' class='common_icon'></div>
-                        <div id='install_db_country_language_translations' class='common_switch'></div>
-                    </div>
-                </div>
-            </div>`;
-        CommonAppDocument.querySelector('#install_db_icon').classList.add('css_spinner');
-        common.FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
-        .then((/**@type{string}*/result)=>{
-            CommonAppDocument.querySelector('#install_db_icon').classList.remove('css_spinner');
-            CommonAppDocument.querySelector('#install_db_icon').classList.remove('installed');
-            if (JSON.parse(result)[0].installed == 1)
-                CommonAppDocument.querySelector('#install_db_icon').classList.add('installed');
-            })
-        .catch(()=>CommonAppDocument.querySelector('#install_db_icon').classList.remove('css_spinner'));
-    }
-    else{
-        CommonAppDocument.querySelector('#menu_content').innerHTML =
-            `<div id='menu_7_content_widget2' class='widget'>
-                <div id='install_demo'>
-                    <div id='install_demo_demo_users_icon' class='common_icon'></div>
-                    <div id='install_demo_button_row'>
-                        <div id='install_demo_button_install' class='common_dialogue_button common_icon'></div>
-                        <div id='install_demo_button_uninstall' class='common_dialogue_button common_icon'></div>
-                    </div>
-                    <div id='install_demo_input'>
-                        <div id="install_demo_password_icon" class='common_icon'></div>
-                        <div class='common_password_container common_input'>
-                                <div id='install_demo_password' contentEditable='true' class='common_input common_password'></div>
-                                <div id='install_demo_password_mask' class='common_input common_password_mask'/></div>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-    }
-};
-/**
- * Show DB info
- * @returns {void}
- */
-const show_db_info = () => {
-    if (admin_token_has_value()){
-        const size = '(Mb)';
-        CommonAppDocument.querySelector('#menu_content').innerHTML = 
-                `<div id='menu_8_content_widget1' class='widget'>
-                    <div id='menu_8_db_info1'></div>
-                </div>
-                <div id='menu_8_content_widget2' class='widget'>
-                    <div id='menu_8_db_info_space_title' class='common_icon'></div>
-                    <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
-                </div>`;
-        CommonAppDocument.querySelector('#menu_8_db_info1').classList.add('css_spinner');
-        common.FFB('/server-db_admin/database', null, 'GET', 'SYSTEMADMIN', null)
-        .then((/**@type{string}*/result)=>{
-            const database = JSON.parse(result)[0];
-            CommonAppDocument.querySelector('#menu_8_db_info1').classList.remove('css_spinner');
-            CommonAppDocument.querySelector('#menu_8_db_info1').innerHTML = 
-                    `<div id='menu_8_db_info_database_title' class='common_icon'></div>          <div id='menu_8_db_info_database_data'>${database.database_use}</div>
-                        <div id='menu_8_db_info_name_title' class='common_icon'></div>              <div id='menu_8_db_info_name_data'>${database.database_name}</div>
-                        <div id='menu_8_db_info_version_title' class='common_icon'></div>           <div id='menu_8_db_info_version_data'>${database.version}</div>
-                        <div id='menu_8_db_info_database_schema_title' class='common_icon'></div>   <div id='menu_8_db_info_database_schema_data'>${database.database_schema}</div>
-                        <div id='menu_8_db_info_host_title' class='common_icon'></div>              <div id='menu_8_db_info_host_data'>${database.hostname}</div>
-                        <div id='menu_8_db_info_connections_title' class='common_icon'></div>       <div id='menu_8_db_info_connections_data'>${database.connections}</div>
-                        <div id='menu_8_db_info_started_title' class='common_icon'></div>           <div id='menu_8_db_info_started_data'>${database.started}</div>`;
-            CommonAppDocument.querySelector('#menu_8_db_info_space_detail').classList.add('css_spinner');
-            common.FFB('/server-db_admin/database-space', null, 'GET', 'SYSTEMADMIN', null)
-            .then((/**@type{string}*/result)=>{
-                let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
-                                <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>TABLE NAME</div>
-                                <div id='menu_8_db_info_space_detail_col_title2' class='menu_8_db_info_space_detail_col list_title'>SIZE ${size}</div>
-                                <div id='menu_8_db_info_space_detail_col_title3' class='menu_8_db_info_space_detail_col list_title'>DATA USED ${size}</div>
-                                <div id='menu_8_db_info_space_detail_col_title4' class='menu_8_db_info_space_detail_col list_title'>DATA FREE ${size}</div>
-                                <div id='menu_8_db_info_space_detail_col_title5' class='menu_8_db_info_space_detail_col list_title'>% USED</div>
-                            </div>`;
-                for (const databaseInfoSpaceTable of JSON.parse(result).rows) {
-                    html += 
-                    `<div class='menu_8_db_info_space_detail_row' >
-                        <div class='menu_8_db_info_space_detail_col'>${databaseInfoSpaceTable.table_name}</div>
-                        <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.total_size)}</div>
-                        <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.data_used)}</div>
-                        <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.data_free)}</div>
-                        <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.pct_used)}</div>
-                    </div>`;
-                }
-                CommonAppDocument.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner');
-                CommonAppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
-                common.FFB('/server-db_admin/database-spacesum', null, 'GET', 'SYSTEMADMIN', null)
-                .then((/**@type{string}*/result)=>{
-                    const databaseInfoSpaceSum = JSON.parse(result)[0];
-                    CommonAppDocument.querySelector('#menu_8_db_info_space_detail').innerHTML += 
-                        `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
-                            <div id='menu_8_info_space_db_sum' class='menu_8_db_info_space_detail_col'></div>
-                            <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceSum.total_size)}</div>
-                            <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceSum.data_used)}</div>
-                            <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceSum.data_free)}</div>
-                            <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceSum.pct_used)}</div>
-                        </div>`;
-                });
-            })
-            .catch(()=>CommonAppDocument.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner'));
-        })
-        .catch(()=>CommonAppDocument.querySelector('#menu_8_db_info1').classList.remove('css_spinner'));
-    }
 };
 /**
  * Show server info
