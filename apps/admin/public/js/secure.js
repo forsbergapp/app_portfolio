@@ -101,7 +101,7 @@ const show_menu = menu => {
         }
         //SERVER CONFIG
         case 6:{
-            show_server_config();
+            common.ComponentRender('menu_content', {function_nav_click:nav_click}, '/component/menu_config.js');
             break;
         }
         //INSTALLATION
@@ -1370,25 +1370,25 @@ const nav_click = (item_id) => {
         case 'list_config_nav_server':{
             reset_config();
             CommonAppDocument.querySelector('#list_config_nav_server').classList.add('list_nav_selected_tab');
-            show_config('SERVER');
+            common.ComponentRender('list_config_container', {file:'SERVER', function_FFB:common.FFB}, '/component/menu_config_detail.js');
             break;
         }
         case 'list_config_nav_iam_blockip':{
             reset_config();
             CommonAppDocument.querySelector('#list_config_nav_iam_blockip').classList.add('list_nav_selected_tab');
-            show_config('IAM_BLOCKIP');
+            common.ComponentRender('list_config_container', {file:'IAM_BLOCKIP', function_FFB:common.FFB}, '/component/menu_config_detail.js');
             break;
         }
         case 'list_config_nav_iam_useragent':{
             reset_config();
             CommonAppDocument.querySelector('#list_config_nav_iam_useragent').classList.add('list_nav_selected_tab');
-            show_config('IAM_USERAGENT');
+            common.ComponentRender('list_config_container', {file:'IAM_USERAGENT', function_FFB:common.FFB}, '/component/menu_config_detail.js');
             break;
         }
         case 'list_config_nav_iam_policy':{
             reset_config();
             CommonAppDocument.querySelector('#list_config_nav_iam_policy').classList.add('list_nav_selected_tab');
-            show_config('IAM_POLICY');
+            common.ComponentRender('list_config_container', {file:'IAM_POLICY', function_FFB:common.FFB}, '/component/menu_config_detail.js');
             break;
         }
     }
@@ -2310,103 +2310,7 @@ const show_existing_logfiles = () => {
         common.lov_show({lov:'SERVER_LOG_FILES', function_event:function_event});
     }
 };
-/**
- * Show server config
- * @returns {void}
- */
-const show_server_config = () =>{
-    CommonAppDocument.querySelector('#menu_content').innerHTML = 
-        `<div id='menu_6_content_widget1' class='widget'>
-            <div id='list_config_nav' class='list_nav'>
-                <div id='list_config_nav_server'        class='list_nav_list list_button common_icon'></div>
-                <div id='list_config_nav_iam_blockip'   class='list_nav_list list_button common_icon'></div>
-                <div id='list_config_nav_iam_useragent' class='list_nav_list list_button common_icon'></div>
-                <div id='list_config_nav_iam_policy'    class='list_nav_list list_button common_icon'></div>
-            </div>
-            <div id='list_config' class='common_list_scrollbar'></div>
-            <div id='list_config_edit'></div>
-            <div id='config_buttons' class="save_buttons">
-                <div id='config_save' class='common_dialogue_button button_save common_icon' ></div>
-            </div>
-        </div>`;
-    nav_click('list_config_nav_server');
-};
-/**
- * Show config
- * @param {string} file 
- * @returns{Promise.<void>}
- */
-const show_config = async file => {
-    CommonAppDocument.querySelector('#list_config').innerHTML = '';
-    CommonAppDocument.querySelector('#list_config_edit').innerHTML = '';
-    if (file=='SERVER'){
-        CommonAppDocument.querySelector('#list_config').classList.add('common_icon','css_spinner');
-        CommonAppDocument.querySelector('#list_config').style.display = 'flex';
-        CommonAppDocument.querySelector('#list_config_edit').style.display = 'none';
-    }
-    else{
-        CommonAppDocument.querySelector('#list_config_edit').classList.add('common_icon','css_spinner');
-        CommonAppDocument.querySelector('#list_config_edit').style.display = 'flex';
-        CommonAppDocument.querySelector('#list_config').style.display = 'none';
-    }
 
-    await common.FFB(`/server-config/config/${file}`, 'saved=1', 'GET', 'SYSTEMADMIN', null)
-    .then((/**@type{string}*/result)=>{
-        const config = JSON.parse(result).data;
-        let i = 0;
-        CommonAppDocument.querySelector('#list_config_edit').contentEditable = 'true';
-        switch (file){
-            case 'SERVER':{
-                let html = `<div id='list_config_row_title' class='list_config_row'>
-                                <div id='list_config_col_title1' class='list_config_col list_title'>PARAMETER NAME</div>
-                                <div id='list_config_col_title2' class='list_config_col list_title'>PARAMETER VALUE</div>
-                                <div id='list_config_col_title3' class='list_config_col list_title'>COMMENT</div>
-                            </div>`;
-                //create div groups with parameters, each group with a title
-                //first 5 attributes in config json contains array of parameter records
-                //metadata is saved last in config
-                for (let i_group = 0; i_group <= 4;i_group++){
-                    html += 
-                    `<div id='list_config_row_${i_group}' class='list_config_row list_config_group' >
-                        <div class='list_config_col list_config_group_title'>
-                            <div class='list_readonly'>${Object.keys(config)[i_group]}</div>
-                        </div>`;
-                        for (let j = 0; j < config[Object.keys(config)[i_group]].length; j++) {
-                            i++;
-                            html += 
-                            `<div id='list_config_row_${i}' class='list_config_row' >
-                                <div class='list_config_col'>
-                                    <div class='list_readonly'>${Object.keys(config[Object.keys(config)[i_group]][j])[0]}</div>
-                                </div>
-                                <div class='list_config_col'>
-                                    <div contentEditable='true' class='common_input'/>${Object.values(config[Object.keys(config)[i_group]][j])[0]}</div>
-                                </div>
-                                <div class='list_config_col'>
-                                    <div class='list_readonly'>${Object.values(config[Object.keys(config)[i_group]][j])[1]}</div>
-                                </div>
-                            </div>`;
-                        }    
-                    html += '</div>';
-                    
-                }
-                CommonAppDocument.querySelector('#list_config').classList.remove('common_icon','css_spinner');
-                CommonAppDocument.querySelector('#list_config').innerHTML = html;
-                
-                //set focus first column in first row
-                CommonAppDocument.querySelectorAll('#list_config .common_input')[0].focus();
-                break;
-            }
-            default:{
-                CommonAppDocument.querySelector('#list_config_edit').classList.remove('common_icon','css_spinner');
-                CommonAppDocument.querySelector('#list_config_edit').innerHTML = JSON.stringify(config, undefined, 2);
-                break;
-            }
-        }
-    })
-    .catch(()=>{
-            CommonAppDocument.querySelector('#list_config').classList.remove('common_icon','css_spinner');
-            CommonAppDocument.querySelector('#list_config_edit').classList.add('common_icon','css_spinner');});
-};
 /**
  * Executes installation rest API and presents the result
  * @param {string} id 

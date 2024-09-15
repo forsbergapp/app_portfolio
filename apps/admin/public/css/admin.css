@@ -705,6 +705,11 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	display: flex;
 	flex-direction: column;
 }
+#list_config_container{
+	height: calc(100% - 50px);
+	overflow-x: auto;
+	overflow-y: auto;
+}
 #list_config{
 	display: flex;
 	flex-direction: column;
