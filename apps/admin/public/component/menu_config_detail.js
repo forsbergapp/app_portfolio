@@ -43,9 +43,7 @@ const template = props => ` ${props.file=='SERVER'?
                                         </div>`
                                     ).join('')}
                                 </div>`:
-                                `<div id='list_config_edit' contentEditable = 'true' class='${props.spinner}'>
-                                    ${JSON.stringify(props.config, undefined, 2)}
-                                </div>`
+                                `<div id='list_config_edit' contentEditable = 'true' class='${props.spinner}'>${JSON.stringify(props.config, undefined, 2)}</div>`
                             }`;
 /**
 * 
@@ -65,8 +63,10 @@ const server_groups = [0,1,2,3,4];
                                                                                                         server_group:server_groups,
                                                                                                         file:props.file,
                                                                                                         config:config_server});
-        //set focus first column in first row
-        props.common_document.querySelectorAll('#list_config .common_input')[0].focus();
+        if (props.file=='SERVER'){
+            //set focus first column in first row
+            props.common_document.querySelectorAll('#list_config .common_input')[0].focus();
+        }
  };
  /**
   @param {{ spinner:string,
