@@ -188,7 +188,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
  * @param {*} parameters 
  * @param {number|null} dba 
  * @param {string|null} locale 
- * @returns {Promise.<import('../../types.js').error|{}>}
+ * @returns {Promise.<*>}
  */
  const db_execute = async (app_id, sql, parameters, dba = null, locale=null) =>{
 	return new Promise ((resolve, reject)=>{

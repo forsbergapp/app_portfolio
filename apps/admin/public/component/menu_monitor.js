@@ -17,18 +17,9 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
                                 </div>
                                 <div id='list_row_sample' class='${props.spinner}'>
                                     <div id='select_app_menu5'></div>
-                                    <select id='select_year_menu5'> <option value="${new Date().getFullYear()}">${new Date().getFullYear()}</option>
-                                                                    <option value="${new Date().getFullYear() -1}">${new Date().getFullYear()-1}</option>
-                                                                    <option value="${new Date().getFullYear() -2}">${new Date().getFullYear()-2}</option>
-                                                                    <option value="${new Date().getFullYear() -3}">${new Date().getFullYear()-3}</option>
-                                                                    <option value="${new Date().getFullYear() -4}">${new Date().getFullYear()-4}</option>
-                                                                    <option value="${new Date().getFullYear() -5}">${new Date().getFullYear()-5}</option></select>
-                                    <select id='select_month_menu5'>
-                                        ${Array(...Array(12)).map((row,index)=>`<option value='${index+1}'>${index+1}</option>`).join('')}
-                                    </select>
-                                    <select id='select_day_menu5'>
-                                        ${Array(...Array(31)).map((row,index)=>`<option value='${index+1}'>${index+1}</option>`).join('')}
-                                    </select>
+                                    <div id='select_year_menu5'></div>
+                                    <div id='select_month_menu5'></div>
+                                    <div id='select_day_menu5'></div>
                                 </div>
                                 <div id='list_monitor'></div>
                             </div>
@@ -51,6 +42,53 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
 const component = async props => {
     const post_component = async () =>{
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({spinner:'', system_admin:props.system_admin});
+        //mount select
+        await props.function_ComponentRender('select_year_menu5', 
+            {
+              default_value:new Date().getFullYear(),
+              default_data_value:new Date().getFullYear(),
+              options:[ {VALUE:new Date().getFullYear(), TEXT:new Date().getFullYear()}, 
+                        {VALUE:new Date().getFullYear() - 1, TEXT:new Date().getFullYear() -1},
+                        {VALUE:new Date().getFullYear() - 2, TEXT:new Date().getFullYear() -2},
+                        {VALUE:new Date().getFullYear() - 3, TEXT:new Date().getFullYear() -3},
+                        {VALUE:new Date().getFullYear() - 4, TEXT:new Date().getFullYear() -4},
+                        {VALUE:new Date().getFullYear() - 5, TEXT:new Date().getFullYear() -5}],
+              path:'',
+              query:'',
+              method:'',
+              authorization_type:'',
+              column_value:'VALUE',
+              column_text:'TEXT',
+              function_FFB:props.function_FFB
+            }, '/common/component/select.js');
+
+        await props.function_ComponentRender('select_month_menu5', 
+            {
+                default_value:new Date().getMonth(),
+                default_data_value:new Date().getMonth(),
+                options:Array(...Array(12)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
+                path:'',
+                query:'',
+                method:'',
+                authorization_type:'',
+                column_value:'VALUE',
+                column_text:'TEXT',
+                function_FFB:props.function_FFB
+            }, '/common/component/select.js');
+
+        await props.function_ComponentRender('select_day_menu5', 
+            {
+                default_value:new Date().getDate() -1,
+                default_data_value:new Date().getDate() -1,
+                options:Array(...Array(31)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
+                path:'',
+                query:'',
+                method:'',
+                authorization_type:'',
+                column_value:'VALUE',
+                column_text:'TEXT',
+                function_FFB:props.function_FFB
+            }, '/common/component/select.js');
 
         await props.function_ComponentRender('select_app_menu5', 
             {
@@ -65,9 +103,7 @@ const component = async props => {
               function_FFB:props.function_FFB
             }, '/common/component/select.js');
 
-        props.common_document.querySelector('#select_day_menu5').selectedIndex = new Date().getDate() -1;
-        props.common_document.querySelector('#select_year_menu5').selectedIndex = 0;
-        props.common_document.querySelector('#select_month_menu5').selectedIndex = new Date().getMonth();
+        //mount the map
         props.function_map_mount();
 
     };

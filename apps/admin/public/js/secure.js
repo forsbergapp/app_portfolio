@@ -1494,12 +1494,18 @@ const show_existing_logfiles = () => {
                                                 logscope, 
                                                 loglevel);
                                 //year
-                                CommonAppDocument.querySelector('#select_year_menu5').value = year;
+                                CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').setAttribute('data-value', year);
+                                CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').innerText = year;
+
                                 //month
-                                CommonAppDocument.querySelector('#select_month_menu5').value = month;
+                                CommonAppDocument.querySelector('#select_month_menu5 .common_select_dropdown_value').setAttribute('data-value', month);
+                                CommonAppDocument.querySelector('#select_month_menu5 .common_select_dropdown_value').innerText = month;
                                 //day if applicable
-                                if (APP_GLOBAL.service_log_file_interval=='1D')
-                                    CommonAppDocument.querySelector('#select_day_menu5').value = day;
+                                if (APP_GLOBAL.service_log_file_interval=='1D'){
+                                    CommonAppDocument.querySelector('#select_day_menu5 .common_select_dropdown_value').setAttribute('data-value', day);
+                                    CommonAppDocument.querySelector('#select_day_menu5 .common_select_dropdown_value').innerText = day;
+                                }
+                                    
 
                                 APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
                                 common.lov_close();
