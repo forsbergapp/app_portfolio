@@ -111,7 +111,7 @@ const show_menu = menu => {
         }
         //SERVER
         case 10:{
-            show_server_info();
+            common.ComponentRender('menu_content', {function_FFB:common.FFB}, '/component/menu_server.js');
             break;
         }
     }            
@@ -1245,77 +1245,6 @@ const demo_uninstall = () =>{
                             '/server-db_admin/database-demo', 
                             `?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
                             'DELETE', 'APP_ACCESS', null);
-};
-/**
- * Show server info
- * @returns {void}
- */
-const show_server_info = () => {
-    CommonAppDocument.querySelector('#menu_content').innerHTML = 
-            `<div id='menu_10_content_widget1' class='widget'>
-                <div id='menu_10_os_title' class='common_icon'></div>
-                <div id='menu_10_os_info'></div>
-            </div>
-            <div id='menu_10_content_widget2' class='widget'>
-                <div id='menu_10_process_title' class='common_icon'></div>
-                <div id='menu_10_process_info'></div>
-            </div>`;
-    CommonAppDocument.querySelector('#menu_10_os_info').classList.add('css_spinner');
-    CommonAppDocument.querySelector('#menu_10_process_info').classList.add('css_spinner');
-    common.FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
-    .then((/**@type{string}*/result)=>{
-        /**
-         * Seconds to time string
-         * @param {number} seconds 
-         * @returns {string}
-         */
-        const seconds_to_time = (seconds) => {
-            let ut_sec = seconds;
-            let ut_min = ut_sec/60;
-            let ut_hour = ut_min/60;
-            
-            ut_sec = Math.floor(ut_sec);
-            ut_min = Math.floor(ut_min);
-            ut_hour = Math.floor(ut_hour);
-            
-            ut_hour = ut_hour%60;
-            ut_min = ut_min%60;
-            ut_sec = ut_sec%60;
-            return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
-        };
-        const server_info = JSON.parse(result);
-        CommonAppDocument.querySelector('#menu_10_os_info').classList.remove('css_spinner');
-        CommonAppDocument.querySelector('#menu_10_process_info').classList.remove('css_spinner');
-        CommonAppDocument.querySelector('#menu_10_os_info').innerHTML = 
-                    `<div id='menu_10_os_info_hostname_title'>${'HOSTNAME'}</div><div id='menu_10_os_info_hostname_data'>${server_info.os.hostname}</div>
-                    <div id='menu_10_os_info_cpus_title'>${'CPUS'}</div><div id='menu_10_os_info_cpus_data'>${server_info.os.cpus.length}</div>
-                    <div id='menu_10_os_info_arch_title'>${'ARCH'}</div><div id='menu_10_os_info_arch_data'>${server_info.os.arch}</div>
-                    <div id='menu_10_os_info_freemem_title'>${'FREEMEM'}</div><div id='menu_10_os_info_freemem_data'>${server_info.os.freemem}</div>
-                    <div id='menu_10_os_info_totalmem_title'>${'TOTALMEM'}</div><div id='menu_10_os_info_totalmem_data'>${server_info.os.totalmem}</div>
-                    <div id='menu_10_os_info_platform_title'>${'PLATFORM'}</div><div id='menu_10_os_info_platform_data'>${server_info.os.platform}</div>
-                    <div id='menu_10_os_info_type_title'>${'TYPE'}</div><div id='menu_10_os_info_type_data'>${server_info.os.type}</div>
-                    <div id='menu_10_os_info_release_title'>${'RELEASE'}</div><div id='menu_10_os_info_release_data'>${server_info.os.release}</div>
-                    <div id='menu_10_os_info_version_title'>${'VERSION'}</div><div id='menu_10_os_info_version_data'>${server_info.os.version}</div>
-                    <div id='menu_10_os_info_uptime_title'>${'UPTIME'}</div><div id='menu_10_os_info_uptime_data'>${seconds_to_time(server_info.os.uptime)}</div>
-                    <div id='menu_10_os_info_homedir_title'>${'HOMEDIR'}</div><div id='menu_10_os_info_homedir_data'>${server_info.os.homedir}</div>
-                    <div id='menu_10_os_info_tmpdir_title'>${'TMPDIR'}</div><div id='menu_10_os_info_tmpdir_data'>${server_info.os.tmpdir}</div>
-                    <div id='menu_10_os_info_userinfo_username_title'>${'USERNAME'}</div><div id='menu_10_os_info_userinfo_username_data'>${server_info.os.userinfo.username}</div>
-                    <div id='menu_10_os_info_userinfo_homedir_title'>${'USER HOMEDIR'}</div><div id='menu_10_os_info_userinfo_homedir_data'>${server_info.os.userinfo.homedir}</div>`;
-        CommonAppDocument.querySelector('#menu_10_process_info').innerHTML =     
-                    `<div id='menu_10_process_info_memoryusage_rss_title'>${'MEMORY RSS'}</div><div id='menu_10_process_info_memoryusage_rss_data'>${server_info.process.memoryusage_rss}</div>
-                    <div id='menu_10_process_info_memoryusage_heaptotal_title'>${'MEMORY HEAPTOTAL'}</div><div id='menu_10_process_info_memoryusage_heaptotal_data'>${server_info.process.memoryusage_heaptotal}</div>
-                    <div id='menu_10_process_info_memoryusage_heapused_title'>${'MEMORY HEAPUSED'}</div><div id='menu_10_process_info_memoryusage_heapused_data'>${server_info.process.memoryusage_heapused}</div>
-                    <div id='menu_10_process_info_memoryusage_external_title'>${'MEMORY EXTERNAL'}</div><div id='menu_10_process_info_memoryusage_external_data'>${server_info.process.memoryusage_external}</div>
-                    <div id='menu_10_process_info_memoryusage_arraybuffers_title'>${'MEMORY ARRAYBUFFERS'}</div><div id='menu_10_process_info_memoryusage_arraybuffers_data'>${server_info.process.memoryusage_arraybuffers}</div>
-                    <div id='menu_10_process_info_uptime_title'>${'UPTIME'}</div><div id='menu_10_process_info_uptime_data'>${seconds_to_time(server_info.process.uptime)}</div>
-                    <div id='menu_10_process_info_version_title'>${'NODEJS VERSION'}</div><div id='menu_10_process_info_version_data'>${server_info.process.version}</div>
-                    <div id='menu_10_process_info_path_title'>${'PATH'}</div><div id='menu_10_process_info_path_data'>${server_info.process.path}</div>
-                    <div id='menu_10_process_info_start_arg_0_title'>${'START ARG 0'}</div><div id='menu_10_process_info_start_arg_0_data'>${server_info.process.start_arg_0}</div>
-                    <div id='menu_10_process_info_start_arg_1_title'>${'START ARG 1'}</div><div id='menu_10_process_info_start_arg_1_data'>${server_info.process.start_arg_1}</div>`;
-    })
-    .catch(()=>{
-            CommonAppDocument.querySelector('#menu_10_os_info').classList.remove('css_spinner');
-            CommonAppDocument.querySelector('#menu_10_process_info').classList.remove('css_spinner');});
 };
 
 /**
