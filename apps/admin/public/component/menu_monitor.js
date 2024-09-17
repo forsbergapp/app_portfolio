@@ -64,8 +64,8 @@ const component = async props => {
 
         await props.function_ComponentRender('select_month_menu5', 
             {
-                default_value:new Date().getMonth(),
-                default_data_value:new Date().getMonth(),
+                default_value:new Date().getMonth()+1,
+                default_data_value:new Date().getMonth()+1,
                 options:Array(...Array(12)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
                 path:'',
                 query:'',
@@ -78,8 +78,8 @@ const component = async props => {
 
         await props.function_ComponentRender('select_day_menu5', 
             {
-                default_value:new Date().getDate() -1,
-                default_data_value:new Date().getDate() -1,
+                default_value:new Date().getDate(),
+                default_data_value:new Date().getDate(),
                 options:Array(...Array(31)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
                 path:'',
                 query:'',
