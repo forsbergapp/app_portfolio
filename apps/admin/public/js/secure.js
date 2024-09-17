@@ -42,18 +42,7 @@ const roundOff = num => {
     const x = Math.pow(10,2);
     return Math.round(num * x) / x;
   };
-/**
- * Generate given amount of options for a select element
- * @param {number} amount 
- * @returns string
- */
-const list_generate = amount =>{
-    let html = '';
-    for (let i=1; i<=amount;i++){
-        html += `<option value='${i}'>${i}</option>`;
-    }
-    return html;
-};
+
 /**
  * Show given menu
  * @param {number} menu 
@@ -62,18 +51,15 @@ const list_generate = amount =>{
 const show_menu = menu => {
     CommonAppDocument.querySelectorAll('.menuitem').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('menuitem_selected'));
     CommonAppDocument.querySelector(`#menu_${menu}`).classList.add('menuitem_selected');
-    const current_year = new Date().getFullYear();
-    const yearvalues =   `<option value="${current_year}">${current_year}</option>
-                        <option value="${current_year -1}">${current_year-1}</option>
-                        <option value="${current_year -2}">${current_year-2}</option>
-                        <option value="${current_year -3}">${current_year-3}</option>
-                        <option value="${current_year -4}">${current_year-4}</option>
-                        <option value="${current_year -5}">${current_year-5}</option>
-                        `;
+
     switch(menu){
         //START
         case 1:{
-            show_start(yearvalues);
+            common.ComponentRender('menu_content', {system_admin:common.COMMON_GLOBAL.system_admin, 
+                                                    function_ComponentRender:common.ComponentRender, 
+                                                    function_FFB:common.FFB}, '/component/menu_start.js')
+            .then(()=>show_charts());
+            
             break;
         }
         //USER STAT
@@ -135,287 +121,10 @@ const show_menu = menu => {
  * @returns{Promise.<void>}
  */
 const show_charts = async () => {
-    if (admin_token_has_value()){
-        //chart 1 shows for all apps, app id used for chart 2
-        const app_id = CommonAppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
-        const year = CommonAppDocument.querySelector('#select_year_menu1').value;
-        const month = CommonAppDocument.querySelector('#select_month_menu1').value;
-        const select_system_admin_stat = common.COMMON_GLOBAL.system_admin!=null?
-                                            CommonAppDocument.querySelector('#select_system_admin_stat'):null;
-        const system_admin_statGroup = common.COMMON_GLOBAL.system_admin!=null?
-                                            select_system_admin_stat.options[select_system_admin_stat.selectedIndex].parentNode.label:null;
-        const system_admin_statValues = common.COMMON_GLOBAL.system_admin!=null?
-                                            { value: CommonAppDocument.querySelector('#select_system_admin_stat').value,
-                                                unique:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('unique'),
-                                                statGroup:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('statGroup')
-                                            }:{value:0, unique:0, statGroup:0};
-
-        CommonAppDocument.querySelector('#graphBox').classList.add('common_icon','css_spinner');
-        CommonAppDocument.querySelector('#graphBox').innerHTML='';
-        let path;
-        let query;
-        let authorization_type;
-        if (common.COMMON_GLOBAL.system_admin!=null){
-            path = '/server-log/log-stat';
-            if (system_admin_statGroup=='REQUEST'){
-                query = `select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`;
-            }
-            else
-                query = `select_app_id=${app_id}&statGroup=&statValue=${system_admin_statValues.value}&unique=&year=${year}&month=${month}`;
-            authorization_type = 'SYSTEMADMIN';
-        }
-        else{
-            path = '/server-db_admin/app_data_stat-log-stat';
-            query = `select_app_id=${app_id}&year=${year}&month=${month}`;
-            authorization_type = 'APP_ACCESS';
-        }
-        //return result for both charts
-        common.FFB(path, query, 'GET', authorization_type, null)
-        .then((/**@type{string}*/result)=>{
-            let html = '';
-            /**@type{{  chart:number,
-             *          app_id:number,
-             *          day:number,
-             *          amount:number,
-             *          statValue:string}[]} */
-            const charts = JSON.parse(result).rows;
-            //chart 1=Piechart, 2= Barchart
-            //CHART 1
-            /**
-             * 
-             * @param {HTMLSelectElement} item 
-             * @param {string} search 
-             * @returns 
-             */
-            const SearchAndGetText = (item, search) => {
-                for (let i=1;i<item.options.length;i++){
-                    if (item.options[i].value == search)
-                        return item.options[i].text;
-                }
-                return null;
-            };
-            let sum_amount =0;
-            const chart_1 = charts.filter((row)=> row.chart==1);
-            for (const stat of chart_1) {
-                sum_amount += +stat.amount;
-            }
-            let chart_colors = '';
-            let degree_start = 0;
-            let degree_stop = 0;
-
-            let chart_color;
-            chart_1.forEach((stat, i)=>{
-                //calculate colors and degree
-                degree_stop = degree_start + +stat.amount/sum_amount*360;
-                chart_color = `rgb(${i/chart_1.length*200},${i/chart_1.length*200},255) ${degree_start}deg ${degree_stop}deg`;
-                if (i < chart_1.length - 1)
-                    chart_colors += chart_color + ',';
-                else
-                    chart_colors += chart_color;
-                //add to legend below chart
-                let legend_text_chart1;
-                if (common.COMMON_GLOBAL.system_admin!=null)
-                    if (system_admin_statGroup=='REQUEST')
-                        legend_text_chart1 = stat.statValue;
-                    else
-                        legend_text_chart1 = SearchAndGetText(CommonAppDocument.querySelector('#select_system_admin_stat'), stat.statValue);
-                else{
-                    legend_text_chart1 = Array.from(CommonAppDocument.querySelectorAll('#select_app_menu1 .common_select_option')).filter(app=>parseInt(app.getAttribute('data-value'))==stat.app_id)[0].innerHTML;
-                }
-                    
-                html += `<div class='box_legend_row'>
-                            <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/chart_1.length*200},${i/chart_1.length*200},255)'></div>
-                            <div id='box1_legend_col2' class='box_legend_col'>${legend_text_chart1}</div>
-                        </div>`;
-                degree_start = degree_start + stat.amount/sum_amount*360;
-            });
-            //display pie chart
-            const box1_chart = `<div id='box1_pie' style='background-image:conic-gradient(${chart_colors})'></div>`;
-            //show legend below chart
-            const box1_legend = html;
-
-            //CHART 2
-            html = '';
-            let max_amount =0;
-            const chart_2 = charts.filter((row)=> row.chart==2);
-            for (const stat of chart_2) {
-                if (+stat.amount>max_amount)
-                    max_amount = +stat.amount;
-            }
-            //set bar data
-            let bar_color;
-            if (app_id == '')
-                bar_color = 'rgb(81, 171, 255)';
-            else
-                bar_color = 'rgb(197 227 255)';
-
-            for (const stat of chart_2) {
-                html += `<div class='box2_barcol box2_barcol_display' style='width:${100/chart_2.length}%'>
-                            <div class='box2_barcol_color' style='background-color:${bar_color};height:${+stat.amount/max_amount*100}%'></div>
-                            <div class='box2_barcol_legendX'>${stat.day}</div>
-                        </div>`;
-            }
-            //create bar chart
-            const box2_chart = `<div id='box2_bar_legendY'>
-                                    <div id='box2_bar_legend_max'>${max_amount}</div>
-                                    <div id='box2_bar_legend_medium'>${max_amount/2}</div>
-                                    <div id='box2_bar_legend_min'>0</div>
-                                </div>
-                                <div id='box2_bar_data'>${html}</div>`;
-            //legend below chart
-            let legend_text_chart2;
-            let box2_legend = '';
-            if (common.COMMON_GLOBAL.system_admin!=null){
-                //as system admin you can filter http codes and application
-                legend_text_chart2 = CommonAppDocument.querySelector('#select_system_admin_stat').options[CommonAppDocument.querySelector('#select_system_admin_stat').selectedIndex].text;
-                const legend_text_chart2_apps = CommonAppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').innerHTML;
-                box2_legend = ` <div id='box2_legend_row' class='box_legend_row'>
-                                    <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                    <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
-                                    <div id='box2_legend_col3' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                    <div id='box2_legend_col4' class='box_legend_col'>${legend_text_chart2_apps}</div>
-                                </div>` ;
-            }
-                
-            else{
-                // as admin you can filter application
-                legend_text_chart2 = CommonAppDocument.querySelector('#select_app_menu1 .common_select_dropdown_value').innerHTML;
-                box2_legend = ` <div id='box2_legend_row' class='box_legend_row'>
-                                    <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                    <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
-                                </div>` ;
-            }
-            let box_title_class;
-            if (common.COMMON_GLOBAL.system_admin!=null)
-                box_title_class = 'system_admin';
-            else
-                box_title_class = 'admin';
-
-            CommonAppDocument.querySelector('#graphBox').innerHTML =  
-                `<div id='box1'>
-                    <div id='box1_title' class='box_title ${box_title_class} common_icon'></div>
-                    <div id='box1_chart' class='box_chart'>${box1_chart}</div>
-                    <div id='box1_legend' class='box_legend'>${box1_legend}</div>
-                </div>
-                <div id='box2'>
-                    <div id='box2_title' class='box_title ${box_title_class} common_icon'></div>
-                    <div id='box2_chart' class='box_chart'>${box2_chart}</div>
-                    <div id='box2_legend' class='box_legend'>${box2_legend}</div>
-                </div>`;
-            CommonAppDocument.querySelector('#graphBox').classList.remove('common_icon','css_spinner');
-        })
-        .catch(()=>CommonAppDocument.querySelector('#graphBox').classList.remove('common_icon','css_spinner')); 
-    }
+    common.ComponentRender('graphBox', {system_admin:common.COMMON_GLOBAL.system_admin,
+                                        function_ComponentRender:common.ComponentRender,
+                                        function_FFB:common.FFB}, '/component/menu_start_chart.js');
 };
-/**
- * Show start
- * @param {string} yearvalues
- * @returns{Promise.<void>}
- */
-const show_start = async (yearvalues) =>{
-    /**
-     * Get system admin stat options
-     * @returns{Promise.<string|null>}
-     */
-    const get_system_admin_stat = async () =>{
-        return new Promise((resolve)=>{
-            common.FFB('/server/info-statuscode', null, 'GET', 'SYSTEMADMIN', null)
-            .then((/**@type{string}*/result)=>{
-                let html = `<optgroup label='REQUEST'>
-                                <option value='ip_total' unique=0 statGroup='ip'>IP TOTAL</option>
-                                <option value='ip_unique' unique=1 statGroup='ip'>IP UNIQUE</option>
-                                <option value='url_total' unique=0 statGroup='url'>URL TOTAL</option>
-                                <option value='url_unique' unique=1 statGroup='url'>URL UNIQUE</option>
-                                <option value='accept-language_total' unique=0 statGroup='accept-language'>ACCEPT-LANGUAGE TOTAL</option>
-                                <option value='accept-language_unique' unique=1 statGroup='accept-language'>ACCEPT-LANGUAGE UNIQUE</option>
-                                <option value='user-agent_total' unique=0 statGroup='user-agent'>USER-AGENT TOTAL</option>
-                                <option value='user-agent_unique' unique=1 statGroup='user-agent'>USER-AGENT UNIQUE</option>
-                            </optgroup>
-                            <optgroup label='RESPONSE HTTP Codes'>
-                                <option value='' unique=0 statGroup=''>${common.ICONS.infinite}</option>
-                            </optgroup>`;
-                /**@type{{status_codes:[number, string][]}} */
-                const result_obj = JSON.parse(result);
-                for (const status_code of Object.entries(result_obj.status_codes)){
-                    html += `<option value='${status_code[0]}' statGroup=''>${status_code[0]} - ${status_code[1]}</option>`;
-                }
-                CommonAppDocument.querySelector('#menu_content').classList.remove('common_icon', 'css_spinner');
-                resolve(html);
-            })
-            .catch(()=>{
-                CommonAppDocument.querySelector('#menu_content').classList.remove('common_icon', 'css_spinner');
-                resolve(null);
-            });
-        });
-    };
-    CommonAppDocument.querySelector('#menu_content').innerHTML = 
-            `<div id='menu_1_content_widget1' class='widget'>
-                <div id='menu_1_row_sample'>
-                    <select id='select_system_admin_stat'>${common.COMMON_GLOBAL.system_admin!=null?await get_system_admin_stat():''}</select>
-                    <div id='select_app_menu1' class='common_select'>${await get_apps_div()}</div>
-                    <select id='select_year_menu1'>${yearvalues}</select>
-                    <select id='select_month_menu1'>${list_generate(12)}</select>
-                </div>
-                <div id='graphBox'></div>
-            </div>
-            <div id='menu_1_content_widget2' class='widget'>
-                <div id='menu_1_maintenance'>
-                    <div id='menu_1_maintenance_title' class='common_icon'></div>
-                    <div id='menu_1_maintenance_checkbox'>
-                        <div id='menu_1_checkbox_maintenance' class='common_switch'></div>
-                    </div>
-                </div>
-                <div id='menu_1_broadcast'>
-                    <div id='menu_1_broadcast_title' class='common_icon'></div>
-                    <div id='menu_1_broadcast_button' class='chat_click common_icon'></div>
-                </div>
-            </div>`;
-    if (common.COMMON_GLOBAL.system_admin!=null){
-        CommonAppDocument.querySelector('#menu_1_maintenance').style.display = 'inline-block';
-        CommonAppDocument.querySelector('#select_system_admin_stat').style.display = 'inline-block';
-    }
-    else{
-        CommonAppDocument.querySelector('#menu_1_maintenance').style.display = 'none';
-        CommonAppDocument.querySelector('#select_system_admin_stat').style.display = 'none';
-    }    
-    CommonAppDocument.querySelector('#select_year_menu1').selectedIndex = 0;
-    CommonAppDocument.querySelector('#select_month_menu1').selectedIndex = new Date().getMonth();
-
-    if (common.COMMON_GLOBAL.system_admin!=null)
-        check_maintenance();
-    show_charts();
-};
-/**
- * Get apps div select HTML
- * @returns{Promise.<string|null>}
- */
-const get_apps_div = async () =>{
-    return new Promise((resolve)=>{
-        let options = '';
-        let authorization_type;
-        if (common.COMMON_GLOBAL.system_admin!=null)
-            authorization_type = 'SYSTEMADMIN';
-        else
-            authorization_type = 'APP_ACCESS';
-        common.FFB('/server-config/config-apps/', 'key=NAME', 'GET', authorization_type, null)
-        .then((/**@type{string}*/result)=>{
-            const apps = JSON.parse(result).rows;
-            for (const app of apps) {
-                options += `<div class='common_select_option' data-value='${app.APP_ID}'>${app.APP_ID} - ${app.NAME}</div>`;
-            }
-            resolve(`   <div class='common_select_dropdown'>
-                            <div class='common_select_dropdown_value' data-value=''>∞</div>
-                            <div class='common_select_dropdown_icon common_icon'></div>
-                        </div>
-                        <div class='common_select_options'>
-                            <div class='common_select_option' data-value=''>∞</div>
-                            ${options}
-                        </div>`);
-        })
-        .catch(()=>resolve(null));
-    });
-};
-
 /**
  * Broadcast send
  * @returns{void}
@@ -550,35 +259,17 @@ const set_broadcast_type = () => {
     }
 };
 /**
- * Maintenance check
- * @returns{Promise.<void>}
- */
-const check_maintenance = async () => {
-    if (admin_token_has_value()){
-        await common.FFB('/server-config/config/SERVER', 'config_group=METADATA&parameter=MAINTENANCE', 'GET', 'SYSTEMADMIN', null)
-        .then((/**@type{string}*/result)=>{
-            if (JSON.parse(result).data==1)
-                CommonAppDocument.querySelector('#menu_1_checkbox_maintenance').classList.add('checked');
-            else
-                CommonAppDocument.querySelector('#menu_1_checkbox_maintenance').classList.remove('checked');
-        })
-        .catch(()=>null);
-    }
-};
-/**
  * Maintenance set
  * @returns{void}
  */
 const set_maintenance = () => {
-    if (admin_token_has_value()){
-        let check_value;
-        if (CommonAppDocument.querySelector('#menu_1_checkbox_maintenance').classList.contains('checked'))
-            check_value = 1;
-        else
-            check_value = 0;
-        const json_data = {maintenance:check_value};
-        common.FFB('/server-config/config/SERVER', null, 'PUT', 'SYSTEMADMIN', json_data).catch(()=>null);
-    }
+    let check_value;
+    if (CommonAppDocument.querySelector('#menu_1_checkbox_maintenance').classList.contains('checked'))
+        check_value = 1;
+    else
+        check_value = 0;
+    const json_data = {maintenance:check_value};
+    common.FFB('/server-config/config/SERVER', null, 'PUT', 'SYSTEMADMIN', json_data).catch(()=>null);
 };
 /**
  * Show users
@@ -1092,54 +783,52 @@ const update_record = async (table,
                              row_element,
                              button,
                              parameters) => {
-    if (admin_token_has_value()){
-        let path = '';
-        let json_data;
-        let token_type = '';
-        let method = '';
-        CommonAppDocument.querySelector('#' + button).classList.add('css_spinner');
-        switch (table){
-            case 'user_account':{
-                json_data = {   app_role_id:        parameters.user_account.app_role_id,
-                                active:             parameters.user_account.active,
-                                user_level:         parameters.user_account.user_level,
-                                private:            parameters.user_account.private,
-                                username:           parameters.user_account.username,
-                                bio:                parameters.user_account.bio,
-                                email:              parameters.user_account.email,
-                                email_unverified:   parameters.user_account.email_unverified,
-                                password_new:       parameters.user_account.password,
-                                password_reminder:  parameters.user_account.password_reminder,
-                                verification_code:  parameters.user_account.verification_code};
-                path = `/server-db_admin/user_account/${parameters.user_account.id}`;
-                token_type = 'SUPERADMIN';
-                method = 'PATCH';
-                break;
-            }
-            case 'app':{
-                json_data = {   
-                                app_category_id:parameters.app.app_category_id
-                            };
-                path = `/server-db_admin/apps/${parameters.app.id}`;
-                token_type = 'APP_ACCESS';
-                method = 'PUT';
-                break;
-            }
-            case 'app_parameter':{
-                json_data = {   parameter_name:     parameters.app_parameter.parameter_name,
-                                parameter_value:    parameters.app_parameter.parameter_value,
-                                parameter_comment:  parameters.app_parameter.parameter_comment};
-                path = `/server-config/config-apps-parameter/${parameters.app_parameter.app_id}`;
-                token_type = 'APP_ACCESS';
-                method = 'PATCH';
-                break;
-            }
+    let path = '';
+    let json_data;
+    let token_type = '';
+    let method = '';
+    CommonAppDocument.querySelector('#' + button).classList.add('css_spinner');
+    switch (table){
+        case 'user_account':{
+            json_data = {   app_role_id:        parameters.user_account.app_role_id,
+                            active:             parameters.user_account.active,
+                            user_level:         parameters.user_account.user_level,
+                            private:            parameters.user_account.private,
+                            username:           parameters.user_account.username,
+                            bio:                parameters.user_account.bio,
+                            email:              parameters.user_account.email,
+                            email_unverified:   parameters.user_account.email_unverified,
+                            password_new:       parameters.user_account.password,
+                            password_reminder:  parameters.user_account.password_reminder,
+                            verification_code:  parameters.user_account.verification_code};
+            path = `/server-db_admin/user_account/${parameters.user_account.id}`;
+            token_type = 'SUPERADMIN';
+            method = 'PATCH';
+            break;
         }
-        await common.FFB(path, null, method, token_type, json_data)
-        .then(()=>{ row_element.setAttribute('data-changed-record', '0');
-                    CommonAppDocument.querySelector('#' + button).classList.remove('css_spinner');})
-        .catch(()=>CommonAppDocument.querySelector('#' + button).classList.remove('css_spinner'));
+        case 'app':{
+            json_data = {   
+                            app_category_id:parameters.app.app_category_id
+                        };
+            path = `/server-db_admin/apps/${parameters.app.id}`;
+            token_type = 'APP_ACCESS';
+            method = 'PUT';
+            break;
+        }
+        case 'app_parameter':{
+            json_data = {   parameter_name:     parameters.app_parameter.parameter_name,
+                            parameter_value:    parameters.app_parameter.parameter_value,
+                            parameter_comment:  parameters.app_parameter.parameter_comment};
+            path = `/server-config/config-apps-parameter/${parameters.app_parameter.app_id}`;
+            token_type = 'APP_ACCESS';
+            method = 'PATCH';
+            break;
+        }
     }
+    await common.FFB(path, null, method, token_type, json_data)
+    .then(()=>{ row_element.setAttribute('data-changed-record', '0');
+                CommonAppDocument.querySelector('#' + button).classList.remove('css_spinner');})
+    .catch(()=>CommonAppDocument.querySelector('#' + button).classList.remove('css_spinner'));
 };
 /**
  * Mounts map in monitor component
@@ -1445,45 +1134,43 @@ const show_server_logs = (sort='logdate', order_by='desc') => {
  * @returns {void}
  */
 const show_existing_logfiles = () => {
-    if (admin_token_has_value()){
-        /**
-         * Event for LOV
-         * @param {import('../../../common_types.js').CommonAppEvent} event 
-         */
-        const function_event = event => {
-                                //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
-                                //logscope and loglevel
-                                let filename = common.element_row(event.target).getAttribute('data-value') ?? '';
-                                const logscope = filename.substring(0,filename.indexOf('_'));
-                                filename = filename.substring(filename.indexOf('_')+1);
-                                const loglevel = filename.substring(0,filename.indexOf('_'));
-                                filename = filename.substring(filename.indexOf('_')+1);
-                                const year     = parseInt(filename.substring(0, 4));
-                                const month    = parseInt(filename.substring(4, 6));
-                                const day      = parseInt(filename.substring(6, 8));
+    /**
+     * Event for LOV
+     * @param {import('../../../common_types.js').CommonAppEvent} event 
+     */
+    const function_event = event => {
+                            //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
+                            //logscope and loglevel
+                            let filename = common.element_row(event.target).getAttribute('data-value') ?? '';
+                            const logscope = filename.substring(0,filename.indexOf('_'));
+                            filename = filename.substring(filename.indexOf('_')+1);
+                            const loglevel = filename.substring(0,filename.indexOf('_'));
+                            filename = filename.substring(filename.indexOf('_')+1);
+                            const year     = parseInt(filename.substring(0, 4));
+                            const month    = parseInt(filename.substring(4, 6));
+                            const day      = parseInt(filename.substring(6, 8));
 
-                                //logscope and loglevel
-                                CommonAppDocument.querySelector('#select_logscopeu5 .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
-                                CommonAppDocument.querySelector('#select_logscope5 .common_select_dropdown_value').innerText = `${logscope} - ${loglevel}`;
-                                //year
-                                CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').setAttribute('data-value', year);
-                                CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').innerText = year;
+                            //logscope and loglevel
+                            CommonAppDocument.querySelector('#select_logscopeu5 .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
+                            CommonAppDocument.querySelector('#select_logscope5 .common_select_dropdown_value').innerText = `${logscope} - ${loglevel}`;
+                            //year
+                            CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').setAttribute('data-value', year);
+                            CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').innerText = year;
 
-                                //month
-                                CommonAppDocument.querySelector('#select_month_menu5 .common_select_dropdown_value').setAttribute('data-value', month);
-                                CommonAppDocument.querySelector('#select_month_menu5 .common_select_dropdown_value').innerText = month;
-                                //day if applicable
-                                if (APP_GLOBAL.service_log_file_interval=='1D'){
-                                    CommonAppDocument.querySelector('#select_day_menu5 .common_select_dropdown_value').setAttribute('data-value', day);
-                                    CommonAppDocument.querySelector('#select_day_menu5 .common_select_dropdown_value').innerText = day;
-                                }
-                                    
+                            //month
+                            CommonAppDocument.querySelector('#select_month_menu5 .common_select_dropdown_value').setAttribute('data-value', month);
+                            CommonAppDocument.querySelector('#select_month_menu5 .common_select_dropdown_value').innerText = month;
+                            //day if applicable
+                            if (APP_GLOBAL.service_log_file_interval=='1D'){
+                                CommonAppDocument.querySelector('#select_day_menu5 .common_select_dropdown_value').setAttribute('data-value', day);
+                                CommonAppDocument.querySelector('#select_day_menu5 .common_select_dropdown_value').innerText = day;
+                            }
+                                
 
-                                APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
-                                common.lov_close();
-                            };
-        common.lov_show({lov:'SERVER_LOG_FILES', function_event:function_event});
-    }
+                            APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
+                            common.lov_close();
+                        };
+    common.lov_show({lov:'SERVER_LOG_FILES', function_event:function_event});
 };
 
 /**
@@ -1564,79 +1251,72 @@ const demo_uninstall = () =>{
  * @returns {void}
  */
 const show_server_info = () => {
-    if (admin_token_has_value()){
-        CommonAppDocument.querySelector('#menu_content').innerHTML = 
-                `<div id='menu_10_content_widget1' class='widget'>
-                    <div id='menu_10_os_title' class='common_icon'></div>
-                    <div id='menu_10_os_info'></div>
-                </div>
-                <div id='menu_10_content_widget2' class='widget'>
-                    <div id='menu_10_process_title' class='common_icon'></div>
-                    <div id='menu_10_process_info'></div>
-                </div>`;
-        CommonAppDocument.querySelector('#menu_10_os_info').classList.add('css_spinner');
-        CommonAppDocument.querySelector('#menu_10_process_info').classList.add('css_spinner');
-        common.FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
-        .then((/**@type{string}*/result)=>{
-            /**
-             * Seconds to time string
-             * @param {number} seconds 
-             * @returns {string}
-             */
-            const seconds_to_time = (seconds) => {
-                let ut_sec = seconds;
-                let ut_min = ut_sec/60;
-                let ut_hour = ut_min/60;
-                
-                ut_sec = Math.floor(ut_sec);
-                ut_min = Math.floor(ut_min);
-                ut_hour = Math.floor(ut_hour);
-                
-                ut_hour = ut_hour%60;
-                ut_min = ut_min%60;
-                ut_sec = ut_sec%60;
-                return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
-            };
-            const server_info = JSON.parse(result);
+    CommonAppDocument.querySelector('#menu_content').innerHTML = 
+            `<div id='menu_10_content_widget1' class='widget'>
+                <div id='menu_10_os_title' class='common_icon'></div>
+                <div id='menu_10_os_info'></div>
+            </div>
+            <div id='menu_10_content_widget2' class='widget'>
+                <div id='menu_10_process_title' class='common_icon'></div>
+                <div id='menu_10_process_info'></div>
+            </div>`;
+    CommonAppDocument.querySelector('#menu_10_os_info').classList.add('css_spinner');
+    CommonAppDocument.querySelector('#menu_10_process_info').classList.add('css_spinner');
+    common.FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
+    .then((/**@type{string}*/result)=>{
+        /**
+         * Seconds to time string
+         * @param {number} seconds 
+         * @returns {string}
+         */
+        const seconds_to_time = (seconds) => {
+            let ut_sec = seconds;
+            let ut_min = ut_sec/60;
+            let ut_hour = ut_min/60;
+            
+            ut_sec = Math.floor(ut_sec);
+            ut_min = Math.floor(ut_min);
+            ut_hour = Math.floor(ut_hour);
+            
+            ut_hour = ut_hour%60;
+            ut_min = ut_min%60;
+            ut_sec = ut_sec%60;
+            return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
+        };
+        const server_info = JSON.parse(result);
+        CommonAppDocument.querySelector('#menu_10_os_info').classList.remove('css_spinner');
+        CommonAppDocument.querySelector('#menu_10_process_info').classList.remove('css_spinner');
+        CommonAppDocument.querySelector('#menu_10_os_info').innerHTML = 
+                    `<div id='menu_10_os_info_hostname_title'>${'HOSTNAME'}</div><div id='menu_10_os_info_hostname_data'>${server_info.os.hostname}</div>
+                    <div id='menu_10_os_info_cpus_title'>${'CPUS'}</div><div id='menu_10_os_info_cpus_data'>${server_info.os.cpus.length}</div>
+                    <div id='menu_10_os_info_arch_title'>${'ARCH'}</div><div id='menu_10_os_info_arch_data'>${server_info.os.arch}</div>
+                    <div id='menu_10_os_info_freemem_title'>${'FREEMEM'}</div><div id='menu_10_os_info_freemem_data'>${server_info.os.freemem}</div>
+                    <div id='menu_10_os_info_totalmem_title'>${'TOTALMEM'}</div><div id='menu_10_os_info_totalmem_data'>${server_info.os.totalmem}</div>
+                    <div id='menu_10_os_info_platform_title'>${'PLATFORM'}</div><div id='menu_10_os_info_platform_data'>${server_info.os.platform}</div>
+                    <div id='menu_10_os_info_type_title'>${'TYPE'}</div><div id='menu_10_os_info_type_data'>${server_info.os.type}</div>
+                    <div id='menu_10_os_info_release_title'>${'RELEASE'}</div><div id='menu_10_os_info_release_data'>${server_info.os.release}</div>
+                    <div id='menu_10_os_info_version_title'>${'VERSION'}</div><div id='menu_10_os_info_version_data'>${server_info.os.version}</div>
+                    <div id='menu_10_os_info_uptime_title'>${'UPTIME'}</div><div id='menu_10_os_info_uptime_data'>${seconds_to_time(server_info.os.uptime)}</div>
+                    <div id='menu_10_os_info_homedir_title'>${'HOMEDIR'}</div><div id='menu_10_os_info_homedir_data'>${server_info.os.homedir}</div>
+                    <div id='menu_10_os_info_tmpdir_title'>${'TMPDIR'}</div><div id='menu_10_os_info_tmpdir_data'>${server_info.os.tmpdir}</div>
+                    <div id='menu_10_os_info_userinfo_username_title'>${'USERNAME'}</div><div id='menu_10_os_info_userinfo_username_data'>${server_info.os.userinfo.username}</div>
+                    <div id='menu_10_os_info_userinfo_homedir_title'>${'USER HOMEDIR'}</div><div id='menu_10_os_info_userinfo_homedir_data'>${server_info.os.userinfo.homedir}</div>`;
+        CommonAppDocument.querySelector('#menu_10_process_info').innerHTML =     
+                    `<div id='menu_10_process_info_memoryusage_rss_title'>${'MEMORY RSS'}</div><div id='menu_10_process_info_memoryusage_rss_data'>${server_info.process.memoryusage_rss}</div>
+                    <div id='menu_10_process_info_memoryusage_heaptotal_title'>${'MEMORY HEAPTOTAL'}</div><div id='menu_10_process_info_memoryusage_heaptotal_data'>${server_info.process.memoryusage_heaptotal}</div>
+                    <div id='menu_10_process_info_memoryusage_heapused_title'>${'MEMORY HEAPUSED'}</div><div id='menu_10_process_info_memoryusage_heapused_data'>${server_info.process.memoryusage_heapused}</div>
+                    <div id='menu_10_process_info_memoryusage_external_title'>${'MEMORY EXTERNAL'}</div><div id='menu_10_process_info_memoryusage_external_data'>${server_info.process.memoryusage_external}</div>
+                    <div id='menu_10_process_info_memoryusage_arraybuffers_title'>${'MEMORY ARRAYBUFFERS'}</div><div id='menu_10_process_info_memoryusage_arraybuffers_data'>${server_info.process.memoryusage_arraybuffers}</div>
+                    <div id='menu_10_process_info_uptime_title'>${'UPTIME'}</div><div id='menu_10_process_info_uptime_data'>${seconds_to_time(server_info.process.uptime)}</div>
+                    <div id='menu_10_process_info_version_title'>${'NODEJS VERSION'}</div><div id='menu_10_process_info_version_data'>${server_info.process.version}</div>
+                    <div id='menu_10_process_info_path_title'>${'PATH'}</div><div id='menu_10_process_info_path_data'>${server_info.process.path}</div>
+                    <div id='menu_10_process_info_start_arg_0_title'>${'START ARG 0'}</div><div id='menu_10_process_info_start_arg_0_data'>${server_info.process.start_arg_0}</div>
+                    <div id='menu_10_process_info_start_arg_1_title'>${'START ARG 1'}</div><div id='menu_10_process_info_start_arg_1_data'>${server_info.process.start_arg_1}</div>`;
+    })
+    .catch(()=>{
             CommonAppDocument.querySelector('#menu_10_os_info').classList.remove('css_spinner');
-            CommonAppDocument.querySelector('#menu_10_process_info').classList.remove('css_spinner');
-            CommonAppDocument.querySelector('#menu_10_os_info').innerHTML = 
-                       `<div id='menu_10_os_info_hostname_title'>${'HOSTNAME'}</div><div id='menu_10_os_info_hostname_data'>${server_info.os.hostname}</div>
-                        <div id='menu_10_os_info_cpus_title'>${'CPUS'}</div><div id='menu_10_os_info_cpus_data'>${server_info.os.cpus.length}</div>
-                        <div id='menu_10_os_info_arch_title'>${'ARCH'}</div><div id='menu_10_os_info_arch_data'>${server_info.os.arch}</div>
-                        <div id='menu_10_os_info_freemem_title'>${'FREEMEM'}</div><div id='menu_10_os_info_freemem_data'>${server_info.os.freemem}</div>
-                        <div id='menu_10_os_info_totalmem_title'>${'TOTALMEM'}</div><div id='menu_10_os_info_totalmem_data'>${server_info.os.totalmem}</div>
-                        <div id='menu_10_os_info_platform_title'>${'PLATFORM'}</div><div id='menu_10_os_info_platform_data'>${server_info.os.platform}</div>
-                        <div id='menu_10_os_info_type_title'>${'TYPE'}</div><div id='menu_10_os_info_type_data'>${server_info.os.type}</div>
-                        <div id='menu_10_os_info_release_title'>${'RELEASE'}</div><div id='menu_10_os_info_release_data'>${server_info.os.release}</div>
-                        <div id='menu_10_os_info_version_title'>${'VERSION'}</div><div id='menu_10_os_info_version_data'>${server_info.os.version}</div>
-                        <div id='menu_10_os_info_uptime_title'>${'UPTIME'}</div><div id='menu_10_os_info_uptime_data'>${seconds_to_time(server_info.os.uptime)}</div>
-                        <div id='menu_10_os_info_homedir_title'>${'HOMEDIR'}</div><div id='menu_10_os_info_homedir_data'>${server_info.os.homedir}</div>
-                        <div id='menu_10_os_info_tmpdir_title'>${'TMPDIR'}</div><div id='menu_10_os_info_tmpdir_data'>${server_info.os.tmpdir}</div>
-                        <div id='menu_10_os_info_userinfo_username_title'>${'USERNAME'}</div><div id='menu_10_os_info_userinfo_username_data'>${server_info.os.userinfo.username}</div>
-                        <div id='menu_10_os_info_userinfo_homedir_title'>${'USER HOMEDIR'}</div><div id='menu_10_os_info_userinfo_homedir_data'>${server_info.os.userinfo.homedir}</div>`;
-            CommonAppDocument.querySelector('#menu_10_process_info').innerHTML =     
-                       `<div id='menu_10_process_info_memoryusage_rss_title'>${'MEMORY RSS'}</div><div id='menu_10_process_info_memoryusage_rss_data'>${server_info.process.memoryusage_rss}</div>
-                        <div id='menu_10_process_info_memoryusage_heaptotal_title'>${'MEMORY HEAPTOTAL'}</div><div id='menu_10_process_info_memoryusage_heaptotal_data'>${server_info.process.memoryusage_heaptotal}</div>
-                        <div id='menu_10_process_info_memoryusage_heapused_title'>${'MEMORY HEAPUSED'}</div><div id='menu_10_process_info_memoryusage_heapused_data'>${server_info.process.memoryusage_heapused}</div>
-                        <div id='menu_10_process_info_memoryusage_external_title'>${'MEMORY EXTERNAL'}</div><div id='menu_10_process_info_memoryusage_external_data'>${server_info.process.memoryusage_external}</div>
-                        <div id='menu_10_process_info_memoryusage_arraybuffers_title'>${'MEMORY ARRAYBUFFERS'}</div><div id='menu_10_process_info_memoryusage_arraybuffers_data'>${server_info.process.memoryusage_arraybuffers}</div>
-                        <div id='menu_10_process_info_uptime_title'>${'UPTIME'}</div><div id='menu_10_process_info_uptime_data'>${seconds_to_time(server_info.process.uptime)}</div>
-                        <div id='menu_10_process_info_version_title'>${'NODEJS VERSION'}</div><div id='menu_10_process_info_version_data'>${server_info.process.version}</div>
-                        <div id='menu_10_process_info_path_title'>${'PATH'}</div><div id='menu_10_process_info_path_data'>${server_info.process.path}</div>
-                        <div id='menu_10_process_info_start_arg_0_title'>${'START ARG 0'}</div><div id='menu_10_process_info_start_arg_0_data'>${server_info.process.start_arg_0}</div>
-                        <div id='menu_10_process_info_start_arg_1_title'>${'START ARG 1'}</div><div id='menu_10_process_info_start_arg_1_data'>${server_info.process.start_arg_1}</div>`;
-        })
-        .catch(()=>{
-                CommonAppDocument.querySelector('#menu_10_os_info').classList.remove('css_spinner');
-                CommonAppDocument.querySelector('#menu_10_process_info').classList.remove('css_spinner');});
-    }
+            CommonAppDocument.querySelector('#menu_10_process_info').classList.remove('css_spinner');});
 };
-/**
- * Checks if tokens have values
- * @returns {boolean}
- */
-const admin_token_has_value = () => !(common.COMMON_GLOBAL.token_at=='' && common.COMMON_GLOBAL.token_admin_at =='');
 
 /**
  * App events
@@ -1650,7 +1330,10 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
     switch (event_type){
         case 'click':{
             switch (event_target_id){
-                case (event_target_id=='select_app_menu1' && event.target.classList.contains('common_select_option'))?event_target_id:'':{
+                case (event_target_id=='select_app_menu1' && event.target.classList.contains('common_select_option'))?event_target_id:'':
+                case (event_target_id=='select_year_menu1' && event.target.classList.contains('common_select_option'))?event_target_id:'':
+                case (event_target_id=='select_month_menu1' && event.target.classList.contains('common_select_option'))?event_target_id:'':
+                case (event_target_id=='select_system_admin_stat' && event.target.classList.contains('common_select_option'))?event_target_id:'':{
                     show_charts();
                     break;
                 }
@@ -1658,6 +1341,25 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     nav_click(CommonAppDocument.querySelector('#list_monitor_nav .list_nav_selected_tab').id);
                     break;
                 }
+                case 'select_year_menu5':
+                case 'select_month_menu5':
+                case 'select_day_menu5':{
+                    const current_tab = CommonAppDocument.querySelector('#list_monitor_nav .list_nav_selected_tab').id;
+                    if (current_tab=='list_monitor_nav_server_log')
+                        APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
+                    else
+                        nav_click(current_tab);
+                    break;
+                }
+                case 'select_logscope5':{
+                    APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
+                    break;
+                }
+
+                case 'select_broadcast_type':{
+                    set_broadcast_type();
+                    break;
+                }    
                 case 'menu_1_broadcast_button':{
                     show_broadcast_dialogue('ALL');
                     break;
@@ -1771,35 +1473,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
             }
-            break;
-        }
-        case 'change':{
-            switch (event_target_id){
-                case 'select_system_admin_stat':
-                case 'select_year_menu1':
-                case 'select_month_menu1':{
-                    show_charts();
-                    break;
-                }
-                case 'select_year_menu5':
-                case 'select_month_menu5':
-                case 'select_day_menu5':{
-                    const current_tab = CommonAppDocument.querySelector('#list_monitor_nav .list_nav_selected_tab').id;
-                    if (current_tab=='list_monitor_nav_server_log')
-                        APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
-                    else
-                        nav_click(current_tab);
-                    break;
-                }
-                case 'select_logscope5':{
-                    APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
-                    break;
-                }
-                case 'select_broadcast_type':{
-                    set_broadcast_type();
-                    break;
-                }
-            }            
             break;
         }
         case 'focus':{
