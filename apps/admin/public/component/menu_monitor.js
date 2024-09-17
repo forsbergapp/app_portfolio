@@ -65,9 +65,7 @@ const component = async props => {
               function_FFB:props.function_FFB
             }, '/common/component/select.js');
 
-        if (props.system_admin!=null){
-            props.common_document.querySelector('#select_day_menu5').selectedIndex = new Date().getDate() -1;
-        }
+        props.common_document.querySelector('#select_day_menu5').selectedIndex = new Date().getDate() -1;
         props.common_document.querySelector('#select_year_menu5').selectedIndex = 0;
         props.common_document.querySelector('#select_month_menu5').selectedIndex = new Date().getMonth();
         props.function_map_mount();
