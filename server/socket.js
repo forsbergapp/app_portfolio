@@ -55,6 +55,7 @@ const ConnectedListSystemadmin = (app_id, query) =>service.ConnectedList(   app_
                                                                             getNumberValue(query.get('limit')), 
                                                                             getNumberValue(query.get('year')), 
                                                                             getNumberValue(query.get('month')), 
+                                                                            getNumberValue(query.get('day')), 
                                                                             query.get('order_by'), 
                                                                             query.get('sort'),  
                                                                             1);
@@ -80,6 +81,7 @@ const ConnectedListAdmin = (app_id, query) =>service.ConnectedList(app_id,
                                                                         getNumberValue(query.get('limit')), 
                                                                         getNumberValue(query.get('year')), 
                                                                         getNumberValue(query.get('month')), 
+                                                                        getNumberValue(query.get('day')), 
                                                                         query.get('order_by'), 
                                                                         query.get('sort'), 0);
 /**
