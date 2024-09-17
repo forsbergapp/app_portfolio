@@ -206,12 +206,13 @@ const ClientAdd = (newClient) => {
  * @param {number|null} limit
  * @param {number|null} year
  * @param {number|null} month
+ * @param {number|null} day
  * @param {string} order_by
  * @param {import('../types.js').server_socket_connected_list_sort} sort
  * @param {number} dba
  * @returns {Promise.<import('../types.js').server_socket_connected_list_no_res[]>}
  */
- const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba) => {
+ const ConnectedList = async (app_id, app_id_select, limit, year, month, day, order_by, sort, dba) => {
     
     /**@type{import('../apps/apps.service.js')} */
     const { app_start } = await import(`file://${process.cwd()}/apps/apps.service.js`);
@@ -240,7 +241,8 @@ const ClientAdd = (newClient) => {
         return index<=Number(limit ?? 0) &&
         (client.app_id == app_id_select || app_id_select==null) &&
         (parseInt(client.connection_date.substring(0,4)) == year && 
-         parseInt(client.connection_date.substring(5,7)) == month);
+         parseInt(client.connection_date.substring(5,7)) == month &&
+         parseInt(client.connection_date.substring(8,10)) == day);
     });
     /**
      * Sort

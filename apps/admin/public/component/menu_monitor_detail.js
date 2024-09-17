@@ -478,7 +478,7 @@ const component = async props => {
             case 'APP_LOG':{
                 props.common_document.querySelector('#select_app_menu5').style.display = 'inline-block';
                 //search month + 1 for CONNECTED
-                return `select_app_id=${app_id}&year=${year}&month=${props.monitor_detail=='CONNECTED'?Number(month)+1:month}&day=${day}&sort=${props.sort}&order_by=${props.order_by}${props.query}&limit=${props.limit}`;
+                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${props.sort}&order_by=${props.order_by}${props.query}&limit=${props.limit}`;
             }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
