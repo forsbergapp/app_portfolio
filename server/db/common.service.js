@@ -165,13 +165,15 @@ const db_limit_rows = (pagination = true) => {
 
 /**
  * Compare date using EXTRACT or STRFTIME depending database
+ * examples in WHERE clause:
  * Database 1,2,3,4:
- * 	EXTRACT(year from date_created)
- * 	EXTRACT(month from date_created)
+ * 	EXTRACT(year from date_created) 	= :year
+ * 	EXTRACT(month from date_created)	= :month
+ *  EXTRACT(day from date_created) 		= :day
  * Database 5:
- * 	STRFTIME('%Y', date_created)
- * 	STRFTIME('%m', date_created)
- *  STRFTIME('%d', date_created)
+ *  CAST(STRFTIME('%Y', date_created) AS INT) = :year
+ *  CAST(STRFTIME('%m', date_created) AS INT) = :month
+ *  CAST(STRFTIME('%d', date_created) AS INT) = :day
  * 
  * @param {'YEAR'|'MONTH'|'DAY'} period
  */

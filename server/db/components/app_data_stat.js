@@ -14,8 +14,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const get = (app_id, query) => service.get( app_id, 
                                             getNumberValue(query.get('id')),
                                             getNumberValue(query.get('data_app_id')), 
-                                            query.get('resource_name_entity'),
-                                            query.get('lang_code'))
+                                            query.get('resource_name_entity'))
                                             .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
@@ -23,7 +22,7 @@ const get = (app_id, query) => service.get( app_id,
  * @param {number} app_id 
  * @param {*} query
  */
-const getLogs = (app_id, query) => service.getLogs( app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
+const getLogs = (app_id, query) => service.getLogs( app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), getNumberValue(query.get('day')),
                                                     query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
                                                 .then(result =>{
                                                         if (query.get('sort')!='date_created' && query.get('sort')!='app_id'){

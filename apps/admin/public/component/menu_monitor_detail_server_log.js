@@ -71,7 +71,24 @@ const template = props => ` ${  /*
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map(log=>
+                                ${props.logs.map((/**@type{{logdate:string,
+                                                            host:string,
+                                                            ip:string,
+                                                            requestid:string,
+                                                            correlationid:string,
+                                                            url:string,
+                                                            http_info:string,
+                                                            method:string,
+                                                            statusCode:string,
+                                                            statusMessage:string,
+                                                            'user-agent':string,
+                                                            'accept-language':string,
+                                                            referer:string,
+                                                            size_received:number,
+                                                            size_sent:number,
+                                                            responsetime:number,
+                                                            logtext:string
+                                                            }}*/log)=>
                                     `<div class='list_server_log_row'>
                                         <div class='list_request_log_col'>
                                             ${log.logdate}
@@ -135,7 +152,9 @@ const template = props => ` ${  /*
                                         LOGTEXT
                                     </div>
                                 </div>
-                                ${props.logs.map(log=>
+                                ${props.logs.map((/**@type{{logdate:string,
+                                                            logtext:string
+                                                            }}*/log)=>
                                     `<div class='list_server_log_row'>
                                         <div class='list_server_log_col'>
                                             ${log.logdate}
@@ -168,7 +187,13 @@ const template = props => ` ${  /*
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map(log=>
+                                ${props.logs.map((/**@type{{logdate:string,
+                                                            app_id:number,
+                                                            app_filename:string,
+                                                            app_function_name:string,
+                                                            app_app_line:string,
+                                                            logtext:string
+                                                            }}*/log)=>
                                     `<div class='list_server_log_row'>
                                         <div class='list_server_app_log_col'>
                                             ${log.logdate}
@@ -210,7 +235,12 @@ const template = props => ` ${  /*
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map(log=>
+                                ${props.logs.map((/**@type{{logdate:string,
+                                                            app_id:number,
+                                                            service:string,
+                                                            parameters:string,
+                                                            logtext:string
+                                                            }}*/log)=>
                                     `<div class='list_server_log_row'>
                                         <div class='list_service_log_col'>
                                             ${log.logdate}
@@ -252,7 +282,13 @@ const template = props => ` ${  /*
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map(log=>
+                                ${props.logs.map((/**@type{{logdate:string,
+                                                            app_id:number,
+                                                            db:string,
+                                                            sql:string,
+                                                            parameters:string,
+                                                            logtext:string
+                                                            }}*/log)=>
                                     `<div class='list_server_log_row'>
                                         <div class='list_db_log_col'>
                                             ${log.logdate}

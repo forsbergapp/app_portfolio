@@ -83,7 +83,20 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 BROADCAST
                                             </div>
                                         </div>
-                                        ${props.logs.map(log=>
+                                        ${props.logs.map((/**@type{{id:number,
+                                                                    connection_date:string,
+                                                                    app_id:number,
+                                                                    system_admin:string,
+                                                                    ip:string,
+                                                                    app_role_id:number,
+                                                                    app_role_icon:string,
+                                                                    user_account_id:number,
+                                                                    gps_latitude:string,
+                                                                    gps_longitude:string,
+                                                                    place:string,
+                                                                    timezone:string,
+                                                                    user_agent:string
+                                                                    }}*/log)=>
                                             `<div class='list_connected_row ${log.id==props.service_socket_client_ID?'list_current_user_row':''}'>
                                                 <div class='list_connected_col'>
                                                     ${log.id}
@@ -189,7 +202,24 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 ACCEPT LANGUAGE
                                             </div>
                                         </div>
-                                        ${props.logs.map(log=>
+                                        ${props.logs.map((/**@type{{date_created:string,
+                                                                    server_http_host:string,
+                                                                    app_id:number,
+                                                                    app_module:string,
+                                                                    app_module_type:string,
+                                                                    app_module_request:string,
+                                                                    app_module_result:string,
+                                                                    app_user_id:number,
+                                                                    server_remote_addr:string,
+                                                                    client_latitude:string,
+                                                                    client_longitude:string,
+                                                                    user_language:string
+                                                                    user_timezone:string
+                                                                    user_number_system:string,
+                                                                    user_platform:string,
+                                                                    server_user_agent:string,
+                                                                    server_http_accept_language:string
+                                                                    }}*/log)=>
                                             `<div class='list_app_log_row'>
                                                 <div class='list_app_log_col'>
                                                     ${log.date_created}
@@ -447,7 +477,7 @@ const component = async props => {
         switch (props.monitor_detail){
             case 'CONNECTED':
             case 'APP_LOG':{
-                return `select_app_id=${app_id}&year=${year}&month=${month}&sort=${props.sort}&order_by=${props.order_by}${props.query}&limit=${props.limit}`;
+                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${props.sort}&order_by=${props.order_by}${props.query}&limit=${props.limit}`;
             }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
@@ -525,7 +555,7 @@ const component = async props => {
         const limit = await props.function_FFB(`/server-config/config-apps/${props.app_id}`, 'key=PARAMETERS', 'GET', props.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
                             .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS));
         if (props.monitor_detail=='APP_LOG')
-            page_last = Math.floor(logs[0].total_rows/limit) * limit;
+            page_last = logs.length>0?(Math.floor(logs[0].total_rows/limit) * limit):0;
 
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:  '',
                                                                                                         system_admin:props.system_admin, 
