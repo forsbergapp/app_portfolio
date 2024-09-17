@@ -1,5 +1,5 @@
 /**
- * @module apps/admin/component/menu_config_server
+ * @module apps/admin/component/menu_config
  */
 /**
  * Displays config

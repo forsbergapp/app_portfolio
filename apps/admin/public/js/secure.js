@@ -15,8 +15,8 @@ const common = await import(common_path);
  * App globals
  */
 const APP_GLOBAL = {
-    page:0,
-    page_last:0,
+    page_navigation:(item='')=>item,
+    monitor_detail_server_log:(sort='', order_by='', search='')=>{sort;order_by;search;},
     limit:0,
     previous_row:{},
     module_leaflet_map_container:'',
@@ -28,9 +28,6 @@ Object.seal(APP_GLOBAL);
  * @returns {void}
  */
 const delete_globals = () => {
-    APP_GLOBAL.page = 0;
-    APP_GLOBAL.page_last = 0;
-    APP_GLOBAL.limit = 0;
     APP_GLOBAL.previous_row = {};
     APP_GLOBAL.module_leaflet_map_container = '';
     APP_GLOBAL.service_log_file_interval = '';
@@ -96,7 +93,17 @@ const show_menu = menu => {
         }
         //MONITOR
         case 5:{
-            show_monitor(yearvalues);
+            common.ComponentRender('menu_content', {app_id:common.COMMON_GLOBAL.app_id, 
+                                                    system_admin:common.COMMON_GLOBAL.system_admin, 
+                                                    function_get_log_parameters:get_log_parameters,
+                                                    function_nav_click:nav_click,
+                                                    function_map_mount:map_mount,
+                                                    function_ComponentRender:common.ComponentRender,
+                                                    function_FFB:common.FFB}, '/component/menu_monitor.js')
+            .then(result=>{
+                APP_GLOBAL.limit = result.limit;
+                nav_click('list_monitor_nav_connected');
+            });
             break;
         }
         //SERVER CONFIG
@@ -406,29 +413,6 @@ const get_apps_div = async () =>{
                             <div class='common_select_option' data-value=''>∞</div>
                             ${options}
                         </div>`);
-        })
-        .catch(()=>resolve(null));
-    });
-};
-/**
- * Get apps select semantic HTML 
- * @returns{Promise.<string|null>}
- */
-const get_apps = async () => {
-    return new Promise((resolve)=>{
-        let options = `<option value=''>${'∞'}</option>`;
-        let authorization_type;
-        if (common.COMMON_GLOBAL.system_admin!=null)
-            authorization_type = 'SYSTEMADMIN';
-        else
-            authorization_type = 'APP_ACCESS';
-        common.FFB('/server-config/config-apps/', 'key=NAME', 'GET', authorization_type, null)
-        .then((/**@type{string}*/result)=>{
-            const apps = JSON.parse(result).rows;
-            for (const app of apps) {
-                options += `<option value='${app.APP_ID}'>${app.APP_ID} - ${app.NAME}</option>`;
-            }
-            resolve(options);
         })
         .catch(()=>resolve(null));
     });
@@ -1159,143 +1143,10 @@ const update_record = async (table,
         .catch(()=>CommonAppDocument.querySelector('#' + button).classList.remove('css_spinner'));
     }
 };
-
 /**
- * Show monitor
- * @param {string} yearvalues 
- * @returns{Promise.<void>}
+ * Mounts map in monitor component
  */
-const show_monitor = async (yearvalues) =>{
-    CommonAppDocument.querySelector('#menu_content').innerHTML = 
-        `<div id='menu_5_content_widget1' class='widget'>
-            <div id='list_monitor_nav' class='list_nav'>
-                <div id='list_monitor_nav_connected' class='list_nav_list list_button common_icon'></div>
-                <div id='list_monitor_nav_app_log' class='list_nav_list list_nav_list_hide list_button common_icon'></div>
-                <div id='list_monitor_nav_server_log' class='list_nav_list list_nav_list_hide list_button common_icon'></div>
-            </div>
-            <div id='list_row_sample' class='common_icon css_spinner'></div>
-            <div id='list_connected_form'>    
-                <div id='list_connected' class='common_list_scrollbar'></div>
-            </div>
-            <div id='list_app_log_form'>
-                <div id='list_app_log' class='common_list_scrollbar'></div>
-                <div id='list_app_pagination'>
-                    <div id='list_app_log_first' class='common_icon'></div>
-                    <div id='list_app_log_previous' class='common_icon'></div>
-                    <div id='list_app_log_next' class='common_icon'></div>
-                    <div id='list_app_log_last' class='common_icon'></div>
-                </div>
-            </div>
-            <div id='list_server_log_form'>
-                <div id='menu5_row_parameters'>
-                    <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col1' class='common_icon'></div>
-                        <div id='menu5_row_parameters_col1_1' class='common_icon'></div>
-                        <div id='menu5_row_parameters_col1_0' class='common_icon'></div>
-                    </div>
-                    <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col2' class='common_icon'></div>
-                        <div id='menu5_row_parameters_col2_1' class='common_icon'></div>
-                        <div id='menu5_row_parameters_col2_0' class='common_icon'></div>
-                    </div>
-                    <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col3' class='common_icon'></div>
-                        <div id='menu5_row_parameters_col3_1' class='common_icon'></div>
-                        <div id='menu5_row_parameters_col3_0' class='common_icon'></div>
-                    </div>
-                </div>
-                <div class='list_search'>
-                    <div id='list_server_log_search_input' contentEditable='true' class='common_input list_search_input'/></div>
-                    <div id='list_server_log_search_icon' class='list_search_icon common_icon'></div>
-                </div>
-                <div id='list_server_log' class='common_list_scrollbar'></div>
-            </div>
-        </div>
-        <div id='menu_5_content_widget2' class='widget'>
-            <div id='mapid'></div>
-        </div>`;
-    if (common.COMMON_GLOBAL.system_admin!=null)
-        CommonAppDocument.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_list_hide');
-    else
-        CommonAppDocument.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_list_hide');
-    
-    //both admin and system admin:
-    const monitor_apps =  await get_apps();
-    const monitor_years = yearvalues;
-    const monitor_month = list_generate(12);
-    const monitor_day = common.COMMON_GLOBAL.system_admin!=null?list_generate(31):'';
-    
-    const monitor_log_data = common.COMMON_GLOBAL.system_admin !=null?await get_log_parameters():{parameters:{SCOPE_REQUEST:'',
-                                                                                                            SCOPE_SERVER:'', 
-                                                                                                            SCOPE_SERVICE:'',
-                                                                                                            SCOPE_APP:'',
-                                                                                                            SCOPE_DB:'',
-                                                                                                            REQUEST_LEVEL:0,
-                                                                                                            SERVICE_LEVEL:0,
-                                                                                                            DB_LEVEL:0,
-                                                                                                            LEVEL_VERBOSE:'',
-                                                                                                            LEVEL_ERROR:'',
-                                                                                                            LEVEL_INFO:'',
-                                                                                                            FILE_INTERVAL:''},
-                                                                                                logscope_level_options:''};
-
-    let token_type = '';
-    if (common.COMMON_GLOBAL.system_admin!=null)
-        token_type = 'SYSTEMADMIN';
-    else
-        token_type = 'APP_ACCESS';
-    const query = 'key=PARAMETERS';
-
-    const result_limit = await common.FFB(`/server-config/config-apps/${common.COMMON_GLOBAL.app_id}`, query, 'GET', token_type, null).catch(()=> null);
-    APP_GLOBAL.limit = parseInt(JSON.parse(result_limit)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS);
-
-    CommonAppDocument.querySelector('#list_row_sample').classList.remove('common_icon','css_spinner');
-    CommonAppDocument.querySelector('#list_row_sample').innerHTML = 
-                        `<select id='select_logscope5'>${monitor_log_data.logscope_level_options}</select>
-                         <select id='select_app_menu5'>${monitor_apps}</select>
-                         <select id='select_year_menu5'>${monitor_years}</select>
-                         <select id='select_month_menu5'>${monitor_month}</select>
-                         <select id='select_day_menu5'>${monitor_day}</select>
-                         <div id='filesearch_menu5' class='common_dialogue_button common_icon'></div>`;
-    if (common.COMMON_GLOBAL.system_admin!=null){
-        //server log
-        CommonAppDocument.querySelector('#select_day_menu5').selectedIndex = new Date().getDate() -1;
-        
-        CommonAppDocument.querySelector('#menu5_row_parameters_col1_1').style.display = 'none';
-        CommonAppDocument.querySelector('#menu5_row_parameters_col1_0').style.display = 'none';
-        CommonAppDocument.querySelector('#menu5_row_parameters_col2_1').style.display = 'none';
-        CommonAppDocument.querySelector('#menu5_row_parameters_col2_0').style.display = 'none';
-        CommonAppDocument.querySelector('#menu5_row_parameters_col3_1').style.display = 'none';
-        CommonAppDocument.querySelector('#menu5_row_parameters_col3_0').style.display = 'none';
-        if (monitor_log_data.parameters.REQUEST_LEVEL==1 ||monitor_log_data.parameters.REQUEST_LEVEL==2)
-                CommonAppDocument.querySelector('#menu5_row_parameters_col1_1').style.display = 'inline-block';
-            else
-                CommonAppDocument.querySelector('#menu5_row_parameters_col1_0').style.display = 'inline-block';
-            if (monitor_log_data.parameters.SERVICE_LEVEL==1 || monitor_log_data.parameters.SERVICE_LEVEL==2)
-                CommonAppDocument.querySelector('#menu5_row_parameters_col2_1').style.display = 'inline-block';
-            else
-                CommonAppDocument.querySelector('#menu5_row_parameters_col2_0').style.display = 'inline-block';
-            if (monitor_log_data.parameters.DB_LEVEL==1 || monitor_log_data.parameters.DB_LEVEL==2)
-                CommonAppDocument.querySelector('#menu5_row_parameters_col3_1').style.display = 'inline-block';
-            else
-                CommonAppDocument.querySelector('#menu5_row_parameters_col3_0').style.display = 'inline-block';
-        if (APP_GLOBAL.service_log_file_interval=='1M')
-            CommonAppDocument.querySelector('#select_day_menu5').style.display = 'none';
-        else
-            CommonAppDocument.querySelector('#select_day_menu5').style.display = 'inline-block';
-    }
-    else{
-        //app log
-        CommonAppDocument.querySelector('#select_logscope5').style.display = 'none';
-        CommonAppDocument.querySelector('#select_day_menu5').style.display = 'none';
-        CommonAppDocument.querySelector('#filesearch_menu5').style.display = 'none';
-    }
-    CommonAppDocument.querySelector('#select_year_menu5').selectedIndex = 0;
-    CommonAppDocument.querySelector('#select_month_menu5').selectedIndex = new Date().getMonth();
-
-    
-    if (common.COMMON_GLOBAL.system_admin==null)
-        APP_GLOBAL.page = 0;
+const map_mount = () =>{
     //show map only for this condition
     if (common.COMMON_GLOBAL.system_admin_only != 1)
         common.map_init(APP_GLOBAL.module_leaflet_map_container,
@@ -1315,7 +1166,6 @@ const show_monitor = async (yearvalues) =>{
                             });
             common.map_resize();
         });
-    nav_click('list_monitor_nav_connected'); 
 };
 
 /**
@@ -1326,8 +1176,10 @@ const show_monitor = async (yearvalues) =>{
 const nav_click = (item_id) => {
     const reset_monitor = () => {
         CommonAppDocument.querySelector('#list_monitor_nav_connected').classList.remove('list_nav_selected_tab');
-        CommonAppDocument.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_selected_tab');
-        CommonAppDocument.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_selected_tab');
+        if (CommonAppDocument.querySelector('#list_monitor_nav_app_log'))
+            CommonAppDocument.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_selected_tab');
+        if (CommonAppDocument.querySelector('#list_monitor_nav_server_log'))
+            CommonAppDocument.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_selected_tab');
     };
     const reset_config = () => {
         CommonAppDocument.querySelector('#list_config_nav_server').classList.remove('list_nav_selected_tab');
@@ -1340,30 +1192,20 @@ const nav_click = (item_id) => {
         //MONITOR
         case 'list_monitor_nav_connected':{
             reset_monitor();
-            CommonAppDocument.querySelector('#list_connected_form').style.display='flex';
-            CommonAppDocument.querySelector('#list_app_log_form').style.display='none';
-            CommonAppDocument.querySelector('#list_server_log_form').style.display='none';
             CommonAppDocument.querySelector('#list_monitor_nav_connected').classList.add('list_nav_selected_tab');
             show_connected();
             break;
         }
         case 'list_monitor_nav_app_log':{
             reset_monitor();
-            CommonAppDocument.querySelector('#list_connected_form').style.display='none';
-            CommonAppDocument.querySelector('#list_app_log_form').style.display='flex';
-            CommonAppDocument.querySelector('#list_server_log_form').style.display='none';
             CommonAppDocument.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
-            APP_GLOBAL.page = 0;
             show_app_log();
             break;
         }
         case 'list_monitor_nav_server_log':{
             reset_monitor();
-            CommonAppDocument.querySelector('#list_connected_form').style.display='none';
-            CommonAppDocument.querySelector('#list_app_log_form').style.display='none';
-            CommonAppDocument.querySelector('#list_server_log_form').style.display='block';
             CommonAppDocument.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
-            show_server_logs('logdate', 'desc', CommonAppDocument.querySelector('#list_server_log_search_input').innerText);
+            show_server_logs('logdate', 'desc');
             break;
         }
         //SERVER CONFIG
@@ -1395,582 +1237,31 @@ const nav_click = (item_id) => {
 };
 /**
  * Show list
- * @param {string} list_div 
+ * @param {'CONNECTED'|'APP_LOG'|'SERVER_LOG'} list_detail
  * @param {string} query
  * @param {string} sort 
  * @param {string} order_by 
  */
-const show_list = async (list_div, query, sort, order_by) => {
-    if (admin_token_has_value()){
-        /**@type{string} */
-        let logscope;
-        let logs;
-        let token_type = '';
-        let path = '';
-        switch (list_div){
-            case 'list_connected':{
-                if (common.COMMON_GLOBAL.system_admin!=null){
-                    path = '/server-socket/socket';
-                    token_type = 'SYSTEMADMIN';
-                }
-                else{
-                    path = '/server-socket/socket';
-                    token_type = 'APP_ACCESS';
-                }
-                break;
-            }
-            case 'list_app_log':{
-                path = '/server-db_admin/app_data_stat-log';
-                token_type = 'APP_ACCESS';
-                break;
-            }
-            case 'list_server_log':{
-                logscope = CommonAppDocument.querySelector('#select_logscope5')[CommonAppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
-                path = '/server-log/log';
-                token_type = 'SYSTEMADMIN';
-                break;
-            }
-        }
-        CommonAppDocument.querySelector('#' + list_div).classList.add('css_spinner');
-        CommonAppDocument.querySelector('#' + list_div).innerHTML = '';
-        common.FFB(path, query, 'GET', token_type, null)
-        .then((/**@type{string}*/result)=>{
-            logs = JSON.parse(result).rows;
-            let html = '';
-            switch (list_div){
-                /*
-                use this grouping to decide column orders
-                [log colums][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
-                */
-                case 'list_connected':{
-                    html = `<div class='list_connected_row'>
-                                <div data-column='id' class='list_connected_col list_sort_click list_title'>
-                                    ID
-                                </div>
-                                <div data-column='connection_date' class='list_connected_col list_sort_click list_title'>
-                                    CONNECTION DATE
-                                </div>
-                                <div data-column='app_id' class='list_connected_col list_sort_click list_title'>
-                                    APP ID
-                                </div>
-                                <div data-column='app_role_icon' class='list_connected_col list_sort_click list_title'>
-                                    ROLE
-                                </div>
-                                <div data-column='user_account_id' class='list_connected_col list_sort_click list_title'>
-                                    USER ID
-                                </div>
-                                <div data-column='system_admin' class='list_connected_col list_sort_click list_title'>
-                                    SYSTEM ADMIN
-                                </div>
-                                <div data-column='ip' class='list_connected_col list_sort_click list_title'>
-                                    IP
-                                </div>
-                                <div data-column='gps_latitude' class='list_connected_col list_sort_click list_title'>
-                                    GPS LAT
-                                </div>
-                                <div data-column='gps_longitude' class='list_connected_col list_sort_click list_title'>
-                                    GPS LONG
-                                </div>
-                                <div data-column='place' class='list_connected_col list_sort_click list_title'>
-                                    PLACE
-                                </div>
-                                <div data-column='timezone' class='list_connected_col list_sort_click list_title'>
-                                    TIMEZONE
-                                </div>
-                                <div data-column='user_agent' class='list_connected_col list_sort_click list_title'>
-                                    USER AGENT
-                                </div>
-                                <div data-column='broadcast' class='list_connected_col list_title'>
-                                    BROADCAST
-                                </div>
-                            </div>`;
-                    break;
-                }
-                case 'list_app_log':{
-                    APP_GLOBAL.page_last = Math.floor(logs[0].total_rows/APP_GLOBAL.limit) * APP_GLOBAL.limit;
-                    html = `<div class='list_app_log_row'>
-                                <div data-column='date_created' class='list_app_log_col list_sort_click list_title'>
-                                    DATE
-                                </div>
-                                <div data-column='server_http_host' class='list_app_log_col list_sort_click list_title'>
-                                    HOST
-                                </div>
-                                <div  data-column='app_id' class='list_app_log_col list_sort_click list_title'>
-                                    APP ID
-                                </div>
-                                <div data-column='app_module' class='list_app_log_col list_sort_click list_title'>
-                                    MODULE
-                                </div>
-                                <div data-column='app_module_type' class='list_app_log_col list_sort_click list_title'>
-                                    MODULE TYPE
-                                </div>
-                                <div data-column='app_module_request' class='list_app_log_col list_sort_click list_title'>
-                                    MODULE REQUEST
-                                </div>
-                                <div data-column='app_module_result' class='list_app_log_col list_sort_click list_title'>
-                                    MODULE RESULT
-                                </div>
-                                <div data-column='app_user_id' class='list_app_log_col list_sort_click list_title'>
-                                    USER ID
-                                </div>
-                                <div data-column='server_remote_addr' class='list_app_log_col list_sort_click list_title'>
-                                    IP
-                                </div>
-                                <div data-column='client_latitude' class='list_app_log_col list_sort_click list_title'>
-                                    GPS LAT
-                                </div>
-                                <div data-column='client_longitude' class='list_app_log_col list_sort_click list_title'>
-                                    GPS LONG
-                                </div>
-                                <div data-column='user_language' class='list_app_log_col list_sort_click list_title'>
-                                    USER LANGUAGE
-                                </div>
-                                <div data-column='user_timezone' class='list_app_log_col list_sort_click list_title'>
-                                    USER TIMEZONE
-                                </div>
-                                <div data-column='user_number_system' class='list_app_log_col list_sort_click list_title'>
-                                    USER NUMBER_SYSTEM
-                                </div>
-                                <div data-column='user_platform' class='list_app_log_col list_sort_click list_title'>
-                                    USER PLATFORM
-                                </div>
-                                <div data-column='server_user_agent' class='list_app_log_col list_sort_click list_title'>
-                                    USER AGENT
-                                </div>
-                                <div data-column='http_accept_language' class='list_app_log_col list_sort_click list_title'>
-                                    ACCEPT LANGUAGE
-                                </div>
-                            </div>`;
-                    break;
-                }
-                case 'list_server_log':{
-                    switch (logscope){
-                        case 'REQUEST':{
-                            html =`<div class='list_server_log_row'>
-                                <div data-column='logdate' class='list_request_log_col list_sort_click list_title'>
-                                    LOGDATE
-                                </div>
-                                <div data-column='host' class='list_request_log_col list_sort_click list_title'>
-                                    HOST
-                                </div>
-                                <div data-column='ip' class='list_request_log_col list_sort_click list_title'>
-                                    IP
-                                </div>
-                                <div data-column='requestid' class='list_request_log_col list_sort_click list_title'>
-                                    REQUEST_ID
-                                </div>
-                                <div data-column='correlationid' class='list_request_log_col list_sort_click list_title'>
-                                    CORRELATION_ID
-                                </div>
-                                <div data-column='url' class='list_request_log_col list_sort_click list_title'>
-                                    URL
-                                </div>
-                                <div data-column='http_info' class='list_request_log_col list_sort_click list_title'>
-                                    HTTP INFO
-                                </div>
-                                <div data-column='method' class='list_request_log_col list_sort_click list_title'>
-                                    METHOD
-                                </div>
-                                <div data-column='statuscode' class='list_request_log_col list_sort_click list_title'>
-                                    STATUSCODE
-                                </div>
-                                <div data-column='statusmessage' class='list_request_log_col list_sort_click list_title'>
-                                    STATUSMESSAGE
-                                </div>
-                                <div data-column='user-agent' class='list_request_log_col list_sort_click list_title'>
-                                    USER AGENT
-                                </div>
-                                <div data-column='accept-language' class='list_request_log_col list_sort_click list_title'>
-                                    ACCEPT LANGUAGE
-                                </div>
-                                <div data-column='referer' class='list_request_log_col list_sort_click list_title'>
-                                    REFERER
-                                </div>
-                                <div data-column='size_received' class='list_request_log_col list_sort_click list_title'>
-                                    SIZE_RECEIVED
-                                </div>
-                                <div data-column='size_sent' class='list_request_log_col list_sort_click list_title'>
-                                    SIZE_SENT
-                                </div>
-                                <div data-column='responsetime' class='list_request_log_col list_sort_click list_title'>
-                                    RESPONSE_TIME
-                                </div>
-                                <div data-column='logtext' class='list_request_log_col list_sort_click list_title'>
-                                    LOG TEXT
-                                </div>
-                            </div>`;
-                            break;
-                        }
-                        case 'SERVER':{
-                            html = `<div class='list_server_log_row'>
-                                        <div data-column='logdate' class='list_server_log_col list_sort_click list_title'>
-                                            LOGDATE
-                                        </div>
-                                        <div data-column='logtext' class='list_server_log_col list_sort_click list_title'>
-                                            LOGTEXT
-                                        </div>
-                                    </div>`;
-                            break;
-                        }
-                        case 'APP':{
-                            html = `<div class='list_server_log_row'>
-                                        <div data-column='logdate' class='list_server_app_log_col list_sort_click list_title'>
-                                            LOGDATE
-                                        </div>
-                                        <div data-column='app_id' class='list_server_app_log_col list_sort_click list_title'>
-                                            APP ID
-                                        </div>
-                                        <div data-column='filename' class='list_server_app_log_col list_sort_click list_title'>
-                                            FILENAME
-                                        </div>
-                                        <div data-column='function' class='list_server_app_log_col list_sort_click list_title'>
-                                            FUNCTION
-                                        </div>
-                                        <div data-column='line' class='list_server_app_log_col list_sort_click list_title'>
-                                            LINE
-                                        </div>
-                                        <div data-column='logtext' class='list_server_app_log_col list_sort_click list_title'>
-                                            LOG TEXT
-                                        </div>
-                                    </div>`;
-                            break;
-                        }
-                        case 'SERVICE':{
-                            html = `<div class='list_server_log_row'>
-                                        <div data-column='logdate' class='list_service_log_col list_sort_click list_title'>
-                                            LOGDATE
-                                        </div>
-                                        <div data-column='app_id' class='list_service_log_col list_sort_click list_title'>
-                                            APP ID
-                                        </div>
-                                        <div data-column='service' class='list_service_log_col list_sort_click list_title'>
-                                            SERVICE
-                                        </div>
-                                        <div data-column='parameters' class='list_service_log_col list_sort_click list_title'>
-                                            PARAMETERS
-                                        </div>
-                                        <div data-column='logtext' class='list_service_log_col list_sort_click list_title'>
-                                            LOG TEXT
-                                        </div>
-                                    </div>`;
-                            break;
-                        }
-                        case 'DB':{
-                            html = `<div class='list_server_log_row'>
-                                        <div data-column='logdate' class='list_db_log_col list_sort_click list_title'>
-                                            LOGDATE
-                                        </div>
-                                        <div data-column='app_id' class='list_db_log_col list_sort_click list_title'>
-                                            APP ID
-                                        </div>
-                                        <div data-column='db' class='list_db_log_col list_sort_click list_title'>
-                                            DB
-                                        </div>
-                                        <div data-column='sql' class='list_db_log_col list_sort_click list_title'>
-                                            SQL
-                                        </div>
-                                        <div data-column='parameters' class='list_db_log_col list_sort_click list_title'>
-                                            PARAMETERS
-                                        </div>
-                                        <div data-column='logtext' class='list_db_log_col list_sort_click list_title'>
-                                            LOG TEXT
-                                        </div>
-                                    </div>`;
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-            if (logs.length >0){
-                for (const log of logs) {
-                    switch (list_div){
-                        case 'list_connected':{    
-                            let list_connected_current_user_row='';
-                            if (log.id==common.COMMON_GLOBAL.service_socket_client_ID)
-                                list_connected_current_user_row = 'list_current_user_row';
-                            else
-                                list_connected_current_user_row ='';
-                            let app_role_class;
-                            let app_role_icon = log.app_role_icon;
-                            if (log.system_admin!=''){
-                                app_role_class = 'app_role_system_admin common_icon';
-                                app_role_icon = '';
-                            }
-                            else
-                                switch (log.app_role_id){
-                                    case 0:{
-                                        app_role_class = 'app_role_superadmin';
-                                        break;
-                                    }
-                                    case 1:{
-                                        app_role_class = 'app_role_admin';
-                                        break;
-                                    }
-                                    default:{
-                                        app_role_class = 'app_role_user';
-                                    }
-                                }
-                            html += `<div class='list_connected_row ${list_connected_current_user_row}'>
-                                        <div class='list_connected_col'>
-                                            ${log.id}
-                                        </div>
-                                        <div class='list_connected_col'>
-                                            ${log.connection_date}
-                                        </div>
-                                        <div class='list_connected_col'>
-                                            ${log.app_id}
-                                        </div>
-                                        <div class='list_connected_col ${app_role_class}'>
-                                            ${app_role_icon}
-                                        </div>
-                                        <div class='list_connected_col'>
-                                            ${log.user_account_id ?? ''}
-                                        </div>
-                                        <div class='list_connected_col'>
-                                            ${log.system_admin}
-                                        </div>
-                                        <div class='list_connected_col'>
-                                            ${log.ip.replace('::ffff:','')}
-                                        </div>
-                                        <div class='list_connected_col gps_click' 
-                                            data-latitude='${log.gps_latitude ?? ''}'
-                                            data-longitude='${log.gps_longitude ?? ''}'>
-                                            ${log.gps_latitude ?? ''}
-                                        </div>
-                                        <div class='list_connected_col gps_click'
-                                            data-latitude='${log.gps_latitude ?? ''}'
-                                            data-longitude='${log.gps_longitude ?? ''}'>
-                                            ${log.gps_longitude ?? ''}
-                                        </div>
-                                        <div class='list_connected_col'>
-                                            ${log.place}
-                                        </div>
-                                        <div class='list_connected_col'>
-                                            ${log.timezone}
-                                        </div>
-                                        <div class='list_connected_col common_wide_list_column'>
-                                            ${common.getUserAgentPlatform(log.user_agent) ?? ''}
-                                        </div>
-                                        <div class='list_connected_col chat_click common_icon' data-id='${log.id}'></div>
-                                    </div>`;
-                            break;
-                        }
-                        case 'list_app_log':{
-                            html += `<div class='list_app_log_row'>
-                                        <div class='list_app_log_col'>
-                                            ${log.date_created}
-                                        </div>
-                                        <div class='list_app_log_col common_wide_list_column'>
-                                            ${log.server_http_host}
-                                        </div>
-                                        <div class='list_app_log_col'>
-                                            ${log.app_id}
-                                        </div>
-                                        <div class='list_app_log_col'>
-                                            ${log.app_module}
-                                        </div>
-                                        <div class='list_app_log_col'>
-                                            ${log.app_module_type}
-                                        </div>
-                                        <div class='list_app_log_col common_wide_list_column'>
-                                            ${log.app_module_request}
-                                        </div>
-                                        <div class='list_app_log_col common_wide_list_column'>
-                                            ${log.app_module_result}
-                                        </div>
-                                        <div class='list_app_log_col'>
-                                            ${log.app_user_id}
-                                        </div>
-                                        <div class='list_app_log_col'>
-                                            ${log.server_remote_addr.replace('::ffff:','')}
-                                        </div>
-                                        <div class='list_app_log_col gps_click'
-                                            data-latitude='${log.client_latitude ?? ''}'
-                                            data-longitude='${log.client_longitude ?? ''}'>
-                                            ${log.client_latitude ?? ''}
-                                        </div>
-                                        <div class='list_app_log_col gps_click'
-                                            data-latitude='${log.client_latitude ?? ''}'
-                                            data-longitude='${log.client_longitude ?? ''}'>
-                                            ${log.client_longitude ?? ''}
-                                        </div>
-                                        <div class='list_app_log_col common_wide_list_column'>
-                                            ${log.user_language}
-                                        </div>
-                                        <div class='list_app_log_col common_wide_list_column'>
-                                            ${log.user_timezone}
-                                        </div>
-                                        <div class='list_app_log_col common_wide_list_column'>
-                                            ${log.user_number_system}
-                                        </div>
-                                        <div class='list_app_log_col common_wide_list_column'>
-                                            ${log.user_platform}
-                                        </div>
-                                        <div class='list_app_log_col common_wide_list_column'>
-                                            ${log.server_user_agent}
-                                        </div>
-                                        <div class='list_app_log_col common_wide_list_column'>
-                                            ${log.server_http_accept_language}
-                                        </div>
-                                    </div>`;
-                            break;
-                        }
-                        case 'list_server_log':{
-                            //test if JSON in logtext
-                            if (typeof log.logtext === 'object')
-                                log.logtext = JSON.stringify(log.logtext);
-                            switch (logscope){
-                                case 'REQUEST':{
-                                    html += 
-                                            `<div class='list_server_log_row'>
-                                                <div class='list_request_log_col'>
-                                                    ${log.logdate}
-                                                </div>
-                                                <div class='list_request_log_col common_wide_list_column'>
-                                                    ${log.host}
-                                                </div>
-                                                <div class='list_request_log_col gps_click' data-ip='${log.ip==''?'':log.ip.replace('::ffff:','')}'>
-                                                    ${log.ip==''?'':log.ip.replace('::ffff:','')}
-                                                </div>
-                                                <div class='list_request_log_col'>
-                                                    ${log.requestid}
-                                                </div>
-                                                <div class='list_request_log_col'>
-                                                    ${log.correlationid}
-                                                </div>
-                                                <div class='list_request_log_col common_wide_list_column'>
-                                                    ${log.url}
-                                                </div>
-                                                <div class='list_request_log_col'>
-                                                    ${log.http_info}
-                                                </div>
-                                                <div class='list_request_log_col'>
-                                                    ${log.method}
-                                                </div>
-                                                <div class='list_request_log_col'>
-                                                    ${log.statusCode}
-                                                </div>
-                                                <div class='list_request_log_col common_wide_list_column'>
-                                                    ${log.statusMessage}
-                                                </div>
-                                                <div class='list_request_log_col common_wide_list_column'>
-                                                    ${log['user-agent']}
-                                                </div>
-                                                <div class='list_request_log_col common_wide_list_column'>
-                                                    ${log['accept-language']}
-                                                </div>
-                                                <div class='list_request_log_col common_wide_list_column'>
-                                                    ${log.referer}
-                                                </div>
-                                                <div class='list_request_log_col'>
-                                                    ${log.size_received}
-                                                </div>
-                                                <div class='list_request_log_col'>
-                                                    ${log.size_sent}
-                                                </div>
-                                                <div class='list_request_log_col'>
-                                                    ${roundOff(log.responsetime)}
-                                                </div>
-                                                <div class='list_request_log_col common_wide_list_column'>
-                                                    ${log.logtext}
-                                                </div>
-                                            </div>`;
-                                    break;
-                                }
-                                case 'SERVER':{
-                                    html += 
-                                            `<div class='list_server_log_row'>
-                                                <div class='list_server_log_col'>
-                                                    ${log.logdate}
-                                                </div>
-                                                <div class='list_server_log_col'>
-                                                    ${log.logtext}
-                                                </div>
-                                            </div>`;
-                                    break;
-                                }
-                                case 'APP':{
-                                    html += 
-                                            `<div class='list_server_log_row'>
-                                                <div class='list_server_app_log_col'>
-                                                    ${log.logdate}
-                                                </div>
-                                                <div class='list_server_app_log_col'>
-                                                    ${log.app_id}
-                                                </div>
-                                                <div class='list_server_app_log_col common_wide_list_column'>
-                                                    ${log.app_filename}
-                                                </div>
-                                                <div class='list_server_app_log_col common_wide_list_column'>
-                                                    ${log.app_function_name}
-                                                </div>
-                                                <div class='list_server_app_log_col'>
-                                                    ${log.app_app_line}
-                                                </div>
-                                                <div class='list_server_app_log_col common_wide_list_column'>
-                                                    ${log.logtext}
-                                                </div>
-                                            </div>`;
-                                    break;
-                                }
-                                case 'SERVICE':{
-                                    html += 
-                                            `<div class='list_server_log_row'>
-                                                <div class='list_service_log_col'>
-                                                    ${log.logdate}
-                                                </div>
-                                                <div class='list_service_log_col'>
-                                                    ${log.app_id}
-                                                </div>
-                                                <div class='list_service_log_col'>
-                                                    ${log.service}
-                                                </div>
-                                                <div class='list_service_log_col common_wide_list_column'>
-                                                    ${log.parameters}
-                                                </div>
-                                                <div class='list_service_log_col common_wide_list_column'>
-                                                    ${log.logtext}
-                                                </div>
-                                            </div>`;
-                                    break;
-                                }
-                                case 'DB':{
-                                    html += 
-                                            `<div class='list_server_log_row'>
-                                                <div class='list_db_log_col'>
-                                                    ${log.logdate}
-                                                </div>
-                                                <div class='list_db_log_col'>
-                                                    ${log.app_id}
-                                                </div>
-                                                <div class='list_db_log_col'>
-                                                    ${log.db}
-                                                </div>
-                                                <div class='list_db_log_col common_wide_list_column'>
-                                                    ${log.sql}
-                                                </div>
-                                                <div class='list_db_log_col common_wide_list_column'>
-                                                    ${log.parameters}
-                                                </div>
-                                                <div class='list_db_log_col common_wide_list_column'>
-                                                    ${log.logtext}
-                                                </div>
-                                            </div>`;
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-                CommonAppDocument.querySelector('#' + list_div).classList.remove('css_spinner');
-                CommonAppDocument.querySelector('#' + list_div).innerHTML = html;
-                CommonAppDocument.querySelector(`#${list_div} .list_title[data-column='${sort}']`).classList.add(order_by);
-            }  
-        })
-        .catch(()=>CommonAppDocument.querySelector('#' + list_div).classList.remove('css_spinner'));   
-    }
+const show_list = async (list_detail, query, sort, order_by) => {
+    common.ComponentRender('list_monitor', {app_id:common.COMMON_GLOBAL.app_id,
+                                            system_admin:common.COMMON_GLOBAL.system_admin,
+                                            monitor_detail:list_detail,
+                                            query:query,
+                                            sort:sort,
+                                            order_by:order_by,
+                                            service_socket_client_ID:common.COMMON_GLOBAL.service_socket_client_ID,
+                                            limit:APP_GLOBAL.limit,
+                                            function_input_control:common.input_control,
+                                            function_ComponentRender:common.ComponentRender,
+                                            function_getUserAgentPlatform:common.getUserAgentPlatform,
+                                            function_get_log_parameters:get_log_parameters,
+                                            function_show_app_log:show_app_log,
+                                            function_roundOff:roundOff,
+                                            function_FFB:common.FFB}, '/component/menu_monitor_detail.js')
+    .then(result=>{
+        APP_GLOBAL.page_navigation = result.function_page_navigation;
+        APP_GLOBAL.monitor_detail_server_log = result.function_monitor_detail_server_log;
+    });
 };
 /**
  * Show connected
@@ -1978,11 +1269,8 @@ const show_list = async (list_div, query, sort, order_by) => {
  * @param {string} order_by
  */
 const show_connected = async (sort='connection_date', order_by='desc') => {
-    const app_id = CommonAppDocument.querySelector('#select_app_menu5').options[CommonAppDocument.querySelector('#select_app_menu5').selectedIndex].value;
-    const year = CommonAppDocument.querySelector('#select_year_menu5').value;
-    const month = CommonAppDocument.querySelector('#select_month_menu5').value;
-    show_list('list_connected', 
-              `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${APP_GLOBAL.limit}`, 
+    show_list('CONNECTED', 
+              '', 
               sort,
               order_by);
 };    
@@ -1992,38 +1280,13 @@ const show_connected = async (sort='connection_date', order_by='desc') => {
  * @param {string} sort 
  * @param {string} order_by
  * @param {number} offset 
- * @param {number} limit 
  * @returns{Promise.<void>}
  */
-const show_app_log = async (sort='date_created', order_by='desc', offset=0, limit=APP_GLOBAL.limit) => {
-    const app_id = CommonAppDocument.querySelector('#select_app_menu5').options[CommonAppDocument.querySelector('#select_app_menu5').selectedIndex].value;
-    const year = CommonAppDocument.querySelector('#select_year_menu5').value;
-    const month = CommonAppDocument.querySelector('#select_month_menu5').value;
-    show_list('list_app_log', 
-              `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`, 
+const show_app_log = async (sort='date_created', order_by='desc', offset=0) => {
+    show_list('APP_LOG', 
+              `&offset=${offset}`, 
               sort,
               order_by);
-};
-/**
- * Get column sort
- * @param {number} order_by 
- * @returns{'asc'|'desc'|string}
- */
-const get_sort = (order_by=0) => {
-    const sort = '';
-    for (const col_title of CommonAppDocument.querySelectorAll('#list_app_log .list_title')){
-        if (col_title.classList.contains('asc'))
-            if (order_by==0)
-                return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
-            else
-                return 'asc';
-        if (col_title.classList.contains('desc'))
-            if (order_by==0)
-                return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
-            else
-                return 'desc';
-    }
-    return sort;
 };
 /**
  * List sort click
@@ -2043,52 +1306,11 @@ const list_sort_click = (list, sortcolumn, order_by) => {
             break;
         }
         case 'list_server_log':{
-            show_server_logs(sortcolumn, order_by, CommonAppDocument.querySelector('#list_server_log_search_input').innerText);
+            APP_GLOBAL.monitor_detail_server_log(sortcolumn, order_by);
             break;
         }
         case 'list_user_account':{
             search_users(sortcolumn, order_by);
-            break;
-        }
-    }
-};
-/**
- * Page navigation
- * @param {string} item 
- * @returns {void}
- */
-const page_navigation = (item) => {
-    
-    let sort = get_sort();
-    const order_by = get_sort(1);
-    if (sort =='')
-        sort = 'date_created';
-    switch (item){
-        case 'list_app_log_first':{
-            APP_GLOBAL.page = 0;
-            show_app_log(sort, order_by, 0,APP_GLOBAL.limit);
-            break;
-        }
-        case 'list_app_log_previous':{
-            APP_GLOBAL.page = APP_GLOBAL.page - APP_GLOBAL.limit;
-            if (APP_GLOBAL.page - APP_GLOBAL.limit < 0)
-                APP_GLOBAL.page = 0;
-            else
-                APP_GLOBAL.page = APP_GLOBAL.page - APP_GLOBAL.limit;
-            show_app_log(sort, order_by, APP_GLOBAL.page, APP_GLOBAL.limit);
-            break;
-        }
-        case 'list_app_log_next':{
-            if (APP_GLOBAL.page + APP_GLOBAL.limit > APP_GLOBAL.page_last)
-                APP_GLOBAL.page = APP_GLOBAL.page_last;
-            else
-                APP_GLOBAL.page = APP_GLOBAL.page + APP_GLOBAL.limit;
-            show_app_log(sort, order_by, APP_GLOBAL.page, APP_GLOBAL.limit);
-            break;
-        }
-        case 'list_app_log_last':{
-            APP_GLOBAL.page = APP_GLOBAL.page_last;
-            show_app_log(sort, order_by, APP_GLOBAL.page, APP_GLOBAL.limit);
             break;
         }
     }
@@ -2221,38 +1443,13 @@ const get_log_parameters = async () => {
  * Show server logs
  * @param {string} sort 
  * @param {string} order_by 
- * @param {string|null} search 
  * @returns {void}
  */
-const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
-    if (search != null){
-        if (common.input_control(null,{check_valid_list_elements:[[CommonAppDocument.querySelector('#list_server_log_search_input'),100]]})==false)
-            return;
-    }
-    const logscope = CommonAppDocument.querySelector('#select_logscope5')[CommonAppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
-    const loglevel = CommonAppDocument.querySelector('#select_logscope5')[CommonAppDocument.querySelector('#select_logscope5').selectedIndex].getAttribute('log_level');
-    const year = CommonAppDocument.querySelector('#select_year_menu5').value;
-    const month= CommonAppDocument.querySelector('#select_month_menu5').value;
-    const day  = CommonAppDocument.querySelector('#select_day_menu5').value;
-    let app_id_filter='';
-    if (logscope=='APP' || logscope=='SERVICE' || logscope=='SERVER-DB'){
-        //show app filter and use it
-        CommonAppDocument.querySelector('#select_app_menu5').style.display = 'inline-block';
-        app_id_filter = `select_app_id=${CommonAppDocument.querySelector('#select_app_menu5').options[CommonAppDocument.querySelector('#select_app_menu5').selectedIndex].value}&`;
-    }
-    else{
-        //no app filter for request
-        CommonAppDocument.querySelector('#select_app_menu5').style.display = 'none';
-        app_id_filter = 'select_app_id=&';
-    }
-    let url_parameters;
-    search=search?encodeURI(search):search;
-    if (APP_GLOBAL.service_log_file_interval=='1M')
-        url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&search=${search}`;
-    else
-        url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}&search=${search}`;
-    show_list('list_server_log', 
-              `${url_parameters}&sort=${sort}&order_by=${order_by}`,
+const show_server_logs = (sort='logdate', order_by='desc') => {
+    
+
+    show_list('SERVER_LOG', 
+              '',
               sort,
               order_by);
 };
@@ -2304,7 +1501,7 @@ const show_existing_logfiles = () => {
                                 if (APP_GLOBAL.service_log_file_interval=='1D')
                                     CommonAppDocument.querySelector('#select_day_menu5').value = day;
 
-                                nav_click('list_monitor_nav_server_log');
+                                APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
                                 common.lov_close();
                             };
         common.lov_show({lov:'SERVER_LOG_FILES', function_event:function_event});
@@ -2479,6 +1676,10 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     show_charts();
                     break;
                 }
+                case (event_target_id=='select_app_menu5' && event.target.classList.contains('common_select_option'))?event_target_id:'':{
+                    nav_click(CommonAppDocument.querySelector('#list_monitor_nav .list_nav_selected_tab').id);
+                    break;
+                }
                 case 'menu_1_broadcast_button':{
                     show_broadcast_dialogue('ALL');
                     break;
@@ -2515,7 +1716,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 case 'list_app_log_previous':
                 case 'list_app_log_next':
                 case 'list_app_log_last':{
-                    page_navigation(event_target_id);
+                    APP_GLOBAL.page_navigation(event_target_id);
                     break;
                 }
                 case 'filesearch_menu5':{
@@ -2602,16 +1803,18 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     show_charts();
                     break;
                 }
-
-                case 'select_app_menu5':
                 case 'select_year_menu5':
-                case 'select_month_menu5':{
-                    nav_click(CommonAppDocument.querySelector('#list_monitor_nav .list_nav_selected_tab').id);
+                case 'select_month_menu5':
+                case 'select_day_menu5':{
+                    const current_tab = CommonAppDocument.querySelector('#list_monitor_nav .list_nav_selected_tab').id;
+                    if (current_tab=='list_monitor_nav_server_log')
+                        APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
+                    else
+                        nav_click(current_tab);
                     break;
                 }
-                case 'select_logscope5':
-                case 'select_day_menu5':{
-                    nav_click('list_monitor_nav_server_log');
+                case 'select_logscope5':{
+                    APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
                     break;
                 }
                 case 'select_broadcast_type':{
@@ -2683,7 +1886,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.typewatch(show_server_logs, 'logdate', 'desc', CommonAppDocument.querySelector('#list_server_log_search_input').innerText);
+                        common.typewatch(APP_GLOBAL.monitor_detail_server_log, 'logdate', 'desc');
                     break;
                 }
             }
@@ -2723,8 +1926,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
  */
 const init = () => {
     //SET GLOBALS
-    APP_GLOBAL.page = 0;
-    APP_GLOBAL.page_last =0;
     APP_GLOBAL.previous_row= {};
     APP_GLOBAL.module_leaflet_map_container      ='mapid';
     APP_GLOBAL.service_log_file_interval= '';
