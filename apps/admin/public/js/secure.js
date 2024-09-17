@@ -95,8 +95,6 @@ const show_menu = menu => {
         case 5:{
             common.ComponentRender('menu_content', {app_id:common.COMMON_GLOBAL.app_id, 
                                                     system_admin:common.COMMON_GLOBAL.system_admin, 
-                                                    function_get_log_parameters:get_log_parameters,
-                                                    function_nav_click:nav_click,
                                                     function_map_mount:map_mount,
                                                     function_ComponentRender:common.ComponentRender,
                                                     function_FFB:common.FFB}, '/component/menu_monitor.js')
@@ -1387,7 +1385,7 @@ const list_item_click = (item_type, data) => {
  *                                  LEVEL_ERROR:string
  *                                  LEVEL_INFO:string,
  *                                  FILE_INTERVAL:string},
- *                     logscope_level_options:string}>}
+ *                     logscope_level_options:{log_scope:string, log_level:string}}>}
  */
 const get_log_parameters = async () => {
     return new Promise((resolve)=>{
@@ -1408,30 +1406,19 @@ const get_log_parameters = async () => {
                 LEVEL_VERBOSE : JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_VERBOSE' in row)[0]['LEVEL_VERBOSE'],
                 FILE_INTERVAL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'FILE_INTERVAL' in row)[0]['FILE_INTERVAL']
                };
-            const logscope_level_options = 
-                        
-                    `   <option value=0 log_scope='${log_parameters.SCOPE_REQUEST}'  log_level='${log_parameters.LEVEL_INFO}'>${log_parameters.SCOPE_REQUEST} - ${log_parameters.LEVEL_INFO}
-                        </option>
-                        <option value=1 log_scope='${log_parameters.SCOPE_REQUEST}'  log_level='${log_parameters.LEVEL_ERROR}'>${log_parameters.SCOPE_REQUEST} - ${log_parameters.LEVEL_ERROR}
-                        </option>
-                        <option value=2 log_scope='${log_parameters.SCOPE_REQUEST}'  log_level='${log_parameters.LEVEL_VERBOSE}'>${log_parameters.SCOPE_REQUEST} - ${log_parameters.LEVEL_VERBOSE}
-                        </option>
-                        <option value=3 log_scope='${log_parameters.SCOPE_SERVER}'   log_level='${log_parameters.LEVEL_INFO}'>${log_parameters.SCOPE_SERVER} - ${log_parameters.LEVEL_INFO}
-                        </option>
-                        <option value=4 log_scope='${log_parameters.SCOPE_SERVER}'   log_level='${log_parameters.LEVEL_ERROR}'>${log_parameters.SCOPE_SERVER} - ${log_parameters.LEVEL_ERROR}
-                        </option>
-                        <option value=5 log_scope='${log_parameters.SCOPE_APP}'      log_level='${log_parameters.LEVEL_INFO}'>${log_parameters.SCOPE_APP} - ${log_parameters.LEVEL_INFO}
-                        </option>
-                        <option value=6 log_scope='${log_parameters.SCOPE_APP}'      log_level='${log_parameters.LEVEL_ERROR}'>${log_parameters.SCOPE_APP} - ${log_parameters.LEVEL_ERROR}
-                        </option>
-                        <option value=7 log_scope='${log_parameters.SCOPE_SERVICE}'  log_level='${log_parameters.LEVEL_INFO}'>${log_parameters.SCOPE_SERVICE} - ${log_parameters.LEVEL_INFO}
-                        </option>
-                        <option value=8 log_scope='${log_parameters.SCOPE_SERVICE}'  log_level='${log_parameters.LEVEL_ERROR}'>${log_parameters.SCOPE_SERVICE} - ${log_parameters.LEVEL_ERROR}
-                        </option>
-                        <option value=9 log_scope='${log_parameters.SCOPE_DB}'       log_level='${log_parameters.LEVEL_INFO}'>${log_parameters.SCOPE_DB} - ${log_parameters.LEVEL_INFO}
-                        </option>
-                        <option value=10 log_scope='${log_parameters.SCOPE_DB}'      log_level='${log_parameters.LEVEL_ERROR}'>${log_parameters.SCOPE_DB} - ${log_parameters.LEVEL_ERROR}
-                        </option>`;
+            const logscope_level_options = [
+                {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_INFO},
+                {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_ERROR},
+                {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_VERBOSE},
+                {log_scope:log_parameters.SCOPE_SERVER,     log_level: log_parameters.LEVEL_INFO},
+                {log_scope:log_parameters.SCOPE_SERVER,     log_level: log_parameters.LEVEL_ERROR},
+                {log_scope:log_parameters.SCOPE_APP,        log_level: log_parameters.LEVEL_INFO},
+                {log_scope:log_parameters.SCOPE_APP,        log_level: log_parameters.LEVEL_ERROR},
+                {log_scope:log_parameters.SCOPE_SERVICE,    log_level: log_parameters.LEVEL_INFO},
+                {log_scope:log_parameters.SCOPE_SERVICE,    log_level: log_parameters.LEVEL_ERROR},
+                {log_scope:log_parameters.SCOPE_DB,         log_level: log_parameters.LEVEL_INFO},
+                {log_scope:log_parameters.SCOPE_DB,         log_level: log_parameters.LEVEL_ERROR}
+            ];
             APP_GLOBAL.service_log_file_interval = log_parameters.FILE_INTERVAL;
             resolve({   parameters:log_parameters,
                         logscope_level_options:logscope_level_options});
@@ -1474,25 +1461,10 @@ const show_existing_logfiles = () => {
                                 const year     = parseInt(filename.substring(0, 4));
                                 const month    = parseInt(filename.substring(4, 6));
                                 const day      = parseInt(filename.substring(6, 8));
-                                /**
-                                 * 
-                                 * @param {HTMLSelectElement} select 
-                                 * @param {string} logscope 
-                                 * @param {string} loglevel 
-                                 * @returns 
-                                 */
-                                const setlogscopelevel = (select, logscope, loglevel) =>{
-                                    for (let i = 0; i < select.options.length; i++) {
-                                        if (select[i].getAttribute('log_scope') == logscope &&
-                                            select[i].getAttribute('log_level') == loglevel) {
-                                            select.selectedIndex = i;
-                                            return null;
-                                        }
-                                    }
-                                };
-                                setlogscopelevel(CommonAppDocument.querySelector('#select_logscope5'),
-                                                logscope, 
-                                                loglevel);
+
+                                //logscope and loglevel
+                                CommonAppDocument.querySelector('#select_logscopeu5 .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
+                                CommonAppDocument.querySelector('#select_logscope5 .common_select_dropdown_value').innerText = `${logscope} - ${loglevel}`;
                                 //year
                                 CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').setAttribute('data-value', year);
                                 CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').innerText = year;
