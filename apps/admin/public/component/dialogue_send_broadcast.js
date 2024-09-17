@@ -28,9 +28,9 @@ const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
     props.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
 
-    const post_component =() =>{
+    const post_component = async () =>{
         // select broadcast type
-        props.function_ComponentRender('select_broadcast_type', 
+        await props.function_ComponentRender('select_broadcast_type', 
             {
               default_data_value:'ALERT',
               options:[{VALUE:'ALERT', TEXT:''}, {VALUE:'MAINTENANCE', TEXT:''}],
@@ -43,7 +43,7 @@ const component = async props => {
               function_FFB:props.function_FFB
             }, '/common/component/select.js');
         // select apps
-        props.function_ComponentRender('select_app_broadcast', 
+        await props.function_ComponentRender('select_app_broadcast', 
             {
               default_value:'∞',
               options:[{APP_ID:'', NAME:'∞'}],

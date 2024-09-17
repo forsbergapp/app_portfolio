@@ -471,13 +471,16 @@ const component = async props => {
     };
     const get_query = ()=>{
         const app_id = props.common_document.querySelector('#select_app_menu5 .common_select_dropdown_value').getAttribute('data-value'); 
-        const year = props.common_document.querySelector('#select_year_menu5').value;
-        const month = props.common_document.querySelector('#select_month_menu5').value;
-        const day  = props.common_document.querySelector('#select_day_menu5').value;
+        const year = props.common_document.querySelector('#select_year_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        const month = props.common_document.querySelector('#select_month_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        const day  = props.common_document.querySelector('#select_day_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        
         switch (props.monitor_detail){
             case 'CONNECTED':
             case 'APP_LOG':{
-                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${props.sort}&order_by=${props.order_by}${props.query}&limit=${props.limit}`;
+                props.common_document.querySelector('#select_app_menu5').style.display = 'inline-block';
+                //search month + 1 for CONNECTED
+                return `select_app_id=${app_id}&year=${year}&month=${props.monitor_detail=='CONNECTED'?Number(month)+1:month}&day=${day}&sort=${props.sort}&order_by=${props.order_by}${props.query}&limit=${props.limit}`;
             }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
