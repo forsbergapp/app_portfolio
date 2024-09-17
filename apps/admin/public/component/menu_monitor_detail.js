@@ -24,20 +24,18 @@
 *          function_get_order_by:function,
 *          function_roundOff:function,
 *          logs:[],
-*          logscope:'REQUEST'|'SERVER'|'APP'|'SERVICE'|'DB'|'',
-*          monitor_log_data:{parameters:{  SCOPE_REQUEST:string,
-*                                          SCOPE_SERVER:string, 
-*                                          SCOPE_SERVICE:string,
-*                                          SCOPE_APP:string,
-*                                          SCOPE_DB:string,
-*                                          REQUEST_LEVEL:number,
-*                                          SERVICE_LEVEL:number,
-*                                          DB_LEVEL:number,
-*                                          LEVEL_VERBOSE:string,
-*                                          LEVEL_ERROR:string,
-*                                          LEVEL_INFO:string,
-*                                          FILE_INTERVAL:string},
-*                                          logscope_level_options:string}}} props
+*          monitor_log_data:{   SCOPE_REQUEST:string,
+*                               SCOPE_SERVER:string, 
+*                               SCOPE_SERVICE:string,
+*                               SCOPE_APP:string,
+*                               SCOPE_DB:string,
+*                               REQUEST_LEVEL:number,
+*                               SERVICE_LEVEL:number,
+*                               DB_LEVEL:number,
+*                               LEVEL_VERBOSE:string,
+*                               LEVEL_ERROR:string,
+*                               LEVEL_INFO:string,
+*                               FILE_INTERVAL:string}}} props
 */
 const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 `<div id='list_connected_form'>    
@@ -291,27 +289,27 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                             }
                             ${props.monitor_detail=='SERVER_LOG'?
                                 `<div id='list_server_log_form' class='${props.spinner}'>
-                                    ${props.monitor_log_data.logscope_level_options !=''?
-                                        `<select id='select_logscope5'>${props.monitor_log_data.logscope_level_options}</select>
+                                    ${props.spinner==''?
+                                        `<div id='select_logscope5'></div>
                                         <div id='filesearch_menu5' class='common_dialogue_button common_icon'></div>
                                         <div id='menu5_row_parameters'>
                                             <div class='menu5_row_parameters_col'>
                                                 <div id='menu5_row_parameters_col1' class='common_icon'></div>
-                                                ${(props.monitor_log_data.parameters.REQUEST_LEVEL==1 ||props.monitor_log_data.parameters.REQUEST_LEVEL==2)?
+                                                ${(props.monitor_log_data.REQUEST_LEVEL==1 ||props.monitor_log_data.REQUEST_LEVEL==2)?
                                                     '<div id=\'menu5_row_parameters_col1_1\' class=\'common_icon\'></div>':
                                                     '<div id=\'menu5_row_parameters_col1_0\' class=\'common_icon\'></div>'
                                                 }
                                             </div>
                                             <div class='menu5_row_parameters_col'>
                                                 <div id='menu5_row_parameters_col2' class='common_icon'></div>
-                                                ${(props.monitor_log_data.parameters.SERVICE_LEVEL==1 || props.monitor_log_data.parameters.SERVICE_LEVEL==2)?
+                                                ${(props.monitor_log_data.SERVICE_LEVEL==1 || props.monitor_log_data.SERVICE_LEVEL==2)?
                                                     '<div id=\'menu5_row_parameters_col2_1\' class=\'common_icon\'></div>':
                                                     '<div id=\'menu5_row_parameters_col2_0\' class=\'common_icon\'></div>'
                                                 }
                                             </div>
                                             <div class='menu5_row_parameters_col'>
                                                 <div id='menu5_row_parameters_col3' class='common_icon'></div>
-                                                ${(props.monitor_log_data.parameters.DB_LEVEL==1 || props.monitor_log_data.parameters.DB_LEVEL==2)?
+                                                ${(props.monitor_log_data.DB_LEVEL==1 || props.monitor_log_data.DB_LEVEL==2)?
                                                     '<div id=\'menu5_row_parameters_col3_1\' class=\'common_icon\'></div>':
                                                     '<div id=\'menu5_row_parameters_col3_0\' class=\'common_icon\'></div>'
                                                 }
@@ -484,12 +482,8 @@ const component = async props => {
             }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
-                const logscope = props.common_document.querySelector('#select_logscope5')?props.common_document.querySelector('#select_logscope5')[props.common_document.querySelector('#select_logscope5')
-                                    .selectedIndex].getAttribute('log_scope'):
-                                    'REQUEST';
-                const loglevel = props.common_document.querySelector('#select_logscope5')?props.common_document.querySelector('#select_logscope5')[props.common_document.querySelector('#select_logscope5')
-                                    .selectedIndex].getAttribute('log_level'):
-                                    'INFO';
+                const logscope = props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
+                const loglevel = props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
                 let app_id_filter='';
                 if (logscope=='APP' || logscope=='SERVICE' || logscope=='SERVER-DB'){
                     //show app filter and use it
@@ -552,7 +546,7 @@ const component = async props => {
                                                                                 logscope_level_options:
                                     ''};
         //save value for query
-        service_log_file_interval = monitor_log_data.logscope_level_options ?? '';
+        service_log_file_interval = monitor_log_data.parameters.FILE_INTERVAL ?? '';
         //fetch logs except for SERVER_LOG
         const logs = props.monitor_detail=='SERVER_LOG'?[]:await props.function_FFB(path, get_query(), 'GET', token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
         const limit = await props.function_FFB(`/server-config/config-apps/${props.app_id}`, 'key=PARAMETERS', 'GET', props.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
@@ -569,11 +563,31 @@ const component = async props => {
                                                                                                         function_get_order_by:get_order_by,
                                                                                                         function_roundOff: props.function_roundOff,
                                                                                                         logs:logs,
-                                                                                                        logscope:'',
-                                                                                                        monitor_log_data:monitor_log_data});
+                                                                                                        monitor_log_data:monitor_log_data.parameters});
+
         //mount list_server_log to outerHTML removing spinner class if SERVER_LOG
-        if (props.monitor_detail=='SERVER_LOG')
+        if (props.monitor_detail=='SERVER_LOG'){
+            //convert normalized arrary to options in array format
+            /**@type{[{VALUE:string, TEXT:string}]} */
+            const options = monitor_log_data.logscope_level_options.map((/**@type{{log_scope:string, log_level: string}}*/row)=>{
+                                return {VALUE:`${row.log_scope}-${row.log_level}`, TEXT:`${row.log_scope} - ${row.log_level}`};});
+
+            await props.function_ComponentRender('select_logscope5', 
+                {
+                    default_value:'REQUEST - INFO',
+                    default_data_value:'REQUEST-INFO',
+                    options:options,
+                    path:'',
+                    query:'',
+                    method:'',
+                    authorization_type:'',
+                    column_value:'VALUE',
+                    column_text:'TEXT',
+                    function_FFB:props.function_FFB
+                }, '/common/component/select.js');
             monitor_detail_server_log(props.sort, props.order_by);
+        }
+            
             
     };
     /**
@@ -586,8 +600,7 @@ const component = async props => {
      *             function_get_order_by:function,
      *             function_roundOff:function,
      *             logs:[],
-     *             logscope:'REQUEST'|'SERVER'|'APP'|'SERVICE'|'DB'|'',
-     *             monitor_log_data:{parameters:{  SCOPE_REQUEST:string,
+     *             monitor_log_data:{  SCOPE_REQUEST:string,
      *                                             SCOPE_SERVER:string, 
      *                                             SCOPE_SERVICE:string,
      *                                             SCOPE_APP:string,
@@ -598,8 +611,7 @@ const component = async props => {
      *                                             LEVEL_VERBOSE:string,
      *                                             LEVEL_ERROR:string,
      *                                             LEVEL_INFO:string,
-     *                                             FILE_INTERVAL:string},
-     *                                             logscope_level_options:string}}} template_props
+     *                                             FILE_INTERVAL:string}}} template_props
      */
     const render_template = template_props =>{
         return template({   spinner:template_props.spinner,
@@ -611,7 +623,6 @@ const component = async props => {
                             function_get_order_by:get_order_by,
                             function_roundOff:props.function_roundOff,
                             logs:template_props.logs,
-                            logscope:template_props.logscope,
                             monitor_log_data:template_props.monitor_log_data
         });
     };
@@ -629,24 +640,18 @@ const component = async props => {
                                     function_get_order_by:get_order_by,
                                     function_roundOff:props.function_roundOff,
                                     logs:[],
-                                    logscope:props.monitor_detail=='SERVER_LOG'?
-                                                (props.common_document.querySelector('#select_logscope5')?
-                                                    props.common_document.querySelector('#select_logscope5')[props.common_document.querySelector('#select_logscope5')
-                                                        .selectedIndex].getAttribute('log_scope'):'REQUEST'):
-                                                '',
-                                    monitor_log_data:{  parameters:{SCOPE_REQUEST:'',
-                                                                    SCOPE_SERVER:'', 
-                                                                    SCOPE_SERVICE:'',
-                                                                    SCOPE_APP:'',
-                                                                    SCOPE_DB:'',
-                                                                    REQUEST_LEVEL:0,
-                                                                    SERVICE_LEVEL:0,
-                                                                    DB_LEVEL:0,
-                                                                    LEVEL_VERBOSE:'',
-                                                                    LEVEL_ERROR:'',
-                                                                    LEVEL_INFO:'',
-                                                                    FILE_INTERVAL:''},
-                                                        logscope_level_options:''}})
+                                    monitor_log_data:{  SCOPE_REQUEST:'',
+                                                        SCOPE_SERVER:'', 
+                                                        SCOPE_SERVICE:'',
+                                                        SCOPE_APP:'',
+                                                        SCOPE_DB:'',
+                                                        REQUEST_LEVEL:0,
+                                                        SERVICE_LEVEL:0,
+                                                        DB_LEVEL:0,
+                                                        LEVEL_VERBOSE:'',
+                                                        LEVEL_ERROR:'',
+                                                        LEVEL_INFO:'',
+                                                        FILE_INTERVAL:''}})
     };
 };
 export default component;

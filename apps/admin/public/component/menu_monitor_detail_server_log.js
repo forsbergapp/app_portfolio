@@ -345,8 +345,7 @@ const component = async props => {
                                                                                                         function_get_order_by:get_order_by,
                                                                                                         function_roundOff:props.function_roundOff,
                                                                                                         logs:logs,
-                                                                                                        logscope:props.common_document.querySelector('#select_logscope5')[props.common_document.querySelector('#select_logscope5')
-                                                                                                                    .selectedIndex].getAttribute('log_scope')});
+                                                                                                        logscope:props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]});
         props.common_document.querySelector('#list_server_log').classList.remove('css_spinner');
     };
     /**
@@ -374,7 +373,7 @@ const component = async props => {
                                     function_get_order_by:get_order_by,
                                     function_roundOff:props.function_roundOff,
                                     logs:[],
-                                    logscope:props.common_document.querySelector('#select_logscope5')[props.common_document.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope')})
+                                    logscope:props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
     };
 };
 export default component;
