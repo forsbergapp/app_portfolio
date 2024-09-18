@@ -6,7 +6,9 @@
 const CommonAppWindow = window;
 
 const template =`   <div id='common_dialogue_maintenance_content' class='common_dialogue_content'>
-                        <div id='common_maintenance_logo'></div>
+                        <div id='common_maintenance_header'>
+                            <div id='common_maintenance_logo' class='common_image common_image_alert'></div>
+                        </div>
                         <div id='common_maintenance_message'></div>
                         <div id='common_maintenance_countdown'></div>
                         <div id='common_maintenance_footer'></div>
