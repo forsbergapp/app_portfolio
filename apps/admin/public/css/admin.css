@@ -520,8 +520,11 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	border-radius: 50%;
 	vertical-align: middle;
 }
-
+#list_user_account .css_spinner, #list_user_account_logon .css_spinner{
+	display: inline-block;
+}
 #list_user_account, #list_user_account_logon{
+	display:block;
 	overflow-y: auto;
 	overflow-x: auto;
 	margin-bottom: 10px;
@@ -1564,6 +1567,11 @@ body{
 	display: inline-block !important;
     vertical-align: super;
 }
+#list_user_account .css_spinner::before,
+#list_user_account_logon .css_spinner::before{
+	background-color: var(--app_theme_list_background_color);
+}
+
 /*APP THEME COMMON*/
 .common_toolbar_selected{
 	background-color: var(--app_theme_login_nav_selected_background_color) !important;
