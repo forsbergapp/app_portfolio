@@ -76,7 +76,7 @@ const show_menu = menu => {
         }
         //APP ADMIN
         case 4:{
-            show_apps();
+            common.ComponentRender('menu_content', {function_FFB:common.FFB}, '/component/menu_apps.js');
             break;    
         }
         //MONITOR
@@ -291,111 +291,6 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
  
 };
 
-
-/**
- * Show apps
- * @returns{Promise.<void>}
- */
-const show_apps = async () => {
-    CommonAppDocument.querySelector('#menu_content').innerHTML = 
-    `<div id='menu_4_content_widget1' class='widget'>
-         <div id='list_apps_title' class='common_icon'></div>
-         <div id='list_apps' class='common_list_scrollbar common_icon css_spinner'></div>
-     </div>
-     <div id='menu_4_content_widget2' class='widget'>
-         <div id='list_app_parameter_title' class='common_icon'></div>
-         <div id='list_app_parameter' class='common_list_scrollbar'></div>
-         <div id='apps_buttons' class="save_buttons">
-             <div id='apps_save' class='common_dialogue_button button_save common_icon'></div>
-         </div>
-     </div>`;
-    await common.FFB('/app_admin/apps', null, 'GET', 'APP_ACCESS', null)
-    .then((/**@type{string}*/result)=>{
-        let html = `<div id='list_apps_row_title' class='list_apps_row'>
-                        <div id='list_apps_col_title1' class='list_apps_col list_title'>ID</div>
-                        <div id='list_apps_col_title2' class='list_apps_col list_title'>NAME</div>
-                        <div id='list_apps_col_title3' class='list_apps_col list_title'>URL</div>
-                        <div id='list_apps_col_title4' class='list_apps_col list_title'>LOGO</div>
-                        <div id='list_apps_col_title5' class='list_apps_col list_title'>STATUS</div>
-                        <div id='list_apps_col_title6' class='list_apps_col list_title'>CATEGORY ID</div>
-                        <div id='list_apps_col_title7' class='list_apps_col list_title'>CATEGORY NAME</div>
-                    </div>`;
-        for (const app of JSON.parse(result).rows) {
-            html += 
-            `<div data-changed-record='0' data-app_id = '${app.ID}' class='list_apps_row common_row' >
-                <div class='list_apps_col'>
-                    <div class='list_readonly'>${app.ID}</div>
-                </div>
-                <div class='list_apps_col'>
-                    <div contentEditable='false' class='common_input list_readonly'/>${app.NAME}</div>
-                </div>
-                <div class='list_apps_col'>
-                    <div contentEditable='false' class='common_input list_readonly'/>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
-                </div>
-                <div class='list_apps_col'>
-                    <div contentEditable='false' class='common_input list_readonly'/>${app.LOGO}</div>
-                </div>
-                <div class='list_apps_col'>
-                    <div class='list_readonly' class='list_readonly'>${app.STATUS}</div>
-                </div>
-                <div class='list_apps_col'>
-                    <div contentEditable='true' class='common_input list_edit common_input_lov' data-defaultValue='${app.APP_CATEGORY_ID ?? ''}'/>${app.APP_CATEGORY_ID ?? ''}</div>
-                    <div class='common_lov_button common_list_lov_click common_icon'></div>
-                </div>
-                <div class='list_apps_col'>
-                    <div class='list_readonly common_lov_value'>${app.APP_CATEGORY_TEXT ?? ''} </div>
-                </div>
-            </div>`;
-        }
-        CommonAppDocument.querySelector('#list_apps').classList.remove('common_icon', 'css_spinner');
-        CommonAppDocument.querySelector('#list_apps').innerHTML = html;
-        //set focus first column in first row
-        //this will trigger to show detail records
-        CommonAppDocument.querySelectorAll('#list_apps .list_edit')[0].focus();
-    })
-    .catch(()=>CommonAppDocument.querySelector('#list_apps').classList.remove('common_icon', 'css_spinner'));
-};
-/**
- * 
- * @param {number} app_id 
- * @returns{void}
- */
-const show_app_parameter = (app_id) => {
-    CommonAppDocument.querySelector('#list_app_parameter').classList.add('common_icon', 'css_spinner');
-    CommonAppDocument.querySelector('#apps_save').style.display = 'none';
-    CommonAppDocument.querySelector('#list_app_parameter').innerHTML = '';
-
-    common.FFB(`/server-config/config-apps/${app_id}`, 'key=PARAMETERS', 'GET', 'APP_ACCESS', null)
-    .then((/**@type{string}*/result)=>{
-        let html = `<div id='list_app_parameter_row_title' class='list_app_parameter_row'>
-                        <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>APP ID</div>
-                        <div id='list_app_parameter_col_title2' class='list_app_parameter_col list_title'>NAME</div>
-                        <div id='list_app_parameter_col_title3' class='list_app_parameter_col list_title'>VALUE</div>
-                        <div id='list_app_parameter_col_title4' class='list_app_parameter_col list_title'>COMMENT</div>
-                    </div>`;
-        for (const app_parameter of JSON.parse(result)[0].PARAMETERS) {
-            html += 
-            `<div data-changed-record='0' class='list_app_parameter_row common_row'>
-                <div class='list_app_parameter_col'>
-                    <div class='list_readonly'>${app_id}</div>
-                </div>
-                <div class='list_app_parameter_col'>
-                    <div class='list_readonly'>${Object.keys(app_parameter).filter(key=>key != 'app_id' && key != 'COMMENT')[0]}</div>
-                </div>
-                <div class='list_app_parameter_col'>
-                    <div contentEditable='true' class='common_input list_edit'/>${app_parameter[Object.keys(app_parameter).filter(key=>key != 'app_id' && key != 'COMMENT')[0]] ?? ''}</div>
-                </div>
-                <div class='list_app_parameter_col'>
-                    <div contentEditable='true' class='common_input list_edit'/>${app_parameter.COMMENT ?? ''}</div>
-                </div>
-            </div>`;
-        }
-        CommonAppDocument.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner');
-        CommonAppDocument.querySelector('#apps_save').style.display = 'inline-block';
-        CommonAppDocument.querySelector('#list_app_parameter').innerHTML = html;
-    })
-    .catch(()=>CommonAppDocument.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner'));
-};
 /**
  * Button save
  * @param {string} item 
@@ -1182,7 +1077,8 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     //event on master to automatically show detail records
                     if (APP_GLOBAL.previous_row != common.element_row(event.target)){
                         APP_GLOBAL.previous_row = common.element_row(event.target);
-                        show_app_parameter(parseInt(common.element_row(event.target).getAttribute('data-app_id') ?? ''));
+                        common.ComponentRender('list_app_parameter', {  app_id_data:parseInt(common.element_row(event.target).getAttribute('data-app_id') ?? ''),
+                                                                        function_FFB:common.FFB}, '/component/menu_apps_parameters.js');
                     }
                     break;
                 }
