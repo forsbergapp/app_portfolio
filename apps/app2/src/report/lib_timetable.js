@@ -134,7 +134,7 @@ const getGregorian = (HijriDate, adjustment) =>{
  */
 const getNumberString = (numbersystem, number) => {
 	const hanidec_numbers = 	[
-								[0,'〇','líng'],
+								[0,'零','líng'],	//alternative less formal: [0,'〇','líng'],
 								[1,'一','yī'],
 								[2,'二','èr'],
 								[3,'三','sān'],
@@ -143,9 +143,7 @@ const getNumberString = (numbersystem, number) => {
 								[6,'六','liù'],
 								[7,'七','qī'],
 								[8,'八','bā'],
-								[9,'九','jiǔ'],
-								[10,'十','shí'],
-								[0,'零','líng'],
+								[9,'九','jiǔ'],								
 								[10,'十','shí'],
 								[11,'十一','shí yī'],
 								[12,'十二','shí èr'],
