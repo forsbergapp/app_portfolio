@@ -10,7 +10,7 @@ const template =`<div id='common_broadcast_info'>
                             </div>    
                         </div>
                         <div id='common_broadcast_footer'>
-                            <div id='common_broadcast_info_logo'></div>
+                            <div id='common_broadcast_info_logo' class='common_image common_image_broadcast'></div>
                             <div id='common_broadcast_info_title' class='common_icon'></div>
                             <div id='common_broadcast_close' class='common_icon'></div>
                         </div>

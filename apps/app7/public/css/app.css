@@ -19,13 +19,6 @@ body {
   	position: absolute;
   	width: 100%;
 }
-#app_logo{
-	background-image: url('/images/logo.png');
-	background-size: contain;
-	width: 192px;
-	height: 192px;
-	margin: 0 auto;
-}
 #app_main_page{
 	display: inline-block;
 	padding-top:50px;
