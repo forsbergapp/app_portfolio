@@ -159,13 +159,15 @@ body.rtl{
 .common_image_avatar_list{
 	height: 1.4em;
 	width: 1.4em;	
-	vertical-align: middle;
+	vertical-align: bottom;
+	display: inline-block;
 }
 .common_image_avatar_profile{
 	width: 64px;
 	height: 64px;
 }
 .common_image_logo_start{
+	border-radius:unset !important;
 	width: 40px;
 	height: 40px;
 }
@@ -596,8 +598,6 @@ select {
 	cursor: pointer;
 }
 .common_dialogue_apps_app_logo{
-	width: 40px;
-	height: 40px;
 	margin: 0 auto;
 }	
 .common_dialogue_apps_app_url{
@@ -857,11 +857,6 @@ select {
 	height:48px;
 	position: fixed;
     top: 4px;
-}
-#common_user_edit_avatar_img{
-	width:48px;
-	height:48px;
-	border-radius: 50%;
 }
 #common_user_edit_input_avatar_img{
 	display:none;
@@ -1207,14 +1202,6 @@ select {
 .common_profile_detail_list_app_delete{
 	cursor:pointer;
 }
-.common_profile_detail_list_app_logo{
-	height:1.4em;
-	width:1.4em;
-	vertical-align: middle;
-}
-.common_profile_stat_list_avatar, 
-.common_profile_search_list_avatar, 
-.common_profile_detail_list_avatar, 
 .common_profile_detail_list_app_delete{
 	height:1.4em;
 	width:1.4em;
@@ -1330,12 +1317,6 @@ select {
 #common_dialogue_user_menu_token_countdown > div {
 	display: inline-block;
 }
-#common_user_menu_avatar_img{
-	width:48px;
-	height:48px;
-	border-radius:50%;
-	vertical-align: middle;
-}
 #common_user_menu_logged_in, #common_dialogue_user_menu_logged_in{
 	display: none;
 }
@@ -1446,7 +1427,7 @@ select {
 #common_window_info_info.css_spinner{
 	inset-inline-start: calc(50% - 30px);
 }
-#common_window_info_info img{
+#common_window_info_info_img{
 	max-width: 100%;
 }
 #common_window_info_content{

@@ -10,7 +10,7 @@ const template =`   <div id='common_user_edit_common'>
                                         <div id='common_user_edit_btn_avatar_img' class='common_icon'></div>
                                         <input id='common_user_edit_input_avatar_img' type='file'>
                                     </div>
-                                    <img id='common_user_edit_avatar_img' alt='' src=''>
+                                    <div id='common_user_edit_avatar_img' class='common_image common_image_avatar'></div>
                                 </div>
                             </div>
                             <div class='common_setting_horizontal_col'>
@@ -198,7 +198,6 @@ const template =`   <div id='common_user_edit_common'>
  *          translation_new_email:string,
  *          translation_new_password:string,
  *          translation_new_password_confirm:string,
- *          function_set_avatar:function,
  *          function_format_json_date:function,
  *          function_show_message:function,
  *          function_FFB:function}} props 
@@ -238,7 +237,7 @@ const component = async props => {
 
                     //display fetched avatar editable
                     props.common_document.querySelector('#common_user_edit_avatar').style.display = 'block';
-                    props.function_set_avatar(user.avatar, props.common_document.querySelector('#common_user_edit_avatar_img')); 
+                    props.common_document.querySelector('#common_user_edit_avatar_img').style.backgroundImage= `url('${user.avatar}')`;
                     props.common_document.querySelector('#common_user_edit_input_email').innerHTML = user.email;
                     props.common_document.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
                     props.common_document.querySelector('#common_user_edit_input_password').innerHTML = '',
@@ -256,12 +255,12 @@ const component = async props => {
                         props.common_document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
                         props.common_document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
                         props.common_document.querySelector('#common_user_edit_avatar').style.display = 'none';
-                        props.function_set_avatar(user.provider_image, props.common_document.querySelector('#common_user_edit_avatar_img')); 
+                        props.common_document.querySelector('#common_user_edit_avatar_img').style.backgroundImage= `url('${user.provider_image}')`;
                     } 
                 props.common_document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = props.function_format_json_date(user.last_logontime, null);
                 props.common_document.querySelector('#common_user_edit_label_data_account_created').innerHTML = props.function_format_json_date(user.date_created, null);
                 props.common_document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = props.function_format_json_date(user.date_modified, null);
-                props.function_set_avatar(user.avatar ?? user.provider_image, props.common_document.querySelector('#common_user_menu_avatar_img'));
+                props.common_document.querySelector('#common_user_menu_avatar_img').style.backgroundImage= `url('${user.avatar ?? user.provider_image}')`;
             } else {
                 //User not found
                 props.function_show_message('ERROR', '20305', null, null, props.common_app_id);

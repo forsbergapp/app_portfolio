@@ -48,7 +48,7 @@ const component = async props => {
             case 0:{
                 //show image
                 return {
-                    INFO:`<img src='${props.url}'/>`,
+                    INFO:`<div id='common_window_info_info_img' style='background-image:url("${props.url}");'</div>`,
                     CONTENT:'',
                     STYLE_TOOLBAR_DISPLAY:'flex',
                     STYLE_CONTENT_DISPLAY:'none',

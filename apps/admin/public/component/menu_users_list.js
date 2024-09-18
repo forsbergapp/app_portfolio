@@ -30,8 +30,7 @@
  *                  date_created:string
  *                  date_modified:string
  *                  }]|[],
- *          function_get_order_by:function,
- *          function_list_image_format_src:function}} props
+ *          function_get_order_by:function}} props
 */
 const template = props => ` ${props.spinner!=''?
                                     `<div class='${props.spinner}'</div>`:
@@ -68,7 +67,7 @@ const template = props => ` ${props.spinner!=''?
                                     `<div data-changed-record='0' data-user_account_id='${user.id}' class='list_user_account_row ${user.id==props.user_account_id?'list_current_user_row':''} common_row' >
                                         <div class='list_user_account_col'>
                                             <div class='list_readonly'>
-                                                <img class='list_user_account_avatar' ${props.function_list_image_format_src(user.avatar)}/>
+                                                <div class='common_image common_image_avatar_list' style='background-image:url("${user.avatar}");'></div>
                                             </div>
                                         </div>
                                         <div class='list_user_account_col'>
@@ -131,7 +130,7 @@ const template = props => ` ${props.spinner!=''?
                                         </div>
                                         <div class='list_user_account_col'>
                                             <div class='list_readonly'>
-                                                <img class='list_user_account_avatar' ${props.function_list_image_format_src(user.provider_image)}/>
+                                                <div class='common_image common_image_avatar_list' style='background-image:url("${user.provider_image}");'></div>
                                             </div>
                                         </div>
                                         <div class='list_user_account_col'>
@@ -159,7 +158,7 @@ const template = props => ` ${props.spinner!=''?
 *          sort:string,
 *          order_by:string,
 *          focus:boolean,
-*          function_list_image_format_src:function,
+*          function_list_url_style:function,
 *          function_FFB:function}} props 
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:null, 
@@ -185,8 +184,7 @@ const component = async props => {
                                                                                                         user_account_id:props.user_account_id,
                                                                                                         user_app_role_id:props.user_app_role_id,
                                                                                                         users:users,
-                                                                                                        function_get_order_by:get_order_by,
-                                                                                                        function_list_image_format_src:props.function_list_image_format_src
+                                                                                                        function_get_order_by:get_order_by
                                                                                                         });
         if (props.common_document.querySelectorAll('#list_user_account .list_edit')[0])
             if (props.focus==true){
@@ -236,16 +234,14 @@ const component = async props => {
    *                    date_created:string
    *                    date_modified:string
    *                  }]|[],
-   *            function_get_order_by:function,
-   *            function_list_image_format_src:function}} template_props
+   *            function_get_order_by:function}} template_props
    */
   const render_template = template_props =>{
       return template({ spinner:template_props.spinner,
                         user_account_id:template_props.user_account_id,
                         user_app_role_id:template_props.user_app_role_id,
                         users:template_props.users,
-                        function_get_order_by:template_props.function_get_order_by,
-                        function_list_image_format_src:template_props.function_list_image_format_src
+                        function_get_order_by:template_props.function_get_order_by
       });
   };
   return {
@@ -255,8 +251,7 @@ const component = async props => {
                                     user_account_id:props.user_account_id,
                                     user_app_role_id:props.user_app_role_id,
                                     users:[],
-                                    function_get_order_by:get_order_by,
-                                    function_list_image_format_src:props.function_list_image_format_src
+                                    function_get_order_by:get_order_by
       })
   };
 };

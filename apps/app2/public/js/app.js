@@ -900,7 +900,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             {
                 const preview_item  = CommonAppDocument.querySelector(`#setting_report${setting_type=='HEADER_CLEAR'?'header':'footer'}_img`);
                 const preview_input = CommonAppDocument.querySelector(`#setting_input_report${setting_type=='HEADER_CLEAR'?'header':'footer'}_img`);
-                common.recreate_img(preview_item);
+                preview_item.style.backgroundImage='url()';
                 preview_input.value = '';
                 break;
             }
@@ -1005,8 +1005,8 @@ const login_common = (avatar) => {
     //create intitial user setting if not exist, send initial=true
     user_settings_function('ADD_LOGIN', true)
     .then(()=>{
-        CommonAppDocument.querySelector('#settings_tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
-        common.set_avatar(avatar, CommonAppDocument.querySelector('#user_setting_avatar_img')); 
+        CommonAppDocument.querySelector('#settings_tab_nav_7').innerHTML = '<div id=\'user_setting_avatar_img\' class=\'common_image\'></div>';
+        CommonAppDocument.querySelector('#user_setting_avatar_img').style.backgroundImage= `url('${avatar}')`;
 
         //Hide settings
         CommonAppDocument.querySelector('#settings').style.visibility = 'hidden';
@@ -1153,8 +1153,8 @@ const user_settings_get = async () => {
                     design_column_notes_checked:Number(settings.design_column_notes_checked),
                     design_column_gps_checked:Number(settings.design_column_gps_checked),
                     design_column_timezone_checked:Number(settings.design_column_timezone_checked),
-                    image_header_image_img:common.image_format(settings.image_header_image_img),
-                    image_footer_image_img:common.image_format(settings.image_footer_image_img),
+                    image_header_image_img:settings.image_header_image_img,
+                    image_footer_image_img:settings.image_footer_image_img,
                     text_header_1_text:settings.text_header_1_text,
                     text_header_2_text:settings.text_header_2_text,
                     text_header_3_text:settings.text_header_3_text,
@@ -1284,17 +1284,24 @@ const user_settings_load = async (tab_selected) => {
             CommonAppDocument.querySelector('#setting_input_reportheader_img').value = '';
             if (APP_GLOBAL.user_settings[settings_index].image_header_image_img == null ||
                 APP_GLOBAL.user_settings[settings_index].image_header_image_img == '') {
-                common.recreate_img(CommonAppDocument.querySelector('#setting_reportheader_img'));
-            } else
-                CommonAppDocument.querySelector('#setting_reportheader_img').src = APP_GLOBAL.user_settings[settings_index].image_header_image_img;
+                CommonAppDocument.querySelector('#setting_reportheader_img').style.backgroundImage= 'url()';
+                CommonAppDocument.querySelector('#setting_reportheader_img').setAttribute('data-image','');
+            } else{
+                CommonAppDocument.querySelector('#setting_reportheader_img').style.backgroundImage= `url('${APP_GLOBAL.user_settings[settings_index].image_header_image_img}')`;
+                CommonAppDocument.querySelector('#setting_reportheader_img').setAttribute('data-image',APP_GLOBAL.user_settings[settings_index].image_header_image_img);
+            }
+                
 
             CommonAppDocument.querySelector('#setting_input_reportfooter_img').value = '';
             if (APP_GLOBAL.user_settings[settings_index].image_footer_image_img == null ||
                 APP_GLOBAL.user_settings[settings_index].image_footer_image_img == '') {
-                CommonAppDocument.querySelector('#setting_reportfooter_img').src = '';
-                common.recreate_img(CommonAppDocument.querySelector('#setting_reportfooter_img'));
-            } else
-                CommonAppDocument.querySelector('#setting_reportfooter_img').src = APP_GLOBAL.user_settings[settings_index].image_footer_image_img;
+                    CommonAppDocument.querySelector('#setting_reportfooter_img').style.backgroundImage= 'url()';
+                    CommonAppDocument.querySelector('#setting_reportfooter_img').setAttribute('data-image','');
+            } else{
+                CommonAppDocument.querySelector('#setting_reportfooter_img').style.backgroundImage= `url('${APP_GLOBAL.user_settings[settings_index].image_footer_image_img}')`;
+                CommonAppDocument.querySelector('#setting_reportfooter_img').setAttribute('data-image',APP_GLOBAL.user_settings[settings_index].image_footer_image_img);
+            }
+                
             break;
         }
         case 5:{
@@ -1619,9 +1626,9 @@ const settings_update = setting_tab => {
                                                     APP_GLOBAL.user_settings[select_user_settings.selectedIndex].design_column_gps_checked,
             design_column_timezone_checked:     setting_tab=='DESIGN'?Number(CommonAppDocument.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')):
                                                     APP_GLOBAL.user_settings[select_user_settings.selectedIndex].design_column_timezone_checked,
-            image_header_image_img:             setting_tab=='IMAGE'?CommonAppDocument.querySelector('#setting_reportheader_img').src:
+            image_header_image_img:             setting_tab=='IMAGE'?CommonAppDocument.querySelector('#setting_reportheader_img').getAttribute('data-image'):
                                                     APP_GLOBAL.user_settings[select_user_settings.selectedIndex].image_header_image_img,
-            image_footer_image_img:             setting_tab=='IMAGE'?CommonAppDocument.querySelector('#setting_reportfooter_img').src:
+            image_footer_image_img:             setting_tab=='IMAGE'?CommonAppDocument.querySelector('#setting_reportfooter_img').getAttribute('data-image'):
                                                     APP_GLOBAL.user_settings[select_user_settings.selectedIndex].image_footer_image_img,
             text_header_1_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportheader1').innerHTML:  
                                                     APP_GLOBAL.user_settings[select_user_settings.selectedIndex].text_header_1_text,
