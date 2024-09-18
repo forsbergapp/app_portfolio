@@ -144,6 +144,40 @@ body{
 body.rtl{
 	direction:rtl;
 }
+/*images common*/
+.common_image{
+	border-radius: 50%;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+/*images specific usage*/
+.common_image_avatar{
+	width: 48px;
+	height: 48px;
+}
+.common_image_avatar_list{
+	height: 1.4em;
+	width: 1.4em;	
+	vertical-align: middle;
+}
+.common_image_avatar_profile{
+	width: 64px;
+	height: 64px;
+}
+.common_image_logo_start{
+	width: 40px;
+	height: 40px;
+}
+.common_image_alert{
+	width: 50px;
+	height: 50px;
+}
+.common_image_broadcast{
+	width: 34px;
+	height: 34px;
+}
+
 select {
 	font-family: inherit;
 	font-size:inherit;
@@ -769,9 +803,6 @@ select {
 }
 #common_user_start_logo{
 	background-image: url('/common/images/logo.png');
-	background-size: contain;
-	width: 40px;
-	height: 40px;
 	margin: 0 auto;
 }
 #common_dialogue_user_start .common_input, .common_login_input{

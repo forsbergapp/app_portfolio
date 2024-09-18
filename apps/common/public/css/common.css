@@ -365,38 +365,6 @@ body.font_arabic_nastaliq .common_input{
 	src: url(/maintenance/modules/fontawesome/webfonts/fa-brands-400.woff2) format("woff2")
 }
 
-
-/*DIALOGUE MAINTENANCE */
-#common_dialogue_maintenance{
-	display: block;
-}
-#common_dialogue_maintenance_content{
-	height:250px;
-	width:300px;
-}
-#common_maintenance_logo {
-	background-image: url('/common/images/logo_maintenance.png');
-	background-size: contain;
-	background-position: center;
-	background-repeat: no-repeat;
-	height: 50px;
-	margin: 0 auto;
-}
-#common_maintenance_message{
-	padding-top:20px;
-	padding-bottom:20px;
-	font-weight: bold;
-	color: var(--common_app_color_blue1);
-	font-size: 2em;
-}
-
-#common_maintenance_countdown{
-	font-size: 30px;
-	padding-bottom:20px;
-}
-#common_maintenance_footer{
-	padding-bottom:5px;
-}
 /* BROADCAST */
 #common_broadcast_info {
 	width:calc(100% - 20px);
@@ -451,13 +419,7 @@ body.font_arabic_nastaliq .common_input{
 }
 #common_broadcast_info_logo {
 	background-image: url('/common/images/logo_broadcast.png');
-	background-size: contain;
-	background-position: center;
-	background-repeat: no-repeat;
-	width:34px;
-	height:34px;
 	background-color: var(--common_app_color_white);
-	border: 2px solid var(--common_app_color_white);
 }
 #common_broadcast_info_title {
 	height: 35px;

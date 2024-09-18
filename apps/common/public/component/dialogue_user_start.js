@@ -10,7 +10,7 @@
  *          system_admin_only: boolean}} props 
  * @returns {string}
  */
-const template = props =>`  <div id='common_user_start_logo'></div>
+const template = props =>`  <div id='common_user_start_logo' class='common_image common_image_logo_start'></div>
                             <div id='common_user_start_nav'>
                                 ${props.system_admin_only?'':
                                     '<div id=\'common_user_start_login\'  class=\'common_icon\'></div>'
