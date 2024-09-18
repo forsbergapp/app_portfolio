@@ -614,7 +614,11 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	width:100%;
 	font-size:1.2em;
 }
+#list_app_parameter .css_spinner{
+	display: inline-block;
+}
 #list_apps, #list_app_parameter{
+	display:block;
 	overflow-y: auto;
 	overflow-x: auto;
 	margin-bottom: 10px;
@@ -1568,7 +1572,9 @@ body{
     vertical-align: super;
 }
 #list_user_account .css_spinner::before,
-#list_user_account_logon .css_spinner::before{
+#list_user_account_logon .css_spinner::before,
+#list_app_parameter .css_spinner::before
+{
 	background-color: var(--app_theme_list_background_color);
 }
 
