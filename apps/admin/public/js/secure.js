@@ -2,6 +2,7 @@
  * @module apps/admin/secure
  */
 
+
 /**@type{import('../../../common_types.js').CommonAppDocument} */
  const CommonAppDocument = document;
 /**@type{import('../../../common_types.js').CommonAppWindow} */
@@ -69,7 +70,8 @@ const show_menu = menu => {
         }
         //USERS
         case 3:{
-            show_users();
+            common.ComponentRender('menu_content', {}, '/component/menu_users.js')
+            .then(()=>search_users());
             break;
         }
         //APP ADMIN
@@ -272,29 +274,6 @@ const set_maintenance = () => {
     common.FFB('/server-config/config/SERVER', null, 'PUT', 'SYSTEMADMIN', json_data).catch(()=>null);
 };
 /**
- * Show users
- * @returns {void}
- */
-const show_users = () =>{
-    CommonAppDocument.querySelector('#menu_content').innerHTML = 
-            `<div id='menu_3_content_widget1' class='widget'>
-                <div id='list_user_account_title' class='common_icon'></div>
-                <div class='list_search'>
-                    <div id='list_user_account_search_input' contentEditable='true's class='common_input list_search_input' /></div>
-                    <div id='list_user_search_icon' class='list_search_icon common_icon'></div>
-                </div>
-                <div id='list_user_account' class='common_list_scrollbar'></div>
-            </div>
-            <div id='menu_3_content_widget2' class='widget'>
-                <div id='list_user_account_logon_title' class='common_icon'></div>
-                <div id='list_user_account_logon' class='common_list_scrollbar'></div>
-                <div id='users_buttons' class="save_buttons">
-                    <div id='users_save' class='common_dialogue_button button_save common_icon' ></div>
-                </div>
-            </div>`;
-    search_users();
-};
-/**
  * 
  * @param {string} sort 
  * @param {string} order_by 
@@ -302,224 +281,17 @@ const show_users = () =>{
  * @returns 
  */
 const search_users = (sort='username', order_by='asc', focus=true) => {
-
-    if (common.input_control(null,{check_valid_list_elements:[[CommonAppDocument.querySelector('#list_user_account_search_input'),100]]})==false)
-        return;
-
-    CommonAppDocument.querySelector('#list_user_account').classList.add('common_icon', 'css_spinner');
-    CommonAppDocument.querySelector('#list_user_account').innerHTML = '';
-    let search_user='*';
-    //show all records if no search criteria
-    if (CommonAppDocument.querySelector('#list_user_account_search_input').innerText!='')
-        search_user = encodeURI(CommonAppDocument.querySelector('#list_user_account_search_input').innerText);
-    common.FFB('/server-db_admin/user_account', `search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'APP_ACCESS', null)
-    .then((/**@type{string}*/result)=>{
-        let html = `<div class='list_user_account_row'>
-                        <div data-column='avatar' class='list_user_account_col list_title common_icon'></div>
-                        <div data-column='id' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='app_role_id' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='app_role_icon' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='active' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='user_level' class='list_user_account_col list_sort_click list_title'></div>
-                        <div data-column='private' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='username' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='bio' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='email' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='emal_unverified' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='password' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='password_reminder' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='verification_code' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='identity_provider_id' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='provider_name' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='provider_id' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='provider_first_name' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='provider_last_name' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='provider_image' class='list_user_account_col list_title common_icon'></div>
-                        <div data-column='provider_image_url' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='provider_email' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='date_created' class='list_user_account_col list_sort_click list_title common_icon'></div>
-                        <div data-column='date_modified' class='list_apps_col list_sort_click list_title common_icon'></div>
-                    </div>`;
-        let input_contentEditable = '';
-        let lov_div = '';
-        let lov_class = '';
-        //superadmin can edit
-        if (common.COMMON_GLOBAL.user_app_role_id==0){
-            lov_div = '<div class=\'common_lov_button common_list_lov_click common_icon\'></div>';
-            lov_class = 'common_input_lov';
-            input_contentEditable = 'contentEditable="true"';
-        }
-        else
-            input_contentEditable = 'contentEditable="false"';
-        for (const user of JSON.parse(result).rows) {
-            let list_user_account_current_user_row='';
-            if (user.id==common.COMMON_GLOBAL.user_account_id)
-                list_user_account_current_user_row = 'list_current_user_row';
-            else
-                list_user_account_current_user_row ='';
-            html += 
-            `<div data-changed-record='0' data-user_account_id='${user.id}' class='list_user_account_row ${list_user_account_current_user_row} common_row' >
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>
-                        <img class='list_user_account_avatar' ${common.list_image_format_src(user.avatar)}/>
-                    </div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>${user.id}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit ${lov_class}' data-defaultValue='${user.app_role_id ?? ''}'/>${user.app_role_id ?? ''}</div>
-                    ${lov_div}
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly common_lov_value'>${user.app_role_icon}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${user.active ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${user.level ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${user.private ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${user.username ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${user.bio ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${user.email ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${user.email_unverified ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit common_input_password' placeholder='******'/></div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${user.password_reminder ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div ${input_contentEditable} class='common_input list_edit'/>${user.verification_code ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>${user.identity_provider ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>${user.provider_name ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>${user.provider_id ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>${user.provider_first_name ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>${user.provider_last_name ?? ''}</div>                        
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>
-                        <img class='list_user_account_avatar' ${common.list_image_format_src(user.provider_image)}/>
-                    </div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>${user.provider_image_url ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>${user.provider_email ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>${user.date_created ?? ''}</div>
-                </div>
-                <div class='list_user_account_col'>
-                    <div class='list_readonly'>${user.date_modified ?? ''}</div>
-                </div>
-            </div>`;
-        }
-        CommonAppDocument.querySelector('#list_user_account').classList.remove('common_icon', 'css_spinner');
-        CommonAppDocument.querySelector('#list_user_account').innerHTML = html;
-        CommonAppDocument.querySelector(`#list_user_account .list_title[data-column='${sort}']`).classList.add(order_by);
-    
-        if (focus==true){
-            //set focus at start
-            //set focus first column in first row
-            //this will trigger to show detail records
-            if (CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].getAttribute('readonly')==true){
-                CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', false);
-                CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', true);
-            }
-            else
-                CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                
-        }
-        else{
-            //trigger focus event on first row set focus back again to search field
-            CommonAppDocument.querySelectorAll('#list_user_account .list_edit')[0].focus();
-            CommonAppDocument.querySelector('#list_user_account_search_input').focus();
-        }
-    })
-    .catch(()=>CommonAppDocument.querySelector('#list_user_account').classList.remove('common_icon', 'css_spinner'));
+    common.ComponentRender('list_user_account', {   user_account_id:common.COMMON_GLOBAL.user_account_id,
+                                                    user_app_role_id:common.COMMON_GLOBAL.user_app_role_id,
+                                                    sort:sort,
+                                                    order_by:order_by,
+                                                    focus:focus,
+                                                    function_list_image_format_src:common.list_image_format_src,
+                                                    function_FFB:common.FFB}, '/component/menu_users_list.js');
+ 
 };
-/**
- * Show user account logon
- * @param {number} user_account_id 
- */
-const show_user_account_logon = async (user_account_id) => {
-    CommonAppDocument.querySelector('#list_user_account_logon').classList.add('common_icon', 'css_spinner');
-    CommonAppDocument.querySelector('#list_user_account_logon').innerHTML = '';
-    common.FFB('/server-db_admin/user_account_logon', `data_user_account_id=${user_account_id}&data_app_id=''`, 'GET', 'APP_ACCESS', null)
-    .then((/**@type{string}*/result)=>{
-        let html = `<div id='list_user_account_logon_row_title' class='list_user_account_logon_row'>
-                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>USER ACCOUNT ID</div>
-                        <div id='list_user_account_logon_col_title2' class='list_user_account_logon_col list_title'>DATE CREATED</div>
-                        <div id='list_user_account_logon_col_title3' class='list_user_account_logon_col list_title'>APP ID</div>
-                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>RESULT</div>
-                        <div id='list_user_account_logon_col_title5' class='list_user_account_logon_col list_title'>IP</div>
-                        <div id='list_user_account_logon_col_title6' class='list_user_account_logon_col list_title'>GPS LONG</div>
-                        <div id='list_user_account_logon_col_title7' class='list_user_account_logon_col list_title'>GPS LAT</div>
-                        <div id='list_user_account_logon_col_title8' class='list_user_account_logon_col list_title'>USER AGENT</div>
-                        <div id='list_user_account_logon_col_title9' class='list_user_account_logon_col list_title'>ACCESS TOKEN</div>
-                    </div>`;
-        for (const user_account_logon of JSON.parse(result)) {
-            html += 
-            `<div data-changed-record='0' class='list_user_account_logon_row'>
-                <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${user_account_logon.user_account_id}</div>
-                </div>
-                <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${user_account_logon.date_created ?? ''}</div>
-                </div>
-                <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${user_account_logon.app_id}</div>
-                </div>
-                <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${user_account_logon.result}</div>
-                </div>
-                <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${user_account_logon.client_ip}</div>
-                </div>
-                <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${user_account_logon.client_longitude ?? ''}</div>
-                </div>
-                <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${user_account_logon.client_latitude ?? ''}</div>
-                </div>
-                <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${user_account_logon.client_user_agent}</div>
-                </div>
-                <div class='list_user_account_logon_col'>
-                    <div class='list_readonly'>${user_account_logon.access_token ?? ''}</div>
-                </div>
-            </div>`;
-        }
-        CommonAppDocument.querySelector('#list_user_account_logon').classList.remove('common_icon', 'css_spinner');
-        CommonAppDocument.querySelector('#list_user_account_logon').innerHTML = html;
-    })
-    .catch(()=>CommonAppDocument.querySelector('#list_user_account_logon').classList.remove('common_icon', 'css_spinner'));
-};
+
+
 /**
  * Show apps
  * @returns{Promise.<void>}
@@ -1418,7 +1190,8 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     //event on master to automatically show detail records
                     if (APP_GLOBAL.previous_row != common.element_row(event.target)){
                         APP_GLOBAL.previous_row = common.element_row(event.target);
-                        show_user_account_logon(parseInt(common.element_row(event.target).getAttribute('data-user_account_id') ?? ''));
+                        common.ComponentRender('list_user_account_logon', { user_account_id:parseInt(common.element_row(event.target).getAttribute('data-user_account_id') ?? ''),
+                                                                            function_FFB:common.FFB}, '/component/menu_users_logon.js');
                     }
                     break;
                 }   
