@@ -312,46 +312,7 @@ const format_json_date = (db_date, short) => {
 const mobile = () =>{
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(CommonAppWindow.navigator.userAgent));
 };
-/**
- * Image format
- * @param {string|null} image 
- * @returns {string}
- */
-const image_format = image => {
-    if (image == '' || image == null )
-        return '';
-    else
-        return image;
-};
-/**
- * List image format src
- * @param {string|null} image 
- * @returns {string}
- */
-const list_image_format_src = image => {
-    if (image == '' || image == null)
-        return '';
-    else
-        return `src='${image_format(image)}'`;
-};
-/**
- * Recreate image
- * @param {HTMLImageElement} img_item 
- * @returns {void}
- */
-const recreate_img = img_item => {
-    //cant set img src to null, it will containt url or show corrupt image
-    //recreating the img is the workaround
-    const parentnode = img_item.parentNode;
-    const id = img_item.id;
-    const alt = img_item.alt;
-    const img = CommonAppDocument.createElement('img');
 
-    parentnode?parentnode.removeChild(img_item):null;
-    img.id = id;
-    img.alt = alt;
-    parentnode?parentnode.appendChild(img):null;
-};
 /**
  * Converts image
  * @param {string} image_url 
@@ -380,17 +341,6 @@ const convert_image = async (image_url, image_width, image_height) => {
             };
         }
     });
-};
-/**
- * Set avatar
- * @param {string|null} avatar 
- * @param {HTMLImageElement} item 
- */
-const set_avatar = (avatar, item) => {
-    if (avatar == null || avatar == '')
-        recreate_img(item);
-    else
-        item.src = image_format(avatar);
 };
 /**
  * Show image
@@ -428,15 +378,19 @@ const show_image = async (item_img, item_input, image_width, image_height) => {
                 reader.onloadend = /**@type{import('../../../common_types.js').CommonAppEvent}*/event => {
                     if (event.target)
                         convert_image(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
-                            item_img.src = srcEncoded;
+                            item_img.style.backgroundImage= `url('${srcEncoded}')`;
+                            item_img.setAttribute('data-image', srcEncoded);
                             resolve(null);
                         });
                 };
             }
         if (file)
             reader.readAsDataURL(file); //reads the data as a URL
-        else
-            item_img.src = '';
+        else{
+            item_img.style.backgroundImage= 'url()';
+            item_img.setAttribute('data-image', '');
+        }
+            
     });
     
 };
@@ -1215,7 +1169,6 @@ const profile_stat = async (statchoice, app_rest_url = null, function_user_click
                         top_app_rest_url:app_rest_url,
                         top_statchoice:statchoice,
                         function_FFB:FFB,
-                        top_function_list_image_format_src:list_image_format_src,
                         top_function_user_click:function_user_click
                     },
                     '/common/component/dialogue_profile.js');
@@ -1268,7 +1221,6 @@ const profile_detail = (detailchoice, fetch_detail, click_function=null) => {
                 'GET', 'APP_ACCESS', null)
             .then(result=>{
                 let html = '';
-                let image = '';
                 let delete_div ='';
                 for (const list_item of JSON.parse(result)) {
                     if (detailchoice==5 && typeof list_item.id =='undefined'){
@@ -1281,7 +1233,7 @@ const profile_detail = (detailchoice, fetch_detail, click_function=null) => {
                                 <div class='common_profile_detail_list_app_id'>${list_item.APP_ID}</div>
                             </div>
                             <div class='common_profile_detail_list_col'>
-                                <img class='common_profile_detail_list_app_logo' src='${list_item.LOGO}'>
+                                <div class='common_image common_image_avatar_list' style='background-image:url("${list_item.LOGO}");'></div>
                             </div>
                             <div class='common_profile_detail_list_col'>
                                 <div class='common_profile_detail_list_app_name common_wide_list_column common_link'>
@@ -1298,14 +1250,13 @@ const profile_detail = (detailchoice, fetch_detail, click_function=null) => {
                     }
                     else{
                         //Username list
-                        image = list_image_format_src(list_item.avatar ?? list_item.provider_image);
                         html += 
                         `<div data-user_account_id='${list_item.id}' class='common_profile_detail_list_row common_row'>
                             <div class='common_profile_detail_list_col'>
                                 <div class='common_profile_detail_list_user_account_id'>${list_item.id}</div>
                             </div>
                             <div class='common_profile_detail_list_col'>
-                                <img class='common_profile_detail_list_avatar' ${image}>
+                                <div class='common_image common_image_avatar_list' style='background-image:url("${list_item.avatar ?? list_item.provider_image}");'></div>
                             </div>
                             <div class='common_profile_detail_list_col'>
                                 <div class='common_profile_detail_list_username common_wide_list_column common_link'>
@@ -1346,7 +1297,6 @@ const search_profile = click_function => {
                             searched_username:searched_username,
                             client_latitude:COMMON_GLOBAL.client_latitude,
                             client_longitude:COMMON_GLOBAL.client_longitude,
-                            function_list_image_format_src:list_image_format_src,
                             function_click_function:click_function,
                             function_FFB:FFB
                         },
@@ -1379,7 +1329,6 @@ const profile_show = async (user_account_id_other = null, username = null) => {
                         info_user_account_id_other:user_account_id_other,
                         info_username:username,
                         function_FFB:FFB,
-                        info_function_set_avatar:set_avatar,
                         info_function_create_qr:create_qr,
                         info_function_getHostname:getHostname,
                         info_function_format_json_date:format_json_date,
@@ -1673,8 +1622,8 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         COMMON_GLOBAL.user_app_role_id = login_data.app_role_id;
 
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
-            //set avatar or emptyif not in admin app
-            set_avatar(provider_id?login_data.provider_image:login_data.avatar ?? null, CommonAppDocument.querySelector('#common_user_menu_avatar_img'));
+            //set avatar or empty if not in admin app
+            CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= `url('${provider_id?login_data.provider_image:login_data.avatar ?? null}')`;
             CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
             CommonAppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
         }
@@ -1763,7 +1712,7 @@ const user_logoff = async () => {
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
             CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
             CommonAppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-            set_avatar(null, CommonAppDocument.querySelector('#common_user_menu_avatar_img')); 
+            CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= 'url()';
             close_window();
             ComponentRemove('common_dialogue_user_edit');
             dialogue_password_new_clear();
@@ -1806,7 +1755,7 @@ const user_update = async () => {
     return new Promise(resolve=>{
         const username = CommonAppDocument.querySelector('#common_user_edit_input_username').innerHTML;
         const bio = CommonAppDocument.querySelector('#common_user_edit_input_bio').innerHTML;
-        const avatar = CommonAppDocument.querySelector('#common_user_edit_avatar_img').src;
+        const avatar = CommonAppDocument.querySelector('#common_user_edit_avatar_img').style.backgroundImage;
         const new_email = CommonAppDocument.querySelector('#common_user_edit_input_new_email').innerHTML;
     
         let path;
@@ -1863,7 +1812,7 @@ const user_update = async () => {
         .then(result=>{
             CommonAppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             const user_update = JSON.parse(result);
-            set_avatar(avatar, CommonAppDocument.querySelector('#common_user_menu_avatar_img'));
+            CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= `url('${avatar}')`;
             if (user_update.sent_change_email == 1){
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, null);
             }
@@ -3219,7 +3168,6 @@ const common_event = async (event_type,event=null) =>{
                                     translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM,
                                     translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                     function_FFB:FFB,
-                                    function_set_avatar:set_avatar,
                                     function_show_message:show_message,
                                     function_format_json_date:format_json_date,
                                     },
@@ -3448,7 +3396,6 @@ const common_event = async (event_type,event=null) =>{
                                         translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM,
                                         translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                         function_FFB:FFB,
-                                        function_set_avatar:set_avatar,
                                         function_show_message:show_message,
                                         function_format_json_date:format_json_date,
                                         },
@@ -4022,8 +3969,8 @@ export{/* GLOBALS*/
        /* MISC */
        element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, typewatch, toBase64, fromBase64, 
        common_translate_ui, get_locales_options, 
-       mobile, image_format,
-       list_image_format_src, recreate_img, convert_image, set_avatar,
+       mobile,
+       convert_image,
        show_image, getHostname, input_control, getUserAgentPlatform, SearchAndSetSelectedIndex,
        common_theme_update_from_body,common_preferences_post_mount,
        common_preferences_update_body_class_from_preferences,

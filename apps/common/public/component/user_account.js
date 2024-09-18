@@ -4,7 +4,7 @@
 const template =`   <div id='common_user_menu'>
                         <div id='common_user_menu_logged_in'>
                             <div id='common_user_menu_avatar'>
-                                <img id='common_user_menu_avatar_img' src='' alt=''>
+                                <div id='common_user_menu_avatar_img' class='common_image common_image_avatar'></div>
                             </div>
                         </div>
                         <div id='common_user_menu_logged_out'>

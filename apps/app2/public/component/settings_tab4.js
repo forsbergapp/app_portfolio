@@ -7,7 +7,7 @@ const template =`   <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'>
                             <div id='setting_paper_preview_image' class='setting_paper_preview'>
                                 <div id='setting_paper_preview_header_image' class='setting_paper_preview_header'>
-                                    <div><img id='setting_reportheader_img' src=''/></div>
+                                    <div id='setting_reportheader_img'></div>                                    
                                 </div>
                                 <div id='setting_paper_preview_header_buttons'>
                                     <input id='setting_input_reportheader_img' type='file' />
@@ -21,7 +21,7 @@ const template =`   <div class='setting_horizontal_row'>
                                     <div id='setting_icon_image_footer_clear' class='setting_button common_icon' ></div>
                                 </div>
                                 <div id='setting_paper_preview_footer_image' class='setting_paper_preview_footer'>
-                                    <div><img id='setting_reportfooter_img' src=''/></div>
+                                    <div id='setting_reportfooter_img'></div>
                                 </div>
                             </div>
                         </div>

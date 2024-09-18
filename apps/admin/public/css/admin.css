@@ -514,12 +514,6 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	width:100%;
 	font-size:1.2em;
 }
-.list_user_account_avatar{
-	height:1.4em;
-	width:1.4em;
-	border-radius: 50%;
-	vertical-align: middle;
-}
 #list_user_account .css_spinner, #list_user_account_logon .css_spinner{
 	display: inline-block;
 }
