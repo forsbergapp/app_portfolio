@@ -32,7 +32,6 @@ const profile_empty = { id:null,
  * @param {{tab:string,
  *          info_profile:import('../../../common_types.js').CommonProfileUser,
  *          top_profile_records:import('../../../common_types.js').CommonProfileTopRecord[]|[],
- *          top_function_list_image_format_src:function,
  *          info_function_format_json_date:function}} props 
  * @returns 
  */
@@ -46,7 +45,7 @@ const template = props =>
                                             <div id='common_profile_id'>${props.info_profile.id}</div>
                                             <div id='common_profile_avatar_container'>
                                                 <div id='common_profile_avatar_image'>
-                                                    <img id='common_profile_avatar' src='' alt=''/>
+                                                    <div id='common_profile_avatar' class='common_image common_image_avatar_profile'></div>
                                                 </div>
                                                 <div id='common_profile_avatar_online_status' class='common_icon'></div>
                                             </div>
@@ -130,7 +129,7 @@ const template = props =>
                                                     <div class='common_profile_stat_list_user_account_id'>${row.id}</div>
                                                 </div>
                                                 <div class='common_profile_stat_list_col'>
-                                                    <img class='common_profile_stat_list_avatar' ${props.top_function_list_image_format_src(row.avatar ?? row.provider_image)}>
+                                                    <div class='common_image common_image_avatar_list' style='background-image:url("${row.avatar ?? row.provider_image}");'></div>
                                                 </div>
                                                 <div class='common_profile_stat_list_col'>
                                                     <div class='common_profile_stat_list_username common_wide_list_column common_link'>
@@ -159,7 +158,6 @@ const template = props =>
  *          info_client_longitude:string,
  *          info_user_account_id_other:number,
  *          info_username:string,
- *          info_function_set_avatar:function,
  *          info_function_format_json_date:function,
  *          info_function_create_qr:function,
  *          info_function_getHostname:function,
@@ -167,7 +165,6 @@ const template = props =>
  *          info_function_checkOnline:function,
  *          top_statchoice:number,
  *          top_app_rest_url:string,
- *          top_function_list_image_format_src:function,
  *          top_function_user_click:function,
  *          function_FFB:function,
  *          }} props 
@@ -215,7 +212,7 @@ const component = async props => {
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
                 render_template(profile, []);
 
-            props.info_function_set_avatar(profile.avatar ?? profile.provider_image, props.common_document.querySelector('#common_profile_avatar')); 
+            props.common_document.querySelector('#common_profile_avatar').style.backgroundImage= `url('${profile.avatar ?? profile.provider_image}')`; 
             props.info_function_create_qr('common_profile_qr', props.info_function_getHostname() + '/' + profile.username);
             //User account followed and liked
             if (profile.followed == 1) {
@@ -299,7 +296,6 @@ const component = async props => {
                             info_profile:profile,
                             top_profile_records:top_profile_records,
                             tab:props.tab,
-                            top_function_list_image_format_src:props.top_function_list_image_format_src,
                             info_function_format_json_date:props.info_function_format_json_date
                         })
                 .replace('<SPINNER_CLASS/>', spinner);

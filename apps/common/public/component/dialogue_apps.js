@@ -21,7 +21,7 @@ const template = props => `
                                             <div class='common_dialogue_apps_app_url'>${row.PROTOCOL}${row.SUBDOMAIN}.${row.HOST}:${row.PORT}</div>
                                         </div>
                                         <div class='common_dialogue_apps_app_link_col'>
-                                            <img class='common_dialogue_apps_app_logo' src='${row.LOGO}' />
+                                            <div class='common_dialogue_apps_app_logo common_image common_image_logo_start' style='background-image:url("${row.LOGO}");'></div>
                                         </div>
                                         <div class='common_dialogue_apps_app_link_col'>
                                             <div class='common_dialogue_apps_app_name'>${row.APP_NAME_TRANSLATION}</div>

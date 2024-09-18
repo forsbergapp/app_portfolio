@@ -286,7 +286,6 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
                                                     sort:sort,
                                                     order_by:order_by,
                                                     focus:focus,
-                                                    function_list_image_format_src:common.list_image_format_src,
                                                     function_FFB:common.FFB}, '/component/menu_users_list.js');
  
 };
