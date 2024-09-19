@@ -435,7 +435,7 @@ const install_db_get_files = async (json_type) =>{
     install_result.push({'start': new Date().toISOString()});
     const fileBuffer = await fs.promises.readFile(`${process.cwd()}/scripts/demo/demo.json`, 'utf8');
     /**@type{[import('../../../types.js').server_db_database_demo_user]}*/
-    const demo_users = JSON.parse(fileBuffer.toString()).server_db_database_demo_users;
+    const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
     //create social records
     const social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'POSTS_LIKE', 'POSTS_VIEW', 'POSTS_VIEW_ANONYMOUS'];
     let email_index = 1000;
