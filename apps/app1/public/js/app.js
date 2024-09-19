@@ -17,15 +17,13 @@ const common = await import(path_common);
  * @returns {void}
  */
 const show_hide_apps_dialogue = () => {
-    if (CommonAppDocument.querySelector('#dialogue_start_content').style.visibility=='visible' ||
-        CommonAppDocument.querySelector('#dialogue_start_content').style.visibility==''){
-        CommonAppDocument.querySelector('#dialogue_start_content').style.visibility='hidden';
-        CommonAppDocument.querySelector('#dialogue_info_content').style.visibility='hidden';
+    if (CommonAppDocument.querySelector('#common_dialogue_apps').style.visibility=='visible' ||
+        CommonAppDocument.querySelector('#common_dialogue_apps').style.visibility==''){
+        CommonAppDocument.querySelector('#common_dialogue_apps').style.visibility='hidden';
         CommonAppDocument.querySelector('#common_profile_btn_top').style.visibility='hidden';
     }
     else{
-        CommonAppDocument.querySelector('#dialogue_start_content').style.visibility='visible';
-        CommonAppDocument.querySelector('#dialogue_info_content').style.visibility='visible';
+        CommonAppDocument.querySelector('#common_dialogue_apps').style.visibility='visible';
         CommonAppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
     }
 };
