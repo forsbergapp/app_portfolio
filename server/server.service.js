@@ -712,8 +712,7 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_string}`, method:'GET', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_string}`, method:'GET', required:true}):{
                         resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, 
                                                                         /**@ts-ignore */
                                                                         resource_id_get_number())
