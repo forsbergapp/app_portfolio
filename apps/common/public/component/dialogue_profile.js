@@ -77,35 +77,35 @@ const template = props =>
                                 </div>
                                 <div id='common_profile_public'>
                                     ${props.info_profile.private!=1?
-                                    `<div id='common_profile_main_stat_row1'>
-                                        <div id='common_profile_info_view'>
-                                            <div id='common_profile_info_view_count_icon' class='common_icon'></div>
-                                            <div id='common_profile_info_view_count'>${props.info_profile.count_views}</div>
-                                        </div>
-                                        <div id='common_profile_info_following'>
-                                            <div id='common_profile_main_btn_following' class='common_link common_icon'></div>
-                                            <div id='common_profile_info_following_count'>${props.info_profile.count_following}</div>
-                                        </div>
-                                        <div id='common_profile_info_followers'>
-                                            <div id='common_profile_main_btn_followed' class='common_link common_icon'></div>
-                                            <div id='common_profile_info_followers_count'>${props.info_profile.count_followed}</div>
-                                        </div>
-                                        <div id='common_profile_info_likes'>
-                                            <div id='common_profile_main_btn_likes' class='common_icon common_link common_like'></div>
-                                            <div id='common_profile_info_likes_count'>${props.info_profile.count_likes}</div>
-                                        </div>
-                                        <div id='common_profile_info_liked'>
-                                            <div id='common_profile_main_btn_liked' >
-                                                <div id='common_profile_main_btn_liked_heart' class='common_icon common_link common_like'></div>
-                                                <div id='common_profile_main_btn_liked_users' class='common_link common_icon'></div>
+                                        `<div id='common_profile_main_stat_row1'>
+                                            <div id='common_profile_info_view'>
+                                                <div id='common_profile_info_view_count_icon' class='common_icon'></div>
+                                                <div id='common_profile_info_view_count'>${props.info_profile.count_views}</div>
                                             </div>
-                                            <div id='common_profile_info_liked_count'>${props.info_profile.count_liked}</div>
+                                            <div id='common_profile_info_following'>
+                                                <div id='common_profile_main_btn_following' class='common_link common_icon'></div>
+                                                <div id='common_profile_info_following_count'>${props.info_profile.count_following}</div>
+                                            </div>
+                                            <div id='common_profile_info_followers'>
+                                                <div id='common_profile_main_btn_followed' class='common_link common_icon'></div>
+                                                <div id='common_profile_info_followers_count'>${props.info_profile.count_followed}</div>
+                                            </div>
+                                            <div id='common_profile_info_likes'>
+                                                <div id='common_profile_main_btn_likes' class='common_icon common_link common_like'></div>
+                                                <div id='common_profile_info_likes_count'>${props.info_profile.count_likes}</div>
+                                            </div>
+                                            <div id='common_profile_info_liked'>
+                                                <div id='common_profile_main_btn_liked' >
+                                                    <div id='common_profile_main_btn_liked_heart' class='common_icon common_link common_like'></div>
+                                                    <div id='common_profile_main_btn_liked_users' class='common_link common_icon'></div>
+                                                </div>
+                                                <div id='common_profile_info_liked_count'>${props.info_profile.count_liked}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div id='common_profile_main_stat_row2'></div>
-                                    <div id='common_profile_detail'>
-                                        <div id='common_profile_detail_list' class='common_profile_detail_list'></div>
-                                    </div>`:''
+                                        <div id='common_profile_main_stat_row2'></div>
+                                        <div id='common_profile_detail'>
+                                            <div id='common_profile_detail_list' class='common_profile_detail_list'></div>
+                                        </div>`:''
                                     }
                                 </div>
                                 <div id='common_profile_private'>
@@ -116,10 +116,10 @@ const template = props =>
                         </div>
                         <div id='common_profile_stat'>
                             ${props.tab=='TOP'?
-                            `<div id='common_profile_stat_row1'>
-                                <div id='common_profile_stat_row1_1' class='common_link common_icon'></div>
-                                <div id='common_profile_stat_row1_2' class='common_link common_icon'></div>
-                                <div id='common_profile_stat_row1_3' class='common_link common_icon'></div>
+                                `<div id='common_profile_stat_row1'>
+                                    <div id='common_profile_stat_row1_1' class='common_link common_icon'></div>
+                                    <div id='common_profile_stat_row1_2' class='common_link common_icon'></div>
+                                    <div id='common_profile_stat_row1_3' class='common_link common_icon'></div>
                                 </div>
                                 <div id='common_profile_stat_row2'></div>
                                 <div id='common_profile_stat_list' <SPINNER_CLASS/>>
@@ -141,9 +141,8 @@ const template = props =>
                                                 </div>
                                             </div>`
                                     ).join('')
-                                }
-                                </div>
-                            </div>`:''
+                                    }
+                                </div>`:''
                             }
                         </div>
                         <div id='common_profile_close' class='common_dialogue_button common_icon' ></div>`;

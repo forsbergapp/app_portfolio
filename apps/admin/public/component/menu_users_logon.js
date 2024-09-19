@@ -16,7 +16,7 @@
  *                          date_modified:string}]|[]}} props
  */
 const template = props => ` ${props.spinner!=''?
-                                `<div class='${props.spinner}'</div>`:
+                                `<div class='${props.spinner}'></div>`:
                                 ''
                             }
                             ${props.spinner==''?

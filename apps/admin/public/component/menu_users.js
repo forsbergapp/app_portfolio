@@ -7,7 +7,7 @@
 const template = () => ` <div id='menu_3_content_widget1' class='widget'>
                                 <div id='list_user_account_title' class='common_icon'></div>
                                 <div class='list_search'>
-                                    <div id='list_user_account_search_input' contentEditable='true' class='common_input list_search_input' /></div>
+                                    <div id='list_user_account_search_input' contentEditable='true' class='common_input list_search_input'></div>
                                     <div id='list_user_search_icon' class='list_search_icon common_icon'></div>
                                 </div>
                                 <div id='list_user_account' class='common_list_scrollbar'></div>

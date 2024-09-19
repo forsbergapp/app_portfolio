@@ -61,7 +61,7 @@ const template = props => ` ${props.spinner==''?
                                     }`
                                 ).join('')
                                 }`:
-                                `<div class='${props.spinner}'</div>`
+                                `<div class='${props.spinner}'></div>`
                             }
                             ` ;
 /**
