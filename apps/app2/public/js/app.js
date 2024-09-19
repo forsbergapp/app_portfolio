@@ -1902,13 +1902,20 @@ const app_event_click = event => {
                     break;
                 }
                 case 'toolbar_btn_search':{
-                
                     const input_row = CommonAppDocument.querySelector('#common_profile_search_input');
                     const searchlist = CommonAppDocument.querySelector('#common_profile_search_list_wrap');
-                    input_row.style.visibility=input_row.style.visibility=='visible'?'hidden':'visible';
-                    //show list if list input is visible and is not empty
-                    searchlist.style.display=(input_row.style.visibility=='visible' && input_row.innerHTML !='')?'flex':'none';
-                    
+                    if (input_row.style.visibility == 'visible'){
+                        input_row.style.visibility='hidden';
+                        input_row.innerHTML = '';
+                        searchlist.style.visibility = 'hidden';
+                        searchlist.style.display  = 'flex';
+                        searchlist.innerHTML = '';
+                    }
+                    else{
+                        input_row.style.visibility='visible';
+                        searchlist.style.visibility = 'visible';
+                        searchlist.style.display  = 'none';
+                    }                   
                     CommonAppDocument.querySelector('#common_profile_search_input').focus();
                     break;
                 }

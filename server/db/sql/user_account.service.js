@@ -561,15 +561,10 @@ const getProfileUser = async (app_id, resource_id_number, resource_id_name, sear
 							AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
 				 FROM <DB_SCHEMA/>.user_account u
 				WHERE ${user_where()}
-				  AND u.active = 1
-				  AND EXISTS(SELECT NULL
-							   FROM <DB_SCHEMA/>.user_account_app uap
-							  WHERE uap.user_account_id = u.id
-								AND uap.app_id = :app_id)`;
+				  AND u.active = 1`;
 	const parameters ={
 						user_accound_id_current_user: id_current_user,
-						user_value: user_where_value(),
-						app_id: app_id
+						user_value: user_where_value()
 					}; 
 	return await db_execute(app_id, sql, parameters, null, null);
 };

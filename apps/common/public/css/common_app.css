@@ -29,6 +29,7 @@
 
 #common_lov_close::before{									content:var(--common_app_icon_close)}
 
+#common_user_menu_close::before{							content:var(--common_app_icon_close)}
 #common_dialogue_user_menu_edit::before{					content:var(--common_app_icon_edit)}
 #common_dialogue_user_menu_log_out::before{					content:var(--common_app_icon_logoff)}
 #common_dialogue_user_menu_signup::before{					content:var(--common_app_icon_signup)}

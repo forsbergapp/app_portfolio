@@ -1174,32 +1174,20 @@ const profile_detail = (detailchoice, click_function=null) => {
  * @returns {void}
  */
 const search_profile = click_function => {
-    CommonAppDocument.querySelector('#common_profile_search_input').classList.remove('common_input_error');
-    CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
-    if (CommonAppDocument.querySelector('#common_profile_search_input').innerText==''){
+    ComponentRender('common_profile_search_list_wrap',
+                    {
+                        user_account_id:COMMON_GLOBAL.user_account_id,
+                        client_latitude:COMMON_GLOBAL.client_latitude,
+                        client_longitude:COMMON_GLOBAL.client_longitude,
+                        function_input_control:input_control,
+                        function_click_function:click_function,
+                        function_FFB:FFB
+                    },
+                    '/common/component/profile_search_list.js')
+    .catch(()=>{
         CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-        CommonAppDocument.querySelector('#common_profile_search_input').classList.add('common_input_error');
-    }
-    else{
-        const searched_username = CommonAppDocument.querySelector('#common_profile_search_input').innerText;
-        if (input_control(null,{check_valid_list_elements:[[CommonAppDocument.querySelector('#common_profile_search_input'),null]]})==false)
-            return;
-        ComponentRender('common_profile_search_list_wrap',
-                        {
-                            user_account_id:COMMON_GLOBAL.user_account_id,
-                            searched_username:searched_username,
-                            client_latitude:COMMON_GLOBAL.client_latitude,
-                            client_longitude:COMMON_GLOBAL.client_longitude,
-                            function_click_function:click_function,
-                            function_FFB:FFB
-                        },
-                        '/common/component/profile_search_list.js')
-        .then(()=>CommonAppDocument.querySelector('#common_profile_search_list').innerHTML==''?
-                        CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none':null)
-        .catch(()=>{
-            CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-        });
-    }
+        CommonAppDocument.querySelector('#common_profile_search_list_wrap').innerHTML = '';
+    });
 };
 /**
  * Profile show
@@ -3045,6 +3033,11 @@ const common_event = async (event_type,event=null) =>{
                                 CommonAppDocument.body.requestFullscreen();
                             break;
                         }
+                        /* Dialogue user menu*/
+                        case 'common_user_menu_close':{
+                            ComponentRemove('common_dialogue_user_menu', true);
+                            break;
+                        }
                         case 'common_dialogue_user_menu_log_in':{
                             ComponentRemove('common_dialogue_user_menu');
                             show_common_dialogue('LOGIN');
@@ -3444,32 +3437,10 @@ const disable_common_input = event => {
         }
 };
 /**
- * Hide user menu and search
- * @param {import('../../../common_types.js').CommonAppEvent} event 
- */
- const hide_user_menu_and_search = event => {
-    if (event.key === 'Escape') {
-        event.preventDefault();
-        //hide use menu dropdown
-        if (CommonAppDocument.querySelector('#common_dialogue_user_menu').innerHTML !='')
-            ComponentRemove('common_dialogue_user_menu', true);
-        if (CommonAppDocument.querySelector('#common_profile_input_row')){
-            //hide search
-            const x = CommonAppDocument.querySelector('#common_profile_input_row'); 
-            if (x.style.visibility == 'visible') {
-                x.style.visibility = 'hidden';
-                CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-            } 
-        }
-    }
-};
-/**
  * Adds common events for all apps
  * @returns {void}
  */
 const common_events_add = () => {
-    //only works on document level:
-    CommonAppDocument.addEventListener('keydown', hide_user_menu_and_search, false);
 
     CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('copy', disable_copy_paste_cut, false);
     CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('paste', disable_copy_paste_cut, false);
@@ -3483,7 +3454,6 @@ const common_events_add = () => {
  * @returns {void}
  */
 const common_events_remove = () => {
-    CommonAppDocument.removeEventListener('keydown', hide_user_menu_and_search);
 
     CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('copy', disable_copy_paste_cut);
     CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('paste', disable_copy_paste_cut);
