@@ -1006,7 +1006,7 @@ const login_common = (avatar) => {
     user_settings_function('ADD_LOGIN', true)
     .then(()=>{
         CommonAppDocument.querySelector('#settings_tab_nav_7').innerHTML = '<div id=\'user_setting_avatar_img\' class=\'common_image\'></div>';
-        CommonAppDocument.querySelector('#user_setting_avatar_img').style.backgroundImage= `url('${avatar}')`;
+        CommonAppDocument.querySelector('#user_setting_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
 
         //Hide settings
         CommonAppDocument.querySelector('#settings').style.visibility = 'hidden';
@@ -1287,7 +1287,9 @@ const user_settings_load = async (tab_selected) => {
                 CommonAppDocument.querySelector('#setting_reportheader_img').style.backgroundImage= 'url()';
                 CommonAppDocument.querySelector('#setting_reportheader_img').setAttribute('data-image','');
             } else{
-                CommonAppDocument.querySelector('#setting_reportheader_img').style.backgroundImage= `url('${APP_GLOBAL.user_settings[settings_index].image_header_image_img}')`;
+                CommonAppDocument.querySelector('#setting_reportheader_img').style.backgroundImage= APP_GLOBAL.user_settings[settings_index].image_header_image_img?
+                                                                                                        `url('${APP_GLOBAL.user_settings[settings_index].image_header_image_img}')`:
+                                                                                                        'url()';
                 CommonAppDocument.querySelector('#setting_reportheader_img').setAttribute('data-image',APP_GLOBAL.user_settings[settings_index].image_header_image_img);
             }
                 
@@ -1298,7 +1300,9 @@ const user_settings_load = async (tab_selected) => {
                     CommonAppDocument.querySelector('#setting_reportfooter_img').style.backgroundImage= 'url()';
                     CommonAppDocument.querySelector('#setting_reportfooter_img').setAttribute('data-image','');
             } else{
-                CommonAppDocument.querySelector('#setting_reportfooter_img').style.backgroundImage= `url('${APP_GLOBAL.user_settings[settings_index].image_footer_image_img}')`;
+                CommonAppDocument.querySelector('#setting_reportfooter_img').style.backgroundImage= APP_GLOBAL.user_settings[settings_index].image_footer_image_img?
+                                                                                                        `url('${APP_GLOBAL.user_settings[settings_index].image_footer_image_img}')`:
+                                                                                                        'url()';
                 CommonAppDocument.querySelector('#setting_reportfooter_img').setAttribute('data-image',APP_GLOBAL.user_settings[settings_index].image_footer_image_img);
             }
                 
