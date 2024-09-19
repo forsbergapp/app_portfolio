@@ -48,9 +48,10 @@ const template = props => props.system_admin?`  <div id='menu_7_content_widget1'
 */
 const component = async props => {
    const post_component = async () =>{
+        //checks installed if system admin
         /**@type{boolean} */
-        const installed = props.function_FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
-                                    .then((/**@type{string}*/result)=>JSON.parse(result)[0].installed==1?true:false);
+        const installed = props.system_admin?props.function_FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
+                                    .then((/**@type{string}*/result)=>JSON.parse(result)[0].installed==1?true:false):null;
 
        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:'',
                                                                                                        system_admin:props.system_admin,
