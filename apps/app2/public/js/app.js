@@ -1091,11 +1091,10 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
 /**
  * 
  * @param {number} detailchoice 
- * @param {boolean} fetch_detail 
  * @param {function|null} click_function 
  * @returns {void}
  */
-const profile_detail_app = (detailchoice, fetch_detail, click_function) => {
+const profile_detail_app = (detailchoice, click_function=null) => {
     if (common.COMMON_GLOBAL.user_account_id || 0 !== 0) {
         if (detailchoice == 0){
             //user settings
@@ -1108,7 +1107,7 @@ const profile_detail_app = (detailchoice, fetch_detail, click_function) => {
             //8 Liked user setting
             CommonAppDocument.querySelector('#profile_user_settings_row').style.display = 'none';
         }
-        common.profile_detail(detailchoice, fetch_detail, click_function);
+        common.profile_detail(detailchoice, click_function);
     } 
     else
         common.show_common_dialogue('LOGIN');
@@ -2102,23 +2101,21 @@ const app_event_click = event => {
                 case 'profile_main_btn_user_settings':{
                     CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(0, false, null);
+                    profile_detail_app(0);
                     break;
                 }
                 case 'profile_main_btn_user_setting_likes':
-                case 'profile_main_btn_user_setting_likes_heart':
                 case 'profile_main_btn_user_setting_likes_user_setting':{
                     CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(6, true, profile_show_app);
+                    profile_detail_app(6, profile_show_app);
                     break;
                 }
                 case 'profile_main_btn_user_setting_liked':
-                case 'profile_main_btn_user_setting_liked_heart':
                 case 'profile_main_btn_user_setting_liked_user_setting':{
                     CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(7, true, profile_show_app);
+                    profile_detail_app(7, profile_show_app);
                     break;
                 }
                 case 'profile_stat_row2_1':{
@@ -2211,21 +2208,21 @@ const app_event_click = event => {
                 }
                 //dialogue profile
                 case 'common_profile_main_btn_following':{
-                    profile_detail_app(1, true, profile_show_app);
+                    profile_detail_app(1, profile_show_app);
                     break;
                 }
                 case 'common_profile_main_btn_followed':{
-                    profile_detail_app(2, true, profile_show_app);
+                    profile_detail_app(2, profile_show_app);
                     break;
                 }
                 case 'common_profile_main_btn_likes':{
-                    profile_detail_app(3, true, profile_show_app);
+                    profile_detail_app(3, profile_show_app);
                     break;
                 }
                 case 'common_profile_main_btn_liked':
                 case 'common_profile_main_btn_liked_heart':
                 case 'common_profile_main_btn_liked_users':{
-                    profile_detail_app(4, true, profile_show_app);
+                    profile_detail_app(4, profile_show_app);
                     break;
                 }
                 case 'common_profile_follow':{
