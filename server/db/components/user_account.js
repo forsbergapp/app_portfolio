@@ -643,18 +643,23 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
          */
         const clear_private = result_getProfileUser =>
             result_getProfileUser.map(row=>{
-                if ((row.private==1 && row.friends==null) || query.get('search')!=null){
-                    //private and not friends or anonymous visit, remove stats
-                    row.count_following = null;
-                    row.count_followed = null;
-                    row.count_likes = null;
-                    row.count_liked = null;
+                if (row.id ==resource_id_number){
+                    //profile of current logged in user should always be displayed
+                    row.private = null;
                 }
                 else
-                    if (row.private==1 && row.friends==1){
-                        //private and friends, remove private
-                        row.private = null;
+                    if ((row.private==1 && row.friends==null) || query.get('search')!=null){
+                        //private and not friends or anonymous visit, remove stats
+                        row.count_following = null;
+                        row.count_followed = null;
+                        row.count_likes = null;
+                        row.count_liked = null;
                     }
+                    else
+                        if (row.private==1 && row.friends==1){
+                            //private and friends, remove private
+                            row.private = null;
+                        }
                 return row;
             });
         //resource id can be number, string or empty if searching
