@@ -378,7 +378,7 @@ const show_image = async (item_img, item_input, image_width, image_height) => {
                 reader.onloadend = /**@type{import('../../../common_types.js').CommonAppEvent}*/event => {
                     if (event.target)
                         convert_image(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
-                            item_img.style.backgroundImage= `url('${srcEncoded}')`;
+                            item_img.style.backgroundImage= srcEncoded?`url('${srcEncoded}')`:'url()';
                             item_img.setAttribute('data-image', srcEncoded);
                             resolve(null);
                         });
@@ -1623,7 +1623,9 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
 
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
             //set avatar or empty if not in admin app
-            CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= `url('${provider_id?login_data.provider_image:login_data.avatar ?? null}')`;
+            CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= (provider_id?login_data.provider_image:login_data.avatar ?? null)?
+                                                                                                        `url('${provider_id?login_data.provider_image:login_data.avatar ?? null}')`:
+                                                                                                        'url()';
             CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
             CommonAppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
         }
@@ -1812,7 +1814,7 @@ const user_update = async () => {
         .then(result=>{
             CommonAppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             const user_update = JSON.parse(result);
-            CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= `url('${avatar}')`;
+            CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
             if (user_update.sent_change_email == 1){
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, null);
             }
