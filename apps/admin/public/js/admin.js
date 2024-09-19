@@ -52,7 +52,7 @@ const admin_login = async () => {
                 }
                 else{
                     //set avatar or empty
-                    CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= `url('${result.avatar}')`;
+                    CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= result.avatar?`url('${result.avatar}')`:'url()';
                     CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
                     CommonAppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
                 }

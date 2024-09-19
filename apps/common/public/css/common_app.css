@@ -838,8 +838,9 @@ select {
 #common_user_start_login_button{
 	width: 100%;
 }
+#common_user_start_identity_provider_login >div,
 #common_user_start_identity_provider_login{
-	display: inline-block;
+	display: block !important;
 }
 /*Dialogue user edit*/
 #common_dialogue_user_edit.common_dialogue_show1{

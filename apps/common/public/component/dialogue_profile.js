@@ -212,7 +212,9 @@ const component = async props => {
             props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
                 render_template(profile, []);
 
-            props.common_document.querySelector('#common_profile_avatar').style.backgroundImage= `url('${profile.avatar ?? profile.provider_image}')`; 
+            props.common_document.querySelector('#common_profile_avatar').style.backgroundImage= (profile.avatar ?? profile.provider_image)?
+                                                                                                    `url('${profile.avatar ?? profile.provider_image}')`:
+                                                                                                    'url()'; 
             props.info_function_create_qr('common_profile_qr', props.info_function_getHostname() + '/' + profile.username);
             //User account followed and liked
             if (profile.followed == 1) {
