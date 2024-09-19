@@ -1175,105 +1175,23 @@ const profile_stat = async (statchoice, app_rest_url = null, function_user_click
 };
 /**
  * Profile detail
- * @param {number} detailchoice 
- * @param {boolean} fetch_detail 
+ * @param {number} detailchoice  
  * @param {function|null} click_function 
  * @returns {void}
  */
-const profile_detail = (detailchoice, fetch_detail, click_function=null) => {
-    let path;
-    const profile_detail_list = CommonAppDocument.querySelector('#common_profile_detail_list');
-    profile_detail_list.innerHTML = '';
-    profile_detail_list.classList.add('css_spinner');
-    switch (detailchoice){
-        case 0:
-        case 6:
-        case 7:{
-            /*detailchoice 0, 6, 7: app specific */
-            path = '/server-db/user_account_app_data_post-profile-detail';
-            break;
-        }
-        case 1:
-        case 2:
-        case 3:
-        case 4:{
-            /*detailchoice 1,2,3, 4: user_account*/
-            path = '/server-db/user_account-profile-detail';
-            break;
-        }
-        case 5:{
-            /* detailchoice 5, apps, returns same columns*/
-            path = '/server-db/user_account_app-apps';
-            break;
-        }
+const profile_detail = (detailchoice, click_function=null) => {
+    if (detailchoice==0){
+        //show only other app specific hide common
+        CommonAppDocument.querySelector('#common_profile_detail_list').innerHTML = '';
     }
-    //DETAIL
-    //show only if user logged in
-    if (COMMON_GLOBAL.user_account_id || 0 !== 0) {
-        if (detailchoice==0){
-            //show only other app specific hide common
-            CommonAppDocument.querySelector('#common_profile_detail').style.display = 'none';
-        }
-        else
-            CommonAppDocument.querySelector('#common_profile_detail').style.display = 'block';
-        if (fetch_detail){
-            FFB(`${path}/${CommonAppDocument.querySelector('#common_profile_id').innerHTML}`, `detailchoice=${detailchoice}`, 
-                'GET', 'APP_ACCESS', null)
-            .then(result=>{
-                let html = '';
-                let delete_div ='';
-                for (const list_item of JSON.parse(result)) {
-                    if (detailchoice==5 && typeof list_item.id =='undefined'){
-                        if (CommonAppDocument.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
-                            delete_div = `<div class='common_profile_detail_list_app_delete common_icon'>${''}</div>`;
-                        html += 
-                        //Apps list
-                        `<div data-app_id='${list_item.APP_ID}' data-url='${list_item.PROTOCOL}${list_item.SUBDOMAIN}.${list_item.HOST}:${list_item.PORT}' class='common_profile_detail_list_row common_row'>
-                            <div class='common_profile_detail_list_col'>
-                                <div class='common_profile_detail_list_app_id'>${list_item.APP_ID}</div>
-                            </div>
-                            <div class='common_profile_detail_list_col'>
-                                <div class='common_image common_image_avatar_list' style='background-image:url("${list_item.LOGO}");'></div>
-                            </div>
-                            <div class='common_profile_detail_list_col'>
-                                <div class='common_profile_detail_list_app_name common_wide_list_column common_link'>
-                                    ${list_item.NAME}
-                                </div>
-                            </div>
-                            <div class='common_profile_detail_list_col'>
-                                ${delete_div}
-                            </div>
-                            <div class='common_profile_detail_list_col'>
-                                <div class='common_profile_detail_list_date_created'>${list_item.date_created}</div>
-                            </div>
-                        </div>`;
-                    }
-                    else{
-                        //Username list
-                        html += 
-                        `<div data-user_account_id='${list_item.id}' class='common_profile_detail_list_row common_row'>
-                            <div class='common_profile_detail_list_col'>
-                                <div class='common_profile_detail_list_user_account_id'>${list_item.id}</div>
-                            </div>
-                            <div class='common_profile_detail_list_col'>
-                                <div class='common_image common_image_avatar_list' style='background-image:url("${list_item.avatar ?? list_item.provider_image}");'></div>
-                            </div>
-                            <div class='common_profile_detail_list_col'>
-                                <div class='common_profile_detail_list_username common_wide_list_column common_link'>
-                                    ${list_item.username}
-                                </div>
-                            </div>
-                        </div>`;
-                    }
-                }
-                profile_detail_list.classList.remove('css_spinner');
-                profile_detail_list.innerHTML = html;
-                CommonAppDocument.querySelector('#common_profile_detail_list')['data-function'] = click_function;
-            })
-            .catch(()=>profile_detail_list.classList.remove('css_spinner'));
-        }
-    } else
-        show_common_dialogue('LOGIN');
+    else{
+        ComponentRender('common_profile_detail_list', { user_account_id:COMMON_GLOBAL.user_account_id,
+                                                        user_account_id_profile:CommonAppDocument.querySelector('#common_profile_id').innerText,
+                                                        detailchoice:detailchoice,
+                                                        function_show_common_dialogue:show_common_dialogue,
+                                                        function_click:click_function,
+                                                        function_FFB:FFB}, '/common/component/profile_detail.js');
+    }
 };
 /**
  * Profile search

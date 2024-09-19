@@ -4,8 +4,8 @@
 #scan_open_mobile_close::before{							content:var(--common_app_icon_close)}
 #scan_open_mobile_title1::before{							content:var(--common_app_icon_mobile)}
 #profile_main_btn_user_settings::before{					content:var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
-#profile_main_btn_user_setting_likes_user_setting::before{	content:var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year) ' ' var(--common_app_icon_user_follows)}
-#profile_main_btn_user_setting_liked_user_setting::before{	content:var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year) ' ' var(--common_app_icon_user_followed)}
+#profile_main_btn_user_setting_likes_user_setting::before{	content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year) ' ' var(--common_app_icon_user_follows)}
+#profile_main_btn_user_setting_liked_user_setting::before{	content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year) ' ' var(--common_app_icon_user_followed)}
     
 #profile_user_settings_day::before{							content:var(--common_app_icon_regional_day)}
 #profile_user_settings_month::before{						content:var(--common_app_icon_regional_month)}
@@ -675,8 +675,12 @@
 	transform: scale(1.3);
 	transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
 }
-/*COMMON*/
+#profile_info_user_setting_likes_count,
+#profile_info_user_setting_liked_count{
+	margin-inline-start: 0.5em;
+}
 
+/*COMMON*/
 #common_toolbar_framework{
 	margin-inline-start: 0px !important;
     bottom: 60px !important;
@@ -706,10 +710,15 @@
 	text-align: center;
 	white-space: nowrap;
 }
+#common_profile_main_stat_row1{
+	height: 30px;
+}
+#common_profile_main_stat_row1 div{
+	height: 90px;
+}
 #common_profile_main_stat_row2 div{
 	display:inline-block;	
 }
-
 #common_window_info #about_table{
 	display:table;
 	padding:0px;

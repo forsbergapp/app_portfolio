@@ -196,21 +196,21 @@ const app_event_click = event => {
                     break;
                 }
                 case 'common_profile_main_btn_following':{
-                    common.profile_detail(1, true, null);
+                    common.profile_detail(1);
                     break;
                 }
                 case 'common_profile_main_btn_followed':{
-                    common.profile_detail(2, true, null);
+                    common.profile_detail(2);
                     break;
                 }
                 case 'common_profile_main_btn_likes':{
-                    common.profile_detail(3, true, null);
+                    common.profile_detail(3);
                     break;
                 }
                 case 'common_profile_main_btn_liked':
                 case 'common_profile_main_btn_liked_heart':
                 case 'common_profile_main_btn_liked_users':{
-                    common.profile_detail(4, true, null);
+                    common.profile_detail(4);
                     break;
                 }
                 default:{

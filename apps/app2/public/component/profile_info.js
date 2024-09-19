@@ -7,14 +7,12 @@ const template =`   <div id='profile_info_user_settings'>
                     </div>
                     <div id='profile_info_user_setting_likes'>
                         <div id='profile_main_btn_user_setting_likes'>
-                            <div id='profile_main_btn_user_setting_likes_heart' class='common_link common_like common_icon'></div>
                             <div id='profile_main_btn_user_setting_likes_user_setting' class='common_link common_icon'></div>
                         </div>
                         <div id='profile_info_user_setting_likes_count'></div>
                     </div>
                     <div id='profile_info_user_setting_liked'>
                         <div id='profile_main_btn_user_setting_liked'>
-                            <div id='profile_main_btn_user_setting_liked_heart' class='common_link common_like common_icon'></div>
                             <div id='profile_main_btn_user_setting_liked_user_setting' class='common_link common_icon'></div>
                         </div>
                         <div id='profile_info_user_setting_liked_count'></div>
