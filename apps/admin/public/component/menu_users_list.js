@@ -33,7 +33,7 @@
  *          function_get_order_by:function}} props
 */
 const template = props => ` ${props.spinner!=''?
-                                    `<div class='${props.spinner}'</div>`:
+                                    `<div class='${props.spinner}'></div>`:
                                     ''
                             }
                             ${props.spinner==''?
@@ -74,7 +74,8 @@ const template = props => ` ${props.spinner!=''?
                                             <div class='list_readonly'>${user.id}</div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit ${props.user_app_role_id==0?'common_input_lov':''}' data-defaultValue='${user.app_role_id ?? ''}'/>${user.app_role_id ?? ''}</div>
+                                            <div    contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit ${props.user_app_role_id==0?'common_input_lov':''}' 
+                                                    data-defaultValue='${user.app_role_id ?? ''}'>${user.app_role_id ?? ''}</div>
                                             ${props.user_app_role_id==0?
                                                 '<div class=\'common_lov_button common_list_lov_click common_icon\'></div>':
                                                 ''
@@ -84,34 +85,34 @@ const template = props => ` ${props.spinner!=''?
                                             <div class='list_readonly common_lov_value'>${user.app_role_icon}</div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'/>${user.active ?? ''}</div>
+                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.active ?? ''}</div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'/>${user.level ?? ''}</div>
+                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.level ?? ''}</div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'/>${user.private ?? ''}</div>
+                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.private ?? ''}</div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'/>${user.username ?? ''}</div>
+                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.username ?? ''}</div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'/>${user.bio ?? ''}</div>
+                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.bio ?? ''}</div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'/>${user.email ?? ''}</div>
+                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.email ?? ''}</div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'/>${user.email_unverified ?? ''}</div>
+                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.email_unverified ?? ''}</div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit common_input_password' placeholder='******'/></div>
+                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit common_input_password' placeholder='******'></div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'/>${user.password_reminder ?? ''}</div>
+                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.password_reminder ?? ''}</div>
                                         </div>
                                         <div class='list_user_account_col'>
-                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'/>${user.verification_code ?? ''}</div>
+                                            <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.verification_code ?? ''}</div>
                                         </div>
                                         <div class='list_user_account_col'>
                                             <div class='list_readonly'>${user.identity_provider ?? ''}</div>
