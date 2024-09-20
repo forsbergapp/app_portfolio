@@ -1350,6 +1350,7 @@ select {
 #common_dialogue_user_menu_app_theme{
 	width: unset !important;
 	margin: 10px;
+	white-space: nowrap;
 }
 #common_dialogue_user_menu_username{
 	cursor:pointer;
