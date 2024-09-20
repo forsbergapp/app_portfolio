@@ -2,15 +2,13 @@
  * @module apps/common/component/app_theme
  */
 
-const template =`   <select id='common_dialogue_user_menu_app_select_theme'>
-                        <option value='1'>Light</option>
-                        <option value='2'>Dark</option>
-                        <option value='3'>Caffè Latte</option>
-                    </select>`;
+const template ='';
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
+ *          function_theme_default_list:function,
+ *          function_ComponentRender:function,
  *          function_app_theme_update:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
@@ -22,6 +20,20 @@ const component = async props => {
         return template;
     };
     const post_component = async () =>{
+        const themes = props.function_theme_default_list();
+        await props.function_ComponentRender(props.common_mountdiv, 
+            {
+              default_data_value:themes[0].VALUE,
+              default_value:themes[0].TEXT,
+              options:themes,
+              path:null,
+              query:null,
+              method:null,
+              authorization_type:null,
+              column_value:'VALUE',
+              column_text:'TEXT',
+              function_FFB:null
+            }, '/common/component/select.js');
         //set app theme
         props.function_app_theme_update();
     };

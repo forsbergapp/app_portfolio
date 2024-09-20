@@ -952,7 +952,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
  */
 const user_login_app = async (system_admin=false, username_verify=null, password_verify=null) => {
     await common.user_login(system_admin, username_verify, password_verify)
-    .then((/**@type{{avatar:string}}*/result)=>{
+    .then(result=>{
         //create intitial user setting if not exist, send initial=true
         login_common(result.avatar);
     })
@@ -1025,7 +1025,7 @@ const login_common = (avatar) => {
  */
 const ProviderSignIn_app = async (provider_id) => {
     common.user_login(null, null, null, provider_id)
-    .then((/**@type{{avatar:string}}*/result)=>{
+    .then(result=>{
         login_common(result.avatar);
     })
     .catch(()=>null);
@@ -1062,7 +1062,7 @@ const profile_update_stat_app = async () => {
 const profile_show_app = async (user_account_id_other = null, username = null) => {
     //using unary plus syntax if user account id has a value
     await common.profile_show(user_account_id_other?+user_account_id_other:null, username)
-    .then((/**@type{{profile_id:number, private:number}}*/result)=>{
+    .then(result=>{
         if (result && result.profile_id != null){
             if (result.private==1 && (common.COMMON_GLOBAL.user_account_id == result.profile_id)==false) {
                 //private
@@ -2173,7 +2173,9 @@ const app_event_click = event => {
                             function_show_message:common.show_message},
                                                 '/common/component/dialogue_user_menu.js')
                         .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
-                                                            {function_app_theme_update:common.common_preferences_post_mount},
+                                                            {   function_theme_default_list:common.theme_default_list,
+                                                                function_ComponentRender:common.ComponentRender, 
+                                                                function_app_theme_update:common.common_preferences_post_mount},
                                                             '/common/component/app_theme.js'));
                         break;
                     }
@@ -2369,12 +2371,6 @@ const app_event_change = event => {
                     break;
                 }
                 //common
-                case 'common_dialogue_user_menu_app_select_theme':
-                case 'common_dialogue_user_menu_user_arabic_script_select':{
-                    CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
-                    common.common_preferences_update_body_class_from_preferences();
-                    break;
-                }
                 case 'common_dialogue_user_menu_user_locale_select':{
                     common.common_translate_ui(event.target.value);
                     break;
@@ -2537,7 +2533,7 @@ const map_update_app = async (parameters) => {
                             timezone_text :parameters.timezone_text,
                             marker_id:parameters.marker_id,
                             to_method:parameters.to_method
-                        }).then((/**@type{string}*/timezonetext)=> {
+                        }).then(timezonetext=> {
             resolve(timezonetext);
         });
     });

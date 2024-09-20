@@ -187,7 +187,9 @@ const app_event_click = event => {
                         function_show_message:common.show_message},
                                             '/common/component/dialogue_user_menu.js')
                     .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
-                                                        {function_app_theme_update:common.common_preferences_post_mount},
+                                                        {   function_theme_default_list:common.theme_default_list,
+                                                            function_ComponentRender:common.ComponentRender, 
+                                                            function_app_theme_update:common.common_preferences_post_mount},
                                                         '/common/component/app_theme.js'));
                     break;
                 }
@@ -237,12 +239,6 @@ const app_event_change = event =>{
             switch (event_target_id){
                 case 'common_dialogue_user_menu_user_locale_select':{
                     common.common_translate_ui(event.target.value);
-                    break;
-                }
-                case 'common_dialogue_user_menu_user_arabic_script_select':
-                case 'common_dialogue_user_menu_app_select_theme':{
-                    CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value;
-                    common.common_preferences_update_body_class_from_preferences();
                     break;
                 }
             }
