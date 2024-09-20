@@ -43,6 +43,12 @@ const app_event_click = event => {
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
+                case event.target.classList.contains('common_select_option')?event_target_id:'':
+                case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
+                    if (event_target_id == 'common_dialogue_user_menu_user_locale_select')
+                        get_apps();
+                    break;
+                }
                 case 'theme_background':{
                     show_hide_apps_dialogue();
                     break;
@@ -88,6 +94,7 @@ const app_event_click = event => {
                             current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
                             //functions
                             function_FFB:common.FFB,
+                            function_ComponentRender:common.ComponentRender,
                             function_user_session_countdown:common.user_session_countdown,
                             function_show_message:common.show_message},
                                                 '/common/component/dialogue_user_menu.js')
@@ -195,10 +202,6 @@ const app_event_change = event => {
         common.common_event('change',event)
         .then(()=>{
             switch (event_target_id){
-                case 'common_dialogue_user_menu_user_locale_select':{
-                    common.common_translate_ui(event.target.value).then(()=>get_apps());
-                    break;
-                }
                 case 'common_dialogue_user_menu_user_arabic_script_select':{
                     app_theme_update();
                     break;

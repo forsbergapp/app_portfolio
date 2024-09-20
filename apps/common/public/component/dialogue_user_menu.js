@@ -21,12 +21,7 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
                             `<div id='common_dialogue_user_menu_preferences'>
                                 <div id='common_dialogue_user_menu_preference_locale' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
                                 <div class='common_dialogue_user_menu_preference_col2'>
-                                    <select id='common_dialogue_user_menu_user_locale_select' >
-                                    ${props.locales.map((/**@type{*}*/row, index)=>
-                                        `<option id="${index}" value="${row.locale}">${row.text}</option>`
-                                        ).join('')
-                                    }
-                                    </select>
+                                    <div id='common_dialogue_user_menu_user_locale_select'></div>
                                 </div>
                                 <div id='common_dialogue_user_menu_preference_timezone' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
                                 <div class='common_dialogue_user_menu_preference_col2'>
@@ -90,6 +85,7 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
  *          current_direction:string,
  *          current_arabic_script:string,
  *          function_FFB:function,
+ *          function_ComponentRender:function,
  *          function_user_session_countdown:function,
  *          function_show_message:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
@@ -143,10 +139,30 @@ const component = async props => {
             username:props.username ?? props.system_admin ?? '',
             countdown:(props.token_exp && props.token_iat)?1:0
         });
+        //mount select
+        if (props.system_admin_only!=1){
+            await props.function_ComponentRender('common_dialogue_user_menu_user_locale_select', 
+                {
+                  default_data_value:props.current_locale,
+                  default_value:'',
+                  options: null,
+                  path:'/server-db/locale',
+                  query:`lang_code=${props.current_locale}`,
+                  method:'GET',
+                  authorization_type:'APP_DATA',
+                  column_value:'locale',
+                  column_text:'text',
+                  function_FFB:props.function_FFB
+                }, '/common/component/select.js');    
+        }
+
+
         if ((props.system_admin_only == 1)==false){
             //set current value on all the selects
-            const common_dialogue_user_menu_user_locale_select =           props.common_document.querySelector('#common_dialogue_user_menu_user_locale_select');
-            common_dialogue_user_menu_user_locale_select.value =           props.current_locale;
+            const text = Array.from(props.common_document.querySelectorAll('#common_dialogue_user_menu_user_locale_select .common_select_option'))
+                            .filter(option=>option.getAttribute('data-value')==props.current_locale)[0].innerText;
+            props.common_document.querySelector('#common_dialogue_user_menu_user_locale_select .common_select_dropdown_value').innerText = text;
+
             const common_dialogue_user_menu_user_timezone_select =         props.common_document.querySelector('#common_dialogue_user_menu_user_timezone_select');
             common_dialogue_user_menu_user_timezone_select.value =         props.current_timezone;
             const common_dialogue_user_menu_user_direction_select =        props.common_document.querySelector('#common_dialogue_user_menu_user_direction_select');
