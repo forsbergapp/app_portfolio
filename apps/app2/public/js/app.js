@@ -620,13 +620,6 @@ const toolbar_button = async (choice) => {
  * @param {number} tab_selected 
  */
 const openTab = async (tab_selected) => {
-    //remove Leaflet listeners if any one used
-    if (common.COMMON_GLOBAL.app_eventListeners.LEAFLET.length>0){
-        for (const listener of common.COMMON_GLOBAL.app_eventListeners.LEAFLET){
-            listener[0].removeEventListener(listener[1], listener[2]);
-        }
-    }
-    common.COMMON_GLOBAL.app_eventListeners.LEAFLET = [];
 
     //empty all tab content
     common.ComponentRemove('settings_tab1');
@@ -959,7 +952,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
  */
 const user_login_app = async (system_admin=false, username_verify=null, password_verify=null) => {
     await common.user_login(system_admin, username_verify, password_verify)
-    .then(result=>{
+    .then((/**@type{{avatar:string}}*/result)=>{
         //create intitial user setting if not exist, send initial=true
         login_common(result.avatar);
     })
@@ -1032,7 +1025,7 @@ const login_common = (avatar) => {
  */
 const ProviderSignIn_app = async (provider_id) => {
     common.user_login(null, null, null, provider_id)
-    .then(result=>{
+    .then((/**@type{{avatar:string}}*/result)=>{
         login_common(result.avatar);
     })
     .catch(()=>null);
@@ -1069,7 +1062,7 @@ const profile_update_stat_app = async () => {
 const profile_show_app = async (user_account_id_other = null, username = null) => {
     //using unary plus syntax if user account id has a value
     await common.profile_show(user_account_id_other?+user_account_id_other:null, username)
-    .then(result=>{
+    .then((/**@type{{profile_id:number, private:number}}*/result)=>{
         if (result && result.profile_id != null){
             if (result.private==1 && (common.COMMON_GLOBAL.user_account_id == result.profile_id)==false) {
                 //private
@@ -2544,7 +2537,7 @@ const map_update_app = async (parameters) => {
                             timezone_text :parameters.timezone_text,
                             marker_id:parameters.marker_id,
                             to_method:parameters.to_method
-                        }).then(timezonetext=> {
+                        }).then((/**@type{string}*/timezonetext)=> {
             resolve(timezonetext);
         });
     });

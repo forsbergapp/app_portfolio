@@ -160,7 +160,6 @@ const app_event_click = event =>{
  */
 const init_map = async ()=>{
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
-    CommonAppDocument.querySelector('#mapid').outerHTML = '<div id="mapid"></div>';
     common.map_init(APP_GLOBAL.module_leaflet_map_container,
                                 common.COMMON_GLOBAL.client_longitude,
                                 common.COMMON_GLOBAL.client_latitude,
