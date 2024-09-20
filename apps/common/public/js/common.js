@@ -726,12 +726,15 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
         return null;
 };
 /**
- * Component render
- * Components are mounted before post component function
- * Renders component and returns default function with:
- *      props       post function is implemented to manage spinner and other post activities after HTML is mounted
+ * Renders component
+ * Components use analogic Vue SFC structure
+ * Components are mounted before post component function using given framework
+ * Components return:
+ *      props       post function is implemented to manage spinner for analogic React suspense pattern and 
+ *                  other post activities after HTML is mounted
  *      data        optional data to be used for specific purposes such as variables or functions
- *      template    rendered HTML to mount on given div or empty if component is mounted inside third party component
+ *      template    rendered HTML to mount on given div or empty if component is mounted inside third party component, 
+ *                  all templates use analogic React iteration and React suspense patterns implemented using pure Javascript
  *      
  * @param {string|null} div 
  * @param {{}} props 
@@ -3518,7 +3521,8 @@ const set_app_parameters = (common_parameters) => {
 /**
  * Mount app using Vue or React framework
  * Component is mounted as pure HTML without events
- * App is mounted with framework events on app root
+ * App component is mounted with supported events on app root for Vue
+ * App component is mounted without events on app root for React
  * Template is already rendered HTML
  * Mounting the rendered template means parsing HTML according to Vue or React standards
  * that validate that the component renders valid HTML
@@ -3536,22 +3540,25 @@ const framework_mount = async (framework, template, methods,mount_div, component
             /**@type {import('../../../common_types.js').CommonModuleVue} */
             const Vue = await import(path_vue);
 
-            if (component){
-                //Use tempmount div to be able to return pure HTML without extra events
-                //since event delegation is used
-                CommonAppDocument.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
-            }
+            //Use tempmount div to be able to return pure HTML without extra events
+            //since event delegation is used
+            CommonAppDocument.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
+
             //mount the app or component
             Vue.createApp({
                 data(){return {};},
                 template: template,
                 methods:methods
-            }).mount(component?'#tempmount':`#${mount_div}`);
+            }).mount('#tempmount');
 
             if (component){
-                //replace tempmount div
+                //replace mount div innerHTML with tempmount div innerHTML without events
                 CommonAppDocument.querySelector(`#${mount_div}`).innerHTML = CommonAppDocument.querySelector('#tempmount').innerHTML;
-            }                
+            }
+            else{
+                //replace mount div with tempmount element with events
+                CommonAppDocument.querySelector(`#${mount_div}`).replaceWith(CommonAppDocument.querySelector('#tempmount >div'));
+            }
             break;
         }
         case 3:{
@@ -3563,48 +3570,21 @@ const framework_mount = async (framework, template, methods,mount_div, component
             /**@type {import('../../../common_types.js').CommonModuleReactDOM} */
             const ReactDOM = await import(path_reactDOM).then(module=>module.ReactDOM);
 
-            if (component){
-                //convert HTML template to React component
-                const div_template = CommonAppDocument.createElement('div');
-                div_template.innerHTML = template;
-                const result_component = React.createElement(div_template.nodeName.toLowerCase(), 
-                                                        { id: div_template.id, className: div_template.className}, 
-                                                        html2reactcomponent(React.createElement, div_template.children));
-
-                CommonAppDocument.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
-                //use inner tempmount div to remove React events
-                //since event delegation is used
-                const application = ReactDOM.createRoot(CommonAppDocument.querySelector(`#${mount_div} #tempmount`));
-                application.render( result_component);
-                await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 200);});
-                //React shows warning Invalid DOM property `class`. Did you mean `className`?
-                //because a div with empty class is created inside tempmount, ignore
-                //replace tempmount div
-                CommonAppDocument.querySelector(`#${mount_div}`).innerHTML = CommonAppDocument.querySelector(`#${mount_div} #tempmount >div`).innerHTML;
-            }
-            else{
-                const App = () => {
-                    //convert HTML template to React component
-                    const div_template = CommonAppDocument.createElement('div');
-                    div_template.id = COMMON_GLOBAL.app_root;
-                    div_template.innerHTML = `  ${CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_div}`).outerHTML}
-                                                ${CommonAppDocument.querySelector('#common_app').outerHTML}`;
-                    return React.createElement( div_template.nodeName.toLowerCase(), 
+            //convert HTML template to React component
+            const div_template = CommonAppDocument.createElement('div');
+            div_template.innerHTML = template;
+            const component = React.createElement(div_template.nodeName.toLowerCase(), 
                                                 { id: div_template.id, className: div_template.className}, 
                                                 html2reactcomponent(React.createElement, div_template.children));
-                };
-                //Save current app root
-                const app_old = template;
-                //Convert app root to React app
-                const application = ReactDOM.createRoot(CommonAppDocument.querySelector(`#${mount_div}`));
-                //Render React app
-                application.render( App());
-                //set delay so some browsers render ok.
-                await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 200);});
-                //React App creates another root of same app root
-                //Mount old app root
-                CommonAppDocument.querySelector(`#${mount_div}`).innerHTML = app_old;
-            }
+
+            CommonAppDocument.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
+            const application = ReactDOM.createRoot(CommonAppDocument.querySelector(`#${mount_div} #tempmount`));
+            application.render( component);
+            await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 200);});
+            //React is only used as a parser of HTML and all Reacts events are removed by removing tempmount div
+            //Mount template HTML
+            CommonAppDocument.querySelector(`#${mount_div}`).innerHTML = template;
+
             break;
         }
     }
@@ -3703,42 +3683,45 @@ const framework_set = async (framework, events) => {
     switch (framework ?? COMMON_GLOBAL.app_framework){
         case 2:{
             //Vue
+            const template = `  <div id='${COMMON_GLOBAL.app_root}'
+                                    @change ='CommonAppEventChange($event)'
+                                    @click  ='CommonAppEventClick($event)'
+                                    @input  ='CommonAppEventInput($event)' 
+                                    @keydown='CommonAppEventKeyDown($event)' 
+                                    @keyup  ='CommonAppEventKeyUp($event)'>
+                                    ${app_element.outerHTML}
+                                    ${common_app_element.outerHTML}
+                                </div>`;
+            const methods = {
+                                CommonAppEventChange: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+                                    events.Change?events.Change(event):null;
+                                },
+                                CommonAppEventClick: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+                                    events.Click?events.Click(event):null;
+                                },
+                                CommonAppEventInput: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+                                    events.Input?events.Input(event):null;
+                                },
+                                CommonAppEventKeyDown: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+                                    events.KeyDown?events.KeyDown(event):null;
+                                },
+                                CommonAppEventKeyUp: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+                                    events.KeyUp?events.KeyUp(event):null;
+                                }
+                            };
             //App events are used on Vue events using event delegation on app root
-            await framework_mount(  2, 
-                        `<div id='${COMMON_GLOBAL.app_root}_vue'
-                            @change ='CommonAppEventChange($event)'
-                            @click  ='CommonAppEventClick($event)'
-                            @input  ='CommonAppEventInput($event)' 
-                            @keydown='CommonAppEventKeyDown($event)' 
-                            @keyup  ='CommonAppEventKeyUp($event)'>
-                            ${app_element.outerHTML}
-                            ${common_app_element.outerHTML}
-                        </div>`, 
-                        {
-                            CommonAppEventChange: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-                                events.Change?events.Change(event):null;
-                            },
-                            CommonAppEventClick: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-                                events.Click?events.Click(event):null;
-                            },
-                            CommonAppEventInput: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-                                events.Input?events.Input(event):null;
-                            },
-                            CommonAppEventKeyDown: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-                                events.KeyDown?events.KeyDown(event):null;
-                            },
-                            CommonAppEventKeyUp: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-                                events.KeyUp?events.KeyUp(event):null;
-                            }
-                        }, COMMON_GLOBAL.app_root, false);
+            await framework_mount(2, template, methods, COMMON_GLOBAL.app_root, false);
             //Does not work in Vue
             events.Focus();
             break;
         }
         case 3:{
             //React
+            const template = `  ${app_element.outerHTML}
+                                ${common_app_element.outerHTML}`;
+            const methods = {};
             //App events are not supported and not used on app root and are managed in event delegation
-            await framework_mount(3, app_root_element.innerHTML, {}, COMMON_GLOBAL.app_root, false);
+            await framework_mount(3, template, methods, COMMON_GLOBAL.app_root, false);
             events.Click();
             events.Change();
             events.Focus();
