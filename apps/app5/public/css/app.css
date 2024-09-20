@@ -10,8 +10,7 @@ body {
 	text-align: center;
 	overflow: hidden;
 }
-#app_root,
-#app_root_vue{
+#app_root{
 	height:100%;
 }
 #app_top, #app_bottom{
