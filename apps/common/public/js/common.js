@@ -653,7 +653,18 @@ const theme_default_list = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}
  * @param { import('../../../common_types.js').CommonAppEvent['target']|
  *          import('../../../common_types.js').CommonAppEvent['target']['parentNode']|null} target
  */
-const preferences_event_action = async (event_target_id, target) =>{
+const select_event_action = async (event_target_id, target) =>{
+    if(event_target_id== 'common_module_leaflet_select_country'){
+        const country_code = CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')==''?
+                                null:
+                                JSON.parse(CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')).country_code;
+        if (country_code)
+            map_city(country_code);
+        else{
+            map_city_empty();
+        }
+    }
+
     if (event_target_id == 'common_dialogue_user_menu_app_theme'){
         CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
         common_preferences_update_body_class_from_preferences();
@@ -2232,6 +2243,8 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                             map_layer:COMMON_GLOBAL.module_leaflet_style,
                             map_layers:COMMON_GLOBAL.module_leaflet_map_styles,
                             module_leaflet_container:leaflet_data.leaflet_container,    //inner Leaflet div returned from Leaflet
+                            function_ComponentRender:ComponentRender,
+                            function_map_country:map_country,
                             function_FFB:FFB,
                             function_search_event:search_event_function,
                             function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
@@ -2242,33 +2255,17 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
 /**
  * Map country
  * @param {string} lang_code 
- * @returns {Promise.<string>}
+ * @returns {Promise.<{value:string, text:string}[]>}
  */
-const map_country = lang_code =>{
-    return new Promise ((resolve, reject)=>{
-        let current_group_name = '';
-        //country
-        FFB('/server-db/country', `lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
-        .then(result=>{resolve(
-            '<option value=\'\' id=\'\' label=\'…\'>…</option>'
-            +
-            JSON.parse(result).rows.map((/**@type{*}*/country, /**@type{number}*/index)=>{
-                const row = (current_group_name !== country.group_name?`<optgroup label=${country.group_name}/>`:'')
-                            +
-                            `<option value=${index}
-                                    id=${country.id} 
-                                    country_code=${country.country_code} 
-                                    flag_emoji=${country.flag_emoji} 
-                                    group_name=${country.group_name}>${country.flag_emoji} ${country.text}
-                            </option>`;
-                current_group_name = country.group_name;
-                return row;
-            }).join(''));
-        })
-        .catch(err=>reject(err));
-    });
-    
-};
+const map_country = async lang_code =>  [{value:'', text:'...'}].concat(await FFB('/server-db/country', `lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
+                                            .then((/**@type{string}*/result)=>JSON.parse(result).rows)
+                                            .then((/**@type{[{id:number, country_code:string, flag_emoji:string, group_name:string, text:string}]}*/result)=>
+                                                result.map(country=>{
+                                                            return {value:JSON.stringify({  id:country.id, 
+                                                                                            country_code:country.country_code, 
+                                                                                            flag_emoji:country.flag_emoji,
+                                                                                            group_name:country.group_name}), 
+                                                                    text:`${country.group_name} - ${country.flag_emoji} ${country.text}`};})));
 /**
  * Map city
  * @param {*} country_code 
@@ -2304,8 +2301,8 @@ const map_city_empty = () =>{
  * @returns {void}
  */
 const map_toolbar_reset = ()=>{
-    const select_country = CommonAppDocument.querySelector('#common_module_leaflet_select_country');
-    select_country.selectedIndex = 0;
+    CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
+    CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
     map_city_empty();
     CommonAppDocument.querySelector('#common_module_leaflet_search_input').innerHTML ='';
     CommonAppDocument.querySelector('#common_module_leaflet_search_list').innerHTML ='';
@@ -2344,7 +2341,19 @@ const map_control_toggle_expand = async item =>{
         CommonAppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display ==''){
             style_display = 'block';
             if (item == 'search')
-                CommonAppDocument.querySelector('#common_module_leaflet_select_country').innerHTML = await map_country(COMMON_GLOBAL.user_locale);
+                await ComponentRender('common_module_leaflet_select_country', 
+                    {
+                        default_data_value:'',
+                        default_value:'...',
+                        options: await map_country(COMMON_GLOBAL.user_locale),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text',
+                        function_FFB:null
+                    }, '/common/component/select.js');
         }
     else
         style_display = 'none';
@@ -2977,14 +2986,14 @@ const common_event = async (event_type,event=null) =>{
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
                             event.target.parentNode.parentNode.style.display = 'none';
-                            await preferences_event_action(event_target_id, event.target.parentNode);
+                            await select_event_action(event_target_id, event.target.parentNode);
                             break;
                         }
                         case event.target.classList.contains('common_select_option')?event_target_id:'':{
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
                             event.target.parentNode.style.display = 'none';
-                            await preferences_event_action(event_target_id, event.target);
+                            await select_event_action(event_target_id, event.target);
                             break;
                         }
                         // dialogue login/signup/forgot
@@ -3266,8 +3275,8 @@ const common_event = async (event_type,event=null) =>{
                                             marker_id:COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                             to_method:COMMON_GLOBAL.module_leaflet_jumpto
                                         });
-                                const select_country = CommonAppDocument.querySelector('#common_module_leaflet_select_country');
-                                select_country.selectedIndex = 0;
+                                CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
+                                CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
                                 const select_city = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
                                 select_city.selectedIndex = 0;
                                 map_toolbar_reset();
@@ -3348,14 +3357,6 @@ const common_event = async (event_type,event=null) =>{
             case 'change':{
                 switch (event.target.id){
                     //module leaflet events
-                    case 'common_module_leaflet_select_country':{
-                        if (event.target.options[event.target.selectedIndex].getAttribute('country_code'))
-                            map_city(event.target.options[event.target.selectedIndex].getAttribute('country_code'));
-                        else{
-                            map_toolbar_reset();
-                        }
-                        break;
-                    }
                     case 'common_module_leaflet_select_city':{
                         const longitude_selected = event.target.options[event.target.selectedIndex].getAttribute('longitude') ??'';
                         const latitude_selected = event.target.options[event.target.selectedIndex].getAttribute('latitude') ??'';
@@ -3963,7 +3964,7 @@ export{/* GLOBALS*/
        user_login, user_session_countdown, user_logoff, user_update, user_signup, user_verify_check_input, user_delete, user_function,
        updatePassword,
        /* MODULE LEAFLET  */
-       map_init, map_country, map_show_search_on_map, map_resize, map_line_removeall, map_line_create,
+       map_init, map_country, map_city, map_show_search_on_map, map_resize, map_line_removeall, map_line_create,
        map_setstyle, map_update,
        /* MODULE EASY.QRCODE */
        create_qr,
