@@ -619,11 +619,18 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
     }
 };
 /**
+ * Default app themes 
+ */
+const theme_default_list = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}, {VALUE:3, TEXT:'Caffè Latte'}];
+
+/**
  * Common theme get
  * @returns {void}
  */
- const common_theme_update_from_body = () => {
-    CommonAppDocument.querySelector('#common_dialogue_user_menu_app_select_theme').value = CommonAppDocument.body.className[9];
+ const common_theme_update_from_body = () => {    
+    CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').innerHTML = 
+        theme_default_list().filter(theme=>theme.VALUE.toString()==CommonAppDocument.body.className[9])[0].TEXT;
+    CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').setAttribute('data-value', CommonAppDocument.body.className[9]);
 };
 /**
  * Common theme update body class from preferences
@@ -2905,12 +2912,20 @@ const common_event = async (event_type,event=null) =>{
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
                             event.target.parentNode.parentNode.style.display = 'none';
+                            if (event_target_id == 'common_dialogue_user_menu_app_theme'){
+                                CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
+                                common_preferences_update_body_class_from_preferences();
+                            }
                             break;
                         }
                         case event.target.classList.contains('common_select_option')?event_target_id:'':{
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
                             event.target.parentNode.style.display = 'none';
+                            if (event_target_id == 'common_dialogue_user_menu_app_theme'){
+                                CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
+                                common_preferences_update_body_class_from_preferences();
+                            }
                             break;
                         }
                         // dialogue login/signup/forgot
@@ -3322,6 +3337,12 @@ const common_event = async (event_type,event=null) =>{
                     }
                     case 'common_dialogue_user_menu_user_arabic_script_select':{
                         COMMON_GLOBAL.user_arabic_script = event.target.value;
+                        //check if app theme div is using default theme with common select div
+                        if (CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme').className?
+                            CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme').className.toLowerCase().indexOf('common_select')>-1:false){
+                            CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').getAttribute('data-value');
+                            common_preferences_update_body_class_from_preferences();
+                        }
                         await user_preference_save();
                         break;
                     }
@@ -3926,7 +3947,7 @@ export{/* GLOBALS*/
        mobile,
        convert_image,
        show_image, getHostname, input_control, getUserAgentPlatform, SearchAndSetSelectedIndex,
-       common_theme_update_from_body,common_preferences_post_mount,
+       theme_default_list, common_theme_update_from_body,common_preferences_post_mount,
        common_preferences_update_body_class_from_preferences,
        /* COMPONENTS */
        ComponentRender,ComponentRemove,
