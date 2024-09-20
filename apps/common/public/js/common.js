@@ -2034,13 +2034,13 @@ const updatePassword = () => {
  */
 const user_preference_save = async () => {
     if (COMMON_GLOBAL.user_account_id != null){
-        const select_locale =           CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select');
         const select_timezone =         CommonAppDocument.querySelector('#common_dialogue_user_menu_user_timezone_select');
         const select_direction =        CommonAppDocument.querySelector('#common_dialogue_user_menu_user_direction_select');
         const select_arabic_script =    CommonAppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select');
         const json_data =
             {  
-                preference_locale: select_locale.value,
+                preference_locale:                      CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select .common_select_dropdown_value')
+                                                            .getAttribute('data-value'),
                 app_setting_preference_timezone_id:     select_timezone.options[select_timezone.selectedIndex].id,
                 app_setting_preference_direction_id:    select_direction.selectedIndex==-1?null:select_direction.options[select_direction.selectedIndex].id,
                 app_setting_preference_arabic_script_id:select_arabic_script.selectedIndex==-1?null:select_arabic_script.options[select_arabic_script.selectedIndex].id
@@ -2916,6 +2916,15 @@ const common_event = async (event_type,event=null) =>{
                                 CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
                                 common_preferences_update_body_class_from_preferences();
                             }
+                            if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
+                                COMMON_GLOBAL.user_locale = event.target.parentNode.getAttribute('data-value');
+                                //change CommonAppWindow.navigator.language, however when logging out default CommonAppWindow.navigator.language will be set
+                                //commented at the moment
+                                //Object.defineProperties(CommonAppWindow.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+                                await user_preference_save();
+                                await common_translate_ui(COMMON_GLOBAL.user_locale);
+                            }
+
                             break;
                         }
                         case event.target.classList.contains('common_select_option')?event_target_id:'':{
@@ -2925,6 +2934,14 @@ const common_event = async (event_type,event=null) =>{
                             if (event_target_id == 'common_dialogue_user_menu_app_theme'){
                                 CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
                                 common_preferences_update_body_class_from_preferences();
+                            }
+                            if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
+                                COMMON_GLOBAL.user_locale = event.target.getAttribute('data-value');
+                                //change CommonAppWindow.navigator.language, however when logging out default CommonAppWindow.navigator.language will be set
+                                //commented at the moment
+                                //Object.defineProperties(CommonAppWindow.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+                                await user_preference_save();
+                                await common_translate_ui(COMMON_GLOBAL.user_locale);
                             }
                             break;
                         }
@@ -3289,16 +3306,6 @@ const common_event = async (event_type,event=null) =>{
             case 'change':{
                 switch (event.target.id){
                     //define globals and save settings here, in apps define what should happen when changing
-                    case 'common_dialogue_user_menu_user_locale_select':{
-                        COMMON_GLOBAL.user_locale = event.target.value;
-                        //change CommonAppWindow.navigator.language, however when logging out default CommonAppWindow.navigator.language will be set
-                        //commented at the moment
-                        //Object.defineProperties(CommonAppWindow.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
-                        await user_preference_save();
-                        CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').innerHTML = await get_locales_options();
-                        CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select').value = COMMON_GLOBAL.user_locale;
-                        break;
-                    }
                     case 'common_dialogue_user_menu_user_timezone_select':{
                         COMMON_GLOBAL.user_timezone = event.target.value;
                         await user_preference_save().then(()=>{

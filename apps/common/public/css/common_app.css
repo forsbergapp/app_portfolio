@@ -206,7 +206,6 @@ select {
 	cursor: pointer;
 	text-align: start;
 	display: inline-block;
-	white-space: nowrap;
 	width: calc(100% - 25px);
 }
 .common_select_dropdown_icon::after{
@@ -236,6 +235,7 @@ select {
 }
 .common_select_option{
 	display: block;
+	width: 100%;
 }
 .common_select_option:hover,
 .common_select_option:active{
@@ -1337,10 +1337,18 @@ select {
 }
 
 /* Dialogue user menu */
+#common_dialogue_user_menu .common_select .common_select_options{
+	display: none;
+	max-height: 200px;
+}
+#common_dialogue_user_menu .common_select{
+	width: 100%;
+}
 #common_dialogue_user_menu.common_dialogue_show1{
 	text-align: center;
 }
 #common_dialogue_user_menu_app_theme{
+	width: unset !important;
 	margin: 10px;
 }
 #common_dialogue_user_menu_username{
