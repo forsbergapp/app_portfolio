@@ -2372,10 +2372,6 @@ const app_event_change = event => {
                     break;
                 }
                 //common
-                case 'common_dialogue_user_menu_user_timezone_select':{
-                    CommonAppDocument.querySelector('#setting_timezone_current').innerHTML = event.target.value;
-                    break;
-                }
                 //module leaflet
                 case 'common_module_leaflet_select_country':{
                     component_setting_update('GPS', 'CITIES'); 

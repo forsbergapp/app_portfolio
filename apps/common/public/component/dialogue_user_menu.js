@@ -4,9 +4,7 @@
 
 /**
  * 
- * @param {{locales:{locale:string, text:string}[],
- *          settings:{id:number, app_setting_type_name:string, value:string, display_data:string}[],
- *          username:string,
+ * @param {{username:string,
  *          countdown:0|1}} props 
  * @returns 
  */
@@ -17,46 +15,24 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
                                 </div>`:''
                             }
                             <div id='common_dialogue_user_menu_app_theme'></div>
-                            ${props.locales.length>0?
-                            `<div id='common_dialogue_user_menu_preferences'>
+                            <div id='common_dialogue_user_menu_preferences'>
                                 <div id='common_dialogue_user_menu_preference_locale' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
                                 <div class='common_dialogue_user_menu_preference_col2'>
                                     <div id='common_dialogue_user_menu_user_locale_select'></div>
                                 </div>
                                 <div id='common_dialogue_user_menu_preference_timezone' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
                                 <div class='common_dialogue_user_menu_preference_col2'>
-                                    <select id='common_dialogue_user_menu_user_timezone_select' >
-                                        ${props.settings.map((/**@type{*}*/row)=>
-                                            row.app_setting_type_name=='TIMEZONE'?
-                                            `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`:''
-                                            ).join('')
-                                        }
-                                    </select>
+                                    <div id='common_dialogue_user_menu_user_timezone_select'></div>
                                 </div>
                                 <div id='common_dialogue_user_menu_preference_direction' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
                                 <div class='common_dialogue_user_menu_preference_col2'>
-                                    <select id='common_dialogue_user_menu_user_direction_select' >
-                                        <option id='' value=''></option>
-                                        ${props.settings.map((/**@type{*}*/row)=>
-                                            row.app_setting_type_name=='DIRECTION'?
-                                                `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`:''
-                                            ).join('')
-                                        }
-                                    </select>
+                                    <div id='common_dialogue_user_menu_user_direction_select'></div>
                                 </div>
                                 <div id='common_dialogue_user_menu_preference_arabic_script' class='common_dialogue_user_menu_preference_col1 common_icon'></div>
                                 <div class='common_dialogue_user_menu_preference_col2'>
-                                    <select id='common_dialogue_user_menu_user_arabic_script_select' >
-                                        <option id='' value=''></option>
-                                        ${props.settings.map((/**@type{*}*/row)=>
-                                            row.app_setting_type_name=='ARABIC_SCRIPT'?
-                                            `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`:''
-                                            ).join('')
-                                        }
-                                    </select>
+                                    <div id='common_dialogue_user_menu_user_arabic_script_select'></div>
                                 </div>
-                            </div>`:''
-                            }
+                            </div>
                             <div id='common_dialogue_user_menu_logged_in'>
                                 <div id='common_dialogue_user_menu_edit' class='common_icon'></div>
                                 <div id='common_dialogue_user_menu_log_out' class='common_icon'></div>
@@ -128,19 +104,18 @@ const component = async props => {
                 props.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'inline-block';
             }
     };
-    const post_component = async () =>{                                                                                             
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({
-            locales:props.system_admin_only == 1?[]:await props.function_FFB('/server-db/locale', `lang_code=${props.current_locale}`, 'GET', 'APP_DATA', null)
-                        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                        .catch((/**@type{Error}*/error)=>{throw error;}),
-            settings: props.system_admin_only == 1?[]:await props.function_FFB('/server-db/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
-                        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                        .catch((/**@type{Error}*/error)=>{throw error;}),
-            username:props.username ?? props.system_admin ?? '',
-            countdown:(props.token_exp && props.token_iat)?1:0
-        });
+    const post_component = async () =>{                                                               
+        //Fetch settings with direction, timezone and arabic script
+        /**@type{{id:number, app_setting_type_name:string, value:string, display_data:string}[]} */
+        const settings = props.system_admin_only == 1?[]:await props.function_FFB('/server-db/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
+                                                                .then((/**@type{string}*/result)=>JSON.parse(result).rows)
+                                                                .catch((/**@type{Error}*/error)=>{throw error;});
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  username:props.username ?? props.system_admin ?? '',
+                                                                                                        countdown:(props.token_exp && props.token_iat)?1:0
+                                                                                                    });
         //mount select
         if (props.system_admin_only!=1){
+            //Locale
             await props.function_ComponentRender('common_dialogue_user_menu_user_locale_select', 
                 {
                   default_data_value:props.current_locale,
@@ -153,22 +128,67 @@ const component = async props => {
                   column_value:'locale',
                   column_text:'text',
                   function_FFB:props.function_FFB
+                }, '/common/component/select.js');
+            //Timezone
+            await props.function_ComponentRender('common_dialogue_user_menu_user_timezone_select', 
+                {
+                    default_data_value:props.current_timezone,
+                    default_value:'',
+                    options: settings.filter(setting=>setting.app_setting_type_name=='TIMEZONE'),
+                    path:null,
+                    query:null,
+                    method:null,
+                    authorization_type:null,
+                    column_value:'value',
+                    column_text:'display_data',
+                    function_FFB:props.function_FFB
+                }, '/common/component/select.js');    
+            //Direction with default ' '
+            await props.function_ComponentRender('common_dialogue_user_menu_user_direction_select', 
+                {
+                    default_data_value:props.current_direction,
+                    default_value:' ',
+                    options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.app_setting_type_name=='DIRECTION')),
+                    path:null,
+                    query:null,
+                    method:null,
+                    authorization_type:null,
+                    column_value:'value',
+                    column_text:'display_data',
+                    function_FFB:props.function_FFB
+                }, '/common/component/select.js');    
+            //Arabic script with default ' '
+            await props.function_ComponentRender('common_dialogue_user_menu_user_arabic_script_select', 
+                {
+                    default_data_value:props.current_arabic_script,
+                    default_value:' ',
+                    options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.app_setting_type_name=='ARABIC_SCRIPT')),
+                    path:null,
+                    query:null,
+                    method:null,
+                    authorization_type:null,
+                    column_value:'value',
+                    column_text:'display_data',
+                    function_FFB:props.function_FFB
                 }, '/common/component/select.js');    
         }
-
+        /**
+         * Sets current value for select div
+         * @param {string} div
+         * @param {string} value
+         */
+        const set_current_value= (div, value) =>{
+            const text = Array.from(props.common_document.querySelectorAll(`#${div} .common_select_option`))
+                .filter(option=>option.getAttribute('data-value')==value)[0].innerText;
+            props.common_document.querySelector(`#${div} .common_select_dropdown_value`).innerText = text;
+            };
 
         if ((props.system_admin_only == 1)==false){
             //set current value on all the selects
-            const text = Array.from(props.common_document.querySelectorAll('#common_dialogue_user_menu_user_locale_select .common_select_option'))
-                            .filter(option=>option.getAttribute('data-value')==props.current_locale)[0].innerText;
-            props.common_document.querySelector('#common_dialogue_user_menu_user_locale_select .common_select_dropdown_value').innerText = text;
-
-            const common_dialogue_user_menu_user_timezone_select =         props.common_document.querySelector('#common_dialogue_user_menu_user_timezone_select');
-            common_dialogue_user_menu_user_timezone_select.value =         props.current_timezone;
-            const common_dialogue_user_menu_user_direction_select =        props.common_document.querySelector('#common_dialogue_user_menu_user_direction_select');
-            common_dialogue_user_menu_user_direction_select.value =        props.current_direction;
-            const common_dialogue_user_menu_user_arabic_script_select =    props.common_document.querySelector('#common_dialogue_user_menu_user_arabic_script_select');
-            common_dialogue_user_menu_user_arabic_script_select.value =    props.current_arabic_script;
+            set_current_value('common_dialogue_user_menu_user_locale_select', props.current_locale);
+            set_current_value('common_dialogue_user_menu_user_timezone_select', props.current_timezone);
+            set_current_value('common_dialogue_user_menu_user_direction_select', props.current_direction);
+            set_current_value('common_dialogue_user_menu_user_arabic_script_select', props.current_arabic_script);
         }
         await adjust_logged_out_logged_in();
         if (props.token_exp && props.token_iat){
@@ -178,9 +198,7 @@ const component = async props => {
     };
     /**
      * 
-     * @param {{locales:{locale:string, text:string}[],
-     *          settings:{id:number, app_setting_type_name:string, value:string, display_data:string}[],
-     *          username:string,
+     * @param {{username:string,
      *          countdown:0|1}} props 
      * @returns 
      */
@@ -190,7 +208,7 @@ const component = async props => {
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({locales:[], settings:[], username:props.username ?? props.system_admin ?? '', countdown:0})
+        template: render_template({username:props.username ?? props.system_admin ?? '', countdown:0})
     };
 };
 export default component;

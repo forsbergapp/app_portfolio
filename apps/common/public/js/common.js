@@ -649,6 +649,69 @@ const theme_default_list = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}
 };
 
 /**
+ * @param {string} event_target_id
+ * @param { import('../../../common_types.js').CommonAppEvent['target']|
+ *          import('../../../common_types.js').CommonAppEvent['target']['parentNode']|null} target
+ */
+const preferences_event_action = async (event_target_id, target) =>{
+    if (event_target_id == 'common_dialogue_user_menu_app_theme'){
+        CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
+        common_preferences_update_body_class_from_preferences();
+    }
+    if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
+        COMMON_GLOBAL.user_locale = target?.getAttribute('data-value') ?? '';
+        //change CommonAppWindow.navigator.language, however when logging out default CommonAppWindow.navigator.language will be set
+        //commented at the moment
+        //Object.defineProperties(CommonAppWindow.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+        await user_preference_save();
+        await common_translate_ui(COMMON_GLOBAL.user_locale);
+    }
+    if (event_target_id == 'common_dialogue_user_menu_user_timezone_select'){
+        COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
+        await user_preference_save().then(()=>{
+            if (CommonAppDocument.querySelector('#common_dialogue_user_edit').innerHTML !='') {
+                ComponentRender('common_dialogue_user_edit', 
+                    {   user_account_id:COMMON_GLOBAL.user_account_id,
+                        common_app_id:COMMON_GLOBAL.common_app_id,
+                        translation_username:COMMON_GLOBAL.translate_items.USERNAME,
+                        translation_bio:COMMON_GLOBAL.translate_items.BIO,
+                        translation_new_email:COMMON_GLOBAL.translate_items.NEW_EMAIL,
+                        translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
+                        translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM,
+                        translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
+                        translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM,
+                        translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
+                        function_FFB:FFB,
+                        function_show_message:show_message,
+                        function_format_json_date:format_json_date,
+                        },
+                    '/common/component/dialogue_user_edit.js')
+                .then(()=>{
+                    ComponentRemove('common_dialogue_user_menu');
+                });
+            }
+        });
+    }
+    if(event_target_id =='common_dialogue_user_menu_user_direction_select'){
+        if(target?.getAttribute('data-value')=='rtl')
+            CommonAppDocument.body.classList.add('rtl');
+        else
+            CommonAppDocument.body.classList.remove('rtl');
+        COMMON_GLOBAL.user_direction = target?.getAttribute('data-value') ?? '';
+        await user_preference_save();
+    }
+    if(event_target_id == 'common_dialogue_user_menu_user_arabic_script_select'){
+        COMMON_GLOBAL.user_arabic_script = target?.getAttribute('data-value') ?? '';
+        //check if app theme div is using default theme with common select div
+        if (CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme').className?
+            CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme').className.toLowerCase().indexOf('common_select')>-1:false){
+            CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').getAttribute('data-value');
+            common_preferences_update_body_class_from_preferences();
+        }
+        await user_preference_save();
+    }
+};
+/**
  * Common preference post mount
  * @returns {void}
  */
@@ -2034,16 +2097,16 @@ const updatePassword = () => {
  */
 const user_preference_save = async () => {
     if (COMMON_GLOBAL.user_account_id != null){
-        const select_timezone =         CommonAppDocument.querySelector('#common_dialogue_user_menu_user_timezone_select');
-        const select_direction =        CommonAppDocument.querySelector('#common_dialogue_user_menu_user_direction_select');
-        const select_arabic_script =    CommonAppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select');
         const json_data =
             {  
                 preference_locale:                      CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select .common_select_dropdown_value')
                                                             .getAttribute('data-value'),
-                app_setting_preference_timezone_id:     select_timezone.options[select_timezone.selectedIndex].id,
-                app_setting_preference_direction_id:    select_direction.selectedIndex==-1?null:select_direction.options[select_direction.selectedIndex].id,
-                app_setting_preference_arabic_script_id:select_arabic_script.selectedIndex==-1?null:select_arabic_script.options[select_arabic_script.selectedIndex].id
+                app_setting_preference_timezone_id:     CommonAppDocument.querySelector('#common_dialogue_user_menu_user_timezone_select .common_select_dropdown_value')
+                                                            .getAttribute('data-value'),
+                app_setting_preference_direction_id:    CommonAppDocument.querySelector('#common_dialogue_user_menu_user_direction_select .common_select_dropdown_value')
+                                                            .getAttribute('data-value'),
+                app_setting_preference_arabic_script_id:CommonAppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select .common_select_dropdown_value')
+                                                            .getAttribute('data-value'),
             };
         await FFB(`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, null, 'PATCH', 'APP_ACCESS', json_data);
     }
@@ -2886,9 +2949,11 @@ const common_event = async (event_type,event=null) =>{
     else{
         switch (event_type){
             case 'click':{
-                //close all open div selects if not clicking inside a div select 
-                if (typeof event.target.className=='string' && event.target.className.indexOf('common_select')<0){
-                    CommonAppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`).forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
+                //close all open div selects except current target
+                if (typeof event.target.className=='string' && event.target.className.indexOf('common_select')>-1){
+                    Array.from(CommonAppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`))
+                        .filter((/**@type{HTMLElement}*/element)=>element_id(element) != element_id(event.target))
+                        .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
                 }
 
                 if (event.target.classList.contains('common_switch')){
@@ -2912,37 +2977,14 @@ const common_event = async (event_type,event=null) =>{
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
                             event.target.parentNode.parentNode.style.display = 'none';
-                            if (event_target_id == 'common_dialogue_user_menu_app_theme'){
-                                CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
-                                common_preferences_update_body_class_from_preferences();
-                            }
-                            if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
-                                COMMON_GLOBAL.user_locale = event.target.parentNode.getAttribute('data-value');
-                                //change CommonAppWindow.navigator.language, however when logging out default CommonAppWindow.navigator.language will be set
-                                //commented at the moment
-                                //Object.defineProperties(CommonAppWindow.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
-                                await user_preference_save();
-                                await common_translate_ui(COMMON_GLOBAL.user_locale);
-                            }
-
+                            await preferences_event_action(event_target_id, event.target.parentNode);
                             break;
                         }
                         case event.target.classList.contains('common_select_option')?event_target_id:'':{
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
                             CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
                             event.target.parentNode.style.display = 'none';
-                            if (event_target_id == 'common_dialogue_user_menu_app_theme'){
-                                CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
-                                common_preferences_update_body_class_from_preferences();
-                            }
-                            if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
-                                COMMON_GLOBAL.user_locale = event.target.getAttribute('data-value');
-                                //change CommonAppWindow.navigator.language, however when logging out default CommonAppWindow.navigator.language will be set
-                                //commented at the moment
-                                //Object.defineProperties(CommonAppWindow.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
-                                await user_preference_save();
-                                await common_translate_ui(COMMON_GLOBAL.user_locale);
-                            }
+                            await preferences_event_action(event_target_id, event.target);
                             break;
                         }
                         // dialogue login/signup/forgot
@@ -3305,54 +3347,6 @@ const common_event = async (event_type,event=null) =>{
             }
             case 'change':{
                 switch (event.target.id){
-                    //define globals and save settings here, in apps define what should happen when changing
-                    case 'common_dialogue_user_menu_user_timezone_select':{
-                        COMMON_GLOBAL.user_timezone = event.target.value;
-                        await user_preference_save().then(()=>{
-                            if (CommonAppDocument.querySelector('#common_dialogue_user_edit').innerHTML !='') {
-                                ComponentRender('common_dialogue_user_edit', 
-                                    {   user_account_id:COMMON_GLOBAL.user_account_id,
-                                        common_app_id:COMMON_GLOBAL.common_app_id,
-                                        translation_username:COMMON_GLOBAL.translate_items.USERNAME,
-                                        translation_bio:COMMON_GLOBAL.translate_items.BIO,
-                                        translation_new_email:COMMON_GLOBAL.translate_items.NEW_EMAIL,
-                                        translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
-                                        translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM,
-                                        translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
-                                        translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM,
-                                        translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
-                                        function_FFB:FFB,
-                                        function_show_message:show_message,
-                                        function_format_json_date:format_json_date,
-                                        },
-                                    '/common/component/dialogue_user_edit.js')
-                                .then(()=>{
-                                    ComponentRemove('common_dialogue_user_menu');
-                                });
-                            }
-                        });
-                        break;
-                    }
-                    case 'common_dialogue_user_menu_user_direction_select':{
-                        if(event.target.value=='rtl')
-                            CommonAppDocument.body.classList.add('rtl');
-                        else
-                            CommonAppDocument.body.classList.remove('rtl');
-                        COMMON_GLOBAL.user_direction = event.target.value;  
-                        await user_preference_save();
-                        break;
-                    }
-                    case 'common_dialogue_user_menu_user_arabic_script_select':{
-                        COMMON_GLOBAL.user_arabic_script = event.target.value;
-                        //check if app theme div is using default theme with common select div
-                        if (CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme').className?
-                            CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme').className.toLowerCase().indexOf('common_select')>-1:false){
-                            CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').getAttribute('data-value');
-                            common_preferences_update_body_class_from_preferences();
-                        }
-                        await user_preference_save();
-                        break;
-                    }
                     //module leaflet events
                     case 'common_module_leaflet_select_country':{
                         if (event.target.options[event.target.selectedIndex].getAttribute('country_code'))

@@ -309,7 +309,9 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 #menu_1_content_widget1 .common_select_options{
 	max-height: 550px;
 }
-
+#select_system_admin_stat{
+	white-space: nowrap;
+}
 #menu_1_content_widget2{
 	height:calc(20% - 10px);
 	vertical-align: middle;
