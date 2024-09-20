@@ -1431,6 +1431,11 @@ select {
 }
 #common_window_info_info_img{
 	max-width: 100%;
+	width: 100%;
+	height: 100%;
+	background-size: contain;
+  	background-position: center;
+  	background-repeat: no-repeat;
 }
 #common_window_info_content{
 	margin-bottom:20px;
