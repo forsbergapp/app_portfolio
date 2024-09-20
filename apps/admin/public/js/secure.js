@@ -86,7 +86,7 @@ const show_menu = menu => {
                                                     function_map_mount:map_mount,
                                                     function_ComponentRender:common.ComponentRender,
                                                     function_FFB:common.FFB}, '/component/menu_monitor.js')
-            .then(result=>{
+            .then((/**@type{{limit:number}}*/result)=>{
                 APP_GLOBAL.limit = result.limit;
                 nav_click('list_monitor_nav_connected');
             });
@@ -611,7 +611,7 @@ const show_list = async (list_detail, query, sort, order_by) => {
                                             function_show_app_log:show_app_log,
                                             function_roundOff:roundOff,
                                             function_FFB:common.FFB}, '/component/menu_monitor_detail.js')
-    .then(result=>{
+    .then((/**@type{*}*/result)=>{
         APP_GLOBAL.page_navigation = result.function_page_navigation;
         APP_GLOBAL.monitor_detail_server_log = result.function_monitor_detail_server_log;
     });

@@ -2096,6 +2096,19 @@ const create_qr = async (div, url) => {
  * @returns {Promise.<void>}
  */
 const map_init = async (mount_div, longitude, latitude, doubleclick_event, search_event_function) => {
+    CommonAppDocument.querySelector(`#${mount_div}`).outerHTML = `<div id='${mount_div}'></div>`;
+    //remove Leaflet listeners if any one used
+    if (COMMON_GLOBAL.app_eventListeners.LEAFLET.length>0){
+        for (const listener of COMMON_GLOBAL.app_eventListeners.LEAFLET){
+            if(listener[0]=='DOCUMENT' || listener[0]=='WINDOW'){
+                //document and window events are both created on document
+                CommonAppDocument.removeEventListener(listener[2], listener[3]);
+            }
+            else
+                listener[1].removeEventListener(listener[2], listener[3]);
+        }
+    }
+    COMMON_GLOBAL.app_eventListeners.LEAFLET = [];
     COMMON_GLOBAL.module_leaflet_session_map = null;
     
     /** @type {import('../../../common_types.js').CommonModuleLeafletMapLayer[]}*/
@@ -3608,12 +3621,8 @@ const framework_clean = () =>{
             delete CommonAppDocument[key];
         }
     }
-    if (COMMON_GLOBAL.app_eventListeners.REACT.length>0){
-        for (const listener of COMMON_GLOBAL.app_eventListeners.REACT){
-            listener[0].removeEventListener(listener[1], listener[2]);
-        }
-        COMMON_GLOBAL.app_eventListeners.REACT = [];
-    }
+    //React events are not created, just reset variable when switching framework
+    COMMON_GLOBAL.app_eventListeners.REACT = [];
     //remove Vue objects
     COMMON_GLOBAL.app_eventListeners.VUE = [];
     delete CommonAppWindow.__VUE_DEVTOOLS_HOOK_REPLAY__;
@@ -3801,25 +3810,64 @@ const custom_framework = () => {
         }
     };
     /**
-     * Custom function used to replace default addEventListener function
+     * Custom function used to replace default addEventListener function for Window
      * to keep track of framework events so they can be removed when necessary
+     * Window events are created on app_root
+     * Using funtion declaration here to support arguments
      * @param  {...any} eventParameters 
-     * @returns {void}
      */
-    function custom_event (...eventParameters) {   
-        COMMON_GLOBAL.app_eventListeners[module(Error().stack)]
+    function  customEventWindow (...eventParameters){
+        const eventmodule = module(Error().stack);
+        COMMON_GLOBAL.app_eventListeners[eventmodule]
             /**@ts-ignore */
-            .push([this, eventParameters[0], eventParameters[1], eventParameters[2]]);
-        COMMON_GLOBAL.app_eventListeners.original.apply(
+            .push(['WINDOW', this, eventParameters[0], eventParameters[1], eventParameters[2]]);
+        //do not create any event for React and create event on app root
+        if (eventmodule!='REACT')
+            COMMON_GLOBAL.app_eventListeners.original.apply(
+                CommonAppDocument, 
+                arguments);
+    }
+    /**
+     * Custom function used to replace default addEventListener function for Document
+     * to keep track of framework events so they can be removed when necessary
+     * Document events are created on app_root
+     * Using funtion declaration here to support arguments
+     * @param  {...any} eventParameters 
+     */
+    function customEventDocument (...eventParameters) {
+        const eventmodule = module(Error().stack);
+        COMMON_GLOBAL.app_eventListeners[eventmodule]
+            /**@ts-ignore */
+            .push(['DOCUMENT',this, eventParameters[0], eventParameters[1], eventParameters[2]]);
+        //do not create any event for React and create event on app root
+        if (eventmodule!='REACT')
+            COMMON_GLOBAL.app_eventListeners.original.apply(
+                CommonAppDocument, 
+                arguments);
+    }
+    /**
+     * Custom function used to replace default addEventListener function for HTMLElement
+     * to keep track of framework events so they can be removed when necessary
+     * Using funtion declaration here to support arguments
+     * @param  {...any} eventParameters 
+     */
+    function customEventHTMLElement (...eventParameters) {
+        const eventmodule = module(Error().stack);
+        COMMON_GLOBAL.app_eventListeners[eventmodule]
+            /**@ts-ignore */
+            .push(['HTMLELEMENT', this, eventParameters[0], eventParameters[1], eventParameters[2]]);
+        //do not create any event for React
+        if (eventmodule!='REACT')
+            COMMON_GLOBAL.app_eventListeners.original.apply(
                 /**@ts-ignore */
                 this, 
                 arguments);
     }
 
-    //set custom event on both window, document and HTMLElement level
-    CommonAppWindow.addEventListener = custom_event;
-    CommonAppDocument.addEventListener = custom_event;
-    HTMLElement.prototype.addEventListener = custom_event;
+    //set custom functions on both window, document and HTMLElement level
+    CommonAppWindow.addEventListener = customEventWindow;
+    CommonAppDocument.addEventListener = customEventDocument;
+    HTMLElement.prototype.addEventListener = customEventHTMLElement;
 
     /**
      * console warn
