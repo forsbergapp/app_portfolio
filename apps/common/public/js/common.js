@@ -1074,7 +1074,7 @@ const lov_filter = text_filter => {
 const zoom_info = (zoomvalue = null) => {
     let old;
     let old_scale;
-    const div = CommonAppDocument.querySelector('#common_window_info_info');
+    const div = CommonAppDocument.querySelector('#common_window_info_info_img');
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
     if (zoomvalue == null) {
@@ -1093,7 +1093,7 @@ const zoom_info = (zoomvalue = null) => {
  */
 const move_info = (move1=null, move2=null) => {
     let old;
-    const div = CommonAppDocument.querySelector('#common_window_info_info');
+    const div = CommonAppDocument.querySelector('#common_window_info_info_img');
     if (move1==null || move2==null) {
         div.style.transformOrigin = '50% 50%';
     } else {

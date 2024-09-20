@@ -5,18 +5,26 @@
 /**@type{import('../../../common_types.js').CommonAppWindow} */
 const CommonAppWindow = window;
 
-const template =`   <div id='common_window_info_btn_close' class='common_toolbar_button common_icon'></div>
-                    <div id='common_window_info_info'><INFO/></div>
-                    <div id='common_window_info_toolbar'>
-                        <div id='common_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
-                        <div id='common_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
-                        <div id='common_window_info_toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
-                        <div id='common_window_info_toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
-                        <div id='common_window_info_toolbar_btn_up' class='common_toolbar_button common_icon' ></div>
-                        <div id='common_window_info_toolbar_btn_down' class='common_toolbar_button common_icon' ></div>
-                        <div id='common_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
-                    </div>
-                    <iframe id='common_window_info_content' scrolling='auto' <IFRAME_CLASS/> src=<CONTENT/> ></iframe>`;
+/**
+ * @param {{info:string, iframe_class:string, content:string}} props
+ */
+const template = props => ` <div id='common_window_info_btn_close' class='common_toolbar_button common_icon'></div>
+                            <div id='common_window_info_info'>
+                                ${props.info?
+                                    `<div id='common_window_info_info_img' style='background-image:url("${props.info}");'></div>`:
+                                    ''
+                                }
+                            </div>
+                            <div id='common_window_info_toolbar'>
+                                <div id='common_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_window_info_toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_window_info_toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_window_info_toolbar_btn_up' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_window_info_toolbar_btn_down' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
+                            </div>
+                            <iframe id='common_window_info_content' scrolling='auto' class='${props.iframe_class}' src='${props.content}' ></iframe>`;
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -48,7 +56,7 @@ const component = async props => {
             case 0:{
                 //show image
                 return {
-                    INFO:`<div id='common_window_info_info_img' style='background-image:url("${props.url}");'</div>`,
+                    INFO:props.url,
                     CONTENT:'',
                     STYLE_TOOLBAR_DISPLAY:'flex',
                     STYLE_CONTENT_DISPLAY:'none',
@@ -78,7 +86,7 @@ const component = async props => {
                         STYLE_CONTENT_DISPLAY:'block',
                         STYLE_INFO_OVERFLOWY:'auto',
                         STYLE_INFO_INFO_DISPLAY:'none',
-                        IFRAME_CLASS:'class=' + props.iframe_class
+                        IFRAME_CLASS:props.iframe_class
                         };
                 }
                 else
@@ -104,18 +112,12 @@ const component = async props => {
                     };
         }
     };
-    const render_template = async () =>{
+    const render_template = () =>{
         if (props.info==3)
-            return template
-                        .replace('<INFO/>','')
-                        .replace('<IFRAME_CLASS/>',props.common_document.querySelector('#paper').classList)
-                        .replace('<CONTENT/>','');
+            return template({info:'', iframe_class:props.common_document.querySelector('#paper').className, content:''});
         else{
             props.common_document.querySelector('#common_window_info').style.visibility='visible';
-            return template
-                    .replace('<INFO/>',variables.INFO)
-                    .replace('<IFRAME_CLASS/>',variables.IFRAME_CLASS)
-                    .replace('<CONTENT/>',variables.CONTENT);
+            return template({info:variables.INFO, iframe_class:variables.IFRAME_CLASS, content:variables.CONTENT});
         }
     };
     const post_component = async () =>{
@@ -137,11 +139,10 @@ const component = async props => {
         }
     };
     const variables = get_variables(props.info);
-    const template_rendered = await render_template();    
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: template_rendered
+        template: render_template()
     };
 };
 export default component;
