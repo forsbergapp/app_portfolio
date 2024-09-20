@@ -207,6 +207,7 @@ select {
 	text-align: start;
 	display: inline-block;
 	width: calc(100% - 25px);
+	min-height: 1em;
 }
 .common_select_dropdown_icon::after{
 	content: var(--common_app_icon_select);
@@ -236,6 +237,7 @@ select {
 .common_select_option{
 	display: block;
 	width: 100%;
+	height: 1.5em;
 }
 .common_select_option:hover,
 .common_select_option:active{
@@ -1340,6 +1342,7 @@ select {
 #common_dialogue_user_menu .common_select .common_select_options{
 	display: none;
 	max-height: 200px;
+	width: calc(85% - 60px);
 }
 #common_dialogue_user_menu .common_select{
 	width: 100%;
