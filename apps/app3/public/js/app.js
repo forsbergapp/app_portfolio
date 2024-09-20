@@ -31,24 +31,6 @@ const app_exception = (error) => {
 };
  
 /**
- * Get docs
- * @param {*} docid 
- * @returns {void}
- */
-const getdocs = (docid = null) => {
-    CommonAppDocument.querySelector('#doc_list').classList.add('css_spinner');
-    let html ='';
-    for (const doc of APP_GLOBAL.docs) {
-        if (docid== doc.id || docid==null)
-            html += `<div class='doc_list_item common_row'>
-                        <div id='doc_${doc.id}' full_size='${doc.doc_url}' class='doc_list_item_image' style='background-image:url("${doc.doc_url_small}")'></div>
-                        <div class='doc_list_item_title'>${doc.doc_title}</div>
-                    </div>`;
-    }
-    CommonAppDocument.querySelector('#doc_list').classList.remove('css_spinner');
-    CommonAppDocument.querySelector('#doc_list').innerHTML = html;
-};
-/**
  * App event click
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
@@ -83,10 +65,10 @@ const app_event_click = event => {
                 case 'doc_list':
                 case event.target.classList.contains('doc_list_item_image')?event_target_id:'':{
                     const target_row = common.element_row(event.target);
-                    if (target_row.querySelector('.doc_list_item_image')?.getAttribute('full_size'))
+                    if (target_row.querySelector('.doc_list_item_image')?.getAttribute('data-full_size'))
                         common.ComponentRender('common_window_info',
                         {   info:0,
-                            url:target_row.querySelector('.doc_list_item_image')?.getAttribute('full_size'),
+                            url:target_row.querySelector('.doc_list_item_image')?.getAttribute('data-full_size'),
                             content_type:null, 
                             iframe_content:null}, '/common/component/window_info.js');
                     break;
@@ -115,7 +97,7 @@ const framework_set = async (framework=null) => {
  */
 const init_app = async () => {
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
-    getdocs();
+    common.ComponentRender('doc_list', {docs:APP_GLOBAL.docs}, '/component/docs.js');
     CommonAppDocument.querySelector('#dialogue_documents').style.visibility = 'visible';
    framework_set();
 };
