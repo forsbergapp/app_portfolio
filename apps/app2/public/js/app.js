@@ -744,15 +744,9 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             }
         case 'GPS_CITIES':
             {
-                const country = CommonAppDocument.querySelector('#common_module_leaflet_select_country');
-                const city = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
-                //set default option
-                city.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
-                //common.SearchAndSetSelectedIndex('', settings.select_place,0);
-                if (country[country.selectedIndex].getAttribute('country_code')!=null){
-                    //fetch list including default option
-                    city.innerHTML = await common.get_cities(country[country.selectedIndex].getAttribute('country_code').toUpperCase());
-                }
+                common.map_city(CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').getAttribute('data-value')==''?
+                                null:
+                                JSON.parse(CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').getAttribute('data-value')).country_code);
                 break;
             }
         case 'GPS_CITY':
@@ -831,7 +825,6 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             }
         case 'GPS_POSITION':
             {
-                const country = CommonAppDocument.querySelector('#common_module_leaflet_select_country');
                 const city = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
                 const select_place = CommonAppDocument.querySelector('#setting_select_popular_place');
                 const gps_lat_input = CommonAppDocument.querySelector('#setting_input_lat');
@@ -853,7 +846,8 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                         APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_text ?? '';
                     });
                     //display empty country and city
-                    common.SearchAndSetSelectedIndex('', country,0);
+                    CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
+                    CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
                     common.SearchAndSetSelectedIndex('', city,0);
                     settings_update('GPS');
                 });
@@ -1835,6 +1829,12 @@ const app_event_click = event => {
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
+                case event.target.classList.contains('common_select_option')?event_target_id:'':
+                case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
+                    if (event_target_id == 'common_module_leaflet_select_country')
+                        settings_update('GPS');
+                    break;
+                }
                 //info dialogue
                 case 'app_link':{
                     if (common.COMMON_GLOBAL.app_link_url)
@@ -2373,11 +2373,6 @@ const app_event_change = event => {
                 }
                 //common
                 //module leaflet
-                case 'common_module_leaflet_select_country':{
-                    component_setting_update('GPS', 'CITIES'); 
-                    settings_update('GPS');
-                    break;
-                }
                 case 'common_module_leaflet_select_city':{
                     //popular place not on map is read when saving
                     component_setting_update('GPS', 'CITY');

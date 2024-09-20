@@ -1530,7 +1530,12 @@ select {
 }
 #common_module_leaflet_select_country, #common_module_leaflet_select_city{
 	width:95%;
+	line-height: 1.5em;
 }
+#common_module_leaflet_select_country .common_select_options, #common_module_leaflet_select_city .common_select_options{
+	max-height: 300px;
+}
+
 #common_module_leaflet_input_row{
 	position: fixed;
 	z-index: 1;

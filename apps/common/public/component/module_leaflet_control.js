@@ -3,35 +3,19 @@
  */
 
 /**
- * 
  * @param {{
- *          current_group_name:string,
- *          countries:import('../../../common_types.js').CommonCountryType[],
+ *          title_search:string,
+ *          title_fullscreen:string,
+ *          title_my_location:string,
  *          longitude : string, 
  *          latitude : string,
- *          map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[]}} props 
- * @returns 
+ *          map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[]}} props
  */
-const template = props =>` <div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='<TITLE_SEARCH/>' role='button'>
+const template = props =>` <div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='${props.title_search}' role='button'>
                             <div id='common_module_leaflet_control_search_button' class='common_icon'></div>
                             <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
-                                <select id='common_module_leaflet_select_country'>
-                                    <option value='' id='' label='…'>…</option>
-                                    ${props.countries.map((/**@type{*}*/country, index)=>{
-                                            const row = (props.current_group_name !== country.group_name?`<optgroup label=${country.group_name}/>`:'')
-                                                        +
-                                                        `<option value=${index}
-                                                                id=${country.id} 
-                                                                country_code=${country.country_code} 
-                                                                flag_emoji=${country.flag_emoji} 
-                                                                group_name=${country.group_name}>${country.flag_emoji} ${country.text}
-                                                        </option>`;
-                                            props.current_group_name = country.group_name;
-                                            return row;
-                                        }).join('')
-                                    }
-                                </select>
-                                <select id='common_module_leaflet_select_city'  >
+                                <div id='common_module_leaflet_select_country'></div>
+                                <select id='common_module_leaflet_select_city'>
                                     <option value='' id='' label='…'>…</option>
                                 </select>
                                 <div id='common_module_leaflet_search_input_row'>
@@ -43,11 +27,11 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
                                 </div>
                             </div>
                         </div>
-                        <div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button common_icon' title='<TITLE_FULLSCREEN/>' role='button'></div>
+                        <div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button common_icon' title='${props.title_fullscreen}' role='button'></div>
                         ${(props.longitude == '' && props.latitude=='')?'':
                             `<div   id='common_module_leaflet_control_my_location_id' 
                                     class='common_module_leaflet_control_button common_icon' 
-                                    title='<TITLE_MY_LOCATION/>' role='button'>
+                                    title='${props.title_my_location}' role='button'>
                             </div>`
                         }
                         <div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' title='Layer' role='button'>
@@ -72,6 +56,8 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *          map_layer:string,
  *          map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[],
  *          module_leaflet_container:string,
+ *          function_ComponentRender:function,
+ *          function_map_country:function,
  *          function_FFB:function,
  *          function_search_event:function,
  *          function_SearchAndSetSelectedIndex:function,
@@ -81,38 +67,44 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      template:null}>}
  */
 const component = async props => {
-    /**
-     * 
-     * @param {import('../../../common_types.js').CommonCountryType[]} countries 
-     * @returns 
-     */
-    const render_template = (countries) =>{
-        return template({
-                            current_group_name:'',
-                            countries:countries,
-                            longitude :props.latitude,
-                            latitude :props.longitude,
-                            map_layers:props.map_layers,
-                        })
-                .replace('<TITLE_SEARCH/>',         'Search')
-                .replace('<TITLE_FULLSCREEN/>',     'Fullscreen')
-                .replace('<TITLE_MY_LOCATION/>',    'My location');
-    };
     
     const post_component = async () =>{
-        await props.function_FFB('/server-db/country', `lang_code=${props.locale}`, 'GET', 'APP_DATA', null)
-        .then((/**@type{string}*/countries_json)=>{
-            //mount custom code inside Leaflet container
-            props.common_document.querySelectorAll(`#${props.common_mountdiv} #${props.module_leaflet_container} .leaflet-control`)[0].innerHTML += render_template(JSON.parse(countries_json).rows);
-            if (props.function_search_event){
-                //add search function in data-function that event delegation will use
-                props.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.function_search_event;
-            }
-            //set additonal settings on rendered Leaflet module
-            props.function_map_setstyle(props.map_layer);
-            //set map layer 
-            props.function_SearchAndSetSelectedIndex(props.map_layer, props.common_document.querySelector('#common_module_leaflet_select_mapstyle'),1);
-        });
+        
+
+        //mount custom code inside Leaflet container
+        props.common_document.querySelectorAll(`#${props.common_mountdiv} #${props.module_leaflet_container} .leaflet-control`)[0].innerHTML += 
+            template({
+                        title_search:'Search',
+                        title_fullscreen:'Fullscreen',
+                        title_my_location:'My location',
+                        longitude :props.latitude,
+                        latitude :props.longitude,
+                        map_layers:props.map_layers,
+                    });
+
+        await props.function_ComponentRender('common_module_leaflet_select_country', 
+            {
+                default_data_value:'',
+                default_value:'...',
+                options:await props.function_map_country(props.locale),
+                path:null,
+                query:null,
+                method:null,
+                authorization_type:null,
+                column_value:'value',
+                column_text:'text',
+                function_FFB:props.function_FFB
+            }, '/common/component/select.js');
+
+        if (props.function_search_event){
+            //add search function in data-function that event delegation will use
+            
+            props.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.function_search_event;
+        }
+        //set additonal settings on rendered Leaflet module
+        props.function_map_setstyle(props.map_layer);
+        //set map layer 
+        props.function_SearchAndSetSelectedIndex(props.map_layer, props.common_document.querySelector('#common_module_leaflet_select_mapstyle'),1);
     };
     return {
         props:  {function_post:post_component},
