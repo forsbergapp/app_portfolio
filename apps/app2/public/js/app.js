@@ -2169,6 +2169,7 @@ const app_event_click = event => {
                             current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
                             //functions
                             function_FFB:common.FFB,
+                            function_ComponentRender:common.ComponentRender,
                             function_user_session_countdown:common.user_session_countdown,
                             function_show_message:common.show_message},
                                                 '/common/component/dialogue_user_menu.js')
@@ -2371,10 +2372,6 @@ const app_event_change = event => {
                     break;
                 }
                 //common
-                case 'common_dialogue_user_menu_user_locale_select':{
-                    common.common_translate_ui(event.target.value);
-                    break;
-                }
                 case 'common_dialogue_user_menu_user_timezone_select':{
                     CommonAppDocument.querySelector('#setting_timezone_current').innerHTML = event.target.value;
                     break;
