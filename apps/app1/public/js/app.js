@@ -47,6 +47,8 @@ const app_event_click = event => {
                 case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
                     if (event_target_id == 'common_dialogue_user_menu_user_locale_select')
                         get_apps();
+                    if (event_target_id == 'common_dialogue_user_menu_user_arabic_script_select')
+                        app_theme_update();
                     break;
                 }
                 case 'theme_background':{
@@ -197,18 +199,8 @@ const app_event_change = event => {
             app_event_change(event);
         }, true);
     }
-    else{
-        const event_target_id = common.element_id(event.target);
-        common.common_event('change',event)
-        .then(()=>{
-            switch (event_target_id){
-                case 'common_dialogue_user_menu_user_arabic_script_select':{
-                    app_theme_update();
-                    break;
-                }
-            }
-        });
-    }
+    else
+        common.common_event('change',event);
 };
 /**
  * App event keyup
