@@ -11,7 +11,7 @@
 #menu_8::before{	content: var(--common_app_icon_server) ' ' var(--common_app_icon_database)}
 #menu_9::before{	content: var(--common_app_icon_server) ' ' var(--common_app_icon_backup) ' ' var(--common_app_icon_restore)}
 #menu_10::before{	content: var(--common_app_icon_server)}
-#menu_11::before{	content: var(--common_app_icon_logoff)}
+#menu_11::before{	content: var(--common_app_icon_logout)}
 
 #select_broadcast_type .common_select_dropdown_value[data-value='ALERT']::before{			content:var(--common_app_icon_alert)}
 #select_broadcast_type .common_select_dropdown_value[data-value='MAINTENANCE']::before{		content:var(--common_app_icon_maintenance)}
@@ -33,7 +33,7 @@
 #menu_1_broadcast_title::before{													content:var(--common_app_icon_broadcast)}
 #menu_1_broadcast_button::before{													content:var(--common_app_icon_chat)}
 
-#list_user_stat_not_connected_icon::before{											content:var(--common_app_icon_loggoff)}
+#list_user_stat_not_connected_icon::before{											content:var(--common_app_icon_logout)}
 #list_user_stat_col_title1::before{													content:var(--common_app_icon_provider_id)}
 #list_user_stat_col_title2::before{													content:var(--common_app_icon_provider)}
 #list_user_stat_col_title3::before{													content:var(--common_app_icon_sum)}

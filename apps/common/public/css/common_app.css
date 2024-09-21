@@ -31,9 +31,9 @@
 
 #common_user_menu_close::before{							content:var(--common_app_icon_close)}
 #common_dialogue_user_menu_edit::before{					content:var(--common_app_icon_edit)}
-#common_dialogue_user_menu_log_out::before{					content:var(--common_app_icon_logoff)}
 #common_dialogue_user_menu_signup::before{					content:var(--common_app_icon_signup)}
 #common_dialogue_user_menu_log_in::before{					content:var(--common_app_icon_login)}
+#common_dialogue_user_menu_log_out::before{					content:var(--common_app_icon_logout)}
 #common_dialogue_user_menu_preference_locale::before{		content:var(--common_app_icon_regional_locale)}
 #common_dialogue_user_menu_preference_timezone::before{		content:var(--common_app_icon_regional_timezone)}
 #common_dialogue_user_menu_preference_direction::before{	content:var(--common_app_icon_regional_direction)}
@@ -1294,9 +1294,9 @@ select {
 #common_user_edit_label_provider_image_url_data{
 	display:none !important;
 }
-/*signup*/
-#common_user_edit_btn_user_delete_account{
-	display: none;
+#common_dialogue_user_edit #common_user_edit_btn_user_delete_account
+{
+	display: inline-block;
 }
 #common_user_edit_btn_user_update,
 #common_user_edit_btn_user_delete_account

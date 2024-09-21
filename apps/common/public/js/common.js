@@ -1684,12 +1684,12 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
     }
 };
 /**
- * User logoff
+ * User logout
  * @returns {Promise.<void>}
  */
-const user_logoff = async () => {
+const user_logout = async () => {
     ComponentRemove('common_dialogue_user_menu');
-    FFB('/server-iam/user/logoff', null, 'POST', 'APP_DATA', null)
+    FFB('/server-iam/user/logout', null, 'POST', 'APP_DATA', null)
     .then(()=>{
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
             CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
@@ -3190,6 +3190,16 @@ const common_event = async (event_type,event=null) =>{
                             await user_update();
                             break;
                         }
+                        case 'common_user_edit_btn_user_delete_account':{
+                            const function_delete_user_account = () => { 
+                                user_delete(1, null)
+                                .then(()=>COMMON_GLOBAL.app_function_session_expired?COMMON_GLOBAL.app_function_session_expired():null)
+                                .catch(()=>null);
+                            };
+                            await user_delete(null, function_delete_user_account);
+                            
+                            break;
+                        }        
                         //dialogue verify
                         case 'common_user_verify_cancel':{
                             ComponentRemove('common_dialogue_user_verify');
@@ -3947,7 +3957,7 @@ export{/* GLOBALS*/
        profile_follow_like, profile_stat, profile_detail, profile_show,
        profile_update_stat, list_key_event,
        /* USER  */
-       user_login, user_session_countdown, user_logoff, user_update, user_signup, user_verify_check_input, user_delete, user_function,
+       user_login, user_session_countdown, user_logout, user_update, user_signup, user_verify_check_input, user_delete, user_function,
        updatePassword,
        /* MODULE LEAFLET  */
        map_init, map_country, map_city, map_city_empty, map_show_search_on_map, map_resize, map_line_removeall, map_line_create,

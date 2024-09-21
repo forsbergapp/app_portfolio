@@ -84,7 +84,7 @@ const app_event_click = event =>{
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
-                    common.user_logoff();
+                    common.user_logout();
                     break;
                 }
                 /*Dialogue user start */
@@ -193,7 +193,7 @@ const init_app = async () =>{
 const init = parameters => {
     CommonAppDocument.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
-    common.COMMON_GLOBAL.app_function_session_expired = common.user_logoff;
+    common.COMMON_GLOBAL.app_function_session_expired = common.user_logout;
     common.init_common(parameters).then(()=>{
         init_app();
     });

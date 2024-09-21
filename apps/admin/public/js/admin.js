@@ -21,11 +21,11 @@ const path_app_secure ='app_secure';
 const app_secure = await import(path_app_secure);
 
 /**
- * Admin log off
+ * Admin logout
  * @returns {void}
  */
-const admin_logoff_app = () => {
-    common.user_logoff().then(() => {
+const admin_logout_app = () => {
+    common.user_logout().then(() => {
         common.ComponentRemove('admin_secure');
         common.show_common_dialogue('LOGIN_ADMIN');
     });
@@ -101,7 +101,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'menu_11': {
-                    admin_logoff_app();
+                    admin_logout_app();
                     break;
                 }
                 //common
@@ -390,7 +390,7 @@ const init_app = async (parameters) => {
 const init = async parameters => {        
     CommonAppDocument.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = admin_exception;
-    common.COMMON_GLOBAL.app_function_session_expired = admin_logoff_app;
+    common.COMMON_GLOBAL.app_function_session_expired = admin_logout_app;
     
     common.init_common(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
         init_app(decodedparameters);
