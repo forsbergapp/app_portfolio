@@ -1826,8 +1826,8 @@ const app_event_click = event => {
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
-                case event.target.classList.contains('common_select_option')?event_target_id:'':
-                case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
+                case event.target?.classList.contains('common_select_option')?event_target_id:'':
+                case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
                     if (event_target_id == 'common_module_leaflet_select_country')
                         settings_update('GPS');
                     if(event_target_id == 'common_module_leaflet_select_city'){
