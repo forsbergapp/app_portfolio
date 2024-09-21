@@ -664,6 +664,21 @@ const select_event_action = async (event_target_id, target) =>{
             map_city_empty();
         }
     }
+    if (event_target_id== 'common_module_leaflet_select_city'){
+        const city = CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
+        await map_update({  longitude:      city==''?'':JSON.parse(city).longitude,
+                            latitude:       city==''?'':JSON.parse(city).latitude,
+                            zoomvalue:      COMMON_GLOBAL.module_leaflet_zoom_city,
+                            text_place:     city==''?'':JSON.parse(city).city,
+                            country:        '',
+                            city:           '',
+                            timezone_text:  null,
+                            marker_id:      COMMON_GLOBAL.module_leaflet_marker_div_city,
+                            to_method:      COMMON_GLOBAL.module_leaflet_flyto
+                        }).then(()=> {
+            map_toolbar_reset();
+        });
+    }
 
     if (event_target_id == 'common_dialogue_user_menu_app_theme'){
         CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
@@ -2245,6 +2260,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                             module_leaflet_container:leaflet_data.leaflet_container,    //inner Leaflet div returned from Leaflet
                             function_ComponentRender:ComponentRender,
                             function_map_country:map_country,
+                            function_map_city_empty:map_city_empty,
                             function_FFB:FFB,
                             function_search_event:search_event_function,
                             function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
@@ -2269,18 +2285,32 @@ const map_country = async lang_code =>  [{value:'', text:'...'}].concat(await FF
 /**
  * Map city
  * @param {*} country_code 
- * @returns {void}
+ * @returns {Promise<void>}
  */
-const map_city = country_code =>{
-    const select_cities = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
-    //set default option
-    select_cities.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
+const map_city = async country_code =>{
     if (country_code!=null){
-        get_cities(country_code.toUpperCase())
-        .then(cities=>{
-            //fetch list including default option
-            select_cities.innerHTML = cities;
-        });
+        await ComponentRender('common_module_leaflet_select_city', 
+            {
+                default_data_value:'',
+                default_value:'...',
+                options:[{value:'', text:''}].concat((await get_cities(country_code.toUpperCase())).map(city=>{
+                                                                        return {value:JSON.stringify({  id:city.id,
+                                                                                                        countrycode:city.iso2, 
+                                                                                                        country:city.country, 
+                                                                                                        admin_name:city.admin_name, 
+                                                                                                        city:city.city,
+                                                                                                        latitude:city.lat, 
+                                                                                                        longitude:city.lng}),
+                                                                                text:`${city.admin_name} - ${city.city}`};
+                                                                        })),
+                path:null,
+                query:null,
+                method:null,
+                authorization_type:null,
+                column_value:'value',
+                column_text:'text',
+                function_FFB:null
+            }, '/common/component/select.js');
     }
 };
 /**
@@ -2288,13 +2318,20 @@ const map_city = country_code =>{
  * @returns {void}
  */
 const map_city_empty = () =>{
-    //remove old city list:      
-    const select_city = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
-    const old_groups = select_city.querySelectorAll('optgroup');
-    for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
-        select_city.removeChild(old_groups[old_index]);
-    //display first empty city
-    select_city.selectedIndex = 0;
+    //set city select with first empty city
+    ComponentRender('common_module_leaflet_select_city', 
+        {
+            default_data_value:'',
+            default_value:'...',
+            options:[{value:'', text:''}],
+            path:null,
+            query:null,
+            method:null,
+            authorization_type:null,
+            column_value:'value',
+            column_text:'text',
+            function_FFB:null
+        }, '/common/component/select.js');
 };
 /**
  * Map toolbar reset
@@ -2805,58 +2842,25 @@ const get_gps_from_ip = async () => {
 /**
  * Worldcities - Get cities
  * @param {string} countrycode 
- * @returns {Promise.<string>}
+ * @returns {Promise.<{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]>}
  */
 const get_cities = async countrycode => {
-    return new Promise((resolve, reject)=>{
-        FFB(`/worldcities/country/${countrycode}`, null, 'GET', 'APP_DATA', null)
-        .then(result=>{
-            /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
-            const cities = JSON.parse(result);
-            cities.sort((a, b) => {
-                const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
-                const y = b.admin_name.toLowerCase() + b.city.toLowerCase();
-                if (x < y) {
-                    return -1;
-                }
-                if (x > y) {
-                    return 1;
-                }
-                return 0;
-            });
+    /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
+    const cities = await FFB(`/worldcities/country/${countrycode}`, null, 'GET', 'APP_DATA', null).then(result=>JSON.parse(result));
     
-            let current_admin_name;
-            //fill list with cities
-            let cities_options='';
-            let i =0;
-            for (const city of cities) {
-                if (i == 0) {
-                    cities_options += `<option value='' id='' label='…'>…</option>
-                                <optgroup label='${city.admin_name}'>`;
-                    current_admin_name = city.admin_name;
-                } else
-                if (city.admin_name != current_admin_name) {
-                    cities_options += `</optgroup>
-                                <optgroup label='${city.admin_name}'>`;
-                    current_admin_name = city.admin_name;
-                }
-                cities_options +=
-                `<option 
-                    id=${city.id} 
-                    value=${i + 1}
-                    countrycode=${city.iso2}
-                    country='${city.country}'
-                    admin_name='${city.admin_name}'
-                    latitude=${city.lat}
-                    longitude=${city.lng}  
-                    >${city.city}
-                </option>`;
-                i++;
-            }
-            resolve(`${cities_options} </optgroup>`);
-        })
-        .then((err)=>reject(err));
+    //sort admin name + city
+    cities.sort((a, b) => {
+        const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
+        const y = b.admin_name.toLowerCase() + b.city.toLowerCase();
+        if (x < y) {
+            return -1;
+        }
+        if (x > y) {
+            return 1;
+        }
+        return 0;
     });
+    return cities;
 };
 /**
  * Worldcities - Search
@@ -3277,8 +3281,7 @@ const common_event = async (event_type,event=null) =>{
                                         });
                                 CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
                                 CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
-                                const select_city = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
-                                select_city.selectedIndex = 0;
+                                map_city_empty();
                                 map_toolbar_reset();
                             }
                             break;
@@ -3357,23 +3360,6 @@ const common_event = async (event_type,event=null) =>{
             case 'change':{
                 switch (event.target.id){
                     //module leaflet events
-                    case 'common_module_leaflet_select_city':{
-                        const longitude_selected = event.target.options[event.target.selectedIndex].getAttribute('longitude') ??'';
-                        const latitude_selected = event.target.options[event.target.selectedIndex].getAttribute('latitude') ??'';
-                        await map_update({  longitude:longitude_selected,
-                                            latitude:latitude_selected,
-                                            zoomvalue:COMMON_GLOBAL.module_leaflet_zoom_city,
-                                            text_place:event.target.options[event.target.selectedIndex].text,
-                                            country:'',
-                                            city:'',
-                                            timezone_text :null,
-                                            marker_id:COMMON_GLOBAL.module_leaflet_marker_div_city,
-                                            to_method:COMMON_GLOBAL.module_leaflet_flyto
-                                        }).then(()=> {
-                            map_toolbar_reset();
-                        });
-                        break;
-                    }
                     case 'common_module_leaflet_select_mapstyle':{
                         map_setstyle(event.target.value);
                         break;
@@ -3964,7 +3950,7 @@ export{/* GLOBALS*/
        user_login, user_session_countdown, user_logoff, user_update, user_signup, user_verify_check_input, user_delete, user_function,
        updatePassword,
        /* MODULE LEAFLET  */
-       map_init, map_country, map_city, map_show_search_on_map, map_resize, map_line_removeall, map_line_create,
+       map_init, map_country, map_city, map_city_empty, map_show_search_on_map, map_resize, map_line_removeall, map_line_create,
        map_setstyle, map_update,
        /* MODULE EASY.QRCODE */
        create_qr,
