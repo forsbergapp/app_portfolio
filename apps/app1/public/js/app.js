@@ -111,7 +111,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
-                    user_logoff_app();
+                    user_logout_app();
                     break;
                 }
                 //profile button
@@ -178,10 +178,6 @@ const app_event_click = event => {
                     const provider_element = target_row.querySelector('.common_login_provider_id');
                     if (provider_element && provider_element.innerHTML)
                         user_login_app(null, null, null, parseInt(provider_element.innerHTML));
-                    break;
-                }
-                case 'common_user_edit_btn_user_delete_account':{
-                    user_delete_app();
                     break;
                 }
             }
@@ -333,11 +329,11 @@ const user_login_app = async (system_admin=false, username_verify=null, password
     .then(()=>get_apps());
 };
 /**
- * User logoff app
+ * User logout app
  * @returns {Promise.<void>}
  */
- const user_logoff_app = async () =>{
-    common.user_logoff()
+ const user_logout_app = async () =>{
+    common.user_logout()
     .then(()=>get_apps());
 };
 
@@ -368,21 +364,6 @@ const get_apps = () => {
  */
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
-};
-/**
- * User delete
- * @returns {Promise.<void>}
- */
-const user_delete_app = async () => {
-    
-    const function_delete_user_account = () => { 
-                                                common.user_delete(1, null)
-                                                .then(()=>user_logoff_app())
-                                                .catch(()=>null);
-                                            };
-    await common.user_delete(null, function_delete_user_account)
-    .then(()=>null)
-    .catch(()=>null);
 };
 /**
  * Sets framework
@@ -439,7 +420,7 @@ const init_app = async (parameters) => {
 const init = parameters => {
     CommonAppDocument.body.className = 'app_theme_sun';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
-    common.COMMON_GLOBAL.app_function_session_expired = user_logoff_app;
+    common.COMMON_GLOBAL.app_function_session_expired = user_logout_app;
     common.init_common(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
         init_app(decodedparameters);
     });

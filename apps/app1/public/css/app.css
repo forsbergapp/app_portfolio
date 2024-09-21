@@ -417,10 +417,6 @@ div.ray8 {
     flex-flow: row-reverse !important;
 	width: calc(100% - 10px) !important;
 }
-#common_dialogue_user_edit #common_user_edit_btn_user_delete_account
-{
-	display: inline-block;
-}
 #common_window_info_info{
 	position:relative;
 	margin:20px;

@@ -195,7 +195,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
-                    user_logoff_app();
+                    user_logout_app();
                     break;
                 }
                 /*Dialogue user start */
@@ -272,8 +272,8 @@ const user_login_app = () =>{
     .then(()=>init_secure())
     .catch(()=>null);
 };
-const user_logoff_app = () =>{
-    common.user_logoff()
+const user_logout_app = () =>{
+    common.user_logout()
     .then(()=>common.ComponentRemove('app_main_page'))
     .then(()=>common.ComponentRender('app_main_page',
                                     {},
@@ -429,7 +429,7 @@ const init_app = async () => {
  */
 const init = parameters => {
     common.COMMON_GLOBAL.app_function_exception = app_exception;
-    common.COMMON_GLOBAL.app_function_session_expired = user_logoff_app;
+    common.COMMON_GLOBAL.app_function_session_expired = user_logout_app;
     common.COMMON_GLOBAL.app_function_sse = show_payment_request;
     common.init_common(parameters).then(()=>{
         init_app();

@@ -964,7 +964,7 @@ const COMMON = {
                                                                 routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route({url:'/bff/app_data/v1/server-iam/user/logoff', method:'POST'}):{
+                    case route({url:'/bff/app_data/v1/server-iam/user/logout', method:'POST'}):{
                         resolve(socket.ConnectedUpdate(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip,routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }

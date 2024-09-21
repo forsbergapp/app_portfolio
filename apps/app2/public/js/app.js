@@ -962,12 +962,12 @@ const user_function_app = async (function_name) => {
 };
 
 /**
- * User logoff
+ * User logout
  * @returns {void}
  */
-const user_logoff_app = () => {
+const user_logout_app = () => {
     
-    common.user_logoff().then(() => {
+    common.user_logout().then(() => {
         CommonAppDocument.querySelector('#settings_tab_nav_7').innerHTML = '';
         common.ComponentRemove('common_dialogue_profile', true);
         //set default settings
@@ -2182,7 +2182,7 @@ const app_event_click = event => {
                         break;
                     }
                 case 'common_dialogue_user_menu_log_out':{
-                    user_logoff_app();
+                    user_logout_app();
                     break;
                 }
                 case 'common_dialogue_user_menu_username':{
@@ -3099,7 +3099,7 @@ const init_app = async parameters => {
 const init = parameters => {
     CommonAppDocument.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
-    common.COMMON_GLOBAL.app_function_session_expired = user_logoff_app;
+    common.COMMON_GLOBAL.app_function_session_expired = user_logout_app;
     common.init_common(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
         init_app(decodedparameters);
     });
