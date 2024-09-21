@@ -179,7 +179,7 @@ const component = async props => {
          */
         const set_current_value= (div, value) =>{
             const text = Array.from(props.common_document.querySelectorAll(`#${div} .common_select_option`))
-                .filter(option=>option.getAttribute('data-value')==value)[0].innerText;
+                .filter(option=>option.getAttribute('data-value')==(value ?? ''))[0].innerText;
             props.common_document.querySelector(`#${div} .common_select_dropdown_value`).innerText = text;
             };
 
