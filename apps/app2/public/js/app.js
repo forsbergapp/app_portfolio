@@ -787,36 +787,34 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             }
         case 'GPS_POPULAR_PLACES':
             {
-                const country = CommonAppDocument.querySelector('#common_module_leaflet_select_country');
-                const city = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
+                
                 const select_place = CommonAppDocument.querySelector('#setting_select_popular_place');
                 const gps_lat_input = CommonAppDocument.querySelector('#setting_input_lat');
                 const gps_long_input = CommonAppDocument.querySelector('#setting_input_long');
+                
                 //set GPS and timezone
-                const longitude_selected = select_place[select_place.selectedIndex].getAttribute('longitude');
-                const latitude_selected = select_place[select_place.selectedIndex].getAttribute('latitude');
-                const timezone_selected = select_place[select_place.selectedIndex].getAttribute('timezone');
+                const city_data = CommonAppDocument.querySelector('#common_module_leaflet_select_city .common_select_dropdown_value').getAttribute('data-value');
+                const longitude_selected = city_data==''?null:city_data.longitude;
+                const latitude_selected = city_data==''?null:city_data.latitude;
+                const timezone_selected = city_data==''?null:city_data.timezone;
                 gps_long_input.innerHTML = longitude_selected;
                 gps_lat_input.innerHTML = latitude_selected;
+
                     //Update map
-                    map_update_app({longitude:gps_long_input.innerHTML,
-                                    latitude:gps_lat_input.innerHTML,
-                                    zoomvalue:common.COMMON_GLOBAL.module_leaflet_zoom_pp, //zoom for popular places
-                                    text_place:select_place.options[select_place.selectedIndex].text,
-                                    country:'',
-                                    city:'',
-                                    timezone_text :timezone_selected,
-                                    marker_id:common.COMMON_GLOBAL.module_leaflet_marker_div_pp, //marker for popular places
-                                    to_method:common.COMMON_GLOBAL.module_leaflet_flyto
+                    map_update_app({longitude:      longitude_selected,
+                                    latitude:       latitude_selected,
+                                    zoomvalue:      common.COMMON_GLOBAL.module_leaflet_zoom_pp, //zoom for popular places
+                                    text_place:     select_place.options[select_place.selectedIndex].text,
+                                    country:        '',
+                                    city:           '',
+                                    timezone_text : timezone_selected,
+                                    marker_id:      common.COMMON_GLOBAL.module_leaflet_marker_div_pp, //marker for popular places
+                                    to_method:      common.COMMON_GLOBAL.module_leaflet_flyto
                                 });
                     //display empty country
-                    common.SearchAndSetSelectedIndex('', country,0);
-                    //remove old city list:            
-                    const old_groups = city.querySelectorAll('optgroup');
-                    for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
-                        city.removeChild(old_groups[old_index]);
-                    //display first empty city
-                    common.SearchAndSetSelectedIndex('', city,0);
+                    CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
+                    CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '...';
+                    common.map_city_empty();
                 APP_GLOBAL.user_settings[select_user_setting.selectedIndex].regional_timezone = timezone_selected;
                 const title = select_place.options[select_place.selectedIndex].text;
                 CommonAppDocument.querySelector('#setting_input_place').innerHTML = title;
@@ -825,7 +823,6 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             }
         case 'GPS_POSITION':
             {
-                const city = CommonAppDocument.querySelector('#common_module_leaflet_select_city');
                 const select_place = CommonAppDocument.querySelector('#setting_select_popular_place');
                 const gps_lat_input = CommonAppDocument.querySelector('#setting_input_lat');
                 const gps_long_input = CommonAppDocument.querySelector('#setting_input_long');
@@ -848,7 +845,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                     //display empty country and city
                     CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
                     CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
-                    common.SearchAndSetSelectedIndex('', city,0);
+                    common.map_city_empty();
                     settings_update('GPS');
                 });
                 break;
@@ -1833,6 +1830,10 @@ const app_event_click = event => {
                 case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
                     if (event_target_id == 'common_module_leaflet_select_country')
                         settings_update('GPS');
+                    if(event_target_id == 'common_module_leaflet_select_city'){
+                        //popular place not on map is read when saving
+                        component_setting_update('GPS', 'CITY');
+                    }
                     break;
                 }
                 //info dialogue
@@ -2373,11 +2374,6 @@ const app_event_change = event => {
                 }
                 //common
                 //module leaflet
-                case 'common_module_leaflet_select_city':{
-                    //popular place not on map is read when saving
-                    component_setting_update('GPS', 'CITY');
-                    break;
-                }
                 case 'common_module_leaflet_select_mapstyle':{
                     component_setting_update('GPS', 'MAP');
                     break;

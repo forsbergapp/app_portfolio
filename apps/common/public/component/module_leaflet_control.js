@@ -15,9 +15,7 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
                             <div id='common_module_leaflet_control_search_button' class='common_icon'></div>
                             <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
                                 <div id='common_module_leaflet_select_country'></div>
-                                <select id='common_module_leaflet_select_city'>
-                                    <option value='' id='' label='…'>…</option>
-                                </select>
+                                <div id='common_module_leaflet_select_city'></div>
                                 <div id='common_module_leaflet_search_input_row'>
                                     <div id='common_module_leaflet_search_input' contentEditable='true' class='common_input'/></div>
                                     <div id='common_module_leaflet_search_icon' class='common_icon'></div>
@@ -58,6 +56,7 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *          module_leaflet_container:string,
  *          function_ComponentRender:function,
  *          function_map_country:function,
+ *          function_map_city_empty:function,
  *          function_FFB:function,
  *          function_search_event:function,
  *          function_SearchAndSetSelectedIndex:function,
@@ -81,7 +80,7 @@ const component = async props => {
                         latitude :props.longitude,
                         map_layers:props.map_layers,
                     });
-
+        //country
         await props.function_ComponentRender('common_module_leaflet_select_country', 
             {
                 default_data_value:'',
@@ -95,6 +94,8 @@ const component = async props => {
                 column_text:'text',
                 function_FFB:props.function_FFB
             }, '/common/component/select.js');
+        //cities, caal function that sets empty record
+        props.function_map_city_empty();
 
         if (props.function_search_event){
             //add search function in data-function that event delegation will use
