@@ -5,8 +5,8 @@
 /**
  * @returns {string}
  */
-const template = () => ` <div id='app_page_start_shop' class='app_page_start_shop app_shop_div'>
-                            </div>`;
+const template = () => `<div id='app_page_start_shop' class='app_page_start_shop app_shop_div'>
+                        </div>`;
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -23,14 +23,7 @@ const template = () => ` <div id='app_page_start_shop' class='app_page_start_sho
  *                      template:string}>}
  */
 const component = async props => {
-    
-    /**
-     * @returns {string}
-     */
-    const render_template = () =>{
-        return template();
-    };
-    
+      
     const post_component = async () =>{
         await props.function_ComponentRender('app_page_start_shop', 
                                             {
@@ -66,7 +59,7 @@ const component = async props => {
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template()
+        template: template()
     };
 };
 export default component;

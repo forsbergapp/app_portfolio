@@ -2,187 +2,197 @@
  * @module apps/common/component/dialogue_user_edit
  */
 
-const template =`   <div id='common_user_edit_common'>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_avatar'>
-                                    <div id='common_user_edit_avatar'>
-                                        <div id='common_user_edit_btn_avatar_img' class='common_icon'></div>
-                                        <input id='common_user_edit_input_avatar_img' type='file'>
+/**
+ * @param {{translation_username:string,
+ *          translation_bio:string,
+ *          translation_new_email:string,
+ *          translation_password:string,
+ *          translation_password_confirm:string,
+ *          translation_new_password:string,
+ *          translation_new_password_confirm:string,
+ *          translation_password_reminder:string}} props
+ */
+const template = props => `<div id='common_user_edit_common'>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_avatar'>
+                                        <div id='common_user_edit_avatar'>
+                                            <div id='common_user_edit_btn_avatar_img' class='common_icon'></div>
+                                            <input id='common_user_edit_input_avatar_img' type='file'>
+                                        </div>
+                                        <div id='common_user_edit_avatar_img' class='common_image common_image_avatar'></div>
                                     </div>
-                                    <div id='common_user_edit_avatar_img' class='common_image common_image_avatar'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_private' class='common_icon'></div>
+                                    <div id='common_user_edit_checkbox_profile_private' class='common_switch'></div>
                                 </div>
                             </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_private' class='common_icon'></div>
-                                <div id='common_user_edit_checkbox_profile_private' class='common_switch'></div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_username_icon' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_username' class='common_input' contentEditable='true' placeholder='${props.translation_username}'></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_username_icon' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_username' class='common_input' contentEditable='true' placeholder='<COMMON_TRANSLATION_USERNAME/>'></div>
-                            </div>
-                        </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_bio_icon' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_bio' class='common_input' contentEditable='true' placeholder='<COMMON_TRANSLATION_BIO/>'></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id='common_user_edit_local'>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_email_icon' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_email'></div>
-                            </div>
-                        </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_new_email_icon' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_new_email' class='common_input' contentEditable='true' placeholder='<COMMON_TRANSLATION_NEW_EMAIL/>'></div>
-                            </div>
-                        </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_password_icon' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div class='common_password_container'>
-                                    <div id='common_user_edit_input_password' class='common_input common_password' contentEditable='true'  placeholder='<COMMON_TRANSLATION_PASSWORD/>'></div>
-                                    <div id='common_user_edit_input_password_mask' class='common_input common_password_mask'></div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_bio_icon' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_bio' class='common_input' contentEditable='true' placeholder='${props.translation_bio}'></div>
                                 </div>
                             </div>
                         </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_password_confirm_icon' class='common_icon'></div>
+                        <div id='common_user_edit_local'>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_email_icon' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_email'></div>
+                                </div>
                             </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div class='common_password_container'>
-                                    <div id='common_user_edit_input_password_confirm' class='common_input common_password' contentEditable='true' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'></div>
-                                    <div id='common_user_edit_input_password_confirm_mask' class='common_input common_password_mask'></div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_new_email_icon' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_new_email' class='common_input' contentEditable='true' placeholder='${props.translation_new_email}'></div>
+                                </div>
+                            </div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_password_icon' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div class='common_password_container'>
+                                        <div id='common_user_edit_input_password' class='common_input common_password' contentEditable='true'  placeholder='${props.translation_password}'></div>
+                                        <div id='common_user_edit_input_password_mask' class='common_input common_password_mask'></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_password_confirm_icon' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div class='common_password_container'>
+                                        <div id='common_user_edit_input_password_confirm' class='common_input common_password' contentEditable='true' placeholder='${props.translation_password_confirm}'></div>
+                                        <div id='common_user_edit_input_password_confirm_mask' class='common_input common_password_mask'></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_password_new_icon' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div class='common_password_container'>
+                                        <div id='common_user_edit_input_password_new' class='common_input common_password' contentEditable='true' placeholder='${props.translation_new_password}'></div>
+                                        <div id='common_user_edit_input_password_new_mask' class='common_input common_password_mask'></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_password_new_confirm_icon' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div class='common_password_container'>
+                                        <div id='common_user_edit_input_password_new_confirm' class='common_input common_password' contentEditable='true' placeholder='${props.translation_new_password_confirm}'></div>
+                                        <div id='common_user_edit_input_password_new_confirm_mask' class='common_input common_password_mask'></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_password_reminder_icon' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_input_password_reminder' class='common_input' contentEditable='true' placeholder='${props.translation_password_reminder}'></div>
                                 </div>
                             </div>
                         </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_password_new_icon' class='common_icon'></div>
+                        <div id='common_user_edit_provider'>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>    
+                                    <div id='common_user_edit_label_provider' class='common_icon'></div>
+                                </div>
+                                <div id='common_user_edit_provider_id' class='common_setting_horizontal_col'>
+                                </div>
                             </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div class='common_password_container'>
-                                    <div id='common_user_edit_input_password_new' class='common_input common_password' contentEditable='true' placeholder='<COMMON_TRANSLATION_NEW_PASSWORD/>'></div>
-                                    <div id='common_user_edit_input_password_new_mask' class='common_input common_password_mask'></div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_provider_id' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_provider_id_data'></div>
+                                </div>
+                            </div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_provider_name'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_provider_name_data'></div>
+                                </div>
+                            </div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_provider_email' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_provider_email_data'></div>
+                                </div>
+                            </div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_provider_image_url'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_provider_image_url_data'></div>
                                 </div>
                             </div>
                         </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_password_new_confirm_icon' class='common_icon'></div>
+                        <div id='common_user_edit_account_info'>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_last_logontime' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_data_last_logontime'></div>
+                                </div>
                             </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div class='common_password_container'>
-                                    <div id='common_user_edit_input_password_new_confirm' class='common_input common_password' contentEditable='true' placeholder='<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>'></div>
-                                    <div id='common_user_edit_input_password_new_confirm_mask' class='common_input common_password_mask'></div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_account_created' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_data_account_created'></div>
+                                </div>
+                            </div>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_account_modified' class='common_icon'></div>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_label_data_account_modified'></div>
                                 </div>
                             </div>
                         </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_password_reminder_icon' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_input_password_reminder' class='common_input' contentEditable='true' placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id='common_user_edit_provider'>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>    
-                                <div id='common_user_edit_label_provider' class='common_icon'></div>
-                            </div>
-                            <div id='common_user_edit_provider_id' class='common_setting_horizontal_col'>
+                        <div id='common_user_edit_buttons'>
+                            <div class='common_setting_horizontal_row'>
+                                <div class='common_setting_horizontal_col'>
+                                </div>
+                                <div class='common_setting_horizontal_col'>
+                                    <div id='common_user_edit_btn_user_update' class='common_dialogue_button common_icon' ></div>
+                                    <div id='common_user_edit_btn_user_delete_account' class='common_dialogue_button common_icon' ></div>
+                                </div>
                             </div>
                         </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_provider_id' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_provider_id_data'></div>
-                            </div>
-                        </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_provider_name'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_provider_name_data'></div>
-                            </div>
-                        </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_provider_email' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_provider_email_data'></div>
-                            </div>
-                        </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_provider_image_url'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_provider_image_url_data'></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id='common_user_edit_account_info'>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_last_logontime' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_data_last_logontime'></div>
-                            </div>
-                        </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_account_created' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_data_account_created'></div>
-                            </div>
-                        </div>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_account_modified' class='common_icon'></div>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_label_data_account_modified'></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id='common_user_edit_buttons'>
-                        <div class='common_setting_horizontal_row'>
-                            <div class='common_setting_horizontal_col'>
-                            </div>
-                            <div class='common_setting_horizontal_col'>
-                                <div id='common_user_edit_btn_user_update' class='common_dialogue_button common_icon' ></div>
-                                <div id='common_user_edit_btn_user_delete_account' class='common_dialogue_button common_icon' ></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id='common_user_edit_close' class='common_dialogue_button common_icon' ></div>`;
+                        <div id='common_user_edit_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -270,21 +280,17 @@ const component = async props => {
         })
         .catch(()=>null);
     };
-    const render_template = () =>{
-        return template
-                .replaceAll('<COMMON_TRANSLATION_USERNAME/>',props.translation_username)
-                .replaceAll('<COMMON_TRANSLATION_BIO/>',props.translation_bio)
-                .replaceAll('<COMMON_TRANSLATION_NEW_EMAIL/>',props.translation_new_email)
-                .replaceAll('<COMMON_TRANSLATION_PASSWORD/>',props.translation_password)
-                .replaceAll('<COMMON_TRANSLATION_PASSWORD_CONFIRM/>',props.translation_password_confirm)
-                .replaceAll('<COMMON_TRANSLATION_NEW_PASSWORD/>',props.translation_new_password)
-                .replaceAll('<COMMON_TRANSLATION_NEW_PASSWORD_CONFIRM/>',props.translation_new_password_confirm)
-                .replaceAll('<COMMON_TRANSLATION_PASSWORD_REMINDER/>',props.translation_password_reminder);
-    };
     return {
         props:  {function_post:user_get},
         data:   null,
-        template: render_template()
+        template: template({translation_username:props.translation_username,
+                            translation_bio:props.translation_bio,
+                            translation_password:props.translation_password,
+                            translation_password_confirm:props.translation_password_confirm,
+                            translation_password_reminder:props.translation_password_reminder,
+                            translation_new_email:props.translation_new_email,
+                            translation_new_password:props.translation_new_password,
+                            translation_new_password_confirm:props.translation_new_password_confirm})
     };
 };
 export default component;

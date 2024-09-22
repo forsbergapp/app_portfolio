@@ -111,9 +111,9 @@ const component = async props => {
         const settings = props.system_admin_only == 1?[]:await props.function_FFB('/server-db/app_settings_display', `data_app_id=${props.data_app_id}`, 'GET', 'APP_DATA')
                                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                                                 .catch((/**@type{Error}*/error)=>{throw error;});
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  username:props.username ?? props.system_admin ?? '',
-                                                                                                        countdown:(props.token_exp && props.token_iat)?1:0
-                                                                                                    });
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ username:props.username ?? props.system_admin ?? '',
+                                                                                                countdown:(props.token_exp && props.token_iat)?1:0
+                                                                                                });
         //mount select
         if (props.system_admin_only!=1){
             //Locale
@@ -186,19 +186,10 @@ const component = async props => {
             props.function_user_session_countdown(props.common_document.querySelector(`#${element_id}`), props.token_exp);
         }   
     };
-    /**
-     * 
-     * @param {{username:string,
-     *          countdown:0|1}} props 
-     * @returns 
-     */
-    const render_template = props =>{
-        return template(props);
-    };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({username:props.username ?? props.system_admin ?? '', countdown:0})
+        template: template({username:props.username ?? props.system_admin ?? '', countdown:0})
     };
 };
 export default component;

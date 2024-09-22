@@ -59,34 +59,23 @@ const component = async props => {
 const server_groups = [0,1,2,3,4];
    const post_component = async () =>{
         const config_server = await props.function_FFB(`/server-config/config/${props.file}`, 'saved=1', 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result).data);
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:'',
-                                                                                                        server_group:server_groups,
-                                                                                                        file:props.file,
-                                                                                                        config:config_server});
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'',
+                                                                                                server_group:server_groups,
+                                                                                                file:props.file,
+                                                                                                config:config_server});
         if (props.file=='SERVER'){
             //set focus first column in first row
             props.common_document.querySelectorAll('#list_config .common_input')[0].focus();
         }
  };
- /**
-  @param {{ spinner:string,
-            server_group:number[],
-            file:'SERVER'|'IAM_BLOCKIP'|'IAM_USERAGENT'|'IAM_POLICY',
-            config:[]}} template_props
-  */
- const render_template = template_props =>{
-     return template({  spinner:template_props.spinner,
-                        server_group:template_props.server_group, 
-                        file:template_props.file,
-                        config:template_props.config});
- };
+ 
  return {
      props:  {function_post:post_component},
      data:   null,
-     template: render_template({spinner:'css_spinner',
-                                server_group:server_groups, 
-                                file:props.file,
-                                config:[]})
+     template: template({   spinner:'css_spinner',
+                            server_group:server_groups, 
+                            file:props.file,
+                            config:[]})
  };
 };
 export default component;

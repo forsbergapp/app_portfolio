@@ -101,51 +101,17 @@ const component = async props => {
        const server_info = await props.function_FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
                                .then((/**@type{string}*/result)=>JSON.parse(result));
        
-       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:'',
-                                                                                                        function_seconds_to_time:seconds_to_time,
-                                                                                                        server_info:server_info,
-                                                                                                   });
-   };
-   /**
-    * @param {{ spinner:string,
-    *           function_seconds_to_time:function,
-    *           server_info:{os:{   hostname:string,
-    *                               cpus:{length:number},
-    *                               arch:string,
-    *                               freemem:number,
-    *                               totalmem:number,
-    *                               platform:string,
-    *                               type:string,
-    *                               release:string,
-    *                               version:string,
-    *                               uptime:number,
-    *                               homedir:string,
-    *                               tmpdir:string,
-    *                               userinfo:{username:string, homedir:string}
-    *                          },
-    *                       process:{  memoryusage_rss:string,
-    *                                  memoryusage_heaptotal:number,
-    *                                  memoryusage_heapused:number,
-    *                                  memoryusage_external:number,
-    *                                  memoryusage_arraybuffers:number,
-    *                                  uptime:number,
-    *                                  version:string,
-    *                                  path:string,
-    *                                  start_arg_0:string,
-    *                                  start_arg_1:string}}|null}} template_props
-    */
-   const render_template = template_props =>{
-       return template({   spinner:template_props.spinner, 
-                            function_seconds_to_time:template_props.function_seconds_to_time, 
-                            server_info:template_props.server_info
-       });
+       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({  spinner:'',
+                                                                                                function_seconds_to_time:seconds_to_time,
+                                                                                                server_info:server_info,
+                                                                                            });
    };
    return {
        props:  {function_post:post_component},
        data:   null,
-       template: render_template({ spinner:'css_spinner',
-                                    function_seconds_to_time:seconds_to_time,
-                                    server_info:null
+       template: template({ spinner:'css_spinner',
+                            function_seconds_to_time:seconds_to_time,
+                            server_info:null
        })
    };
 };

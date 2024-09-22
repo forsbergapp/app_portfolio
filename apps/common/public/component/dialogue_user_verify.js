@@ -1,22 +1,27 @@
 /**
  * @module apps/common/component/dialogue_user_verify
  */
-
-const template =`
-                <div id='common_user_verify_email_icon' class='common_icon'></div>
-                <div id='common_user_verify_email'><TITLE/></div>
-                <div id='common_user_verify_data_verification_type'><VERIFICATION_TYPE/></div>
-                <div id='common_user_verify_data_username'><USERNAME/></div>
-                <div id='common_user_verify_data_password'><PASSWORD/></div>
-                <div id='common_user_verify_verification_container'>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char1' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char2' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char3' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char4' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char5' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>
-                    <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char6' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>                
-                </div>
-                <div id='common_user_verify_cancel' class='common_dialogue_button common_icon'></div>`;
+/**
+ * @param {{title: string,
+ *          verification_type:string,
+ *          username:string,
+ *          password:string}} props
+ */
+const template = props => `
+                            <div id='common_user_verify_email_icon' class='common_icon'></div>
+                            <div id='common_user_verify_email'>${props.title}</div>
+                            <div id='common_user_verify_data_verification_type'>${props.verification_type}</div>
+                            <div id='common_user_verify_data_username'>${props.username}</div>
+                            <div id='common_user_verify_data_password'>${props.password}</div>
+                            <div id='common_user_verify_verification_container'>
+                                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char1' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>
+                                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char2' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>
+                                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char3' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>
+                                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char4' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>
+                                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char5' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>
+                                <div class='common_user_verify_verification_wrap'><div id='common_user_verify_verification_char6' contentEditable='true' class='common_input common_user_verify_input_verification_char'></div></div>                
+                            </div>
+                            <div id='common_user_verify_cancel' class='common_dialogue_button common_icon'></div>`;
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -60,20 +65,17 @@ const component = async props => {
             break;
         }
     }
-    const render_template = () =>{
-        return template
-                .replace('<TITLE/>',props.title)
-                .replace('<VERIFICATION_TYPE/>',verification_type)
-                .replace('<USERNAME/>',username)
-                .replace('<PASSWORD/>',password);
-    };
+    
     const post_component = async () =>{
         props.common_document.querySelector(`#${props.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.function_data_function;
     };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template()
+        template: template({title: props.title,
+                            verification_type:verification_type,
+                            username:username,
+                            password:password})
     };
 };
 export default component;

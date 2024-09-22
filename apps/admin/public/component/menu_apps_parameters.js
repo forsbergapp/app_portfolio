@@ -51,21 +51,17 @@ const component = async props => {
         const app_parameters = await props.function_FFB(`/server-config/config-apps/${props.app_id_data}`, 'key=PARAMETERS', 'GET', 'APP_ACCESS', null)
                                 .then((/**@type{string}*/result)=>JSON.parse(result)[0].PARAMETERS);
         
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({spinner:'', app_id:props.app_id_data, app_parameters:app_parameters});
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
+                                                                                                app_id:props.app_id_data, 
+                                                                                                app_parameters:app_parameters});
         
-    };
-    /**
-     * @param {{spinner:string, 
-     *          app_id:number,
-     *          app_parameters:[{COMMENT:string}]|[]}} template_props
-     */
-    const render_template = template_props =>{
-        return template({spinner:template_props.spinner, app_id:template_props.app_id, app_parameters:template_props.app_parameters});
     };
     return {
        props:  {function_post:post_component},
        data:   null,
-       template: render_template({spinner:'css_spinner', app_id:props.app_id_data, app_parameters:[]})
+       template: template({ spinner:'css_spinner', 
+                            app_id:props.app_id_data, 
+                            app_parameters:[]})
     };
 };
 export default component;

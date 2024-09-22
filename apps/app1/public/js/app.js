@@ -44,7 +44,7 @@ const app_event_click = event => {
         .then(()=>{
             switch (event_target_id){
                 case event.target.classList.contains('common_select_option')?event_target_id:'':
-                case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
+                case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
                     if (event_target_id == 'common_dialogue_user_menu_user_locale_select')
                         get_apps();
                     if (event_target_id == 'common_dialogue_user_menu_user_arabic_script_select')

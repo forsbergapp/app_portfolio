@@ -4,7 +4,8 @@
 
 /**
  * 
- * @param {{list:*,
+ * @param {{spinner:string,
+ *          list:*,
  *          lov:string,
  *          lov_column_value:string}} props 
  * @returns {string}
@@ -15,7 +16,7 @@ const template = props =>`  <div id='common_lov_form'>
                                     <div id='common_lov_search_input' contentEditable='true' class='common_input'></div>
                                     <div id='common_lov_search_icon' class='common_icon'></div>
                                 </div>
-                            <div id='common_lov_list' data-lov='${props.lov}' class='common_list_scrollbar <SPINNER/>'>
+                            <div id='common_lov_list' data-lov='${props.lov}' class='common_list_scrollbar ${props.spinner}'>
                                 ${props.list.map((/**@type{*}*/list_row)=>
                                     `<div data-id='${props.lov_column_value.startsWith('text')?list_row.value:list_row.id}' data-value='${list_row[props.lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
                                         <div class='common_list_lov_col1'>
@@ -46,14 +47,15 @@ const template = props =>`  <div id='common_lov_form'>
 const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show2');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
-    let spinner = 'css_spinner';
     /**
      * @returns {void}
      */
      const post_component = () =>{
         if (props.lov=='CUSTOM'){
-            spinner = '';
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({list:props.lov_custom_list, lov:props.lov, lov_column_value:props.lov_custom_value ??''});
+            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
+                                                                                                    list:props.lov_custom_list, 
+                                                                                                    lov:props.lov, 
+                                                                                                    lov_column_value:props.lov_custom_value ??''});
             props.common_document.querySelector('#common_lov_list')['data-function'] = props.function_event;
             props.common_document.querySelector('#common_lov_search_input').focus();
         }
@@ -100,31 +102,19 @@ const component = async props => {
             }
             props.function_FFB(path, query, 'GET', token_type, null)
             .then((/**@type{string}*/result)=>{
-                    spinner = '';
-                    props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({list:JSON.parse(result).rows, lov:props.lov, lov_column_value:lov_column_value});
+                    props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
+                                                                                                            list:JSON.parse(result).rows, 
+                                                                                                            lov:props.lov, 
+                                                                                                            lov_column_value:lov_column_value});
                     props.common_document.querySelector('#common_lov_list')['data-function'] = props.function_event;
                     props.common_document.querySelector('#common_lov_search_input').focus();
-            })
-            .catch(()=>props.common_document.querySelector('#common_lov_list').classList.remove('css_spinner'));
+            });
         }
     };
-    /**
-     * 
-     * @param {{list:*,
-     *          lov:string,
-     *          lov_column_value:string}} props 
-     * @returns 
-     */
-    const render_template = props =>{
-        return template(props)
-                .replace('<SPINNER/>', spinner);
-    };
-    //render first time with spinner and empty records
-    //post function will render again without spinner
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({list: [], lov:props.lov, lov_column_value:''})
+        template: template({spinner:'css_spinner', list: [], lov:props.lov, lov_column_value:''})
     };
 };
 export default component;
