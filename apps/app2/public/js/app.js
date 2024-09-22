@@ -1782,6 +1782,9 @@ const app_event_click = event => {
                         //popular place not on map is read when saving
                         component_setting_update('GPS', 'CITY');
                     }
+                    //module leaflet
+                    if (event_target_id == 'common_module_leaflet_select_mapstyle')
+                        component_setting_update('GPS', 'MAP');
                     break;
                 }
                 //info dialogue
@@ -2313,12 +2316,6 @@ const app_event_change = event => {
                     profile_show_user_setting_detail(   Number(event.target.options[event.target.selectedIndex].getAttribute('liked')), 
                                                         Number(event.target.options[event.target.selectedIndex].getAttribute('count_likes')), 
                                                         Number(event.target.options[event.target.selectedIndex].getAttribute('count_views')));
-                    break;
-                }
-                //common
-                //module leaflet
-                case 'common_module_leaflet_select_mapstyle':{
-                    component_setting_update('GPS', 'MAP');
                     break;
                 }
             }

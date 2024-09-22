@@ -8,8 +8,7 @@
  *          title_fullscreen:string,
  *          title_my_location:string,
  *          longitude : string, 
- *          latitude : string,
- *          map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[]}} props
+ *          latitude : string}} props
  */
 const template = props =>` <div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='${props.title_search}' role='button'>
                             <div id='common_module_leaflet_control_search_button' class='common_icon'></div>
@@ -35,12 +34,7 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
                         <div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' title='Layer' role='button'>
                             <div id='common_module_leaflet_control_layer_button' class='common_icon'></div>
                             <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
-                                <select id='common_module_leaflet_select_mapstyle' >
-                                    ${props.map_layers.map((/**@type{*}*/row)=>(
-                                        `<option id=${row.id} value='${row.value}'>${row.display_data}</option>`)
-                                        ).join('')
-                                    }
-                                </select>
+                                <div id='common_module_leaflet_select_mapstyle' ></div>
                             </div>
                         </div>`;
 /**
@@ -77,8 +71,7 @@ const component = async props => {
                         title_fullscreen:'Fullscreen',
                         title_my_location:'My location',
                         longitude :props.latitude,
-                        latitude :props.longitude,
-                        map_layers:props.map_layers,
+                        latitude :props.longitude
                     });
         //country
         await props.function_ComponentRender('common_module_leaflet_select_country', 
@@ -92,20 +85,32 @@ const component = async props => {
                 authorization_type:null,
                 column_value:'value',
                 column_text:'text',
-                function_FFB:props.function_FFB
+                function_FFB:null
             }, '/common/component/select.js');
         //cities, caal function that sets empty record
         props.function_map_city_empty();
 
+        //map layers
+        await props.function_ComponentRender('common_module_leaflet_select_mapstyle', 
+            {
+                default_data_value:props.map_layers[0].value,
+                default_value:props.map_layers[0].display_data,
+                options:props.map_layers,
+                path:null,
+                query:null,
+                method:null,
+                authorization_type:null,
+                column_value:'value',
+                column_text:'display_data',
+                function_FFB:null
+            }, '/common/component/select.js');
+        
         if (props.function_search_event){
-            //add search function in data-function that event delegation will use
-            
+            //add search function in data-function that event delegation will use            
             props.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.function_search_event;
         }
         //set additonal settings on rendered Leaflet module
         props.function_map_setstyle(props.map_layer);
-        //set map layer 
-        props.function_SearchAndSetSelectedIndex(props.map_layer, props.common_document.querySelector('#common_module_leaflet_select_mapstyle'),1);
     };
     return {
         props:  {function_post:post_component},
