@@ -56,14 +56,10 @@ const component = async props => {
               function_FFB:props.function_FFB
             }, '/common/component/select.js');
     };
-    const render_template = () =>{
-        return template({   admin_class:props.system_admin?'system_admin':'admin'
-        });
-    };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template()
+        template: template({ admin_class:props.system_admin?'system_admin':'admin'})
     };
 };
 export default component;

@@ -75,7 +75,7 @@ const component = async props => {
      * @returns{void}
      */
     const render_message = (display_message, display_message_font_class) =>{
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template(
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template(
             {   message:display_message,
                 message_type:props.message_type,
                 message_title_font_class:display_message_font_class,
@@ -123,28 +123,15 @@ const component = async props => {
             }
         }
     };
-    /**
-     * 
-     * @param {{message:*,
-     *          message_type:string,
-     *          message_title_font_class:string|null,
-     *          message_title_icon_class:string,
-     *          translation_confirm_question:string
-     *        }} props_template 
-     * @returns 
-     */
-    const render_template = (props_template) =>{
-        return template(props_template);
-    };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({ message:'',
-                                    message_type:'',
-                                    message_title_font_class:'',
-                                    message_title_icon_class:'',
-                                    translation_confirm_question:''
-                                })
+        template: template({    message:'',
+                                message_type:'',
+                                message_title_font_class:'',
+                                message_title_icon_class:'',
+                                translation_confirm_question:''
+                            })
     };
 };
 export default component;

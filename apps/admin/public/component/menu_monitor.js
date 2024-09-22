@@ -41,7 +41,7 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
  */
 const component = async props => {
     const post_component = async () =>{
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({spinner:'', system_admin:props.system_admin});
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({spinner:'', system_admin:props.system_admin});
         //mount select
         await props.function_ComponentRender('select_year_menu5', 
             {
@@ -107,20 +107,12 @@ const component = async props => {
         props.function_map_mount();
 
     };
- /**
-  * @param {{   spinner:string,
-  *             system_admin:string|null}} template_props
-  */
- const render_template = template_props =>{
-     return template({  spinner:template_props.spinner,
-                        system_admin:template_props.system_admin
-     });
- };
- return {
-     props:  {function_post:post_component},
-     data:   {limit:await props.function_FFB(`/server-config/config-apps/${props.app_id}`, 'key=PARAMETERS', 'GET', props.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
-                        .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS))},
-     template: render_template({spinner:'css_spinner', system_admin:props.system_admin})
- };
+
+    return {
+        props:  {function_post:post_component},
+        data:   {limit:await props.function_FFB(`/server-config/config-apps/${props.app_id}`, 'key=PARAMETERS', 'GET', props.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
+                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS))},
+        template: template({spinner:'css_spinner', system_admin:props.system_admin})
+    };
 };
 export default component;

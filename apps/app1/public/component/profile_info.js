@@ -2,7 +2,7 @@
  * @module apps/app1/component/profile_info
  */
 
-const template ='   <div id=\'profile_info_apps\'></div>';
+const template = () =>' <div id=\'profile_info_apps\'></div>';
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -13,13 +13,10 @@ const template ='   <div id=\'profile_info_apps\'></div>';
  */
 const component = async props => {
     props;
-    const render_template = () =>{
-        return template;
-    };
     return {
         props:  {function_post:null},
         data:   null,
-        template: render_template()
+        template: template()
     };
 };
 export default component;

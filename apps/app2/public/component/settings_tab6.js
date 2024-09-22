@@ -2,7 +2,7 @@
  * @module apps/app2/component/settings_tab6
  */
 
-const template =`   <div class='setting_horizontal_row'>
+const template = () =>`   <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_icon_prayer_method' class='common_icon'></div>
@@ -193,7 +193,7 @@ const template =`   <div class='setting_horizontal_row'>
 const method = async props => {
     
     const render_template = () =>{
-        return template
+        return template()
                     .replace('<AppMethod/>',props.AppMethod ?? '')
                     .replace('<AppMethodAsr/>',props.AppMethodAsr ?? '')
                     .replace('<AppHighlatitudeadjustment/>',props.AppHighlatitudeadjustment ?? '')

@@ -17,13 +17,10 @@ const template = () =>` <div id='app_main'>
 const component = async props => {
     props;
     
-    const render_template = () =>{
-        return template();
-    };
     return {
         props:  {function_post:null},
         data:   null,
-        template: render_template()
+        template: template()
     };
 };
 export default component;

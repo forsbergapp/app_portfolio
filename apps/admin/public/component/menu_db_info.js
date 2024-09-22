@@ -90,64 +90,33 @@ const component = async props => {
         const db = await props.function_FFB('/server-db_admin/database', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
         const db_detail = await props.function_FFB('/server-db_admin/database-space', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
         const db_detail_sum = await props.function_FFB('/server-db_admin/database-spacesum', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:'',
-                                                                                                        size:size,
-                                                                                                        db:db,
-                                                                                                        db_detail:db_detail,
-                                                                                                        db_detail_sum:db_detail_sum,
-                                                                                                        function_roundOff:props.function_roundOff
-                                                                                                    });
-  };
-  /**
-   * @param {{spinner:string,
-   *          size:string,
-   *          db:{  database_use:string,
-   *                database_name:string,
-   *                version:string,
-   *                database_schema:string,
-   *                hostname:string,
-   *                connections:string,
-   *                started:string},
-   *          db_detail:[{table_name:string,
-   *                      total_size: number,
-   *                      data_used:string,
-   *                      data_free:string,
-   *                      pct_used:string}]|[],
-   *          db_detail_sum:{ table_name:string,
-   *                          total_size: number,
-   *                          data_used:string,
-   *                          data_free:string,
-   *                          pct_used:string},
-   *          function_roundOff:function}} template_props
-   */
-  const render_template = template_props =>{
-      return template({   spinner:template_props.spinner,
-                          size:template_props.size,
-                          db:template_props.db,
-                          db_detail:template_props.db_detail,
-                          db_detail_sum:template_props.db_detail_sum,
-                          function_roundOff:props.function_roundOff
-      });
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'',
+                                                                                                size:size,
+                                                                                                db:db,
+                                                                                                db_detail:db_detail,
+                                                                                                db_detail_sum:db_detail_sum,
+                                                                                                function_roundOff:props.function_roundOff
+                                                                                            });
   };
   return {
       props:  {function_post:post_component},
       data:   null,
-      template: render_template({ spinner:'css_spinner',
-                                  size:size,
-                                  db:{  database_use:'',
-                                        database_name:'',
-                                        version:'',
-                                        database_schema:'',
-                                        hostname:'',
-                                        connections:'',
-                                        started:''},
-                                  db_detail:[],
-                                  db_detail_sum:{   table_name:'',
-                                                    total_size: 0,
-                                                    data_used:'',
-                                                    data_free:'',
-                                                    pct_used:''},
-                                  function_roundOff:props.function_roundOff
+      template: template({  spinner:'css_spinner',
+                            size:size,
+                            db:{  database_use:'',
+                                database_name:'',
+                                version:'',
+                                database_schema:'',
+                                hostname:'',
+                                connections:'',
+                                started:''},
+                            db_detail:[],
+                            db_detail_sum:{   table_name:'',
+                                            total_size: 0,
+                                            data_used:'',
+                                            data_free:'',
+                                            pct_used:''},
+                            function_roundOff:props.function_roundOff
       })
   };
 };

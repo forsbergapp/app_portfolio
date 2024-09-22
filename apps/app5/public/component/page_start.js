@@ -30,23 +30,13 @@ const template = props => ` <div id='app_page_start_divs'>
  */
 const component = async props => {
     props;
-    /**
-     * @param {{text_account:string,
-     *          text_statements:string,
-     *          text_directpayment:string,
-     *          text_iso:string}} props_template
-     * @returns {string}
-     */
-    const render_template = props_template =>{
-        return template(props_template);
-    };
     return {
         props:  {function_post:null},
         data:   null,
-        template: render_template({ text_account:'BANK ACCOUNT',
-                                    text_statements:'BANK STATEMENTS',
-                                    text_directpayment:'DIRECT PAYMENT',
-                                    text_iso:'ISO STANDARDS'})
+        template: template({text_account:'BANK ACCOUNT',
+                            text_statements:'BANK STATEMENTS',
+                            text_directpayment:'DIRECT PAYMENT',
+                            text_iso:'ISO STANDARDS'})
     };
 };
 export default component;

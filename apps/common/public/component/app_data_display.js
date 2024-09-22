@@ -311,25 +311,25 @@ const component = async props => {
             
         spinner = '';
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
-            render_template({   display_type:props.display_type,
-                                master_object:master_object,
-                                rows:(props.detail_path && detail_rows.length>0)?(Object.values(detail_rows[0])[0].constructor===Array?Object.values(detail_rows[0])[0]:detail_rows):[],
-                                detail_class:props.detail_class,
-                                new_resource:props.new_resource,
-                                mode:props.mode,
-                                function_format_value:format_value,
-                                function_div_id:div_id,
-                                timezone:props.timezone, 
-                                locale:props.locale,
-                                spinner:spinner,
-                                button_print:props.button_print,
-                                button_print_icon_class:props.button_print_icon_class,
-                                button_update:props.button_update,
-                                button_update_icon_class:props.button_update_icon_class,
-                                button_post:props.button_post,
-                                button_post_icon_class:props.button_post_icon_class,
-                                button_delete:props.button_delete,
-                                button_delete_icon_class:props.button_delete_icon_class});
+            template({  display_type:props.display_type,
+                        master_object:master_object,
+                        rows:(props.detail_path && detail_rows.length>0)?(Object.values(detail_rows[0])[0].constructor===Array?Object.values(detail_rows[0])[0]:detail_rows):[],
+                        detail_class:props.detail_class,
+                        new_resource:props.new_resource,
+                        mode:props.mode,
+                        function_format_value:format_value,
+                        function_div_id:div_id,
+                        timezone:props.timezone, 
+                        locale:props.locale,
+                        spinner:spinner,
+                        button_print:props.button_print,
+                        button_print_icon_class:props.button_print_icon_class,
+                        button_update:props.button_update,
+                        button_update_icon_class:props.button_update_icon_class,
+                        button_post:props.button_post,
+                        button_post_icon_class:props.button_post_icon_class,
+                        button_delete:props.button_delete,
+                        button_delete_icon_class:props.button_delete_icon_class});
         if (props.function_button_print)
             props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_print`)['data-function'] = props.function_button_print;
         if (props.function_button_update)
@@ -339,36 +339,28 @@ const component = async props => {
         if (props.function_button_delete)
             props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_delete`)['data-function'] = props.function_button_delete;
     };
-    /**
-     * 
-     * @param {props_template} props_template_parameters 
-     * @returns 
-     */
-    const render_template = props_template_parameters =>{
-        return template(props_template_parameters);
-    };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({ display_type:props.display_type,
-                                    master_object:null,
-                                    rows:[],
-                                    detail_class:props.detail_class,
-                                    new_resource:props.new_resource,
-                                    mode:props.mode,
-                                    function_format_value:format_value,
-                                    function_div_id:div_id,
-                                    timezone:props.timezone,
-                                    locale:props.locale,
-                                    spinner:spinner,
-                                    button_print:false,
-                                    button_print_icon_class:props.button_print_icon_class,
-                                    button_update:false,
-                                    button_update_icon_class:props.button_update_icon_class,
-                                    button_post:false,
-                                    button_post_icon_class:props.button_post_icon_class,
-                                    button_delete:false,
-                                    button_delete_icon_class:props.button_delete_icon_class})
+        template: template({display_type:props.display_type,
+                            master_object:null,
+                            rows:[],
+                            detail_class:props.detail_class,
+                            new_resource:props.new_resource,
+                            mode:props.mode,
+                            function_format_value:format_value,
+                            function_div_id:div_id,
+                            timezone:props.timezone,
+                            locale:props.locale,
+                            spinner:spinner,
+                            button_print:false,
+                            button_print_icon_class:props.button_print_icon_class,
+                            button_update:false,
+                            button_update_icon_class:props.button_update_icon_class,
+                            button_post:false,
+                            button_post_icon_class:props.button_post_icon_class,
+                            button_delete:false,
+                            button_delete_icon_class:props.button_delete_icon_class})
     };
 };
 export default component;
