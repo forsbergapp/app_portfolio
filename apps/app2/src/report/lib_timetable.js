@@ -2,6 +2,46 @@
  * @module apps/app2/report/lib_timetable
  */
 
+const col_title_record_default = {
+									coltitle_transliteration_imsak: 'Imsak',
+									coltitle_transliteration_fajr: 'Fajr',
+									coltitle_transliteration_fajr_iqamat: 'Iqamat',
+									coltitle_transliteration_sunrise: 'Shoorok',
+									coltitle_transliteration_dhuhr: 'Dhuhr',
+									coltitle_transliteration_dhuhr_iqamat: 'Iqamat',
+									coltitle_transliteration_asr: 'Asr',
+									coltitle_transliteration_asr_iqamat: 'Iqamat',
+									coltitle_transliteration_sunset: 'Sunset',
+									coltitle_transliteration_maghrib: 'Maghrib',
+									coltitle_transliteration_maghrib_iqamat: 'Iqamat',
+									coltitle_transliteration_isha: 'Isha',
+									coltitle_transliteration_isha_iqamat: 'Iqamat',
+									coltitle_transliteration_midnight: 'Midnight',
+									timetable_title: 'Timetable',
+									coltitle_day: 'Day',
+									coltitle_weekday: 'Weekday',
+									coltitle_weekday_tr: '',
+									coltitle_caltype_hijri: 'Hijri',
+									coltitle_caltype_gregorian: 'Gregorian',
+									coltitle_imsak: 'Imsak',
+									coltitle_fajr: 'Dawn',
+									coltitle_fajr_iqamat: 'Iqamat',
+									coltitle_sunrise: 'Sunrise',
+									coltitle_dhuhr: 'Noon',
+									coltitle_dhuhr_iqamat: 'Iqamat',
+									coltitle_asr: 'Afternoon',
+									coltitle_asr_iqamat: 'Iqamat',
+									coltitle_sunset: 'Sunset',
+									coltitle_maghrib: 'Sunset',
+									coltitle_maghrib_iqamat: 'Iqamat',
+									coltitle_isha: 'Night',
+									coltitle_isha_iqamat: 'Iqamat',
+									coltitle_midnight: 'Midnight',
+									coltitle_notes: 'Notes',
+									timezone_text: '🌐',
+									gps_lat_text:'📍',
+									gps_long_text:''
+								};
 /**@type{import('../types.js').APP_REPORT_GLOBAL} */
 const REPORT_GLOBAL = {
 	app_copyright:'',
@@ -14,71 +54,10 @@ const REPORT_GLOBAL = {
 	regional_def_locale_ext_calendar:'',
 	regional_def_calendar_type_greg:'',
 	regional_def_calendar_number_system:'',
-	first_language:{
-						coltitle_transliteration_imsak: 'Imsak',
-						coltitle_transliteration_fajr: 'Fajr',
-						coltitle_transliteration_fajr_iqamat: 'Iqamat',
-						coltitle_transliteration_sunrise: 'Shoorok',
-						coltitle_transliteration_dhuhr: 'Dhuhr',
-						coltitle_transliteration_dhuhr_iqamat: 'Iqamat',
-						coltitle_transliteration_asr: 'Asr',
-						coltitle_transliteration_asr_iqamat: 'Iqamat',
-						coltitle_transliteration_sunset: 'Sunset',
-						coltitle_transliteration_maghrib: 'Maghrib',
-						coltitle_transliteration_maghrib_iqamat: 'Iqamat',
-						coltitle_transliteration_isha: 'Isha',
-						coltitle_transliteration_isha_iqamat: 'Iqamat',
-						coltitle_transliteration_midnight: 'Midnight',
-						timetable_title: 'Timetable',
-						coltitle_day: 'Day',
-						coltitle_weekday: 'Weekday',
-						coltitle_weekday_tr: '',
-						coltitle_caltype_hijri: 'Hijri',
-						coltitle_caltype_gregorian: 'Gregorian',
-						coltitle_imsak: 'Imsak',
-						coltitle_fajr: 'Dawn',
-						coltitle_fajr_iqamat: 'Iqamat',
-						coltitle_sunrise: 'Sunrise',
-						coltitle_dhuhr: 'Noon',
-						coltitle_dhuhr_iqamat: 'Iqamat',
-						coltitle_asr: 'Afternoon',
-						coltitle_asr_iqamat: 'Iqamat',
-						coltitle_sunset: 'Sunset',
-						coltitle_maghrib: 'Sunset',
-						coltitle_maghrib_iqamat: 'Iqamat',
-						coltitle_isha: 'Night',
-						coltitle_isha_iqamat: 'Iqamat',
-						coltitle_midnight: 'Midnight',
-						coltitle_notes: 'Notes',
-						timezone_text: '🌐',
-						gps_lat_text:'📍',
-						gps_long_text:''
-					},
+	first_language:col_title_record_default,
 	//second language objects that are displayed are column titles
 	//transliterated column titles are used by first language
-	second_language:{
-						timetable_title: 'Timetable',
-						coltitle_day: 'Day',
-						coltitle_weekday: 'Weekday',
-						coltitle_weekday_tr: '',
-						coltitle_caltype_hijri: 'Hijri',
-						coltitle_caltype_gregorian: 'Gregorian',
-						coltitle_imsak: 'Imsak',
-						coltitle_fajr: 'Dawn',
-						coltitle_fajr_iqamat: 'Iqamat',
-						coltitle_sunrise: 'Sunrise',
-						coltitle_dhuhr: 'Noon',
-						coltitle_dhuhr_iqamat: 'Iqamat',
-						coltitle_asr: 'Afternoon',
-						coltitle_asr_iqamat: 'Iqamat',
-						coltitle_sunset: 'Sunset',
-						coltitle_maghrib: 'Sunset',
-						coltitle_maghrib_iqamat: 'Iqamat',
-						coltitle_isha: 'Night',
-						coltitle_isha_iqamat: 'Iqamat',
-						coltitle_midnight: 'Midnight',
-						coltitle_notes: 'Notes'
-					}
+	second_language:col_title_record_default
 };
 Object.seal(REPORT_GLOBAL);
 /**
@@ -245,8 +224,65 @@ const getNumberString = (numbersystem, number) => {
 	}
 };
 /**
+ * Translates first and second language used on timetable
+ *	@param {function} function_fetch
+ *  @param {string} locale
+ *  @param {string} locale_second
+ */
+const timetable_translate_settings = async (function_fetch, locale, locale_second) =>{
+	/**
+	 * @param {string} locale 
+	 * @param {boolean} first 
+	 * @returns 
+	 */
+	const fetch_translation = async (locale, first) => {
+		/**@type{{	object:string, 
+		 *       	app_id:number, 
+	     *          object_name:string, 
+	     *          object_item_name:string, 
+	     *          subitem_name:string,
+	     *          lang_code:string,
+	     *          id:number,
+	     *          text:string}[]} */
+		const objects = await function_fetch(locale);
+		//show translation using first or second language
+		for (const app_object_item of objects){
+			if (first == true)
+				REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
+			else
+				REPORT_GLOBAL.second_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
+		}
+	};
+	await fetch_translation(locale, true).then(() => {
+		if (locale_second =='0'){
+			REPORT_GLOBAL.second_language.timetable_title = '';
+			REPORT_GLOBAL.second_language.coltitle_day = '';
+			REPORT_GLOBAL.second_language.coltitle_weekday = '';
+			REPORT_GLOBAL.second_language.coltitle_weekday_tr = '';
+			REPORT_GLOBAL.second_language.coltitle_caltype_hijri = '';
+			REPORT_GLOBAL.second_language.coltitle_caltype_gregorian = '';
+			REPORT_GLOBAL.second_language.coltitle_imsak = '';
+			REPORT_GLOBAL.second_language.coltitle_fajr = '';
+			REPORT_GLOBAL.second_language.coltitle_fajr_iqamat = '';
+			REPORT_GLOBAL.second_language.coltitle_sunrise = '';
+			REPORT_GLOBAL.second_language.coltitle_dhuhr = '';
+			REPORT_GLOBAL.second_language.coltitle_dhuhr_iqamat = '';
+			REPORT_GLOBAL.second_language.coltitle_asr = '';
+			REPORT_GLOBAL.second_language.coltitle_asr_iqamat = '';
+			REPORT_GLOBAL.second_language.coltitle_sunset = '';
+			REPORT_GLOBAL.second_language.coltitle_maghrib = '';
+			REPORT_GLOBAL.second_language.coltitle_maghrib_iqamat = '';
+			REPORT_GLOBAL.second_language.coltitle_isha = '';
+			REPORT_GLOBAL.second_language.coltitle_isha_iqamat = '';
+			REPORT_GLOBAL.second_language.coltitle_midnight = '';
+			REPORT_GLOBAL.second_language.coltitle_notes = '';
+		}
+	});
+	await fetch_translation(locale_second, false);
+};
+/**
  * Get column titles
-* @param {number} 		transliteration 
+ * @param {number} 		transliteration 
  * @param {string} 		calendartype 
  * @param {string} 		locale 
  * @param {string|null} second_locale 
@@ -1624,6 +1660,7 @@ const displayYear = (prayTimes, settings, button_id) => {
 	return year_timetable();
 };
 export{	REPORT_GLOBAL,
+		timetable_translate_settings,
 		set_prayer_method,
 		displayDay,
 		displayMonth,

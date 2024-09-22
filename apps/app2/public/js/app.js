@@ -152,12 +152,8 @@ const APP_GLOBAL = {
     places:null,
     user_settings:user_settings_empty,
     //lib
-    lib_prayTimes:null,
-    lib_timetable:{ set_prayer_method:()=>null, 
-                    REPORT_GLOBAL:null, 
-                    displayDay:()=>null, 
-                    displayMonth:()=>null, 
-                    displayYear:()=>null}
+    lib_prayTimes:prayTimes,
+    lib_timetable:lib_timetable
     };
 Object.seal(APP_GLOBAL);
 /**
@@ -452,56 +448,27 @@ const theme_nav = async (nav, type) => {
 
 /**
  * Setting translate
- * @param {boolean} first 
  * @returns {Promise.<void>}
  */
-const settings_translate = async (first=true) => {
-    
-    let locale;
-    if (first ==true){
-        locale = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_language_locale;
-    }
-    else
-        locale = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_second_language_locale;
-    if (locale != '0'){
-        //fetch any message with first language always
-        //show translation using first or second language
-        await common.FFB('/server-db/app_object', `data_lang_code=${locale}&object_name=REPORT`,  'GET', 'APP_DATA', null)
-        .then((/**@type{string}*/result)=>{
-            for (const app_object_item of JSON.parse(result).rows){
-                if (first==true)
-                    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
-                else
-                    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
-            }
-            //if translating first language and second language is not used
-            if (first == true &&
-                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_second_language_locale =='0'){
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.timetable_title= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_day= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_weekday= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_weekday_tr= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_caltype_hijri= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_caltype_gregorian= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_imsak= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_fajr= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_fajr_iqamat= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_sunrise= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_dhuhr= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_dhuhr_iqamat= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_asr= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_asr_iqamat= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_sunset= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_maghrib= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_maghrib_iqamat= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_isha= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_isha_iqamat= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_midnight= '';
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.second_language.coltitle_notes= '';
-            }
-        })
-        .catch(()=>null);
-    }
+const settings_translate = async () => {
+    const locale        = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_language_locale;
+    const locale_second = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_second_language_locale;
+
+    /**
+     * @param {string} locale
+     * @returns {Promise<[{ object:string, 
+     *                      app_id:number, 
+     *                      object_name:string, 
+     *                      object_item_name:string, 
+     *                      subitem_name:string,
+     *                      lang_code:string,
+     *                      id:number,
+     *                      text:string}]>}
+     */
+    const function_fetch = async locale =>await common.FFB('/server-db/app_object', `data_lang_code=${locale}&object_name=REPORT`,  'GET', 'APP_DATA', null)
+                                    .then(result=>JSON.parse(result).rows);
+    APP_GLOBAL.lib_timetable.timetable_translate_settings(function_fetch, locale, locale_second);
+
 };
 /**
  * Get horizontal alignment
@@ -957,11 +924,9 @@ const user_logout_app = () => {
         common.ComponentRemove('common_dialogue_profile', true);
         //set default settings
         set_default_settings().then(() => {
-            settings_translate(true).then(() => {
-                settings_translate(false).then(() => {
-                    //show default startup
-                    toolbar_button(APP_GLOBAL.app_default_startup_page);
-                });
+            settings_translate().then(() => {
+                //show default startup
+                toolbar_button(APP_GLOBAL.app_default_startup_page);
             });
         });
     });    
@@ -984,12 +949,10 @@ const login_common = (avatar) => {
         CommonAppDocument.querySelector('#paper').innerHTML='';
         dialogue_loading(1);
         user_settings_get().then(() => {
-            settings_translate(true).then(() => {
-                settings_translate(false).then(() => {
-                    //show default startup
-                    toolbar_button(APP_GLOBAL.app_default_startup_page);
-                    dialogue_loading(0);
-                });
+            settings_translate().then(() => {
+                //show default startup
+                toolbar_button(APP_GLOBAL.app_default_startup_page);
+                dialogue_loading(0);
             });
         });
     });
@@ -1463,9 +1426,7 @@ const user_settings_delete = (choice=null) => {
                     APP_GLOBAL.user_settings.data.splice(select.selectedIndex,1);
                     APP_GLOBAL.user_settings.current_id = select.selectedIndex;
                     //load next available
-                    user_settings_load(7)
-                    .then(()=>settings_translate(true))
-                    .then(()=>settings_translate(false))
+                    settings_translate()
                     .then(()=>CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
                 }
                 
@@ -2272,7 +2233,7 @@ const app_event_change = event => {
                 //settings regional
                 case 'setting_select_locale':{
                     settings_update('REGIONAL');
-                    settings_translate(true);
+                    settings_translate();
                     break;
                 }
                 case 'setting_select_report_timezone':{
@@ -2286,7 +2247,7 @@ const app_event_change = event => {
                 }
                 case 'setting_select_report_locale_second':{
                     settings_update('REGIONAL');
-                    settings_translate(false);
+                    settings_translate();
                     break;
                 }
                 case 'setting_select_report_coltitle':
@@ -2344,7 +2305,7 @@ const app_event_change = event => {
                 }
                 //settings user
                 case 'setting_select_user_setting':{
-                    user_settings_load(7).then(() => settings_translate(true).then(() => settings_translate(false)));
+                    settings_translate();
                     break;
                 }
                 //profile
@@ -2873,9 +2834,6 @@ const settings_load = async (tab_selected) => {
  * @returns {Promise.<void>}
  */
 const init_app = async parameters => {
-    APP_GLOBAL.lib_prayTimes = prayTimes;
-    APP_GLOBAL.lib_timetable = lib_timetable;
-
     await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
     .then(()=>common.ComponentRender('app_profile_search', {}, '/common/component/profile_search.js'))
     .then(()=>common.ComponentRender('app_profile_toolbar', {}, '/common/component/profile_toolbar.js'))
@@ -3048,26 +3006,24 @@ const init_app = async parameters => {
         //show dialogue about using mobile and scan QR code after 5 seconds
         CommonAppWindow.setTimeout(() => {show_dialogue('SCAN');}, 5000);
         set_default_settings().then(() => {
-            settings_translate(true).then(() => {
-                settings_translate(false).then(() => {
-                    const show_start = async () => {
-                        //show default startup
-                        await toolbar_button(APP_GLOBAL.app_default_startup_page);
-                        const user = CommonAppWindow.location.pathname.substring(1);
-                        if (user !='') {
-                            //show profile for user entered in url
-                            profile_show_app(null, user);
-                        }
-                    };
-                    show_start().then(() => {
-                        dialogue_loading(0);
-                        serviceworker();
-                        if (common.COMMON_GLOBAL.user_locale != CommonAppWindow.navigator.language.toLowerCase())
-                            common.common_translate_ui(common.COMMON_GLOBAL.user_locale)
-                            .then(()=>framework_set());
-                        else
-                           framework_set();
-                    });
+            settings_translate().then(() => {
+                const show_start = async () => {
+                    //show default startup
+                    await toolbar_button(APP_GLOBAL.app_default_startup_page);
+                    const user = CommonAppWindow.location.pathname.substring(1);
+                    if (user !='') {
+                        //show profile for user entered in url
+                        profile_show_app(null, user);
+                    }
+                };
+                show_start().then(() => {
+                    dialogue_loading(0);
+                    serviceworker();
+                    if (common.COMMON_GLOBAL.user_locale != CommonAppWindow.navigator.language.toLowerCase())
+                        common.common_translate_ui(common.COMMON_GLOBAL.user_locale)
+                        .then(()=>framework_set());
+                    else
+                        framework_set();
                 });
             });
         });
