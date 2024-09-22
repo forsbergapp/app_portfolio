@@ -5,14 +5,14 @@
 /**@type{import('../../../common_types.js').CommonAppWindow} */
 const CommonAppWindow = window;
 
-const template =`   <div id='common_dialogue_maintenance_content' class='common_dialogue_content'>
-                        <div id='common_maintenance_header'>
-                            <div id='common_maintenance_logo' class='common_image common_image_alert'></div>
-                        </div>
-                        <div id='common_maintenance_message'></div>
-                        <div id='common_maintenance_countdown'></div>
-                        <div id='common_maintenance_footer'></div>
-                    </div>`;
+const template = () =>` <div id='common_dialogue_maintenance_content' class='common_dialogue_content'>
+                            <div id='common_maintenance_header'>
+                                <div id='common_maintenance_logo' class='common_image common_image_alert'></div>
+                            </div>
+                            <div id='common_maintenance_message'></div>
+                            <div id='common_maintenance_countdown'></div>
+                            <div id='common_maintenance_footer'></div>
+                        </div>`;
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -34,13 +34,10 @@ const component = async props => {
             CommonAppWindow.setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
         }
     };    
-    const render_template = () =>{
-        return template;
-    };
     return {
         props:  {function_post:maintenance_countdown},
         data:   null,
-        template: render_template()
+        template: template()
     };
 };
 export default component;

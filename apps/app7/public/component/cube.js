@@ -122,17 +122,7 @@ const component = async props => {
     };
     /**@type {import('./cube_lib.js')}*/
     const cube_lib = await import('./cube_lib.js');
-
-    
-    /**
-     * @param {{icon_robot:string,
-     *          icon_human:string, 
-     *          icon_solution:string,
-     *          icon_solution_list:string}} props_template
-     */
-    const render_template = props_template =>{
-        return template(props_template);
-    };
+   
     /**
      * @returns {{cube:*, controls:*}}
      */
@@ -240,10 +230,10 @@ const component = async props => {
                 cube_multiplyAffine:        cube_lib.multiplyAffine,
                 cube_makeRotateAffineX:     cube_lib.makeRotateAffineX,
                 cube_makeRotateAffineY:     cube_lib.makeRotateAffineY},
-       template: render_template({ icon_robot:ICONS.robot,
-                                   icon_human:ICONS.human, 
-                                   icon_solution:ICONS.solution,
-                                   icon_solution_list:ICONS.solution_list})
+       template: template({ icon_robot:ICONS.robot,
+                            icon_human:ICONS.human, 
+                            icon_solution:ICONS.solution,
+                            icon_solution_list:ICONS.solution_list})
    };
 };
 export default component;

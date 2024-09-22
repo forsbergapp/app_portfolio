@@ -173,71 +173,36 @@ const component = async props => {
          *          statValue:string}[]} */
         const charts = await props.function_FFB(path, query, 'GET', authorization_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
-       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({   spinner:'', 
-                                                                                                        system_admin:props.system_admin, 
-                                                                                                        app_id:app_id,
-                                                                                                        chart1_stat:charts.filter(row=> row.chart==1),
-                                                                                                        function_chart1_pie_colors:chart1_pie_colors,
-                                                                                                        function_chart1_legend:chart1_legend,
-                                                                                                        chart2_color_app_all:'rgb(81, 171, 255)',
-                                                                                                        chart2_color_app:'rgb(197 227 255)',
-                                                                                                        chart2_stat:charts.filter(row=> row.chart==2),
-                                                                                                        chart2_legend_text:props.system_admin!=null?
-                                                                                                                                props.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').innerText:
-                                                                                                                                props.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerText,
-                                                                                                        chart2_legend_text_apps:props.system_admin!=null?
-                                                                                                                                    props.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerText:
-                                                                                                                                    ''});
-  };
-/**
-* @param {{ spinner:string,
-*           system_admin:string|null,
-*           app_id:number|null,
-*           chart1_stat:{  chart:number,
-*                          app_id:number,
-*                          day:number,
-*                          amount:number,
-*                          statValue:string}[],
-*           function_chart1_pie_colors:function,
-*           function_chart1_legend:function,
-*           chart2_color_app_all:string,
-*           chart2_color_app:string,
-*           chart2_stat:{   chart:number,
-*                          app_id:number,
-*                          day:number,
-*                          amount:number,
-*                          statValue:string}[],
-*           chart2_legend_text:string,
-*           chart2_legend_text_apps:string}} template_props
-*/
-const render_template = template_props =>{
-   return template({spinner:template_props.spinner,
-                    system_admin:template_props.system_admin,
-                    app_id:template_props.app_id,
-                    chart1_stat:template_props.chart1_stat,
-                    function_chart1_pie_colors:template_props.function_chart1_pie_colors,
-                    function_chart1_legend:template_props.function_chart1_legend,
-                    chart2_color_app_all:template_props.chart2_color_app_all,
-                    chart2_color_app:template_props.chart2_color_app,
-                    chart2_stat:template_props.chart2_stat,
-                    chart2_legend_text:template_props.chart2_legend_text,
-                    chart2_legend_text_apps:template_props.chart2_legend_text_apps
-   });
-};
-return {
-   props:  {function_post:post_component},
-   data:   null,
-   template: render_template({  spinner:'css_spinner', 
-                                system_admin:props.system_admin, 
-                                app_id:app_id,
-                                chart1_stat:[],
-                                function_chart1_pie_colors:chart1_pie_colors,
-                                function_chart1_legend:chart1_legend,
-                                chart2_color_app_all:'rgb(81, 171, 255)',
-                                chart2_color_app:'rgb(197 227 255)',
-                                chart2_stat:[],
-                                chart2_legend_text:'',
-                                chart2_legend_text_apps:''})
-};
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
+                                                                                                system_admin:props.system_admin, 
+                                                                                                app_id:app_id,
+                                                                                                chart1_stat:charts.filter(row=> row.chart==1),
+                                                                                                function_chart1_pie_colors:chart1_pie_colors,
+                                                                                                function_chart1_legend:chart1_legend,
+                                                                                                chart2_color_app_all:'rgb(81, 171, 255)',
+                                                                                                chart2_color_app:'rgb(197 227 255)',
+                                                                                                chart2_stat:charts.filter(row=> row.chart==2),
+                                                                                                chart2_legend_text:props.system_admin!=null?
+                                                                                                                        props.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').innerText:
+                                                                                                                        props.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerText,
+                                                                                                chart2_legend_text_apps:props.system_admin!=null?
+                                                                                                                            props.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerText:
+                                                                                                                            ''});
+    };
+    return {
+    props:  {function_post:post_component},
+    data:   null,
+    template: template({ spinner:'css_spinner', 
+                            system_admin:props.system_admin, 
+                            app_id:app_id,
+                            chart1_stat:[],
+                            function_chart1_pie_colors:chart1_pie_colors,
+                            function_chart1_legend:chart1_legend,
+                            chart2_color_app_all:'rgb(81, 171, 255)',
+                            chart2_color_app:'rgb(197 227 255)',
+                            chart2_stat:[],
+                            chart2_legend_text:'',
+                            chart2_legend_text_apps:''})
+    };
 };
 export default component;

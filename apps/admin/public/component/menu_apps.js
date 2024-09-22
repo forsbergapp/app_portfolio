@@ -81,29 +81,14 @@ const component = async props => {
         const apps = await props.function_FFB('/app_admin/apps', null, 'GET', 'APP_ACCESS', null)
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows);
         
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({spinner:'', apps:apps});
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({spinner:'', apps:apps});
         if (apps.length>0)
             props.common_document.querySelectorAll('#list_apps .list_edit')[0].focus();
-    };
-    /**
-     * @param {{spinner:string, apps:[{ ID:Number, 
-     *                                  NAME:string, 
-     *                                  PROTOCOL:string, 
-     *                                  SUBDOMAIN:string, 
-     *                                  HOST:string, 
-     *                                  PORT:string, 
-     *                                  STATUS:string, 
-     *                                  LOGO:string, 
-     *                                  APP_CATEGORY_ID:number, 
-     *                                  APP_CATEGORY_TEXT:string}]|[]}} template_props
-     */
-    const render_template = template_props =>{
-        return template({spinner:template_props.spinner, apps:template_props.apps});
     };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({spinner:'css_spinner', apps:[]})
+        template: template({spinner:'css_spinner', apps:[]})
 };
 };
 export default component;

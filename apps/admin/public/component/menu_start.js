@@ -76,7 +76,7 @@ const component = async props => {
         const maintenance = props.system_admin!=null?await props.function_FFB('/server-config/config/SERVER', 'config_group=METADATA&parameter=MAINTENANCE', 'GET', 'SYSTEMADMIN', null)
                                     .then((/**@type{string}*/result)=>JSON.parse(result).data):null;
 
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({spinner:'', system_admin:props.system_admin, maintenance:maintenance});
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({spinner:'', system_admin:props.system_admin, maintenance:maintenance});
 
         //mount select
         if (props.system_admin)
@@ -141,21 +141,10 @@ const component = async props => {
             }, '/common/component/select.js');
 
    };
-/**
- * @param {{spinner:string,
- *          system_admin:string|null,
- *          maintenance:0|1|null}} template_props
- */
-const render_template = template_props =>{
-    return template({  spinner:template_props.spinner,
-                       system_admin:template_props.system_admin,
-                       maintenance:template_props.maintenance
-    });
-};
-return {
-    props:  {function_post:post_component},
-    data:   null,
-    template: render_template({spinner:'css_spinner', system_admin:props.system_admin, maintenance:0})
-};
+    return {
+        props:  {function_post:post_component},
+        data:   null,
+        template: template({spinner:'css_spinner', system_admin:props.system_admin, maintenance:0})
+    };
 };
 export default component;

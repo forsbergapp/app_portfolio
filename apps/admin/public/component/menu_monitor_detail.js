@@ -554,16 +554,16 @@ const component = async props => {
         if (props.monitor_detail=='APP_LOG')
             page_last = logs.length>0?(Math.floor(logs[0].total_rows/limit) * limit):0;
 
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:  '',
-                                                                                                        system_admin:props.system_admin, 
-                                                                                                        service_socket_client_ID:props.service_socket_client_ID,
-                                                                                                        monitor_detail:props.monitor_detail,
-                                                                                                        function_getUserAgentPlatform:props.function_getUserAgentPlatform,
-                                                                                                        function_role_icon_class:role_icon_class,
-                                                                                                        function_get_order_by:get_order_by,
-                                                                                                        function_roundOff: props.function_roundOff,
-                                                                                                        logs:logs,
-                                                                                                        monitor_log_data:monitor_log_data.parameters});
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:  '',
+                                                                                                system_admin:props.system_admin, 
+                                                                                                service_socket_client_ID:props.service_socket_client_ID,
+                                                                                                monitor_detail:props.monitor_detail,
+                                                                                                function_getUserAgentPlatform:props.function_getUserAgentPlatform,
+                                                                                                function_role_icon_class:role_icon_class,
+                                                                                                function_get_order_by:get_order_by,
+                                                                                                function_roundOff: props.function_roundOff,
+                                                                                                logs:logs,
+                                                                                                monitor_log_data:monitor_log_data.parameters});
 
         //mount list_server_log to outerHTML removing spinner class if SERVER_LOG
         if (props.monitor_detail=='SERVER_LOG'){
@@ -590,68 +590,32 @@ const component = async props => {
             
             
     };
-    /**
-     * @param {{   spinner:string,
-     *             system_admin:string|null,
-     *             service_socket_client_ID:number,
-     *             monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
-     *             function_getUserAgentPlatform:function,
-     *             function_role_icon_class:function,
-     *             function_get_order_by:function,
-     *             function_roundOff:function,
-     *             logs:[],
-     *             monitor_log_data:{  SCOPE_REQUEST:string,
-     *                                             SCOPE_SERVER:string, 
-     *                                             SCOPE_SERVICE:string,
-     *                                             SCOPE_APP:string,
-     *                                             SCOPE_DB:string,
-     *                                             REQUEST_LEVEL:number,
-     *                                             SERVICE_LEVEL:number,
-     *                                             DB_LEVEL:number,
-     *                                             LEVEL_VERBOSE:string,
-     *                                             LEVEL_ERROR:string,
-     *                                             LEVEL_INFO:string,
-     *                                             FILE_INTERVAL:string}}} template_props
-     */
-    const render_template = template_props =>{
-        return template({   spinner:template_props.spinner,
-                            system_admin:template_props.system_admin,
-                            service_socket_client_ID:template_props.service_socket_client_ID,
-                            monitor_detail:template_props.monitor_detail,
-                            function_getUserAgentPlatform:template_props.function_getUserAgentPlatform,
-                            function_role_icon_class:role_icon_class,
-                            function_get_order_by:get_order_by,
-                            function_roundOff:props.function_roundOff,
-                            logs:template_props.logs,
-                            monitor_log_data:template_props.monitor_log_data
-        });
-    };
     return {
         props:  {function_post:post_component},
         data:   {function_page_navigation:page_navigation,
                  function_monitor_detail_server_log:monitor_detail_server_log
         },
-        template: render_template({ spinner:'css_spinner', 
-                                    system_admin:props.system_admin, 
-                                    service_socket_client_ID:props.service_socket_client_ID,
-                                    monitor_detail:props.monitor_detail,
-                                    function_getUserAgentPlatform:props.function_getUserAgentPlatform,
-                                    function_role_icon_class:role_icon_class,
-                                    function_get_order_by:get_order_by,
-                                    function_roundOff:props.function_roundOff,
-                                    logs:[],
-                                    monitor_log_data:{  SCOPE_REQUEST:'',
-                                                        SCOPE_SERVER:'', 
-                                                        SCOPE_SERVICE:'',
-                                                        SCOPE_APP:'',
-                                                        SCOPE_DB:'',
-                                                        REQUEST_LEVEL:0,
-                                                        SERVICE_LEVEL:0,
-                                                        DB_LEVEL:0,
-                                                        LEVEL_VERBOSE:'',
-                                                        LEVEL_ERROR:'',
-                                                        LEVEL_INFO:'',
-                                                        FILE_INTERVAL:''}})
+        template: template({spinner:'css_spinner', 
+                            system_admin:props.system_admin, 
+                            service_socket_client_ID:props.service_socket_client_ID,
+                            monitor_detail:props.monitor_detail,
+                            function_getUserAgentPlatform:props.function_getUserAgentPlatform,
+                            function_role_icon_class:role_icon_class,
+                            function_get_order_by:get_order_by,
+                            function_roundOff:props.function_roundOff,
+                            logs:[],
+                            monitor_log_data:{  SCOPE_REQUEST:'',
+                                                SCOPE_SERVER:'', 
+                                                SCOPE_SERVICE:'',
+                                                SCOPE_APP:'',
+                                                SCOPE_DB:'',
+                                                REQUEST_LEVEL:0,
+                                                SERVICE_LEVEL:0,
+                                                DB_LEVEL:0,
+                                                LEVEL_VERBOSE:'',
+                                                LEVEL_ERROR:'',
+                                                LEVEL_INFO:'',
+                                                FILE_INTERVAL:''}})
     };
 };
 export default component;

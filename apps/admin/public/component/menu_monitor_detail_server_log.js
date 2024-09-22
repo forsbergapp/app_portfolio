@@ -340,40 +340,24 @@ const component = async props => {
 
     const post_component = async () =>{   
         const logs = await props.function_FFB(props.path, props.query, 'GET', props.token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:'', 
-                                                                                                        system_admin:props.system_admin, 
-                                                                                                        function_get_order_by:get_order_by,
-                                                                                                        function_roundOff:props.function_roundOff,
-                                                                                                        logs:logs,
-                                                                                                        logscope:props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]});
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
+                                                                                                system_admin:props.system_admin, 
+                                                                                                function_get_order_by:get_order_by,
+                                                                                                function_roundOff:props.function_roundOff,
+                                                                                                logs:logs,
+                                                                                                logscope:props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]});
         props.common_document.querySelector('#list_server_log').classList.remove('css_spinner');
     };
-    /**
-     * @param {{   spinner:string,
-     *             system_admin:string|null,
-     *             function_get_order_by:function,
-     *             function_roundOff:function,
-     *             logs:[],
-     *             logscope:'REQUEST'|'SERVER'|'APP'|'SERVICE'|'DB'|''}} template_props
-     */
-    const render_template = template_props =>{
-        return template({   spinner:template_props.spinner,
-                            system_admin:template_props.system_admin,
-                            function_get_order_by:get_order_by,
-                            function_roundOff:props.function_roundOff,
-                            logs:template_props.logs,
-                            logscope:template_props.logscope
-        });
-    };
+    
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({ spinner:'css_spinner', 
-                                    system_admin:props.system_admin, 
-                                    function_get_order_by:get_order_by,
-                                    function_roundOff:props.function_roundOff,
-                                    logs:[],
-                                    logscope:props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
+        template: template({spinner:'css_spinner', 
+                            system_admin:props.system_admin, 
+                            function_get_order_by:get_order_by,
+                            function_roundOff:props.function_roundOff,
+                            logs:[],
+                            logscope:props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
     };
 };
 export default component;

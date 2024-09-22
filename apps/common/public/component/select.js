@@ -47,40 +47,24 @@ const component = async props => {
         /**@type{[{value:string, text:string}]|[]} */
         const options = props.options?props.options.concat(ffb_options):ffb_options;
         props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_select');
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:'',
-                                                                                                        default_data_value:props.default_data_value,
-                                                                                                        default_value:props.default_value,
-                                                                                                        options:options,
-                                                                                                        column_value:props.column_value,
-                                                                                                        column_text:props.column_text
-                                                                                                    });
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'',
+                                                                                                default_data_value:props.default_data_value ?? '',
+                                                                                                default_value:props.default_value ?? '',
+                                                                                                options:options,
+                                                                                                column_value:props.column_value,
+                                                                                                column_text:props.column_text
+                                                                                            });
    };
-   /**
-    * @param {{ spinner:string,
-    *           default_data_value:string,
-    *           default_value:string,
-    *           options:[{value:string, text:string}]|[],
-    *           column_value:string,
-    *           column_text:string}} template_props
-    */
-   const render_template = template_props =>{
-       return template({    spinner:template_props.spinner,
-                            default_data_value:template_props.default_data_value ?? '',
-                            default_value:template_props.default_value ?? '',
-                            options:template_props.options,
-                            column_value:template_props.column_value,
-                            column_text:template_props.column_text
-       });
-   };
+   
    return {
        props:  {function_post:post_component},
        data:   null,
-       template: render_template({  spinner:'css_spinner',
-                                    default_data_value:props.default_data_value,
-                                    default_value:props.default_value,
-                                    options:[],
-                                    column_value:props.column_value,
-                                    column_text:props.column_text
+       template: template({ spinner:'css_spinner',
+                            default_data_value:props.default_data_value,
+                            default_value:props.default_value,
+                            options:[],
+                            column_value:props.column_value,
+                            column_text:props.column_text
        })
    };
 };

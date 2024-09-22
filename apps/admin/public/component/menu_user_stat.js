@@ -64,28 +64,17 @@ const component = async props => {
             row.count_connected = await get_count(row.identity_provider_id ?? '',1).then(result=>result.count_connected);
 
         const count_not_connected = await get_count('',0).then(result=>result.count_connected);
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:'',
-                                                                                                        records_user_stat:user_stat,
-                                                                                                        count_not_connected:count_not_connected
-                                                                                                    });
-    };
-    /**
-     * @param {{spinner:string,
-     *          records_user_stat:[{identity_provider_id:string, provider_name:String, count_users:number, count_connected:number}]|[],
-     *          count_not_connected:number}} template_props
-     */
-    const render_template = template_props =>{
-        return template({   spinner:template_props.spinner,
-                            records_user_stat:template_props.records_user_stat,
-                            count_not_connected:template_props.count_not_connected
-        });
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'',
+                                                                                                records_user_stat:user_stat,
+                                                                                                count_not_connected:count_not_connected
+                                                                                            });
     };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({ spinner:'css_spinner',
-                                    records_user_stat:[],
-                                    count_not_connected:0
+        template: template({spinner:'css_spinner',
+                            records_user_stat:[],
+                            count_not_connected:0
         })
     };
 };

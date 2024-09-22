@@ -1,16 +1,16 @@
 /**
  * @module apps/common/component/user_account
  */
-const template =`   <div id='common_user_menu'>
-                        <div id='common_user_menu_logged_in'>
-                            <div id='common_user_menu_avatar'>
-                                <div id='common_user_menu_avatar_img' class='common_image common_image_avatar'></div>
+const template = () =>` <div id='common_user_menu'>
+                            <div id='common_user_menu_logged_in'>
+                                <div id='common_user_menu_avatar'>
+                                    <div id='common_user_menu_avatar_img' class='common_image common_image_avatar'></div>
+                                </div>
                             </div>
-                        </div>
-                        <div id='common_user_menu_logged_out'>
-                            <div id='common_user_menu_default_avatar' class='common_icon'></div>
-                        </div>
-                    </div>`;
+                            <div id='common_user_menu_logged_out'>
+                                <div id='common_user_menu_default_avatar' class='common_icon'></div>
+                            </div>
+                        </div>`;
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -21,13 +21,10 @@ const template =`   <div id='common_user_menu'>
  */
 const component = async props => {
     props;
-    const render_template = () =>{
-        return template;
-    };
     return {
         props:  {function_post:null},
         data:   null,
-        template: render_template()
+        template: template()
     };
 };
 export default component;

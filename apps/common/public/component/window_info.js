@@ -114,10 +114,14 @@ const component = async props => {
     };
     const render_template = () =>{
         if (props.info==3)
-            return template({info:'', iframe_class:props.common_document.querySelector('#paper').className, content:''});
+            return template({   info:'', 
+                                iframe_class:props.common_document.querySelector('#paper').className, 
+                                content:''});
         else{
             props.common_document.querySelector('#common_window_info').style.visibility='visible';
-            return template({info:variables.INFO, iframe_class:variables.IFRAME_CLASS, content:variables.CONTENT});
+            return template({   info:variables.INFO, 
+                                iframe_class:variables.IFRAME_CLASS, 
+                                content:variables.CONTENT});
         }
     };
     const post_component = async () =>{

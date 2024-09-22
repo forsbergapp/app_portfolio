@@ -2,7 +2,7 @@
  * @module apps/admin/component/admin_secure
  */
 
-const template =`       <div id='dialogues'>
+const template = () =>` <div id='dialogues'>
                             <div id='dialogue_send_broadcast' class='common_dialogue common_dialogue_content'></div>
                         </div>
                         <div id='menu_open' class='common_dialogue_button common_icon'></div>
@@ -36,11 +36,10 @@ const template =`       <div id='dialogues'>
  */
 const component = async props => {
     props;
-    const render_template = () =>template;
     return {
         props:  {function_post:null},
         data:   null,
-        template: render_template()
+        template: template()
     };
 };
 export default component;

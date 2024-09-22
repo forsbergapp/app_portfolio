@@ -181,12 +181,12 @@ const component = async props => {
         const users = await props.function_FFB('/server-db_admin/user_account', `search=${search_user}&sort=${props.sort}&order_by=${props.order_by}`, 'GET', 'APP_ACCESS', null)
                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
       
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:'',
-                                                                                                        user_account_id:props.user_account_id,
-                                                                                                        user_app_role_id:props.user_app_role_id,
-                                                                                                        users:users,
-                                                                                                        function_get_order_by:get_order_by
-                                                                                                        });
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'',
+                                                                                                user_account_id:props.user_account_id,
+                                                                                                user_app_role_id:props.user_app_role_id,
+                                                                                                users:users,
+                                                                                                function_get_order_by:get_order_by
+                                                                                                });
         if (props.common_document.querySelectorAll('#list_user_account .list_edit')[0])
             if (props.focus==true){
                 //set focus at start
@@ -207,52 +207,14 @@ const component = async props => {
                 props.common_document.querySelector('#list_user_account_search_input').focus();
             }
   };
-  /**
-   * @param {{  spinner:string,
-   *            user_account_id:number,
-   *            user_app_role_id:number,
-   *            users:[{id:number,
-   *                    avatar:string, 
-   *                    app_role_id:number|null, 
-   *                    app_role_icon:string, 
-   *                    active:0|1|null,
-   *                    level:number|null,
-   *                    private:number|null,
-   *                    username:string,
-   *                    bio:string,
-   *                    email:string,
-   *                    email_unverified:string,
-   *                    password_reminder:string,
-   *                    verification_code:string,
-   *                    identity_provider:number,
-   *                    provider_name:string,
-   *                    provider_id:string,
-   *                    provider_first_name:string,
-   *                    provider_last_name:string,
-   *                    provider_image:string,
-   *                    provider_image_url:string,
-   *                    provider_email:string,
-   *                    date_created:string
-   *                    date_modified:string
-   *                  }]|[],
-   *            function_get_order_by:function}} template_props
-   */
-  const render_template = template_props =>{
-      return template({ spinner:template_props.spinner,
-                        user_account_id:template_props.user_account_id,
-                        user_app_role_id:template_props.user_app_role_id,
-                        users:template_props.users,
-                        function_get_order_by:template_props.function_get_order_by
-      });
-  };
   return {
       props:  {function_post:post_component},
       data:   null,
-      template: render_template({   spinner:'css_spinner',
-                                    user_account_id:props.user_account_id,
-                                    user_app_role_id:props.user_app_role_id,
-                                    users:[],
-                                    function_get_order_by:get_order_by
+      template: template({  spinner:'css_spinner',
+                            user_account_id:props.user_account_id,
+                            user_app_role_id:props.user_app_role_id,
+                            users:[],
+                            function_get_order_by:get_order_by
       })
   };
 };

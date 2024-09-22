@@ -241,20 +241,17 @@ const template = props =>`  <div id='common_toolbar_framework'>
  */
 const component = async props => {
     
-    const render_template = () =>{
-        return template({
-                            font_default:   props.font_default,
-                            font_arabic:    props.font_arabic,
-                            font_asian:     props.font_asian,
-                            font_prio1:     props.font_prio1,
-                            font_prio2:     props.font_prio2,
-                            font_prio3:     props.font_prio3
-                        });
-    };
     return {
         props:  {function_post:null},
         data:   null,
-        template: render_template()
+        template: template({
+                        font_default:   props.font_default,
+                        font_arabic:    props.font_arabic,
+                        font_asian:     props.font_asian,
+                        font_prio1:     props.font_prio1,
+                        font_prio2:     props.font_prio2,
+                        font_prio3:     props.font_prio3
+                    })
     };
 };
 export default component;

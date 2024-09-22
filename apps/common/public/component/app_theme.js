@@ -2,7 +2,7 @@
  * @module apps/common/component/app_theme
  */
 
-const template ='';
+const template = () => '';
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -16,9 +16,6 @@ const template ='';
  */
 const component = async props => {
     
-    const render_template = () =>{
-        return template;
-    };
     const post_component = async () =>{
         const themes = props.function_theme_default_list();
         await props.function_ComponentRender(props.common_mountdiv, 
@@ -40,7 +37,7 @@ const component = async props => {
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template()
+        template: template()
     };
 };
 export default component;

@@ -53,28 +53,17 @@ const component = async props => {
         const installed = props.system_admin?props.function_FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
                                     .then((/**@type{string}*/result)=>JSON.parse(result)[0].installed==1?true:false):null;
 
-       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  spinner:'',
-                                                                                                       system_admin:props.system_admin,
-                                                                                                       installed:installed
-                                                                                                   });
-   };
-   /**
-    * @param {{spinner:string,
-    *          system_admin:string|null,
-    *          installed:boolean}} template_props
-    */
-   const render_template = template_props =>{
-       return template({   spinner:template_props.spinner,
-                           system_admin:template_props.system_admin,
-                           installed:template_props.installed
-       });
+       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({  spinner:'',
+                                                                                                system_admin:props.system_admin,
+                                                                                                installed:installed
+                                                                                            });
    };
    return {
        props:  {function_post:post_component},
        data:   null,
-       template: render_template({ spinner:'css_spinner',
-                                   system_admin:props.system_admin,
-                                   installed:false
+       template: template({ spinner:'css_spinner',
+                            system_admin:props.system_admin,
+                            installed:false
        })
    };
 };

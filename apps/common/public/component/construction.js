@@ -2,7 +2,7 @@
  * @module apps/common/component/construction
  */
 
-const template ='   <div id=\'common_construction\' class=\'common_icon\'></div>';
+const template = () => ' <div id=\'common_construction\' class=\'common_icon\'></div>';
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -14,13 +14,10 @@ const template ='   <div id=\'common_construction\' class=\'common_icon\'></div>
  */
 const component = async props => {
     props;
-    const render_template = () =>{
-        return template;
-    };
     return {
         props:  {function_post:null},
         data:   null,
-        template: render_template()
+        template: template()
     };
 };
 export default component;

@@ -1,9 +1,12 @@
 /**
  * @module apps/common/component/module_leaflet
  */
-
-const template =`   <link media="all" rel="stylesheet" href="<CSS_URL/>" type="text/css"/>
-                    <div id='<LEAFLET_CONTAINER/>'></div>`;
+/**
+ * @param {{css_url:string,
+ *          leaflet_container:string}} props
+ */
+const template = props => ` <link media="all" rel="stylesheet" href='${props.css_url}' type="text/css"/>
+                            <div id='${props.leaflet_container}'></div>`;
 
 /**
  * 
@@ -76,14 +79,10 @@ const component = async props => {
             resolve(leaflet_map);
         });  
     };
-    const render_template = () =>{
-        return template
-                    .replace('<LEAFLET_CONTAINER/>', LEAFLET_CONTAINER)
-                    .replace('<CSS_URL/>', '/common/modules/leaflet/leaflet.css');
-    };
     //mounts template with css and Leaflet div inside apps mountdiv props
-    props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML += render_template();
-    
+    props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML += template({css_url:'/common/modules/leaflet/leaflet.css',
+                                                                                            leaflet_container:LEAFLET_CONTAINER
+                                                                                            });    
     return {
         props:  {function_post:null},
         data:   {   
@@ -93,7 +92,6 @@ const component = async props => {
                     //return Leaflet inner mounted map div to add custom code inside Leaflet
                     leaflet_container:LEAFLET_CONTAINER
                 },
-        //return empty template
         template: null
     };
 };

@@ -2,12 +2,12 @@
  * @module apps/app2/component/profile_stat
  */
 
-const template =`   <div id='profile_stat_app2'>
-                    <div id='profile_stat_row2'>
-                        <div id='profile_stat_row2_1' class='common_link common_icon'></div>
-                        <div id='profile_stat_row2_2' class='common_link common_icon'></div>
-                    </div>
-                    </div>`;
+const template = () =>` <div id='profile_stat_app2'>
+                        <div id='profile_stat_row2'>
+                            <div id='profile_stat_row2_1' class='common_link common_icon'></div>
+                            <div id='profile_stat_row2_2' class='common_link common_icon'></div>
+                        </div>
+                        </div>`;
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -18,13 +18,10 @@ const template =`   <div id='profile_stat_app2'>
  */
 const method = async props => {
     props;
-    const render_template = () =>{
-        return template;
-    };
     return {
         props:  {function_post:null},
         data:   null,
-        template: render_template()
+        template: template()
     };
 };
 export default method;

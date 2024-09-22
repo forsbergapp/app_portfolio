@@ -3,7 +3,8 @@
  */
 
 /**
- * @param {{apps:import('../../../common_types.js').CommonAppRecord[],
+ * @param {{spinner:String,
+ *          apps:import('../../../common_types.js').CommonAppRecord[],
  *          app_copyright:string,
  *          app_email:string,
  *          app_link_url:string,
@@ -14,7 +15,7 @@
  * @returns {string}
  */
 const template = props => ` 
-                            <div id='common_dialogue_apps_list' <CLASS_SPINNER/>>
+                            <div id='common_dialogue_apps_list' class='${props.spinner}'>
                                 ${props.apps.map(row=>
                                     `<div class='common_dialogue_apps_app_link_row common_row'>
                                         <div class='common_dialogue_apps_app_link_col'>
@@ -75,7 +76,6 @@ const template = props => `
  */
 const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
-    let class_spinner = 'class=\'css_spinner\'';        
     /**
      * @returns {Promise<void>}
      */
@@ -83,8 +83,8 @@ const component = async props => {
         const apps = await props.function_FFB('/app/apps/', null, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.APP_ID != props.app_id))
                             .catch((/**@type{Error}*/error)=>{throw error;});
-        class_spinner = '';
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({
+            spinner:'',
             apps:apps,
             app_copyright:props.app_copyright,
             app_email:props.app_email,
@@ -95,34 +95,19 @@ const component = async props => {
             info_link_terms_name:props.info_link_terms_name
         });
     };
-    /**
-     * 
-     * @param {{apps:[],
-     *          app_copyright:string,
-     *          app_email:string,
-     *          app_link_url:string,
-     *          app_link_title:string,
-     *          info_link_policy_name:string,
-     *          info_link_disclaimer_name:string,
-     *          info_link_terms_name:string}} props 
-     * @returns 
-     */
-    const render_template = props =>{
-        return template(props)
-                .replace('<CLASS_SPINNER/>', class_spinner);
-    };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({ apps:[],
-                                    app_copyright:'',
-                                    app_email:'',
-                                    app_link_url:'',
-                                    app_link_title:'',
-                                    info_link_policy_name:'',
-                                    info_link_disclaimer_name:'',
-                                    info_link_terms_name:''
-                                })
+        template: template({    spinner:'css_spinner',
+                                apps:[],
+                                app_copyright:'',
+                                app_email:'',
+                                app_link_url:'',
+                                app_link_title:'',
+                                info_link_policy_name:'',
+                                info_link_disclaimer_name:'',
+                                info_link_terms_name:''
+                            })
     };
 };
 export default component;

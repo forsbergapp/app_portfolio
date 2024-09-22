@@ -4,7 +4,8 @@
 
 /**
  *  
- * @param {{customer:[]}} props 
+ * @param {{spinner:string,
+ *          customer:[]}} props 
  * @returns 
  */
 const template = props => ` <div id='app_page_secure'>
@@ -15,14 +16,14 @@ const template = props => ` <div id='app_page_secure'>
                                         <div id='tab2' class='app_page_secure_tab common_link common_icon'></div>
                                         <div id='tab3' class='app_page_secure_tab common_link common_icon'></div>
                                     </div>
-                                    <div id='app_page_secure_tab_content' class='app_bank_div <SPINNER_CLASS/>' >
+                                    <div id='app_page_secure_tab_content' class='app_bank_div ${props.spinner}' >
                                     </div>
                                     `:
                                     `
                                     <div id='app_page_secure_nav'>
                                         <div id='tab0' class='app_page_secure_tab common_link common_icon'></div>
                                     </div>
-                                    <div id='app_page_secure_tab_content' class='app_bank_div <SPINNER_CLASS/>' >
+                                    <div id='app_page_secure_tab_content' class='app_bank_div ${props.spinner}' >
                                     </div>
                                     `
                                 }
@@ -43,22 +44,12 @@ const template = props => ` <div id='app_page_secure'>
  *                      template:string}>}
  */
 const component = async props => {
-    let spinner = 'css_spinner\'';
-    /**
-     * @param {{customer:[]}} props_template
-     * @returns {string}
-     */
-    const render_template = props_template =>{
-        return template(props_template)
-                .replace('<SPINNER_CLASS/>', spinner);
-    };
     const post_component = async () =>{
-        spinner = '';
         const customer = await props.function_FFB('/app-function/CUSTOMER_GET', null, 'POST', 'APP_ACCESS', {user_account_id:props.user_account_id,data_app_id:props.app_id})
                                             .then((/**@type{string}*/result)=>JSON.parse(result))
                                             .catch((/**@type{Error}*/error)=>{throw error;});
         
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({  customer:customer.rows});
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({  spinner:'', customer:customer.rows});
         if (customer.rows.length>0)
             props.common_document.querySelector('#tab1').click();
         else{
@@ -96,7 +87,7 @@ const component = async props => {
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: render_template({customer:[]})
+        template: template({spinner:'css_spinner', customer:[]})
     };
 };
 export default component;

@@ -79,34 +79,17 @@ const component = async props => {
     const post_component = async () =>{
         const user_logon = await props.function_FFB('/server-db_admin/user_account_logon', `data_user_account_id=${props.user_account_id}&data_app_id=''`, 'GET', 'APP_ACCESS', null)
                                     .then((/**@type{string}*/result)=>JSON.parse(result));
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({ spinner:'',
-                                                                                                       user_logons:user_logon
-                                                                                                       });
- };
- /**
-  * @param {{  spinner:string,
-  *            user_logons:[{user_account_id:number,
-  *                          app_id:number,
-  *                          result:string,
-  *                          client_ip:string,
-  *                          client_longitude:string|null,
-  *                          client_latitude:string|null,
-  *                          client_user_agent:string,
-  *                          access_token:string|null,
-  *                          date_created:string
-  *                          date_modified:string}]|[]}} template_props
-  */
- const render_template = template_props =>{
-     return template({ spinner:template_props.spinner,
-                       user_logons:template_props.user_logons
-     });
- };
- return {
-     props:  {function_post:post_component},
-     data:   null,
-     template: render_template({   spinner:'css_spinner',
-                                   user_logons:[]
-     })
- };
+        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'',
+                                                                                                user_logons:user_logon
+                                                                                                });
+};
+ 
+    return {
+        props:  {function_post:post_component},
+        data:   null,
+        template: template({   spinner:'css_spinner',
+                            user_logons:[]
+        })
+};
 };
 export default component;

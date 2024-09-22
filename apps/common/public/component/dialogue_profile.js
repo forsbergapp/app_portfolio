@@ -29,7 +29,8 @@ const profile_empty = { id:null,
  let profile = profile_empty;
 /**
  * 
- * @param {{tab:string,
+ * @param {{spinner:string,
+ *          tab:string,
  *          info_profile:import('../../../common_types.js').CommonProfileUser,
  *          top_profile_records:import('../../../common_types.js').CommonProfileTopRecord[]|[],
  *          info_function_format_json_date:function}} props 
@@ -122,7 +123,7 @@ const template = props =>
                                     <div id='common_profile_stat_row1_3' class='common_link common_icon'></div>
                                 </div>
                                 <div id='common_profile_stat_row2'></div>
-                                <div id='common_profile_stat_list' <SPINNER_CLASS/>>
+                                <div id='common_profile_stat_list' class='${props.spinner}'>
                                     ${props.top_profile_records.map(row=>
                                         `   <div data-user_account_id='${row.id}' class='common_profile_stat_list_row common_row'>
                                                 <div class='common_profile_stat_list_col'>
@@ -175,7 +176,6 @@ const template = props =>
 const component = async props => {
     props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
     props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
-    let spinner = 'class=\'css_spinner\'';
     if (props.tab=='INFO'){
         let path;
         if (props.info_user_account_id_other !== null)
@@ -208,8 +208,13 @@ const component = async props => {
         if (user_account_id_other == null && props.info_user_account_id == null && username == null) {
             null;
         } else {
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
-                render_template(profile, []);
+            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({
+                                                                                                    spinner:'',
+                                                                                                    info_profile:profile,
+                                                                                                    top_profile_records:[],
+                                                                                                    tab:props.tab,
+                                                                                                    info_function_format_json_date:props.info_function_format_json_date
+                                                                                                });
 
             props.common_document.querySelector('#common_profile_avatar').style.backgroundImage= (profile.avatar ?? profile.provider_image)?
                                                                                                     `url('${profile.avatar ?? profile.provider_image}')`:
@@ -281,25 +286,14 @@ const component = async props => {
             const profile_stat_records = await props.function_FFB(path, `statchoice=${statchoice}`, 'GET', 'APP_DATA', null)
                                             .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                             .catch((/**@type{Error}*/error)=>{throw error;});
-            spinner = '';
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
-                render_template(profile_empty, profile_stat_records);
+            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({
+                                                                                                    spinner:'',
+                                                                                                    info_profile:profile_empty,
+                                                                                                    top_profile_records:profile_stat_records,
+                                                                                                    tab:props.tab,
+                                                                                                    info_function_format_json_date:props.info_function_format_json_date
+                                                                                                });
             props.common_document.querySelector('#common_profile_stat_list')['data-function'] = function_user_click;
-    };
-    /**
-     * div common_profile_main_stat_row2 and common_profile_stat_row2 used for app components
-     * @param {import('../../../common_types.js').CommonProfileUser} profile
-     * @param {import('../../../common_types.js').CommonProfileTopRecord[]|[]} top_profile_records
-     * @returns {string}
-     */
-    const render_template = (profile, top_profile_records) =>{
-        return template({
-                            info_profile:profile,
-                            top_profile_records:top_profile_records,
-                            tab:props.tab,
-                            info_function_format_json_date:props.info_function_format_json_date
-                        })
-                .replace('<SPINNER_CLASS/>', spinner);
     };
     const post_component = async () =>{
         if (props.tab=='INFO')
@@ -313,7 +307,13 @@ const component = async props => {
                     profile_id:profile.id,
                     private:profile.private
                 }:null,
-        template: render_template(profile_empty, [])
+        template: template({
+            spinner:'css_spinner',
+            info_profile:profile_empty,
+            top_profile_records:[],
+            tab:props.tab,
+            info_function_format_json_date:props.info_function_format_json_date
+        })
     };
 };
 export default component;

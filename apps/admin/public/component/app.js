@@ -2,7 +2,7 @@
  * @module apps/admin/component/app
  */
 
-const template ='   <div id=\'admin_secure\'></div>';
+const template = () =>' <div id=\'admin_secure\'></div>';
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -13,13 +13,10 @@ const template ='   <div id=\'admin_secure\'></div>';
  */
 const component = async props => {
     props;
-    const render_template = () =>{
-        return template;
-    };
     return {
         props:  {function_post:null},
         data:   null,
-        template: render_template()
+        template: template()
     };
 };
 export default component;

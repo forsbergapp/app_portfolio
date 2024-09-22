@@ -108,48 +108,23 @@ const component = async props => {
        const list = await props.function_FFB(`${path}/${props.user_account_id_profile}`, `detailchoice=${props.detailchoice}`, 'GET', 'APP_ACCESS', null)
                                    .then((/**@type{string}*/result)=>JSON.parse(result));
 
-       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = render_template({   spinner:'',
-                                                                                                        user_account_id:props.user_account_id,
-                                                                                                        user_account_id_profile:props.user_account_id_profile,
-                                                                                                        detailchoice:props.detailchoice,
-                                                                                                        list:list
-                                                                                                    });
+       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({  spinner:'',
+                                                                                                user_account_id:props.user_account_id,
+                                                                                                user_account_id_profile:props.user_account_id_profile,
+                                                                                                detailchoice:props.detailchoice,
+                                                                                                list:list
+                                                                                            });
         props.common_document.querySelector('#common_profile_detail_list')['data-function'] = props.function_click;
   };
-  /**
-   * @param {{  spinner:string,
-   *            user_account_id:number,
-   *            user_account_id_profile:number,
-   *            detailchoice:number,
-   *            list:[{ id:number|null, 
-   *                    APP_ID:number, 
-   *                    PROTOCOL:string, 
-   *                    SUBDOMAIN:string, 
-   *                    HOST:string, 
-   *                    PORT:string,
-   *                    LOGO:string,
-   *                    NAME:string,
-   *                    date_created:string,
-   *                    avatar:string,
-   *                    provider_image:string,
-   *                    username:string}]|[]}} template_props
-   */
-  const render_template = template_props =>{
-      return template({ spinner:template_props.spinner,
-                        user_account_id:template_props.user_account_id,
-                        user_account_id_profile:template_props.user_account_id_profile,
-                        detailchoice:template_props.detailchoice,
-                        list:template_props.list
-      });
-  };
+
   return {
       props:  {function_post:props.user_account_id?post_component:null},
       data:   null,
-      template: render_template({   spinner:'css_spinner',
-                                    user_account_id:props.user_account_id,
-                                    user_account_id_profile:props.user_account_id_profile,
-                                    detailchoice:props.detailchoice,
-                                    list:[]
+      template: template({  spinner:'css_spinner',
+                            user_account_id:props.user_account_id,
+                            user_account_id_profile:props.user_account_id_profile,
+                            detailchoice:props.detailchoice,
+                            list:[]
       })
   };
 };
