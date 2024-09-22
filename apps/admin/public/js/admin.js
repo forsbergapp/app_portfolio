@@ -140,6 +140,7 @@ const app_event_click = event => {
                             current_direction:common.COMMON_GLOBAL.user_direction,
                             current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
                             //functions
+                            function_set_current_value:common.set_current_value,
                             function_FFB:common.FFB,
                             function_ComponentRender:common.ComponentRender,
                             function_user_session_countdown:common.user_session_countdown,

@@ -60,6 +60,7 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
  *          current_timezone:string,
  *          current_direction:string,
  *          current_arabic_script:string,
+ *          function_set_current_value:function,
  *          function_FFB:function,
  *          function_ComponentRender:function,
  *          function_user_session_countdown:function,
@@ -172,23 +173,12 @@ const component = async props => {
                     function_FFB:props.function_FFB
                 }, '/common/component/select.js');    
         }
-        /**
-         * Sets current value for select div
-         * @param {string} div
-         * @param {string} value
-         */
-        const set_current_value= (div, value) =>{
-            const text = Array.from(props.common_document.querySelectorAll(`#${div} .common_select_option`))
-                .filter(option=>option.getAttribute('data-value')==(value ?? ''))[0].innerText;
-            props.common_document.querySelector(`#${div} .common_select_dropdown_value`).innerText = text;
-            };
-
         if ((props.system_admin_only == 1)==false){
             //set current value on all the selects
-            set_current_value('common_dialogue_user_menu_user_locale_select', props.current_locale);
-            set_current_value('common_dialogue_user_menu_user_timezone_select', props.current_timezone);
-            set_current_value('common_dialogue_user_menu_user_direction_select', props.current_direction);
-            set_current_value('common_dialogue_user_menu_user_arabic_script_select', props.current_arabic_script);
+            props.function_set_current_value('common_dialogue_user_menu_user_locale_select', props.current_locale);
+            props.function_set_current_value('common_dialogue_user_menu_user_timezone_select', props.current_timezone);
+            props.function_set_current_value('common_dialogue_user_menu_user_direction_select', props.current_direction);
+            props.function_set_current_value('common_dialogue_user_menu_user_arabic_script_select', props.current_arabic_script);
         }
         await adjust_logged_out_logged_in();
         if (props.token_exp && props.token_iat){
