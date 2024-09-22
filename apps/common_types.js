@@ -397,10 +397,6 @@
  * @typedef {import('./common/public/modules/leaflet/leaflet-src.esm.js')} CommonModuleLeaflet
  */
 /**
- * Type CommonModulePrayTimes
- * @typedef {{default:{adjust:function, getTimes:function, setMethod:function}}} CommonModulePrayTimes
- */
-/**
  * Type CommonModuleRegional
  * @typedef {import('./common/public/modules/regional/regional.js')} CommonModuleRegional
  */

@@ -15,7 +15,7 @@ const path = import.meta.dirname.replaceAll('\\', '/');
 const prayTimes_source = await fs.promises.readFile(`${path}/lib_PrayTimes.js`)
 									.then(result=>result.toString().replace('var prayTimes = new PrayTimes();','export default new PrayTimes();'))
 									.catch(error=>{throw error;});
-/**@type {import('../../../common_types.js').CommonModulePrayTimes} */
+/**@type {{default:{adjust:function, getTimes:function, setMethod:function}}} */
 const {default:prayTimes} = await import('data:text/javascript;base64,' + btoa(prayTimes_source));
 
 const timetable_lib = await import('./lib_timetable.js');
@@ -101,49 +101,21 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
  */
 const timetable_translate_settings = async (app_id, locale, locale_second) => {
 	/**@type{import('../../../../server/db/sql/app_object.service.js')} */
-    const { getObjects } = await import(`file://${process.cwd()}/server/db/sql/app_object.service.js`);
+	const { getObjects } = await import(`file://${process.cwd()}/server/db/sql/app_object.service.js`);
 	/**
-	 * 
-	 * @param {string} locale 
-	 * @param {boolean} first 
-	 * @returns 
-	 */
-	const fetch_translation = async (locale, first) => {
-		//show translation using first or second language
-		const result_app_object_items = await getObjects(app_id, locale, 'REPORT', null);	
-		for (const app_object_item of result_app_object_items){
-			if (first == true)
-				timetable_lib.REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
-			else
-				timetable_lib.REPORT_GLOBAL.second_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
-		}
-	};
-	await fetch_translation(locale, true).then(() => {
-		if (locale_second =='0'){
-			timetable_lib.REPORT_GLOBAL.second_language.timetable_title = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_day = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_weekday = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_weekday_tr = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_caltype_hijri = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_caltype_gregorian = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_imsak = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_fajr = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_fajr_iqamat = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_sunrise = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_dhuhr = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_dhuhr_iqamat = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_asr = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_asr_iqamat = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_sunset = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_maghrib = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_maghrib_iqamat = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_isha = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_isha_iqamat = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_midnight = '';
-			timetable_lib.REPORT_GLOBAL.second_language.coltitle_notes = '';
-		}
-	});
-	await fetch_translation(locale_second, false);
+     * @param {string} locale
+     * @returns {Promise<{ object:string, 
+	*                      app_id:number, 
+	*                      object_name:string, 
+	*                      object_item_name:string, 
+	*                      subitem_name:string,
+	*                      lang_code:string,
+	*                      id:number,
+	*                      text:string}[]>}
+	*/
+	const function_fetch = async locale =>await getObjects(app_id, locale, 'REPORT', null);
+	
+	timetable_lib.timetable_translate_settings(function_fetch, locale, locale_second);
 };
 /**
  * Timetable get day user settings
