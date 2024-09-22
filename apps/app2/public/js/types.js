@@ -86,7 +86,6 @@
  *          regional_default_calendartype:string,
  *          regional_default_calendar_hijri_type:string,
  *          gps_default_place_id:number,
- *          gps_module_leaflet_container:string,
  *          gps_module_leaflet_qibbla_title:string,
  *          gps_module_leaflet_qibbla_text_size:number,
  *          gps_module_leaflet_qibbla_lat:number,
