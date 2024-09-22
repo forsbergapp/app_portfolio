@@ -713,9 +713,6 @@
 #common_profile_main_stat_row1{
 	height: 30px;
 }
-#common_profile_main_stat_row1 div{
-	height: 90px;
-}
 #common_profile_main_stat_row2 div{
 	display:inline-block;	
 }
