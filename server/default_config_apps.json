@@ -199,7 +199,6 @@
                     {"REGIONAL_DEFAULT_LOCALE_EXT_PREFIX": "-u", "COMMENT":""},
                     {"REGIONAL_DEFAULT_LOCALE_SECOND": "0", "COMMENT":"Second languague:None"},
                     {"GPS_DEFAULT_PLACE_ID": "40002", "COMMENT":"Default place: Kabba, Makkah"},
-                    {"GPS_MODULE_LEAFLET_CONTAINER": "mapid", "COMMENT":""},
                     {"GPS_MODULE_LEAFLET_QIBBLA_COLOR": "#a49775", "COMMENT":""},
                     {"GPS_MODULE_LEAFLET_QIBBLA_LAT": "21.4226", "COMMENT":""},
                     {"GPS_MODULE_LEAFLET_QIBBLA_LONG": "39.8261", "COMMENT":""},

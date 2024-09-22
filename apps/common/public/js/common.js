@@ -660,14 +660,22 @@ const theme_default_list = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}
 const app_settings_get = async () =>await FFB('/server-db/app_settings', null, 'GET', 'APP_DATA').then((/**@type{string}*/result)=>JSON.parse(result).rows);
 /**
  * Sets current value for select div
+ * Get json data for given key and value is found or matches value if not json
  * @param {string} div
- * @param {string} value
+ * @param {string|null} value
+ * @param {string|null} json_key
+ * @param {string|null} json_value
  */
-const set_current_value= (div, value) =>{
-    const text = Array.from(CommonAppDocument.querySelectorAll(`#${div} .common_select_option`))
-        .filter(option=>option.getAttribute('data-value')==(value ?? ''))[0].innerText;
-    CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).setAttribute('data-value', value);
-    CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).innerText = text;
+const set_current_value= (div, value, json_key=null, json_value=null) =>{
+    CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).innerText = Array.from(CommonAppDocument.querySelectorAll(`#${div} .common_select_option`))
+                                                                                            .filter(option=>(json_key?JSON.parse(option.getAttribute('data-value'))[json_key]:
+                                                                                                                option.getAttribute('data-value'))==(json_value ?? value ?? ''))[0].innerText;
+    if (json_value)
+        Array.from(CommonAppDocument.querySelectorAll(`#${div} .common_select_option`))
+            .filter(option=>json_key?JSON.parse(option.getAttribute('data-value'))[json_key]:''==json_value ?? '')[0].getAttribute('data-value');
+    else
+        CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).setAttribute('data-value', value);
+      
 };
 
 
