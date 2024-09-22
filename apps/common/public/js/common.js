@@ -647,6 +647,29 @@ const theme_default_list = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}
     if (class_arabic_script)
         CommonAppDocument.body.classList.add(class_arabic_script);
 };
+/**
+ * @returns {Promise<{  id:number,
+*                      value:string,
+*                      text:string,
+*                      app_setting_type_name:string,
+*                      data2:string,
+*                      data3:string,
+*                      data4:string,
+*                      data5:string}[]>}
+*/
+const app_settings_get = async () =>await FFB('/server-db/app_settings', null, 'GET', 'APP_DATA').then((/**@type{string}*/result)=>JSON.parse(result).rows);
+/**
+ * Sets current value for select div
+ * @param {string} div
+ * @param {string} value
+ */
+const set_current_value= (div, value) =>{
+    const text = Array.from(CommonAppDocument.querySelectorAll(`#${div} .common_select_option`))
+        .filter(option=>option.getAttribute('data-value')==(value ?? ''))[0].innerText;
+    CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).setAttribute('data-value', value);
+    CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).innerText = text;
+};
+
 
 /**
  * @param {string} event_target_id
@@ -3937,8 +3960,11 @@ export{/* GLOBALS*/
        mobile,
        convert_image,
        show_image, getHostname, input_control, getUserAgentPlatform, SearchAndSetSelectedIndex,
-       theme_default_list, common_theme_update_from_body,common_preferences_post_mount,
+       theme_default_list, common_theme_update_from_body,
        common_preferences_update_body_class_from_preferences,
+       app_settings_get,
+       set_current_value,
+       common_preferences_post_mount,
        /* COMPONENTS */
        ComponentRender,ComponentRemove,
        /* MESSAGE & DIALOGUE */

@@ -281,6 +281,12 @@
 }
 
 /*SETTINGS, common*/
+#settings .common_select{
+	white-space: nowrap;
+	display: inline-block;
+	width: inherit;
+}
+
 #settings label {
 	margin: 0 0 3px 0;
 	padding: 0px;
@@ -362,6 +368,11 @@
 #setting_icon_design_theme_day, #setting_icon_design_theme_month, #setting_icon_design_theme_year{
 	display: block;
 	padding-top: unset;
+}
+#setting_icon_design_theme_day.css_spinner, 
+#setting_icon_design_theme_month.css_spinner, 
+#setting_icon_design_theme_year.css_spinner{
+	display: inline-block;
 }
 
 /* THEME SLIDER*/

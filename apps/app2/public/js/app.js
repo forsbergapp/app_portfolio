@@ -328,15 +328,21 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
 
 /**
  * Update all timetables and theme thumbnails
+ * @param {'day'|'month'|'year'|null} type
  * @returns {Promise.<void>}
  */
-const update_all_theme_thumbnails = async () => {
-    await update_timetable_report(0, null, getReportSettings());
-    update_theme_thumbnail('day');
-    await update_timetable_report(1, null, getReportSettings());
-    update_theme_thumbnail('month');
-    await update_timetable_report(2, null, getReportSettings());
-    update_theme_thumbnail('year');
+const update_all_theme_thumbnails = async (type=null) => {
+    if (type =='day' || type==null){
+        await update_timetable_report(0, null, getReportSettings());
+        update_theme_thumbnail('day');
+    }
+    if (type =='month' || type=='year' || type==null){
+        await update_timetable_report(1, null, getReportSettings());
+        update_theme_thumbnail('month');
+        await update_timetable_report(2, null, getReportSettings());
+        update_theme_thumbnail('year');
+    }
+    
 };
 /**
  * Update theme thumbnail
@@ -415,7 +421,7 @@ const load_themes = () => {
 /**
  * 
  * @param {number} nav 
- * @param {string} type 
+ * @param {'day'|'month'|'year'} type 
  * @returns {Promise.<void>}
  */
 const theme_nav = async (nav, type) => {
@@ -443,7 +449,7 @@ const theme_nav = async (nav, type) => {
     CommonAppDocument.querySelectorAll(`#slides_${type} .slide`)[theme_index].children[0].classList.add(`slider_active_${type}`);
     //set theme title
     set_theme_title(type);
-    update_all_theme_thumbnails();
+    update_all_theme_thumbnails(type);
 };
 
 /**
@@ -598,7 +604,24 @@ const SettingShow = async (tab_selected) => {
     //update with class to style each settings component
     CommonAppDocument.querySelector('#settings_content').className = `settings_tab_content settings_tab${tab_selected}`;
     //mount the selected component
-    common.ComponentRender('settings_content', {user_settings:APP_GLOBAL.user_settings.data}, `/component/settings_tab${tab_selected}.js`).then(()=>settings_load(tab_selected));
+    switch (tab_selected){
+        case 3:{
+            common.ComponentRender('settings_content', {user_settings:APP_GLOBAL.user_settings.data,
+                                                        app_id:common.COMMON_GLOBAL.app_id,
+                                                        function_load_themes:load_themes,
+                                                        function_update_all_theme_thumbnails:update_all_theme_thumbnails,
+                                                        function_ComponentRender:common.ComponentRender,
+                                                        function_app_settings_get:common.app_settings_get}, `/component/settings_tab${tab_selected}.js`).then(()=>settings_load(tab_selected));
+            break;
+        }
+        default:{
+            common.ComponentRender('settings_content', {user_settings:APP_GLOBAL.user_settings.data,
+                                                        app_id:common.COMMON_GLOBAL.app_id,
+                                                        function_settings_get:common.app_settings_get}, `/component/settings_tab${tab_selected}.js`).then(()=>settings_load(tab_selected));
+            break;
+        }
+    }
+    
 };
 /**
  * Get alignment for button
@@ -805,7 +828,8 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
         case 'DESIGN_PAPER':
             {
                 const paper = CommonAppDocument.querySelector('#paper');
-                const paper_size = CommonAppDocument.querySelector('#setting_select_report_papersize').value;
+                const paper_size = CommonAppDocument.querySelector('#setting_select_report_papersize .common_select_dropdown_value').getAttribute('data-value');
+                 
                 switch (paper_size) {
                     case 'A4':
                         {
@@ -1179,11 +1203,12 @@ const user_settings_load = async (tab_selected) => {
             set_theme_id('day', APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_day_id);
             set_theme_id('month', APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_month_id);
             set_theme_id('year', APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_year_id);
-            CommonAppDocument.querySelector('#setting_select_report_papersize').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size;
+            common.set_current_value('setting_select_report_papersize', APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size);
             
             CommonAppDocument.querySelector('#paper').className=APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size;
 
-            CommonAppDocument.querySelector('#setting_select_report_highlight_row').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_row_highlight;
+            common.set_current_value('setting_select_report_highlight_row', APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_row_highlight);
+
             if (Number(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_weekday_checked))
                 CommonAppDocument.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
             else
@@ -1548,9 +1573,9 @@ const settings_update = setting_tab => {
                         design_theme_day_id:                setting_tab=='DESIGN'?get_theme_id('day'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_day_id,
                         design_theme_month_id:              setting_tab=='DESIGN'?get_theme_id('month'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_month_id,
                         design_theme_year_id:               setting_tab=='DESIGN'?get_theme_id('year'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_year_id,
-                        design_paper_size:                  setting_tab=='DESIGN'?CommonAppDocument.querySelector('#setting_select_report_papersize').value:
+                        design_paper_size:                  setting_tab=='DESIGN'?CommonAppDocument.querySelector('#setting_select_report_papersize .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
-                        design_row_highlight:               setting_tab=='DESIGN'?CommonAppDocument.querySelector('#setting_select_report_highlight_row').value:
+                        design_row_highlight:               setting_tab=='DESIGN'?CommonAppDocument.querySelector('#setting_select_report_highlight_row .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_row_highlight,
                         design_column_weekday_checked:      setting_tab=='DESIGN'?Number(CommonAppDocument.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_weekday_checked,
@@ -1776,13 +1801,20 @@ const app_event_click = event => {
             switch (event_target_id){
                 case event.target?.classList.contains('common_select_option')?event_target_id:'':
                 case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
+                    //settings design
+                    if(event_target_id == 'setting_select_report_papersize'){
+                        settings_update('DESIGN');
+                        component_setting_update('DESIGN', 'PAPER');
+                    }
+                    if(event_target_id== 'setting_select_report_highlight_row')
+                        settings_update('DESIGN');
+                    //module leaflet
                     if (event_target_id == 'common_module_leaflet_select_country')
                         settings_update('GPS');
                     if(event_target_id == 'common_module_leaflet_select_city'){
                         //popular place not on map is read when saving
                         component_setting_update('GPS', 'CITY');
                     }
-                    //module leaflet
                     if (event_target_id == 'common_module_leaflet_select_mapstyle')
                         component_setting_update('GPS', 'MAP');
                     break;
@@ -2115,6 +2147,7 @@ const app_event_click = event => {
                             current_direction:common.COMMON_GLOBAL.user_direction,
                             current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
                             //functions
+                            function_set_current_value:common.set_current_value,
                             function_FFB:common.FFB,
                             function_ComponentRender:common.ComponentRender,
                             function_user_session_countdown:common.user_session_countdown,
@@ -2264,16 +2297,6 @@ const app_event_change = event => {
                 case 'setting_select_popular_place':{
                     settings_update('GPS');
                     component_setting_update('GPS', 'POPULAR_PLACES');
-                    break;
-                }
-                //settings design
-                case 'setting_select_report_papersize':{
-                    settings_update('DESIGN');
-                    component_setting_update('DESIGN', 'PAPER');
-                    break;
-                }
-                case 'setting_select_report_highlight_row':{
-                    settings_update('DESIGN');
                     break;
                 }
                 //settings image
@@ -2510,91 +2533,23 @@ const framework_set = async (framework=null) => {
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                             .catch((/**@type{Error}*/error)=>error);
  }; 
+
 /**
  * @param {number} tab_selected
  * @returns {Promise.<void>}
  */
 const settings_load = async (tab_selected) => {    
-    /**
-     * Get themes
-     * @param {number|null} app_id
-     * @param {*} app_settings
-     * @returns {{day:string, month:string,year:string}}
-     */
-    const themes = (app_id, app_settings) =>{
-        let theme_found = false;
-        let span_themes_day ='', span_themes_month='', span_themes_year='';
-        //get themes and save result in three theme variables
-        for (const app_setting of app_settings.filter((/**@type{*}*/setting)=>setting.app_id == app_id && setting.app_setting_type_name.startsWith('REPORT_THEME'))){        
-            if (theme_found==false){
-                theme_found = true;
-            }
-            let theme_type;
-            switch (app_setting.app_setting_type_name){
-                case 'REPORT_THEME_BASIC_DAY':
-                case 'REPORT_THEME_PREMIUM_DAY':{
-                    theme_type = 'day';
-                    break;
-                }
-                case 'REPORT_THEME_BASIC_MONTH':
-                case 'REPORT_THEME_PREMIUM_MONTH':{
-                    theme_type = 'month';
-                    break;
-                }
-                case 'REPORT_THEME_BASIC_YEAR':
-                case 'REPORT_THEME_PREMIUM_YEAR':{
-                    theme_type = 'year';
-                    break;
-                }
-            }
-            const new_span = `<div class="slide slide_${theme_type}">
-                                <div id='theme_${theme_type}_${app_setting.value}'
-                                    data-theme_id='${app_setting.value}'> 
-                                </div>
-                            </div>`;
-            switch (app_setting.app_setting_type_name){
-                case 'REPORT_THEME_BASIC_DAY':{
-                    span_themes_day += new_span;
-                    break;
-                }
-                case 'REPORT_THEME_PREMIUM_DAY':{
-                    span_themes_day += new_span;
-                    break;
-                }
-                case 'REPORT_THEME_BASIC_MONTH':{
-                    span_themes_month += new_span;
-                    break;
-                }
-                case 'REPORT_THEME_PREMIUM_MONTH':{
-                    span_themes_month += new_span;
-                    break;
-                }
-                case 'REPORT_THEME_BASIC_YEAR':{
-                    span_themes_year += new_span;
-                    break;
-                }
-                case 'REPORT_THEME_PREMIUM_YEAR':{
-                    span_themes_year += new_span;
-                    break;
-                }
-            }
-        }
-        if (theme_found)
-            return {day:span_themes_day, month:span_themes_month, year:span_themes_year};
-        else
-            return {day:'', month:'', year:''};
-    };
+    
     /**
      * Get places
-     * @param {number|null} app_id
      * @param {*} app_settings
      * @returns {string}
      */
-    const places = (app_id, app_settings) => {
+    const places = app_settings => {
         let select_places = '';
         let place_found = false;
         let i = 0;
-        APP_GLOBAL.places = app_settings.filter((/**@type{*}*/setting)=>setting.app_id==app_id && setting.app_setting_type_name=='PLACE');
+        APP_GLOBAL.places = app_settings;
         for (const app_setting of APP_GLOBAL.places ?? []){
             if (place_found==false){
                 place_found = true;
@@ -2627,10 +2582,7 @@ const settings_load = async (tab_selected) => {
     let APP_CALENDAR_TYPE='';
     let APP_CALENDAR_HIJRI_TYPE='';
 
-    let APP_THEMES={day:'',month:'',year:''};
     let APP_PLACES = '';
-    let APP_PAPER_SIZE='';
-    let APP_HIGHLIGHT_ROW='';
 
     let APP_METHOD='';
     let APP_METHOD_ASR='';
@@ -2641,18 +2593,8 @@ const settings_load = async (tab_selected) => {
     let APP_FAST_START_END='';
     
     if (tab_selected==1 || tab_selected==2 || tab_selected==3 || tab_selected==6){
-        /**@type{{  id:number,
-         *          value:string,
-         *          text:string,
-         *          app_setting_type_name:string,
-         *          data2:string,
-         *          data3:string,
-         *          data4:string,
-         *          data5:string}[]} */
-        const app_settings_db = await common.FFB('/server-db/app_settings', null, 'GET', 'APP_DATA')
-        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-        .catch((/**@type{Error}*/error)=>{throw error;});
         let option;
+        const app_settings_db = await common.app_settings_get();
         for (const app_setting of app_settings_db) {
             option = `<option id=${app_setting.id} value='${app_setting.value}'>${app_setting.text}</option>`;
             switch (app_setting.app_setting_type_name){
@@ -2682,14 +2624,6 @@ const settings_load = async (tab_selected) => {
                 }
                 case 'CALENDAR_HIJRI_TYPE':{
                     APP_CALENDAR_HIJRI_TYPE += option;
-                    break;
-                }
-                case 'PAPER_SIZE':{
-                    APP_PAPER_SIZE += option;
-                    break;
-                }
-                case 'HIGHLIGHT_ROW':{
-                    APP_HIGHLIGHT_ROW += option;
                     break;
                 }
                 case 'METHOD':{
@@ -2724,8 +2658,7 @@ const settings_load = async (tab_selected) => {
                 }
             }
         }
-        APP_THEMES = themes(common.COMMON_GLOBAL.app_id, app_settings_db);
-        APP_PLACES = places(common.COMMON_GLOBAL.app_id, app_settings_db);
+        APP_PLACES = places(app_settings_db.filter((/**@type{*}*/setting)=>setting.app_id== common.COMMON_GLOBAL.app_id && setting.app_setting_type_name=='PLACE'));
     }
         
     switch (tab_selected){
@@ -2753,18 +2686,6 @@ const settings_load = async (tab_selected) => {
             CommonAppDocument.querySelector('#setting_select_popular_place').innerHTML = APP_PLACES;
             //set default geolocation
             CommonAppDocument.querySelector('#setting_select_popular_place').selectedIndex = 0;
-            break;
-        }
-        case 3:{
-            //tab 3 - settings design
-            CommonAppDocument.querySelector('#slides_day').innerHTML = APP_THEMES.day;
-            CommonAppDocument.querySelector('#slides_month').innerHTML = APP_THEMES.month;
-            CommonAppDocument.querySelector('#slides_year').innerHTML = APP_THEMES.year;
-            CommonAppDocument.querySelector('#setting_select_report_papersize').innerHTML = APP_PAPER_SIZE;
-            CommonAppDocument.querySelector('#setting_select_report_highlight_row').innerHTML = APP_HIGHLIGHT_ROW;
-            //load themes in Design tab
-            load_themes();
-            update_all_theme_thumbnails();
             break;
         }
         case 5:{
