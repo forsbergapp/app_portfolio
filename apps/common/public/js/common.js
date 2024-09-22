@@ -654,6 +654,7 @@ const theme_default_list = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}
  *          import('../../../common_types.js').CommonAppEvent['target']['parentNode']|null} target
  */
 const select_event_action = async (event_target_id, target) =>{
+    //module leaflet events
     if(event_target_id== 'common_module_leaflet_select_country'){
         const country_code = CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')==''?
                                 null:
@@ -678,6 +679,10 @@ const select_event_action = async (event_target_id, target) =>{
                         }).then(()=> {
             map_toolbar_reset();
         });
+    }
+                    
+    if(event_target_id == 'common_module_leaflet_select_mapstyle'){
+        map_setstyle(target?.getAttribute('data-value'));
     }
 
     if (event_target_id == 'common_dialogue_user_menu_app_theme'){
@@ -3365,19 +3370,6 @@ const common_event = async (event_type,event=null) =>{
                         }
                     }
                 }   
-                break;
-            }
-            case 'change':{
-                switch (event.target.id){
-                    //module leaflet events
-                    case 'common_module_leaflet_select_mapstyle':{
-                        map_setstyle(event.target.value);
-                        break;
-                    }
-                    default:{
-                        break;
-                    }
-                }
                 break;
             }
             case 'keyup':{

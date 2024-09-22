@@ -1528,7 +1528,7 @@ select {
 	width: 60vw;
     top: 60px;
 }
-#common_module_leaflet_select_country, #common_module_leaflet_select_city{
+#common_module_leaflet_select_country, #common_module_leaflet_select_city, #common_module_leaflet_select_mapstyle{
 	width:95%;
 	line-height: 1.5em;
 }
