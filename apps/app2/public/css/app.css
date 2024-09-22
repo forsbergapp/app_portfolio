@@ -344,19 +344,19 @@
 	margin-bottom: 10px;
 }
 /* SETTINGS DESIGN*/
-#settings #settings_tab3 .setting_horizontal_row:nth-child(1){
+#settings .settings_tab3 .setting_horizontal_row:nth-child(1){
 	direction:ltr;
 	min-height:	230px;
 }
-#settings #settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(1),
-#settings #settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(2),
-#settings #settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(3){
+#settings .settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(1),
+#settings .settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(2),
+#settings .settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(3){
 	width: 125px;
 }
-#settings #settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(4){
+#settings .settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(4){
 	width:0%;
 }
-#settings #settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col{
+#settings .settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col{
 	text-align: center !important;
 }
 #setting_icon_design_theme_day, #setting_icon_design_theme_month, #setting_icon_design_theme_year{
@@ -484,11 +484,11 @@
 	}
 }
 /*SETTINGS IMAGE*/
-#settings #settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
-#settings #settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
+#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
+#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
 	width:5%;
 }
-#settings #settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
+#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
 	width:90%;
 }
 .setting_paper_preview{
@@ -530,61 +530,61 @@
   	background-repeat: no-repeat;
 }
 /*SETTINGS Text*/
-#settings #settings_tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
-#settings #settings_tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
+#settings .settings_tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
+#settings .settings_tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
 	width:5%;
 }
-#settings #settings_tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
+#settings .settings_tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
 	width:90%;
 	text-align: center;
 	display: block;
 }
-#settings #settings_tab5 #setting_icon_text_theme_col{
+#settings .settings_tab5 #setting_icon_text_theme_col{
 	display: inline-block;
 	width: 60px;
 	vertical-align: top;
 }
-#settings #settings_tab5 #setting_icon_text_theme_col > div{
+#settings .settings_tab5 #setting_icon_text_theme_col > div{
     height: 2em;
 	width: 2em;
 }
-#settings #settings_tab5 #setting_icon_text_theme_col .common_icon{
+#settings .settings_tab5 #setting_icon_text_theme_col .common_icon{
 	cursor: pointer;
 }
-#settings #settings_tab5 #setting_paper_preview_text{
+#settings .settings_tab5 #setting_paper_preview_text{
 	transform: scale(0.95) translate(0%, -7%);
 	display: inline-block;
 }
-#settings #settings_tab5 #setting_paper_preview_text.font_arabic_sans .display_font{
+#settings .settings_tab5 #setting_paper_preview_text.font_arabic_sans .display_font{
 	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_sans) !important;
 	line-height: initial;
 }
-#settings #settings_tab5 #setting_paper_preview_text.font_arabic_kufi .display_font{
+#settings .settings_tab5 #setting_paper_preview_text.font_arabic_kufi .display_font{
 	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_kufi) !important;
 	line-height: initial;
 }
-#settings #settings_tab5 #setting_paper_preview_text.font_arabic_nashk .display_font{
+#settings .settings_tab5 #setting_paper_preview_text.font_arabic_nashk .display_font{
 	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_nashk) !important;
 	line-height: initial;
 }
-#settings #settings_tab5 #setting_paper_preview_text.font_arabic_nastaliq .display_font{
+#settings .settings_tab5 #setting_paper_preview_text.font_arabic_nastaliq .display_font{
 	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_nastaliq) !important;
 	line-height: initial;
 }
-#settings #settings_tab5 #setting_paper_preview_header_text .common_input,
-#settings #settings_tab5 #setting_paper_preview_footer_text .common_input{
+#settings .settings_tab5 #setting_paper_preview_header_text .common_input,
+#settings .settings_tab5 #setting_paper_preview_footer_text .common_input{
 	font-size: 0.4em;
 }
-#settings #settings_tab5 .setting_report_title{
+#settings .settings_tab5 .setting_report_title{
 	min-width: 99%;
 	margin: -2px;
 	text-align: center;
 	font-size: 0.7em;
 }
-#settings #settings_tab5 #setting_input_reportheader3{
+#settings .settings_tab5 #setting_input_reportheader3{
 	margin-bottom: 4px;
 }
-#settings #settings_tab5 #setting_input_reportfooter1{
+#settings .settings_tab5 #setting_input_reportfooter1{
 	margin-top: 4px;
 }
 
@@ -600,14 +600,14 @@
 	display:inline-block;
 }
 /* SETTINGS USER SETTINGS*/
-#settings #settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(1),
-#settings #settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(4){
+#settings .settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(1),
+#settings .settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(4){
 	width: 10%;
 }
-#settings #settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(2){
+#settings .settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(2){
 	width: 0%;
 }
-#settings #settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(3){
+#settings .settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(3){
 	width: 80%;
 	text-align: center;
 }
@@ -776,7 +776,7 @@
 	.profile_user_settings_row div:nth-child(1){
 		width:200px;
 	}
-	#settings #settings_tab5 #setting_paper_preview_footer_text{
+	#settings .settings_tab5 #setting_paper_preview_footer_text{
 		font-size: 0.8em;
 	}
 }
@@ -958,7 +958,7 @@ body,
 .setting_paper_preview{
 	background-color: var(--app_theme_paper_preview_background_color);
 }
-#settings #settings_tab5 .setting_report_title{
+#settings .settings_tab5 .setting_report_title{
     border: 0.5px solid var(--common_app_color_gold);
 }
 .common_dialogue_button:hover,
@@ -984,34 +984,34 @@ body,
 	color: var(--app_theme_button_active_color) !important;
 	background-color: var(--app_theme_button_active_background_color) !important;
 }
-#settings #settings_tab3 .slide #timetable_day,
-#settings #settings_tab3 .slide #timetable_month,
-#settings #settings_tab3 .slide #timetable_year{
+#settings .settings_tab3 .slide #timetable_day,
+#settings .settings_tab3 .slide #timetable_month,
+#settings .settings_tab3 .slide #timetable_year{
 	background-color:var(--app_theme_paper_preview_background_color);
 }
-#settings #settings_tab5 #setting_icon_text_theme_day,
-#settings #settings_tab5 #setting_icon_text_theme_month,
-#settings #settings_tab5 #setting_icon_text_theme_year{
+#settings .settings_tab5 #setting_icon_text_theme_day,
+#settings .settings_tab5 #setting_icon_text_theme_month,
+#settings .settings_tab5 #setting_icon_text_theme_year{
 	color: var(--app_theme_button_color);
 }
-#settings #settings_tab5 #setting_icon_text_theme_day:hover,
-#settings #settings_tab5 #setting_icon_text_theme_day:active,
-#settings #settings_tab5 #setting_icon_text_theme_month:hover,
-#settings #settings_tab5 #setting_icon_text_theme_month:active,
-#settings #settings_tab5 #setting_icon_text_theme_year:hover,
-#settings #settings_tab5 #setting_icon_text_theme_year:active{
+#settings .settings_tab5 #setting_icon_text_theme_day:hover,
+#settings .settings_tab5 #setting_icon_text_theme_day:active,
+#settings .settings_tab5 #setting_icon_text_theme_month:hover,
+#settings .settings_tab5 #setting_icon_text_theme_month:active,
+#settings .settings_tab5 #setting_icon_text_theme_year:hover,
+#settings .settings_tab5 #setting_icon_text_theme_year:active{
 	color: var(--app_theme_hover);
 }
 
-#settings #settings_tab5 #setting_input_header,
-#settings #settings_tab5 #setting_input_footer{
+#settings .settings_tab5 #setting_input_header,
+#settings .settings_tab5 #setting_input_footer{
 	background-color: var(--report_theme_footer_background_color);
 }
-#settings #settings_tab5 #setting_paper_preview_header_text .common_input{
+#settings .settings_tab5 #setting_paper_preview_header_text .common_input{
 	color : var(--report_theme_header_color) !important;
 	background-color:var(--report_theme_header_background_color);
 }	
-#settings #settings_tab5 #setting_paper_preview_footer_text .common_input{
+#settings .settings_tab5 #setting_paper_preview_footer_text .common_input{
 	color : var(--report_theme_footer_color) !important;
 	background-color:var(--report_theme_footer_background_color);
 }
