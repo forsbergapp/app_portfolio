@@ -53,7 +53,6 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *          function_map_city_empty:function,
  *          function_FFB:function,
  *          function_search_event:function,
- *          function_SearchAndSetSelectedIndex:function,
  *          function_map_setstyle:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:  null,
