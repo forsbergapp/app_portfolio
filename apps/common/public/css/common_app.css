@@ -603,9 +603,6 @@ select {
 .common_dialogue_apps_app_logo{
 	margin: 0 auto;
 }	
-.common_dialogue_apps_app_url{
-	display:none;
-}
 /*DIALOGUE INFO*/
 #common_dialogue_apps #common_dialogue_info_contact_text, 
 #common_dialogue_apps #common_dialogue_info_app_email{

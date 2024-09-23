@@ -3084,10 +3084,10 @@ const common_event = async (event_type,event=null) =>{
                         }
                         //Dialogue apps
                         case 'common_dialogue_apps_list':
-                            if (event.target.className == 'common_dialogue_apps_app_logo'){
-                                const app_url = element_row(event.target).querySelector('.common_dialogue_apps_app_url');
+                            if (event.target.classList.contains('common_dialogue_apps_app_logo')){
+                                const app_url = event.target.getAttribute('data-url');
                                 if (app_url)
-                                    CommonAppWindow.open(app_url.innerHTML);
+                                    CommonAppWindow.open(app_url);
                             }
                             break;
                         case 'common_dialogue_info_app_link':{
