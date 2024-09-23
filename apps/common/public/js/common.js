@@ -247,18 +247,6 @@ const common_translate_ui = async lang_code => {
     }
 };
 /**
- * Renders locales options
- * @returns {Promise<string>}
- */
-const get_locales_options = async () =>{
-    const locales = await FFB('/server-db/locale', `lang_code=${COMMON_GLOBAL.user_locale}`, 'GET', 'APP_DATA', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                            .catch((/**@type{Error}*/error)=>{throw error;});
-    return locales.map((/**@type{*}*/row, /**@type{number}*/index)=>
-        `<option id="${index}" value="${row.locale}">${row.text}</option>`
-        ).join('');
-};
-/**
  * Format JSON date with user timezone
  * @param {string} db_date 
  * @param {boolean|null} short 
@@ -3964,7 +3952,7 @@ export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS,
        /* MISC */
        element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, typewatch, toBase64, fromBase64, 
-       common_translate_ui, get_locales_options, 
+       common_translate_ui,
        mobile,
        convert_image,
        show_image, getHostname, input_control, getUserAgentPlatform, SearchAndSetSelectedIndex,

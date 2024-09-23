@@ -56,10 +56,10 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
  *          token_timestamp:number|null,
  *          system_admin:string,
  *          system_admin_only:number,
- *          current_locale:string,
- *          current_timezone:string,
- *          current_direction:string,
- *          current_arabic_script:string,
+ *          user_locale:string,
+ *          user_timezone:string,
+ *          user_direction:string,
+ *          user_arabic_script:string,
  *          function_set_current_value:function,
  *          function_FFB:function,
  *          function_ComponentRender:function,
@@ -119,11 +119,11 @@ const component = async props => {
             //Locale
             await props.function_ComponentRender('common_dialogue_user_menu_user_locale_select', 
                 {
-                  default_data_value:props.current_locale,
+                  default_data_value:props.user_locale,
                   default_value:'',
                   options: null,
                   path:'/server-db/locale',
-                  query:`lang_code=${props.current_locale}`,
+                  query:`lang_code=${props.user_locale}`,
                   method:'GET',
                   authorization_type:'APP_DATA',
                   column_value:'locale',
@@ -133,7 +133,7 @@ const component = async props => {
             //Timezone
             await props.function_ComponentRender('common_dialogue_user_menu_user_timezone_select', 
                 {
-                    default_data_value:props.current_timezone,
+                    default_data_value:props.user_timezone,
                     default_value:'',
                     options: settings.filter(setting=>setting.app_setting_type_name=='TIMEZONE'),
                     path:null,
@@ -147,7 +147,7 @@ const component = async props => {
             //Direction with default ' '
             await props.function_ComponentRender('common_dialogue_user_menu_user_direction_select', 
                 {
-                    default_data_value:props.current_direction,
+                    default_data_value:props.user_direction,
                     default_value:' ',
                     options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.app_setting_type_name=='DIRECTION')),
                     path:null,
@@ -161,7 +161,7 @@ const component = async props => {
             //Arabic script with default ' '
             await props.function_ComponentRender('common_dialogue_user_menu_user_arabic_script_select', 
                 {
-                    default_data_value:props.current_arabic_script,
+                    default_data_value:props.user_arabic_script,
                     default_value:' ',
                     options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.app_setting_type_name=='ARABIC_SCRIPT')),
                     path:null,
@@ -175,10 +175,10 @@ const component = async props => {
         }
         if ((props.system_admin_only == 1)==false){
             //set current value on all the selects
-            props.function_set_current_value('common_dialogue_user_menu_user_locale_select', props.current_locale);
-            props.function_set_current_value('common_dialogue_user_menu_user_timezone_select', props.current_timezone);
-            props.function_set_current_value('common_dialogue_user_menu_user_direction_select', props.current_direction);
-            props.function_set_current_value('common_dialogue_user_menu_user_arabic_script_select', props.current_arabic_script);
+            props.function_set_current_value('common_dialogue_user_menu_user_locale_select', props.user_locale);
+            props.function_set_current_value('common_dialogue_user_menu_user_timezone_select', props.user_timezone);
+            props.function_set_current_value('common_dialogue_user_menu_user_direction_select', props.user_direction);
+            props.function_set_current_value('common_dialogue_user_menu_user_arabic_script_select', props.user_arabic_script);
         }
         await adjust_logged_out_logged_in();
         if (props.token_exp && props.token_iat){

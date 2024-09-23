@@ -496,9 +496,9 @@ const get_align = (al,ac,ar) => {
  * @returns {Promise.<void>}
  */
 const settingsTimesShow = async () => {
-    const element_setting_select_locale         = CommonAppDocument.querySelector('#setting_select_locale');
+    const setting_select_locale                 = CommonAppDocument.querySelector('#setting_select_locale .common_select_dropdown_value')?.getAttribute('data-value');
     const element_setting_current_date          = CommonAppDocument.querySelector('#setting_current_date_time_display');
-    const element_setting_select_report_timezone= CommonAppDocument.querySelector('#setting_select_report_timezone');
+    const setting_select_report_timezone        = CommonAppDocument.querySelector('#setting_select_report_timezone .common_select_dropdown_value')?.getAttribute('data-value');
     const element_setting_report_data_time      = CommonAppDocument.querySelector('#setting_report_date_time_display');
     
     /**@type{Intl.DateTimeFormatOptions} */
@@ -515,9 +515,9 @@ const settingsTimesShow = async () => {
     };
     if (element_setting_current_date){     
         element_setting_current_date.innerHTML = new Date().toLocaleTimeString(common.COMMON_GLOBAL.user_locale, options);    
-        if (element_setting_select_report_timezone && element_setting_select_report_timezone.selectedIndex>0){
-            options.timeZone = element_setting_select_report_timezone[element_setting_select_report_timezone.selectedIndex].value;
-            element_setting_report_data_time.innerHTML = new Date().toLocaleTimeString(element_setting_select_locale.value, options);
+        if (setting_select_report_timezone){
+            options.timeZone = setting_select_report_timezone;
+            element_setting_report_data_time.innerHTML = new Date().toLocaleTimeString(setting_select_locale, options);
         }
         //wait 1 second
         await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 1000);});            
@@ -604,6 +604,27 @@ const SettingShow = async (tab_selected) => {
     CommonAppDocument.querySelector('#settings_content').className = `settings_tab_content settings_tab${tab_selected}`;
     //mount the selected component
     switch (tab_selected){
+        case 1:{
+            common.ComponentRender('settings_content', {user_settings:APP_GLOBAL.user_settings.data,
+                      app_id:common.COMMON_GLOBAL.app_id,
+                      user_locale:common.COMMON_GLOBAL.user_locale,
+                      user_timezone:common.COMMON_GLOBAL.user_timezone,
+                      setting_locale:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_language_locale,
+                      setting_locale_second:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_second_language_locale,
+                      setting_columntitle:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_column_title,
+                      setting_timezone:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone,
+                      setting_number_system:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_number_system,
+                      setting_direction:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_layout_direction,
+                      setting_arabic_script:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script,
+                      setting_calendar_type:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_type,
+                      setting_calendar_hijri_type:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_hijri_type,
+                      function_component_setting_update:component_setting_update,
+                      function_app_settings_get:common.app_settings_get,
+                      function_set_current_value:common.set_current_value,
+                      function_ComponentRender:common.ComponentRender,
+                      function_FFB:common.FFB}, `/component/settings_tab${tab_selected}.js`);
+            break;
+        }
         case 2:{
             common.ComponentRender('settings_content', {user_settings:APP_GLOBAL.user_settings.data,
                                                         app_id:common.COMMON_GLOBAL.app_id,
@@ -927,6 +948,9 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 CommonAppDocument.querySelector('#setting_method_param_isha').innerHTML = 'Isha:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
                 break;
             }
+        case 'USER_SETTING':{
+            APP_GLOBAL.user_settings.current_id = CommonAppDocument.querySelector('#setting_select_user_setting').selectedIndex;
+        }
     }
 };
 
@@ -1195,20 +1219,6 @@ const user_setting_link = (item) => {
 const user_settings_load = async (tab_selected) => {
     
     switch (tab_selected){
-        case 1:{
-            //Regional
-            CommonAppDocument.querySelector('#setting_select_locale').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_language_locale;
-            CommonAppDocument.querySelector('#setting_timezone_current').innerHTML = common.COMMON_GLOBAL.user_timezone;
-            CommonAppDocument.querySelector('#setting_select_report_timezone').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone;
-            CommonAppDocument.querySelector('#setting_select_report_numbersystem').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_number_system;
-            CommonAppDocument.querySelector('#setting_select_report_direction').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_layout_direction;
-            CommonAppDocument.querySelector('#setting_select_report_locale_second').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_second_language_locale;
-            CommonAppDocument.querySelector('#setting_select_report_coltitle').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_column_title;
-            CommonAppDocument.querySelector('#setting_select_report_arabic_script').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script;
-            CommonAppDocument.querySelector('#setting_select_calendartype').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_type;
-            CommonAppDocument.querySelector('#setting_select_calendar_hijri_type').value = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_hijri_type;
-            break;
-        }
         case 3:{
             //Design
             set_theme_id('day', APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_day_id);
@@ -1555,23 +1565,23 @@ const settings_update = setting_tab => {
 
     const json_data = { description:                        setting_tab=='GPS'?CommonAppDocument.querySelector('#setting_input_place').innerHTML:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
-                        regional_language_locale:           setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_locale').value:
+                        regional_language_locale:           setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_locale .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_language_locale,
-                        regional_timezone:                  setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_timezone').value:
+                        regional_timezone:                  setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_timezone .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone,
-                        regional_number_system:             setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_numbersystem').value:
+                        regional_number_system:             setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_numbersystem .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_number_system,
-                        regional_layout_direction:          setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_direction').value:
+                        regional_layout_direction:          setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_direction .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_layout_direction,
-                        regional_second_language_locale:    setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_locale_second').value:
+                        regional_second_language_locale:    setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_locale_second .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_second_language_locale,
-                        regional_column_title:              setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_coltitle').value:
+                        regional_column_title:              setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_coltitle .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_column_title,
-                        regional_arabic_script:             setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_arabic_script').value:
+                        regional_arabic_script:             setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_arabic_script .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script,
-                        regional_calendar_type:             setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_calendartype').value:
+                        regional_calendar_type:             setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_calendartype .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_type,
-                        regional_calendar_hijri_type:       setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_calendar_hijri_type').value:
+                        regional_calendar_hijri_type:       setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_calendar_hijri_type .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_hijri_type,
                         gps_popular_place_id:               setting_tab=='GPS'?
                                                                 (JSON.parse(CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value')).id==''?null:
@@ -1812,6 +1822,29 @@ const app_event_click = event => {
             switch (event_target_id){
                 case event.target?.classList.contains('common_select_option')?event_target_id:'':
                 case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
+                    //settings regional
+                                    //settings regional
+                    if(event_target_id == 'setting_select_locale'){
+                        settings_update('REGIONAL');
+                        settings_translate();
+                    }
+                    if(event_target_id == 'setting_select_report_timezone'){
+                        settings_update('REGIONAL');
+                    }
+                    if(event_target_id == 'setting_select_report_numbersystem' ||
+                       event_target_id == 'setting_select_report_direction'){
+                        settings_update('REGIONAL');
+                    }
+                    if(event_target_id == 'setting_select_report_locale_second'){
+                        settings_update('REGIONAL');
+                        settings_translate();
+                    }
+                    if( event_target_id == 'setting_select_report_coltitle' ||
+                        event_target_id == 'setting_select_report_arabic_script' ||
+                        event_target_id == 'setting_select_calendartype' ||
+                        event_target_id == 'setting_select_calendar_hijri_type'){
+                        settings_update('REGIONAL');
+                    }
                     //settings gps
                     if(event_target_id=='setting_select_popular_place'){
                         settings_update('GPS');
@@ -2158,10 +2191,10 @@ const app_event_click = event => {
                             token_iat:common.COMMON_GLOBAL.token_iat,
                             token_timestamp: common.COMMON_GLOBAL.token_timestamp,
                             system_admin:common.COMMON_GLOBAL.system_admin,
-                            current_locale:common.COMMON_GLOBAL.user_locale,
-                            current_timezone:common.COMMON_GLOBAL.user_timezone,
-                            current_direction:common.COMMON_GLOBAL.user_direction,
-                            current_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
+                            user_locale:common.COMMON_GLOBAL.user_locale,
+                            user_timezone:common.COMMON_GLOBAL.user_timezone,
+                            user_direction:common.COMMON_GLOBAL.user_direction,
+                            user_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
                             //functions
                             function_set_current_value:common.set_current_value,
                             function_FFB:common.FFB,
@@ -2255,10 +2288,10 @@ const app_event_click = event => {
                     CommonAppDocument.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
                     CommonAppDocument.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
                     //update timezone
-                    CommonAppDocument.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
                     //set qibbla
                     map_show_qibbla();
-                    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(CommonAppDocument.querySelector('#setting_select_report_timezone').value);
+                    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
                     settings_update('GPS');
                     break;
                 }       
@@ -2282,33 +2315,6 @@ const app_event_change = event => {
         common.common_event('change',event)
         .then(()=>{
             switch (event_target_id){
-                //settings regional
-                case 'setting_select_locale':{
-                    settings_update('REGIONAL');
-                    settings_translate();
-                    break;
-                }
-                case 'setting_select_report_timezone':{
-                    settings_update('REGIONAL');
-                    break;
-                }
-                case 'setting_select_report_numbersystem':
-                case 'setting_select_report_direction':{
-                    settings_update('REGIONAL');
-                    break;
-                }
-                case 'setting_select_report_locale_second':{
-                    settings_update('REGIONAL');
-                    settings_translate();
-                    break;
-                }
-                case 'setting_select_report_coltitle':
-                case 'setting_select_report_arabic_script':
-                case 'setting_select_calendartype':
-                case 'setting_select_calendar_hijri_type':{
-                    settings_update('REGIONAL');
-                    break;
-                }
                 //settings image
                 case 'setting_input_reportheader_img':{
                     component_setting_update('IMAGE', 'HEADER_LOAD',  event_target_id)
@@ -2341,6 +2347,7 @@ const app_event_change = event => {
                 }
                 //settings user
                 case 'setting_select_user_setting':{
+                    component_setting_update('USER', 'SETTING');
                     settings_translate();
                     break;
                 }
@@ -2549,14 +2556,6 @@ const framework_set = async (framework=null) => {
  */
 const settings_load = async (tab_selected) => {    
     
-    let USER_TIMEZONE ='';
-    let USER_DIRECTION='';
-    let USER_ARABIC_SCRIPT='';
-    let APP_NUMBER_SYSTEM='';
-    let APP_COLUMN_TITLE='';
-    let APP_CALENDAR_TYPE='';
-    let APP_CALENDAR_HIJRI_TYPE='';
-
     let APP_METHOD='';
     let APP_METHOD_ASR='';
     let APP_HIGH_LATITUDE_ADJUSTMENT='';
@@ -2571,34 +2570,6 @@ const settings_load = async (tab_selected) => {
         for (const app_setting of app_settings_db) {
             option = `<option id=${app_setting.id} value='${app_setting.value}'>${app_setting.text}</option>`;
             switch (app_setting.app_setting_type_name){
-                case 'TIMEZONE':{
-                    USER_TIMEZONE += option;
-                    break;
-                }
-                case 'DIRECTION':{
-                    USER_DIRECTION += option;
-                    break;
-                }
-                case 'ARABIC_SCRIPT':{
-                    USER_ARABIC_SCRIPT += option;
-                    break;
-                }
-                case 'NUMBER_SYSTEM':{
-                    APP_NUMBER_SYSTEM += option;
-                    break;
-                }
-                case 'COLUMN_TITLE':{
-                    APP_COLUMN_TITLE += option;
-                    break;
-                }
-                case 'CALENDAR_TYPE':{
-                    APP_CALENDAR_TYPE += option;
-                    break;
-                }
-                case 'CALENDAR_HIJRI_TYPE':{
-                    APP_CALENDAR_HIJRI_TYPE += option;
-                    break;
-                }
                 case 'METHOD':{
                     option = `<option id=${app_setting.id} value='${app_setting.value}' ` +
                                 `data2='${nvl(app_setting.data2)}' data3='${nvl(app_setting.data3)}' data4='${nvl(app_setting.data4)}' data5='${nvl(app_setting.data5)}'>${app_setting.text}</option>`;
@@ -2634,25 +2605,6 @@ const settings_load = async (tab_selected) => {
     }
         
     switch (tab_selected){
-        case 1:{
-            //tab 1 - settings regional
-            const LOCALES = await common.get_locales_options().catch((/**@type{Error}*/error)=>{throw error;});
-            CommonAppDocument.querySelector('#setting_select_locale').innerHTML = LOCALES;
-            
-            CommonAppDocument.querySelector('#setting_timezone_current').innerHTML = common.COMMON_GLOBAL.user_timezone;
-
-            CommonAppDocument.querySelector('#setting_select_report_locale_second').innerHTML = `<option id='' value='0'></option>${LOCALES}`;
-            CommonAppDocument.querySelector('#setting_select_report_timezone').innerHTML = USER_TIMEZONE;
-            CommonAppDocument.querySelector('#setting_select_report_direction').innerHTML = `<option id='' value=''></option>${USER_DIRECTION}`;
-            CommonAppDocument.querySelector('#setting_select_report_numbersystem').innerHTML = APP_NUMBER_SYSTEM;
-            CommonAppDocument.querySelector('#setting_select_report_coltitle').innerHTML = APP_COLUMN_TITLE;
-            CommonAppDocument.querySelector('#setting_select_report_arabic_script').innerHTML = `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`;
-            CommonAppDocument.querySelector('#setting_select_calendartype').innerHTML = APP_CALENDAR_TYPE;
-            CommonAppDocument.querySelector('#setting_select_calendar_hijri_type').innerHTML = APP_CALENDAR_HIJRI_TYPE;
-            //set initial default language from clients locale
-            common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_locale, CommonAppDocument.querySelector('#setting_select_locale'),1);            
-            break;
-        }
         case 5:{
             CommonAppDocument.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
             break;
@@ -2676,13 +2628,6 @@ const settings_load = async (tab_selected) => {
         }
     }
     await user_settings_load(tab_selected);
-    switch (tab_selected){
-        case 1:{
-            //show settings times
-            component_setting_update('REGIONAL', 'TIMEZONE');
-            break;
-        }
-    }
 };
 /**
  * 
