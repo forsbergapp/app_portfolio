@@ -385,13 +385,17 @@ const getColumnTitles = (transliteration = 0, calendartype, locale, second_local
 };
 /**
  * Checks if today
+ * compares the current date in the timetable with current date of the client using the timetable timezone
  * @param {Date} checkdate 
+ * @param {string|null} timezone
  * @returns {boolean}
  */
-const isToday = (checkdate) => {
-    return (checkdate.getMonth() == REPORT_GLOBAL.session_currentDate.getMonth()) && 
-            (checkdate.getDate() == REPORT_GLOBAL.session_currentDate.getDate()) && 
-            (checkdate.getFullYear() == REPORT_GLOBAL.session_currentDate.getFullYear());
+const isToday = (checkdate, timezone=null) => {
+	const date_user_timetable_timezone = 	new Date(new Date().setHours(new Date().getHours()+getTimezoneOffset(timezone ?? 'UTC')))
+											.toLocaleDateString('en', {timeZone: 'UTC', year:'numeric',month:'numeric',day:'numeric'});
+    return (checkdate.getMonth()+1 	== Number(date_user_timetable_timezone.split('/')[0])) && 
+            (checkdate.getDate() 	== Number(date_user_timetable_timezone.split('/')[1])) && 
+            (checkdate.getFullYear()== Number(date_user_timetable_timezone.split('/')[2]));
 };
 /**
  * Sets prayer method
@@ -1188,12 +1192,12 @@ const displayDay = (prayTimes, settings, button_id, user_settings) => {
 	const date_current = new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
 									REPORT_GLOBAL.session_currentDate.getMonth(),
 									REPORT_GLOBAL.session_currentDate.getDate());
-	const date_title4 = date_current.toLocaleDateString(settings.locale + 
+	const title_gregorian = date_current.toLocaleDateString(settings.locale + 
 									REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 									REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 									(settings.number_system=='hanidec'?'latn':settings.number_system), options).toLocaleUpperCase();
 	date_current.setDate(date_current.getDate() + settings.hijri_adj);
-	const date_title5 = date_current.toLocaleDateString(settings.locale + 
+	const title_hijri = date_current.toLocaleDateString(settings.locale + 
 									REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 									REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 									settings.calendar_hijri_type + 
@@ -1245,7 +1249,7 @@ const displayDay = (prayTimes, settings, button_id, user_settings) => {
 			const col_midnight = settings.show_midnight == 1? show_col(1, 'midnight', times.midnight, show_col_data):'';
 
 			day_html +=
-				`<div class='timetable_day_timetable_row_data ${isToday(date_current)==true?'timetable_day_today_row':''}'>
+				`<div class='timetable_day_timetable_row_data ${isToday(date_current, settings.timezone)==true?'timetable_day_today_row':''}'>
 					${col_imsak}${col_fajr}${col_sunrise}${col_dhuhr}${col_asr}${col_sunset}${col_maghrib}${col_isha}${col_midnight}
 				</div>
 				<div class='timetable_day_timetable_footer'>
@@ -1305,9 +1309,9 @@ const displayDay = (prayTimes, settings, button_id, user_settings) => {
 					<div >${settings.header_txt2}</div>
 					<div >${settings.header_txt3}</div>
 				</div>
-				<div id='timetable_day_timetable_header' class='display_font'>
-					<div>${date_title4}</div>
-					<div>${date_title5}</div>
+				<div id='timetable_header_date' class='display_font'>
+					<div>${title_gregorian}</div>
+					<div>${title_hijri}</div>
 				</div>
 				<div id='timetable_day_timetable' class='default_font'>
 					${timetable_headers(0, settings)}
@@ -1341,6 +1345,18 @@ const displayMonth = (prayTimes, settings, button_id, year_class='') => {
 		month_data_class = 'default_font bignumbers';
 	else
 		month_data_class = 'default_font';
+	/**
+	 * Gets dates and titles
+	 * Only one title of gregorian and hijri date can be displayed
+	 * @returns {{	month:			number,
+	 *				year:			number,
+	 *				title_gregorian:string,
+	 *				title_hijri:	string,
+	 *				date:			Date,
+	 *				endDate:		Date,
+	 *				date_hijri : 	[number, number,number],
+	 *				endDate_hijri: 	[number, number,number]}} 
+	 */
 	const getDatesAndTitle = () =>{
 		/**@type{Intl.DateTimeFormatOptions} */
 		let options;
@@ -1359,17 +1375,25 @@ const displayMonth = (prayTimes, settings, button_id, year_class='') => {
 			}
 		}
 		if (settings.calendartype=='GREGORIAN'){
-			const month_gregorian = REPORT_GLOBAL.session_currentDate.getMonth();
-			const year_greogrian = REPORT_GLOBAL.session_currentDate.getFullYear();
+			const month_gregorian 		= REPORT_GLOBAL.session_currentDate.getMonth();
+			const year_gregorian 		= REPORT_GLOBAL.session_currentDate.getFullYear();
+
+			//use format new Date('[year]-[month]-01T12:00:00.000Z')
+			//format new Date(	year,month,1) will not produce same month for all timezones
+			const gregorian_date_start 	= new Date(`${year_gregorian}-${(month_gregorian+1).toString().padStart(2,'0')}-01T12:00:00.000Z`);
+			const gregorian_date_end 	= new Date(`${year_gregorian}-${(month_gregorian+2).toString().padStart(2,'0')}-01T12:00:00.000Z`);
 			return {month:			month_gregorian,
-					year:			year_greogrian,
-					title:			new Date(	year_greogrian,month_gregorian,1).toLocaleDateString(settings.locale + 
+					year:			year_gregorian,
+
+					title_gregorian:gregorian_date_start.toLocaleDateString(settings.locale + 
 												REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 												REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 												(settings.number_system=='hanidec'?'latn':settings.number_system), 
 												options).toLocaleUpperCase(),
-					date:			new Date(year_greogrian, month_gregorian, 1),
-					endDate: 		new Date(year_greogrian, month_gregorian+ 1, 1),
+					title_hijri:	'',
+									
+					date:			gregorian_date_start,
+					endDate: 		gregorian_date_end,
 					date_hijri : 	[0,0,0],
 					endDate_hijri: 	[0,0,0]};
 		}	
@@ -1388,7 +1412,8 @@ const displayMonth = (prayTimes, settings, button_id, year_class='') => {
 			return {
 					month:			month_hijri,
 					year:			year_hijri,
-					title:			new Date(title_date[0],title_date[1]-1,title_date[2]).toLocaleDateString(settings.locale + 
+					title_gregorian:'',
+					title_hijri:	new Date(title_date[0],title_date[1]-1,title_date[2]).toLocaleDateString(settings.locale + 
 										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 										settings.calendar_hijri_type + 
@@ -1418,7 +1443,7 @@ const displayMonth = (prayTimes, settings, button_id, year_class='') => {
 				times.day = ++data.date_hijri[2] - 1;
 			let row_class='';
 			//check if today
-			if (isToday(data.date))
+			if (isToday(data.date, settings.timezone))
 				row_class = 'timetable_month_data_today_row ';
 			//check if row should be highlighted
 			switch (settings.highlight){
@@ -1481,9 +1506,9 @@ const displayMonth = (prayTimes, settings, button_id, year_class='') => {
 					<div >${settings.header_txt2}</div>
 					<div >${settings.header_txt3}</div>
 				</div>`:''}
-				<div id='timetable_month_data_header' class='display_font'>
-					<div id='timetable_month_data_header_title1'>${data.title}</div>
-					<div id='timetable_month_data_header_title2'>${REPORT_GLOBAL.first_language.timetable_title} ${settings.second_locale!='0'?REPORT_GLOBAL.second_language.timetable_title:''}</div>
+				<div id='timetable_header_date' class='display_font'>
+					<div>${data.title_gregorian}</div>
+					<div>${data.title_hijri}</div>
 				</div>
 				<div id='timetable_month_data' class='${month_data_class}'>
 					${timetable_headers(1, settings)}
