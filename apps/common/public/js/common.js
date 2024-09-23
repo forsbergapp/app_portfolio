@@ -584,29 +584,6 @@ const get_uservariables = () => {
             };
 };
 /**
- * Search and set selected index
- * colcheck=0 search id
- * colcheck=1 search value
- * @param {string} search 
- * @param {HTMLSelectElement} select_item 
- * @param {number} colcheck 
- * @returns {void}
- */
-const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
-    
-    try {
-        for (let i = 0; i < select_item.options.length; i++) {
-            if ((colcheck==0 && select_item.options[i].id == search) ||
-                (colcheck==1 && select_item.options[i].value == search)) {
-                select_item.selectedIndex = i;
-                break;
-            }
-        }    
-    } catch (/**@type{*}*/error) {
-        exception(COMMON_GLOBAL.app_function_exception, error);
-    }
-};
-/**
  * Default app themes 
  */
 const theme_default_list = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}, {VALUE:3, TEXT:'Caffè Latte'}];
@@ -2287,7 +2264,6 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                             function_map_city_empty:map_city_empty,
                             function_FFB:FFB,
                             function_search_event:search_event_function,
-                            function_SearchAndSetSelectedIndex:SearchAndSetSelectedIndex,
                             function_map_setstyle:map_setstyle
                             },
                         '/common/component/module_leaflet_control.js');
@@ -3955,7 +3931,7 @@ export{/* GLOBALS*/
        common_translate_ui,
        mobile,
        convert_image,
-       show_image, getHostname, input_control, getUserAgentPlatform, SearchAndSetSelectedIndex,
+       show_image, getHostname, input_control, getUserAgentPlatform,
        theme_default_list, common_theme_update_from_body,
        common_preferences_update_body_class_from_preferences,
        app_settings_get,
