@@ -139,7 +139,10 @@ const template = props =>`  <div class='setting_horizontal_row'>
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
+ *          user_settings:import('../js//types.js').APP_user_setting_record,
  *          function_load_themes:function,
+ *          function_set_theme_title:function,
+ *          function_set_current_value:function,
  *          function_update_all_theme_thumbnails:function
  *          function_ComponentRender:function,
  *          function_app_settings_get:function}} props 
@@ -148,7 +151,29 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *                      template:string}>}
  */
 const method = async props => {
-
+    /**
+     * Set theme id
+     * @param {string} type 
+     * @param {string} theme_id 
+     * @returns {void}
+     */
+    const set_theme_id = (type, theme_id) => {
+        const slides = props.common_document.querySelectorAll(`#setting_themes_${type}_slider .slide div`);
+        let i=0;
+        for (const slide of slides) {
+            if (slide.getAttribute('data-theme_id') == theme_id) {
+                //remove active class from current theme
+                props.common_document.querySelectorAll('.slider_active_' + type)[0].classList.remove('slider_active_' + type);
+                //set active class on found theme
+                slide.classList.add('slider_active_' + type);
+                //update preview image to correct theme
+                props.common_document.querySelector('#slides_' + type).style.left = (-96 * (i)).toString() + 'px';
+                props.function_set_theme_title(type);
+                break;
+            }
+            i++;
+        }
+    };
     const post_component = async () =>{
         const settings = await props.function_app_settings_get();
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
@@ -195,6 +220,36 @@ const method = async props => {
             }, '/common/component/select.js');
         props.function_load_themes();
         props.function_update_all_theme_thumbnails();
+
+        set_theme_id('day', props.user_settings.design_theme_day_id);
+        set_theme_id('month', props.user_settings.design_theme_month_id);
+        set_theme_id('year', props.user_settings.design_theme_year_id);
+        props.function_set_current_value('setting_select_report_papersize', props.user_settings.design_paper_size);
+        
+        props.common_document.querySelector('#paper').className=props.user_settings.design_paper_size;
+
+        props.function_set_current_value('setting_select_report_highlight_row', props.user_settings.design_row_highlight);
+
+        if (Number(props.user_settings.design_column_weekday_checked))
+            props.common_document.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
+        else
+            props.common_document.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
+        if (Number(props.user_settings.design_column_calendartype_checked))
+            props.common_document.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
+        else
+            props.common_document.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
+        if (Number(props.user_settings.design_column_notes_checked))
+            props.common_document.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
+        else
+            props.common_document.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
+        if (Number(props.user_settings.design_column_gps_checked))
+            props.common_document.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
+        else
+            props.common_document.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
+        if (Number(props.user_settings.design_column_timezone_checked))
+            props.common_document.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
+        else
+            props.common_document.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
     };
     return {
         props:  {function_post:post_component},

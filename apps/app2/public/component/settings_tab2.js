@@ -44,10 +44,7 @@ const template = () => `<div id='mapid'></div>
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
- *          current_place_id:number,
- *          current_place_description:string,
- *          current_latitude:string,
- *          current_longitude:string,
+ *          user_settings:import('../js//types.js').APP_user_setting_record,
  *          lib_timetable_REPORT_GLOBAL:*,
  *          function_component_setting_update:function,
  *          function_map_show_search_on_map_app:function,
@@ -87,10 +84,10 @@ const method = async props => {
                 column_text:'text',
                 function_FFB:null
             }, '/common/component/select.js');
-        props.function_set_current_value(   'setting_select_popular_place', null, 'id', props.current_place_id);
-        props.common_document.querySelector('#setting_input_place').innerHTML = props.current_place_description;
-        props.common_document.querySelector('#setting_input_lat').innerHTML = props.current_latitude;
-        props.common_document.querySelector('#setting_input_long').innerHTML = props.current_longitude;
+        props.function_set_current_value(   'setting_select_popular_place', null, 'id', props.user_settings.gps_popular_place_id);
+        props.common_document.querySelector('#setting_input_place').innerHTML = props.user_settings.description;
+        props.common_document.querySelector('#setting_input_lat').innerHTML = props.user_settings.gps_lat_text;
+        props.common_document.querySelector('#setting_input_long').innerHTML = props.user_settings.gps_long_text;
 
         //init map thirdparty module
         /**
