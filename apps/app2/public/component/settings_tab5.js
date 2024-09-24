@@ -39,15 +39,46 @@ const template = () =>` <div class='setting_horizontal_row'>
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string}} props 
- * @returns {Promise.<{ props:{function_post:null}, 
+ *          common_mountdiv:string,
+ *          user_settings:import('../js//types.js').APP_user_setting_record,
+ *          function_component_setting_update:function}} props 
+ * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
  */
 const method = async props => {
-    props;
+    const post_component = async () =>{
+        //Text
+        props.common_document.querySelector('#setting_input_reportheader1').innerHTML = props.user_settings.text_header_1_text;
+        props.common_document.querySelector('#setting_input_reportheader2').innerHTML = props.user_settings.text_header_2_text;
+        props.common_document.querySelector('#setting_input_reportheader3').innerHTML = props.user_settings.text_header_3_text;
+        if (props.user_settings.text_header_align == null) {
+            props.common_document.querySelector('#setting_icon_text_header_aleft').classList.remove('setting_button_active');
+            props.common_document.querySelector('#setting_icon_text_header_acenter').classList.remove('setting_button_active');
+            props.common_document.querySelector('#setting_icon_text_header_aright').classList.remove('setting_button_active');
+        } else { //update with 'left', 'center' or 'right' adding to bject name and add active class to this object
+            //remove active class if it is active
+            props.common_document.querySelector(  '#setting_icon_text_header_a' + 
+                                        props.user_settings.text_header_align).classList.remove('setting_button_active');
+            props.function_component_setting_update('TEXT', 'HEADER_ALIGN', 'setting_icon_text_header_a' + props.user_settings.text_header_align);
+        }
+        props.common_document.querySelector('#setting_input_reportfooter1').innerHTML = props.user_settings.text_footer_1_text;
+        props.common_document.querySelector('#setting_input_reportfooter2').innerHTML = props.user_settings.text_footer_2_text;
+        props.common_document.querySelector('#setting_input_reportfooter3').innerHTML = props.user_settings.text_footer_3_text;
+        if (props.user_settings.text_footer_align == null) {
+            props.common_document.querySelector('#setting_icon_text_footer_aleft').classList.remove('setting_button_active');
+            props.common_document.querySelector('#setting_icon_text_footer_acenter').classList.remove('setting_button_active');
+            props.common_document.querySelector('#setting_icon_text_footer_aright').classList.remove('setting_button_active');
+        } else { //update with 'left', 'center' or 'right' adding to bject name and add active class to this object
+            //remove active class if it is active
+            props.common_document.querySelector('#setting_icon_text_footer_a' +
+                props.user_settings.text_footer_align).classList.remove('setting_button_active');
+            props.function_component_setting_update('TEXT', 'FOOTER_ALIGN', 'setting_icon_text_footer_a' + props.user_settings.text_footer_align);
+        }
+        props.common_document.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
+    };
     return {
-        props:  {function_post:null},
+        props:  {function_post:post_component},
         data:   null,
         template: template()
     };
