@@ -1128,7 +1128,9 @@ const displayMonth = (prayTimes, settings, button_id, year_class='') => {
 			//use format new Date('[year]-[month]-01T12:00:00.000Z')
 			//format new Date(	year,month,1) will not produce same month for all timezones
 			const gregorian_date_start 	= new Date(`${year_gregorian}-${(month_gregorian+1).toString().padStart(2,'0')}-01T12:00:00.000Z`);
-			const gregorian_date_end 	= new Date(`${year_gregorian}-${(month_gregorian+2).toString().padStart(2,'0')}-01T12:00:00.000Z`);
+			let gregorian_date_end = new Date(gregorian_date_start);
+			gregorian_date_end 	= new Date(gregorian_date_end.setMonth(gregorian_date_end.getMonth()+1));
+
 			return {month:			month_gregorian,
 					year:			year_gregorian,
 
@@ -1378,9 +1380,7 @@ const displayYear = (prayTimes, settings, button_id) => {
 																							options_year);
 	}
 	const months = new Array(12);
-	REPORT_GLOBAL.session_currentDate.setMonth(startmonth);
-	REPORT_GLOBAL.session_currentHijriDate[0] = starthijrimonth;
-
+	
 	//TIMETABLE
 	const year_timetable = ()=>{
 		return `<div id='timetable_year'
@@ -1450,6 +1450,8 @@ const displayYear = (prayTimes, settings, button_id) => {
 			REPORT_GLOBAL.session_currentHijriDate[0] = monthindex;
 		months[monthindex-1] = displayMonth(prayTimes, settings, null, settings.timetable_year_month);		
 	}
+	REPORT_GLOBAL.session_currentDate.setMonth(startmonth);
+	REPORT_GLOBAL.session_currentHijriDate[0] = starthijrimonth;
 	return year_timetable();
 };
 export{	REPORT_GLOBAL,
