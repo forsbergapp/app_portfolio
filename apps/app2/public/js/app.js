@@ -452,30 +452,6 @@ const theme_nav = async (nav, type) => {
 };
 
 /**
- * Setting translate
- * @returns {Promise.<void>}
- */
-const settings_translate = async () => {
-    const locale        = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_language_locale;
-    const locale_second = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_second_language_locale;
-
-    /**
-     * @param {string} locale
-     * @returns {Promise<[{ object:string, 
-     *                      app_id:number, 
-     *                      object_name:string, 
-     *                      object_item_name:string, 
-     *                      subitem_name:string,
-     *                      lang_code:string,
-     *                      id:number,
-     *                      text:string}]>}
-     */
-    const function_fetch = async locale =>await common.FFB('/server-db/app_object', `data_lang_code=${locale}&object_name=REPORT`,  'GET', 'APP_DATA', null)
-                                    .then(result=>JSON.parse(result).rows);
-    APP_GLOBAL.lib_timetable.timetable_translate_settings(function_fetch, locale, locale_second);
-
-};
-/**
  * Get horizontal alignment
  * @param {boolean} al 
  * @param {boolean} ac 
@@ -992,10 +968,8 @@ const user_logout_app = () => {
         common.ComponentRemove('common_dialogue_profile', true);
         //set default settings
         set_default_settings().then(() => {
-            settings_translate().then(() => {
-                //show default startup
-                toolbar_button(APP_GLOBAL.app_default_startup_page);
-            });
+            //show default startup
+            toolbar_button(APP_GLOBAL.app_default_startup_page);
         });
     });    
 };
@@ -1017,11 +991,9 @@ const login_common = (avatar) => {
         CommonAppDocument.querySelector('#paper').innerHTML='';
         dialogue_loading(1);
         user_settings_get().then(() => {
-            settings_translate().then(() => {
-                //show default startup
-                toolbar_button(APP_GLOBAL.app_default_startup_page);
-                dialogue_loading(0);
-            });
+            //show default startup
+            toolbar_button(APP_GLOBAL.app_default_startup_page);
+            dialogue_loading(0);
         });
     });
 };
@@ -1471,9 +1443,7 @@ const user_settings_delete = (choice=null) => {
                     //remove current element from array
                     APP_GLOBAL.user_settings.data.splice(select.selectedIndex,1);
                     APP_GLOBAL.user_settings.current_id = select.selectedIndex;
-                    //load next available
-                    settings_translate()
-                    .then(()=>CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
+                    CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner');
                 }
                 
             })
@@ -1826,7 +1796,6 @@ const app_event_click = event => {
                                     //settings regional
                     if(event_target_id == 'setting_select_locale'){
                         settings_update('REGIONAL');
-                        settings_translate();
                     }
                     if(event_target_id == 'setting_select_report_timezone'){
                         settings_update('REGIONAL');
@@ -1837,7 +1806,6 @@ const app_event_click = event => {
                     }
                     if(event_target_id == 'setting_select_report_locale_second'){
                         settings_update('REGIONAL');
-                        settings_translate();
                     }
                     if( event_target_id == 'setting_select_report_coltitle' ||
                         event_target_id == 'setting_select_report_arabic_script' ||
@@ -2348,7 +2316,6 @@ const app_event_change = event => {
                 //settings user
                 case 'setting_select_user_setting':{
                     component_setting_update('USER', 'SETTING');
-                    settings_translate();
                     break;
                 }
                 //profile
@@ -2806,25 +2773,23 @@ const init_app = async parameters => {
         //show dialogue about using mobile and scan QR code after 5 seconds
         CommonAppWindow.setTimeout(() => {show_dialogue('SCAN');}, 5000);
         set_default_settings().then(() => {
-            settings_translate().then(() => {
-                const show_start = async () => {
-                    //show default startup
-                    await toolbar_button(APP_GLOBAL.app_default_startup_page);
-                    const user = CommonAppWindow.location.pathname.substring(1);
-                    if (user !='') {
-                        //show profile for user entered in url
-                        profile_show_app(null, user);
-                    }
-                };
-                show_start().then(() => {
-                    dialogue_loading(0);
-                    serviceworker();
-                    if (common.COMMON_GLOBAL.user_locale != CommonAppWindow.navigator.language.toLowerCase())
-                        common.common_translate_ui(common.COMMON_GLOBAL.user_locale)
-                        .then(()=>framework_set());
-                    else
-                        framework_set();
-                });
+            const show_start = async () => {
+                //show default startup
+                await toolbar_button(APP_GLOBAL.app_default_startup_page);
+                const user = CommonAppWindow.location.pathname.substring(1);
+                if (user !='') {
+                    //show profile for user entered in url
+                    profile_show_app(null, user);
+                }
+            };
+            show_start().then(() => {
+                dialogue_loading(0);
+                serviceworker();
+                if (common.COMMON_GLOBAL.user_locale != CommonAppWindow.navigator.language.toLowerCase())
+                    common.common_translate_ui(common.COMMON_GLOBAL.user_locale)
+                    .then(()=>framework_set());
+                else
+                    framework_set();
             });
         });
     });

@@ -94,30 +94,6 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
 	});
 };
 /**
- * Timetable translate settings
- * @param {number} app_id 
- * @param {string} locale 
- * @param {string} locale_second 
- */
-const timetable_translate_settings = async (app_id, locale, locale_second) => {
-	/**@type{import('../../../../server/db/sql/app_object.service.js')} */
-	const { getObjects } = await import(`file://${process.cwd()}/server/db/sql/app_object.service.js`);
-	/**
-     * @param {string} locale
-     * @returns {Promise<{ object:string, 
-	*                      app_id:number, 
-	*                      object_name:string, 
-	*                      object_item_name:string, 
-	*                      subitem_name:string,
-	*                      lang_code:string,
-	*                      id:number,
-	*                      text:string}[]>}
-	*/
-	const function_fetch = async locale =>await getObjects(app_id, locale, 'REPORT', null);
-	
-	timetable_lib.timetable_translate_settings(function_fetch, locale, locale_second);
-};
-/**
  * Timetable get day user settings
  * @param {number} app_id 
  * @param {number} user_account_id 
@@ -209,46 +185,44 @@ const timetable = async (timetable_parameters) => {
 		.then(()=>{
 			timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
 			.then((user_account_app_data_post)=>{
-				timetable_translate_settings(timetable_parameters.app_id, user_account_app_data_post.locale, user_account_app_data_post.second_locale).then(() => {
-					//set current date for report month
-					timetable_lib.REPORT_GLOBAL.session_currentDate = new Date();
-					timetable_lib.REPORT_GLOBAL.session_currentHijriDate = [0,0];
-					//get Hijri date from initial Gregorian date
-					timetable_lib.REPORT_GLOBAL.session_currentHijriDate[0] = 
-						parseInt(new Date(	timetable_lib.REPORT_GLOBAL.session_currentDate.getFullYear(),
-											timetable_lib.REPORT_GLOBAL.session_currentDate.getMonth(),
-											timetable_lib.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-					timetable_lib.REPORT_GLOBAL.session_currentHijriDate[1] = 
-						//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
-						parseInt(new Date(	timetable_lib.REPORT_GLOBAL.session_currentDate.getFullYear(),
-											timetable_lib.REPORT_GLOBAL.session_currentDate.getMonth(),
-											timetable_lib.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
-					getSettingDisplayData(timetable_parameters.app_id, timetable_parameters.app_id, 'METHOD')
-						.then(methods=>{
-							timetable_lib.set_prayer_method(methods).then(() => {
-								if (reporttype==0){
-									timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
-									.then((user_account_app_data_posts_parameters)=>{
-										
-										resolve({	report:timetable_lib.displayDay(prayTimes, user_account_app_data_post, null, user_account_app_data_posts_parameters),
-													papersize:user_account_app_data_post.papersize
-												});
-									})
-									.catch(()=>resolve({report:'', papersize:''}));
+				//set current date for report month
+				timetable_lib.REPORT_GLOBAL.session_currentDate = new Date();
+				timetable_lib.REPORT_GLOBAL.session_currentHijriDate = [0,0];
+				//get Hijri date from initial Gregorian date
+				timetable_lib.REPORT_GLOBAL.session_currentHijriDate[0] = 
+					parseInt(new Date(	timetable_lib.REPORT_GLOBAL.session_currentDate.getFullYear(),
+										timetable_lib.REPORT_GLOBAL.session_currentDate.getMonth(),
+										timetable_lib.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+				timetable_lib.REPORT_GLOBAL.session_currentHijriDate[1] = 
+					//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
+					parseInt(new Date(	timetable_lib.REPORT_GLOBAL.session_currentDate.getFullYear(),
+										timetable_lib.REPORT_GLOBAL.session_currentDate.getMonth(),
+										timetable_lib.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+				getSettingDisplayData(timetable_parameters.app_id, timetable_parameters.app_id, 'METHOD')
+					.then(methods=>{
+						timetable_lib.set_prayer_method(methods).then(() => {
+							if (reporttype==0){
+								timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
+								.then((user_account_app_data_posts_parameters)=>{
+									
+									resolve({	report:timetable_lib.displayDay(prayTimes, user_account_app_data_post, null, user_account_app_data_posts_parameters),
+												papersize:user_account_app_data_post.papersize
+											});
+								})
+								.catch(()=>resolve({report:'', papersize:''}));
+							}
+							else
+								if (reporttype==1){
+									resolve({	report:timetable_lib.displayMonth(prayTimes, user_account_app_data_post, null),
+												papersize:user_account_app_data_post.papersize});
 								}
-								else
-									if (reporttype==1){
-										resolve({	report:timetable_lib.displayMonth(prayTimes, user_account_app_data_post, null),
+								else 
+									if (reporttype==2){
+										resolve({	report:timetable_lib.displayYear(prayTimes, user_account_app_data_post, null),
 													papersize:user_account_app_data_post.papersize});
 									}
-									else 
-										if (reporttype==2){
-											resolve({	report:timetable_lib.displayYear(prayTimes, user_account_app_data_post, null),
-														papersize:user_account_app_data_post.papersize});
-										}
-							});
 						});
-				});
+					});
 			}) 
 			.catch(()=>resolve({report:'', papersize:''}));
 		})
