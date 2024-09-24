@@ -125,17 +125,9 @@ const template = props => ` <div class='setting_horizontal_row'>
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
+ *          user_settings:import('../js//types.js').APP_user_setting_record,
  *          user_locale:string,
  *          user_timezone:string,
- *          setting_locale:string,
- *          setting_locale_second:string,
- *          setting_columntitle:string,
- *          setting_timezone:string,
- *          setting_number_system:string,
- *          setting_direction:string
- *          setting_arabic_script:string,
- *          setting_calendar_type:string,
- *          setting_calendar_hijri_type:string,
  *          function_component_setting_update:function,
  *          function_app_settings_get:function,
  *          function_set_current_value:function,
@@ -154,7 +146,7 @@ const method = async props => {
         //Locale using setting locale
         await props.function_ComponentRender('setting_select_locale', 
             {
-              default_data_value:props.setting_locale,
+              default_data_value:props.user_settings.regional_language_locale,
               default_value:'',
               options: locales,
               path:null,
@@ -281,17 +273,17 @@ const method = async props => {
             }, '/common/component/select.js');
       
         //update select with settings values
-        props.function_set_current_value('setting_select_locale', props.setting_locale);
-        props.function_set_current_value('setting_select_report_locale_second', props.setting_locale_second);
+        props.function_set_current_value('setting_select_locale', props.user_settings.regional_language_locale);
+        props.function_set_current_value('setting_select_report_locale_second', props.user_settings.regional_second_language_locale);
 
-        props.function_set_current_value('setting_select_report_coltitle', props.setting_columntitle);
+        props.function_set_current_value('setting_select_report_coltitle', props.user_settings.regional_column_title);
 
-        props.function_set_current_value('setting_select_report_timezone', props.setting_timezone);
-        props.function_set_current_value('setting_select_report_numbersystem', props.setting_number_system);
-        props.function_set_current_value('setting_select_report_direction', props.setting_direction);
-        props.function_set_current_value('setting_select_report_arabic_script', props.setting_arabic_script);
-        props.function_set_current_value('setting_select_calendartype', props.setting_calendar_type);
-        props.function_set_current_value('setting_select_calendar_hijri_type', props.setting_calendar_hijri_type);
+        props.function_set_current_value('setting_select_report_timezone', props.user_settings.regional_timezone);
+        props.function_set_current_value('setting_select_report_numbersystem', props.user_settings.regional_number_system);
+        props.function_set_current_value('setting_select_report_direction', props.user_settings.regional_layout_direction);
+        props.function_set_current_value('setting_select_report_arabic_script', props.user_settings.regional_arabic_script);
+        props.function_set_current_value('setting_select_calendartype', props.user_settings.regional_calendar_type);
+        props.function_set_current_value('setting_select_calendar_hijri_type', props.user_settings.regional_calendar_hijri_type);
 
         //display live timezone time
         props.function_component_setting_update('REGIONAL', 'TIMEZONE');
