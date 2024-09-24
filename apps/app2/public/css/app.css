@@ -77,12 +77,12 @@
 #setting_icon_prayer_highlatitude::before{					content:var(--common_app_icon_gps_high_latitude)}
 #setting_icon_prayer_timeformat::before{					content:var(--common_app_icon_regional_timeformat)}
 #setting_icon_prayer_hijri_adjustment::before{				content:var(--common_app_icon_settings) ' ' var(--common_app_icon_regional_calendar)}
-#setting_icon_prayer_report_iqamat_title_fajr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_sunrise)}
+#setting_icon_prayer_report_iqamat_title_fajr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_sunrise_horizont)}
 #setting_icon_prayer_report_iqamat_title_dhuhr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_midday)}
 #setting_icon_prayer_report_iqamat_title_asr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_afternoon)}
 #setting_icon_prayer_report_iqamat_title_maghrib::before{	content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_sunset)}
 #setting_icon_prayer_report_iqamat_title_isha::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_night)}
-#setting_icon_prayer_report_show_imsak::before{				content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_sunrise) ' ' var(--common_app_icon_misc_food)}
+#setting_icon_prayer_report_show_imsak::before{				content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_sunrise_horizont) ' ' var(--common_app_icon_misc_food)}
 #setting_icon_prayer_report_show_sunset::before{			content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_sunset)}
 #setting_icon_prayer_report_show_midnight::before{			content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_midnight) ' ' var(--common_app_icon_misc_prayer)}
 #setting_icon_prayer_report_show_fast_start_end::before{	content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_food) ' ' var(--common_app_icon_misc_ban)}

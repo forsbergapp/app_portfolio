@@ -110,48 +110,6 @@
  */
 
 /**
- * Type APP_REPORT_GLOBAL_coltitle_record
- * @typedef {{  [key: string]:string,
-* 		        coltitle_transliteration_imsak: string,
-* 		        coltitle_transliteration_fajr: string,
-* 		        coltitle_transliteration_fajr_iqamat: string,
-* 		        coltitle_transliteration_sunrise: string,
-* 		        coltitle_transliteration_dhuhr: string,
-* 		        coltitle_transliteration_dhuhr_iqamat: string,
-* 		        coltitle_transliteration_asr: string,
-* 		        coltitle_transliteration_asr_iqamat: string,
-* 		        coltitle_transliteration_sunset: string,
-* 		        coltitle_transliteration_maghrib: string,
-* 		        coltitle_transliteration_maghrib_iqamat: string,
-* 		        coltitle_transliteration_isha: string,
-* 		        coltitle_transliteration_isha_iqamat: string,
-* 		        coltitle_transliteration_midnight: string,
-* 		        timetable_title: string,
-* 		        coltitle_day: string,
-* 		        coltitle_weekday: string,
-* 		        coltitle_weekday_tr: string,
-* 		        coltitle_caltype_hijri: string,
-* 		        coltitle_caltype_gregorian: string,
-* 		        coltitle_imsak: string,
-* 		        coltitle_fajr: string,
-* 		        coltitle_fajr_iqamat: string,
-* 		        coltitle_sunrise: string,
-* 		        coltitle_dhuhr: string,
-* 		        coltitle_dhuhr_iqamat: string,
-* 		        coltitle_asr: string,
-* 		        coltitle_asr_iqamat: string,
-* 		        coltitle_sunset: string,
-* 		        coltitle_maghrib: string,
-* 		        coltitle_maghrib_iqamat: string,
-* 		        coltitle_isha: string,
-* 		        coltitle_isha_iqamat: string,
-* 		        coltitle_midnight: string,
-* 		        coltitle_notes: string,
-* 		        timezone_text: string,
-* 		        gps_lat_text: string,
-* 		        gps_long_text: string}} APP_REPORT_GLOBAL_coltitle_record
-*/
-/**
  * Type APP_REPORT_GLOBAL
  * @typedef {{	app_copyright:string,
  * 			session_currentDate:Date,
@@ -170,8 +128,9 @@
  * 			regional_def_locale_ext_calendar:string,
  * 			regional_def_calendar_type_greg:string,
  * 			regional_def_calendar_number_system:string,
- * 			first_language:APP_REPORT_GLOBAL_coltitle_record,
- * 			second_language:APP_REPORT_GLOBAL_coltitle_record
+ * 			timezone_text: string,
+ * 		    gps_lat_text: string,
+ * 		    gps_long_text: string
  * 			}}  APP_REPORT_GLOBAL
  */
 
