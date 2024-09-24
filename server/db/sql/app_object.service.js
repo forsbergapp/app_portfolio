@@ -69,9 +69,7 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 													AND l1.lang_code IN (<LOCALE/>)
 												)
 							AND aoi.app_object_app_id IN(:app_id, :common_app_id)
-							AND ((aoi.app_object_object_name IN ('APP','APP_LOV')
-								AND :object_name = 'APP')
-								OR aoi.app_object_object_name <> 'APP')
+							AND aoi.app_object_object_name = :object_name
 							AND (aoi.object_item_name = :object_item_name OR :object_item_name IS NULL)
 						UNION ALL
 						SELECT 	aoit.app_object_item_app_object_object_name object_name, 
