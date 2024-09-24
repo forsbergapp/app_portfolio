@@ -137,26 +137,4 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'FAST_START_END','2',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'FAST_START_END','3',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'FAST_START_END','4',NULL,NULL,NULL,NULL,NULL);
---
--- app_object
---
-INSERT INTO <DB_SCHEMA/>.app_object (app_id, object_name) VALUES (<APP_ID/>,'APP_LOV');
---
--- app_object_item
---
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_ASR','METHOD_ASR', 2);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_CALENDARTYPE','CALENDAR_TYPE', 0);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_HIGHLATITUDE','HIGH_LATITUDE_ADJUSTMENT', 2);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_POPULAR_PLACE',NULL, NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_COLTITLE','COLUMN_TITLE', 2);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_DIRECTION','DIRECTION', 0);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_HIGHLIGHT_ROW','HIGHLIGHT_ROW', 2);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_IQAMAT_TITLE_ASR','IQAMAT', 2);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_IQAMAT_TITLE_DHUHR','IQAMAT', 2);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_IQAMAT_TITLE_FAJR','IQAMAT', 2);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_IQAMAT_TITLE_ISHA','IQAMAT', 2);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_IQAMAT_TITLE_MAGHRIB','IQAMAT', 2);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_LOCALE_SECOND',NULL, NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_PAPERSIZE','PAPER_SIZE', 0);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_REPORT_SHOW_FAST_START_END','FAST_START_END', 2);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'APP_LOV','SETTING_SELECT_TIMEFORMAT','TIMEFORMAT', 2);
+

@@ -233,16 +233,6 @@ const common_translate_ui = async lang_code => {
 					COMMON_GLOBAL.translate_items[app_object.object_item_name] = app_object.text;
                 break;
             }
-            case 'APP_LOV':{
-                //translate items in select lists in current app
-                const select_element = CommonAppDocument.querySelector('#' + app_object.object_item_name.toLowerCase());
-                if (select_element)
-                    for (let option_element = 0; option_element < select_element.options.length; option_element++){
-                        if (select_element.options[option_element].id == app_object.id)
-                            select_element.options[option_element].text = app_object.text;
-                    }
-                break;
-            }   
         }
     }
 };
