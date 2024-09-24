@@ -207,17 +207,17 @@
  * @property {string}	caltype
  * @property {string}	imsak
  * @property {string}	fajr
- * @property {string}	fajr_iqamat
+ * @property {string}	iqamat_fajr
  * @property {string}	sunrise
  * @property {string}	dhuhr
- * @property {string}	dhuhr_iqamat
+ * @property {string}	iqamat_dhuhr
  * @property {string}	asr
- * @property {string}	asr_iqamat
+ * @property {string}	iqamat_asr
  * @property {string}	sunset
  * @property {string}	maghrib
- * @property {string}	maghrib_iqamat
+ * @property {string}	iqamat_maghrib
  * @property {string}	isha
- * @property {string}	isha_iqamat
+ * @property {string}	iqamat_isha
  * @property {string}	midnight
  * @property {string}	notes
  */

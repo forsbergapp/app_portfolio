@@ -303,7 +303,7 @@
 }
 /*uppercase all timetable data header*/
 #timetable_day .timetable_day_timetable_header_row div,
-#timetable_month .timetable_month_data_header_col {
+#timetable_month .timetable_month_data_header_row div {
 	text-transform: uppercase;
 }
 
@@ -465,7 +465,6 @@
 /*r2l and unicode fix when mixing arabic with non arabic text*/
 #timetable_header,
 .timetable_month_class #timetable_header_date,
-.timetable_month_class #timetable_month_data .timetable_month_data_header_col,
 .timetable_month_class #timetable_month_data .timetable_month_data_col,
 .timetable_month_class #timetable_month_data_footer,
 #timetable_footer {
@@ -485,7 +484,7 @@
 .timetable_month_class #timetable_month_data .timetable_month_data_row {
 	display: table-row;
 }
-.timetable_month_class #timetable_month_data .timetable_month_data_header_col {
+.timetable_month_class #timetable_month_data .timetable_month_data_header_row .timetable_month_data_col {
 	display: table-cell;
 	text-align: center;
 	padding: 1px;
@@ -651,7 +650,7 @@
 	font-size: 5pt !important;
 	height: inherit;
 }
-#timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_header_row .timetable_month_data_header_col {
+#timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_header_row .timetable_month_data_col {
 	font-size: 4pt;
 	overflow-x: hidden;
 }
@@ -1292,7 +1291,7 @@
 	color: var(--report_theme_timetable_header_color);
 	background-color: var(--report_theme_timetable_header_background_color);
 }
-.timetable_month_class #timetable_month_data .timetable_month_data_header_row .timetable_month_data_header_col {
+.timetable_month_class #timetable_month_data .timetable_month_data_header_row .timetable_month_data_col {
 	color: var(--report_theme_timetable_data_header_color) !important;
 	background-color: var(--report_theme_timetable_data_header_background_color) !important;
 }
