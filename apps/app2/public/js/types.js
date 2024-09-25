@@ -137,6 +137,7 @@
  *          timetable_type:number,
  *          places:APP_place[]|null,
  *          user_settings:APP_user_setting,
+ *          themes: {data:{type:string, value:string, text:string}[]},
  *          lib_prayTimes:CommonModulePrayTimes|null,
  *          lib_timetable:CommonModuleLibTimetable
  *          }} APP_GLOBAL

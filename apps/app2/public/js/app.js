@@ -150,6 +150,7 @@ const APP_GLOBAL = {
     timetable_type:0,
     places:null,
     user_settings:user_settings_empty,
+    themes: {data:[{type:'', value:'', text:''}]},
     //lib
     lib_prayTimes:prayTimes,
     lib_timetable:lib_timetable
@@ -326,47 +327,61 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
 };
 
 /**
- * Update all timetables and theme thumbnails
- * @param {'day'|'month'|'year'|null} type
+ * Update thumbnails with timetables
+ * @param {{type:'day'|'month'|'year'|null,
+ *          theme_id:string}|null} theme
  * @returns {Promise.<void>}
  */
-const update_all_theme_thumbnails = async (type=null) => {
-    if (type =='day' || type==null){
-        await update_timetable_report(0, null, getReportSettings());
-        update_theme_thumbnail('day');
+const update_all_theme_thumbnails = async (theme=null) => {
+    if (theme?.type =='day' || theme==null){
+        const current_user_settings = APP_GLOBAL.user_settings.data.map(setting=>{
+            return {
+                description : setting.json_data.description,
+                regional_language_locale : setting.json_data.regional_language_locale,
+                regional_timezone : setting.json_data.regional_timezone,
+                regional_number_system : setting.json_data.regional_number_system,
+                regional_calendar_hijri_type : setting.json_data.regional_calendar_hijri_type,
+                gps_lat_text : setting.json_data.gps_lat_text,
+                gps_long_text : setting.json_data.gps_long_text,
+                prayer_method : setting.json_data.prayer_method,
+                prayer_asr_method : setting.json_data.prayer_asr_method,
+                prayer_high_latitude_adjustment : setting.json_data.prayer_high_latitude_adjustment,
+                prayer_time_format : setting.json_data.prayer_time_format,
+                prayer_hijri_date_adjustment : setting.json_data.prayer_hijri_date_adjustment
+            };
+        });
+        
+        const timetable = APP_GLOBAL.lib_timetable.displayDay(APP_GLOBAL.lib_prayTimes, getReportSettings(), null, current_user_settings);
+        await common.ComponentRender('setting_design_theme_day',{ 
+                                                            class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                                                            theme_id:CommonAppDocument.querySelector('#setting_design_theme_day').getAttribute('data-theme_id'),
+                                                            type:'day',
+                                                            html:timetable}, '/component/settings_tab3_theme_thumbnail.js');
     }
-    if (type =='month' || type=='year' || type==null){
-        await update_timetable_report(1, null, getReportSettings());
-        update_theme_thumbnail('month');
-        await update_timetable_report(2, null, getReportSettings());
-        update_theme_thumbnail('year');
+    if (theme?.type =='month' || theme?.type=='year' || theme==null){
+        await common.ComponentRender('setting_design_theme_month',{ 
+                                                            class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                                                            theme_id:CommonAppDocument.querySelector('#setting_design_theme_month').getAttribute('data-theme_id'),
+                                                            type:'month',
+                                                            html:APP_GLOBAL.lib_timetable.displayMonth(APP_GLOBAL.lib_prayTimes, getReportSettings(), null)
+                                                        }, '/component/settings_tab3_theme_thumbnail.js');
+        await common.ComponentRender('setting_design_theme_year',{ 
+                                                            class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                                                            theme_id:CommonAppDocument.querySelector('#setting_design_theme_year').getAttribute('data-theme_id'),
+                                                            type:'year',
+                                                            html:APP_GLOBAL.lib_timetable.displayYear(APP_GLOBAL.lib_prayTimes, getReportSettings(), null)
+                                                        }, '/component/settings_tab3_theme_thumbnail.js');
     }
-    
 };
-/**
- * Update theme thumbnail
- * @param {string} theme_type 
- * @returns {void}
- */
-const update_theme_thumbnail = theme_type => {
-    const thumbnail = CommonAppDocument.querySelectorAll(`#slides_${theme_type} .slide .slider_active_${theme_type}`)[0];
-    //copy paper div with current papersize class to a new div with paper class
-    thumbnail.innerHTML =  `<div class='paper ${CommonAppDocument.querySelector('#paper').className}'>
-                    ${CommonAppDocument.querySelector('#paper').innerHTML}
-                    </div>` ;
-    const new_theme_id = thumbnail.getAttribute('data-theme_id');
-    const old_theme = thumbnail.querySelectorAll('.timetable_class')[0].className.split(' ').filter((/**@type{string}*/themeclass)=>themeclass.startsWith(`theme_${theme_type}`))[0];
-    thumbnail.querySelectorAll('.timetable_class')[0].classList.remove(old_theme);
-    thumbnail.querySelectorAll('.timetable_class')[0].classList.add('theme_'  + theme_type + '_' + new_theme_id);
-};
+
 /**
  * Get theme id
  * @param {string} type 
  * @returns {string}
  */
 const get_theme_id = type => {
-    if (CommonAppDocument.querySelectorAll('.slider_active_' + type)[0])
-        return CommonAppDocument.querySelectorAll('.slider_active_' + type)[0].getAttribute('data-theme_id');
+    if (CommonAppDocument.querySelector(`#setting_design_theme_${type}`))
+        return CommonAppDocument.querySelector(`#setting_design_theme_${type}`).getAttribute('data-theme_id');
     else{
         /**@ts-ignore */
         return APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id]['design_theme_' + type + '_id'];
@@ -375,58 +390,44 @@ const get_theme_id = type => {
 };
 
 /**
- * Set theme title
- * @param {string} type 
- * @returns {void}
- */
-const set_theme_title = type => {
-    CommonAppDocument.querySelector(`#slider_theme_${type}_id`).innerHTML =
-        CommonAppDocument.querySelector(`#theme_${type}_${get_theme_id(type)}`).getAttribute('data-theme_id');
-};
-/**
- * Load themes
- * @returns {void}
- */
-const load_themes = () => {
-    CommonAppDocument.querySelector('#slides_day .slide div').classList.add('slider_active_day');
-    set_theme_title('day');
-    CommonAppDocument.querySelector('#slides_month .slide div').classList.add('slider_active_month');
-    set_theme_title('month');
-    CommonAppDocument.querySelector('#slides_year .slide div').classList.add('slider_active_year');
-    set_theme_title('year');
-};
-/**
  * 
  * @param {number} nav 
  * @param {'day'|'month'|'year'} type 
  * @returns {Promise.<void>}
  */
 const theme_nav = async (nav, type) => {
-    let theme_index = 0;
+    
+
+    let theme_index_APP_GLOBAL = 0;
+
     //get current index
-    CommonAppDocument.querySelectorAll(`#slides_${type} .slide_${type} > div`).forEach((/**@type{HTMLElement}*/e, /**@type{number}*/index) => {
-        if (e.classList.contains(`slider_active_${type}`))
-            theme_index = index;
-    });
+    const current_user_theme_id = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data[`design_theme_${type}_id`];
+
+    theme_index_APP_GLOBAL = APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type)).findIndex( theme => theme.value == current_user_theme_id);
+
     //set next index
-    if (nav == 1)
-        if ((theme_index + 1) == CommonAppDocument.querySelectorAll(`#slides_${type} .slide_${type}`).length)
-            theme_index = 0;
+    if (nav == 1){
+        if ((theme_index_APP_GLOBAL + 1) == APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type)).length)
+            theme_index_APP_GLOBAL = 0;
         else
-            theme_index++;
+            theme_index_APP_GLOBAL++;
+
+    }
     else 
-        if (nav == -1)
-            if (theme_index == 0)
-                theme_index = CommonAppDocument.querySelectorAll(`#slides_${type} .slide_${type}`).length -1;
+        if (nav == -1){
+            if (theme_index_APP_GLOBAL == 0)
+                theme_index_APP_GLOBAL = APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type)).length-1;
             else
-                theme_index--;
-    //remove old active theme class
-    CommonAppDocument.querySelectorAll(`.slider_active_${type}`)[0].classList.remove(`slider_active_${type}`);
-    //add new active theme class
-    CommonAppDocument.querySelectorAll(`#slides_${type} .slide`)[theme_index].children[0].classList.add(`slider_active_${type}`);
-    //set theme title
-    set_theme_title(type);
-    update_all_theme_thumbnails(type);
+                theme_index_APP_GLOBAL--;
+
+        }
+    //set user setting theme id since getReportSetting will fetch user settings
+    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data[`design_theme_${type}_id`] = 
+        APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
+    CommonAppDocument.querySelector(`#setting_design_theme_${type}`).setAttribute('data-theme_id', APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value);
+    CommonAppDocument.querySelector(`#setting_design_theme_${type}_id`).innerText = APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
+    await update_all_theme_thumbnails({   type: type,
+                                    theme_id :APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value});
 };
 
 /**
@@ -588,8 +589,7 @@ const SettingShow = async (tab_selected) => {
         case 3:{
             common.ComponentRender('settings_content', {app_id:common.COMMON_GLOBAL.app_id,
                                                         user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                                                        function_load_themes:load_themes,
-                                                        function_set_theme_title:set_theme_title,
+                                                        themes:APP_GLOBAL.themes,
                                                         function_set_current_value:common.set_current_value,
                                                         function_update_all_theme_thumbnails:update_all_theme_thumbnails,
                                                         function_ComponentRender:common.ComponentRender,
@@ -949,7 +949,7 @@ const user_function_app = async (function_name) => {
 const user_logout_app = () => {
     
     common.user_logout().then(() => {
-        CommonAppDocument.querySelector('#settings_tab_nav_7').innerHTML = '';
+        common.ComponentRemove('settings_tab_nav_7');
         common.ComponentRemove('common_dialogue_profile', true);
         //set default settings
         set_default_settings().then(() => {
@@ -966,8 +966,7 @@ const login_common = (avatar) => {
     //create intitial user setting if not exist, send initial=true
     user_settings_function('ADD_LOGIN', true)
     .then(()=>{
-        CommonAppDocument.querySelector('#settings_tab_nav_7').innerHTML = '<div id=\'user_setting_avatar_img\' class=\'common_image\'></div>';
-        CommonAppDocument.querySelector('#user_setting_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
+        common.ComponentRender('settings_tab_nav_7', {avatar:avatar}, '/component/setting_tab_nav_7.js');
 
         //Hide settings
         CommonAppDocument.querySelector('#settings').style.visibility = 'hidden';
@@ -1831,34 +1830,16 @@ const app_event_click = event => {
                 }
                 
                 //setting design
-                case 'slider_prev_day':{
-                    theme_nav(-1, 'day');
-                    settings_update('DESIGN');
-                    break;
-                }
-                case 'slider_next_day':{
-                    theme_nav(1, 'day');
-                    settings_update('DESIGN');
-                    break;
-                }
-                case 'slider_prev_month':{
-                    theme_nav(-1, 'month');
-                    settings_update('DESIGN');
-                    break;
-                }
-                case 'slider_next_month':{
-                    theme_nav(1, 'month');
-                    settings_update('DESIGN');
-                    break;
-                }
-                case 'slider_prev_year':{
-                    theme_nav(-1, 'year');
-                    settings_update('DESIGN');
-                    break;
-                }
-                case 'slider_next_year':{
-                    theme_nav(1, 'year');
-                    settings_update('DESIGN');
+                case 'setting_design_prev_day':
+                case 'setting_design_next_day':
+                case 'setting_design_prev_month':
+                case 'setting_design_next_month':
+                case 'setting_design_prev_year':
+                case 'setting_design_next_year':{
+                    /**@ts-ignore */
+                    theme_nav(event_target_id.split('_')[2]=='prev'?-1:1, event_target_id.split('_')[3])
+                    .then(()=>settings_update('DESIGN'));
+                    
                     break;
                 }
                 case 'setting_checkbox_report_show_weekday':
