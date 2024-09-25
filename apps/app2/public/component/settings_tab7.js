@@ -2,22 +2,14 @@
  * @module apps/app2/component/settings_tab7
  */
 
-/**
- * @param {{user_settings:import('../js/types.js').APP_user_setting['data']}} props
- */
-const template = props =>`  <div id='user_settings'>
+const template = () =>`  <div id='user_settings'>
                                 <div class='setting_horizontal_row'>
                                     <div class='setting_horizontal_col'></div>
                                     <div class='setting_horizontal_col'>
                                         <div id='setting_icon_user_settings' class='common_icon'></div>
                                     </div>
                                     <div class='setting_horizontal_col'>
-                                        <select id='setting_select_user_setting' >
-                                            ${props.user_settings.map(user_settings=>
-                                                `<option id=${user_settings.id} >${user_settings.json_data.description}</option>`
-                                            ).join('')
-                                            }                                        
-                                        </select>
+                                        <div id='setting_select_user_setting'></div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
                                 </div>
@@ -72,16 +64,33 @@ const template = props =>`  <div id='user_settings'>
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
- *          user_settings:import('../js/types.js').APP_user_setting['data'] }} props 
- * @returns {Promise.<{ props:{function_post:null}, 
+ *          user_settings:import('../js/types.js').APP_user_setting,
+ *          function_ComponentRender:function}} props 
+ * @returns {Promise.<{ props:{function_post:function},
  *                      data:null, 
  *                      template:string}>}
  */
 const method = async props => {
+    const post_component = async () =>{
+
+        await props.function_ComponentRender('setting_select_user_setting',
+            {
+                default_data_value:props.user_settings.current_id,
+                default_value:props.user_settings.data[props.user_settings.current_id].json_data.description,
+                options: props.user_settings.data.map((setting, index)=>{return {value:index, text:setting.json_data.description};}),
+                path:null,
+                query:null,
+                method:null,
+                authorization_type:null,
+                column_value:'value',
+                column_text:'text',
+                function_FFB:null
+            }, '/common/component/select.js');
+    };
     return {
-        props:  {function_post:null},
+        props:  {function_post:post_component},
         data:   null,
-        template: template({user_settings:props.user_settings})
+        template: template()
     };
 };
 export default method;
