@@ -563,8 +563,6 @@
 	display: block;
 	flex-direction: column;
 	text-align: center;
-	left:0px;
-	top:0px;
 }
 /*Arabic Nastaliq fixes*/
 #timetable_year.font_arabic_nastaliq .display_font{
