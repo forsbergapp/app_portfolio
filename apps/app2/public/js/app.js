@@ -1706,6 +1706,28 @@ const app_event_click = event => {
                     }
                     if (event_target_id == 'common_module_leaflet_select_mapstyle')
                         component_setting_update('GPS', 'MAP');
+
+                    //settings prayer
+                    if (event_target_id == 'setting_select_method'){
+                        component_setting_update('PRAYER', 'METHOD');
+                        settings_update('PRAYER');
+                    }
+                    if (event_target_id == 'setting_select_asr' ||
+                        event_target_id == 'setting_select_highlatitude' ||
+                        event_target_id == 'setting_select_timeformat' ||
+                        event_target_id == 'setting_select_hijri_adjustment' ||
+                        event_target_id == 'setting_select_report_iqamat_title_fajr' ||
+                        event_target_id == 'setting_select_report_iqamat_title_dhuhr' ||
+                        event_target_id == 'setting_select_report_iqamat_title_asr' ||
+                        event_target_id == 'setting_select_report_iqamat_title_maghrib' ||
+                        event_target_id == 'setting_select_report_iqamat_title_isha' ||
+                        event_target_id == 'setting_select_report_show_fast_start_end'){
+                        settings_update('PRAYER');
+                    }
+                    //settings user
+                    if (event_target_id == 'setting_select_user_setting'){
+                        component_setting_update('USER', 'SETTING');
+                    }
                     break;
                 }
                 //info dialogue
@@ -2146,30 +2168,6 @@ const app_event_change = event => {
                 case 'setting_input_reportfooter_img':{
                     component_setting_update('IMAGE', 'FOOTER_LOAD', event_target_id)
                     .then(()=> settings_update('IMAGE'));
-                    break;
-                }
-                //settings prayer
-                case 'setting_select_method':{
-                    component_setting_update('PRAYER', 'METHOD');
-                    settings_update('PRAYER');
-                    break;
-                }
-                case 'setting_select_asr':
-                case 'setting_select_highlatitude':
-                case 'setting_select_timeformat':
-                case 'setting_select_hijri_adjustment':
-                case 'setting_select_report_iqamat_title_fajr':
-                case 'setting_select_report_iqamat_title_dhuhr':
-                case 'setting_select_report_iqamat_title_asr':
-                case 'setting_select_report_iqamat_title_maghrib':
-                case 'setting_select_report_iqamat_title_isha':
-                case 'setting_select_report_show_fast_start_end':{
-                    settings_update('PRAYER');
-                    break;
-                }
-                //settings user
-                case 'setting_select_user_setting':{
-                    component_setting_update('USER', 'SETTING');
                     break;
                 }
                 //profile
