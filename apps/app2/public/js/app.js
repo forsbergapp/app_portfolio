@@ -617,7 +617,8 @@ const SettingShow = async (tab_selected) => {
             break;
         }
         case 7:{
-            common.ComponentRender('settings_content', {user_settings:APP_GLOBAL.user_settings.data}, `/component/settings_tab${tab_selected}.js`);
+            common.ComponentRender('settings_content', {user_settings:APP_GLOBAL.user_settings,
+                                                        function_ComponentRender:common.ComponentRender}, `/component/settings_tab${tab_selected}.js`);
             break;
         }
     }
@@ -910,7 +911,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 break;
             }
         case 'USER_SETTING':{
-            APP_GLOBAL.user_settings.current_id = CommonAppDocument.querySelector('#setting_select_user_setting').selectedIndex;
+            APP_GLOBAL.user_settings.current_id = CommonAppDocument.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value');
         }
     }
 };
@@ -966,7 +967,7 @@ const login_common = (avatar) => {
     //create intitial user setting if not exist, send initial=true
     user_settings_function('ADD_LOGIN', true)
     .then(()=>{
-        common.ComponentRender('settings_tab_nav_7', {avatar:avatar}, '/component/setting_tab_nav_7.js');
+        common.ComponentRender('settings_tab_nav_7', {avatar:avatar}, '/component/settings_tab_nav_7.js');
 
         //Hide settings
         CommonAppDocument.querySelector('#settings').style.visibility = 'hidden';
@@ -1231,11 +1232,21 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                         APP_GLOBAL.user_settings.current_id = APP_GLOBAL.user_settings.data.length -1;
                     }
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id = JSON.parse(result).insertId;
-                    //save current settings to new option
-                    const select_user_setting = CommonAppDocument.querySelector('#setting_select_user_setting');
-                    select_user_setting.innerHTML += `<option id=${JSON.parse(result).id}>${APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description}</option>`;
-                    select_user_setting.selectedIndex = APP_GLOBAL.user_settings.current_id;
-                    select_user_setting.options[APP_GLOBAL.user_settings.current_id].value = APP_GLOBAL.user_settings.current_id;
+
+                    //Update select
+                    common.ComponentRender('setting_select_user_setting',
+                        {
+                            default_data_value:APP_GLOBAL.user_settings.current_id,
+                            default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
+                            options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.json_data.description};}),
+                            path:null,
+                            query:null,
+                            method:null,
+                            authorization_type:null,
+                            column_value:'value',
+                            column_text:'text',
+                            function_FFB:null
+                        }, '/common/component/select.js');
                     break;
                 }
                 case 'ADD_LOGIN':{
@@ -1266,8 +1277,7 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
  * @returns {void}
  */
 const user_settings_delete = (choice=null) => {
-    const select_user_setting = CommonAppDocument.querySelector('#setting_select_user_setting');
-    const user_setting_id = APP_GLOBAL.user_settings.data[select_user_setting.selectedIndex].id;
+    const user_setting_id = APP_GLOBAL.user_settings.data[CommonAppDocument.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value')].id;
     const function_delete_user_setting = () => { user_settings_delete(1); };
     
     switch (choice){
@@ -1280,18 +1290,31 @@ const user_settings_delete = (choice=null) => {
             common.FFB(`/server-db/user_account_app_data_post/${user_setting_id}`, null, 'DELETE', 'APP_ACCESS', {user_account_id:common.COMMON_GLOBAL.user_account_id})
             .then(()=>{
                 common.ComponentRemove('common_dialogue_message', true);
-                const select = CommonAppDocument.querySelector('#setting_select_user_setting');
-
-                //delete current option
-                select.remove(select.selectedIndex);
-                if (select_user_setting.length == 0) {
+                //check if last setting
+                if (APP_GLOBAL.user_settings.data.length == 1) {
                     user_settings_function('ADD', false, false)
                     .then(()=>CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
                 }
                 else{
                     //remove current element from array
-                    APP_GLOBAL.user_settings.data.splice(select.selectedIndex,1);
-                    APP_GLOBAL.user_settings.current_id = select.selectedIndex;
+                    APP_GLOBAL.user_settings.data.splice(CommonAppDocument.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value'),1);
+                    //show next or last setting
+                    APP_GLOBAL.user_settings.current_id = Math.min(CommonAppDocument.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value') +1, APP_GLOBAL.user_settings.data.length - 1);
+
+                    //Update select
+                    common.ComponentRender('setting_select_user_setting',
+                        {
+                            default_data_value:APP_GLOBAL.user_settings.current_id,
+                            default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
+                            options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.json_data.description};}),
+                            path:null,
+                            query:null,
+                            method:null,
+                            authorization_type:null,
+                            column_value:'value',
+                            column_text:'text',
+                            function_FFB:null
+                        }, '/common/component/select.js');
                     CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner');
                 }
                 
