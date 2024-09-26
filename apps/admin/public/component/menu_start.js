@@ -66,7 +66,7 @@ const component = async props => {
             {VALUE:'request#accept_language_unqiue#1#accept-language',  TEXT:'REQUEST - ACCEPT LANGUAGE UNIQUE'},
             {VALUE:'request#user_agent_total#0#user-agent',             TEXT:'REQUEST - USER#AGENT TOTAL'},
             {VALUE:'request#user_agent_unqiue#1#user-agent',            TEXT:'REQUEST - USER#AGENT UNIQUE'},
-            {VALUE:'response#codes#0#',                                 TEXT:'REPONSE - ∞'},
+            {VALUE:'response##0#',                                 TEXT:'REPONSE - ∞'},
             ...Object.entries(result_obj.status_codes).map(code=>{
                 return {VALUE:`response#${code[0]}#1#`, TEXT:`RESPONSE - ${code[0]} - ${code[1]}`};
             })

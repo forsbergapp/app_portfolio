@@ -781,6 +781,12 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	cursor:pointer;
 }
 /* SERVER LOG*/
+#select_logscope5{
+	white-space: nowrap;
+	width: 15em;
+}
+
+
 #filesearch_menu5{
 	font-size: 1.4em;
 	height: auto;

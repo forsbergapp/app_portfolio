@@ -181,10 +181,6 @@ body.rtl{
 	height: 34px;
 }
 
-select {
-	font-family: inherit;
-	font-size:inherit;
-}
 #common_construction{
 	font-size: 30px;
 }
@@ -1385,9 +1381,6 @@ select {
 }
 #common_dialogue_user_menu_preferences .common_dialogue_user_menu_preference_col2{
 	width: 85%;
-}
-#common_dialogue_user_menu_preferences .common_dialogue_user_menu_preference_col2 select {
-	width: 100%;
 }
 /* SPINNER */
 @keyframes spin{
