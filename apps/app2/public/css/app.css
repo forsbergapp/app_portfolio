@@ -146,40 +146,23 @@
     position: absolute;
 }
 /*profile user setting*/
+#common_profile_main_stat_row2 #profile_info_user_settings,
+#common_profile_main_stat_row2 #profile_info_user_settings div,
+#common_profile_main_stat_row2 #profile_info_user_setting_likes,
+#common_profile_main_stat_row2 #profile_info_user_setting_likes div,
+#common_profile_main_stat_row2 #profile_info_user_setting_liked,
+#common_profile_main_stat_row2 #profile_info_user_setting_liked div{
+	display:inline-block;
+}
 #profile_user_settings_row{
 	width:100%;
-	display: inline-block;	
 }
 #profile_select_user_settings{
-	width:100%;
-	display:block;
+	display: block;
+  	line-height: 1.5em;
 }
 #profile_user_settings_detail{
 	width: 100% !important;
-
-}
-#profile_user_settings_row i{
-	width: 26px;
-	height: 26px;
-}
-#profile_user_settings_row
-{
-	text-align: start;
-}
-#profile_user_settings_row div{
-	display:inline-block;
-	width:40px;
-	vertical-align: bottom;
-}
-#profile_user_settings_row div:nth-child(5),
-#profile_user_settings_row div:nth-child(6){
-	display:inline-block;
-	width:78px;
-	text-align: end;
-}
-#profile_user_settings_info_likes_count,
-#profile_user_settings_info_views_count{
-	display:inline !important;
 }
 /*Profile top*/
 #profile_stat_row2{
@@ -701,7 +684,7 @@
 #common_profile_main_stat_row1{
 	height: 30px;
 }
-#common_profile_main_stat_row2 div{
+#common_profile_main_stat_row2 #profile_user_settings_detail div{
 	display:inline-block;	
 }
 #common_window_info #about_table{
