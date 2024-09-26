@@ -5,9 +5,6 @@
 /**@type{import('../../../common_types.js').CommonAppDocument} */
 const CommonAppDocument = document;
 
-/**@type{import('../../../common_types.js').CommonAppWindow} */
-const CommonAppWindow = window;
-
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
@@ -174,9 +171,9 @@ const printTimetable = async () => {
     await common.ComponentRender('common_window_info', {  info:3,
                                                     url:null, 
                                                     content_type:null, 
+                                                    frame:common.DocumentFrame, 
                                                     iframe_content:template,
-                                                    frame:CommonAppWindow.frames.document, 
-                                                    mobile_function:common.mobile}, '/common/component/window_info.js');
+                                                    function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
     
 };
 /**
@@ -479,7 +476,7 @@ const settingsTimesShow = async () => {
             element_setting_report_data_time.innerHTML = new Date().toLocaleTimeString(setting_select_locale, options);
         }
         //wait 1 second
-        await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 1000);});            
+        await common.common_wait(1000);
         settingsTimesShow();
     }
     
@@ -1170,7 +1167,8 @@ const user_setting_link = (item) => {
                         url:null,
                         content_type:'HTML', 
                         iframe_content:url,
-                        iframe_class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size}, '/common/component/window_info.js');
+                        iframe_class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                        function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
             break;
         }
     }
@@ -1536,7 +1534,8 @@ const profile_user_setting_link = item => {
                         url:null,
                         content_type:'HTML', 
                         iframe_content:url,
-                        iframe_class:paper_size}, '/common/component/window_info.js');
+                        iframe_class:paper_size,
+                        function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
             break;
         }
         case 'profile_user_settings_like':{
@@ -1661,7 +1660,7 @@ const app_event_click = event => {
                 //info dialogue
                 case 'app_link':{
                     if (common.COMMON_GLOBAL.app_link_url)
-                        CommonAppWindow.open(common.COMMON_GLOBAL.app_link_url,'_blank','');
+                        common.WindowOpen(common.COMMON_GLOBAL.app_link_url);
                     break;
                 }
                 case 'info_link1':{
@@ -1669,7 +1668,8 @@ const app_event_click = event => {
                                             {   info:1,
                                                 url:common.COMMON_GLOBAL.info_link_policy_url,
                                                 content_type:null, 
-                                                iframe_content:null}, '/common/component/window_info.js');
+                                                iframe_content:null,
+                                                function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
                     break;
                 }
                 case 'info_link2':{
@@ -1677,7 +1677,8 @@ const app_event_click = event => {
                                             {   info:1,
                                                 url:common.COMMON_GLOBAL.info_link_disclaimer_url,
                                                 content_type:null, 
-                                                iframe_content:null}, '/common/component/window_info.js');
+                                                iframe_content:null,
+                                                function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
                     break;
                 }
                 case 'info_link3':{
@@ -1685,7 +1686,8 @@ const app_event_click = event => {
                                             {   info:1,
                                                 url:common.COMMON_GLOBAL.info_link_terms_url,
                                                 content_type:null, 
-                                                iframe_content:null}, '/common/component/window_info.js');
+                                                iframe_content:null,
+                                                function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
                     break;
                 }
                 case 'info_link4':{
@@ -1693,7 +1695,8 @@ const app_event_click = event => {
                                             {   info:1,
                                                 url:common.COMMON_GLOBAL.info_link_about_url,
                                                 content_type:null, 
-                                                iframe_content:null}, '/common/component/window_info.js');
+                                                iframe_content:null,
+                                                function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
                     break;
                 }
                 case 'info_close':{
@@ -2171,18 +2174,7 @@ const app_event_keyup = event => {
         });
     }
 };
-/**
- * Serviceworker
- * @returns {void}
- */
-const serviceworker = () => {
-    if (!CommonAppWindow.Promise) {
-        CommonAppWindow.Promise = Promise;
-    }
-    if('serviceWorker' in CommonAppWindow.navigator) {
-        CommonAppWindow.navigator.serviceWorker.register('/sw.js', {scope: '/'});
-    }
-};
+
 /**
  * Map show qibbla
  * @returns {void}
@@ -2459,12 +2451,12 @@ const init_app = async parameters => {
 	const methods = await settings_method();
     APP_GLOBAL.lib_timetable.set_prayer_method(methods).then(() => {
         //show dialogue about using mobile and scan QR code after 5 seconds
-        CommonAppWindow.setTimeout(() => {show_dialogue('SCAN');}, 5000);
+        common.common_setTimeout(() => {show_dialogue('SCAN');}, 5000);
         set_default_settings().then(() => {
             const show_start = async () => {
                 //show default startup
                 await toolbar_button(APP_GLOBAL.app_default_startup_page);
-                const user = CommonAppWindow.location.pathname.substring(1);
+                const user = common.LocationPathname(1);
                 if (user !='') {
                     //show profile for user entered in url
                     profile_show_app(null, user);
@@ -2472,8 +2464,8 @@ const init_app = async parameters => {
             };
             show_start().then(() => {
                 dialogue_loading(0);
-                serviceworker();
-                if (common.COMMON_GLOBAL.user_locale != CommonAppWindow.navigator.language.toLowerCase())
+                common.serviceworker();
+                if (common.COMMON_GLOBAL.user_locale != common.NavigatorLocale())
                     common.common_translate_ui(common.COMMON_GLOBAL.user_locale)
                     .then(()=>framework_set());
                 else

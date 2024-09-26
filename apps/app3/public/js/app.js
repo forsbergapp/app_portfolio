@@ -70,7 +70,8 @@ const app_event_click = event => {
                         {   info:0,
                             url:target_row.querySelector('.doc_list_item_image')?.getAttribute('data-full_size'),
                             content_type:null, 
-                            iframe_content:null}, '/common/component/window_info.js');
+                            iframe_content:null,
+                            function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
                     break;
                 }
             }

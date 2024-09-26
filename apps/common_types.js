@@ -57,8 +57,6 @@
  *              btoa:function,
  *              setTimeout:function,
  *              clearTimeout:function,
- *              setInterval:function,
- *              clearInterval:function,
  *              open:function,
  *              addEventListener:function,  //used to override default function with custom function to keep track of third party libraries
  *              EventSource:*,

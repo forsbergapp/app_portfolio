@@ -5,8 +5,6 @@
 
 /**@type{import('../../../common_types.js').CommonAppDocument} */
  const CommonAppDocument = document;
-/**@type{import('../../../common_types.js').CommonAppWindow} */
-const CommonAppWindow = window;
 
 const common_path ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
@@ -156,7 +154,7 @@ const sendBroadcast = () => {
                             client_id:          client_id==''?null:client_id,
                             client_id_current:  common.COMMON_GLOBAL.service_socket_client_ID,
                             broadcast_type:     broadcast_type, 
-                            broadcast_message:  CommonAppWindow.btoa(broadcast_message)};
+                            broadcast_message:  common.toBase64(broadcast_message)};
         let path='';
         let token_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
