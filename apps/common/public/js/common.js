@@ -3631,15 +3631,6 @@ const framework_set = async (framework, events) => {
     const app_element = CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_div}`);
     const common_app_element = CommonAppDocument.querySelector('#common_app');
 
-    //get all select and selectedIndex
-    /**@type{{id:string,index:number}[]} */
-    let select_selectedindex = [];
-    CommonAppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} select`).forEach((/**@type{HTMLSelectElement}*/select) =>{
-        if (select_selectedindex.length>0)
-            select_selectedindex.push({id:select.id, index:select.selectedIndex});
-        else
-            select_selectedindex = [{id:select.id, index:select.selectedIndex}];
-    });
     //get all ellements with data-function
     /**@type{{id:string,element_function:function}[]} */
     const data_function = [];
@@ -3748,8 +3739,6 @@ const framework_set = async (framework, events) => {
         CommonAppDocument.querySelectorAll('.leaflet-container')[index].replaceWith(leaflet_container);
         index++;
     }
-    //update all select with selectedIndex since copying outerHTML does not include setting correct selectedIndex
-    select_selectedindex.forEach(select =>CommonAppDocument.querySelector(`#${select.id}`).selectedIndex = select.index);
     //update all elements with data-function since copying outerHTML does not include data-function
     data_function.forEach(element =>CommonAppDocument.querySelector(`#${element.id}`)['data-function'] = element.element_function);
     //add common events for all apps

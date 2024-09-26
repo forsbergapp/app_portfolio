@@ -130,7 +130,6 @@
  *                                   getAttribute:function,
  *                                   parentNode:{style:{display:string}},
  *                                   style:{display:string}},
- *              selectedIndex:      number,
  *              setAttribute:       function,
  *              value:              string
  *            }}  target
