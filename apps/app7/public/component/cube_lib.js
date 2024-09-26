@@ -3,8 +3,10 @@
  * @module apps/app7/component/cube_lib
  */
 
-/**@type{import('../../../common_types.js').CommonAppWindow} */
-const CommonAppWindow = window;
+const path_common ='common';
+/**@type {import('../../../common_types.js').CommonModuleCommon} */
+const {common_setTimeout} = await import(path_common);
+
 
 /**
  * Original code https://github.com/stringham/rubiks-solver
@@ -12,7 +14,7 @@ const CommonAppWindow = window;
  * Converted to one javascript module
  * Replaced event listeners with event delegation
  * Moved css to external css file and using responsive css
- * Replaced infinite loop on canvas element with setInterval
+ * Replaced infinite loop on canvas element with setTimeout
  * Replaced canvas with svg
  * Replaced step button images with characters
  * Removed FlatCube, FlatFace FlatSticker, FlatColorPicker
@@ -640,7 +642,7 @@ RubiksCube.prototype.scramble = function(num) {
 			this.makeMove(moves[Math.floor(Math.random()*moves.length)] + (Math.random() > 1/2 ? '\'' : ''));
 		}
 		const checkAgain = function(){
-			CommonAppWindow.setTimeout(function() {
+			common_setTimeout(function() {
 				if(me.queue.length == 0){
 					me.turnSpeed = turnSpeed;
 				} else {
@@ -729,7 +731,6 @@ RubiksCube.prototype.rotateFace = function(face, d){
 				
 		});
 		if(p >= 1){
-			CommonAppWindow.clearInterval(timer_render);
 			for(let i=0; i<blocks.length; i++){
 				blocks[i].resetRotation();
 			}
@@ -737,8 +738,10 @@ RubiksCube.prototype.rotateFace = function(face, d){
 			me.update();
 			me.makeNextMove();
 		}
+		else
+			common_setTimeout(() => {rotate();me.render()}, 10);
 	};
-	let timer_render = CommonAppWindow.setInterval(() => {rotate();me.render()}, 10);
+	rotate();
 };
 /**
  * @param {*} face

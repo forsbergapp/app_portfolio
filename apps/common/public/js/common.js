@@ -9,7 +9,6 @@ const CommonAppWindow = window;
 /**@type{import('../../../common_types.js').CommonAppDocument} */
  const CommonAppDocument = document;
 
-
 /**@type{import('../../../common_types.js').CommonGlobal} */
 const COMMON_GLOBAL = {
     common_app_id:0,
@@ -174,7 +173,6 @@ const getTimezoneDate = timezone =>{
     return new Date(utc.setHours(  utc.getHours() + getTimezoneOffset(timezone)));
 };
 
-let timer = 0;
 /**
  * Delay API calls when typing to avoid too many calls 
  * ES6 spread operator, arrow function without function keyword 
@@ -194,8 +192,7 @@ const typewatch = (function_name, ...parameter) =>{
                 break;
             }
         }
-    CommonAppWindow.clearTimeout(timer);
-    timer = CommonAppWindow.setTimeout(() => {
+    common_setTimeout(() => {
         function_name(...parameter);
     }, type_delay);
 };
@@ -737,6 +734,50 @@ const select_event_action = async (event_target_id, target) =>{
     common_theme_update_from_body();
 };
 /**
+ * Use SetTimout for given function and millseconds
+ * @param {function}    function_timeout
+ * @param {number}      milliseconds
+ * @returns {void}
+ */
+const common_setTimeout = (function_timeout, milliseconds) => CommonAppWindow.setTimeout(function_timeout, milliseconds);
+
+/**
+ * Waits given amount of milliseconds
+ * @param {number} milliseconds
+ * @returns {Promise<null>}
+ */
+const common_wait = async milliseconds => new Promise ((resolve)=>{common_setTimeout(()=> resolve(null),milliseconds);});
+
+/**
+ * Read Navigator language
+ * @returns {string}
+ */
+const NavigatorLocale = () => CommonAppWindow.navigator.language.toLowerCase();
+
+/**
+ * Returns info about location pathname for given argument number
+ * @param {number} argumentNumber
+ */
+const LocationPathname = argumentNumber => CommonAppWindow.location.pathname.substring(argumentNumber);
+
+/**
+ * Returns frames document element
+ */
+const DocumentFrame = () => CommonAppWindow.frames.document;
+
+/**
+ * Opens an url in a new window
+ * @param {string} url
+ */
+const WindowOpen = url => CommonAppWindow.open(url, '_blank');
+
+/**
+ * Opens an window prompt with given text
+ * @param {string} text
+ */
+const WindowPrompt = text => CommonAppWindow.prompt(text);
+
+/**
  * Convert HTML to React component
  * @param {*} React_create_element
  * @param {*} element 
@@ -1233,6 +1274,7 @@ const profile_stat = async (statchoice, app_rest_url = null, function_user_click
                         tab:'TOP',
                         top_app_rest_url:app_rest_url,
                         top_statchoice:statchoice,
+                        function_common_setTimeout:common_setTimeout,
                         function_FFB:FFB,
                         top_function_user_click:function_user_click
                     },
@@ -1299,6 +1341,7 @@ const profile_show = async (user_account_id_other = null, username = null) => {
                         info_client_longitude:COMMON_GLOBAL.client_longitude,
                         info_user_account_id_other:user_account_id_other,
                         info_username:username,
+                        function_common_setTimeout:common_setTimeout,
                         function_FFB:FFB,
                         info_function_create_qr:create_qr,
                         info_function_getHostname:getHostname,
@@ -1641,7 +1684,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
 };
 /**
  * Countdown function to monitor token expire time
- * Uses event listener on element instead of setInterval since element can removed 
+ * Uses event listener on element instead of setTimeout since element can removed 
  * and then event listener will automatically be removed
  * @param {HTMLElement} element
  * @param {number} token_exp
@@ -1669,7 +1712,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             //run app function if any
             app_function?app_function():null;
             //wait 1 second
-            await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 1000);});            
+            await common_wait(1000);            
             user_session_countdown(element, token_exp, app_function);
         }
     }
@@ -2174,7 +2217,7 @@ const create_qr = async (div, url) => {
         drawer: 'svg'
     });
     //executing await promise 1 ms results in QRCode rendered
-    await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null),1);});
+    common_wait(1);
 };
 /**
  * Map init
@@ -2741,7 +2784,7 @@ const show_maintenance = (message, init=null) => {
     
     if (init==1){
         ComponentRender('common_dialogue_maintenance', 
-                        {},
+                        {function_common_setTimeout:common_setTimeout},
                         '/maintenance/component/dialogue_maintenance.js');
     }
     else
@@ -2752,7 +2795,7 @@ const show_maintenance = (message, init=null) => {
  * @returns {void}
  */
 const reconnect = () => {
-    setTimeout(()=>{connectOnline();}, 5000);
+    common_setTimeout(()=>{connectOnline();}, 5000);
 };
 /**
  * Socket connect online
@@ -2938,6 +2981,18 @@ const set_app_service_parameters = async parameters => {
  */
 const disable_textediting = () =>COMMON_GLOBAL.app_text_edit=='0';
 /**
+ * Serviceworker
+ * @returns {void}
+ */
+const serviceworker = () => {
+    if (!CommonAppWindow.Promise) {
+        CommonAppWindow.Promise = Promise;
+    }
+    if('serviceWorker' in CommonAppWindow.navigator) {
+        CommonAppWindow.navigator.serviceWorker.register('/sw.js', {scope: '/'});
+    }
+};
+/**
  * Common events
  * @param {string} event_type 
  * @param {import('../../../common_types.js').CommonAppEvent|null} event 
@@ -3058,7 +3113,8 @@ const common_event = async (event_type,event=null) =>{
                                             {   info:1,
                                                 url:COMMON_GLOBAL.info_link_policy_url,
                                                 content_type:null, 
-                                                iframe_content:null}, '/common/component/window_info.js');
+                                                iframe_content:null,
+                                                function_common_setTimeout:common_setTimeout}, '/common/component/window_info.js');
                             break;
                         }
                         case 'common_dialogue_info_info_link2':{
@@ -3066,7 +3122,8 @@ const common_event = async (event_type,event=null) =>{
                                             {   info:1,
                                                 url:COMMON_GLOBAL.info_link_disclaimer_url,
                                                 content_type:null, 
-                                                iframe_content:null}, '/common/component/window_info.js');
+                                                iframe_content:null,
+                                                function_common_setTimeout:common_setTimeout}, '/common/component/window_info.js');
                             break;
                         }
                         case 'common_dialogue_info_info_link3':{
@@ -3074,7 +3131,8 @@ const common_event = async (event_type,event=null) =>{
                                             {   info:1,
                                                 url:COMMON_GLOBAL.info_link_terms_url,
                                                 content_type:null, 
-                                                iframe_content:null}, '/common/component/window_info.js');
+                                                iframe_content:null,
+                                                function_common_setTimeout:common_setTimeout}, '/common/component/window_info.js');
                             break;
                         }
                         //dialogue app_data_display
@@ -3576,7 +3634,7 @@ const framework_mount = async (framework, template, methods,mount_div, component
             CommonAppDocument.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
             const application = ReactDOM.createRoot(CommonAppDocument.querySelector(`#${mount_div} #tempmount`));
             application.render( component);
-            await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> resolve(null), 200);});
+            await new Promise ((resolve)=>{common_setTimeout(()=> resolve(null), 200);});
             //React is only used as a parser of HTML and all Reacts events are removed by removing tempmount div
             //Mount template HTML
             CommonAppDocument.querySelector(`#${mount_div}`).innerHTML = template;
@@ -3748,7 +3806,7 @@ const framework_set = async (framework, events) => {
  * Set useragent attributes
  * @returns {void}
  */
- const setUserAgentAttibutes = () => {
+ const setUserAgentAttributes = () => {
     if (CommonAppWindow.navigator.userAgent.toLowerCase().indexOf('firefox')>-1)
         CommonAppDocument.querySelector(':root').style.setProperty('--common_app_useragent_fix_margin_top', '-5px');
  };
@@ -3872,7 +3930,7 @@ const init_common = async (parameters) => {
      *          app_service:{system_admin_only:number, first_time:number}}}
      */
     const decoded_parameters = JSON.parse(fromBase64(parameters));
-    setUserAgentAttibutes();
+    setUserAgentAttributes();
     custom_framework();
     await ComponentRender('common_app', 
                             {
@@ -3916,6 +3974,13 @@ export{/* GLOBALS*/
        app_settings_get,
        set_current_value,
        common_preferences_post_mount,
+       common_setTimeout,
+       common_wait,
+       NavigatorLocale,
+       LocationPathname,
+       DocumentFrame,
+       WindowOpen,
+       WindowPrompt,
        /* COMPONENTS */
        ComponentRender,ComponentRemove,
        /* MESSAGE & DIALOGUE */
@@ -3942,6 +4007,7 @@ export{/* GLOBALS*/
        /* SERVICE WORLDCITIES */
        get_cities,
        /* INIT */
+       serviceworker,
        common_event,
        framework_set,
        init_common};

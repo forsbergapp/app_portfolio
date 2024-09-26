@@ -5,9 +5,6 @@
 /**@type{import('../../../common_types.js').CommonAppDocument} */
 const CommonAppDocument = document;
 
-/**@type{import('../../../common_types.js').CommonAppWindow} */
-const CommonAppWindow = window;
-
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
@@ -19,14 +16,7 @@ const common = await import(path_common);
  const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
 };
-const serviceworker = () => {
-    if (!CommonAppWindow.Promise) {
-        CommonAppWindow.Promise = Promise;
-    }
-    if('serviceWorker' in CommonAppWindow.navigator) {
-        CommonAppWindow.navigator.serviceWorker.register('/sw.js', {scope: '/'});
-    }
-};
+
 /**
  * App event click
  * @param {import('../../../common_types.js').CommonAppEvent} event 
@@ -72,7 +62,7 @@ const app_event_click = event => {
             KeyUp: null,
             Focus: null,
             Input:null})
-    .then(()=>serviceworker());
+    .then(()=>common.serviceworker());
 };
 /**
  * Init app

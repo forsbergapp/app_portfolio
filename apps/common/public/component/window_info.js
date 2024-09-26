@@ -2,9 +2,6 @@
  * @module apps/common/component/window_info
  */
 
-/**@type{import('../../../common_types.js').CommonAppWindow} */
-const CommonAppWindow = window;
-
 /**
  * @param {{info:string, iframe_class:string, content:string}} props
  */
@@ -29,12 +26,13 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
+ *          info:number, 
  *          url:string,
  *          content_type:string,
  *          frame:import('../../../common_types.js').CommonAppDocument|null,
  *          iframe_content:string,
  *          iframe_class:string,
- *          info:number}} props 
+ *          function_common_setTimeout:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
@@ -131,7 +129,7 @@ const component = async props => {
             props.common_document.querySelector('#common_window_info_content').contentWindow.document.write(props.iframe_content);
             props.frame?props.frame.querySelector('#common_window_info_content').focus():null;
             //await delay to avoid browser render error
-            await new Promise ((resolve)=>{CommonAppWindow.setTimeout(()=> {props.common_document.querySelector('#common_window_info_content').contentWindow.print();
+            await new Promise ((resolve)=>{props.function_common_setTimeout(()=> {props.common_document.querySelector('#common_window_info_content').contentWindow.print();
                                                             resolve(null);}, 100);})
             .then(()=>props.common_document.querySelector('#common_window_info').innerHTML='');
         }
