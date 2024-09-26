@@ -153,7 +153,11 @@ const APP_GLOBAL = {
     themes: {data:[{type:'', value:'', text:''}]},
     //lib
     lib_prayTimes:prayTimes,
-    lib_timetable:lib_timetable
+    lib_timetable:lib_timetable,
+    //profile_info functions
+    function_profile_user_setting_update: ()=>null,
+    function_profile_show_user_setting_detail: ()=>null,
+    function_profile_user_setting_stat: ()=>null
     };
 Object.seal(APP_GLOBAL);
 /**
@@ -1000,7 +1004,7 @@ const ProviderSignIn_app = async (provider_id) => {
  */
 const profile_update_stat_app = async () => {
     const result = await common.profile_update_stat();
-    profile_user_setting_stat(result.id);
+    APP_GLOBAL.function_profile_user_setting_stat(result.id);
 };
 /**
  * Profile top
@@ -1033,13 +1037,16 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
                 null;
             } else {
                 common.ComponentRender('common_profile_main_stat_row2', 
-                                        {},
+                                        {   
+                                            user_account_id:common.COMMON_GLOBAL.user_account_id,
+                                            profile_id:result.profile_id,
+                                            function_ComponentRender:common.ComponentRender,
+                                            function_FFB:common.FFB},
                                         '/component/profile_info.js')
-                .then(()=>{
-                    //public
-                    profile_show_user_setting();
-                    CommonAppDocument.querySelector('#common_profile_main_stat_row2').style.display = 'block';
-                    profile_user_setting_stat(result.profile_id);
+                .then(data=>{
+                    APP_GLOBAL.function_profile_user_setting_update = data.function_profile_user_setting_update;
+                    APP_GLOBAL.function_profile_show_user_setting_detail= data.function_profile_show_user_setting_detail;
+                    APP_GLOBAL.function_profile_user_setting_stat = data.function_profile_user_setting_stat;
                 });
             }    
         }
@@ -1305,7 +1312,9 @@ const user_settings_delete = (choice=null) => {
                     common.ComponentRender('setting_select_user_setting',
                         {
                             default_data_value:APP_GLOBAL.user_settings.current_id,
+                            /**@ts-ignore */
                             default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
+                            /**@ts-ignore */
                             options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.json_data.description};}),
                             path:null,
                             query:null,
@@ -1501,29 +1510,17 @@ const settings_update = setting_tab => {
                     };
     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data = json_data;
 };
-/**
- * Profile user setting stat
- * @param {number} id
- * @returns {void}
- */
-const profile_user_setting_stat = id => {
-    common.FFB(`/server-db/user_account_app_data_post-profile-stat-like/${id}`, null, 'GET', 'APP_DATA', null)
-    .then((/**@type{string}*/result)=>{
-        CommonAppDocument.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
-        CommonAppDocument.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
-    })
-    .catch(()=>null);
-};
+
 /**
  * Profile user setting show link
  * @param {HTMLElement} item 
  * @returns {void}
  */
 const profile_user_setting_link = item => {
-    const select_user_setting = CommonAppDocument.querySelector('#profile_select_user_settings');
-    const user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
-    const sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
-    const paper_size = select_user_setting[select_user_setting.selectedIndex].getAttribute('paper_size');
+    const select_user_setting = CommonAppDocument.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
+    const user_account_id = JSON.parse(select_user_setting).user_account_id;
+    const sid = JSON.parse(select_user_setting).sid;
+    const paper_size = JSON.parse(select_user_setting).paper_size;
     switch (item.id){
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
@@ -1548,83 +1545,7 @@ const profile_user_setting_link = item => {
         }
     }
 };
-/**
- * Profile show user setting detail
- * @param {number} liked 
- * @param {number} count_likes 
- * @param {number} count_views 
- * @returns {void}
- */
-const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
-    
-    CommonAppDocument.querySelector('#profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
-    CommonAppDocument.querySelector('#profile_user_settings_like').children[1].style.display = `${liked == 1?'block':'none'}`;
 
-    CommonAppDocument.querySelector('#profile_user_settings_info_likes_count').innerHTML = count_likes;
-    CommonAppDocument.querySelector('#profile_user_settings_info_views_count').innerHTML = count_views;
-};
-/**
- * Profile show user setting
- * @returns {void}
- */
-const profile_show_user_setting = () => {
-    CommonAppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
-
-    common.FFB( `/server-db/user_account_app_data_post-profile/${CommonAppDocument.querySelector('#common_profile_id').innerHTML}`, 
-                `id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
-                'GET', 'APP_DATA', null)
-    .then((/**@type{string}*/result)=>{
-        const profile_select_user_settings = CommonAppDocument.querySelector('#profile_select_user_settings');
-        profile_select_user_settings.innerHTML='';
-        let html = '';
-        let i = 0;
-        for (const profile_setting of JSON.parse(result)) {
-            html += `<option id="${i}" 
-                    value=""
-                    sid=${profile_setting.id} 
-                    user_account_id=${profile_setting.user_account_app_user_account_id}
-                    liked=${profile_setting.liked}
-                    count_likes=${profile_setting.count_likes}
-                    count_views=${profile_setting.count_views}
-                    paper_size=${JSON.parse(profile_setting.json_data).design_paper_size}
-                    >${profile_setting.description}
-                    </option>`;
-            i++;
-        }
-        profile_select_user_settings.innerHTML = html;
-        profile_show_user_setting_detail(profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('liked'), 
-                                         profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_likes'), 
-                                         profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_views'));
-    })
-    .catch(()=>null);
-};
-/**
- * Profile user setting update stat
- * @returns {void}
- */
-const profile_user_setting_update_stat = () => {
-    const profile_id = CommonAppDocument.querySelector('#common_profile_id').innerHTML;
-    common.FFB( `/server-db/user_account_app_data_post-profile/${profile_id}`,
-                `id_current_user=${common.COMMON_GLOBAL.user_account_id??''}`, 
-                'GET', 'APP_DATA', null)
-    .then((/**@type{string}*/result)=>{
-        const profile_select_user_settings = CommonAppDocument.querySelector('#profile_select_user_settings');
-        for (const profile_setting of JSON.parse(result)) {
-            if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==profile_setting.id){
-                profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', profile_setting.user_account_id);
-                profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('liked', profile_setting.liked);
-                profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_likes', profile_setting.count_likes);
-                profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_views', profile_setting.count_views);
-                profile_select_user_settings.options[profile_select_user_settings.selectedIndex].text = profile_setting.description;
-                profile_show_user_setting_detail(profile_setting.liked, 
-                                                 profile_setting.count_likes, 
-                                                 profile_setting.count_views);
-            }
-        }
-        profile_user_setting_stat(profile_id);
-    })
-    .catch(()=>null);
-};
 /**
  * User settings like
  * @param {number} user_account_app_data_post_id 
@@ -1643,7 +1564,9 @@ const user_settings_like = user_account_app_data_post_id => {
         common.FFB( `/server-db/user_account_app_data_post_like/${common.COMMON_GLOBAL.user_account_id??''}`,
                     null, 
                     method, 'APP_ACCESS', json_data)
-        .then(()=>profile_user_setting_update_stat())
+        .then(()=>APP_GLOBAL.function_profile_user_setting_update(  CommonAppDocument.querySelector('#common_profile_id').innerHTML,
+                                                                    JSON.parse(CommonAppDocument.querySelector('#profile_select_user_settings .common_select_dropdown_value')
+                                                                                .getAttribute('data-value')).sid))
         .catch(()=>null);
     }
 };
@@ -1665,7 +1588,6 @@ const app_event_click = event => {
                 case event.target?.classList.contains('common_select_option')?event_target_id:'':
                 case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
                     //settings regional
-                                    //settings regional
                     if(event_target_id == 'setting_select_locale'){
                         settings_update('REGIONAL');
                     }
@@ -1727,6 +1649,12 @@ const app_event_click = event => {
                     //settings user
                     if (event_target_id == 'setting_select_user_setting'){
                         component_setting_update('USER', 'SETTING');
+                    }
+                    //profile
+                    if (event_target_id== 'profile_select_user_settings'){
+                        APP_GLOBAL.function_profile_show_user_setting_detail(   Number(JSON.parse(event.target.getAttribute('data-value')).liked), 
+                                                                                Number(JSON.parse(event.target.getAttribute('data-value')).count_likes), 
+                                                                                Number(JSON.parse(event.target.getAttribute('data-value')).count_views));
                     }
                     break;
                 }
@@ -2168,13 +2096,6 @@ const app_event_change = event => {
                 case 'setting_input_reportfooter_img':{
                     component_setting_update('IMAGE', 'FOOTER_LOAD', event_target_id)
                     .then(()=> settings_update('IMAGE'));
-                    break;
-                }
-                //profile
-                case 'profile_select_user_settings':{
-                    profile_show_user_setting_detail(   Number(event.target.options[event.target.selectedIndex].getAttribute('liked')), 
-                                                        Number(event.target.options[event.target.selectedIndex].getAttribute('count_likes')), 
-                                                        Number(event.target.options[event.target.selectedIndex].getAttribute('count_views')));
                     break;
                 }
             }

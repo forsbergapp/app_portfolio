@@ -208,6 +208,7 @@ select {
 	display: inline-block;
 	width: calc(100% - 25px);
 	min-height: 1em;
+	overflow: hidden;
 }
 .common_select_dropdown_icon::after{
 	content: var(--common_app_icon_select);
@@ -218,6 +219,7 @@ select {
 	width: 15px;
     height: 100%;
 	cursor:pointer;
+	vertical-align: top;
 }
 .common_select_options{
 	display: none;
