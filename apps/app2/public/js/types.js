@@ -139,7 +139,10 @@
  *          user_settings:APP_user_setting,
  *          themes: {data:{type:string, value:string, text:string}[]},
  *          lib_prayTimes:CommonModulePrayTimes|null,
- *          lib_timetable:CommonModuleLibTimetable
+ *          lib_timetable:CommonModuleLibTimetable,
+ *          function_profile_user_setting_update:function,
+ *          function_profile_show_user_setting_detail: function,
+ *          function_profile_user_setting_stat: function
  *          }} APP_GLOBAL
  */
 
