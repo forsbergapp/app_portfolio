@@ -37,8 +37,8 @@ const template = props => ` <div id='app_page_secure'>
  *          timezone:string,
  *          locale:string,
  *          function_button_post:function,
- *          function_ComponentRender:function,
- *          function_FFB:function}} props,
+ *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+ *          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}} props,
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
@@ -53,35 +53,38 @@ const component = async props => {
         if (customer.rows.length>0)
             props.common_document.querySelector('#tab1').click();
         else{
-            props.function_ComponentRender('app_page_secure_tab_content', 
-                                            {
-                                                app_id:props.app_id,
-                                                display_type:'VERTICAL_KEY_VALUE',
-                                                master_path:'/app-function/CUSTOMER_METADATA',
-                                                master_query:'fields=json_data',
-                                                master_body:{data_app_id:props.app_id},
-                                                master_method:'POST',
-                                                master_token_type:'APP_DATA',
-                                                master_resource:'CUSTOMER_METADATA',
-                                                detail_path:null,
-                                                detail_query:null,
-                                                detail_method:null,
-                                                detail_token_type:null,
-                                                detail_class:null,
-                                                new_resource:true,
-                                                mode:'EDIT',
-                                                timezone:props.timezone,
-                                                locale:props.locale,
-                                                button_print: false,
-                                                button_update: false,
-                                                button_post: true,
-                                                button_delete: false,
-                                                function_FFB:props.function_FFB,
-                                                function_button_print:null,
-                                                function_button_update:null,
-                                                function_button_post:props.function_button_post,
-                                                function_button_delete:null
-                                            }, '/common/component/app_data_display.js');
+            props.function_ComponentRender({mountDiv:'app_page_secure_tab_content',
+                props:{
+                    app_id:props.app_id,
+                    display_type:'VERTICAL_KEY_VALUE',
+                    master_path:'/app-function/CUSTOMER_METADATA',
+                    master_query:'fields=json_data',
+                    master_body:{data_app_id:props.app_id},
+                    master_method:'POST',
+                    master_token_type:'APP_DATA',
+                    master_resource:'CUSTOMER_METADATA',
+                    detail_path:null,
+                    detail_query:null,
+                    detail_method:null,
+                    detail_token_type:null,
+                    detail_class:null,
+                    new_resource:true,
+                    mode:'EDIT',
+                    timezone:props.timezone,
+                    locale:props.locale,
+                    button_print: false,
+                    button_update: false,
+                    button_post: true,
+                    button_delete: false,
+                    function_FFB:props.function_FFB,
+                    function_button_print:null,
+                    function_button_update:null,
+                    function_button_post:props.function_button_post,
+                    function_button_delete:null
+                },
+                methods:null,
+                lifecycle:null,
+                path:'/common/component/app_data_display.js'});
         }
     };
     return {

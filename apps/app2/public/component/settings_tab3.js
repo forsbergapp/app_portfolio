@@ -109,7 +109,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *          themes:import('../js//types.js').APP_GLOBAL['themes'],
  *          function_set_current_value:function,
  *          function_update_all_theme_thumbnails:function
- *          function_ComponentRender:function,
+ *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *          function_app_settings_get:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
@@ -133,8 +133,8 @@ const method = async props => {
                                                                                                 theme_id_year:props.user_settings.design_theme_year_id});
         //
         //paper size
-        await props.function_ComponentRender('setting_select_report_papersize', 
-            {
+        await props.function_ComponentRender({mountDiv:'setting_select_report_papersize',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>
                                         setting.app_setting_type_name.startsWith('PAPER_SIZE'))[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>
@@ -148,10 +148,13 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         //highlight row
-        await props.function_ComponentRender('setting_select_report_highlight_row',
-            {
+        await props.function_ComponentRender({mountDiv:'setting_select_report_highlight_row',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>
                                         setting.app_id == props.app_id && 
                                         setting.app_setting_type_name.startsWith('HIGHLIGHT_ROW'))[0].value,
@@ -168,7 +171,10 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
 
         props.function_set_current_value('setting_select_report_papersize', props.user_settings.design_paper_size);
         

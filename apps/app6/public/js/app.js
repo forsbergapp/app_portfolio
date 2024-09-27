@@ -118,8 +118,8 @@ const product_update = async () =>{
 
     const product_variant_id = CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id] .common_select_dropdown_value .common_app_data_display_master_col_list[data-id]')[0].getAttribute('data-id');
 
-    await common.ComponentRender(CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].id, 
-        {
+    await common.ComponentRender({mountDiv:CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].id, 
+        props:{
             app_id:common.COMMON_GLOBAL.app_id,
             display_type:'VERTICAL_KEY_VALUE',
             master_path:'/app-function/PRODUCT_LOCATION_GET',
@@ -146,7 +146,10 @@ const product_update = async () =>{
             function_button_update:null,
             function_button_post:null,
             function_button_delete:null
-        }, '/common/component/app_data_display.js');
+        },
+        methods:null,
+        lifecycle:null,
+        path:'/common/component/app_data_display.js'});
     CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].innerHTML = CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[2].innerHTML;
     
 };
@@ -186,9 +189,8 @@ const payment_request = async () =>{
             currency_code:  CommonAppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-currency_code]')[0].getAttribute('data-currency_code'),
             message:        'Shop app'
         };
-
-        await common.ComponentRender('common_dialogue_app_data_display', 
-            {
+        await common.ComponentRender({mountDiv:'common_dialogue_app_data_display', 
+            props:{
                 app_id:common.COMMON_GLOBAL.app_id,
                 display_type:'VERTICAL_KEY_VALUE',
                 dialogue:true,
@@ -217,7 +219,10 @@ const payment_request = async () =>{
                 function_button_update:null,
                 function_button_post:null,
                 function_button_delete:pay_cancel
-            }, '/common/component/app_data_display.js')
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/app_data_display.js'})
             .then(()=>{
                 CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
                 CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
@@ -243,9 +248,8 @@ const pay_cancel = async () =>{
  * Pay product
  */
 const pay = async () =>{
-    
-    await common.ComponentRender('common_dialogue_app_data_display', 
-        {
+    await common.ComponentRender({mountDiv:'common_dialogue_app_data_display', 
+        props:{
             app_id:common.COMMON_GLOBAL.app_id,
             display_type:'VERTICAL_KEY_VALUE',
             dialogue:true,
@@ -276,7 +280,10 @@ const pay = async () =>{
             function_button_update:null,
             function_button_post:payment_request,
             function_button_delete:pay_cancel,
-        }, '/common/component/app_data_display.js');
+        },
+        methods:null,
+        lifecycle:null,
+        path:'/common/component/app_data_display.js'});
         CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
         CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
         CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
@@ -301,16 +308,22 @@ const pay = async () =>{
  */
 const init_app = async () => {
     CommonAppDocument.body.className = 'app_theme1';
-    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
-    await common.ComponentRender('app_main_page', 
-                                        {app_id:common.COMMON_GLOBAL.app_id,
-                                        timezone:common.COMMON_GLOBAL.user_timezone,
-                                        locale:common.COMMON_GLOBAL.user_locale,
-                                        function_pay:pay,
-                                        function_FFB:common.FFB,
-                                        function_ComponentRender:common.ComponentRender,
-                                        function_show_message:common.show_message},
-                                        '/component/page_start.js');
+    await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div, 
+        props:null,
+        methods:null,
+        lifecycle:null,
+        path:'/component/app.js'});
+    await common.ComponentRender({mountDiv:'app_main_page', 
+        props:{app_id:common.COMMON_GLOBAL.app_id,
+            timezone:common.COMMON_GLOBAL.user_timezone,
+            locale:common.COMMON_GLOBAL.user_locale,
+            function_pay:pay,
+            function_FFB:common.FFB,
+            function_ComponentRender:common.ComponentRender,
+            function_show_message:common.show_message},
+        methods:null,
+        lifecycle:null,
+        path:'/component/page_start.js'});
     product_update();
     framework_set();
 };

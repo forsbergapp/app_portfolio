@@ -53,7 +53,7 @@ const template = () => `<div id='mapid'></div>
  *          function_map_init:function,
  *          function_map_resize:function,
  *          function_set_current_value:function,
- *          function_ComponentRender:function,
+ *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *          function_app_settings_get:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
@@ -69,8 +69,8 @@ const method = async props => {
         
         const empty_place = {value:JSON.stringify({id:'', latitude:'0', longitude:'0', timezone:''}), text:'...'};
         //places uses json in value to save multiple attributes
-        await props.function_ComponentRender('setting_select_popular_place',
-            {
+        await props.function_ComponentRender({mountDiv:'setting_select_popular_place',
+            props:{
                 default_data_value:empty_place.value,
                 default_value:empty_place.text,
                 options: [empty_place].concat(settings.map(place=>{
@@ -83,7 +83,10 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         props.function_set_current_value(   'setting_select_popular_place', null, 'id', props.user_settings.gps_popular_place_id);
         props.common_document.querySelector('#setting_input_place').innerHTML = props.user_settings.description;
         props.common_document.querySelector('#setting_input_lat').innerHTML = props.user_settings.gps_lat_text;
