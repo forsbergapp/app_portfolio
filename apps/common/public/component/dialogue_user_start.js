@@ -49,7 +49,7 @@ const template = props =>`  <div id='common_user_start_logo' class='common_image
                                     }
                                     <div id='common_user_start_login_system_admin_username' contentEditable='true' class='common_input common_placeholder' ></div>
                                     <div class='common_password_container'>
-                                        <div id='common_user_start_login_system_admin_password' contentEditable='true' class='common_input common_password commno_placeholder' ></div>
+                                        <div id='common_user_start_login_system_admin_password' contentEditable='true' class='common_input common_password common_placeholder' ></div>
                                         <div id='common_user_start_login_system_admin_password_mask' class='common_input common_password_mask'></div>
                                     </div>
                                     ${props.first_time?
