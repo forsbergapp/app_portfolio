@@ -206,35 +206,42 @@ const app_event_other = () => {
  */
 const init_app = async () => {
     CommonAppDocument.body.className = 'app_theme1';
-    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
-    await common.ComponentRender('app_main_page', 
-                                    {cube_width:APP_GLOBAL.width,
-                                    common_app_id:common.COMMON_GLOBAL.common_app_id,
-                                    function_element_row:common.element_row,
-                                    function_lov_show:common.lov_show,
-                                    function_lov_close:common.lov_close,
-                                    function_show_message:common.show_message,
-                                    function_ComponentRemove:common.ComponentRemove,
-                                    function_FFB:common.FFB
-                                }, '/component/cube.js')
-            .then((/**@type{{   cube_init:                  function, 
-                                cube_show_solution:         function,
-                                cube_solve:                 function,
-                                cube_makeIdentityAffine:    function,
-                                cube_multiplyAffine:        function,
-                                cube_makeRotateAffineX:     function,
-                                cube_makeRotateAffineY:     function}}*/data)=>{
-                APP_GLOBAL.cube_init =                  data.cube_init;
-                APP_GLOBAL.cube_show_solution =         data.cube_show_solution;
-                APP_GLOBAL.cube_solve =                 data.cube_solve;
-                APP_GLOBAL.cube_makeIdentityAffine =    data.cube_makeIdentityAffine;
-                APP_GLOBAL.cube_multiplyAffine =        data.cube_multiplyAffine;
-                APP_GLOBAL.cube_makeRotateAffineX =     data.cube_makeRotateAffineX;
-                APP_GLOBAL.cube_makeRotateAffineY =     data.cube_makeRotateAffineY;
-                const init_cube = APP_GLOBAL.cube_init();
-                APP_GLOBAL.cube = init_cube.cube;
-                APP_GLOBAL.cube_controls = init_cube.controls;
-            });
+    await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div, 
+        props:null,
+        methods:null,
+        lifecycle:null,
+        path:'/component/app.js'});
+    await common.ComponentRender({mountDiv:'app_main_page', 
+        props:{cube_width:APP_GLOBAL.width,
+            common_app_id:common.COMMON_GLOBAL.common_app_id,
+            function_element_row:common.element_row,
+            function_lov_show:common.lov_show,
+            function_lov_close:common.lov_close,
+            function_show_message:common.show_message,
+            function_ComponentRemove:common.ComponentRemove,
+            function_FFB:common.FFB
+        },
+        methods:null,
+        lifecycle:null,
+        path:'/component/cube.js'})
+    .then((/**@type{{   cube_init:                  function, 
+                        cube_show_solution:         function,
+                        cube_solve:                 function,
+                        cube_makeIdentityAffine:    function,
+                        cube_multiplyAffine:        function,
+                        cube_makeRotateAffineX:     function,
+                        cube_makeRotateAffineY:     function}}*/data)=>{
+        APP_GLOBAL.cube_init =                  data.cube_init;
+        APP_GLOBAL.cube_show_solution =         data.cube_show_solution;
+        APP_GLOBAL.cube_solve =                 data.cube_solve;
+        APP_GLOBAL.cube_makeIdentityAffine =    data.cube_makeIdentityAffine;
+        APP_GLOBAL.cube_multiplyAffine =        data.cube_multiplyAffine;
+        APP_GLOBAL.cube_makeRotateAffineX =     data.cube_makeRotateAffineX;
+        APP_GLOBAL.cube_makeRotateAffineY =     data.cube_makeRotateAffineY;
+        const init_cube = APP_GLOBAL.cube_init();
+        APP_GLOBAL.cube = init_cube.cube;
+        APP_GLOBAL.cube_controls = init_cube.controls;
+    });
     framework_set();
 };
 /**

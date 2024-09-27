@@ -39,101 +39,110 @@ const app_event_click = event => {
                     CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('active');
                     switch (event_target_id){
                         case 'tab1':{
-                            common.ComponentRender('app_page_secure_tab_content', 
-                                            {
-                                                app_id:common.COMMON_GLOBAL.app_id,
-                                                display_type:'MASTER_DETAIL_HORIZONTAL',
-                                                master_path:'/app-function/ACCOUNT_STATEMENT',
-                                                master_query:'fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
-                                                master_body:{user_account_id: common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
-                                                master_method:'POST',
-                                                master_token_type:'APP_ACCESS',
-                                                master_resource:'ACCOUNT_METADATA',
-                                                detail_path:'/app-function/ACCOUNT_TRANSACTIONS',
-                                                detail_query: 'fields=timestamp,logo,origin,amount_deposit,amount_withdrawal',
-                                                detail_body: {user_account_id:common.COMMON_GLOBAL.user_account_id,data_app_id:common.COMMON_GLOBAL.app_id},
-                                                detail_method:'POST',
-                                                detail_token_type:'APP_ACCESS',
-                                                detail_resource:'TRANSACTION_METADATA',
-                                                detail_class:'bank_statement',
-                                                new_resource:false,
-                                                mode:'READ',
-                                                timezone:common.COMMON_GLOBAL.user_timezone,
-                                                locale:common.COMMON_GLOBAL.user_locale,
-                                                button_print: false,
-                                                button_update: false,
-                                                button_post: false,
-                                                button_delete: false,
-                                                function_FFB:common.FFB,
-                                                function_button_print:null,
-                                                function_button_update:null,
-                                                function_button_post:null,
-                                                function_button_delete:null
-                                            }, '/common/component/app_data_display.js');                            
+                            common.ComponentRender({mountDiv:'app_page_secure_tab_content', 
+                                props:{
+                                    app_id:common.COMMON_GLOBAL.app_id,
+                                    display_type:'MASTER_DETAIL_HORIZONTAL',
+                                    master_path:'/app-function/ACCOUNT_STATEMENT',
+                                    master_query:'fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
+                                    master_body:{user_account_id: common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
+                                    master_method:'POST',
+                                    master_token_type:'APP_ACCESS',
+                                    master_resource:'ACCOUNT_METADATA',
+                                    detail_path:'/app-function/ACCOUNT_TRANSACTIONS',
+                                    detail_query: 'fields=timestamp,logo,origin,amount_deposit,amount_withdrawal',
+                                    detail_body: {user_account_id:common.COMMON_GLOBAL.user_account_id,data_app_id:common.COMMON_GLOBAL.app_id},
+                                    detail_method:'POST',
+                                    detail_token_type:'APP_ACCESS',
+                                    detail_resource:'TRANSACTION_METADATA',
+                                    detail_class:'bank_statement',
+                                    new_resource:false,
+                                    mode:'READ',
+                                    timezone:common.COMMON_GLOBAL.user_timezone,
+                                    locale:common.COMMON_GLOBAL.user_locale,
+                                    button_print: false,
+                                    button_update: false,
+                                    button_post: false,
+                                    button_delete: false,
+                                    function_FFB:common.FFB,
+                                    function_button_print:null,
+                                    function_button_update:null,
+                                    function_button_post:null,
+                                    function_button_delete:null
+                                },
+                                methods:null,
+                                lifecycle:null,
+                                path:'/common/component/app_data_display.js'});
                             break;
                         }
                         case 'tab2':{
-                            common.ComponentRender('app_page_secure_tab_content', 
-                                            {
-                                                app_id:common.COMMON_GLOBAL.app_id,
-                                                display_type:'VERTICAL_KEY_VALUE',
-                                                master_path:'/app-function/CUSTOMER_GET',
-                                                master_query: 'fields=name,customer_type,address,city,country',
-                                                master_body:{user_account_id:common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
-                                                master_method:'POST',
-                                                master_token_type:'APP_ACCESS',
-                                                master_resource:'CUSTOMER_METADATA',
-                                                detail_path:null,
-                                                detail_query:null,
-                                                detail_method:null,
-                                                detail_token_type:null,
-                                                detail_class:null,
-                                                new_resource:false,
-                                                mode:'READ',
-                                                timezone:common.COMMON_GLOBAL.user_timezone,
-                                                locale:common.COMMON_GLOBAL.user_locale,
-                                                button_print: false,
-                                                button_update: false,
-                                                button_post: false,
-                                                button_delete: false,
-                                                function_FFB:common.FFB,
-                                                function_button_print:null,
-                                                function_button_update:null,
-                                                function_button_post:null,
-                                                function_button_delete:null
-                                            }, '/common/component/app_data_display.js');
+                            common.ComponentRender({mountDiv:'app_page_secure_tab_content', 
+                                props:{
+                                    app_id:common.COMMON_GLOBAL.app_id,
+                                    display_type:'VERTICAL_KEY_VALUE',
+                                    master_path:'/app-function/CUSTOMER_GET',
+                                    master_query: 'fields=name,customer_type,address,city,country',
+                                    master_body:{user_account_id:common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
+                                    master_method:'POST',
+                                    master_token_type:'APP_ACCESS',
+                                    master_resource:'CUSTOMER_METADATA',
+                                    detail_path:null,
+                                    detail_query:null,
+                                    detail_method:null,
+                                    detail_token_type:null,
+                                    detail_class:null,
+                                    new_resource:false,
+                                    mode:'READ',
+                                    timezone:common.COMMON_GLOBAL.user_timezone,
+                                    locale:common.COMMON_GLOBAL.user_locale,
+                                    button_print: false,
+                                    button_update: false,
+                                    button_post: false,
+                                    button_delete: false,
+                                    function_FFB:common.FFB,
+                                    function_button_print:null,
+                                    function_button_update:null,
+                                    function_button_post:null,
+                                    function_button_delete:null
+                                },
+                                methods:null,
+                                lifecycle:null,
+                                path:'/common/component/app_data_display.js'});
                             break;
                         }
                         case 'tab3':{
-                            common.ComponentRender('app_page_secure_tab_content', 
-                                            {
-                                                app_id:common.COMMON_GLOBAL.app_id,
-                                                display_type:'VERTICAL_KEY_VALUE',
-                                                master_path:'/app-function/ACCOUNT_GET',
-                                                master_query: 'fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
-                                                master_body: {user_account_id:common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
-                                                master_method:'POST',
-                                                master_token_type:'APP_ACCESS',
-                                                master_resource:'ACCOUNT_METADATA',
-                                                detail_path:null,
-                                                detail_query:null,
-                                                detail_method:null,
-                                                detail_token_type:null,
-                                                detail_class:null,
-                                                new_resource:false,
-                                                mode:'READ',
-                                                timezone:common.COMMON_GLOBAL.user_timezone,
-                                                locale:common.COMMON_GLOBAL.user_locale,
-                                                button_print: false,
-                                                button_update: false,
-                                                button_post: false,
-                                                button_delete: false,
-                                                function_FFB:common.FFB,
-                                                function_button_print:null,
-                                                function_button_update:null,
-                                                function_button_post:null,
-                                                function_button_delete:null
-                                            }, '/common/component/app_data_display.js');
+                            common.ComponentRender({mountDiv:'app_page_secure_tab_content', 
+                                props:{
+                                    app_id:common.COMMON_GLOBAL.app_id,
+                                    display_type:'VERTICAL_KEY_VALUE',
+                                    master_path:'/app-function/ACCOUNT_GET',
+                                    master_query: 'fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
+                                    master_body: {user_account_id:common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
+                                    master_method:'POST',
+                                    master_token_type:'APP_ACCESS',
+                                    master_resource:'ACCOUNT_METADATA',
+                                    detail_path:null,
+                                    detail_query:null,
+                                    detail_method:null,
+                                    detail_token_type:null,
+                                    detail_class:null,
+                                    new_resource:false,
+                                    mode:'READ',
+                                    timezone:common.COMMON_GLOBAL.user_timezone,
+                                    locale:common.COMMON_GLOBAL.user_locale,
+                                    button_print: false,
+                                    button_update: false,
+                                    button_post: false,
+                                    button_delete: false,
+                                    function_FFB:common.FFB,
+                                    function_button_print:null,
+                                    function_button_update:null,
+                                    function_button_post:null,
+                                    function_button_delete:null
+                                },
+                                methods:null,
+                                lifecycle:null,
+                                path:'/common/component/app_data_display.js'});
                             break;
                         }
                     }
@@ -167,32 +176,37 @@ const app_event_click = event => {
                 case 'common_user_menu_avatar_img':
                 case 'common_user_menu_logged_out':
                 case 'common_user_menu_default_avatar':{
-                    common.ComponentRender('common_dialogue_user_menu', 
-                    {   app_id:common.COMMON_GLOBAL.app_id,
-                        user_account_id:common.COMMON_GLOBAL.user_account_id,
-                        common_app_id:common.COMMON_GLOBAL.common_app_id,
-                        data_app_id:common.COMMON_GLOBAL.common_app_id,
-                        username:common.COMMON_GLOBAL.user_account_username,
-                        token_exp:common.COMMON_GLOBAL.token_exp,
-                        token_iat:common.COMMON_GLOBAL.token_iat,
-                        token_timestamp: common.COMMON_GLOBAL.token_timestamp,
-                        system_admin:common.COMMON_GLOBAL.system_admin,
-                        user_locale:common.COMMON_GLOBAL.user_locale,
-                        user_timezone:common.COMMON_GLOBAL.user_timezone,
-                        user_direction:common.COMMON_GLOBAL.user_direction,
-                        user_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
-                        //functions
-                        function_set_current_value:common.set_current_value,
-                        function_FFB:common.FFB,
-                        function_ComponentRender:common.ComponentRender,
-                        function_user_session_countdown:common.user_session_countdown,
-                        function_show_message:common.show_message},
-                                            '/common/component/dialogue_user_menu.js')
-                    .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
-                                                        {   function_theme_default_list:common.theme_default_list,
-                                                            function_ComponentRender:common.ComponentRender, 
-                                                            function_app_theme_update:common.common_preferences_post_mount},
-                                                        '/common/component/app_theme.js'));
+                    common.ComponentRender({mountDiv:'common_dialogue_user_menu', 
+                        props:{   app_id:common.COMMON_GLOBAL.app_id,
+                            user_account_id:common.COMMON_GLOBAL.user_account_id,
+                            common_app_id:common.COMMON_GLOBAL.common_app_id,
+                            data_app_id:common.COMMON_GLOBAL.common_app_id,
+                            username:common.COMMON_GLOBAL.user_account_username,
+                            token_exp:common.COMMON_GLOBAL.token_exp,
+                            token_iat:common.COMMON_GLOBAL.token_iat,
+                            token_timestamp: common.COMMON_GLOBAL.token_timestamp,
+                            system_admin:common.COMMON_GLOBAL.system_admin,
+                            user_locale:common.COMMON_GLOBAL.user_locale,
+                            user_timezone:common.COMMON_GLOBAL.user_timezone,
+                            user_direction:common.COMMON_GLOBAL.user_direction,
+                            user_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
+                            //functions
+                            function_set_current_value:common.set_current_value,
+                            function_FFB:common.FFB,
+                            function_ComponentRender:common.ComponentRender,
+                            function_user_session_countdown:common.user_session_countdown,
+                            function_show_message:common.show_message},
+                        methods:null,
+                        lifecycle:null,
+                        path:'/common/component/dialogue_user_menu.js'})
+                    .then(()=>
+                        common.ComponentRender({mountDiv:'common_dialogue_user_menu_app_theme', 
+                            props:{   function_theme_default_list:common.theme_default_list,
+                                function_ComponentRender:common.ComponentRender, 
+                                function_app_theme_update:common.common_preferences_post_mount},
+                            methods:null,
+                            lifecycle:null,
+                            path:'/common/component/app_theme.js'}));
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
@@ -276,9 +290,12 @@ const user_login_app = () =>{
 const user_logout_app = () =>{
     common.user_logout()
     .then(()=>common.ComponentRemove('app_main_page'))
-    .then(()=>common.ComponentRender('app_main_page',
-                                    {},
-                                    '/component/page_start.js'));
+    .then(()=>
+        common.ComponentRender({mountDiv:'app_main_page', 
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/component/page_start.js'}));
 };
 /**
  * Sets framework
@@ -345,42 +362,45 @@ const show_payment_request = async message =>{
     if (CommonAppDocument.querySelector('#common_dialogue_app_data_display .common_app_data_display_master_col1[data-key=amount]'))
         null;
     else
-        await common.ComponentRender('common_dialogue_app_data_display', 
-            {
-                app_id:common.COMMON_GLOBAL.app_id,
-                display_type:'VERTICAL_KEY_VALUE',
-                dialogue:true,
-                master_path:'/app-function/PAYMENT_REQUEST_GET',
-                master_query:'',
-                master_body:{	
-                                data_app_id:common.COMMON_GLOBAL.app_id,
-                                user_account_id: common.COMMON_GLOBAL.user_account_id,
-                                payment_request_id: JSON.parse(message).payment_request_id
-                            },
-                master_method:'POST',
-                master_token_type:'APP_ACCESS',
-                master_resource:'PAYMENT_REQUEST_METADATA',
-                detail_path:null,
-                detail_query:null,
-                detail_method:null,
-                detail_token_type:null,
-                detail_class:null,
-                new_resource:false,
-                mode:'READ',
-                timezone:common.COMMON_GLOBAL.user_timezone,
-                locale:common.COMMON_GLOBAL.user_locale,
-                button_print: false,
-                button_update: false,
-                button_post: true,
-                button_post_icon_class:'common_data_display_icon_ok',
-                button_delete: true,
-                button_delete_icon_class:'common_data_display_icon_cancel',
-                function_FFB:common.FFB,
-                function_button_print:null,
-                function_button_update:null,
-                function_button_post:payment_request_accept,
-                function_button_delete:payment_request_cancel
-            }, '/common/component/app_data_display.js')
+        await common.ComponentRender({mountDiv:'common_dialogue_app_data_display', 
+                props:{
+                    app_id:common.COMMON_GLOBAL.app_id,
+                    display_type:'VERTICAL_KEY_VALUE',
+                    dialogue:true,
+                    master_path:'/app-function/PAYMENT_REQUEST_GET',
+                    master_query:'',
+                    master_body:{	
+                                    data_app_id:common.COMMON_GLOBAL.app_id,
+                                    user_account_id: common.COMMON_GLOBAL.user_account_id,
+                                    payment_request_id: JSON.parse(message).payment_request_id
+                                },
+                    master_method:'POST',
+                    master_token_type:'APP_ACCESS',
+                    master_resource:'PAYMENT_REQUEST_METADATA',
+                    detail_path:null,
+                    detail_query:null,
+                    detail_method:null,
+                    detail_token_type:null,
+                    detail_class:null,
+                    new_resource:false,
+                    mode:'READ',
+                    timezone:common.COMMON_GLOBAL.user_timezone,
+                    locale:common.COMMON_GLOBAL.user_locale,
+                    button_print: false,
+                    button_update: false,
+                    button_post: true,
+                    button_post_icon_class:'common_data_display_icon_ok',
+                    button_delete: true,
+                    button_delete_icon_class:'common_data_display_icon_cancel',
+                    function_FFB:common.FFB,
+                    function_button_print:null,
+                    function_button_update:null,
+                    function_button_post:payment_request_accept,
+                    function_button_delete:payment_request_cancel
+                },
+                methods:null,
+                lifecycle:null,
+                path:'/common/component/app_data_display.js'})
             .then(()=>{
                 CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
                 CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
@@ -397,16 +417,18 @@ const show_payment_request = async message =>{
  * @returns {void}
  */
 const init_secure = () => {
-    common.ComponentRender('app_main_page',
-                            {
-                            app_id:common.COMMON_GLOBAL.app_id,
-                            user_account_id:common.COMMON_GLOBAL.user_account_id,
-                            timezone:common.COMMON_GLOBAL.user_timezone,
-                            locale:common.COMMON_GLOBAL.user_locale,
-                            function_button_post:customer_create,
-                            function_ComponentRender:common.ComponentRender,
-                            function_FFB:common.FFB},
-                            '/component/page_secure.js');
+    common.ComponentRender({mountDiv:'app_main_page', 
+        props:{
+            app_id:common.COMMON_GLOBAL.app_id,
+            user_account_id:common.COMMON_GLOBAL.user_account_id,
+            timezone:common.COMMON_GLOBAL.user_timezone,
+            locale:common.COMMON_GLOBAL.user_locale,
+            function_button_post:customer_create,
+            function_ComponentRender:common.ComponentRender,
+            function_FFB:common.FFB},
+        methods:null,
+        lifecycle:null,
+        path:'/component/page_secure.js'});
 };
 /**
  * Init app
@@ -414,13 +436,23 @@ const init_secure = () => {
  */
 const init_app = async () => {
     CommonAppDocument.body.className = 'app_theme1';
-    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
-    .then(()=> common.ComponentRender('app_top_usermenu', 
-                                        {},
-                                        '/common/component/user_account.js'))
-    .then(()=> common.ComponentRender('app_main_page', 
-                                        {},
-                                        '/component/page_start.js'));
+    await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div, 
+        props:null,
+        methods:null,
+        lifecycle:null,
+        path:'/component/app.js'})
+    .then(()=> 
+        common.ComponentRender({mountDiv:'app_top_usermenu', 
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/user_account.js'}))
+    .then(()=> 
+        common.ComponentRender({mountDiv:'app_main_page', 
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/component/page_start.js'}));
    framework_set();
 };
 /**

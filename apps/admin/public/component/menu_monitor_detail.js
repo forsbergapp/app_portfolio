@@ -343,7 +343,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *          function_get_log_parameters:function,
 *          function_show_app_log:function,
 *          function_roundOff:function,
-*          function_FFB:function}} props 
+*          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}} props 
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:{function_page_navigation:function, function_monitor_detail_server_log:function},
 *                      template:string}>}
@@ -518,15 +518,19 @@ const component = async props => {
                 return;
         }
         search=search?encodeURI(search):search;
-        props.function_ComponentRender('list_server_log', 
-            {system_admin:props.system_admin,
-             path:path,
-             query:`${get_query()}&search=${search ?? ''}`,
-             token_type: token_type,
-             sort:sort,
-             order_by:order_by,
-             function_roundOff:props.function_roundOff,
-             function_FFB:props.function_FFB}, '/component/menu_monitor_detail_server_log.js');
+        props.function_ComponentRender(
+                {   mountDiv:'list_server_log',
+                    props:{system_admin:props.system_admin,
+                        path:path,
+                        query:`${get_query()}&search=${search ?? ''}`,
+                        token_type: token_type,
+                        sort:sort,
+                        order_by:order_by,
+                        function_roundOff:props.function_roundOff,
+                        function_FFB:props.function_FFB},
+                    methods:null,
+                    lifecycle:null,
+                    path:'/component/menu_monitor_detail_server_log.js'});
     };
     const post_component = async () =>{
         //fetch log parameter data if SERVER_LOG
@@ -584,7 +588,7 @@ const component = async props => {
                     column_value:'VALUE',
                     column_text:'TEXT',
                     function_FFB:props.function_FFB
-                }, '/common/component/select.js');
+                }, null, null, '/common/component/select.js');
             monitor_detail_server_log(props.sort, props.order_by);
         }
             

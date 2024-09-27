@@ -65,16 +65,16 @@ const template = () =>`  <div id='user_settings'>
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          user_settings:import('../js/types.js').APP_user_setting,
- *          function_ComponentRender:function}} props 
+ *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']}} props 
  * @returns {Promise.<{ props:{function_post:function},
  *                      data:null, 
  *                      template:string}>}
  */
 const method = async props => {
     const post_component = async () =>{
-
-        await props.function_ComponentRender('setting_select_user_setting',
-            {
+        
+        await props.function_ComponentRender({mountDiv:'setting_select_user_setting',
+            props:{
                 default_data_value:props.user_settings.current_id,
                 default_value:props.user_settings.data[props.user_settings.current_id].json_data.description,
                 options: props.user_settings.data.map((setting, index)=>{return {value:index, text:setting.json_data.description};}),
@@ -85,7 +85,10 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
     };
     return {
         props:  {function_post:post_component},

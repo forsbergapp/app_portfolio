@@ -54,36 +54,56 @@ const show_menu = menu => {
     switch(menu){
         //START
         case 1:{
-            common.ComponentRender('menu_content', {system_admin:common.COMMON_GLOBAL.system_admin, 
-                                                    function_ComponentRender:common.ComponentRender, 
-                                                    function_FFB:common.FFB}, '/component/menu_start.js')
+            common.ComponentRender({mountDiv:'menu_content',
+                                    props:{system_admin:common.COMMON_GLOBAL.system_admin, 
+                                        function_ComponentRender:common.ComponentRender, 
+                                        function_FFB:common.FFB},
+                                    methods:null,
+                                    lifecycle:null,
+                                    path:'/component/menu_start.js'})
             .then(()=>show_charts());
             
             break;
         }
         //USER STAT
         case 2:{
-            common.ComponentRender('menu_content', {function_FFB:common.FFB}, '/component/menu_user_stat.js');
+            common.ComponentRender({mountDiv:'menu_content',
+                props:{function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_user_stat.js'});
             break;    
         }
         //USERS
         case 3:{
-            common.ComponentRender('menu_content', {}, '/component/menu_users.js')
+            common.ComponentRender({mountDiv:'menu_content',
+                props:{},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_users.js'})
             .then(()=>search_users());
             break;
         }
         //APP ADMIN
         case 4:{
-            common.ComponentRender('menu_content', {function_FFB:common.FFB}, '/component/menu_apps.js');
+            common.ComponentRender({mountDiv:'menu_content',
+                props:{function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_apps.js'});
             break;    
         }
         //MONITOR
         case 5:{
-            common.ComponentRender('menu_content', {app_id:common.COMMON_GLOBAL.app_id, 
-                                                    system_admin:common.COMMON_GLOBAL.system_admin, 
-                                                    function_map_mount:map_mount,
-                                                    function_ComponentRender:common.ComponentRender,
-                                                    function_FFB:common.FFB}, '/component/menu_monitor.js')
+            common.ComponentRender({mountDiv:'menu_content',
+                props:{app_id:common.COMMON_GLOBAL.app_id, 
+                    system_admin:common.COMMON_GLOBAL.system_admin, 
+                    function_map_mount:map_mount,
+                    function_ComponentRender:common.ComponentRender,
+                    function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_monitor.js'})
             .then((/**@type{{limit:number}}*/result)=>{
                 APP_GLOBAL.limit = result.limit;
                 nav_click('list_monitor_nav_connected');
@@ -92,17 +112,29 @@ const show_menu = menu => {
         }
         //SERVER CONFIG
         case 6:{
-            common.ComponentRender('menu_content', {function_nav_click:nav_click}, '/component/menu_config.js');
+            common.ComponentRender({mountDiv:'menu_content',
+                props:{function_nav_click:nav_click},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_config.js'});
             break;
         }
         //INSTALLATION
         case 7:{
-            common.ComponentRender('menu_content', {system_admin:common.COMMON_GLOBAL.system_admin, function_FFB:common.FFB}, '/component/menu_installation.js');
+            common.ComponentRender({mountDiv:'menu_content',
+                props:{system_admin:common.COMMON_GLOBAL.system_admin, function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_installation.js'});
             break;
         }
         //DATABASE
         case 8:{
-            common.ComponentRender('menu_content', {function_roundOff:roundOff, function_FFB:common.FFB}, '/component/menu_db_info.js');
+            common.ComponentRender({mountDiv:'menu_content',
+                props:{function_roundOff:roundOff, function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_db_info.js'});
             break;
         }
         //BACKUP/RESTORE
@@ -111,7 +143,11 @@ const show_menu = menu => {
         }
         //SERVER
         case 10:{
-            common.ComponentRender('menu_content', {function_FFB:common.FFB}, '/component/menu_server.js');
+            common.ComponentRender({mountDiv:'menu_content',
+                props:{function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_server.js'});
             break;
         }
     }            
@@ -121,9 +157,13 @@ const show_menu = menu => {
  * @returns{Promise.<void>}
  */
 const show_charts = async () => {
-    common.ComponentRender('graphBox', {system_admin:common.COMMON_GLOBAL.system_admin,
-                                        function_ComponentRender:common.ComponentRender,
-                                        function_FFB:common.FFB}, '/component/menu_start_chart.js');
+    common.ComponentRender({mountDiv:'graphBox',
+        props:{system_admin:common.COMMON_GLOBAL.system_admin,
+            function_ComponentRender:common.ComponentRender,
+            function_FFB:common.FFB},
+        methods:null,
+        lifecycle:null,
+        path:'/component/menu_start_chart.js'});
 };
 /**
  * Broadcast send
@@ -189,11 +229,15 @@ const closeBroadcast = () => {
  * @returns{Promise.<void>}
  */
 const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
-    common.ComponentRender('dialogue_send_broadcast', {
-                                                        system_admin:common.COMMON_GLOBAL.system_admin,
-                                                        function_ComponentRender:common.ComponentRender,
-                                                        function_FFB:common.FFB
-                                                        }, '/component/dialogue_send_broadcast.js')
+    common.ComponentRender({mountDiv:'dialogue_send_broadcast',
+        props:{
+            system_admin:common.COMMON_GLOBAL.system_admin,
+            function_ComponentRender:common.ComponentRender,
+            function_FFB:common.FFB
+            },
+        methods:null,
+        lifecycle:null,
+        path:'/component/dialogue_send_broadcast.js'})
     .then(()=>{
         switch (dialogue_type){
             case 'CHAT':{
@@ -279,12 +323,16 @@ const set_maintenance = () => {
  * @returns 
  */
 const search_users = (sort='username', order_by='asc', focus=true) => {
-    common.ComponentRender('list_user_account', {   user_account_id:common.COMMON_GLOBAL.user_account_id,
-                                                    user_app_role_id:common.COMMON_GLOBAL.user_app_role_id,
-                                                    sort:sort,
-                                                    order_by:order_by,
-                                                    focus:focus,
-                                                    function_FFB:common.FFB}, '/component/menu_users_list.js');
+    common.ComponentRender({mountDiv:'list_user_account',
+        props:{   user_account_id:common.COMMON_GLOBAL.user_account_id,
+            user_app_role_id:common.COMMON_GLOBAL.user_app_role_id,
+            sort:sort,
+            order_by:order_by,
+            focus:focus,
+            function_FFB:common.FFB},
+        methods:null,
+        lifecycle:null,
+        path:'/component/menu_users_list.js'});
  
 };
 
@@ -563,25 +611,41 @@ const nav_click = (item_id) => {
         case 'list_config_nav_server':{
             reset_config();
             CommonAppDocument.querySelector('#list_config_nav_server').classList.add('list_nav_selected_tab');
-            common.ComponentRender('list_config_container', {file:'SERVER', function_FFB:common.FFB}, '/component/menu_config_detail.js');
+            common.ComponentRender({mountDiv:'list_config_container',
+                props:{file:'SERVER', function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_config_detail.js'});
             break;
         }
         case 'list_config_nav_iam_blockip':{
             reset_config();
             CommonAppDocument.querySelector('#list_config_nav_iam_blockip').classList.add('list_nav_selected_tab');
-            common.ComponentRender('list_config_container', {file:'IAM_BLOCKIP', function_FFB:common.FFB}, '/component/menu_config_detail.js');
+            common.ComponentRender({mountDiv:'list_config_container',
+                props:{file:'IAM_BLOCKIP', function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_config_detail.js'});
             break;
         }
         case 'list_config_nav_iam_useragent':{
             reset_config();
             CommonAppDocument.querySelector('#list_config_nav_iam_useragent').classList.add('list_nav_selected_tab');
-            common.ComponentRender('list_config_container', {file:'IAM_USERAGENT', function_FFB:common.FFB}, '/component/menu_config_detail.js');
+            common.ComponentRender({mountDiv:'list_config_container',
+                props:{file:'IAM_USERAGENT', function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_config_detail.js'});
             break;
         }
         case 'list_config_nav_iam_policy':{
             reset_config();
             CommonAppDocument.querySelector('#list_config_nav_iam_policy').classList.add('list_nav_selected_tab');
-            common.ComponentRender('list_config_container', {file:'IAM_POLICY', function_FFB:common.FFB}, '/component/menu_config_detail.js');
+            common.ComponentRender({mountDiv:'list_config_container',
+                props:{file:'IAM_POLICY', function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:'/component/menu_config_detail.js'});
             break;
         }
     }
@@ -594,21 +658,25 @@ const nav_click = (item_id) => {
  * @param {string} order_by 
  */
 const show_list = async (list_detail, query, sort, order_by) => {
-    common.ComponentRender('list_monitor', {app_id:common.COMMON_GLOBAL.app_id,
-                                            system_admin:common.COMMON_GLOBAL.system_admin,
-                                            monitor_detail:list_detail,
-                                            query:query,
-                                            sort:sort,
-                                            order_by:order_by,
-                                            service_socket_client_ID:common.COMMON_GLOBAL.service_socket_client_ID,
-                                            limit:APP_GLOBAL.limit,
-                                            function_input_control:common.input_control,
-                                            function_ComponentRender:common.ComponentRender,
-                                            function_getUserAgentPlatform:common.getUserAgentPlatform,
-                                            function_get_log_parameters:get_log_parameters,
-                                            function_show_app_log:show_app_log,
-                                            function_roundOff:roundOff,
-                                            function_FFB:common.FFB}, '/component/menu_monitor_detail.js')
+    common.ComponentRender({mountDiv:'list_monitor',
+        props:{app_id:common.COMMON_GLOBAL.app_id,
+            system_admin:common.COMMON_GLOBAL.system_admin,
+            monitor_detail:list_detail,
+            query:query,
+            sort:sort,
+            order_by:order_by,
+            service_socket_client_ID:common.COMMON_GLOBAL.service_socket_client_ID,
+            limit:APP_GLOBAL.limit,
+            function_input_control:common.input_control,
+            function_ComponentRender:common.ComponentRender,
+            function_getUserAgentPlatform:common.getUserAgentPlatform,
+            function_get_log_parameters:get_log_parameters,
+            function_show_app_log:show_app_log,
+            function_roundOff:roundOff,
+            function_FFB:common.FFB},
+        methods:null,
+        lifecycle:null,
+        path:'/component/menu_monitor_detail.js'})
     .then((/**@type{*}*/result)=>{
         APP_GLOBAL.page_navigation = result.function_page_navigation;
         APP_GLOBAL.monitor_detail_server_log = result.function_monitor_detail_server_log;
@@ -1074,8 +1142,12 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     //event on master to automatically show detail records
                     if (APP_GLOBAL.previous_row != common.element_row(event.target)){
                         APP_GLOBAL.previous_row = common.element_row(event.target);
-                        common.ComponentRender('list_app_parameter', {  app_id_data:parseInt(common.element_row(event.target).getAttribute('data-app_id') ?? ''),
-                                                                        function_FFB:common.FFB}, '/component/menu_apps_parameters.js');
+                        common.ComponentRender({mountDiv:'list_app_parameter',
+                            props:{  app_id_data:parseInt(common.element_row(event.target).getAttribute('data-app_id') ?? ''),
+                                function_FFB:common.FFB},
+                            methods:null,
+                            lifecycle:null,
+                            path:'/component/menu_apps_parameters.js'});
                     }
                     break;
                 }
@@ -1083,8 +1155,12 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     //event on master to automatically show detail records
                     if (APP_GLOBAL.previous_row != common.element_row(event.target)){
                         APP_GLOBAL.previous_row = common.element_row(event.target);
-                        common.ComponentRender('list_user_account_logon', { user_account_id:parseInt(common.element_row(event.target).getAttribute('data-user_account_id') ?? ''),
-                                                                            function_FFB:common.FFB}, '/component/menu_users_logon.js');
+                        common.ComponentRender({mountDiv:'list_user_account_logon',
+                            props:{ user_account_id:parseInt(common.element_row(event.target).getAttribute('data-user_account_id') ?? ''),
+                                function_FFB:common.FFB},
+                            methods:null,
+                            lifecycle:null,
+                            path:'/component/menu_users_logon.js'});
                     }
                     break;
                 }   
