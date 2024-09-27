@@ -159,7 +159,7 @@ const app_event_click = event => {
                     common.profile_detail(4);
                     break;
                 }
-                case 'common_profile_main_btn_cloud':{
+                case 'common_profile_info_main_btn_cloud':{
                     common.profile_detail(5);
                     break;
                 }
@@ -399,8 +399,6 @@ const init_app = async (parameters) => {
         if (parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'])
             common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];
     }
-    if (common.COMMON_GLOBAL.user_locale != common.NavigatorLocale())
-        await common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
     get_apps();
     
     const user = common.LocationPathname(1);

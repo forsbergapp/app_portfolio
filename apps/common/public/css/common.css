@@ -153,6 +153,8 @@
     --common_app_icon_user_account_created:     '\f4c6';
     --common_app_icon_user_account_modified:    '\f044';
     --common_app_icon_user_password:            '\f084';
+	--common_app_icon_user_password_confirm:    '\f084\21';
+	--common_app_icon_user_password_reminder:   '\f084\f059';
     --common_app_icon_user_account_reminder:    '\f059';
     --common_app_icon_user_avatar_edit:         '\f030';
     --common_app_icon_user_avatar:              '\f2bd';

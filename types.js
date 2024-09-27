@@ -287,20 +287,6 @@
  */
 
 /**
- * Server - Apps translate items
- * @typedef {{  USERNAME:string,
-*              EMAIL:string,
-*              NEW_EMAIL:string,
-*              BIO:string,
-*              PASSWORD:string,
-*              PASSWORD_CONFIRM:string,
-*              PASSWORD_REMINDER:string,
-*              NEW_PASSWORD_CONFIRM:string,
-*              NEW_PASSWORD:string,
-*              CONFIRM_QUESTION:string}} server_apps_translate_items
-*/
-
-/**
  * Server - Apps App info
  * @typedef {object} server_apps_app_info   - app info
  * @property {number} app_id                - app id
@@ -311,7 +297,6 @@
  * @property {string} longitude             - geodata longitude
  * @property {string} place                 - geodata place
  * @property {string} timezone              - geodata timezone
- * @property {server_apps_translate_items} translate_items - items to be translated
  * @property {string|null} module                - HTML
  */
 
@@ -331,7 +316,6 @@
  * @property {number}       app_rest_api_version
  * @property {string}       app_idtoken
  * @property {string}       locale
- * @property {server_apps_translate_items}  translate_items
  * @property {number}       system_admin_only
  * @property {string|null}  client_latitude
  * @property {string|null}  client_longitude

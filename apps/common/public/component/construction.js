@@ -2,7 +2,7 @@
  * @module apps/common/component/construction
  */
 
-const template = () => ' <div id=\'common_construction\' class=\'common_icon\'></div>';
+const template = () => ' <div class=\'common_construction common_icon\'></div>';
 /**
  * 
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
