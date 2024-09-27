@@ -14,7 +14,6 @@
  *  CommonIcons
  *  CommonComponentResult
  *  CommonErrorMessageISO20022
- *  CommonTranslationkey
  * 
  * Common REST API types
  *  CommonAppRecord
@@ -262,10 +261,7 @@
  *               "developer_text":string|null,
  *               "more_info":string|null}}} CommonErrorMessageISO20022
  */
-/**
- * Type CommonTranslationKey
- * @typedef {   'USERNAME'|'EMAIL'|'NEW_EMAIL'|'BIO'|'PASSWORD'|'PASSWORD_CONFIRM'|'PASSWORD_REMINDER'|'NEW_PASSWORD_CONFIRM'|'NEW_PASSWORD'|'CONFIRM_QUESTION'} CommonTranslationkey
- */
+
 /**
  * Type CommonProfileUser
  * @typedef {{  id:number|null,

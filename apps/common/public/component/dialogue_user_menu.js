@@ -41,7 +41,7 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
                                 <div id='common_dialogue_user_menu_signup' class='common_icon'></div>
                                 <div id='common_dialogue_user_menu_log_in' class='common_icon'></div>
                             </div>
-                            <div id='common_user_menu_close' class='common_dialogue_button common_icon' ></div>`;
+                            <div id='common_dialogue_user_menu_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * div common_dialogue_user_menu_app_theme used to show optional component app_theme.js
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,

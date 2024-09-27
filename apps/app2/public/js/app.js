@@ -2465,11 +2465,7 @@ const init_app = async parameters => {
             show_start().then(() => {
                 dialogue_loading(0);
                 common.serviceworker();
-                if (common.COMMON_GLOBAL.user_locale != common.NavigatorLocale())
-                    common.common_translate_ui(common.COMMON_GLOBAL.user_locale)
-                    .then(()=>framework_set());
-                else
-                    framework_set();
+                framework_set();
             });
         });
     });
