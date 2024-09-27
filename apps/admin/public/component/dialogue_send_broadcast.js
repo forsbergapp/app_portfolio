@@ -18,8 +18,8 @@ const template = props => ` <div id='send_broadcast_form'>
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          system_admin:boolean,
- *          function_ComponentRender:function
- *          function_FFB:function}} props 
+ *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']
+ *          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}} props 
  * @returns {Promise.<{ props:{function_post:function},
  *                      data:null, 
  *                      template:string}>}
@@ -30,31 +30,39 @@ const component = async props => {
 
     const post_component = async () =>{
         // select broadcast type
-        await props.function_ComponentRender('select_broadcast_type', 
-            {
-              default_data_value:'ALERT',
-              options:[{VALUE:'ALERT', TEXT:''}, {VALUE:'MAINTENANCE', TEXT:''}],
-              path:'',
-              query:'',
-              method:'',
-              authorization_type:'',
-              column_value:'VALUE',
-              column_text:'TEXT',
-              function_FFB:props.function_FFB
-            }, '/common/component/select.js');
+        await props.function_ComponentRender(
+            {   mountDiv:'select_broadcast_type',
+                props:{
+                    default_data_value:'ALERT',
+                    options:[{VALUE:'ALERT', TEXT:''}, {VALUE:'MAINTENANCE', TEXT:''}],
+                    path:'',
+                    query:'',
+                    method:'',
+                    authorization_type:'',
+                    column_value:'VALUE',
+                    column_text:'TEXT',
+                    function_FFB:props.function_FFB
+                },
+                methods:null,
+                lifecycle:null,
+                path:'/common/component/select.js'});
         // select apps
-        await props.function_ComponentRender('select_app_broadcast', 
-            {
-              default_value:'∞',
-              options:[{APP_ID:'', NAME:'∞'}],
-              path:'/server-config/config-apps/',
-              query:'key=NAME',
-              method:'GET',
-              authorization_type:props.system_admin?'SYSTEMADMIN':'APP_ACCESS',
-              column_value:'APP_ID',
-              column_text:'NAME',
-              function_FFB:props.function_FFB
-            }, '/common/component/select.js');
+        await props.function_ComponentRender( 
+            {   mountDiv:'select_app_broadcast',
+                props:{
+                    default_value:'∞',
+                    options:[{APP_ID:'', NAME:'∞'}],
+                    path:'/server-config/config-apps/',
+                    query:'key=NAME',
+                    method:'GET',
+                    authorization_type:props.system_admin?'SYSTEMADMIN':'APP_ACCESS',
+                    column_value:'APP_ID',
+                    column_text:'NAME',
+                    function_FFB:props.function_FFB
+                  },
+                methods:null,
+                lifecycle:null,
+                path:'/common/component/select.js'});
     };
     return {
         props:  {function_post:post_component},

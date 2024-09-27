@@ -46,8 +46,8 @@ const template = props => ` ${props.spinner==''?
  *          common_mountdiv:string,
  *          user_account_id:number|null,
  *          profile_id:number,
- *          function_ComponentRender:function,
- *          function_FFB:function}} props 
+ *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+ *          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}} props 
  * @returns {Promise.<{ props:{function_post:post_component}, 
  *                      data:{  function_profile_user_setting_update:       function,
  *                              function_profile_show_user_setting_detail:  function,
@@ -114,19 +114,22 @@ const method = async props => {
 
         props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({spinner:''});
         //show current setting or first setting if showing first time
-        await props.function_ComponentRender('profile_select_user_settings', 
-            {
-              default_data_value:   sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].value:user_settings[0].value,
-              default_value:        sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].text:user_settings[0].text,
-              options: user_settings,
-              path:null,
-              query:null,
-              method:null,
-              authorization_type:null,
-              column_value:'value',
-              column_text:'text',
-              function_FFB:props.function_FFB
-            }, '/common/component/select.js');
+        await props.function_ComponentRender({mountDiv:'profile_select_user_settings',
+            props:{
+                default_data_value:   sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].value:user_settings[0].value,
+                default_value:        sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].text:user_settings[0].text,
+                options: user_settings,
+                path:null,
+                query:null,
+                method:null,
+                authorization_type:null,
+                column_value:'value',
+                column_text:'text',
+                function_FFB:props.function_FFB
+              },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         
         const profile_select_user_settings = props.common_document.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
         profile_show_user_setting_detail(   JSON.parse(profile_select_user_settings).liked,

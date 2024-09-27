@@ -77,30 +77,35 @@ const app_event_click = event => {
                     case 'common_user_menu_avatar_img':
                     case 'common_user_menu_logged_out':
                     case 'common_user_menu_default_avatar':{
-                        common.ComponentRender('common_dialogue_user_menu', 
-                        {   app_id:common.COMMON_GLOBAL.app_id,
-                            user_account_id:common.COMMON_GLOBAL.user_account_id,
-                            common_app_id:common.COMMON_GLOBAL.common_app_id,
-                            data_app_id:common.COMMON_GLOBAL.common_app_id,
-                            username:common.COMMON_GLOBAL.user_account_username,
-                            token_exp:common.COMMON_GLOBAL.token_exp,
-                            token_iat:common.COMMON_GLOBAL.token_iat,
-                            token_timestamp: common.COMMON_GLOBAL.token_timestamp,
-                            system_admin:common.COMMON_GLOBAL.system_admin,
-                            user_locale:common.COMMON_GLOBAL.user_locale,
-                            user_timezone:common.COMMON_GLOBAL.user_timezone,
-                            user_direction:common.COMMON_GLOBAL.user_direction,
-                            user_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
-                            //functions
-                            function_set_current_value:common.set_current_value,
-                            function_FFB:common.FFB,
-                            function_ComponentRender:common.ComponentRender,
-                            function_user_session_countdown:common.user_session_countdown,
-                            function_show_message:common.show_message},
-                                                '/common/component/dialogue_user_menu.js')
-                        .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
-                                                            {function_app_theme_update:app_preferences_post_mount},
-                                                            '/component/app_theme.js'));
+                        common.ComponentRender({mountDiv:'common_dialogue_user_menu',
+                            props:{ app_id:common.COMMON_GLOBAL.app_id,
+                                    user_account_id:common.COMMON_GLOBAL.user_account_id,
+                                    common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                    data_app_id:common.COMMON_GLOBAL.common_app_id,
+                                    username:common.COMMON_GLOBAL.user_account_username,
+                                    token_exp:common.COMMON_GLOBAL.token_exp,
+                                    token_iat:common.COMMON_GLOBAL.token_iat,
+                                    token_timestamp: common.COMMON_GLOBAL.token_timestamp,
+                                    system_admin:common.COMMON_GLOBAL.system_admin,
+                                    user_locale:common.COMMON_GLOBAL.user_locale,
+                                    user_timezone:common.COMMON_GLOBAL.user_timezone,
+                                    user_direction:common.COMMON_GLOBAL.user_direction,
+                                    user_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
+                                    //functions
+                                    function_set_current_value:common.set_current_value,
+                                    function_FFB:common.FFB,
+                                    function_ComponentRender:common.ComponentRender,
+                                    function_user_session_countdown:common.user_session_countdown,
+                                    function_show_message:common.show_message},
+                            methods:null,
+                            lifecycle:null,
+                            path:'/common/component/dialogue_user_menu.js'})
+                        .then(()=>
+                            common.ComponentRender({mountDiv:'common_dialogue_user_menu_app_theme',
+                                                    props:{function_app_theme_update:app_preferences_post_mount},
+                                                    methods:null,
+                                                    lifecycle:null,
+                                                    path:'/component/app_theme.js'}));
                         break;
                     }
                 case 'common_dialogue_user_menu_username':{
@@ -303,13 +308,17 @@ const profile_show_app = async (user_account_id_other, username) =>{
                 null;
             }
             else
-                common.ComponentRender('common_profile_main_stat_row2', 
-                                        {},
-                                        '/component/profile_info.js')
+                common.ComponentRender({mountDiv:'common_profile_main_stat_row2',
+                                        props:{function_app_theme_update:app_preferences_post_mount},
+                                        methods:null,
+                                        lifecycle:null,
+                                        path:'/component/profile_info.js'})
                 .then(()=>{
-                    common.ComponentRender('profile_info_apps', 
-                                            {},
-                                            '/common/component/profile_info_apps.js');
+                    common.ComponentRender({mountDiv:'profile_info_apps',
+                                            props:{function_app_theme_update:app_preferences_post_mount},
+                                            methods:null,
+                                            lifecycle:null,
+                                            path:'/common/component/profile_info_apps.js'});
                 });
         }
     });
@@ -340,20 +349,22 @@ const user_login_app = async (system_admin=false, username_verify=null, password
  * @returns {void}
  */
 const get_apps = () => {
-    common.ComponentRender('common_dialogue_apps',
-                            {
-                                common_app_id:common.COMMON_GLOBAL.common_app_id,
-                                app_id:common.COMMON_GLOBAL.app_id,
-                                app_copyright:common.COMMON_GLOBAL.app_copyright,
-                                app_email:common.COMMON_GLOBAL.app_email,
-                                app_link_url:common.COMMON_GLOBAL.app_link_url,
-                                app_link_title:common.COMMON_GLOBAL.app_link_title,
-                                info_link_policy_name:common.COMMON_GLOBAL.info_link_policy_name,
-                                info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
-                                info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name,
-                                function_FFB:common.FFB
-                            },
-                            '/common/component/dialogue_apps.js');
+    common.ComponentRender({mountDiv:'common_dialogue_apps',
+        props:{
+            common_app_id:common.COMMON_GLOBAL.common_app_id,
+            app_id:common.COMMON_GLOBAL.app_id,
+            app_copyright:common.COMMON_GLOBAL.app_copyright,
+            app_email:common.COMMON_GLOBAL.app_email,
+            app_link_url:common.COMMON_GLOBAL.app_link_url,
+            app_link_title:common.COMMON_GLOBAL.app_link_title,
+            info_link_policy_name:common.COMMON_GLOBAL.info_link_policy_name,
+            info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
+            info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name,
+            function_FFB:common.FFB
+        },
+        methods:null,
+        lifecycle:null,
+        path:'/common/component/dialogue_apps.js'});
 };
 /**
  * App exception function
@@ -384,10 +395,29 @@ const framework_set = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const init_app = async (parameters) => {
-    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')    
-    .then(()=>common.ComponentRender('common_profile_search',{}, '/common/component/profile_search.js'))
-    .then(()=>common.ComponentRender('app_profile_toolbar',{}, '/common/component/profile_toolbar.js'))
-    .then(()=>common.ComponentRender('common_user_account', {},'/common/component/user_account.js'));
+    await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
+        props:null,
+        methods:null,
+        lifecycle:null,
+        path:'/component/app.js'})
+    .then(()=>
+        common.ComponentRender({mountDiv:'common_profile_search',
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/profile_search.js'}))
+    .then(()=>
+        common.ComponentRender({mountDiv:'app_profile_toolbar',
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/profile_toolbar.js'}))
+    .then(()=>
+        common.ComponentRender({mountDiv:'common_user_account',
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/user_account.js'}));
 
     for (const parameter of parameters.app) {
         if (parameter['MODULE_EASY.QRCODE_WIDTH'])

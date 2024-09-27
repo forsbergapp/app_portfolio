@@ -48,10 +48,10 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *          map_layer:string,
  *          map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[],
  *          module_leaflet_container:string,
- *          function_ComponentRender:function,
+ *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *          function_map_country:function,
  *          function_map_city_empty:function,
- *          function_FFB:function,
+ *          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
  *          function_search_event:function,
  *          function_map_setstyle:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
@@ -73,8 +73,8 @@ const component = async props => {
                         latitude :props.longitude
                     });
         //country
-        await props.function_ComponentRender('common_module_leaflet_select_country', 
-            {
+        await props.function_ComponentRender({mountDiv:'common_module_leaflet_select_country', 
+            props:{
                 default_data_value:'',
                 default_value:'...',
                 options:await props.function_map_country(props.locale),
@@ -85,13 +85,16 @@ const component = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         //cities, caal function that sets empty record
         props.function_map_city_empty();
 
         //map layers
-        await props.function_ComponentRender('common_module_leaflet_select_mapstyle', 
-            {
+        await props.function_ComponentRender({mountDiv:'common_module_leaflet_select_mapstyle', 
+            props:{
                 default_data_value:props.map_layers[0].value,
                 default_value:props.map_layers[0].display_data,
                 options:props.map_layers,
@@ -102,7 +105,10 @@ const component = async props => {
                 column_value:'value',
                 column_text:'display_data',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         
         if (props.function_search_event){
             //add search function in data-function that event delegation will use            

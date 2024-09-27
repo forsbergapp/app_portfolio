@@ -161,7 +161,7 @@ const template = () =>`   <div class='setting_horizontal_row'>
  *          user_settings:import('../js//types.js').APP_user_setting_record,
  *          function_set_current_value:function,
  *          function_component_setting_update:function,
- *          function_ComponentRender:function,
+ *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *          function_app_settings_get:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
@@ -173,8 +173,8 @@ const method = async props => {
         /**@type{[{value:string, data2:string, data3:string, data4:string, data5:string, text:string}]} */
         const settings = await props.function_app_settings_get();
         //Method
-        await props.function_ComponentRender('setting_select_method',
-            {
+        await props.function_ComponentRender({mountDiv:'setting_select_method',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'METHOD')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'METHOD')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'METHOD'),
@@ -185,10 +185,13 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         //Method asr
-        await props.function_ComponentRender('setting_select_asr',
-            {
+        await props.function_ComponentRender({mountDiv:'setting_select_asr',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'METHOD_ASR')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'METHOD_ASR')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'METHOD_ASR'),
@@ -199,10 +202,13 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         //Highlatitude adjustment
-        await props.function_ComponentRender('setting_select_highlatitude',
-            {
+        await props.function_ComponentRender({mountDiv:'setting_select_highlatitude',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'HIGH_LATITUDE_ADJUSTMENT')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'HIGH_LATITUDE_ADJUSTMENT')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'HIGH_LATITUDE_ADJUSTMENT'),
@@ -213,10 +219,13 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         //Timeformat
-        await props.function_ComponentRender('setting_select_timeformat',
-            {
+        await props.function_ComponentRender({mountDiv:'setting_select_timeformat',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'TIMEFORMAT')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'TIMEFORMAT')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'TIMEFORMAT'),
@@ -227,10 +236,13 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         //Hijri date adjustment
-        await props.function_ComponentRender('setting_select_hijri_adjustment',
-            {
+        await props.function_ComponentRender({mountDiv:'setting_select_hijri_adjustment',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'HIJRI_DATE_ADJUSTMENT')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'HIJRI_DATE_ADJUSTMENT')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'HIJRI_DATE_ADJUSTMENT'),
@@ -241,10 +253,13 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         //Iqamat
-        await props.function_ComponentRender('setting_select_report_iqamat_title_fajr',
-            {
+        await props.function_ComponentRender({mountDiv:'setting_select_report_iqamat_title_fajr',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT'),
@@ -255,9 +270,12 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
-        await props.function_ComponentRender('setting_select_report_iqamat_title_dhuhr',
-            {
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
+        await props.function_ComponentRender({mountDiv:'setting_select_report_iqamat_title_dhuhr',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT'),
@@ -268,9 +286,12 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
-        await props.function_ComponentRender('setting_select_report_iqamat_title_asr',
-            {
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
+        await props.function_ComponentRender({mountDiv:'setting_select_report_iqamat_title_asr',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT'),
@@ -281,9 +302,12 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
-        await props.function_ComponentRender('setting_select_report_iqamat_title_maghrib',
-            {
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
+        await props.function_ComponentRender({mountDiv:'setting_select_report_iqamat_title_maghrib',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT'),
@@ -294,9 +318,12 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
-        await props.function_ComponentRender('setting_select_report_iqamat_title_isha',
-            {
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
+        await props.function_ComponentRender({mountDiv:'setting_select_report_iqamat_title_isha',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'IQAMAT'),
@@ -307,10 +334,13 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
         //Fasting start end
-        await props.function_ComponentRender('setting_select_report_show_fast_start_end',
-            {
+        await props.function_ComponentRender({mountDiv:'setting_select_report_show_fast_start_end',
+            props:{
                 default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'FAST_START_END')[0].value,
                 default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'FAST_START_END')[0].text,
                 options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'FAST_START_END'),
@@ -321,7 +351,10 @@ const method = async props => {
                 column_value:'value',
                 column_text:'text',
                 function_FFB:null
-            }, '/common/component/select.js');
+            },
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/select.js'});
 
         props.function_set_current_value('setting_select_method', props.user_settings.prayer_method);
         props.function_component_setting_update('PRAYER', 'METHOD');

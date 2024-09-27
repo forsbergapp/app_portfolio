@@ -168,12 +168,16 @@ const printTimetable = async () => {
     /**@type{import('../../../common_types.js').CommonComponentResult}*/
     const {template} = await component_function({   common_document:CommonAppDocument, 
                                                     html:CommonAppDocument.querySelector('#paper').outerHTML});
-    await common.ComponentRender('common_window_info', {  info:3,
-                                                    url:null, 
-                                                    content_type:null, 
-                                                    frame:common.DocumentFrame, 
-                                                    iframe_content:template,
-                                                    function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
+    await common.ComponentRender({  mountDiv:'common_window_info',
+                                    props:{ info:3,
+                                            url:null, 
+                                            content_type:null, 
+                                            frame:common.DocumentFrame, 
+                                            iframe_content:template,
+                                            function_common_setTimeout:common.common_setTimeout},
+                                    methods:null,
+                                    lifecycle:null,
+                                    path:'/common/component/window_info.js'});
     
 };
 /**
@@ -353,25 +357,37 @@ const update_all_theme_thumbnails = async (theme=null) => {
         });
         
         const timetable = APP_GLOBAL.lib_timetable.displayDay(APP_GLOBAL.lib_prayTimes, getReportSettings(), null, current_user_settings);
-        await common.ComponentRender('setting_design_theme_day',{ 
-                                                            class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
-                                                            theme_id:CommonAppDocument.querySelector('#setting_design_theme_day').getAttribute('data-theme_id'),
-                                                            type:'day',
-                                                            html:timetable}, '/component/settings_tab3_theme_thumbnail.js');
+        await common.ComponentRender({  mountDiv:'setting_design_theme_day',
+            props:{ 
+                class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                theme_id:CommonAppDocument.querySelector('#setting_design_theme_day').getAttribute('data-theme_id'),
+                type:'day',
+                html:timetable},
+            methods:null,
+            lifecycle:null,
+            path:'/component/settings_tab3_theme_thumbnail.js'});
     }
     if (theme?.type =='month' || theme?.type=='year' || theme==null){
-        await common.ComponentRender('setting_design_theme_month',{ 
-                                                            class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
-                                                            theme_id:CommonAppDocument.querySelector('#setting_design_theme_month').getAttribute('data-theme_id'),
-                                                            type:'month',
-                                                            html:APP_GLOBAL.lib_timetable.displayMonth(APP_GLOBAL.lib_prayTimes, getReportSettings(), null)
-                                                        }, '/component/settings_tab3_theme_thumbnail.js');
-        await common.ComponentRender('setting_design_theme_year',{ 
-                                                            class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
-                                                            theme_id:CommonAppDocument.querySelector('#setting_design_theme_year').getAttribute('data-theme_id'),
-                                                            type:'year',
-                                                            html:APP_GLOBAL.lib_timetable.displayYear(APP_GLOBAL.lib_prayTimes, getReportSettings(), null)
-                                                        }, '/component/settings_tab3_theme_thumbnail.js');
+        await common.ComponentRender({  mountDiv:'setting_design_theme_month',
+                                        props:{ 
+                                            class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                                            theme_id:CommonAppDocument.querySelector('#setting_design_theme_month').getAttribute('data-theme_id'),
+                                            type:'month',
+                                            html:APP_GLOBAL.lib_timetable.displayMonth(APP_GLOBAL.lib_prayTimes, getReportSettings(), null)
+                                        },
+                                        methods:null,
+                                        lifecycle:null,
+                                        path:'/component/settings_tab3_theme_thumbnail.js'});
+        await common.ComponentRender({  mountDiv:'setting_design_theme_year',
+                                        props:{ 
+                                            class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                                            theme_id:CommonAppDocument.querySelector('#setting_design_theme_year').getAttribute('data-theme_id'),
+                                            type:'year',
+                                            html:APP_GLOBAL.lib_timetable.displayYear(APP_GLOBAL.lib_prayTimes, getReportSettings(), null)
+                                        },
+                                        methods:null,
+                                        lifecycle:null,
+                                        path:'/component/settings_tab3_theme_thumbnail.js'});
     }
 };
 
@@ -561,65 +577,93 @@ const SettingShow = async (tab_selected) => {
     //mount the selected component
     switch (tab_selected){
         case 1:{
-            common.ComponentRender('settings_content', {user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                      app_id:common.COMMON_GLOBAL.app_id,
-                      user_locale:common.COMMON_GLOBAL.user_locale,
-                      user_timezone:common.COMMON_GLOBAL.user_timezone,
-                      function_component_setting_update:component_setting_update,
-                      function_app_settings_get:common.app_settings_get,
-                      function_set_current_value:common.set_current_value,
-                      function_ComponentRender:common.ComponentRender,
-                      function_FFB:common.FFB}, `/component/settings_tab${tab_selected}.js`);
+            common.ComponentRender({  mountDiv:'settings_content',
+                props:{user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                    app_id:common.COMMON_GLOBAL.app_id,
+                    user_locale:common.COMMON_GLOBAL.user_locale,
+                    user_timezone:common.COMMON_GLOBAL.user_timezone,
+                    function_component_setting_update:component_setting_update,
+                    function_app_settings_get:common.app_settings_get,
+                    function_set_current_value:common.set_current_value,
+                    function_ComponentRender:common.ComponentRender,
+                    function_FFB:common.FFB},
+                methods:null,
+                lifecycle:null,
+                path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
         case 2:{
-            common.ComponentRender('settings_content', {app_id:common.COMMON_GLOBAL.app_id,
-                                                        user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                                                        lib_timetable_REPORT_GLOBAL:APP_GLOBAL.lib_timetable.REPORT_GLOBAL,
-                                                        function_component_setting_update:component_setting_update,
-                                                        function_map_show_search_on_map_app:map_show_search_on_map_app,
-                                                        function_getTimezone:getTimezone,
-                                                        function_getTimezoneDate:common.getTimezoneDate,
-                                                        function_map_init:common.map_init,
-                                                        function_map_resize:common.map_resize,
-                                                        function_set_current_value:common.set_current_value,
-                                                        function_ComponentRender:common.ComponentRender,
-                                                        function_app_settings_get:common.app_settings_get}, `/component/settings_tab${tab_selected}.js`);
+            common.ComponentRender({  mountDiv:'settings_content',
+                props:{app_id:common.COMMON_GLOBAL.app_id,
+                    user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                    lib_timetable_REPORT_GLOBAL:APP_GLOBAL.lib_timetable.REPORT_GLOBAL,
+                    function_component_setting_update:component_setting_update,
+                    function_map_show_search_on_map_app:map_show_search_on_map_app,
+                    function_getTimezone:getTimezone,
+                    function_getTimezoneDate:common.getTimezoneDate,
+                    function_map_init:common.map_init,
+                    function_map_resize:common.map_resize,
+                    function_set_current_value:common.set_current_value,
+                    function_ComponentRender:common.ComponentRender,
+                    function_app_settings_get:common.app_settings_get},
+                methods:null,
+                lifecycle:null,
+                path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
         case 3:{
-            common.ComponentRender('settings_content', {app_id:common.COMMON_GLOBAL.app_id,
-                                                        user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                                                        themes:APP_GLOBAL.themes,
-                                                        function_set_current_value:common.set_current_value,
-                                                        function_update_all_theme_thumbnails:update_all_theme_thumbnails,
-                                                        function_ComponentRender:common.ComponentRender,
-                                                        function_app_settings_get:common.app_settings_get}, `/component/settings_tab${tab_selected}.js`);
+            common.ComponentRender({  mountDiv:'settings_content',
+                props:{app_id:common.COMMON_GLOBAL.app_id,
+                    user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                    themes:APP_GLOBAL.themes,
+                    function_set_current_value:common.set_current_value,
+                    function_update_all_theme_thumbnails:update_all_theme_thumbnails,
+                    function_ComponentRender:common.ComponentRender,
+                    function_app_settings_get:common.app_settings_get},
+                methods:null,
+                lifecycle:null,
+                path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
         case 4:{
-            common.ComponentRender('settings_content', {app_id:common.COMMON_GLOBAL.app_id,
-                                                        user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data}, `/component/settings_tab${tab_selected}.js`);
+            common.ComponentRender({  mountDiv:'settings_content',
+                props:{app_id:common.COMMON_GLOBAL.app_id,
+                    user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data},
+                methods:null,
+                lifecycle:null,
+                path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
         case 5:{
-            common.ComponentRender('settings_content', {app_id:common.COMMON_GLOBAL.app_id,
-                                                        user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                                                        function_component_setting_update:component_setting_update}, `/component/settings_tab${tab_selected}.js`);
+            common.ComponentRender({  mountDiv:'settings_content',
+                props:{app_id:common.COMMON_GLOBAL.app_id,
+                    user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                    function_component_setting_update:component_setting_update},
+                methods:null,
+                lifecycle:null,
+                path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
         case 6:{
-            common.ComponentRender('settings_content', {app_id:common.COMMON_GLOBAL.app_id,
-                                                        user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                                                        function_set_current_value:common.set_current_value,
-                                                        function_component_setting_update:component_setting_update,
-                                                        function_ComponentRender:common.ComponentRender,
-                                                        function_app_settings_get:common.app_settings_get}, `/component/settings_tab${tab_selected}.js`);
+            common.ComponentRender({  mountDiv:'settings_content',
+                props:{app_id:common.COMMON_GLOBAL.app_id,
+                    user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                    function_set_current_value:common.set_current_value,
+                    function_component_setting_update:component_setting_update,
+                    function_ComponentRender:common.ComponentRender,
+                    function_app_settings_get:common.app_settings_get},
+                methods:null,
+                lifecycle:null,
+                path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
         case 7:{
-            common.ComponentRender('settings_content', {user_settings:APP_GLOBAL.user_settings,
-                                                        function_ComponentRender:common.ComponentRender}, `/component/settings_tab${tab_selected}.js`);
+            common.ComponentRender({  mountDiv:'settings_content',
+                props:{user_settings:APP_GLOBAL.user_settings,
+                    function_ComponentRender:common.ComponentRender},
+                methods:null,
+                lifecycle:null,
+                path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
     }
@@ -647,11 +691,14 @@ const align_button_value = (report_align_where) => {
  */
 const dialogue_loading = (visible) => {
     if (visible==1){
-        common.ComponentRender('dialogue_loading', {}, '/component/dialogue_loading.js');
+        common.ComponentRender({  mountDiv:'dialogue_loading',
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/component/dialogue_loading.js'});
     }
-    else{
+    else
         common.ComponentRemove('dialogue_loading', true);
-    }
 };
 /**
  * Zoom paper
@@ -683,10 +730,14 @@ const zoom_paper = (zoomvalue = null) => {
  */
 const show_dialogue = (dialogue) => {
     if (dialogue == 'SCAN' && common.mobile()==false){
-        common.ComponentRender('dialogue_scan_open_mobile', {
-                                                                function_create_qr:common.create_qr,
-                                                                function_getHostname:common.getHostname 
-                                                            }, '/component/dialogue_scan_open_mobile.js');
+        common.ComponentRender({mountDiv:'dialogue_scan_open_mobile',
+                                props:{
+                                    function_create_qr:common.create_qr,
+                                    function_getHostname:common.getHostname 
+                                },
+                                methods:null,
+                                lifecycle:null,
+                                path:'/component/dialogue_scan_open_mobile.js'});
     }
 };
 /**
@@ -968,7 +1019,11 @@ const login_common = (avatar) => {
     //create intitial user setting if not exist, send initial=true
     user_settings_function('ADD_LOGIN', true)
     .then(()=>{
-        common.ComponentRender('settings_tab_nav_7', {avatar:avatar}, '/component/settings_tab_nav_7.js');
+        common.ComponentRender({mountDiv:'settings_tab_nav_7',
+            props:{avatar:avatar},
+            methods:null,
+            lifecycle:null,
+            path:'/component/settings_tab_nav_7.js'});
 
         //Hide settings
         CommonAppDocument.querySelector('#settings').style.visibility = 'hidden';
@@ -1013,9 +1068,11 @@ const profile_update_stat_app = async () => {
  const profile_stat_app = async (statchoice, app_rest_url, function_user_click) => {
     await common.profile_stat(statchoice, app_rest_url, function_user_click)
     .then(()=>{
-        common.ComponentRender('common_profile_stat_row2', 
-                                {},
-                                '/component/profile_stat.js');
+        common.ComponentRender({mountDiv:'common_profile_stat_row2',
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/component/profile_stat.js'});
     });
  };
 /**
@@ -1033,13 +1090,15 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
                 //private
                 null;
             } else {
-                common.ComponentRender('common_profile_main_stat_row2', 
-                                        {   
-                                            user_account_id:common.COMMON_GLOBAL.user_account_id,
-                                            profile_id:result.profile_id,
-                                            function_ComponentRender:common.ComponentRender,
-                                            function_FFB:common.FFB},
-                                        '/component/profile_info.js')
+                common.ComponentRender({mountDiv:'common_profile_main_stat_row2',
+                    props:{   
+                        user_account_id:common.COMMON_GLOBAL.user_account_id,
+                        profile_id:result.profile_id,
+                        function_ComponentRender:common.ComponentRender,
+                        function_FFB:common.FFB},
+                    methods:null,
+                    lifecycle:null,
+                    path:'/component/profile_info.js'})
                 .then(data=>{
                     APP_GLOBAL.function_profile_user_setting_update = data.function_profile_user_setting_update;
                     APP_GLOBAL.function_profile_show_user_setting_detail= data.function_profile_show_user_setting_detail;
@@ -1162,13 +1221,16 @@ const user_setting_link = (item) => {
                                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
                                         item.id,
                                         'HTML');
-            common.ComponentRender('common_window_info',
-                    {   info:2,
+            common.ComponentRender({mountDiv:'common_window_info',
+                    props:{   info:2,
                         url:null,
                         content_type:'HTML', 
                         iframe_content:url,
                         iframe_class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
-                        function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
+                        function_common_setTimeout:common.common_setTimeout},
+                    methods:null,
+                    lifecycle:null,
+                    path:'/common/component/window_info.js'});
             break;
         }
     }
@@ -1239,8 +1301,8 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id = JSON.parse(result).insertId;
 
                     //Update select
-                    common.ComponentRender('setting_select_user_setting',
-                        {
+                    common.ComponentRender({mountDiv:'setting_select_user_setting',
+                        props:{
                             default_data_value:APP_GLOBAL.user_settings.current_id,
                             default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
                             options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.json_data.description};}),
@@ -1251,7 +1313,10 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                             column_value:'value',
                             column_text:'text',
                             function_FFB:null
-                        }, '/common/component/select.js');
+                        },
+                        methods:null,
+                        lifecycle:null,
+                        path:'/common/component/select.js'});
                     break;
                 }
                 case 'ADD_LOGIN':{
@@ -1307,8 +1372,8 @@ const user_settings_delete = (choice=null) => {
                     APP_GLOBAL.user_settings.current_id = Math.min(CommonAppDocument.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value') +1, APP_GLOBAL.user_settings.data.length - 1);
 
                     //Update select
-                    common.ComponentRender('setting_select_user_setting',
-                        {
+                    common.ComponentRender({mountDiv:'setting_select_user_setting',
+                        props:{
                             default_data_value:APP_GLOBAL.user_settings.current_id,
                             /**@ts-ignore */
                             default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
@@ -1321,7 +1386,10 @@ const user_settings_delete = (choice=null) => {
                             column_value:'value',
                             column_text:'text',
                             function_FFB:null
-                        }, '/common/component/select.js');
+                        },
+                        methods:null,
+                        lifecycle:null,
+                        path:'/common/component/select.js'});
                     CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner');
                 }
                 
@@ -1529,13 +1597,16 @@ const profile_user_setting_link = item => {
                                      item.id,
                                      'HTML',
                                      false);
-            common.ComponentRender('common_window_info',
-                    {   info:2,
+            common.ComponentRender({mountDiv:'common_window_info',
+                    props:{   info:2,
                         url:null,
                         content_type:'HTML', 
                         iframe_content:url,
                         iframe_class:paper_size,
-                        function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
+                        function_common_setTimeout:common.common_setTimeout},
+                    methods:null,
+                    lifecycle:null,
+                    path:'/common/component/window_info.js'});
             break;
         }
         case 'profile_user_settings_like':{
@@ -1664,39 +1735,51 @@ const app_event_click = event => {
                     break;
                 }
                 case 'info_link1':{
-                    common.ComponentRender('common_window_info',
-                                            {   info:1,
-                                                url:common.COMMON_GLOBAL.info_link_policy_url,
-                                                content_type:null, 
-                                                iframe_content:null,
-                                                function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
+                    common.ComponentRender({mountDiv:'common_window_info',
+                        props:{   info:1,
+                            url:common.COMMON_GLOBAL.info_link_policy_url,
+                            content_type:null, 
+                            iframe_content:null,
+                            function_common_setTimeout:common.common_setTimeout},
+                        methods:null,
+                        lifecycle:null,
+                        path:'/common/component/window_info.js'});
                     break;
                 }
                 case 'info_link2':{
-                    common.ComponentRender('common_window_info',
-                                            {   info:1,
-                                                url:common.COMMON_GLOBAL.info_link_disclaimer_url,
-                                                content_type:null, 
-                                                iframe_content:null,
-                                                function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
+                    common.ComponentRender({mountDiv:'common_window_info',
+                        props:{   info:1,
+                            url:common.COMMON_GLOBAL.info_link_disclaimer_url,
+                            content_type:null, 
+                            iframe_content:null,
+                            function_common_setTimeout:common.common_setTimeout},
+                        methods:null,
+                        lifecycle:null,
+                        path:'/common/component/window_info.js'});
                     break;
                 }
                 case 'info_link3':{
-                    common.ComponentRender('common_window_info',
-                                            {   info:1,
-                                                url:common.COMMON_GLOBAL.info_link_terms_url,
-                                                content_type:null, 
-                                                iframe_content:null,
-                                                function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
+                    common.ComponentRender({mountDiv:'common_window_info',
+                        props:{   info:1,
+                            url:common.COMMON_GLOBAL.info_link_terms_url,
+                            content_type:null, 
+                            iframe_content:null,
+                            function_common_setTimeout:common.common_setTimeout},
+                        methods:null,
+                        lifecycle:null,
+                        path:'/common/component/window_info.js'});
                     break;
                 }
                 case 'info_link4':{
-                    common.ComponentRender('common_window_info',
-                                            {   info:1,
-                                                url:common.COMMON_GLOBAL.info_link_about_url,
-                                                content_type:null, 
-                                                iframe_content:null,
-                                                function_common_setTimeout:common.common_setTimeout}, '/common/component/window_info.js');
+                    common.ComponentRender({mountDiv:'common_window_info',
+                        props:{   info:1,
+                            url:common.COMMON_GLOBAL.info_link_about_url,
+                            content_type:null, 
+                            iframe_content:null,
+                            function_common_setTimeout:common.common_setTimeout},
+                        methods:null,
+                        lifecycle:null,
+                        path:'/common/component/window_info.js'});
                     break;
                 }
                 case 'info_close':{
@@ -1740,17 +1823,20 @@ const app_event_click = event => {
                 }
                 //toolbar bottom
                 case 'toolbar_btn_about':{
-                    
-                    common.ComponentRender('dialogue_info', {   
-                                                                about_logo:common.COMMON_GLOBAL.app_logo,
-                                                                app_copyright:common.COMMON_GLOBAL.app_copyright,
-                                                                app_link_url:common.COMMON_GLOBAL.app_link_url,
-                                                                app_link_title: common.COMMON_GLOBAL.app_link_title,
-                                                                info_link_policy_name:common.COMMON_GLOBAL.info_link_policy_name,
-                                                                info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
-                                                                info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name,
-                                                                info_link_about_name:common.COMMON_GLOBAL.info_link_about_name
-                                                            }, '/component/dialogue_info.js');
+                    common.ComponentRender({mountDiv:'dialogue_info',
+                        props:{   
+                            about_logo:common.COMMON_GLOBAL.app_logo,
+                            app_copyright:common.COMMON_GLOBAL.app_copyright,
+                            app_link_url:common.COMMON_GLOBAL.app_link_url,
+                            app_link_title: common.COMMON_GLOBAL.app_link_title,
+                            info_link_policy_name:common.COMMON_GLOBAL.info_link_policy_name,
+                            info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
+                            info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name,
+                            info_link_about_name:common.COMMON_GLOBAL.info_link_about_name
+                        },
+                        methods:null,
+                        lifecycle:null,
+                        path:'/component/dialogue_info.js'});
                     break;
                 }
                 case 'toolbar_btn_print':{
@@ -1956,32 +2042,37 @@ const app_event_click = event => {
                     case 'common_user_menu_avatar_img':
                     case 'common_user_menu_logged_out':
                     case 'common_user_menu_default_avatar':{
-                        common.ComponentRender('common_dialogue_user_menu', 
-                        {   app_id:common.COMMON_GLOBAL.app_id,
-                            user_account_id:common.COMMON_GLOBAL.user_account_id,
-                            common_app_id:common.COMMON_GLOBAL.common_app_id,
-                            data_app_id:common.COMMON_GLOBAL.common_app_id,
-                            username:common.COMMON_GLOBAL.user_account_username,
-                            token_exp:common.COMMON_GLOBAL.token_exp,
-                            token_iat:common.COMMON_GLOBAL.token_iat,
-                            token_timestamp: common.COMMON_GLOBAL.token_timestamp,
-                            system_admin:common.COMMON_GLOBAL.system_admin,
-                            user_locale:common.COMMON_GLOBAL.user_locale,
-                            user_timezone:common.COMMON_GLOBAL.user_timezone,
-                            user_direction:common.COMMON_GLOBAL.user_direction,
-                            user_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
-                            //functions
-                            function_set_current_value:common.set_current_value,
-                            function_FFB:common.FFB,
-                            function_ComponentRender:common.ComponentRender,
-                            function_user_session_countdown:common.user_session_countdown,
-                            function_show_message:common.show_message},
-                                                '/common/component/dialogue_user_menu.js')
-                        .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
-                                                            {   function_theme_default_list:common.theme_default_list,
-                                                                function_ComponentRender:common.ComponentRender, 
-                                                                function_app_theme_update:common.common_preferences_post_mount},
-                                                            '/common/component/app_theme.js'));
+                        common.ComponentRender({mountDiv:'common_dialogue_user_menu',
+                            props:{   app_id:common.COMMON_GLOBAL.app_id,
+                                user_account_id:common.COMMON_GLOBAL.user_account_id,
+                                common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                data_app_id:common.COMMON_GLOBAL.common_app_id,
+                                username:common.COMMON_GLOBAL.user_account_username,
+                                token_exp:common.COMMON_GLOBAL.token_exp,
+                                token_iat:common.COMMON_GLOBAL.token_iat,
+                                token_timestamp: common.COMMON_GLOBAL.token_timestamp,
+                                system_admin:common.COMMON_GLOBAL.system_admin,
+                                user_locale:common.COMMON_GLOBAL.user_locale,
+                                user_timezone:common.COMMON_GLOBAL.user_timezone,
+                                user_direction:common.COMMON_GLOBAL.user_direction,
+                                user_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
+                                //functions
+                                function_set_current_value:common.set_current_value,
+                                function_FFB:common.FFB,
+                                function_ComponentRender:common.ComponentRender,
+                                function_user_session_countdown:common.user_session_countdown,
+                                function_show_message:common.show_message},
+                            methods:null,
+                            lifecycle:null,
+                            path:'/common/component/dialogue_user_menu.js'})
+                        .then(()=>
+                            common.ComponentRender({mountDiv:'common_dialogue_user_menu_app_theme',
+                                props:{   function_theme_default_list:common.theme_default_list,
+                                    function_ComponentRender:common.ComponentRender, 
+                                    function_app_theme_update:common.common_preferences_post_mount},
+                                methods:null,
+                                lifecycle:null,
+                                path:'/common/component/app_theme.js'}));
                         break;
                     }
                 case 'common_dialogue_user_menu_log_out':{
@@ -2283,10 +2374,29 @@ const framework_set = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const init_app = async parameters => {
-    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js')
-    .then(()=>common.ComponentRender('app_profile_search', {}, '/common/component/profile_search.js'))
-    .then(()=>common.ComponentRender('app_profile_toolbar', {}, '/common/component/profile_toolbar.js'))
-    .then(()=>common.ComponentRender('app_user_account', {}, '/common/component/user_account.js'));
+    await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
+        props:null,
+        methods:null,
+        lifecycle:null,
+        path:'/component/app.js'})
+    .then(()=>
+        common.ComponentRender({mountDiv:'app_profile_search',
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/profile_search.js'}))
+    .then(()=>
+        common.ComponentRender({mountDiv:'app_profile_toolbar',
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/profile_toolbar.js'}))
+    .then(()=>
+        common.ComponentRender({mountDiv:'app_user_account',
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/common/component/user_account.js'}));
     dialogue_loading(1);
     //set papersize
     zoom_paper();

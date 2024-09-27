@@ -61,8 +61,8 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
  *          user_direction:string,
  *          user_arabic_script:string,
  *          function_set_current_value:function,
- *          function_FFB:function,
- *          function_ComponentRender:function,
+ *          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
+ *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *          function_user_session_countdown:function,
  *          function_show_message:function}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
@@ -117,22 +117,25 @@ const component = async props => {
         //mount select
         if (props.system_admin_only!=1){
             //Locale
-            await props.function_ComponentRender('common_dialogue_user_menu_user_locale_select', 
-                {
-                  default_data_value:props.user_locale,
-                  default_value:'',
-                  options: null,
-                  path:'/server-db/locale',
-                  query:`lang_code=${props.user_locale}`,
-                  method:'GET',
-                  authorization_type:'APP_DATA',
-                  column_value:'locale',
-                  column_text:'text',
-                  function_FFB:props.function_FFB
-                }, '/common/component/select.js');
+            await props.function_ComponentRender({mountDiv:'common_dialogue_user_menu_user_locale_select', 
+                props:{
+                    default_data_value:props.user_locale,
+                    default_value:'',
+                    options: null,
+                    path:'/server-db/locale',
+                    query:`lang_code=${props.user_locale}`,
+                    method:'GET',
+                    authorization_type:'APP_DATA',
+                    column_value:'locale',
+                    column_text:'text',
+                    function_FFB:props.function_FFB
+                  },
+                methods:null,
+                lifecycle:null,
+                path:'/common/component/select.js'});
             //Timezone
-            await props.function_ComponentRender('common_dialogue_user_menu_user_timezone_select', 
-                {
+            await props.function_ComponentRender({mountDiv:'common_dialogue_user_menu_user_timezone_select', 
+                props:{
                     default_data_value:props.user_timezone,
                     default_value:'',
                     options: settings.filter(setting=>setting.app_setting_type_name=='TIMEZONE'),
@@ -143,10 +146,13 @@ const component = async props => {
                     column_value:'value',
                     column_text:'display_data',
                     function_FFB:props.function_FFB
-                }, '/common/component/select.js');    
+                },
+                methods:null,
+                lifecycle:null,
+                path:'/common/component/select.js'});
             //Direction with default ' '
-            await props.function_ComponentRender('common_dialogue_user_menu_user_direction_select', 
-                {
+            await props.function_ComponentRender({mountDiv:'common_dialogue_user_menu_user_direction_select', 
+                props:{
                     default_data_value:props.user_direction,
                     default_value:' ',
                     options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.app_setting_type_name=='DIRECTION')),
@@ -157,10 +163,13 @@ const component = async props => {
                     column_value:'value',
                     column_text:'display_data',
                     function_FFB:props.function_FFB
-                }, '/common/component/select.js');    
+                },
+                methods:null,
+                lifecycle:null,
+                path:'/common/component/select.js'});   
             //Arabic script with default ' '
-            await props.function_ComponentRender('common_dialogue_user_menu_user_arabic_script_select', 
-                {
+            await props.function_ComponentRender({mountDiv:'common_dialogue_user_menu_user_arabic_script_select', 
+                props:{
                     default_data_value:props.user_arabic_script,
                     default_value:' ',
                     options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.app_setting_type_name=='ARABIC_SCRIPT')),
@@ -171,7 +180,10 @@ const component = async props => {
                     column_value:'value',
                     column_text:'display_data',
                     function_FFB:props.function_FFB
-                }, '/common/component/select.js');    
+                },
+                methods:null,
+                lifecycle:null,
+                path:'/common/component/select.js'});
         }
         if ((props.system_admin_only == 1)==false){
             //set current value on all the selects

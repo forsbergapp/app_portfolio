@@ -38,9 +38,17 @@ const admin_login = async () => {
     
     await common.user_login(system_admin)
     .then((result)=>{
-        common.ComponentRender('admin_secure', {}, '/component/admin_secure.js')
+        common.ComponentRender({mountDiv:'admin_secure',
+            props:null,
+            methods:null,
+            lifecycle:null,
+            path:'/component/admin_secure.js'})
         .then(()=>{
-            common.ComponentRender('app_user_account', {},'/common/component/user_account.js')
+            common.ComponentRender({mountDiv:'app_user_account',
+                props:null,
+                methods:null,
+                lifecycle:null,
+                path:'/common/component/user_account.js'})
             .then(()=>{
                 if (system_admin){
                     CommonAppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
@@ -121,33 +129,38 @@ const app_event_click = event => {
                 case 'common_user_menu_avatar_img':
                 case 'common_user_menu_logged_out':
                 case 'common_user_menu_default_avatar':{
-                    common.ComponentRender('common_dialogue_user_menu', 
-                        {   app_id:common.COMMON_GLOBAL.app_id,
-                            user_account_id:common.COMMON_GLOBAL.user_account_id,
-                            common_app_id:common.COMMON_GLOBAL.common_app_id,
-                            data_app_id:common.COMMON_GLOBAL.common_app_id,
-                            username:common.COMMON_GLOBAL.user_account_username,
-                            token_exp:common.COMMON_GLOBAL.token_exp,
-                            token_iat:common.COMMON_GLOBAL.token_iat,
-                            token_timestamp: common.COMMON_GLOBAL.token_timestamp,
-                            system_admin:common.COMMON_GLOBAL.system_admin,
-                            system_admin_only:common.COMMON_GLOBAL.system_admin_only,
-                            user_locale:common.COMMON_GLOBAL.user_locale,
-                            user_timezone:common.COMMON_GLOBAL.user_timezone,
-                            user_direction:common.COMMON_GLOBAL.user_direction,
-                            user_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
-                            //functions
-                            function_set_current_value:common.set_current_value,
-                            function_FFB:common.FFB,
-                            function_ComponentRender:common.ComponentRender,
-                            function_user_session_countdown:common.user_session_countdown,
-                            function_show_message:common.show_message},
-                                                '/common/component/dialogue_user_menu.js')
-                        .then(()=>common.ComponentRender(   'common_dialogue_user_menu_app_theme', 
-                                                            {   function_theme_default_list:common.theme_default_list, 
-                                                                function_ComponentRender:common.ComponentRender, 
-                                                                function_app_theme_update:common.common_preferences_post_mount},
-                                                            '/common/component/app_theme.js'));
+                    common.ComponentRender({mountDiv:'common_dialogue_user_menu',
+                                        props:{ app_id:common.COMMON_GLOBAL.app_id,
+                                                user_account_id:common.COMMON_GLOBAL.user_account_id,
+                                                common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                                data_app_id:common.COMMON_GLOBAL.common_app_id,
+                                                username:common.COMMON_GLOBAL.user_account_username,
+                                                token_exp:common.COMMON_GLOBAL.token_exp,
+                                                token_iat:common.COMMON_GLOBAL.token_iat,
+                                                token_timestamp: common.COMMON_GLOBAL.token_timestamp,
+                                                system_admin:common.COMMON_GLOBAL.system_admin,
+                                                system_admin_only:common.COMMON_GLOBAL.system_admin_only,
+                                                user_locale:common.COMMON_GLOBAL.user_locale,
+                                                user_timezone:common.COMMON_GLOBAL.user_timezone,
+                                                user_direction:common.COMMON_GLOBAL.user_direction,
+                                                user_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
+                                                //functions
+                                                function_set_current_value:common.set_current_value,
+                                                function_FFB:common.FFB,
+                                                function_ComponentRender:common.ComponentRender,
+                                                function_user_session_countdown:common.user_session_countdown,
+                                                function_show_message:common.show_message},
+                                        methods:null,
+                                        lifecycle:null,
+                                        path:'/common/component/dialogue_user_menu.js'})
+
+                        .then(()=>common.ComponentRender({mountDiv:'common_dialogue_user_menu_app_theme',
+                                        props:{ function_theme_default_list:common.theme_default_list, 
+                                                function_ComponentRender:common.ComponentRender, 
+                                                function_app_theme_update:common.common_preferences_post_mount},
+                                        methods:null,
+                                        lifecycle:null,
+                                        path:'/common/component/app_theme.js'}));
                     break;
                 }
                 /**Dialogue user start */
@@ -364,7 +377,11 @@ const framework_set = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const init_app = async (parameters) => {
-    await common.ComponentRender(common.COMMON_GLOBAL.app_div, {}, '/component/app.js');
+    await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
+                                        props:null,
+                                        methods:null,
+                                        lifecycle:null,
+                                        path:'/component/app.js'});
     if (parameters.app_service.system_admin_only == 0)
         for (const parameter of parameters.app) {
             if (parameter['MODULE_EASY.QRCODE_WIDTH'])
