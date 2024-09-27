@@ -3,19 +3,6 @@
 --
 INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,515,'{"name":"Admin"}');
 --
---  app_translation app_object_item
---
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',515,'Användarnamn');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',515,'Lösenord');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','BIO',515,'Bio');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','EMAIL',515,'E-post');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','NEW_EMAIL',515,'Ny e-post');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD_CONFIRM',515,'Bekräfta lösenord');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD_REMINDER',515,'Lösenordspåminnelse');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','NEW_PASSWORD_CONFIRM',515,'Nytt bekräfta lösenord');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','NEW_PASSWORD',515,'Nytt lösenord');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','CONFIRM_QUESTION',515,'Är du säker?');
---
 -- app_translation app_setting
 --
 INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'PAPER_SIZE' and app_setting_type_app_id = 0 AND value='A4'),515,'A4 (210 x 297 mm) porträtt');

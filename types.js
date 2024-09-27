@@ -1470,17 +1470,6 @@
  *              json_data:string}} server_db_sql_result_app_data_stat_getStatUniqueVisitor
  */
 
-/**
- * APP OBJECTS
- * @typedef {{  object:string, 
- *              app_id:number, 
- *              object_name:string, 
- *              object_item_name:string, 
- *              subitem_name:string,
- *              lang_code:string,
- *              id:number,
- *              text:string}} server_db_sql_result_app_object_getObjects
- */
 
 /**
  * APP ROLE
