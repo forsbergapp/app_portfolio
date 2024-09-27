@@ -24,8 +24,6 @@
         {"db": 4, "sql": "drop role app_portfolio_role_app_dba"},
 
         {"db": 5, "sql": "drop table app_translation"},
-        {"db": 5, "sql": "drop table app_object_item"},
-        {"db": 5, "sql": "drop table app_object"},
         {"db": 5, "sql": "drop table app_device"},
         {"db": 5, "sql": "drop table app_data_translation"},
         {"db": 5, "sql": "drop table app_data_stat"},

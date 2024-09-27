@@ -21,16 +21,6 @@
 <createdTime>2024-08-07 06:18:41 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_object_app_id" id="6096566C-43D6-F94A-CA2B-817ED77780EF">
-<createdBy>admin</createdBy>
-<createdTime>2024-08-07 06:18:41 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_object_item_app_object_object_name" id="6F263B4F-6157-A254-7ACF-EEC20F31ABF8">
-<createdBy>admin</createdBy>
-<createdTime>2024-08-07 06:18:41 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="app_setting_id" id="731248E8-998E-5F49-DB6A-58095E5C150B">
 <createdBy>admin</createdBy>
 <createdTime>2024-08-07 06:18:41 UTC</createdTime>
@@ -51,17 +41,7 @@
 <createdTime>2024-08-07 06:18:41 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_object_item_object_item_name" id="B767C61E-5F8A-AB9E-7964-75F53C94019B">
-<createdBy>admin</createdBy>
-<createdTime>2024-08-07 06:18:41 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="language_id_translation" id="C5AB26BC-7D0F-4C8B-7DB7-19EFE728ADA7">
-<createdBy>admin</createdBy>
-<createdTime>2024-08-07 06:18:41 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_object_item_app_object_app_id" id="D7167EAB-F3D5-469D-11FF-257D60CF7189">
 <createdBy>admin</createdBy>
 <createdTime>2024-08-07 06:18:41 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
@@ -71,19 +51,9 @@
 <createdTime>2024-08-07 06:18:41 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_object_object_name" id="FA2871CC-0BAB-15A7-4043-B374B99DE5B6">
-<createdBy>admin</createdBy>
-<createdTime>2024-08-07 06:18:41 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 </columnProxies>
 <foreignKeys>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_setting_FK" id="2E4E0ACF-41EC-D3A9-99D7-C2CD0570E15E">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ForeignKey>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_object_item_FK" id="327A30A9-D754-5A14-2079-74926D8FBAC3">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -108,11 +78,6 @@
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ForeignKey>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_object_FK" id="ADF3F32A-B490-EE43-47C5-B39ACD3623D3">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ForeignKey>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_category_FK" id="F902DC1D-0FA3-DE0D-BC87-B81066EBF05B">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -121,12 +86,6 @@
 </foreignKeys>
 <uniqueKeys>
 <UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_UN" id="0D920F6B-FDAD-B539-F590-A060F3BB1B53">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</UniqueKey>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_object_item_UN" id="474777BA-2BBA-E8D6-A17E-3500999F5868">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -151,12 +110,6 @@
 <indexSort>SORTED</indexSort>
 </UniqueKey>
 <UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_language_translation_UN" id="9C96029F-82F4-D3E8-5482-B89191835E11">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</UniqueKey>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_object_object_UN" id="C6A0FE01-2BC2-81B4-3F68-DC8AE801C67B">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>

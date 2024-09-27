@@ -3,19 +3,6 @@
 --
 INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES (0,25,'{"name":"مسؤل"}');
 --
---  app_translation app_object_item
---
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',25,'اسم المستخدم');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',25,'كلمه السر');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','BIO',25,'سيرة شخصية');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','EMAIL',25,'البريد الإلكتروني');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','NEW_EMAIL',25,'بريد إلكتروني جديد');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD_CONFIRM',25,'تأكيد كلمة المرور');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD_REMINDER',25,'تذكير كلمة السر');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','NEW_PASSWORD_CONFIRM',25,'تأكيد كلمة المرور الجديدة');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','NEW_PASSWORD',25,'كلمة السر الجديدة');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','CONFIRM_QUESTION',25,'هل أنت متأكد؟');
---
 -- app_translation app_setting
 --
 INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'PAPER_SIZE' and app_setting_type_app_id = 0 AND value='A4'),25,'A4 (210 × 297 مم) عمودي');

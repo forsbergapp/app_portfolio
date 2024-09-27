@@ -70,89 +70,6 @@
 <colAssociation fkAssociation="0C61892A-CF9C-6CEA-3547-508EF5122868" referredColumn="93C58542-9E64-4064-7D3B-63604934E015"/>
 </associations>
 </Column>
-<Column name="app_object_object_name" id="FA2871CC-0BAB-15A7-4043-B374B99DE5B6">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>30DD4113-E3F0-5917-191D-A858C9498888</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="2D4ADA12-F068-CFB8-042D-FBD6A95F2A70" referredColumn="084BF52D-9C7A-6C13-885D-3DC4D30EA3B2"/>
-</associations>
-</Column>
-<Column name="app_object_app_id" id="6096566C-43D6-F94A-CA2B-817ED77780EF">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>C3678969-C2F5-0901-B36C-C5C7024B81AF</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="2D4ADA12-F068-CFB8-042D-FBD6A95F2A70" referredColumn="84E290B8-489C-028A-57F8-9ADB8AD5913D"/>
-</associations>
-</Column>
-<Column name="app_object_item_app_object_app_id" id="D7167EAB-F3D5-469D-11FF-257D60CF7189">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>1B2D26F1-7E8C-4238-6D03-7FA2DBA44AEE</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="E87B9CFC-B92C-7A5C-A253-99A88B5B2E13" referredColumn="E9D702BD-8DE7-535F-B096-FA28B6BD877E"/>
-</associations>
-</Column>
-<Column name="app_object_item_app_object_object_name" id="6F263B4F-6157-A254-7ACF-EEC20F31ABF8">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>2A3EB58E-48D4-25A0-4BEF-679B61E1E70C</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="E87B9CFC-B92C-7A5C-A253-99A88B5B2E13" referredColumn="D8389D67-BEA9-3A20-BDF9-ED1DB1AC9450"/>
-</associations>
-</Column>
-<Column name="app_object_item_object_item_name" id="B767C61E-5F8A-AB9E-7964-75F53C94019B">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>A7B8B6E3-FD01-2510-8BA1-25B27DBB8F9E</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="E87B9CFC-B92C-7A5C-A253-99A88B5B2E13" referredColumn="EC3D65A2-19E1-442A-D2BE-D6F1DB5CE758"/>
-</associations>
-</Column>
 <Column name="country_id" id="8570199D-E163-7A1A-9A2F-A9E9C7817E90">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -236,33 +153,6 @@
 <colUsage columnID="B6265773-7C95-5239-C73D-DAAD7BBCC650"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="C6A0FE01-2BC2-81B4-3F68-DC8AE801C67B" name="app_translation_app_object_object_UN">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>AC2C3C52-8958-A6CD-5D6F-DBA499F9F434</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="FA2871CC-0BAB-15A7-4043-B374B99DE5B6"/>
-<colUsage columnID="6096566C-43D6-F94A-CA2B-817ED77780EF"/>
-<colUsage columnID="B6265773-7C95-5239-C73D-DAAD7BBCC650"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="474777BA-2BBA-E8D6-A17E-3500999F5868" name="app_translation_app_object_item_UN">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>2511F171-74E9-CF8F-755E-E94A7CEF8962</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="6F263B4F-6157-A254-7ACF-EEC20F31ABF8"/>
-<colUsage columnID="B767C61E-5F8A-AB9E-7964-75F53C94019B"/>
-<colUsage columnID="D7167EAB-F3D5-469D-11FF-257D60CF7189"/>
-<colUsage columnID="B6265773-7C95-5239-C73D-DAAD7BBCC650"/>
-</indexColumnUsage>
-</ind_PK_UK>
 <ind_PK_UK id="4BEEEFE9-A6ED-9512-2AD9-C254C758F525" name="app_translation_app_setting_UN">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -310,18 +200,6 @@
 <colUsage columnID="145515DA-45DC-6089-FDC7-67E257F1F543"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="ADF3F32A-B490-EE43-47C5-B39ACD3623D3" name="app_translation_app_object_FK">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>8EFA23AA-E19A-6F94-8CE4-75693EF65CA5</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="FA2871CC-0BAB-15A7-4043-B374B99DE5B6"/>
-<colUsage columnID="6096566C-43D6-F94A-CA2B-817ED77780EF"/>
-</indexColumnUsage>
-</ind_PK_UK>
 <ind_PK_UK id="F902DC1D-0FA3-DE0D-BC87-B81066EBF05B" name="app_translation_app_category_FK">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -331,19 +209,6 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="D87D7DA9-6BFA-2F3C-A591-B73628E6C537"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="327A30A9-D754-5A14-2079-74926D8FBAC3" name="app_translation_app_object_item_FK">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>CA0C4E5E-E315-21B9-351E-82D3EA765494</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="B767C61E-5F8A-AB9E-7964-75F53C94019B"/>
-<colUsage columnID="6F263B4F-6157-A254-7ACF-EEC20F31ABF8"/>
-<colUsage columnID="D7167EAB-F3D5-469D-11FF-257D60CF7189"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="2E4E0ACF-41EC-D3A9-99D7-C2CD0570E15E" name="app_translation_app_setting_FK">

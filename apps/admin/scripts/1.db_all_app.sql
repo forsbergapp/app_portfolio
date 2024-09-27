@@ -574,21 +574,3 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (0, 0, '
 --
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (0, <APP_ID/>, 0, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'LOG'), '{"description":"Log"}');
 INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (1, <APP_ID/>, 0, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PROFILE_SEARCH'), '{"description":"Profile search"}');
-
---
--- app_object
---
-INSERT INTO <DB_SCHEMA/>.app_object (app_id, object_name) VALUES (0,'APP');
---
--- app_object_item
---
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','BIO',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','CONFIRM_QUESTION',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','EMAIL',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','NEW_EMAIL',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','NEW_PASSWORD',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','NEW_PASSWORD_CONFIRM',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','PASSWORD',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','PASSWORD_CONFIRM',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','PASSWORD_REMINDER',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','USERNAME',NULL,NULL);
