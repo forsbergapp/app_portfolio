@@ -205,7 +205,6 @@ const get_module_with_initBFF = async (app_info) => {
                 app_rest_api_version:getNumberValue(ConfigGetApp(app_info.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_REST_API_VERSION' in parameter)[0].APP_REST_API_VERSION) ?? 1,
                 app_idtoken: app_info.idtoken,
                 locale: app_info.locale,
-                translate_items:app_info.translate_items,
                 system_admin_only: app_info.system_admin_only,
                 client_latitude: app_info.latitude,
                 client_longitude: app_info.longitude,
@@ -399,8 +398,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
     let app_module_type;
     /** @type {string|null} */
     let app;
-    /**@type{*} */
-    let translate_items = {};
 
     if (app_id == 0){
         //get app admin
@@ -412,17 +409,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
             system_admin_only = 1;
         }
         app_module_type = 'ADMIN';
-
-        translate_items =  {USERNAME:'Username',
-                            EMAIL:'Email',
-                            NEW_EMAIL:'New email',
-                            BIO:'Bio',
-                            PASSWORD:'Password',
-                            PASSWORD_CONFIRM:'Password confirm',
-                            PASSWORD_REMINDER:'Password reminder',
-                            NEW_PASSWORD_CONFIRM:'New password confirm',
-                            NEW_PASSWORD:'New password',
-                            CONFIRM_QUESTION:'Are you sure?'};
     }
     else{
         system_admin_only = 0;
@@ -430,13 +416,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
         if (app == null)
             return null;
         app_module_type = 'APP';
-        //get translation data
-        /**@type{import('../server/db/sql/app_object.service.js')} */
-        const {getObjects} = await import(`file://${process.cwd()}/server/db/sql/app_object.service.js`);
-        const result_objects = await getObjects(app_id, client_locale(app_parameters.accept_language), 'APP', null);
-        for (const row of result_objects){
-            translate_items[row.object_item_name.toUpperCase()] = row.text;
-        }        
     }
     const app_with_init = await get_module_with_initBFF({   app_id:             app_id, 
                                                             locale:             client_locale(app_parameters.accept_language),
@@ -446,7 +425,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
                                                             longitude:          result_geodata.longitude,
                                                             place:              result_geodata.place,
                                                             timezone:           result_geodata.timezone,
-                                                            translate_items:    translate_items,
                                                             module:             app});
     //if app admin then log, system does not log in database
     if (await app_start() && getNumberValue(ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LOG' in parameter)[0].APP_LOG) == 1){

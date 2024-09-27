@@ -213,27 +213,6 @@ const fromBase64 = (str) => {
     return decodeURIComponent(escape(CommonAppWindow.atob(str)));
 };
 /**
- * Translate ui
- * @param {string} lang_code 
- * @returns {Promise.<void>}
- */
-const common_translate_ui = async lang_code => {
-    //translate objects
-    const app_objects_json = await FFB('/server-db/app_object', `data_lang_code=${lang_code}&object_name=APP`, 'GET', 'APP_DATA', null);
-    /**@type{{object_name:string,object_item_name:import('../../../common_types.js').CommonTranslationkey, id:string, text:string}[]} */
-    const app_objects = JSON.parse(app_objects_json).rows;
-    for (const app_object of app_objects){
-        switch (app_object.object_name){
-            case 'APP':{
-                //save current translations to be used in components
-                if (COMMON_GLOBAL.translate_items[app_object.object_item_name])
-					COMMON_GLOBAL.translate_items[app_object.object_item_name] = app_object.text;
-                break;
-            }
-        }
-    }
-};
-/**
  * Format JSON date with user timezone
  * @param {string} db_date 
  * @param {boolean|null} short 
@@ -561,7 +540,7 @@ const getUserAgentPlatform = useragent =>{
  *              client_place:string}}
  */
 const get_uservariables = () => {
-    return {    user_language:      CommonAppWindow.navigator.language,
+    return {    user_language:      NavigatorLocale(),
                 user_timezone:      CommonAppWindow.Intl.DateTimeFormat().resolvedOptions().timeZone,
                 user_number_system: CommonAppWindow.Intl.NumberFormat().resolvedOptions().numberingSystem,
                 user_platform:      getUserAgentPlatform(CommonAppWindow.navigator.userAgent),
@@ -674,11 +653,12 @@ const select_event_action = async (event_target_id, target) =>{
     }
     if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
         COMMON_GLOBAL.user_locale = target?.getAttribute('data-value') ?? '';
-        //change CommonAppWindow.navigator.language, however when logging out default CommonAppWindow.navigator.language will be set
-        //commented at the moment
-        //Object.defineProperties(CommonAppWindow.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+        /**
+         * @todo change CommonAppWindow.navigator.language, however when logging out default CommonAppWindow.navigator.language will be set
+         *       commented at the moment
+         *       Object.defineProperties(CommonAppWindow.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+         */
         await user_preference_save();
-        await common_translate_ui(COMMON_GLOBAL.user_locale);
     }
     if (event_target_id == 'common_dialogue_user_menu_user_timezone_select'){
         COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
@@ -687,14 +667,6 @@ const select_event_action = async (event_target_id, target) =>{
                 ComponentRender('common_dialogue_user_edit', 
                     {   user_account_id:COMMON_GLOBAL.user_account_id,
                         common_app_id:COMMON_GLOBAL.common_app_id,
-                        translation_username:COMMON_GLOBAL.translate_items.USERNAME,
-                        translation_bio:COMMON_GLOBAL.translate_items.BIO,
-                        translation_new_email:COMMON_GLOBAL.translate_items.NEW_EMAIL,
-                        translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
-                        translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM,
-                        translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
-                        translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM,
-                        translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                         function_FFB:FFB,
                         function_show_message:show_message,
                         function_format_json_date:format_json_date,
@@ -947,9 +919,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
         case 'PASSWORD_NEW':
             {    
                 ComponentRender('common_dialogue_user_password_new', 
-                                {   auth:title,
-                                    translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
-                                    translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM}, 
+                                {   auth:title}, 
                                 '/common/component/dialogue_user_password_new.js');
                 break;
             }
@@ -972,11 +942,6 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 common_app_id:                  COMMON_GLOBAL.common_app_id,
                                 system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
                                 system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
-                                translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
-                                translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
-                                translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
-                                translation_email:              COMMON_GLOBAL.translate_items.EMAIL,
-                                translation_password_reminder:  COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                 function_FFB:                   FFB},
                             '/common/component/dialogue_user_start.js');
             break;
@@ -989,11 +954,6 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 common_app_id:                  COMMON_GLOBAL.common_app_id,
                                 system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
                                 system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
-                                translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
-                                translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
-                                translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
-                                translation_email:              COMMON_GLOBAL.translate_items.EMAIL,
-                                translation_password_reminder:  COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                 function_FFB:                   FFB},
                             '/common/component/dialogue_user_start.js');
             break;
@@ -1005,11 +965,6 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 common_app_id:                  COMMON_GLOBAL.common_app_id,
                                 system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
                                 system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
-                                translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
-                                translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
-                                translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
-                                translation_email:              COMMON_GLOBAL.translate_items.EMAIL,
-                                translation_password_reminder:  COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                 function_FFB:                   FFB},
                             '/common/component/dialogue_user_start.js');
             break;
@@ -1021,11 +976,6 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 common_app_id:                  COMMON_GLOBAL.common_app_id,
                                 system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
                                 system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
-                                translation_username:           COMMON_GLOBAL.translate_items.USERNAME,
-                                translation_password:           COMMON_GLOBAL.translate_items.PASSWORD,
-                                translation_password_confirm:   COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM, 
-                                translation_email:              COMMON_GLOBAL.translate_items.EMAIL,
-                                translation_password_reminder:  COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                 function_FFB:                   FFB},
                             '/common/component/dialogue_user_start.js');
             break;
@@ -1047,7 +997,6 @@ const show_message = async (message_type, code, function_event, text_class=null,
                                                 code:code,
                                                 text_class:text_class,
                                                 message:message,
-                                                translation_confirm_question:COMMON_GLOBAL.translate_items.CONFIRM_QUESTION,
                                                 function_componentremove:ComponentRemove,
                                                 function_FFB:FFB, 
                                                 function_event:function_event}, '/common/component/dialogue_message.js');
@@ -1668,8 +1617,6 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         COMMON_GLOBAL.user_arabic_script = user_account_app.app_setting_preference_arabic_script_value;
         //update body class with app theme, direction and arabic script usage classes
         common_preferences_update_body_class_from_preferences();
-        //
-        await common_translate_ui(COMMON_GLOBAL.user_locale);
         if (login_data.active==0){
             show_common_dialogue('VERIFY', 'LOGIN', login_data.email, null);
             throw 'ERROR';
@@ -1741,8 +1688,6 @@ const user_logout = async () => {
         user_preferences_set_default_globals('ARABIC_SCRIPT');
         //update body class with app theme, direction and arabic script usage classes
         common_preferences_update_body_class_from_preferences();
-        if (COMMON_GLOBAL.system_admin == null)
-            common_translate_ui(COMMON_GLOBAL.user_locale);
     })
     .catch((error)=>{
         COMMON_GLOBAL.service_socket_eventsource?COMMON_GLOBAL.service_socket_eventsource.close():null;
@@ -2089,7 +2034,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
             FFB(`/server-db/user_account_app/${user_account_id}`, `delete_app_id=${app_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
                 //execute event and refresh app list
-                CommonAppDocument.querySelector('#common_profile_main_btn_cloud').click();
+                CommonAppDocument.querySelector('#common_profile_info_main_btn_cloud').click();
             })
             .catch(()=>null);
             break;
@@ -2179,7 +2124,7 @@ const user_preference_save = async () => {
 const user_preferences_set_default_globals = (preference) => {
     switch (preference){
         case 'LOCALE':{
-            COMMON_GLOBAL.user_locale         = CommonAppWindow.navigator.language.toLowerCase();
+            COMMON_GLOBAL.user_locale         = NavigatorLocale();
             break;
         }
         case 'TIMEZONE':{
@@ -2968,8 +2913,6 @@ const set_app_service_parameters = async parameters => {
         user_preferences_set_default_globals('ARABIC_SCRIPT');
     }
 
-    COMMON_GLOBAL.translate_items = parameters.translate_items;
-
     COMMON_GLOBAL.user_locale                = parameters.locale;
     COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? CommonAppWindow.Intl.DateTimeFormat().resolvedOptions().timeZone;
     COMMON_GLOBAL.user_direction             = '';
@@ -3185,7 +3128,7 @@ const common_event = async (event_type,event=null) =>{
                             break;
                         }
                         /* Dialogue user menu*/
-                        case 'common_user_menu_close':{
+                        case 'common_dialogue_user_menu_close':{
                             ComponentRemove('common_dialogue_user_menu', true);
                             break;
                         }
@@ -3198,14 +3141,6 @@ const common_event = async (event_type,event=null) =>{
                             ComponentRender('common_dialogue_user_edit', 
                                 {   user_account_id:COMMON_GLOBAL.user_account_id,
                                     common_app_id:COMMON_GLOBAL.common_app_id,
-                                    translation_username:COMMON_GLOBAL.translate_items.USERNAME,
-                                    translation_bio:COMMON_GLOBAL.translate_items.BIO,
-                                    translation_new_email:COMMON_GLOBAL.translate_items.NEW_EMAIL,
-                                    translation_password:COMMON_GLOBAL.translate_items.PASSWORD,
-                                    translation_password_confirm:COMMON_GLOBAL.translate_items.PASSWORD_CONFIRM,
-                                    translation_new_password:COMMON_GLOBAL.translate_items.NEW_PASSWORD,
-                                    translation_new_password_confirm:COMMON_GLOBAL.translate_items.NEW_PASSWORD_CONFIRM,
-                                    translation_password_reminder:COMMON_GLOBAL.translate_items.PASSWORD_REMINDER,
                                     function_FFB:FFB,
                                     function_show_message:show_message,
                                     function_format_json_date:format_json_date,
@@ -3373,7 +3308,7 @@ const common_event = async (event_type,event=null) =>{
                         case 'common_profile_main_btn_liked':
                         case 'common_profile_main_btn_liked_heart':
                         case 'common_profile_main_btn_liked_users':
-                        case 'common_profile_main_btn_cloud':{    
+                        case 'common_profile_info_main_btn_cloud':{    
                             CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                             CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                             break;
@@ -3416,9 +3351,11 @@ const common_event = async (event_type,event=null) =>{
                 break;
             }
             case 'keyup':{
-                if (event.target.classList.contains('common_password')){
-                    if (event.target.innerText.indexOf('\n')>-1)
-                        event.target.innerText = event.target.innerText.replace('\n','');
+                if (event.target.innerText.indexOf('\n')>-1 ||event.target.innerText.indexOf('<br>')>-1){
+                    event.target.innerText = event.target.innerText.replace('\n','');
+                    event.target.innerText = event.target.innerText.replace('<br>','');
+                }
+                if (event.target.classList.contains('common_password')){   
                     CommonAppDocument.querySelector(`#${event.target.id}_mask`).innerText = 
                         event.target.innerText.replace(event.target.innerText, '*'.repeat(LengthWithoutDiacrites(event.target.innerText)));
                 }
@@ -3965,7 +3902,6 @@ export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS,
        /* MISC */
        element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, typewatch, toBase64, fromBase64, 
-       common_translate_ui,
        mobile,
        convert_image,
        show_image, getHostname, input_control, getUserAgentPlatform,

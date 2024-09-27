@@ -2,17 +2,8 @@
  * @module apps/common/component/dialogue_user_edit
  */
 
-/**
- * @param {{translation_username:string,
- *          translation_bio:string,
- *          translation_new_email:string,
- *          translation_password:string,
- *          translation_password_confirm:string,
- *          translation_new_password:string,
- *          translation_new_password_confirm:string,
- *          translation_password_reminder:string}} props
- */
-const template = props => `<div id='common_user_edit_common'>
+
+const template = () => `<div id='common_user_edit_common'>
                             <div class='common_setting_horizontal_row'>
                                 <div class='common_setting_horizontal_col'>
                                     <div id='common_user_avatar'>
@@ -33,7 +24,7 @@ const template = props => `<div id='common_user_edit_common'>
                                     <div id='common_user_edit_input_username_icon' class='common_icon'></div>
                                 </div>
                                 <div class='common_setting_horizontal_col'>
-                                    <div id='common_user_edit_input_username' class='common_input' contentEditable='true' placeholder='${props.translation_username}'></div>
+                                    <div id='common_user_edit_input_username' class='common_input common_placeholder' contentEditable='true' ></div>
                                 </div>
                             </div>
                             <div class='common_setting_horizontal_row'>
@@ -41,7 +32,7 @@ const template = props => `<div id='common_user_edit_common'>
                                     <div id='common_user_edit_input_bio_icon' class='common_icon'></div>
                                 </div>
                                 <div class='common_setting_horizontal_col'>
-                                    <div id='common_user_edit_input_bio' class='common_input' contentEditable='true' placeholder='${props.translation_bio}'></div>
+                                    <div id='common_user_edit_input_bio' class='common_input common_placeholder' contentEditable='true' ></div>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +50,7 @@ const template = props => `<div id='common_user_edit_common'>
                                     <div id='common_user_edit_input_new_email_icon' class='common_icon'></div>
                                 </div>
                                 <div class='common_setting_horizontal_col'>
-                                    <div id='common_user_edit_input_new_email' class='common_input' contentEditable='true' placeholder='${props.translation_new_email}'></div>
+                                    <div id='common_user_edit_input_new_email' class='common_input common_placeholder' contentEditable='true'></div>
                                 </div>
                             </div>
                             <div class='common_setting_horizontal_row'>
@@ -68,7 +59,7 @@ const template = props => `<div id='common_user_edit_common'>
                                 </div>
                                 <div class='common_setting_horizontal_col'>
                                     <div class='common_password_container'>
-                                        <div id='common_user_edit_input_password' class='common_input common_password' contentEditable='true'  placeholder='${props.translation_password}'></div>
+                                        <div id='common_user_edit_input_password' class='common_input common_password common_placeholder' contentEditable='true'></div>
                                         <div id='common_user_edit_input_password_mask' class='common_input common_password_mask'></div>
                                     </div>
                                 </div>
@@ -79,7 +70,7 @@ const template = props => `<div id='common_user_edit_common'>
                                 </div>
                                 <div class='common_setting_horizontal_col'>
                                     <div class='common_password_container'>
-                                        <div id='common_user_edit_input_password_confirm' class='common_input common_password' contentEditable='true' placeholder='${props.translation_password_confirm}'></div>
+                                        <div id='common_user_edit_input_password_confirm' class='common_input common_password common_placeholder' contentEditable='true'></div>
                                         <div id='common_user_edit_input_password_confirm_mask' class='common_input common_password_mask'></div>
                                     </div>
                                 </div>
@@ -90,7 +81,7 @@ const template = props => `<div id='common_user_edit_common'>
                                 </div>
                                 <div class='common_setting_horizontal_col'>
                                     <div class='common_password_container'>
-                                        <div id='common_user_edit_input_password_new' class='common_input common_password' contentEditable='true' placeholder='${props.translation_new_password}'></div>
+                                        <div id='common_user_edit_input_password_new' class='common_input common_password common_placeholder' contentEditable='true'></div>
                                         <div id='common_user_edit_input_password_new_mask' class='common_input common_password_mask'></div>
                                     </div>
                                 </div>
@@ -101,7 +92,7 @@ const template = props => `<div id='common_user_edit_common'>
                                 </div>
                                 <div class='common_setting_horizontal_col'>
                                     <div class='common_password_container'>
-                                        <div id='common_user_edit_input_password_new_confirm' class='common_input common_password' contentEditable='true' placeholder='${props.translation_new_password_confirm}'></div>
+                                        <div id='common_user_edit_input_password_new_confirm' class='common_input common_password common_placeholder' contentEditable='true'></div>
                                         <div id='common_user_edit_input_password_new_confirm_mask' class='common_input common_password_mask'></div>
                                     </div>
                                 </div>
@@ -111,7 +102,7 @@ const template = props => `<div id='common_user_edit_common'>
                                     <div id='common_user_edit_input_password_reminder_icon' class='common_icon'></div>
                                 </div>
                                 <div class='common_setting_horizontal_col'>
-                                    <div id='common_user_edit_input_password_reminder' class='common_input' contentEditable='true' placeholder='${props.translation_password_reminder}'></div>
+                                    <div id='common_user_edit_input_password_reminder' class='common_input common_placeholder' contentEditable='true'></div>
                                 </div>
                             </div>
                         </div>
@@ -199,15 +190,6 @@ const template = props => `<div id='common_user_edit_common'>
  *          common_mountdiv:string,
  *          user_account_id:number,
  *          common_app_id:number,
- *          translation_username:string,
- *          translation_bio:string,
- *          translation_password:string,
- *          translation_password_confirm:string,
- *          translation_password_reminder:string,
- *          translation_email:string,
- *          translation_new_email:string,
- *          translation_new_password:string,
- *          translation_new_password_confirm:string,
  *          function_format_json_date:function,
  *          function_show_message:function,
  *          function_FFB:function}} props 
@@ -283,14 +265,7 @@ const component = async props => {
     return {
         props:  {function_post:user_get},
         data:   null,
-        template: template({translation_username:props.translation_username,
-                            translation_bio:props.translation_bio,
-                            translation_password:props.translation_password,
-                            translation_password_confirm:props.translation_password_confirm,
-                            translation_password_reminder:props.translation_password_reminder,
-                            translation_new_email:props.translation_new_email,
-                            translation_new_password:props.translation_new_password,
-                            translation_new_password_confirm:props.translation_new_password_confirm})
+        template: template()
     };
 };
 export default component;

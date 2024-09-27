@@ -1191,7 +1191,6 @@ const init = () => {
     else{
         CommonAppDocument.querySelector('#menu_secure').classList.add('admin');
         show_menu(1);
-        common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
     }
 };
 export {delete_globals, show_menu, app_events, init};

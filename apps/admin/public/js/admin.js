@@ -376,8 +376,6 @@ const init_app = async (parameters) => {
             if (parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'])
                 common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];
         }
-        if (common.COMMON_GLOBAL.user_locale != common.NavigatorLocale())
-            common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
    framework_set();
 };
 /**

@@ -6,12 +6,11 @@
  * @param {{message:*,
  *          message_type:string,
  *          message_title_font_class:string|null,
- *          message_title_icon_class:string,
- *          translation_confirm_question:string}} props 
+ *          message_title_icon_class:string}} props 
  * @returns 
  */
 const template = props =>`  ${props.message_type=='CONFIRM'?
-                                `<div id='common_confirm_question' class='common_icon'>${props.translation_confirm_question}</div>`:''
+                                '<div id=\'common_message_confirm_question\' class=\'common_icon\'></div>':''
                             }
                             ${props.message_type!='CONFIRM'?
                             `<div id='common_message_title_container'>
@@ -56,7 +55,6 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  *          data_app_id:number,
  *          code:string,
  *          message:*,
- *          translation_confirm_question:string,
  *          function_FFB:function,
  *          function_event:function,
  *          function_componentremove:function,
@@ -80,7 +78,6 @@ const component = async props => {
                 message_type:props.message_type,
                 message_title_font_class:display_message_font_class,
                 message_title_icon_class:props.text_class,
-                translation_confirm_question:props.translation_confirm_question
             });
     };
     const post_component = async () => {
@@ -129,8 +126,7 @@ const component = async props => {
         template: template({    message:'',
                                 message_type:'',
                                 message_title_font_class:'',
-                                message_title_icon_class:'',
-                                translation_confirm_question:''
+                                message_title_icon_class:''
                             })
     };
 };
