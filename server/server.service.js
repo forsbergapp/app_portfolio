@@ -243,9 +243,6 @@ const COMMON = {
     /**@type{import('./db/components/app_data_stat.js')} */
     const db_app_data_stat = await import(`file://${process.cwd()}/server/db/components/app_data_stat.js`);
 
-    /**@type{import('./db/components/app_object.js')} */
-    const db_app_object = await import(`file://${process.cwd()}/server/db/components/app_object.js`);
-
     /**@type{import('./db/components/app_role.js')} */
     const db_app_role = await import(`file://${process.cwd()}/server/db/components/app_role.js`);
 
@@ -408,11 +405,6 @@ const COMMON = {
                                                     /**@ts-ignore */
                                                     resource_id_get_number()), 
                                                     true));
-                        break;
-                    }
-                    case route({url:'/bff/app_data/v1/server-db/app_object', method:'GET'}):{
-                        resolve(db_app_object.getObjects(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, false)));
                         break;
                     }
                     case route({url:'/bff/app_data/v1/server-db/country', method:'GET'}):{

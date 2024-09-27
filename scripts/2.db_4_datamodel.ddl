@@ -200,35 +200,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_device TO app_portfolio
 ALTER TABLE <DB_SCHEMA/>.app_device ADD CONSTRAINT app_device_pk PRIMARY KEY ( app_id,
                                                                                 app_setting_id );
 
-CREATE TABLE <DB_SCHEMA/>.app_object (
-    app_id      INTEGER NOT NULL,
-    object_name VARCHAR2(100) NOT NULL
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.app_object TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_object TO app_portfolio_role_app_admin;
-
-ALTER TABLE <DB_SCHEMA/>.app_object ADD CONSTRAINT app_object_pk PRIMARY KEY ( object_name,
-                                                                                app_id );
-
-CREATE TABLE <DB_SCHEMA/>.app_object_item (
-    app_object_object_name                 VARCHAR2(100) NOT NULL,
-    object_item_name                       VARCHAR2(100) NOT NULL,
-    app_object_app_id                      INTEGER NOT NULL,
-    app_setting_type_app_setting_type_name VARCHAR2(100),
-    app_setting_type_app_id                INTEGER
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.app_object_item TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_object_item TO app_portfolio_role_app_admin;
-
-ALTER TABLE <DB_SCHEMA/>.app_object_item
-    ADD CONSTRAINT app_object_item_pk PRIMARY KEY ( object_item_name,
-                                                    app_object_object_name,
-                                                    app_object_app_id );
-
 CREATE TABLE <DB_SCHEMA/>.app_role (
     id        INTEGER NOT NULL,
     role_name VARCHAR2(100) NOT NULL,
@@ -284,11 +255,6 @@ CREATE TABLE <DB_SCHEMA/>.app_translation (
     app_id                                 INTEGER,
     app_category_id                        INTEGER,
     app_setting_id                         INTEGER,
-    app_object_object_name                 VARCHAR2(100),
-    app_object_app_id                      INTEGER,
-    app_object_item_app_object_app_id      INTEGER,
-    app_object_item_app_object_object_name VARCHAR2(100),
-    app_object_item_object_item_name       VARCHAR2(100),
     country_id                             INTEGER,
     language_id_translation                INTEGER,
     text                                   VARCHAR2(2000),
@@ -296,72 +262,27 @@ CREATE TABLE <DB_SCHEMA/>.app_translation (
 );
 
 ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT arc_3 CHECK ( ( ( app_object_object_name IS NOT NULL )
-                                   AND ( app_object_app_id IS NOT NULL )
-                                   AND ( app_object_item_object_item_name IS NULL )
-                                   AND ( app_object_item_app_object_object_name IS NULL )
-                                   AND ( app_object_item_app_object_app_id IS NULL )
-                                   AND ( app_setting_id IS NULL )
+    ADD CONSTRAINT arc_3 CHECK ( ( ( app_setting_id IS NOT NULL )
                                    AND ( app_id IS NULL )
                                    AND ( app_category_id IS NULL )
                                    AND ( country_id IS NULL )
                                    AND ( language_id_translation IS NULL ) )
-                                 OR ( ( app_object_item_object_item_name IS NOT NULL )
-                                      AND ( app_object_item_app_object_object_name IS NOT NULL )
-                                      AND ( app_object_item_app_object_app_id IS NOT NULL )
-                                      AND ( app_object_object_name IS NULL )
-                                      AND ( app_object_app_id IS NULL )
-                                      AND ( app_setting_id IS NULL )
-                                      AND ( app_id IS NULL )
-                                      AND ( app_category_id IS NULL )
-                                      AND ( country_id IS NULL )
-                                      AND ( language_id_translation IS NULL ) )
-                                 OR ( ( app_setting_id IS NOT NULL )
-                                      AND ( app_object_object_name IS NULL )
-                                      AND ( app_object_app_id IS NULL )
-                                      AND ( app_object_item_object_item_name IS NULL )
-                                      AND ( app_object_item_app_object_object_name IS NULL )
-                                      AND ( app_object_item_app_object_app_id IS NULL )
-                                      AND ( app_id IS NULL )
-                                      AND ( app_category_id IS NULL )
-                                      AND ( country_id IS NULL )
-                                      AND ( language_id_translation IS NULL ) )
                                  OR ( ( app_id IS NOT NULL )
-                                      AND ( app_object_object_name IS NULL )
-                                      AND ( app_object_app_id IS NULL )
-                                      AND ( app_object_item_object_item_name IS NULL )
-                                      AND ( app_object_item_app_object_object_name IS NULL )
-                                      AND ( app_object_item_app_object_app_id IS NULL )
                                       AND ( app_setting_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( country_id IS NULL )
                                       AND ( language_id_translation IS NULL ) )
                                  OR ( ( app_category_id IS NOT NULL )
-                                      AND ( app_object_object_name IS NULL )
-                                      AND ( app_object_app_id IS NULL )
-                                      AND ( app_object_item_object_item_name IS NULL )
-                                      AND ( app_object_item_app_object_object_name IS NULL )
-                                      AND ( app_object_item_app_object_app_id IS NULL )
                                       AND ( app_setting_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( country_id IS NULL )
                                       AND ( language_id_translation IS NULL ) )
                                  OR ( ( country_id IS NOT NULL )
-                                      AND ( app_object_object_name IS NULL )
-                                      AND ( app_object_app_id IS NULL )
-                                      AND ( app_object_item_object_item_name IS NULL )
-                                      AND ( app_object_item_app_object_object_name IS NULL )
-                                      AND ( app_object_item_app_object_app_id IS NULL )
                                       AND ( app_setting_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
                                       AND ( language_id_translation IS NULL ) )
                                  OR ( ( language_id_translation IS NOT NULL )
-                                      AND ( app_object_object_name IS NULL )
-                                      AND ( app_object_app_id IS NULL )
-                                      AND ( app_object_item_object_item_name IS NULL )
-                                      AND ( app_object_item_app_object_object_name IS NULL )
-                                      AND ( app_object_item_app_object_app_id IS NULL )
                                       AND ( app_setting_id IS NULL )
                                       AND ( app_id IS NULL )
                                       AND ( app_category_id IS NULL )
@@ -378,17 +299,6 @@ ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
                                                             app_id,
                                                             language_id );
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_app_object_object_un UNIQUE ( app_object_object_name,
-                                                                 app_object_app_id,
-                                                                 language_id );
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_app_object_item_un UNIQUE ( app_object_item_app_object_object_name,
-                                                               app_object_item_object_item_name,
-                                                               app_object_item_app_object_app_id,
-                                                               language_id );
 
 ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
                                                                                                  language_id );
@@ -836,28 +746,6 @@ ALTER TABLE <DB_SCHEMA/>.app_device
         REFERENCES <DB_SCHEMA/>.app_setting ( id )
     NOT DEFERRABLE;
 
-ALTER TABLE <DB_SCHEMA/>.app_object
-    ADD CONSTRAINT app_object_app_fk FOREIGN KEY ( app_id )
-        REFERENCES <DB_SCHEMA/>.app ( id )
-            ON DELETE CASCADE
-    NOT DEFERRABLE;
-
-ALTER TABLE <DB_SCHEMA/>.app_object_item
-    ADD CONSTRAINT app_object_item_app_object_fk FOREIGN KEY ( app_object_object_name,
-                                                               app_object_app_id )
-        REFERENCES <DB_SCHEMA/>.app_object ( object_name,
-                                              app_id )
-            ON DELETE CASCADE
-    NOT DEFERRABLE;
-
-ALTER TABLE <DB_SCHEMA/>.app_object_item
-    ADD CONSTRAINT app_object_item_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
-                                                                     app_setting_type_app_id )
-        REFERENCES <DB_SCHEMA/>.app_setting_type ( app_setting_type_name,
-                                                    app_id )
-            ON DELETE CASCADE
-    NOT DEFERRABLE;
-
 ALTER TABLE <DB_SCHEMA/>.app_setting
     ADD CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
                                                                  app_setting_type_app_id )
@@ -880,24 +768,6 @@ ALTER TABLE <DB_SCHEMA/>.app_translation
 ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_fk FOREIGN KEY ( app_id )
         REFERENCES <DB_SCHEMA/>.app ( id )
-            ON DELETE CASCADE
-    NOT DEFERRABLE;
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_app_object_fk FOREIGN KEY ( app_object_object_name,
-                                                               app_object_app_id )
-        REFERENCES <DB_SCHEMA/>.app_object ( object_name,
-                                              app_id )
-            ON DELETE CASCADE
-    NOT DEFERRABLE;
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_app_object_item_fk FOREIGN KEY ( app_object_item_object_item_name,
-                                                                    app_object_item_app_object_object_name,
-                                                                    app_object_item_app_object_app_id )
-        REFERENCES <DB_SCHEMA/>.app_object_item ( object_item_name,
-                                                   app_object_object_name,
-                                                   app_object_app_id )
             ON DELETE CASCADE
     NOT DEFERRABLE;
 

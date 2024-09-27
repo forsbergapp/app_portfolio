@@ -71,79 +71,6 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="app_object_name" id="30DD4113-E3F0-5917-191D-A858C9498888">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 03:58:43 UTC</createdTime>
-<generatorID>8EFA23AA-E19A-6F94-8CE4-75693EF65CA5</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>3C5EF603-4F1D-C96C-F318-B45200872626</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_object_app_id" id="C3678969-C2F5-0901-B36C-C5C7024B81AF">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 03:58:43 UTC</createdTime>
-<generatorID>8EFA23AA-E19A-6F94-8CE4-75693EF65CA5</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>4B4BC33F-FD04-32A9-F318-A0B698964186</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_object_item_app_id" id="1B2D26F1-7E8C-4238-6D03-7FA2DBA44AEE">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 03:59:34 UTC</createdTime>
-<generatorID>CA0C4E5E-E315-21B9-351E-82D3EA765494</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>58E9912B-0229-116F-A5F0-89EEFC01724C</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_object_item_object_name" id="2A3EB58E-48D4-25A0-4BEF-679B61E1E70C">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 03:59:34 UTC</createdTime>
-<generatorID>CA0C4E5E-E315-21B9-351E-82D3EA765494</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>A4C8F86D-38DA-A5BF-DE0D-3D5B84350DB0</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_object_item_object_item_name" id="A7B8B6E3-FD01-2510-8BA1-25B27DBB8F9E">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 03:59:34 UTC</createdTime>
-<generatorID>CA0C4E5E-E315-21B9-351E-82D3EA765494</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>650758CC-95C9-3BBC-BD76-33A2BE00FB2C</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="country_id" id="1C88CFB6-370B-FA6F-5267-A67EAAFA1910">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 04:13:18 UTC</createdTime>
@@ -247,10 +174,8 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<newElementsIDs>30DD4113-E3F0-5917-191D-A858C9498888,C3678969-C2F5-0901-B36C-C5C7024B81AF,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<newElementsIDs>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
 <usedAttributes>
-<attributeRef>30DD4113-E3F0-5917-191D-A858C9498888</attributeRef>
-<attributeRef>C3678969-C2F5-0901-B36C-C5C7024B81AF</attributeRef>
 <attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
 </usedAttributes>
 </identifier>
@@ -261,11 +186,8 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<newElementsIDs>2A3EB58E-48D4-25A0-4BEF-679B61E1E70C,A7B8B6E3-FD01-2510-8BA1-25B27DBB8F9E,1B2D26F1-7E8C-4238-6D03-7FA2DBA44AEE,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<newElementsIDs>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
 <usedAttributes>
-<attributeRef>2A3EB58E-48D4-25A0-4BEF-679B61E1E70C</attributeRef>
-<attributeRef>A7B8B6E3-FD01-2510-8BA1-25B27DBB8F9E</attributeRef>
-<attributeRef>1B2D26F1-7E8C-4238-6D03-7FA2DBA44AEE</attributeRef>
 <attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
 </usedAttributes>
 </identifier>
