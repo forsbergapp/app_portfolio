@@ -36,7 +36,7 @@ const template = props => `
  *                      function_data_function:function
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

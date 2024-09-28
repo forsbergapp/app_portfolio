@@ -8,7 +8,7 @@ const template = () => ' <div id=\'common_profile_btn_top\' class=\'common_toolb
  * @param {{data:       {common_mountdiv:string},
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
  *          lifecycle:  null}} props  
- * @returns {Promise.<{ lifecycle:{onMounted:null}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

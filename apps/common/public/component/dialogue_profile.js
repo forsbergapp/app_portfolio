@@ -168,7 +168,7 @@ const template = props =>
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:   {   profile_id:number|null,
  *                                  private:number|null}|null,
  *                      methods:null,

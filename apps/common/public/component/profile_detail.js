@@ -78,7 +78,7 @@ const template = props => ` ${props.spinner==''?
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:function|null}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn,
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

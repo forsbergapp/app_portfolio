@@ -8,7 +8,7 @@ const template = () => ' <div id=\'dialogue_loading_content\'></div>';
  * @param {{data:       {common_mountdiv:string},
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
  *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:{onMounted:function},
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn,
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

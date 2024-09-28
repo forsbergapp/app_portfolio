@@ -37,7 +37,7 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
  *                      module_leaflet_session_map:*},
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:null}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:   null,
  *                      methods:null,
  *                      template:null}>}
