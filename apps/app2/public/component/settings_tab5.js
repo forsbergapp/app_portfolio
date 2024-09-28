@@ -46,7 +46,7 @@ const template = () =>` <div class='setting_horizontal_row'>
  *                       component_setting_update:import('../js/app.js')['component_setting_update']
  *                       },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

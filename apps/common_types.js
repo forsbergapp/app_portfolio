@@ -247,9 +247,14 @@
 
 /**
  * Type CommonComponentLifecycle
- * @typedef  {{ beforeMounted:function|null,
- *              onMounted:function|null}|null} CommonComponentLifecycle
+ * @typedef  {{ beforeMounted?:function|null,
+ *              onMounted?:function|null}|null} CommonComponentLifecycle
+ */
+/**
+ * Type CommonComponentLifecycleReturn
+ * @typedef  {{ onMounted?:function|null}|null} CommonComponentLifecycleReturn
 */
+
 
 /**
  * Type CommonComponentResult

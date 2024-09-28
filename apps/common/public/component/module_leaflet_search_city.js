@@ -40,7 +40,7 @@ const template = props =>`  <div id='common_module_leaflet_search_list' class='$
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

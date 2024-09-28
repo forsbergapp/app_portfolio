@@ -39,7 +39,7 @@ const template = props =>`  <div id='common_profile_search_list' ${props.spinner
  *                      function_click_function:function,
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:function|null}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn,
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

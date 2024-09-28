@@ -31,7 +31,7 @@ const template = () =>` <div id="app_themes">
  *                      app_theme_update:import('../js/app.js')['app_theme_update']
  *                      },
  *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

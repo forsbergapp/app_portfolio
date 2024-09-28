@@ -69,7 +69,7 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
  *                      show_message:import('../../../common_types.js').CommonModuleCommon['show_message']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

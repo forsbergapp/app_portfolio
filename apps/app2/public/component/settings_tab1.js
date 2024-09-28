@@ -135,7 +135,7 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

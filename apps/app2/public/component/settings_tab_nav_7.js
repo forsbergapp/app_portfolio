@@ -15,7 +15,7 @@ const template = props => `<div id='user_setting_avatar_img' class='common_image
  *          lifecycle:  null}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string}} props 
- * @returns {Promise.<{ lifecycle:{onMounted:null}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:null,
  *                      methods:null, 
  *                      template:string}>}

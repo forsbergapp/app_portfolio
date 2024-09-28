@@ -57,7 +57,7 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      map_setstyle:import('../../../common_types.js').CommonModuleCommon['map_setstyle']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:  null,
  *                      methods:null,
  *                      template:null}>}

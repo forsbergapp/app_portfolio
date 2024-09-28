@@ -14,7 +14,7 @@ const template = () =>` <div id='profile_stat_app2'>
  *          lifecycle:  null}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string}} props 
- * @returns {Promise.<{ lifecycle:{onMounted:null}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

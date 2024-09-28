@@ -43,7 +43,7 @@ const template = props => props.system_admin?`  <div id='menu_7_content_widget1'
 *          methods:{    common_document:import('../../../common_types.js').CommonAppDocument,
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *          lifecycle:   null}} props 
-* @returns {Promise.<{ lifecycle:{onMounted:function}, 
+* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
 *                      data:null, 
 *                      methods:null,
 *                      template:string}>}

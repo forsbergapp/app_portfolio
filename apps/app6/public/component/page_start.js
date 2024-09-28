@@ -20,7 +20,7 @@ const template = () => `<div id='app_page_start_shop' class='app_page_start_shop
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      show_message:function},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

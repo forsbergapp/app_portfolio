@@ -345,7 +345,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:{onMounted:function}, 
+* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
 *                      data:{function_page_navigation:function, function_monitor_detail_server_log:function},
 *                      methods:null,
 *                      template:string}>}

@@ -64,7 +64,7 @@ const template = () => `<div id='mapid'></div>
  *          app_id:number,
  *          user_settings:import('../js//types.js').APP_user_setting_record,
  *          }} props 
- * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
