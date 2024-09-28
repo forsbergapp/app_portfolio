@@ -112,7 +112,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
  *                      update_all_theme_thumbnails:function
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get'],},
+ *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get']},
  *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
