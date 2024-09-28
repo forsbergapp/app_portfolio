@@ -197,8 +197,9 @@ const template = () => `<div id='common_user_edit_common'>
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:   null,
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -267,8 +268,9 @@ const component = async props => {
         .catch(()=>null);
     };
     return {
-        props:  {function_post:user_get},
+        lifecycle:  {onMounted:user_get},
         data:   null,
+        methods:null,
         template: template()
     };
 };

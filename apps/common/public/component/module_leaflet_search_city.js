@@ -40,13 +40,14 @@ const template = props =>`  <div id='common_module_leaflet_search_list' class='$
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:   null,
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
     
-    const post_component = async () =>{
+    const onMounted = async () =>{
         const records = props.data.search==''?[]:await props.methods.FFB('/worldcities/city', `search=${encodeURI(props.data.search)}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                             .catch((/**@type{Error}*/error)=>{throw error;});
@@ -55,8 +56,9 @@ const component = async props => {
             props.methods.common_document.querySelector('#common_module_leaflet_search_list')['data-function'] = props.methods.click_function;
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({spinner:'css_spinner', records:[]})
     };
 };

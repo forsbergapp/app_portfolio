@@ -25,15 +25,17 @@ const template = props => ` <div id='app_page_start_divs'>
  * @param {{data:       {common_mountdiv:string},
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
  *          lifecycle:  null}} props 
- * @returns {Promise.<{ props:{function_post:null}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:null}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
     props;
     return {
-        props:  {function_post:null},
+        lifecycle:  {onMounted:null},
         data:   null,
+        methods:null,
         template: template({text_account:'BANK ACCOUNT',
                             text_statements:'BANK STATEMENTS',
                             text_directpayment:'DIRECT PAYMENT',

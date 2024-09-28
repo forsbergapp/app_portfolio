@@ -135,12 +135,13 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
-    const post_component = async () =>{
+    const onMounted = async () =>{
         const settings = await props.methods.app_settings_get();
         //get locales using user locale
         /**@type{{locale:string, text:string}[]} */
@@ -320,8 +321,9 @@ const method = async props => {
 
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({user_timezone:props.data.user_timezone})
     };
 };

@@ -71,8 +71,9 @@ const template = props => `
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -80,7 +81,7 @@ const component = async props => {
     /**
      * @returns {Promise<void>}
      */
-    const post_component = async () =>{
+    const onMounted = async () =>{
         const apps = await props.methods.FFB('/app/apps/', null, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.APP_ID != props.data.app_id))
                             .catch((/**@type{Error}*/error)=>{throw error;});
@@ -97,8 +98,9 @@ const component = async props => {
         });
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({    spinner:'css_spinner',
                                 apps:[],
                                 app_copyright:'',

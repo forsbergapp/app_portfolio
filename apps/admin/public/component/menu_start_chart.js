@@ -86,8 +86,9 @@ const template = props => ` <div id='box1' class='${props.spinner}'>
 *                       ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:null,
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
@@ -147,7 +148,7 @@ const component = async props => {
         }
 
     };
-    const post_component = async () =>{
+    const onMounted = async () =>{
         let path;
         let query;
         let authorization_type;
@@ -190,8 +191,9 @@ const component = async props => {
                                                                                                                             ''});
     };
     return {
-    props:  {function_post:post_component},
+    lifecycle:  {onMounted:onMounted},
     data:   null,
+    methods:null,
     template: template({ spinner:'css_spinner', 
                             system_admin:props.data.system_admin, 
                             app_id:app_id,

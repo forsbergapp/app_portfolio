@@ -854,17 +854,26 @@ const WindowPrompt = text => CommonAppWindow.prompt(text);
  * @param {{mountDiv:string|null,
  *          data:{}|null,
  *          methods:{}|null,
- *          lifecycle:{beforeMounted:function}|null,
+ *          lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *          path:string}} componentRender
  * @returns {Promise.<*>}
  */
 const ComponentRender = async componentRender => {
     const {default:ComponentCreate} = await import(componentRender.path);
-    //add document (less type errors), framework and mountdiv to props
+    //set spinner for where subcomponent should be mounted, no spinner for main component
+	if (componentRender?.lifecycle?.beforeMounted){
+        //subcomponent with async function  to wait result before component is called
+        //the subcomponent manages the result
+        //set spinner inside sub component and in mount div if component should be mounted to a div
+        if (componentRender.mountDiv)
+            CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
+    }
     /**@type{import('../../../common_types.js').CommonComponentResult}*/
     const component = await ComponentCreate({   data:       {...componentRender.data,       ...{common_mountdiv:componentRender.mountDiv}},
                                                 methods:    {...componentRender.methods,    ...{common_document:CommonAppDocument}},
-                                                lifecycle:componentRender.lifecycle})
+                                                lifecycle:  {beforeMounted:componentRender?.lifecycle?.beforeMounted?
+                                                                await componentRender.lifecycle.beforeMounted():
+                                                                null}})
                                                 .catch((/**@type{Error}*/error)=>{
                                                     componentRender.mountDiv?ComponentRemove(componentRender.mountDiv, true):null;
                                                     exception(COMMON_GLOBAL.app_function_exception, error);
@@ -891,14 +900,14 @@ const ComponentRender = async componentRender => {
                     CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).innerHTML = component.template;
                 }
             }
-        //post function
-        if (component.props.function_post){
+        //run onMounted function after component is mounted
+        if (component.lifecycle.onMounted){
             if (componentRender.path == '/common/component/module_leaflet.js'){
                 COMMON_GLOBAL.module_leaflet =              component.data.library_Leaflet;
                 COMMON_GLOBAL.module_leaflet_session_map =  component.data.module_map;
                 COMMON_GLOBAL.module_leaflet_map_styles =   component.data.map_layer_array;
             }
-            await component.props.function_post();
+            await component.lifecycle.onMounted();
         }
         return component.data;
     }
@@ -1265,7 +1274,7 @@ const profile_stat = async (statchoice, app_rest_url = null, function_user_click
         methods:    {
                     common_setTimeout:common_setTimeout,
                     FFB:FFB,
-                    top_function_user_click:function_user_click
+                    function_user_click:function_user_click
                     },
         lifecycle:  null,
         path:       '/common/component/dialogue_profile.js'});

@@ -15,14 +15,16 @@ const template = props => `<div id='user_setting_avatar_img' class='common_image
  *          lifecycle:  null}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string}} props 
- * @returns {Promise.<{ props:{function_post:null}, 
- *                      data:null, 
+ * @returns {Promise.<{ lifecycle:{onMounted:null}, 
+ *                      data:null,
+ *                      methods:null, 
  *                      template:string}>}
  */
 const method = async props => {
     return {
-        props:  {function_post:null},
+        lifecycle:  {onMounted:null},
         data:   null,
+        methods:null,
         template: template({avatar:props.data.avatar})
     };
 };

@@ -74,8 +74,9 @@ const template = props => ` <div id='menu_10_content_widget1' class='widget'>
 *           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:null, 
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
@@ -98,7 +99,7 @@ const component = async props => {
         ut_sec = ut_sec%60;
         return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
     };
-   const post_component = async () =>{
+   const onMounted = async () =>{
        const server_info = await props.methods.FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
                                .then((/**@type{string}*/result)=>JSON.parse(result));
        
@@ -108,8 +109,9 @@ const component = async props => {
                                                                                             });
    };
    return {
-       props:  {function_post:post_component},
+       lifecycle:  {onMounted:onMounted},
        data:   null,
+       methods:null,
        template: template({ spinner:'css_spinner',
                             function_seconds_to_time:seconds_to_time,
                             server_info:null

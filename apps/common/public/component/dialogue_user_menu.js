@@ -69,8 +69,9 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
  *                      show_message:import('../../../common_types.js').CommonModuleCommon['show_message']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:   null,
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -109,7 +110,7 @@ const component = async props => {
                 props.methods.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'inline-block';
             }
     };
-    const post_component = async () =>{                                                               
+    const onMounted = async () =>{                                                               
         //Fetch settings with direction, timezone and arabic script
         /**@type{{id:number, app_setting_type_name:string, value:string, display_data:string}[]} */
         const settings = props.data.system_admin_only == 1?[]:await props.methods.FFB('/server-db/app_settings_display', `data_app_id=${props.data.data_app_id}`, 'GET', 'APP_DATA')
@@ -203,8 +204,9 @@ const component = async props => {
         }   
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({username:props.data.username ?? props.data.system_admin ?? '', countdown:0})
     };
 };

@@ -12,19 +12,21 @@ const template = () => `<div id='scan_open_mobile_qrcode'></div>
  *                      create_qr:import('../../../common_types.js').CommonModuleCommon['create_qr'],
  *                      getHostname:import('../../../common_types.js').CommonModuleCommon['getHostname']},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
     props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
     props.methods.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
-    const post_component = async () =>{
+    const onMounted = async () =>{
         props.methods.create_qr('scan_open_mobile_qrcode', props.methods.getHostname());
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template()
     };
 };

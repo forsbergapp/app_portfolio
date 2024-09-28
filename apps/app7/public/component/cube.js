@@ -111,15 +111,16 @@ const template = props =>`  <div id='cube'>
  *                      ComponentRemove:import('../../../common_types.js').CommonModuleCommon['ComponentRemove'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
  *          lifecycle:  null}} props
- * @returns {Promise.<{  props:{function_post:null}, 
- *                       data:{  cube_init:                  function, 
- *                               cube_show_solution:         function,
- *                               cube_solve:                 function,
- *                               cube_makeIdentityAffine:    function,
- *                               cube_multiplyAffine:        function,
- *                               cube_makeRotateAffineX:     function,
- *                               cube_makeRotateAffineY:     function},
- *                       template:string}>}
+ * @returns {Promise.<{ lifecycle:{onMounted:null}, 
+ *                      data:{  cube_init:                  function, 
+ *                              cube_show_solution:         function,
+ *                              cube_solve:                 function,
+ *                              cube_makeIdentityAffine:    function,
+ *                              cube_multiplyAffine:        function,
+ *                              cube_makeRotateAffineX:     function,
+ *                              cube_makeRotateAffineY:     function},
+ *                      methods:null,
+ *                      template:string}>}
  */
 const component = async props => {
     const ICONS = {
@@ -221,15 +222,16 @@ const component = async props => {
         }
     };
    return {
-       props:  {function_post:null},
-       data:   {cube_init:                  cube_init, 
+        lifecycle:  {onMounted:null},
+        data:   {cube_init:                  cube_init, 
                 cube_show_solution:         cube_show_solution,
                 cube_solve:                 cube_solve,
                 cube_makeIdentityAffine:    cube_lib.makeIdentityAffine,
                 cube_multiplyAffine:        cube_lib.multiplyAffine,
                 cube_makeRotateAffineX:     cube_lib.makeRotateAffineX,
                 cube_makeRotateAffineY:     cube_lib.makeRotateAffineY},
-       template: template({ icon_robot:ICONS.robot,
+        methods:null,
+        template: template({ icon_robot:ICONS.robot,
                             icon_human:ICONS.human, 
                             icon_solution:ICONS.solution,
                             icon_solution_list:ICONS.solution_list})

@@ -21,15 +21,16 @@ const template = props => ` <div id='send_broadcast_form'>
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
  *          lifecycle:  null}} props 
- * @returns {Promise.<{ props:{function_post:function},
+ * @returns {Promise.<{ lifecycle:{onMounted:function},
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
     props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
     props.methods.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
 
-    const post_component = async () =>{
+    const onMounted = async () =>{
         // select broadcast type
         await props.methods.ComponentRender(
             {   mountDiv:'select_broadcast_type',
@@ -64,8 +65,9 @@ const component = async props => {
                 path:'/common/component/select.js'});
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({ admin_class:props.data.system_admin?'system_admin':'admin'})
     };
 };

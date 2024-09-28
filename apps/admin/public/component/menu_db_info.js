@@ -72,13 +72,14 @@ const template = props => ` <div id='menu_8_content_widget1' class='widget'>
 *                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:null, 
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
     const size = '(Mb)';
-    const post_component = async () =>{
+    const onMounted = async () =>{
         /**
          * @type {{ database_use:string,
          *          database_name:string,
@@ -100,8 +101,9 @@ const component = async props => {
                                                                                             });
   };
   return {
-      props:  {function_post:post_component},
+      lifecycle:  {onMounted:onMounted},
       data:   null,
+      methods:null,
       template: template({  spinner:'css_spinner',
                             size:size,
                             db:{  database_use:'',

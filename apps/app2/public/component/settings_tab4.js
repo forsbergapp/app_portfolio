@@ -34,12 +34,13 @@ const template = () => `<div class='setting_horizontal_row'>
  *                      },
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
-    const post_component = async () =>{
+    const onMounted = async () =>{
         //Image
             //dont set null value, it will corrupt IMG tag
             props.methods.common_document.querySelector('#setting_input_reportheader_img').value = '';
@@ -68,8 +69,9 @@ const method = async props => {
             }
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template()
     };
 };

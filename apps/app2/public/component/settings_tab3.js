@@ -114,12 +114,13 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get']},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
-    const post_component = async () =>{
+    const onMounted = async () =>{
         const settings = await props.methods.app_settings_get();
         //update APP_GLOBAL with themes
         /**@type{import('../js//types.js').APP_GLOBAL['themes']} */
@@ -208,8 +209,9 @@ const method = async props => {
         props.methods.update_all_theme_thumbnails();
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({spinner:'css_spinner',
                             theme_id_day:props.data.user_settings.design_theme_day_id,
                             theme_id_month:props.data.user_settings.design_theme_month_id,

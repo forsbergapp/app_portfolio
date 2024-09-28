@@ -162,8 +162,9 @@ const template = props => ` ${props.spinner!=''?
 *                       ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:null, 
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
@@ -174,7 +175,7 @@ const component = async props => {
      */
     const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
 
-    const post_component = async () =>{
+    const onMounted = async () =>{
         let search_user='*';
         //show all records if no search criteria
         if (props.methods.common_document.querySelector('#list_user_account_search_input').innerText.replaceAll('\n','')!='')
@@ -209,8 +210,9 @@ const component = async props => {
             }
   };
   return {
-      props:  {function_post:post_component},
+      lifecycle:  {onMounted:onMounted},
       data:   null,
+      methods:null,
       template: template({  spinner:'css_spinner',
                             user_account_id:props.data.user_account_id,
                             user_app_role_id:props.data.user_app_role_id,

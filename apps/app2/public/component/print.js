@@ -28,15 +28,17 @@ const template = props =>`  <!DOCTYPE html>
  *          lifecycle:  null}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          html:string}} props 
- * @returns {Promise.<{ props:{function_post:null}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:null}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
     props;
     return {
-        props:  {function_post:null},
+        lifecycle:  {onMounted:null},
         data:   null,
+        methods:null,
         template: template({app_link_app_report_css:props.methods.common_document.querySelector('#app_link_app_report_css').attributes['href'].nodeValue,
                             common_link_common_css:props.methods.common_document.querySelector('#common_link_common_css').attributes['href'].nodeValue,
                             html: props.data.html})

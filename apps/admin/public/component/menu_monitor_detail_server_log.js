@@ -327,8 +327,9 @@ const template = props => ` ${  /*
 *                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifeycle:   null}} props 
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:null,
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
@@ -339,7 +340,7 @@ const component = async props => {
      */
     const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
 
-    const post_component = async () =>{   
+    const onMounted = async () =>{   
         const logs = await props.methods.FFB(props.data.path, props.data.query, 'GET', props.data.token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
         props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'', 
                                                                                                 system_admin:props.data.system_admin, 
@@ -351,8 +352,9 @@ const component = async props => {
     };
     
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({spinner:'css_spinner', 
                             system_admin:props.data.system_admin, 
                             function_get_order_by:get_order_by,

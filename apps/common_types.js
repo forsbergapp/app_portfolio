@@ -246,9 +246,16 @@
  */
 
 /**
+ * Type CommonComponentLifecycle
+ * @typedef  {{ beforeMounted:function|null,
+ *              onMounted:function|null}|null} CommonComponentLifecycle
+*/
+
+/**
  * Type CommonComponentResult
- * @typedef  {{ props:{function_post:function|null, function_error:function|null}, 
+ * @typedef  {{ lifecycle:{onMounted:function|null, onError:function|null}, 
  *              data:*,
+ *              methods:*,
  *              template:string|null}} CommonComponentResult
  */
 

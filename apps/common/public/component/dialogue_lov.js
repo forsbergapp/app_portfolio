@@ -45,8 +45,9 @@ const template = props =>`  <div id='common_lov_form'>
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:   null,
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -55,7 +56,7 @@ const component = async props => {
     /**
      * @returns {void}
      */
-     const post_component = () =>{
+     const onMounted = () =>{
         if (props.data.lov=='CUSTOM'){
             props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'', 
                                                                                                     list:props.data.lov_custom_list, 
@@ -117,8 +118,9 @@ const component = async props => {
         }
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({spinner:'css_spinner', list: [], lov:props.data.lov, lov_column_value:''})
     };
 };

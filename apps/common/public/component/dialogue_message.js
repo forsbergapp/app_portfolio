@@ -61,8 +61,9 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  *                      componentRemove:import('../../../common_types.js').CommonModuleCommon['ComponentRemove']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null, 
  *                      template:string}>}
  */
 const component = async props => {
@@ -82,7 +83,7 @@ const component = async props => {
                 message_title_icon_class:props.data.text_class,
             });
     };
-    const post_component = async () => {
+    const onMounted = async () => {
         const function_close = () => { props.methods.componentRemove('common_dialogue_message', true);};
         
         switch (props.data.message_type){
@@ -123,8 +124,9 @@ const component = async props => {
         }
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({    message:'',
                                 message_type:'',
                                 message_title_font_class:'',

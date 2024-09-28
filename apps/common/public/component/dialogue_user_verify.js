@@ -36,8 +36,9 @@ const template = props => `
  *                      function_data_function:function
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:   null,
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -69,12 +70,13 @@ const component = async props => {
         }
     }
     
-    const post_component = async () =>{
+    const onMounted = async () =>{
         props.methods.common_document.querySelector(`#${props.data.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.methods.function_data_function;
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({title: props.data.title,
                             verification_type:verification_type,
                             username:username,

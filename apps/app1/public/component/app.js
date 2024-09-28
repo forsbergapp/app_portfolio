@@ -47,18 +47,20 @@ const template = () =>` <div id="theme_background">
                         <div id='app_profile_toolbar'></div>`;
 /**
  * 
-* @param {{data:       {common_mountdiv:string},
-*          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
-*          lifecycle:  null}} props 
- * @returns {Promise.<{ props:{function_post:null}, 
+ * @param {{data:       {common_mountdiv:string},
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props 
+ * @returns {Promise.<{ lifecycle:{onMounted:null}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
     props;
     return {
-        props:  {function_post:null},
+        lifecycle:  {onMounted:null},
         data:   null,
+        methods:null,
         template: template()
     };
 };

@@ -51,10 +51,11 @@ const template = props => ` ${props.spinner==''?
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:post_component}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:onMounted}, 
  *                      data:{  function_profile_user_setting_update:       function,
  *                              function_profile_show_user_setting_detail:  function,
  *                              function_profile_user_setting_stat:         function},
+ *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
@@ -141,16 +142,17 @@ const method = async props => {
         profile_user_setting_stat(profile_id);
     };
 
-    const post_component = async ()=>{
+    const onMounted = async ()=>{
         await profile_user_setting_update(props.data.profile_id);
     };
 
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   {function_profile_user_setting_update:profile_user_setting_update,
                  function_profile_show_user_setting_detail:profile_show_user_setting_detail,
                  function_profile_user_setting_stat:profile_user_setting_stat
         },
+        methods:null,
         template: template({spinner:'css_spinner'})
     };
 };

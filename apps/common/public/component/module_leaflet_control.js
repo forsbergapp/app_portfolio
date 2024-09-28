@@ -57,13 +57,14 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      map_setstyle:import('../../../common_types.js').CommonModuleCommon['map_setstyle']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:  null,
+ *                      methods:null,
  *                      template:null}>}
  */
 const component = async props => {
     
-    const post_component = async () =>{
+    const onMounted = async () =>{
         
 
         //mount custom code inside Leaflet container
@@ -121,8 +122,9 @@ const component = async props => {
         props.methods.map_setstyle(props.data.map_layer);
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: null
     };
 };
