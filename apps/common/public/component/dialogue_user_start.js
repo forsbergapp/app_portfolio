@@ -83,41 +83,44 @@ const template = props =>`  <div id='common_user_start_logo' class='common_image
                             }
                             <div id='common_user_start_close' class='common_dialogue_button common_icon' ></div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          user_click:string,
- *          app_id:number,
- *          common_app_id:number,
- *          system_admin_first_time:number,
- *          system_admin_only:number,
- *          function_FFB:function}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      user_click:string,
+ *                      app_id:number,
+ *                      common_app_id:number,
+ *                      system_admin_first_time:number,
+ *                      system_admin_only:number},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      },
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */
 const component = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
-    props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show1');
+    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
 
     const post_component = async () =>{
-        props.common_document.querySelector(`#${props.user_click}`).click();
+        props.methods.common_document.querySelector(`#${props.data.user_click}`).click();
         //fetch providers if not admin app
-        const providers = props.app_id == props.common_app_id?[]:
-                            await props.function_FFB('/server-db/identity_provider', null, 'GET', 'APP_DATA', null)
+        const providers = props.data.app_id == props.data.common_app_id?[]:
+                            await props.methods.FFB('/server-db/identity_provider', null, 'GET', 'APP_DATA', null)
                                         .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                         .catch((/**@type{Error}*/error)=>{
-                                                                            props.common_document.querySelector('#common_user_start_identity_provider_login').classList.remove('css_spinner');
+                                                                            props.methods.common_document.querySelector('#common_user_start_identity_provider_login').classList.remove('css_spinner');
                                                                             throw error;});
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = 
             template({  spinner:'',
                         providers:providers,
-                        admin_app:props.app_id == props.common_app_id,
-                        first_time: props.system_admin_first_time == 1,
-                        system_admin_only: props.system_admin_only == 1
+                        admin_app:props.data.app_id == props.data.common_app_id,
+                        first_time: props.data.system_admin_first_time == 1,
+                        system_admin_only: props.data.system_admin_only == 1
                     });
-            props.common_document.querySelector(`#${props.user_click}`).click();
+            props.methods.common_document.querySelector(`#${props.data.user_click}`).click();
     };
     return {
         props:  {function_post:post_component},
@@ -125,9 +128,9 @@ const component = async props => {
         template: template({
                             spinner:'css_spinner',
                             providers:[], 
-                            admin_app:props.app_id == props.common_app_id,
-                            first_time: props.system_admin_first_time == 1,
-                            system_admin_only: props.system_admin_only == 1})
+                            admin_app:props.data.app_id == props.data.common_app_id,
+                            first_time: props.data.system_admin_first_time == 1,
+                            system_admin_only: props.data.system_admin_only == 1})
     };
 };
 export default component;

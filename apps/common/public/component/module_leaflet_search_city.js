@@ -31,12 +31,15 @@ const template = props =>`  <div id='common_module_leaflet_search_list' class='$
                                 }
                             </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          search:string,
- *          function_click_function:function,
- *          function_FFB:function}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      search:string},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      click_function:function,
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      },
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
@@ -44,12 +47,12 @@ const template = props =>`  <div id='common_module_leaflet_search_list' class='$
 const component = async props => {
     
     const post_component = async () =>{
-        const records = props.search==''?[]:await props.function_FFB('/worldcities/city', `search=${encodeURI(props.search)}`, 'GET', 'APP_DATA', null)
+        const records = props.data.search==''?[]:await props.methods.FFB('/worldcities/city', `search=${encodeURI(props.data.search)}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                             .catch((/**@type{Error}*/error)=>{throw error;});
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({spinner:'', records:records});
-        if (props.search.length>0)
-            props.common_document.querySelector('#common_module_leaflet_search_list')['data-function'] = props.function_click_function;
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:'', records:records});
+        if (props.data.search.length>0)
+            props.methods.common_document.querySelector('#common_module_leaflet_search_list')['data-function'] = props.methods.click_function;
     };
     return {
         props:  {function_post:post_component},

@@ -28,53 +28,55 @@ const template = props =>`  <div id='common_profile_search_list' ${props.spinner
                                 }
                             </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          user_account_id:number,
- *          client_latitude:string,
- *          client_longitude:string,
- *          function_input_control:function,
- *          function_click_function:function,
- *          function_FFB:function}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      user_account_id:number,
+ *                      client_latitude:string,
+ *                      client_longitude:string},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      input_control:import('../../../common_types.js').CommonModuleCommon['input_control'],
+ *                      function_click_function:function,
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function|null}, 
  *                      data:   null,
  *                      template:string}>}
  */
 const component = async props => {
     //remove any old search result and input errors
-    props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = '';
-    props.common_document.querySelector('#common_profile_search_input').classList.remove('common_input_error');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = '';
+    props.methods.common_document.querySelector('#common_profile_search_input').classList.remove('common_input_error');
 
     //check search text
-    const searched_username = props.common_document.querySelector('#common_profile_search_input').innerText;
-    const input_control =   props.function_input_control(null,{check_valid_list_elements:[[props.common_document.querySelector('#common_profile_search_input'),null]]}) &&
-                            props.common_document.querySelector('#common_profile_search_input').innerText!='' &&
+    const searched_username = props.methods.common_document.querySelector('#common_profile_search_input').innerText;
+    const input_control =   props.methods.input_control(null,{check_valid_list_elements:[[props.methods.common_document.querySelector('#common_profile_search_input'),null]]}) &&
+                            props.methods.common_document.querySelector('#common_profile_search_input').innerText!='' &&
                             searched_username.length>1;
     if (!input_control){
-        props.common_document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-        props.common_document.querySelector('#common_profile_search_input').classList.add('common_input_error');
+        props.methods.common_document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+        props.methods.common_document.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
     const post_component = async () =>{
-        const records = await props.function_FFB(   '/server-db/user_account-profile/', 
-                                                    `id=${props.user_account_id ?? ''}&search=${encodeURI(searched_username)}` +
-                                                    `&client_latitude=${props.client_latitude}&client_longitude=${props.client_longitude}`, 
+        const records = await props.methods.FFB(   '/server-db/user_account-profile/', 
+                                                    `id=${props.data.user_account_id ?? ''}&search=${encodeURI(searched_username)}` +
+                                                    `&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
                                                     'GET', 'APP_DATA', null)
                                         .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                         .catch((/**@type{Error}*/error)=>{throw error;});
                                     
         if (records.length>0){
-            props.common_document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
+            props.methods.common_document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
+            props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = 
                 template({
                             spinner:'',
                             records:records
                         });
-            props.common_document.querySelector('#common_profile_search_list')['data-function'] = props.function_click_function;
+            props.methods.common_document.querySelector('#common_profile_search_list')['data-function'] = props.methods.function_click_function;
         }
         else{
             //remove search list element
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = '';
+            props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = '';
         }
             
     };

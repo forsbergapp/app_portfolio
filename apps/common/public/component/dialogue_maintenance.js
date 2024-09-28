@@ -11,10 +11,12 @@ const template = () =>` <div id='common_dialogue_maintenance_content' class='com
                             <div id='common_maintenance_footer'></div>
                         </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          function_common_setTimeout:function}} props 
+ * @param {{data:       {common_mountdiv:string},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      common_setTimeout:import('../../../common_types.js').CommonModuleCommon['common_setTimeout']
+ *                      },
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
@@ -28,8 +30,8 @@ const component = async props => {
         if(remaining && remaining <= 0)
             location.reload();
         else{
-            props.common_document.querySelector('#common_maintenance_countdown').innerHTML = remaining;
-            props.function_common_setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
+            props.methods.common_document.querySelector('#common_maintenance_countdown').innerHTML = remaining;
+            props.methods.common_setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
         }
     };    
     return {

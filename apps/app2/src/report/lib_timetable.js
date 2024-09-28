@@ -780,7 +780,7 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 		iqamat = '';
 		//Check if column should be displayed
 		if ( (column=='weekday' && (settings.show_weekday ==0 || settings.reporttype_year_month =='YEAR'))||
-				(column=='weekday_tr' && ((settings.second_locale =='0' ||
+				(column=='weekday_tr' && ((settings.second_locale =='' ||
 									settings.show_weekday ==0) || settings.reporttype_year_month =='YEAR'))||
 				(column=='caltype' && (settings.show_calendartype ==0 || settings.reporttype_year_month =='YEAR'))||
 				(column=='imsak' && (settings.show_imsak ==0 || settings.reporttype_year_month =='YEAR'))||
@@ -1263,7 +1263,7 @@ const displayMonth = (prayTimes, settings, button_id, year_class='') => {
 					<div class='timetable_month_data_row timetable_month_data_header_row'>
 						<div class='timetable_month_data_col timetable_icon timetable_header_col_day'></div>
 						${settings.reporttype_year_month=='MONTH' 	&& settings.show_weekday==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
-						${settings.reporttype_year_month=='MONTH' 	&& settings.second_locale !='0' 
+						${settings.reporttype_year_month=='MONTH' 	&& settings.second_locale !='' 
 																	&& settings.show_weekday==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
 						${settings.reporttype_year_month=='MONTH' 	&& settings.show_calendartype==1?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_caltype\'></div>':''}
 						${settings.reporttype_year_month=='MONTH' 	&& settings.show_imsak==1?			'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_imsak\'></div>':''}
@@ -1337,7 +1337,7 @@ const displayYear = (prayTimes, settings, button_id) => {
 	//add class to fix size
 	let timetable_class ='';
 	let timetable_footer_class ='';
-	if (settings.second_locale!='0') {
+	if (settings.second_locale!='') {
 		//transliteration OR translation
 		if (settings.coltitle=='0' || settings.coltitle=='3'){
 			timetable_class = 'class="two_columntitles"';

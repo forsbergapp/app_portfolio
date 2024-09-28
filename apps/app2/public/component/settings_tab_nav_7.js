@@ -7,9 +7,14 @@
 const template = props => `<div id='user_setting_avatar_img' class='common_image' style='background-image=url(${props.avatar?props.avatar:''})'></div>`;
 /**
  * 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      avatar:string|null
+ *                      },
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          avatar:string|null}} props 
+ *          common_mountdiv:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:null, 
  *                      template:string}>}
@@ -18,7 +23,7 @@ const method = async props => {
     return {
         props:  {function_post:null},
         data:   null,
-        template: template({avatar:props.avatar})
+        template: template({avatar:props.data.avatar})
     };
 };
 export default method;

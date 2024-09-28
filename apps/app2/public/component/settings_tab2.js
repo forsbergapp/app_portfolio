@@ -40,21 +40,30 @@ const template = () => `<div id='mapid'></div>
                             <div class='setting_horizontal_col'></div>
                         </div>`;
 /**
- * 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      app_id:number,
+ *                      user_settings:import('../js//types.js').APP_user_setting_record,
+ *                      user_locale:string,
+ *                      user_timezone:string
+ *                      },
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      component_setting_update:import('../js/app.js')['component_setting_update'],
+ *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get'],
+ *                      lib_timetable_REPORT_GLOBAL:import('../js/types.js').APP_GLOBAL['lib_timetable']['REPORT_GLOBAL'],
+ *                      map_show_search_on_map_app:import('../js/app.js')['map_show_search_on_map_app'],
+ *                      getTimezone:import('../../../common_types.js').CommonModuleRegional['getTimezone'],
+ *                      getTimezoneDate:import('../../../common_types.js').CommonModuleCommon['getTimezoneDate'],
+ *                      map_init:import('../../../common_types.js').CommonModuleCommon['map_init'],
+ *                      map_resize:import('../../../common_types.js').CommonModuleCommon['map_resize'],
+ *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
+ *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']},
+ *          lifecycle:  null}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
  *          user_settings:import('../js//types.js').APP_user_setting_record,
- *          lib_timetable_REPORT_GLOBAL:*,
- *          function_component_setting_update:function,
- *          function_map_show_search_on_map_app:function,
- *          function_getTimezone:function,
- *          function_getTimezoneDate:function,
- *          function_map_init:function,
- *          function_map_resize:function,
- *          function_set_current_value:function,
- *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *          function_app_settings_get:function}} props 
+ *          }} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
@@ -62,35 +71,34 @@ const template = () => `<div id='mapid'></div>
 const method = async props => {
     
     const post_component = async () =>{
-        /**@type{[{value:string, data2:string, data3:string, data4:string, data5:string, text:string}]} */
-        const settings = (await props.function_app_settings_get()).filter((/**@type{*}*/setting)=>
-                                                                                        setting.app_id == props.app_id && 
+        const settings = (await props.methods.app_settings_get()).filter((/**@type{*}*/setting)=>
+                                                                                        setting.app_id == props.data.app_id && 
                                                                                         setting.app_setting_type_name.startsWith('PLACE'));
         
         const empty_place = {value:JSON.stringify({id:'', latitude:'0', longitude:'0', timezone:''}), text:'...'};
         //places uses json in value to save multiple attributes
-        await props.function_ComponentRender({mountDiv:'setting_select_popular_place',
-            props:{
-                default_data_value:empty_place.value,
-                default_value:empty_place.text,
-                options: [empty_place].concat(settings.map(place=>{
-                                return {value:JSON.stringify({id:place.value, latitude:place.data2, longitude:place.data3, timezone:place.data4}), text:`${place.data5} ${place.text}`};
-                            })),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
-        props.function_set_current_value(   'setting_select_popular_place', null, 'id', props.user_settings.gps_popular_place_id);
-        props.common_document.querySelector('#setting_input_place').innerHTML = props.user_settings.description;
-        props.common_document.querySelector('#setting_input_lat').innerHTML = props.user_settings.gps_lat_text;
-        props.common_document.querySelector('#setting_input_long').innerHTML = props.user_settings.gps_long_text;
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_popular_place',
+            data:       {
+                        default_data_value:empty_place.value,
+                        default_value:empty_place.text,
+                        options: [empty_place].concat(settings.map(place=>{
+                                        return {value:JSON.stringify({id:place.value, latitude:place.data2, longitude:place.data3, timezone:place.data4}), text:`${place.data5} ${place.text}`};
+                                    })),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
+        props.methods.set_current_value(   'setting_select_popular_place', null, 'id', props.data.user_settings.gps_popular_place_id);
+        props.methods.common_document.querySelector('#setting_input_place').innerHTML = props.data.user_settings.description;
+        props.methods.common_document.querySelector('#setting_input_lat').innerHTML = props.data.user_settings.gps_lat_text;
+        props.methods.common_document.querySelector('#setting_input_long').innerHTML = props.data.user_settings.gps_long_text;
 
         //init map thirdparty module
         /**
@@ -98,21 +106,21 @@ const method = async props => {
          */
         const dbl_click_event = event => {
             if (event.originalEvent.target.parentNode.id == 'mapid'){
-                props.common_document.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
-                props.common_document.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
+                props.methods.common_document.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
+                props.methods.common_document.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
                 //Update GPS position
-                props.function_component_setting_update('GPS', 'POSITION');
-                const timezone = props.function_getTimezone(   event.latlng.lat, event.latlng.lng);
-                props.lib_timetable_REPORT_GLOBAL.session_currentDate = props.function_getTimezoneDate(timezone);
+                props.methods.component_setting_update('GPS', 'POSITION');
+                const timezone = props.methods.getTimezone(   event.latlng.lat, event.latlng.lng);
+                props.methods.lib_timetable_REPORT_GLOBAL.session_currentDate = props.methods.getTimezoneDate(timezone);
             }   
         };
-        await props.function_map_init('mapid',
-                        props.common_document.querySelector('#setting_input_long').innerHTML, 
-                        props.common_document.querySelector('#setting_input_lat').innerHTML,
+        await props.methods.map_init('mapid',
+                        props.methods.common_document.querySelector('#setting_input_long').innerHTML, 
+                        props.methods.common_document.querySelector('#setting_input_lat').innerHTML,
                         dbl_click_event,
-                        props.function_map_show_search_on_map_app).then(() => {
-            props.function_component_setting_update('GPS', 'MAP');
-            props.function_map_resize();
+                        props.methods.map_show_search_on_map_app).then(() => {
+            props.methods.component_setting_update('GPS', 'MAP');
+            props.methods.map_resize();
         });
     };
     return {

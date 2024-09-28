@@ -206,24 +206,27 @@ const app_event_other = () => {
  */
 const init_app = async () => {
     CommonAppDocument.body.className = 'app_theme1';
-    await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div, 
-        props:null,
-        methods:null,
-        lifecycle:null,
-        path:'/component/app.js'});
-    await common.ComponentRender({mountDiv:'app_main_page', 
-        props:{cube_width:APP_GLOBAL.width,
-            common_app_id:common.COMMON_GLOBAL.common_app_id,
-            function_element_row:common.element_row,
-            function_lov_show:common.lov_show,
-            function_lov_close:common.lov_close,
-            function_show_message:common.show_message,
-            function_ComponentRemove:common.ComponentRemove,
-            function_FFB:common.FFB
-        },
-        methods:null,
-        lifecycle:null,
-        path:'/component/cube.js'})
+    await common.ComponentRender({
+        mountDiv:   common.COMMON_GLOBAL.app_div, 
+        data:       null,
+        methods:    null,
+        lifecycle:  null,
+        path:       '/component/app.js'});
+    await common.ComponentRender({
+        mountDiv:   'app_main_page', 
+        data:       {
+                    cube_width:APP_GLOBAL.width,
+                    common_app_id:common.COMMON_GLOBAL.common_app_id
+                    },
+        methods:    {
+                    element_row:common.element_row,
+                    lov_show:common.lov_show,
+                    lov_close:common.lov_close,
+                    show_message:common.show_message,
+                    ComponentRemove:common.ComponentRemove,
+                    FFB:common.FFB},
+        lifecycle:  null,
+        path:       '/component/cube.js'})
     .then((/**@type{{   cube_init:                  function, 
                         cube_show_solution:         function,
                         cube_solve:                 function,

@@ -70,9 +70,10 @@ const template = props => ` <div id='menu_10_content_widget1' class='widget'>
                             </div>` ;
 /**
 * 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          function_FFB:function}} props 
+* @param {{ data:{      common_mountdiv:string},
+*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*           lifecycle:  null}} props 
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:null, 
 *                      template:string}>}
@@ -98,10 +99,10 @@ const component = async props => {
         return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
     };
    const post_component = async () =>{
-       const server_info = await props.function_FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
+       const server_info = await props.methods.FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
                                .then((/**@type{string}*/result)=>JSON.parse(result));
        
-       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({  spinner:'',
+       props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({  spinner:'',
                                                                                                 function_seconds_to_time:seconds_to_time,
                                                                                                 server_info:server_info,
                                                                                             });

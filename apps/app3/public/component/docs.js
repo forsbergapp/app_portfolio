@@ -12,10 +12,12 @@ const template = props => ` ${props.docs.map(doc=>
                             ).join('')
                             }`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          docs:[{id:number, doc_url:string, doc_url_small:string, doc_title:string}]}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      docs:[{id:number, doc_url:string, doc_url_small:string, doc_title:string}]
+ *                      },
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:null, 
  *                      template:string}>}
@@ -24,7 +26,7 @@ const component = async props => {
     return {
         props:  {function_post:null},
         data:   null,
-        template: template({docs:props.docs})
+        template: template({docs:props.data.docs})
     };
 };
 export default component;

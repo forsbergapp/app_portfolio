@@ -9,21 +9,24 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
                             <div id='${props.leaflet_container}'></div>`;
 
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          longitude:string,
- *          latitude:string,
- *          module_leaflet_zoom:number,
- *          module_leaflet_jumpto:number,
- *          module_leaflet_marker_div_gps:string,
- *          function_event_doubleclick:function,
- *          function_get_place_from_gps:function,
- *          function_map_update:function}} props 
-* @returns {Promise.<{ props:{function_post:null}, 
-*                      data:   import('../../../common_types.js').CommonModuleLeafletData,
-*                      template:null}>}
-*/
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      longitude:string,
+ *                      latitude:string,
+ *                      module_leaflet_zoom:number,
+ *                      module_leaflet_jumpto:number,
+ *                      module_leaflet_marker_div_gps:string,},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      function_event_doubleclick:function,
+ *                      get_place_from_gps:import('../../../common_types.js').CommonModuleCommon['get_place_from_gps'],
+ *                      map_update:import('../../../common_types.js').CommonModuleCommon['map_update']
+ *                       },
+ *          lifecycle:  null}} props
+ * @returns {Promise.<{ props:{function_post:null}, 
+ *                      data:   import('../../../common_types.js').CommonModuleLeafletData,
+ *                      template:null}>}
+ */
 const component = async props => {
     const path_leaflet ='leaflet';
     /**@type {import('../../../common_types.js').CommonModuleLeaflet} */
@@ -39,7 +42,7 @@ const component = async props => {
      */
     const map_init = async (longitude, latitude, doubleclick_event) => {
         return await new Promise((resolve)=>{
-            const leaflet_map = Leaflet.map(LEAFLET_CONTAINER).setView([latitude, longitude], props.module_leaflet_zoom);
+            const leaflet_map = Leaflet.map(LEAFLET_CONTAINER).setView([latitude, longitude], props.data.module_leaflet_zoom);
             //disable doubleclick in event dblclick since e.preventdefault() does not work
             leaflet_map.doubleClickZoom.disable(); 
             //add scale
@@ -58,16 +61,16 @@ const component = async props => {
                         const lng = e.latlng.lng;
                         const lat = e.latlng.lat;
                         //Update GPS position
-                        props.function_get_place_from_gps(lng, lat).then((/**@type{string}*/gps_place) => {
-                            props.function_map_update({ longitude:lng,
+                        props.methods.get_place_from_gps(lng, lat).then((/**@type{string}*/gps_place) => {
+                            props.methods.map_update({ longitude:lng,
                                                         latitude:lat,
                                                         zoomvalue:null,//do not change zoom 
                                                         text_place: gps_place,
                                                         country:'',
                                                         city:'',
                                                         timezone_text :null,
-                                                        marker_id:props.module_leaflet_marker_div_gps,
-                                                        to_method:props.module_leaflet_jumpto
+                                                        marker_id:props.data.module_leaflet_marker_div_gps,
+                                                        to_method:props.data.module_leaflet_jumpto
                                                     });
                         });
                     }
@@ -80,7 +83,7 @@ const component = async props => {
         });  
     };
     //mounts template with css and Leaflet div inside apps mountdiv props
-    props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML += template({css_url:'/common/modules/leaflet/leaflet.css',
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML += template({css_url:'/common/modules/leaflet/leaflet.css',
                                                                                             leaflet_container:LEAFLET_CONTAINER
                                                                                             });    
     return {
@@ -88,7 +91,7 @@ const component = async props => {
         data:   {   
                     library_Leaflet:Leaflet,
                     //return Leaflet mounted map on already mounted div
-                    module_map:await map_init(props.longitude, props.latitude, props.function_event_doubleclick),
+                    module_map:await map_init(props.data.longitude, props.data.latitude, props.methods.function_event_doubleclick),
                     //return Leaflet inner mounted map div to add custom code inside Leaflet
                     leaflet_container:LEAFLET_CONTAINER
                 },

@@ -315,49 +315,50 @@ const template = props => ` ${  /*
                             
 /**
 * 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          system_admin:string,
-*          path:string,
-*          query:string,
-*          token_type:string,
-*          sort:string,
-*          logs:[],
-*          order_by:string,
-*          function_roundOff:function,
-*          function_FFB:function}} props 
+* @param {{ data:{      common_mountdiv:string,
+*                       system_admin:string,
+*                       path:string,
+*                       query:string,
+*                       token_type:string,
+*                       sort:string,
+*                       logs:[],
+*                       order_by:string},
+*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+*                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
+*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*           lifeycle:   null}} props 
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:null,
 *                      template:string}>}
 */
 const component = async props => {
-    props.common_document.querySelector('#list_server_log').classList.add('css_spinner');
+    props.methods.common_document.querySelector('#list_server_log').classList.add('css_spinner');
     /**
      * Get order by if column matches
      * @param {string} column
      */
-    const get_order_by = column =>column==props.sort?props.order_by:'';
+    const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
 
     const post_component = async () =>{   
-        const logs = await props.function_FFB(props.path, props.query, 'GET', props.token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
-                                                                                                system_admin:props.system_admin, 
+        const logs = await props.methods.FFB(props.data.path, props.data.query, 'GET', props.data.token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'', 
+                                                                                                system_admin:props.data.system_admin, 
                                                                                                 function_get_order_by:get_order_by,
-                                                                                                function_roundOff:props.function_roundOff,
+                                                                                                function_roundOff:props.methods.roundOff,
                                                                                                 logs:logs,
-                                                                                                logscope:props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]});
-        props.common_document.querySelector('#list_server_log').classList.remove('css_spinner');
+                                                                                                logscope:props.methods.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]});
+        props.methods.common_document.querySelector('#list_server_log').classList.remove('css_spinner');
     };
     
     return {
         props:  {function_post:post_component},
         data:   null,
         template: template({spinner:'css_spinner', 
-                            system_admin:props.system_admin, 
+                            system_admin:props.data.system_admin, 
                             function_get_order_by:get_order_by,
-                            function_roundOff:props.function_roundOff,
+                            function_roundOff:props.methods.roundOff,
                             logs:[],
-                            logscope:props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
+                            logscope:props.methods.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
     };
 };
 export default component;

@@ -5,18 +5,19 @@
 const template = () => ' <div id=\'dialogue_loading_content\'></div>';
 /**
  * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string}} props 
+ * @param {{data:       {common_mountdiv:string},
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props 
  * @returns {Promise.<{ props:{function_post:function},
  *                      data:null, 
  *                      template:string}>}
  */
 const method = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
-    props.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
 
     const post_component = async () =>{
-        props.common_document.querySelector('#dialogue_loading_content').classList.add('css_spinner');
+        props.methods.common_document.querySelector('#dialogue_loading_content').classList.add('css_spinner');
     };
     return {
         props:  {function_post:post_component},

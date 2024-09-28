@@ -8,7 +8,14 @@
 *          icon_solution:string,
 *          icon_solution_list:string}} props
 */
-const template = props =>`  <div id='cube'></div> 
+const template = props =>`  <div id='cube'>
+                                <svg xmlns='http://www.w3.org/2000/svg'>
+                                    ${Array(...Array(156)).map((i, index)=>
+                                        `<path class='cube_face' id='cube_face_${index}'/>`
+                                        ).join('')
+                                    }
+                                </svg>
+                            </div> 
                             <div id='button_controls'>
                                 <div class='buttons_row buttons_move'>
                                     <div id='button_L' name='L' class='button_move cube_red'>↷</div>
@@ -90,27 +97,30 @@ const template = props =>`  <div id='cube'></div>
                                 </div>
                             </div>`;
 /**
-* Cube component
-* @param {{ cube_width:number,
-*           common_app_id:number,
-*           function_element_row:function,
-*           function_lov_show:function,
-*           function_lov_close:function,
-*           function_show_message:function,
-*           function_ComponentRemove:function,
-*           function_FFB:function,
-*           common_document:import('../../../common_types.js').CommonAppDocument,
-*           common_mountdiv:string}} props 
-* @returns {Promise.<{  props:{function_post:function}, 
-*                       data:{  cube_init:                  function, 
-*                               cube_show_solution:         function,
-*                               cube_solve:                 function,
-*                               cube_makeIdentityAffine:    function,
-*                               cube_multiplyAffine:        function,
-*                               cube_makeRotateAffineX:     function,
-*                               cube_makeRotateAffineY:     function},
-*                       template:string}>}
-*/
+ * Cube component
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      cube_width:number,
+ *                      common_app_id:number},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      element_row:import('../../../common_types.js').CommonModuleCommon['element_row'],
+ *                      lov_show:import('../../../common_types.js').CommonModuleCommon['lov_show'],
+ *                      lov_close:import('../../../common_types.js').CommonModuleCommon['lov_close'],
+ *                      show_message:import('../../../common_types.js').CommonModuleCommon['show_message'],
+ *                      ComponentRemove:import('../../../common_types.js').CommonModuleCommon['ComponentRemove'],
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+ *          lifecycle:  null}} props
+ * @returns {Promise.<{  props:{function_post:null}, 
+ *                       data:{  cube_init:                  function, 
+ *                               cube_show_solution:         function,
+ *                               cube_solve:                 function,
+ *                               cube_makeIdentityAffine:    function,
+ *                               cube_multiplyAffine:        function,
+ *                               cube_makeRotateAffineX:     function,
+ *                               cube_makeRotateAffineY:     function},
+ *                       template:string}>}
+ */
 const component = async props => {
     const ICONS = {
         robot:'🤖',
@@ -127,7 +137,7 @@ const component = async props => {
      * @returns {{cube:*, controls:*}}
      */
     const cube_init = () => {
-        const cube = new cube_lib.RubiksCube( props.cube_width);
+        const cube = new cube_lib.RubiksCube( props.data.cube_width);
         cube.render();
         return {cube:cube, controls:new cube_lib.RubiksCubeControls('button_controls', cube)};
     };
@@ -160,18 +170,18 @@ const component = async props => {
             * @returns {void}
             */
             const function_event = event => {
-                const solution = atob(props.function_element_row(event.target).getAttribute('data-id') ?? '');
+                const solution = atob(props.methods.element_row(event.target).getAttribute('data-id') ?? '');
                 if (button_id=='button_solve' || button_id=='button_solve_cubestate')
                     cube.makeMoves(solution);
                 else
                     cube_controls.setSolution(solution);
-                props.function_lov_close();
+                props.methods.lov_close();
             };
-            props.function_lov_show({lov:'CUSTOM', lov_custom_list:cube_result_lov, lov_custom_value:'cube_solution', function_event:function_event});
+            props.methods.lov_show({lov:'CUSTOM', lov_custom_list:cube_result_lov, lov_custom_value:'cube_solution', function_event:function_event});
         }
         else
             if (button_id=='button_solve_cubestate' || button_id=='button_solved_step_cubestate')
-                props.function_show_message('INFO', null, null, 'message_text','!', props.common_app_id);
+                props.methods.show_message('INFO', null, null, 'message_text','!', props.data.common_app_id);
     };
     /**
      * Solve the cube state using server function CUBE_SOLVE that uses generative AI pattern
@@ -183,7 +193,7 @@ const component = async props => {
      */
     const cube_solve = (cube, cube_controls, button_id, cube_goalstate=null) => {
         if (cube.rotating == false){
-            props.common_document.querySelector(`#${button_id}`).classList.add('css_spinner');
+            props.methods.common_document.querySelector(`#${button_id}`).classList.add('css_spinner');
             /**
              *  Solve using generative AI parameters
              * 
@@ -193,36 +203,25 @@ const component = async props => {
              *  cube current state  string of cube state
              *  cube goalstate      empty to solve or to given cube state
              */
-            props.function_FFB('/app-function/CUBE_SOLVE', null, 'POST', 'APP_DATA',
-                {   model:              Number(props.common_document.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
+            props.methods.FFB('/app-function/CUBE_SOLVE', null, 'POST', 'APP_DATA',
+                {   model:              Number(props.methods.common_document.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
                     preamble:           0,
-                    temperature:        Number(props.common_document.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
+                    temperature:        Number(props.methods.common_document.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
                     cube_currentstate: 	cube.getState(),
                     cube_goalstate: 	cube_goalstate})
                     .then((/**@type{string}*/result)=>{
-                        props.function_ComponentRemove('common_dialogue_message', true);
-                        props.common_document.querySelector(`#${button_id}`).classList.remove('css_spinner');
+                        props.methods.ComponentRemove('common_dialogue_message', true);
+                        props.methods.common_document.querySelector(`#${button_id}`).classList.remove('css_spinner');
                         cube_show_solution(cube, cube_controls, result, button_id);
                     })
                     .catch(()=>{
-                        props.function_ComponentRemove('common_dialogue_message', true);
-                        props.common_document.querySelector(`#${button_id}`).classList.remove('css_spinner');
+                        props.methods.ComponentRemove('common_dialogue_message', true);
+                        props.methods.common_document.querySelector(`#${button_id}`).classList.remove('css_spinner');
                     });
         }
     };
-    /**
-     * Post component, adds all SVG paths for the cube
-     * @returns {void}
-     */
-    const post_component =() =>{
-        let html = '';
-        for (let i=0;i<156;i++){
-            html += `<path class='cube_face' id='cube_face_${i}'/>`;
-        }
-        props.common_document.querySelector('#cube').innerHTML = `<svg xmlns='http://www.w3.org/2000/svg'>${html}</svg>`;
-   };
    return {
-       props:  {function_post:post_component},
+       props:  {function_post:null},
        data:   {cube_init:                  cube_init, 
                 cube_show_solution:         cube_show_solution,
                 cube_solve:                 cube_solve,

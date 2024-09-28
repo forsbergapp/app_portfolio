@@ -20,21 +20,23 @@ const template = props =>`  <div id='common_user_password_new_icon' class='commo
                             </div>`;
 /**
  * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          auth:string}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      auth:string},
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:   null,
  *                      template:string}>}
  */
 const component = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show2');
-    props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show2');
+    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     return {
         props:  {function_post:null},
         data:   null,
-        template: template({auth:props.auth})
+        template: template({auth:props.data.auth})
     };
 };
 export default component;

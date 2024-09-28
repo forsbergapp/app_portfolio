@@ -28,23 +28,24 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
                             </div>`;
 /**
  * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          app_id:number,
- *          system_admin:string,
- *          function_map_mount:function,
- *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}} props 
+ * @param {{data:{      common_mountdiv:string,
+ *                      app_id:number,
+ *                      system_admin:string},
+ *          methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      map_mount:import('../js/secure.js')['map_mount'],
+ *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+ *          lifecycle:  null}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:{limit:number},
  *                      template:string}>}
  */
 const component = async props => {
     const post_component = async () =>{
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({spinner:'', system_admin:props.system_admin});
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:'', system_admin:props.data.system_admin});
         //mount select
-        await props.function_ComponentRender({mountDiv:'select_year_menu5',
-            props:{
+        await props.methods.ComponentRender({mountDiv:'select_year_menu5',
+            data:{
                 default_value:new Date().getFullYear(),
                 default_data_value:new Date().getFullYear(),
                 options:[ {VALUE:new Date().getFullYear(), TEXT:new Date().getFullYear()}, 
@@ -58,14 +59,13 @@ const component = async props => {
                 method:'',
                 authorization_type:'',
                 column_value:'VALUE',
-                column_text:'TEXT',
-                function_FFB:props.function_FFB
+                column_text:'TEXT'
               },
-            methods:null,
+            methods:{FFB:props.methods.FFB},
             lifecycle:null,
             path:'/common/component/select.js'});
-        await props.function_ComponentRender({mountDiv:'select_month_menu5',
-                props:{
+        await props.methods.ComponentRender({mountDiv:'select_month_menu5',
+                data:{
                     default_value:new Date().getMonth()+1,
                     default_data_value:new Date().getMonth()+1,
                     options:Array(...Array(12)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
@@ -74,15 +74,14 @@ const component = async props => {
                     method:'',
                     authorization_type:'',
                     column_value:'VALUE',
-                    column_text:'TEXT',
-                    function_FFB:props.function_FFB
+                    column_text:'TEXT'
                 },
-                methods:null,
+                methods:{FFB:props.methods.FFB},
                 lifecycle:null,
                 path:'/common/component/select.js'});
 
-        await props.function_ComponentRender({mountDiv:'select_day_menu5',
-                props:{
+        await props.methods.ComponentRender({mountDiv:'select_day_menu5',
+                data:{
                     default_value:new Date().getDate(),
                     default_data_value:new Date().getDate(),
                     options:Array(...Array(31)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
@@ -91,39 +90,37 @@ const component = async props => {
                     method:'',
                     authorization_type:'',
                     column_value:'VALUE',
-                    column_text:'TEXT',
-                    function_FFB:props.function_FFB
+                    column_text:'TEXT'
                 },
-                methods:null,
+                methods:{FFB:props.methods.FFB},
                 lifecycle:null,
                 path:'/common/component/select.js'});
 
-        await props.function_ComponentRender({mountDiv:'select_app_menu5',
-                props:{
+        await props.methods.ComponentRender({mountDiv:'select_app_menu5',
+                data:{
                     default_value:'∞',
                     options:[{APP_ID:'', NAME:'∞'}],
                     path:'/server-config/config-apps/',
                     query:'key=NAME',
                     method:'GET',
-                    authorization_type:props.system_admin?'SYSTEMADMIN':'APP_ACCESS',
+                    authorization_type:props.data.system_admin?'SYSTEMADMIN':'APP_ACCESS',
                     column_value:'APP_ID',
-                    column_text:'NAME',
-                    function_FFB:props.function_FFB
+                    column_text:'NAME'
                   },
-                methods:null,
+                methods:{FFB:props.methods.FFB},
                 lifecycle:null,
                 path:'/common/component/select.js'});
 
         //mount the map
-        props.function_map_mount();
+        props.methods.map_mount();
 
     };
 
     return {
         props:  {function_post:post_component},
-        data:   {limit:await props.function_FFB(`/server-config/config-apps/${props.app_id}`, 'key=PARAMETERS', 'GET', props.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
+        data:   {limit:await props.methods.FFB(`/server-config/config-apps/${props.data.app_id}`, 'key=PARAMETERS', 'GET', props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
                             .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS))},
-        template: template({spinner:'css_spinner', system_admin:props.system_admin})
+        template: template({spinner:'css_spinner', system_admin:props.data.system_admin})
     };
 };
 export default component;

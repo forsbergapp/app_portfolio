@@ -156,51 +156,52 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                 }
                             </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          app_id:number,
- *          display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL'
- *          dialogue:boolean,
- *          master_path:string,
- *          master_query:string,
-*           master_body:string,
- *          master_method:string,
- *          master_token_type:string,
- *          master_resource:string,
- *          detail_path:string,
- *          detail_query:string,
- *          detail_body:string,
- *          detail_method:string,
- *          detail_token_type:string,
- *          detail_resource:string,
- *          detail_class:string,
- *          new_resource:boolean,
- *          mode:'EDIT'|'READ',
- *          timezone:string,
- *          locale:string,
- *          button_print: boolean,
- *          button_print_icon_class:string,
- *          button_update: boolean,
- *          button_update_icon_class:string,
- *          button_post: boolean,
- *          button_post_icon_class:string,
- *          button_delete: boolean,
- *          button_delete_icon_class:string,
- *          function_FFB:function,
- *          function_button_print:function,
- *          function_button_update:function,
- *          function_button_post:function,
- *          function_button_delete:function
- *          }} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      app_id:number,
+ *                      display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL'
+ *                      dialogue:boolean,
+ *                      master_path:string,
+ *                      master_query:string,
+ *                      master_body:string,
+ *                      master_method:string,
+ *                      master_token_type:string,
+ *                      master_resource:string,
+ *                      detail_path:string,
+ *                      detail_query:string,
+ *                      detail_body:string,
+ *                      detail_method:string,
+ *                      detail_token_type:string,
+ *                      detail_resource:string,
+ *                      detail_class:string,
+ *                      new_resource:boolean,
+ *                      mode:'EDIT'|'READ',
+ *                      timezone:string,
+ *                      locale:string,
+ *                      button_print: boolean,
+ *                      button_print_icon_class:string,
+ *                      button_update: boolean,
+ *                      button_update_icon_class:string,
+ *                      button_post: boolean,
+ *                      button_post_icon_class:string,
+ *                      button_delete: boolean,
+ *                      button_delete_icon_class:string},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
+ *                      button_print:function,
+ *                      button_update:function,
+ *                      button_post:function,
+ *                      button_delete:function},
+ *          lifecycle:  null}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
  */
 const component = async props => {
-    if (props.dialogue){
-        props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
-		props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    if (props.data.dialogue){
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show1');
+		props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     }
     let spinner = 'css_spinner';
     const div_id = () =>Date.now().toString() + Math.floor(Math.random() *100000).toString();
@@ -265,25 +266,25 @@ const component = async props => {
 
     const post_component = async () => {
         
-        const master_object = props.master_path?
-                                    await props.function_FFB(   props.master_path, 
-                                                                props.master_query, 
-                                                                props.master_method, props.master_token_type, props.master_body)
+        const master_object = props.data.master_path?
+                                    await props.methods.FFB(   props.data.master_path, 
+                                                                props.data.master_query, 
+                                                                props.data.master_method, props.data.master_token_type, props.data.master_body)
                                             .then((/**@type{*}*/result)=>
-                                                props.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>
+                                                props.data.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>
                                                     JSON.parse(row.json_data)):
                                     JSON.parse(result).rows[0]):{};
-        const detail_rows = props.detail_path?
-                                    await props.function_FFB(   props.detail_path, 
-                                                                props.detail_query, 
-                                                                props.detail_method, props.detail_token_type, props.detail_body)
+        const detail_rows = props.data.detail_path?
+                                    await props.methods.FFB(   props.data.detail_path, 
+                                                                props.data.detail_query, 
+                                                                props.data.detail_method, props.data.detail_token_type, props.data.detail_body)
                                             .then((/**@type{*}*/result)=>JSON.parse(result).rows):
                                     [];
         
-        if (props.new_resource==false){
-            const master_metadata = await props.function_FFB(   `/app-function/${props.master_resource}`, 
+        if (props.data.new_resource==false){
+            const master_metadata = await props.methods.FFB(   `/app-function/${props.data.master_resource}`, 
                                                                 'fields=json_data', 
-                                                                'POST', 'APP_DATA', {data_app_id:props.app_id})
+                                                                'POST', 'APP_DATA', {data_app_id:props.data.app_id})
                                             .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
             for (const key of Object.entries(master_object)){
                 master_object[key[0]] = {   
@@ -293,10 +294,10 @@ const component = async props => {
                                         };
             }
         }
-        if (props.detail_resource){
-            const detail_metadata = await props.function_FFB(   `/app-function/${props.detail_resource}`, 
+        if (props.data.detail_resource){
+            const detail_metadata = await props.methods.FFB(   `/app-function/${props.data.detail_resource}`, 
                                                             'fields=json_data', 
-                                                            'POST', 'APP_DATA', {data_app_id:props.app_id})
+                                                            'POST', 'APP_DATA', {data_app_id:props.data.app_id})
                                             .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
             for (const row of detail_rows){
                 for (const key of Object.entries(row)){
@@ -310,57 +311,57 @@ const component = async props => {
         }
             
         spinner = '';
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = 
-            template({  display_type:props.display_type,
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = 
+            template({  display_type:props.data.display_type,
                         master_object:master_object,
-                        rows:(props.detail_path && detail_rows.length>0)?(Object.values(detail_rows[0])[0].constructor===Array?Object.values(detail_rows[0])[0]:detail_rows):[],
-                        detail_class:props.detail_class,
-                        new_resource:props.new_resource,
-                        mode:props.mode,
+                        rows:(props.data.detail_path && detail_rows.length>0)?(Object.values(detail_rows[0])[0].constructor===Array?Object.values(detail_rows[0])[0]:detail_rows):[],
+                        detail_class:props.data.detail_class,
+                        new_resource:props.data.new_resource,
+                        mode:props.data.mode,
                         function_format_value:format_value,
                         function_div_id:div_id,
-                        timezone:props.timezone, 
-                        locale:props.locale,
+                        timezone:props.data.timezone, 
+                        locale:props.data.locale,
                         spinner:spinner,
-                        button_print:props.button_print,
-                        button_print_icon_class:props.button_print_icon_class,
-                        button_update:props.button_update,
-                        button_update_icon_class:props.button_update_icon_class,
-                        button_post:props.button_post,
-                        button_post_icon_class:props.button_post_icon_class,
-                        button_delete:props.button_delete,
-                        button_delete_icon_class:props.button_delete_icon_class});
-        if (props.function_button_print)
-            props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_print`)['data-function'] = props.function_button_print;
-        if (props.function_button_update)
-            props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_update`)['data-function'] = props.function_button_update;
-        if (props.function_button_post)
-            props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_post`)['data-function'] = props.function_button_post;
-        if (props.function_button_delete)
-            props.common_document.querySelector(`#${props.common_mountdiv} .common_app_data_display_button_delete`)['data-function'] = props.function_button_delete;
+                        button_print:props.data.button_print,
+                        button_print_icon_class:props.data.button_print_icon_class,
+                        button_update:props.data.button_update,
+                        button_update_icon_class:props.data.button_update_icon_class,
+                        button_post:props.data.button_post,
+                        button_post_icon_class:props.data.button_post_icon_class,
+                        button_delete:props.data.button_delete,
+                        button_delete_icon_class:props.data.button_delete_icon_class});
+        if (props.methods.button_print)
+            props.methods.common_document.querySelector(`#${props.data.common_mountdiv} .common_app_data_display_button_print`)['data-function'] = props.methods.button_print;
+        if (props.methods.button_update)
+            props.methods.common_document.querySelector(`#${props.data.common_mountdiv} .common_app_data_display_button_update`)['data-function'] = props.methods.button_update;
+        if (props.methods.button_post)
+            props.methods.common_document.querySelector(`#${props.data.common_mountdiv} .common_app_data_display_button_post`)['data-function'] = props.methods.button_post;
+        if (props.methods.button_delete)
+            props.methods.common_document.querySelector(`#${props.data.common_mountdiv} .common_app_data_display_button_delete`)['data-function'] = props.methods.button_delete;
     };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: template({display_type:props.display_type,
+        template: template({display_type:props.data.display_type,
                             master_object:null,
                             rows:[],
-                            detail_class:props.detail_class,
-                            new_resource:props.new_resource,
-                            mode:props.mode,
+                            detail_class:props.data.detail_class,
+                            new_resource:props.data.new_resource,
+                            mode:props.data.mode,
                             function_format_value:format_value,
                             function_div_id:div_id,
-                            timezone:props.timezone,
-                            locale:props.locale,
+                            timezone:props.data.timezone,
+                            locale:props.data.locale,
                             spinner:spinner,
                             button_print:false,
-                            button_print_icon_class:props.button_print_icon_class,
+                            button_print_icon_class:props.data.button_print_icon_class,
                             button_update:false,
-                            button_update_icon_class:props.button_update_icon_class,
+                            button_update_icon_class:props.data.button_update_icon_class,
                             button_post:false,
-                            button_post_icon_class:props.button_post_icon_class,
+                            button_post_icon_class:props.data.button_post_icon_class,
                             button_delete:false,
-                            button_delete_icon_class:props.button_delete_icon_class})
+                            button_delete_icon_class:props.data.button_delete_icon_class})
     };
 };
 export default component;

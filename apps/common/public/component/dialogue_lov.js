@@ -32,39 +32,44 @@ const template = props =>`  <div id='common_lov_form'>
                             <div id='common_lov_close' class='common_dialogue_button common_icon'></div>
                         </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          lov:string,
- *          lov_custom_list?:{}[],
- *          lov_custom_value?:string,
- *          function_event:function,
- *          function_FFB:function}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      common_app_id:number,
+ *                      lov:string,
+ *                      lov_custom_list?:{}[],
+ *                      lov_custom_value?:string
+ *                      },
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      function_event:function,
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      },
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */
 const component = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show2');
-    props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show2');
+    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     /**
      * @returns {void}
      */
      const post_component = () =>{
-        if (props.lov=='CUSTOM'){
-            props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
-                                                                                                    list:props.lov_custom_list, 
-                                                                                                    lov:props.lov, 
-                                                                                                    lov_column_value:props.lov_custom_value ??''});
-            props.common_document.querySelector('#common_lov_list')['data-function'] = props.function_event;
-            props.common_document.querySelector('#common_lov_search_input').focus();
+        if (props.data.lov=='CUSTOM'){
+            props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'', 
+                                                                                                    list:props.data.lov_custom_list, 
+                                                                                                    lov:props.data.lov, 
+                                                                                                    lov_column_value:props.data.lov_custom_value ??''});
+            props.methods.common_document.querySelector('#common_lov_list')['data-function'] = props.methods.function_event;
+            props.methods.common_document.querySelector('#common_lov_search_input').focus();
         }
         else{
             let path = '';
             let query = null;
             let token_type = '';
             let lov_column_value = '';
-            switch (props.lov){
+            switch (props.data.lov){
                 case 'SERVER_LOG_FILES':{
                     lov_column_value = 'filename';
                     path = '/server-log/log-files';
@@ -96,25 +101,25 @@ const component = async props => {
                 default:{
                     lov_column_value = 'text';
                     path = '/server-db/app_settings';
-                    query= `setting_type=${props.lov}`;
+                    query= `setting_type=${props.data.lov}`;
                     token_type = 'APP_DATA';
                 }
             }
-            props.function_FFB(path, query, 'GET', token_type, null)
+            props.methods.FFB(path, query, 'GET', token_type, null)
             .then((/**@type{string}*/result)=>{
-                    props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
+                    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'', 
                                                                                                             list:JSON.parse(result).rows, 
-                                                                                                            lov:props.lov, 
+                                                                                                            lov:props.data.lov, 
                                                                                                             lov_column_value:lov_column_value});
-                    props.common_document.querySelector('#common_lov_list')['data-function'] = props.function_event;
-                    props.common_document.querySelector('#common_lov_search_input').focus();
+                    props.methods.common_document.querySelector('#common_lov_list')['data-function'] = props.methods.function_event;
+                    props.methods.common_document.querySelector('#common_lov_search_input').focus();
             });
         }
     };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: template({spinner:'css_spinner', list: [], lov:props.lov, lov_column_value:''})
+        template: template({spinner:'css_spinner', list: [], lov:props.data.lov, lov_column_value:''})
     };
 };
 export default component;

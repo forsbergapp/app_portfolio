@@ -41,13 +41,16 @@ const template = props => ` ${props.spinner==''?
                             }
                             `;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          user_account_id:number|null,
- *          profile_id:number,
- *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      user_account_id:number|null,
+ *                      profile_id:number
+ *                      },
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:post_component}, 
  *                      data:{  function_profile_user_setting_update:       function,
  *                              function_profile_show_user_setting_detail:  function,
@@ -64,11 +67,11 @@ const method = async props => {
      */
     const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
         
-        props.common_document.querySelector('#profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
-        props.common_document.querySelector('#profile_user_settings_like').children[1].style.display = `${liked == 1?'block':'none'}`;
+        props.methods.common_document.querySelector('#profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
+        props.methods.common_document.querySelector('#profile_user_settings_like').children[1].style.display = `${liked == 1?'block':'none'}`;
 
-        props.common_document.querySelector('#profile_user_settings_info_likes_count').innerHTML = count_likes;
-        props.common_document.querySelector('#profile_user_settings_info_views_count').innerHTML = count_views;
+        props.methods.common_document.querySelector('#profile_user_settings_info_likes_count').innerHTML = count_likes;
+        props.methods.common_document.querySelector('#profile_user_settings_info_views_count').innerHTML = count_views;
     };
 
     /**
@@ -77,10 +80,10 @@ const method = async props => {
      * @returns {void}
      */
     const profile_user_setting_stat = id => {
-        props.function_FFB(`/server-db/user_account_app_data_post-profile-stat-like/${id}`, null, 'GET', 'APP_DATA', null)
+        props.methods.FFB(`/server-db/user_account_app_data_post-profile-stat-like/${id}`, null, 'GET', 'APP_DATA', null)
         .then((/**@type{string}*/result)=>{
-            props.common_document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
-            props.common_document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
+            props.methods.common_document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
+            props.methods.common_document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
         })
         .catch(()=>null);
     };
@@ -90,8 +93,8 @@ const method = async props => {
      */
     const profile_user_setting_update = async (profile_id, sid=null) =>{
         /**@type{{value:string, text:string}[]}*/
-        const user_settings = await props.function_FFB(  `/server-db/user_account_app_data_post-profile/${profile_id}`, 
-                                                        `id_current_user=${props.user_account_id??''}`, 
+        const user_settings = await props.methods.FFB(  `/server-db/user_account_app_data_post-profile/${profile_id}`, 
+                                                        `id_current_user=${props.data.user_account_id??''}`, 
                                                         'GET', 
                                                         'APP_DATA', null)
                                     .then((/**@type{string}*/result)=>
@@ -112,26 +115,26 @@ const method = async props => {
                                                                                                                 description:setting.description}), 
                                                                                                         text:setting.description};}));
 
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({spinner:''});
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:''});
         //show current setting or first setting if showing first time
-        await props.function_ComponentRender({mountDiv:'profile_select_user_settings',
-            props:{
-                default_data_value:   sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].value:user_settings[0].value,
-                default_value:        sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].text:user_settings[0].text,
-                options: user_settings,
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:props.function_FFB
-              },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await props.methods.ComponentRender({
+            mountDiv:   'profile_select_user_settings',
+            data:       {
+                        default_data_value:   sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].value:user_settings[0].value,
+                        default_value:        sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].text:user_settings[0].text,
+                        options: user_settings,
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:props.methods.FFB},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
         
-        const profile_select_user_settings = props.common_document.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
+        const profile_select_user_settings = props.methods.common_document.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
         profile_show_user_setting_detail(   JSON.parse(profile_select_user_settings).liked,
                                             JSON.parse(profile_select_user_settings).count_likes,
                                             JSON.parse(profile_select_user_settings).count_views);
@@ -139,7 +142,7 @@ const method = async props => {
     };
 
     const post_component = async ()=>{
-        await profile_user_setting_update(props.profile_id);
+        await profile_user_setting_update(props.data.profile_id);
     };
 
     return {

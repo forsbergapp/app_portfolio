@@ -20,9 +20,12 @@ const template = props =>` <div id='common_broadcast_info'>
                         </div>`;
 /**
  * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          message:string}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      message:string
+ *                      },
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:   null,
  *                      template:string}>}
@@ -31,7 +34,7 @@ const component = async props => {
     return {
         props:  {function_post:null},
         data:   null,
-        template: template({message:props.message})
+        template: template({message:props.data.message})
     };
 };
 export default component;

@@ -68,9 +68,10 @@ const template = props => ` <div id='menu_4_content_widget1' class='widget'>
                             </div>` ;
 /**
 * 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          function_FFB:function}} props 
+* @param {{data:{       common_mountdiv:string},
+*          methods:{    common_document:import('../../../common_types.js').CommonAppDocument,
+*                       FFB: import('../../../common_types.js').CommonModuleCommon['FFB']},
+*          lifecycle:   null}} props 
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:null, 
 *                      template:string}>}
@@ -78,12 +79,12 @@ const template = props => ` <div id='menu_4_content_widget1' class='widget'>
 const component = async props => {
     
     const post_component = async () =>{
-        const apps = await props.function_FFB('/app_admin/apps', null, 'GET', 'APP_ACCESS', null)
+        const apps = await props.methods.FFB('/app_admin/apps', null, 'GET', 'APP_ACCESS', null)
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows);
         
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({spinner:'', apps:apps});
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:'', apps:apps});
         if (apps.length>0)
-            props.common_document.querySelectorAll('#list_apps .list_edit')[0].focus();
+            props.methods.common_document.querySelectorAll('#list_apps .list_edit')[0].focus();
     };
     return {
         props:  {function_post:post_component},
