@@ -15,7 +15,7 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  *                      latitude:string,
  *                      module_leaflet_zoom:number,
  *                      module_leaflet_jumpto:number,
- *                      module_leaflet_marker_div_gps:string,},
+ *                      module_leaflet_marker_div_gps:string},
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      function_event_doubleclick:function,
