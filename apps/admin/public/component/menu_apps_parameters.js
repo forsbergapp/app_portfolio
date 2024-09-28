@@ -37,10 +37,11 @@ const template = props => ` ${props.spinner==''?
                             }` ;
 /**
  * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          app_id_data:number,
- *          function_FFB:function}} props 
+ * @param {{data:{      common_mountdiv:string,
+ *                      app_id_data:number},
+ *          methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+ *          lifecycle:  null}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
@@ -48,19 +49,19 @@ const template = props => ` ${props.spinner==''?
 const component = async props => {
    
     const post_component = async () =>{
-        const app_parameters = await props.function_FFB(`/server-config/config-apps/${props.app_id_data}`, 'key=PARAMETERS', 'GET', 'APP_ACCESS', null)
+        const app_parameters = await props.methods.FFB(`/server-config/config-apps/${props.data.app_id_data}`, 'key=PARAMETERS', 'GET', 'APP_ACCESS', null)
                                 .then((/**@type{string}*/result)=>JSON.parse(result)[0].PARAMETERS);
         
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
-                                                                                                app_id:props.app_id_data, 
-                                                                                                app_parameters:app_parameters});
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:'', 
+                                                                                                            app_id:props.data.app_id_data, 
+                                                                                                            app_parameters:app_parameters});
         
     };
     return {
        props:  {function_post:post_component},
        data:   null,
        template: template({ spinner:'css_spinner', 
-                            app_id:props.app_id_data, 
+                            app_id:props.data.app_id_data, 
                             app_parameters:[]})
     };
 };

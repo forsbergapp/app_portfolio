@@ -65,65 +65,72 @@ const template = props => ` ${props.spinner==''?
                             }
                             ` ;
 /**
-* 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          user_account_id:number,
-*          user_account_id_profile:number,
-*          detailchoice:number,
-*          function_show_common_dialogue:function,
-*          function_click:function,
-*          function_FFB:function}} props 
-* @returns {Promise.<{ props:{function_post:function|null}, 
-*                      data:null, 
-*                      template:string}>}
-*/
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      user_account_id:number,
+ *                      user_account_id_profile:number,
+ *                      detailchoice:number
+ *                      },
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      show_common_dialogue:import('../../../common_types.js').CommonModuleCommon['show_common_dialogue'],
+ *                      function_click:function,
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      },
+ *          lifecycle:  null}} props
+ * @returns {Promise.<{ props:{function_post:function|null}, 
+ *                      data:null, 
+ *                      template:string}>}
+ */
 const component = async props => {
 
-    if (!props.user_account_id)
-        props.function_show_common_dialogue('LOGIN');
+    if (!props.data.user_account_id)
+        props.methods.show_common_dialogue('LOGIN');
    const post_component = async () =>{
-        let path;
-        switch (props.detailchoice){
-            case 1:
-            case 2:
-            case 3:
-            case 4:{
-                /*detailchoice 1,2,3, 4: user_account*/
-                path = '/server-db/user_account-profile-detail';
-                break;
+        if (props.data.user_account_id){
+            let path;
+            switch (props.data.detailchoice){
+                case 1:
+                case 2:
+                case 3:
+                case 4:{
+                    /*detailchoice 1,2,3, 4: user_account*/
+                    path = '/server-db/user_account-profile-detail';
+                    break;
+                }
+                case 5:{
+                    /* detailchoice 5, apps, returns same columns*/
+                    path = '/server-db/user_account_app-apps';
+                    break;
+                }
+                case 6:
+                case 7:{
+                    /*detailchoice 6, 7: app specific */
+                    path = '/server-db/user_account_app_data_post-profile-detail';
+                    break;
+                }    
             }
-            case 5:{
-                /* detailchoice 5, apps, returns same columns*/
-                path = '/server-db/user_account_app-apps';
-                break;
-            }
-            case 6:
-            case 7:{
-                /*detailchoice 6, 7: app specific */
-                path = '/server-db/user_account_app_data_post-profile-detail';
-                break;
-            }    
+           const list = await props.methods.FFB(`${path}/${props.data.user_account_id_profile}`, `detailchoice=${props.data.detailchoice}`, 'GET', 'APP_ACCESS', null)
+                                       .then((/**@type{string}*/result)=>JSON.parse(result));
+    
+           props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({  spinner:'',
+                                                                                                    user_account_id:props.data.user_account_id,
+                                                                                                    user_account_id_profile:props.data.user_account_id_profile,
+                                                                                                    detailchoice:props.data.detailchoice,
+                                                                                                    list:list
+                                                                                                });
+            props.methods.common_document.querySelector('#common_profile_detail_list')['data-function'] = props.methods.function_click;
         }
-       const list = await props.function_FFB(`${path}/${props.user_account_id_profile}`, `detailchoice=${props.detailchoice}`, 'GET', 'APP_ACCESS', null)
-                                   .then((/**@type{string}*/result)=>JSON.parse(result));
-
-       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({  spinner:'',
-                                                                                                user_account_id:props.user_account_id,
-                                                                                                user_account_id_profile:props.user_account_id_profile,
-                                                                                                detailchoice:props.detailchoice,
-                                                                                                list:list
-                                                                                            });
-        props.common_document.querySelector('#common_profile_detail_list')['data-function'] = props.function_click;
+        else
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = '';
   };
-
   return {
-      props:  {function_post:props.user_account_id?post_component:null},
+      props:  {function_post:post_component},
       data:   null,
       template: template({  spinner:'css_spinner',
-                            user_account_id:props.user_account_id,
-                            user_account_id_profile:props.user_account_id_profile,
-                            detailchoice:props.detailchoice,
+                            user_account_id:props.data.user_account_id,
+                            user_account_id_profile:props.data.user_account_id_profile,
+                            detailchoice:props.data.detailchoice,
                             list:[]
       })
   };

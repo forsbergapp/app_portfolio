@@ -19,16 +19,17 @@ const template = () => ` <div id='menu_6_content_widget1' class='widget'>
                         </div>`;
 /**
 * 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          function_nav_click:function}} props 
+* @param {{ data:{      common_mountdiv:string},
+*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+*                       nav_click:import('../js/secure.js').nav_click},
+*           lifecycle:  null}} props 
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:null, 
 *                      template:string}>}
 */
 const component = async props => {
     const post_component = () =>{
-        props.function_nav_click('list_config_nav_server');
+        props.methods.nav_click('list_config_nav_server');
     };
  
     return {

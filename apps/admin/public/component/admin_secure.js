@@ -28,8 +28,9 @@ const template = () =>` <div id='dialogues'>
                         </div>`;
 /**
  * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string}} props 
+ * @param {{data:{      common_mountdiv:string},
+ *          methods:{   common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:null, 
  *                      template:string}>}

@@ -15,24 +15,25 @@ const template = props => ` <div id='send_broadcast_form'>
                             </div>`;
 /**
  * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          system_admin:boolean,
- *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']
- *          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}} props 
+ * @param {{data:{      common_mountdiv:string,
+ *                      system_admin:boolean},
+ *          methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+ *          lifecycle:  null}} props 
  * @returns {Promise.<{ props:{function_post:function},
  *                      data:null, 
  *                      template:string}>}
  */
 const component = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
-    props.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
 
     const post_component = async () =>{
         // select broadcast type
-        await props.function_ComponentRender(
+        await props.methods.ComponentRender(
             {   mountDiv:'select_broadcast_type',
-                props:{
+                data:{
                     default_data_value:'ALERT',
                     options:[{VALUE:'ALERT', TEXT:''}, {VALUE:'MAINTENANCE', TEXT:''}],
                     path:'',
@@ -40,34 +41,32 @@ const component = async props => {
                     method:'',
                     authorization_type:'',
                     column_value:'VALUE',
-                    column_text:'TEXT',
-                    function_FFB:props.function_FFB
+                    column_text:'TEXT'
                 },
-                methods:null,
+                methods:{FFB:props.methods.FFB},
                 lifecycle:null,
                 path:'/common/component/select.js'});
         // select apps
-        await props.function_ComponentRender( 
+        await props.methods.ComponentRender( 
             {   mountDiv:'select_app_broadcast',
-                props:{
+                data:{
                     default_value:'∞',
                     options:[{APP_ID:'', NAME:'∞'}],
                     path:'/server-config/config-apps/',
                     query:'key=NAME',
                     method:'GET',
-                    authorization_type:props.system_admin?'SYSTEMADMIN':'APP_ACCESS',
+                    authorization_type:props.data.system_admin?'SYSTEMADMIN':'APP_ACCESS',
                     column_value:'APP_ID',
-                    column_text:'NAME',
-                    function_FFB:props.function_FFB
+                    column_text:'NAME'
                   },
-                methods:null,
+                methods:{FFB:props.methods.FFB},
                 lifecycle:null,
                 path:'/common/component/select.js'});
     };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: template({ admin_class:props.system_admin?'system_admin':'admin'})
+        template: template({ admin_class:props.data.system_admin?'system_admin':'admin'})
     };
 };
 export default component;

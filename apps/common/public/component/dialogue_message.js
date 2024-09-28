@@ -47,25 +47,27 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
                                 }
                             </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          text_class:string,
- *          message_type:string,
- *          data_app_id:number,
- *          code:string,
- *          message:*,
- *          function_FFB:function,
- *          function_event:function,
- *          function_componentremove:function,
- *          }} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      text_class:string,
+ *                      message_type:string,
+ *                      data_app_id:number,
+ *                      code:string,
+ *                      message:*},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
+ *                      function_event:function,
+ *                      componentRemove:import('../../../common_types.js').CommonModuleCommon['ComponentRemove']
+ *                      },
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
  */
 const component = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show3');
-    props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show3');
+    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     /**
      * 
      * @param {*} display_message
@@ -73,49 +75,49 @@ const component = async props => {
      * @returns{void}
      */
     const render_message = (display_message, display_message_font_class) =>{
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template(
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template(
             {   message:display_message,
-                message_type:props.message_type,
+                message_type:props.data.message_type,
                 message_title_font_class:display_message_font_class,
-                message_title_icon_class:props.text_class,
+                message_title_icon_class:props.data.text_class,
             });
     };
     const post_component = async () => {
-        const function_close = () => { props.function_componentremove('common_dialogue_message', true);};
+        const function_close = () => { props.methods.componentRemove('common_dialogue_message', true);};
         
-        switch (props.message_type){
+        switch (props.data.message_type){
             case 'ERROR_BFF':{
                 /**@type{import('../../../common_types.js').CommonErrorMessageISO20022} */
-                const message_iso = JSON.parse(props.message);
+                const message_iso = JSON.parse(props.data.message);
                 render_message(message_iso.error.text, 'common_font_normal');
-                props.common_document.querySelector('#common_message_close')['data-function'] = function_close;
-                props.common_document.querySelector('#common_message_close').focus();
+                props.methods.common_document.querySelector('#common_message_close')['data-function'] = function_close;
+                props.methods.common_document.querySelector('#common_message_close').focus();
                 break;
             }
             case 'ERROR':
             case 'INFO':
             case 'EXCEPTION':
             case 'LOG':{
-                const display_message = props.message_type=='ERROR'?await props.function_FFB(
+                const display_message = props.data.message_type=='ERROR'?await props.methods.FFB(
                                                     '/server-db/app_settings_display', 
-                                                    `data_app_id=${props.data_app_id}&setting_type=MESSAGE&value=${props.code}`, 
+                                                    `data_app_id=${props.data.data_app_id}&setting_type=MESSAGE&value=${props.data.code}`, 
                                                     'GET', 'APP_DATA')
                                     .then((/**@type{string}*/result)=>JSON.parse(result)[0].display_data)
-                                    .catch((/**@type{Error}*/error)=>error):props.message;
-                render_message(display_message, props.message_type=='LOG'?'common_font_log':'common_font_normal');
-                props.common_document.querySelector('#common_message_close')['data-function'] = function_close;
-                props.common_document.querySelector('#common_message_close').focus();
+                                    .catch((/**@type{Error}*/error)=>error):props.data.message;
+                render_message(display_message, props.data.message_type=='LOG'?'common_font_log':'common_font_normal');
+                props.methods.common_document.querySelector('#common_message_close')['data-function'] = function_close;
+                props.methods.common_document.querySelector('#common_message_close').focus();
                 break;
             }
             case 'CONFIRM':{
                 render_message(null, null);
-                props.common_document.querySelector('#common_message_close')['data-function'] = props.function_event;
-                props.common_document.querySelector('#common_message_close').focus();
+                props.methods.common_document.querySelector('#common_message_close')['data-function'] = props.methods.function_event;
+                props.methods.common_document.querySelector('#common_message_close').focus();
                 break;
             }
             case 'PROGRESS':{
-                render_message(props.message.text, 'common_font_log');
-                props.common_document.querySelector('#common_message_progressbar').style.width = `${(props.message.part/props.message.total)*100}%`;
+                render_message(props.data.message.text, 'common_font_log');
+                props.methods.common_document.querySelector('#common_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
                 break;
             }
         }

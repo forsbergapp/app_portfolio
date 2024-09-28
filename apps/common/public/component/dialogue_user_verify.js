@@ -23,37 +23,40 @@ const template = props => `
                             </div>
                             <div id='common_user_verify_cancel' class='common_dialogue_button common_icon'></div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          user_verification_type:string,
- *          username_login:string,
- *          password_login:string,
- *          username_signup:string,
- *          password_signup:string,
- *          title:string,
- *          function_data_function:function}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      user_verification_type:string,
+ *                      username_login:string,
+ *                      password_login:string,
+ *                      username_signup:string,
+ *                      password_signup:string,
+ *                      title:string},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      function_data_function:function
+ *                      },
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */
 const component = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show2');
-    props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show2');
+    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     let verification_type ='';
     let username = '';
     let password = '';
-    switch (props.user_verification_type){
+    switch (props.data.user_verification_type){
         case 'LOGIN':{
             verification_type = '1';
-            username = props.username_login;
-            password = props.password_login;
+            username = props.data.username_login;
+            password = props.data.password_login;
             break;
         }
         case 'SIGNUP':{
             verification_type = '2';
-            username = props.username_signup;
-            password = props.password_signup;
+            username = props.data.username_signup;
+            password = props.data.password_signup;
             break;
         }
         case 'FORGOT':{
@@ -67,12 +70,12 @@ const component = async props => {
     }
     
     const post_component = async () =>{
-        props.common_document.querySelector(`#${props.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.function_data_function;
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.methods.function_data_function;
     };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: template({title: props.title,
+        template: template({title: props.data.title,
                             verification_type:verification_type,
                             username:username,
                             password:password})

@@ -20,7 +20,12 @@ const template = props =>`  <!DOCTYPE html>
                             </body>
                             </html> `;
 /**
- * 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      html:string
+ *                      },
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          html:string}} props 
  * @returns {Promise.<{ props:{function_post:null}, 
@@ -32,9 +37,9 @@ const method = async props => {
     return {
         props:  {function_post:null},
         data:   null,
-        template: template({app_link_app_report_css:props.common_document.querySelector('#app_link_app_report_css').attributes['href'].nodeValue,
-                            common_link_common_css:props.common_document.querySelector('#common_link_common_css').attributes['href'].nodeValue,
-                            html: props.html})
+        template: template({app_link_app_report_css:props.methods.common_document.querySelector('#app_link_app_report_css').attributes['href'].nodeValue,
+                            common_link_common_css:props.methods.common_document.querySelector('#common_link_common_css').attributes['href'].nodeValue,
+                            html: props.data.html})
     };
 };
 export default method;

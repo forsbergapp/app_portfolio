@@ -6,20 +6,21 @@ const template = () => `<div id='scan_open_mobile_qrcode'></div>
                         <div id='scan_open_mobile_title1' class='common_icon'></div>
                         <div id='scan_open_mobile_close' class='common_dialogue_button common_icon' ></div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          function_create_qr:function,
- *          function_getHostname:function}} props 
+ * @param {{data:       {common_mountdiv:string},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      create_qr:import('../../../common_types.js').CommonModuleCommon['create_qr'],
+ *                      getHostname:import('../../../common_types.js').CommonModuleCommon['getHostname']},
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
  */
 const method = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
-    props.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
     const post_component = async () =>{
-        props.function_create_qr('scan_open_mobile_qrcode', props.function_getHostname());
+        props.methods.create_qr('scan_open_mobile_qrcode', props.methods.getHostname());
     };
     return {
         props:  {function_post:post_component},

@@ -226,15 +226,19 @@ const template = props =>`  <div id='common_toolbar_framework'>
                                 }
                             </div>`;
 /**
- * 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      font_default:boolean|null,
+ *                      font_arabic:boolean|null,
+ *                      font_asian:boolean|null,
+ *                      font_prio1:boolean|null,
+ *                      font_prio2:boolean|null,
+ *                      font_prio3:boolean|null},
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
- *          font_default:boolean|null,
- *          font_arabic:boolean|null,
- *          font_asian:boolean|null,
- *          font_prio1:boolean|null,
- *          font_prio2:boolean|null,
- *          font_prio3:boolean|null}} props 
+ *          }} props 
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:   null,
  *                      template:string}>}
@@ -245,12 +249,12 @@ const component = async props => {
         props:  {function_post:null},
         data:   null,
         template: template({
-                        font_default:   props.font_default,
-                        font_arabic:    props.font_arabic,
-                        font_asian:     props.font_asian,
-                        font_prio1:     props.font_prio1,
-                        font_prio2:     props.font_prio2,
-                        font_prio3:     props.font_prio3
+                        font_default:   props.data.font_default,
+                        font_arabic:    props.data.font_arabic,
+                        font_asian:     props.data.font_asian,
+                        font_prio1:     props.data.font_prio1,
+                        font_prio2:     props.data.font_prio2,
+                        font_prio3:     props.data.font_prio3
                     })
     };
 };

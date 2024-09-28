@@ -15,13 +15,15 @@ const template = props => ` <div class='paper ${props.class}'>
                                 ${props.html}
                             </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          class:string,
- *          theme_id:string,
- *          type:'day'|'month'|'year',
- *          html:string}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      class:string,
+ *                      theme_id:string,
+ *                      type:'day'|'month'|'year',
+ *                      html:string
+ *                      },
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:null, 
  *                      template:string}>}
@@ -31,7 +33,7 @@ const method = async props => {
     return {
         props:  {function_post:null},
         data:   null,
-        template: template({class:props.class, theme_id:props.theme_id, type:props.type, html:props.html})
+        template: template({class:props.data.class, theme_id:props.data.theme_id, type:props.data.type, html:props.data.html})
     };
 };
 export default method;

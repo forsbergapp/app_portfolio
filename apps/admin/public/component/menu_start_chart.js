@@ -80,28 +80,28 @@ const template = props => ` <div id='box1' class='${props.spinner}'>
                                 }
                             </div>`;
 /**
-* 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          system_admin:string,
-*          function_ComponentRender:function,
-*          function_FFB:function}} props 
+* @param {{ data:{      common_mountdiv:string,
+*                       system_admin:string},
+*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+*                       ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*           lifecycle:  null}} props
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:null,
 *                      template:string}>}
 */
 const component = async props => {
-    const app_id = props.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
-    const year = props.common_document.querySelector('#select_year_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
-    const month = props.common_document.querySelector('#select_month_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
+    const app_id = props.methods.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
+    const year = props.methods.common_document.querySelector('#select_year_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
+    const month = props.methods.common_document.querySelector('#select_month_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
 
     // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]',                 TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']},
-    const system_admin_statGroup = props.system_admin!=null?
-    props.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[0].toUpperCase():null;
-    const system_admin_statValues = props.system_admin!=null?
-        { value: props.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[1],
-            unique:props.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[2],
-            statGroup:props.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[3]
+    const system_admin_statGroup = props.data.system_admin!=null?
+    props.methods.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[0].toUpperCase():null;
+    const system_admin_statValues = props.data.system_admin!=null?
+        { value: props.methods.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[1],
+            unique:props.methods.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[2],
+            statGroup:props.methods.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[3]
         }:{value:0, unique:0, statGroup:0};
     /**
      * Chart 2 pie colors
@@ -137,13 +137,13 @@ const component = async props => {
      * @returns {string}
      */
     const chart1_legend = (stat_app_id, stat_value) =>{
-        if (props.system_admin!=null)
+        if (props.data.system_admin!=null)
             if (system_admin_statGroup=='REQUEST')
                 return stat_value;
             else
-                return Array.from(props.common_document.querySelectorAll('#select_system_admin_stat .common_select_option')).filter(value=>value.getAttribute('data-value').split('#')[1]==stat_value)[0].innerText;
+                return Array.from(props.methods.common_document.querySelectorAll('#select_system_admin_stat .common_select_option')).filter(value=>value.getAttribute('data-value').split('#')[1]==stat_value)[0].innerText;
         else{
-            return Array.from(props.common_document.querySelectorAll('#select_app_menu1 .common_select_option')).filter(app=>parseInt(app.getAttribute('data-value'))==stat_app_id)[0].innerText;
+            return Array.from(props.methods.common_document.querySelectorAll('#select_app_menu1 .common_select_option')).filter(app=>parseInt(app.getAttribute('data-value'))==stat_app_id)[0].innerText;
         }
 
     };
@@ -151,7 +151,7 @@ const component = async props => {
         let path;
         let query;
         let authorization_type;
-        if (props.system_admin!=null){
+        if (props.data.system_admin!=null){
             path = '/server-log/log-stat';
             if (system_admin_statGroup=='REQUEST'){
                 query = `select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`;
@@ -171,10 +171,10 @@ const component = async props => {
          *          day:number,
          *          amount:number,
          *          statValue:string}[]} */
-        const charts = await props.function_FFB(path, query, 'GET', authorization_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+        const charts = await props.methods.FFB(path, query, 'GET', authorization_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
-                                                                                                system_admin:props.system_admin, 
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'', 
+                                                                                                system_admin:props.data.system_admin, 
                                                                                                 app_id:app_id,
                                                                                                 chart1_stat:charts.filter(row=> row.chart==1),
                                                                                                 function_chart1_pie_colors:chart1_pie_colors,
@@ -182,18 +182,18 @@ const component = async props => {
                                                                                                 chart2_color_app_all:'rgb(81, 171, 255)',
                                                                                                 chart2_color_app:'rgb(197 227 255)',
                                                                                                 chart2_stat:charts.filter(row=> row.chart==2),
-                                                                                                chart2_legend_text:props.system_admin!=null?
-                                                                                                                        props.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').innerText:
-                                                                                                                        props.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerText,
-                                                                                                chart2_legend_text_apps:props.system_admin!=null?
-                                                                                                                            props.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerText:
+                                                                                                chart2_legend_text:props.data.system_admin!=null?
+                                                                                                                        props.methods.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').innerText:
+                                                                                                                        props.methods.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerText,
+                                                                                                chart2_legend_text_apps:props.data.system_admin!=null?
+                                                                                                                            props.methods.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerText:
                                                                                                                             ''});
     };
     return {
     props:  {function_post:post_component},
     data:   null,
     template: template({ spinner:'css_spinner', 
-                            system_admin:props.system_admin, 
+                            system_admin:props.data.system_admin, 
                             app_id:app_id,
                             chart1_stat:[],
                             function_chart1_pie_colors:chart1_pie_colors,

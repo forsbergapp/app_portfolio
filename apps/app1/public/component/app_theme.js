@@ -25,9 +25,12 @@ const template = () =>` <div id="app_themes">
                         </div>`;
 /**
  * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          function_app_theme_update:function}} props 
+ * @param {{data:       {common_mountdiv:string},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      app_theme_update:import('../js/app.js')['app_theme_update']
+ *                      },
+ *          lifecycle:  null}} props 
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
@@ -36,7 +39,7 @@ const component = async props => {
     
     const post_component = async () =>{
         //set app theme
-        props.function_app_theme_update();
+        props.methods.app_theme_update();
     };
     return {
         props:  {function_post:post_component},

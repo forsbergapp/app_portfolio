@@ -56,37 +56,42 @@ const app_event_click = event =>{
                 case 'common_user_menu_avatar_img':
                 case 'common_user_menu_logged_out':
                 case 'common_user_menu_default_avatar':{
-                    common.ComponentRender({mountDiv:'common_dialogue_user_menu',
-                        props:{   app_id:common.COMMON_GLOBAL.app_id,
-                            user_account_id:common.COMMON_GLOBAL.user_account_id,
-                            common_app_id:common.COMMON_GLOBAL.common_app_id,
-                            data_app_id:common.COMMON_GLOBAL.common_app_id,
-                            username:common.COMMON_GLOBAL.user_account_username,
-                            token_exp:common.COMMON_GLOBAL.token_exp,
-                            token_iat:common.COMMON_GLOBAL.token_iat,
-                            token_timestamp: common.COMMON_GLOBAL.token_timestamp,
-                            system_admin:common.COMMON_GLOBAL.system_admin,
-                            user_locale:common.COMMON_GLOBAL.user_locale,
-                            user_timezone:common.COMMON_GLOBAL.user_timezone,
-                            user_direction:common.COMMON_GLOBAL.user_direction,
-                            user_arabic_script:common.COMMON_GLOBAL.user_arabic_script,
-                            //functions
-                            function_set_current_value:common.set_current_value,
-                            function_FFB:common.FFB,
-                            function_ComponentRender:common.ComponentRender,
-                            function_user_session_countdown:common.user_session_countdown,
-                            function_show_message:common.show_message},
-                        methods:null,
-                        lifecycle:null,
-                        path:'/common/component/dialogue_user_menu.js'})
+                    common.ComponentRender({
+                        mountDiv:   'common_dialogue_user_menu',
+                        data:       {
+                                    app_id:common.COMMON_GLOBAL.app_id,
+                                    user_account_id:common.COMMON_GLOBAL.user_account_id,
+                                    common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                    data_app_id:common.COMMON_GLOBAL.common_app_id,
+                                    username:common.COMMON_GLOBAL.user_account_username,
+                                    token_exp:common.COMMON_GLOBAL.token_exp,
+                                    token_iat:common.COMMON_GLOBAL.token_iat,
+                                    token_timestamp: common.COMMON_GLOBAL.token_timestamp,
+                                    system_admin:common.COMMON_GLOBAL.system_admin,
+                                    user_locale:common.COMMON_GLOBAL.user_locale,
+                                    user_timezone:common.COMMON_GLOBAL.user_timezone,
+                                    user_direction:common.COMMON_GLOBAL.user_direction,
+                                    user_arabic_script:common.COMMON_GLOBAL.user_arabic_script},
+                        methods:    {
+                                    set_current_value:common.set_current_value,
+                                    FFB:common.FFB,
+                                    ComponentRender:common.ComponentRender,
+                                    user_session_countdown:common.user_session_countdown,
+                                    show_message:common.show_message
+                                    },
+                        lifecycle:  null,
+                        path:       '/common/component/dialogue_user_menu.js'})
                     .then(()=>
-                        common.ComponentRender({mountDiv:'common_dialogue_user_menu_app_theme',
-                            props:{   function_theme_default_list:common.theme_default_list,
-                                function_ComponentRender:common.ComponentRender, 
-                                function_app_theme_update:common.common_preferences_post_mount},
-                            methods:null,
-                            lifecycle:null,
-                            path:'/common/component/app_theme.js'}));
+                        common.ComponentRender({
+                            mountDiv:   'common_dialogue_user_menu_app_theme',
+                            data:       null,
+                            methods:    {
+                                        theme_default_list:common.theme_default_list,
+                                        ComponentRender:common.ComponentRender, 
+                                        app_theme_update:common.common_preferences_post_mount
+                                        },
+                            lifecycle:  null,
+                            path:       '/common/component/app_theme.js'}));
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
@@ -159,11 +164,12 @@ const app_event_click = event =>{
  * @returns {Promise.<void>}
  */
 const init_map = async ()=>{
-    await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
-        props:null,
-        methods:null,
-        lifecycle:null,
-        path:'/component/app.js'});
+    await common.ComponentRender({
+        mountDiv:   common.COMMON_GLOBAL.app_div,
+        data:       null,
+        methods:    null,
+        lifecycle:  null,
+        path:       '/component/app.js'});
     common.map_init(APP_GLOBAL.module_leaflet_map_container,
                                 common.COMMON_GLOBAL.client_longitude,
                                 common.COMMON_GLOBAL.client_latitude,
@@ -189,11 +195,12 @@ const init_map = async ()=>{
  * @returns {Promise.<void>}
  */
 const init_app = async () =>{
-    await common.ComponentRender({mountDiv:'common_user_account',
-        props:null,
-        methods:null,
-        lifecycle:null,
-        path:'/common/component/user_account.js'});
+    await common.ComponentRender({
+        mountDiv:   'common_user_account',
+        data:       null,
+        methods:    null,
+        lifecycle:  null,
+        path:       '/common/component/user_account.js'});
     APP_GLOBAL.module_leaflet_map_container      ='mapid';
     init_map();
 };
