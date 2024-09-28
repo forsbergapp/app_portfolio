@@ -46,12 +46,13 @@ const template = () =>` <div class='setting_horizontal_row'>
  *                       component_setting_update:import('../js/app.js')['component_setting_update']
  *                       },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
-    const post_component = async () =>{
+    const onMounted = async () =>{
         //Text
         props.methods.common_document.querySelector('#setting_input_reportheader1').innerHTML = props.data.user_settings.text_header_1_text;
         props.methods.common_document.querySelector('#setting_input_reportheader2').innerHTML = props.data.user_settings.text_header_2_text;
@@ -82,8 +83,9 @@ const method = async props => {
         props.methods.common_document.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template()
     };
 };

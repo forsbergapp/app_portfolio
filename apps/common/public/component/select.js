@@ -38,13 +38,14 @@ const template = props => ` <div class='common_select_dropdown'>
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
 
-    const post_component = async () =>{
+    const onMounted = async () =>{
         // add first static option first if any then add fetched options
         const ffb_options = props.data.path?await props.methods.FFB(props.data.path, props.data.query, props.data.method, props.data.authorization_type, null)
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows):[];
@@ -61,8 +62,9 @@ const component = async props => {
    };
    
    return {
-       props:  {function_post:post_component},
+       lifecycle:  {onMounted:onMounted},
        data:   null,
+       methods:null,
        template: template({ spinner:'css_spinner',
                             default_data_value:props.data.default_data_value,
                             default_value:props.data.default_value,

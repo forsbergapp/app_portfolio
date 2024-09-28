@@ -20,13 +20,14 @@ const template = () => `<div id='app_page_start_shop' class='app_page_start_shop
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      show_message:function},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
       
-    const post_component = async () =>{
+    const onMounted = async () =>{
         await props.methods.ComponentRender({
             mountDiv:   'app_page_start_shop', 
             data:       {
@@ -64,8 +65,9 @@ const component = async props => {
             path:       '/common/component/app_data_display.js'});
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template()
     };
 };

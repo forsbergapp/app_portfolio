@@ -17,15 +17,17 @@ const template = () =>` <div id='app_top'>
  * @param {{data:       {common_mountdiv:string},
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
  *          lifecycle:  null}} props 
- * @returns {Promise.<{ props:{function_post:null}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:null}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
     props;
     return {
-        props:  {function_post:null},
+        lifecycle:  {onMounted:null},
         data:   null,
+        methods:null,
         template: template()
     };
 };

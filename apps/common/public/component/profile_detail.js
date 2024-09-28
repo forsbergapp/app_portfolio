@@ -78,15 +78,16 @@ const template = props => ` ${props.spinner==''?
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function|null}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
 
     if (!props.data.user_account_id)
         props.methods.show_common_dialogue('LOGIN');
-   const post_component = async () =>{
+   const onMounted = async () =>{
         if (props.data.user_account_id){
             let path;
             switch (props.data.detailchoice){
@@ -125,8 +126,9 @@ const component = async props => {
         props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = '';
   };
   return {
-      props:  {function_post:post_component},
+      lifecycle:  {onMounted:onMounted},
       data:   null,
+      methods:null,
       template: template({  spinner:'css_spinner',
                             user_account_id:props.data.user_account_id,
                             user_account_id_profile:props.data.user_account_id_profile,

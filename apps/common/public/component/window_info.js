@@ -36,9 +36,11 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
  *                      common_setTimeout:import('../../../common_types.js').CommonModuleCommon['common_setTimeout']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:   null,
- *                      template:string}>}
+ *                      methods:null,
+ *                      template:string}
+ * >}
  */
 const component = async props => {
     /**
@@ -125,7 +127,7 @@ const component = async props => {
                                 content:variables.CONTENT});
         }
     };
-    const post_component = async () =>{
+    const onMounted = async () =>{
         if (props.data.info==3){
             //print content only
             props.methods.common_document.querySelector('#common_window_info_content').contentWindow.document.open();
@@ -145,8 +147,9 @@ const component = async props => {
     };
     const variables = get_variables(props.data.info);
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: render_template()
     };
 };

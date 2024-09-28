@@ -43,12 +43,13 @@ const template = props => props.system_admin?`  <div id='menu_7_content_widget1'
 *          methods:{    common_document:import('../../../common_types.js').CommonAppDocument,
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *          lifecycle:   null}} props 
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:null, 
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
-   const post_component = async () =>{
+   const onMounted = async () =>{
         //checks installed if system admin
         /**@type{boolean|null} */
         const installed = props.data.system_admin?await props.methods.FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
@@ -60,8 +61,9 @@ const component = async props => {
                                                                                             });
    };
    return {
-       props:  {function_post:post_component},
+       lifecycle:  {onMounted:onMounted},
        data:   null,
+       methods:null,
        template: template({ spinner:'css_spinner',
                             system_admin:props.data.system_admin,
                             installed:false

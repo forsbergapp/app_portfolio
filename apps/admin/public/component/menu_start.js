@@ -45,12 +45,13 @@ const template = props => ` <div id='menu_1_content_widget1' class='widget'>
 *                       ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:null,
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
-   const post_component = async () =>{
+   const onMounted = async () =>{
         //system admin
         /**@type{{status_codes:[number, string][]}} */
         const result_obj = props.data.system_admin!=null?await props.methods.FFB('/server/info-statuscode', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)):[];
@@ -149,8 +150,9 @@ const component = async props => {
                 path:'/common/component/select.js'});
    };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({spinner:'css_spinner', system_admin:props.data.system_admin, maintenance:0})
     };
 };

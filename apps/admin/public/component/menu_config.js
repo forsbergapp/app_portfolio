@@ -23,18 +23,20 @@ const template = () => ` <div id='menu_6_content_widget1' class='widget'>
 *           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
 *                       nav_click:import('../js/secure.js').nav_click},
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:null, 
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
-    const post_component = () =>{
+    const onMounted = () =>{
         props.methods.nav_click('list_config_nav_server');
     };
  
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template()
     };
 };

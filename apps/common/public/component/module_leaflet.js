@@ -23,8 +23,9 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  *                      map_update:import('../../../common_types.js').CommonModuleCommon['map_update']
  *                       },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:null}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:null}, 
  *                      data:   import('../../../common_types.js').CommonModuleLeafletData,
+ *                      methods:null,
  *                      template:null}>}
  */
 const component = async props => {
@@ -87,7 +88,7 @@ const component = async props => {
                                                                                             leaflet_container:LEAFLET_CONTAINER
                                                                                             });    
     return {
-        props:  {function_post:null},
+        lifecycle:  {onMounted:null},
         data:   {   
                     library_Leaflet:Leaflet,
                     //return Leaflet mounted map on already mounted div
@@ -95,6 +96,7 @@ const component = async props => {
                     //return Leaflet inner mounted map div to add custom code inside Leaflet
                     leaflet_container:LEAFLET_CONTAINER
                 },
+        methods:null,
         template: null
     };
 };
