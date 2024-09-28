@@ -64,13 +64,14 @@ const template = () => `<div id='mapid'></div>
  *          app_id:number,
  *          user_settings:import('../js//types.js').APP_user_setting_record,
  *          }} props 
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
     
-    const post_component = async () =>{
+    const onMounted = async () =>{
         const settings = (await props.methods.app_settings_get()).filter((/**@type{*}*/setting)=>
                                                                                         setting.app_id == props.data.app_id && 
                                                                                         setting.app_setting_type_name.startsWith('PLACE'));
@@ -124,8 +125,9 @@ const method = async props => {
         });
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template()
     };
 };

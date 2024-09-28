@@ -345,8 +345,9 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:{function_page_navigation:function, function_monitor_detail_server_log:function},
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
@@ -538,7 +539,7 @@ const component = async props => {
                     lifecycle:null,
                     path:'/component/menu_monitor_detail_server_log.js'});
     };
-    const post_component = async () =>{
+    const onMounted = async () =>{
         //fetch log parameter data if SERVER_LOG
         const monitor_log_data = props.data.monitor_detail=='SERVER_LOG'?
                                     await props.methods.get_log_parameters():{ parameters:{SCOPE_REQUEST:'',
@@ -602,10 +603,11 @@ const component = async props => {
         }
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   {function_page_navigation:page_navigation,
                  function_monitor_detail_server_log:monitor_detail_server_log
         },
+        methods:null,
         template: template({spinner:'css_spinner', 
                             system_admin:props.data.system_admin, 
                             service_socket_client_ID:props.data.service_socket_client_ID,

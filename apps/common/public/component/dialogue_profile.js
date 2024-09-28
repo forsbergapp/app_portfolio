@@ -168,9 +168,10 @@ const template = props =>
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:   {   profile_id:number|null,
  *                                  private:number|null}|null,
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -275,18 +276,19 @@ const component = async props => {
                                                                                                 });
             props.methods.common_document.querySelector('#common_profile_stat_list')['data-function'] = function_user_click;
     };
-    const post_component = async () =>{
+    const onMounted = async () =>{
         if (props.data.tab=='INFO')
             profile_show(props.data.info_user_account_id_other, props.data.info_username);
         else
             await profile_stat(props.data.top_statchoice, props.data.top_app_rest_url, props.methods.function_user_click);
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   props.data.tab=='INFO'?{
                     profile_id:profile.id,
                     private:profile.private
                 }:null,
+        methods:null,
         template: template({
             spinner:'css_spinner',
             info_profile:profile_empty,

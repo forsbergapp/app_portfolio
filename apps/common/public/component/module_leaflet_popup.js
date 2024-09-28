@@ -37,8 +37,9 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
  *                      module_leaflet_session_map:*},
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:null}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:null}, 
  *                      data:   null,
+ *                      methods:null,
  *                      template:null}>}
  */
 const component = async props => {
@@ -59,8 +60,9 @@ const component = async props => {
     marker._icon.id = props.data.marker_id;
     
     return {
-        props:  {function_post:null},
+        lifecycle:  {onMounted:null},
         data:   null,
+        methods:null,
         template: null
     };
 };

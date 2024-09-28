@@ -11,13 +11,14 @@ const template = () => '';
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      app_theme_update:function},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:   null,
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
     
-    const post_component = async () =>{
+    const onMounted = async () =>{
         const themes = props.methods.theme_default_list();
         await props.methods.ComponentRender({
             mountDiv:   props.data.common_mountdiv, 
@@ -39,8 +40,9 @@ const component = async props => {
         props.methods.app_theme_update();
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template()
     };
 };

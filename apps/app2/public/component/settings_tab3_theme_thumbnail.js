@@ -24,15 +24,17 @@ const template = props => ` <div class='paper ${props.class}'>
  *                      },
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:null}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:null}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
 
     return {
-        props:  {function_post:null},
+        lifecycle:  {onMounted:null},
         data:   null,
+        methods:null,
         template: template({class:props.data.class, theme_id:props.data.theme_id, type:props.data.type, html:props.data.html})
     };
 };

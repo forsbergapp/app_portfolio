@@ -52,13 +52,14 @@ const template = props => ` ${props.file=='SERVER'?
 *          methods:{    common_document:import('../../../common_types.js').CommonAppDocument,
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *          lifecycle:   null}} props 
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:null, 
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
 const server_groups = [0,1,2,3,4];
-   const post_component = async () =>{
+   const onMounted = async () =>{
         const config_server = await props.methods.FFB(`/server-config/config/${props.data.file}`, 'saved=1', 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result).data);
         props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'',
                                                                                                 server_group:server_groups,
@@ -71,8 +72,9 @@ const server_groups = [0,1,2,3,4];
  };
  
  return {
-     props:  {function_post:post_component},
+     lifecycle:  {onMounted:onMounted},
      data:   null,
+     methods:null,
      template: template({   spinner:'css_spinner',
                             server_group:server_groups, 
                             file:props.data.file,

@@ -95,8 +95,9 @@ const template = props =>`  <div id='common_user_start_logo' class='common_image
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:   null,
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -104,7 +105,7 @@ const component = async props => {
     props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
 
-    const post_component = async () =>{
+    const onMounted = async () =>{
         props.methods.common_document.querySelector(`#${props.data.user_click}`).click();
         //fetch providers if not admin app
         const providers = props.data.app_id == props.data.common_app_id?[]:
@@ -123,8 +124,9 @@ const component = async props => {
             props.methods.common_document.querySelector(`#${props.data.user_click}`).click();
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({
                             spinner:'css_spinner',
                             providers:[], 

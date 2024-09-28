@@ -17,8 +17,9 @@ const template = () =>` <div id='common_dialogue_maintenance_content' class='com
  *                      common_setTimeout:import('../../../common_types.js').CommonModuleCommon['common_setTimeout']
  *                      },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -35,8 +36,9 @@ const component = async props => {
         }
     };    
     return {
-        props:  {function_post:maintenance_countdown},
+        lifecycle:  {onMounted:maintenance_countdown},
         data:   null,
+        methods:null,
         template: template()
     };
 };

@@ -194,8 +194,9 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      button_post:function,
  *                      button_delete:function},
  *          lifecycle:  null}} props 
- * @returns {Promise.<{ props:{function_post:function}, 
- *                      data:null, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ *                      data:null,
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -264,7 +265,7 @@ const component = async props => {
             return '';
     };
 
-    const post_component = async () => {
+    const onMounted = async () => {
         
         const master_object = props.data.master_path?
                                     await props.methods.FFB(   props.data.master_path, 
@@ -341,8 +342,9 @@ const component = async props => {
             props.methods.common_document.querySelector(`#${props.data.common_mountdiv} .common_app_data_display_button_delete`)['data-function'] = props.methods.button_delete;
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({display_type:props.data.display_type,
                             master_object:null,
                             rows:[],

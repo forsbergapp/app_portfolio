@@ -72,12 +72,13 @@ const template = props => ` ${props.spinner!=''?
 *           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props
-* @returns {Promise.<{ props:{function_post:function}, 
+* @returns {Promise.<{ lifecycle:{onMounted:function}, 
 *                      data:null, 
+*                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
-    const post_component = async () =>{
+    const onMounted = async () =>{
         const user_logon = await props.methods.FFB('/server-db_admin/user_account_logon', `data_user_account_id=${props.data.user_account_id}&data_app_id=''`, 'GET', 'APP_ACCESS', null)
                                     .then((/**@type{string}*/result)=>JSON.parse(result));
         props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:'',
@@ -86,8 +87,9 @@ const component = async props => {
 };
  
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({spinner:'css_spinner',
                             user_logons:[]
         })

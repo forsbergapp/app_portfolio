@@ -167,13 +167,14 @@ const template = () =>`   <div class='setting_horizontal_row'>
  *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get']
  *                       },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
     
-    const post_component = async () =>{
+    const onMounted = async () =>{
         const settings = await props.methods.app_settings_get();
         //Method
         await props.methods.ComponentRender({
@@ -386,8 +387,9 @@ const method = async props => {
         props.methods.common_document.querySelector('#setting_select_report_show_fast_start_end').value = props.data.user_settings.prayer_column_fast_start_end;
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template()
     };
 };

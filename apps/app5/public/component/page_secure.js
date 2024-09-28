@@ -42,13 +42,14 @@ const template = props => ` <div id='app_page_secure'>
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props 
- * @returns {Promise.<{ props:{function_post:function}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
  *                      data:null, 
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    const post_component = async () =>{
-        const customer = await props.methods.FFB('/app-function/CUSTOMER_GET', null, 'POST', 'APP_ACCESS', {user_account_id:props.user_account_id,data_app_id:props.app_id})
+    const onMounted = async () =>{
+        const customer = await props.methods.FFB('/app-function/CUSTOMER_GET', null, 'POST', 'APP_ACCESS', {user_account_id:props.data.user_account_id,data_app_id:props.data.app_id})
                                             .then((/**@type{string}*/result)=>JSON.parse(result))
                                             .catch((/**@type{Error}*/error)=>{throw error;});
         
@@ -92,8 +93,9 @@ const component = async props => {
         }
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({spinner:'css_spinner', customer:[]})
     };
 };

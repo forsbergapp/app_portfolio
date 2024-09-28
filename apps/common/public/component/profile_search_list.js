@@ -39,8 +39,9 @@ const template = props =>`  <div id='common_profile_search_list' ${props.spinner
  *                      function_click_function:function,
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ props:{function_post:function|null}, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function|null}, 
  *                      data:   null,
+ *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -57,7 +58,7 @@ const component = async props => {
         props.methods.common_document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         props.methods.common_document.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
-    const post_component = async () =>{
+    const onMounted = async () =>{
         const records = await props.methods.FFB(   '/server-db/user_account-profile/', 
                                                     `id=${props.data.user_account_id ?? ''}&search=${encodeURI(searched_username)}` +
                                                     `&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
@@ -81,8 +82,9 @@ const component = async props => {
             
     };
     return {
-        props:  {function_post:input_control?post_component:null},
+        lifecycle:  {onMounted:input_control?onMounted:null},
         data:   null,
+        methods:null,
         template: template({spinner:'css_spinner',records:[]})
     };
 };

@@ -31,22 +31,24 @@ const template = props => ` <div id='about_logo'></div>
  *                      },
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
  *          lifecycle:  null}} props 
- * @returns {Promise.<{ props:{function_post:function}, 
- *                      data:null, 
+ * @returns {Promise.<{ lifecycle:{onMounted:function}, 
+ *                      data:null,
+ *                      methods:null, 
  *                      template:string}>}
  */
 const method = async props => {
     props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
     props.methods.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
-    const post_component = async () =>{
+    const onMounted = async () =>{
         if ((props.data.app_link_url ?? '')=='')
             props.methods.common_document.querySelector('#about_logo').style.backgroundImage=`url(${props.data.about_logo})`;
         else
             props.methods.common_document.querySelector('#app_link').innerHTML = props.data.app_link_title;
     };
     return {
-        props:  {function_post:post_component},
+        lifecycle:  {onMounted:onMounted},
         data:   null,
+        methods:null,
         template: template({app_copyright:props.data.app_copyright,
                             info_link1:props.data.info_link_policy_name,
                             info_link2:props.data.info_link_disclaimer_name,
