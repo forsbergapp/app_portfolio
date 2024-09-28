@@ -23,7 +23,7 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  *                      map_update:import('../../../common_types.js').CommonModuleCommon['map_update']
  *                       },
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:null}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:   import('../../../common_types.js').CommonModuleLeafletData,
  *                      methods:null,
  *                      template:null}>}

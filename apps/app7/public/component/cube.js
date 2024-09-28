@@ -111,7 +111,7 @@ const template = props =>`  <div id='cube'>
  *                      ComponentRemove:import('../../../common_types.js').CommonModuleCommon['ComponentRemove'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
  *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:{onMounted:null}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:{  cube_init:                  function, 
  *                              cube_show_solution:         function,
  *                              cube_solve:                 function,

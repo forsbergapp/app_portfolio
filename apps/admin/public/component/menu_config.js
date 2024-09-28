@@ -23,7 +23,7 @@ const template = () => ` <div id='menu_6_content_widget1' class='widget'>
 *           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
 *                       nav_click:import('../js/secure.js').nav_click},
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:{onMounted:function}, 
+* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
 *                      data:null, 
 *                      methods:null,
 *                      template:string}>}
