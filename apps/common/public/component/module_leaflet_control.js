@@ -38,22 +38,25 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
                             </div>
                         </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          data_app_id:number,
- *          locale:string,
- *          longitude:string,
- *          latitude:string,
- *          map_layer:string,
- *          map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[],
- *          module_leaflet_container:string,
- *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *          function_map_country:function,
- *          function_map_city_empty:function,
- *          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
- *          function_search_event:function,
- *          function_map_setstyle:function}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      data_app_id:number,
+ *                      locale:string,
+ *                      longitude:string,
+ *                      latitude:string,
+ *                      map_layer:string,
+ *                      map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[],
+ *                      module_leaflet_container:string},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+ *                      map_country:import('../../../common_types.js').CommonModuleCommon['map_country'],
+ *                      map_city_empty:import('../../../common_types.js').CommonModuleCommon['map_city_empty'],
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
+ *                      function_search_event:function,
+ *                      map_setstyle:import('../../../common_types.js').CommonModuleCommon['map_setstyle']
+ *                      },
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:  null,
  *                      template:null}>}
@@ -64,58 +67,58 @@ const component = async props => {
         
 
         //mount custom code inside Leaflet container
-        props.common_document.querySelectorAll(`#${props.common_mountdiv} #${props.module_leaflet_container} .leaflet-control`)[0].innerHTML += 
+        props.methods.common_document.querySelectorAll(`#${props.data.common_mountdiv} #${props.data.module_leaflet_container} .leaflet-control`)[0].innerHTML += 
             template({
                         title_search:'Search',
                         title_fullscreen:'Fullscreen',
                         title_my_location:'My location',
-                        longitude :props.latitude,
-                        latitude :props.longitude
+                        longitude :props.data.latitude,
+                        latitude :props.data.longitude
                     });
         //country
-        await props.function_ComponentRender({mountDiv:'common_module_leaflet_select_country', 
-            props:{
-                default_data_value:'',
-                default_value:'...',
-                options:await props.function_map_country(props.locale),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
+        await props.methods.ComponentRender({
+            mountDiv:   'common_module_leaflet_select_country', 
+            data:       {
+                        default_data_value:'',
+                        default_value:'...',
+                        options:await props.methods.map_country(props.data.locale),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
             lifecycle:null,
             path:'/common/component/select.js'});
         //cities, caal function that sets empty record
-        props.function_map_city_empty();
+        props.methods.map_city_empty();
 
         //map layers
-        await props.function_ComponentRender({mountDiv:'common_module_leaflet_select_mapstyle', 
-            props:{
-                default_data_value:props.map_layers[0].value,
-                default_value:props.map_layers[0].display_data,
-                options:props.map_layers,
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'display_data',
-                function_FFB:null
-            },
-            methods:null,
+        await props.methods.ComponentRender({
+            mountDiv:   'common_module_leaflet_select_mapstyle', 
+            data:       {
+                        default_data_value:props.data.map_layers[0].value,
+                        default_value:props.data.map_layers[0].display_data,
+                        options:props.data.map_layers,
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'display_data'
+                        },
+            methods:    {FFB:null},
             lifecycle:null,
             path:'/common/component/select.js'});
         
-        if (props.function_search_event){
+        if (props.methods.function_search_event){
             //add search function in data-function that event delegation will use            
-            props.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.function_search_event;
+            props.methods.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.methods.function_search_event;
         }
         //set additonal settings on rendered Leaflet module
-        props.function_map_setstyle(props.map_layer);
+        props.methods.map_setstyle(props.data.map_layer);
     };
     return {
         props:  {function_post:post_component},

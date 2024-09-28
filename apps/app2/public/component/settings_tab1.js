@@ -121,205 +121,208 @@ const template = props => ` <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                             </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          app_id:number,
- *          user_settings:import('../js//types.js').APP_user_setting_record,
- *          user_locale:string,
- *          user_timezone:string,
- *          function_component_setting_update:function,
- *          function_app_settings_get:function,
- *          function_set_current_value:function,
- *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      app_id:number,
+ *                      user_settings:import('../js//types.js').APP_user_setting_record,
+ *                      user_locale:string,
+ *                      user_timezone:string
+ *                      },
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      component_setting_update:import('../js/app.js')['component_setting_update'],
+ *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get'],
+ *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
+ *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
  */
 const method = async props => {
     const post_component = async () =>{
-        const settings = await props.function_app_settings_get();
+        const settings = await props.methods.app_settings_get();
         //get locales using user locale
-        const locales = await props.function_FFB('/server-db/locale', `lang_code=${props.user_locale}`, 'GET', 'APP_DATA', null)
+        /**@type{{locale:string, text:string}[]} */
+        const locales = await props.methods.FFB('/server-db/locale', `lang_code=${props.data.user_locale}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
         //Locale using setting locale
-        await props.function_ComponentRender({mountDiv:'setting_select_locale',
-            props:{
-                default_data_value:props.user_settings.regional_language_locale,
-                default_value:'',
-                options: locales,
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'locale',
-                column_text:'text',
-                function_FFB:props.function_FFB
-              },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_locale',
+            data:       {
+                        default_data_value:props.data.user_settings.regional_language_locale,
+                        default_value:'',
+                        options: locales,
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'locale',
+                        column_text:'text'
+                        },
+            methods:    {FFB:props.methods.FFB},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
         //Locale second using setting locale with first one empty
-        await props.function_ComponentRender({mountDiv:'setting_select_report_locale_second',
-            props:{
-                default_data_value:0,
-                default_value:'',
-                options: [{locale:0, text:''}].concat(locales),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'locale',
-                column_text:'text',
-                function_FFB:props.function_FFB
-              },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_report_locale_second',
+            data:       {
+                        default_data_value:'',
+                        default_value:'',
+                        options: [{locale:'', text:''}].concat(locales),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'locale',
+                        column_text:'text'
+                        },
+            methods:    {FFB:props.methods.FFB},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
         //app
         //Column title
-        await props.function_ComponentRender({mountDiv:'setting_select_report_coltitle',
-            props:{
-                default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'COLUMN_TITLE')[0].value,
-                default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'COLUMN_TITLE')[0].text,
-                options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.app_id && setting.app_setting_type_name == 'COLUMN_TITLE'),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_report_coltitle',
+            data:       {
+                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.data.app_id && setting.app_setting_type_name == 'COLUMN_TITLE')[0].value,
+                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.data.app_id && setting.app_setting_type_name == 'COLUMN_TITLE')[0].text,
+                        options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.data.app_id && setting.app_setting_type_name == 'COLUMN_TITLE'),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
         //commmon
         //Timezone
-        await props.function_ComponentRender({mountDiv:'setting_select_report_timezone',
-            props:{
-                default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'TIMEZONE')[0].value,
-                default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'TIMEZONE')[0].text,
-                options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'TIMEZONE'),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_report_timezone',
+            data:       {
+                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'TIMEZONE')[0].value,
+                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'TIMEZONE')[0].text,
+                        options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'TIMEZONE'),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
         //number system
-        await props.function_ComponentRender({mountDiv:'setting_select_report_numbersystem',
-            props:{
-                default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'NUMBER_SYSTEM')[0].value,
-                default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'NUMBER_SYSTEM')[0].text,
-                options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'NUMBER_SYSTEM'),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_report_numbersystem',
+            data:       {
+                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'NUMBER_SYSTEM')[0].value,
+                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'NUMBER_SYSTEM')[0].text,
+                        options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'NUMBER_SYSTEM'),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
         //direction with first one empty
-        await props.function_ComponentRender({mountDiv:'setting_select_report_direction',
-            props:{
-                default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'DIRECTION')[0].value,
-                default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'DIRECTION')[0].text,
-                options: [{value:'', text:''}].concat(settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'DIRECTION')),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_report_direction',
+            data:       {
+                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'DIRECTION')[0].value,
+                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'DIRECTION')[0].text,
+                        options: [{value:'', text:''}].concat(settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'DIRECTION')),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
         //arabic script with first one empty
-        await props.function_ComponentRender({mountDiv:'setting_select_report_arabic_script',
-            props:{
-                default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'ARABIC_SCRIPT')[0].value,
-                default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'ARABIC_SCRIPT')[0].text,
-                options: [{value:'', text:''}].concat(settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'ARABIC_SCRIPT')),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_report_arabic_script',
+            data:       {
+                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'ARABIC_SCRIPT')[0].value,
+                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'ARABIC_SCRIPT')[0].text,
+                        options: [{value:'', text:''}].concat(settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'ARABIC_SCRIPT')),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
         //calendar type
-        await props.function_ComponentRender({mountDiv:'setting_select_calendartype',
-            props:{
-                default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_TYPE')[0].value,
-                default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_TYPE')[0].text,
-                options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_TYPE'),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_calendartype',
+            data:       {
+                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_TYPE')[0].value,
+                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_TYPE')[0].text,
+                        options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_TYPE'),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
         //calendar hijri type
-        await props.function_ComponentRender({mountDiv:'setting_select_calendar_hijri_type',
-            props:{
-                default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_HIJRI_TYPE')[0].value,
-                default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_HIJRI_TYPE')[0].text,
-                options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_HIJRI_TYPE'),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_calendar_hijri_type',
+            data:       {
+                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_HIJRI_TYPE')[0].value,
+                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_HIJRI_TYPE')[0].text,
+                        options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_HIJRI_TYPE'),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
             lifecycle:null,
             path:'/common/component/select.js'});
       
         //update select with settings values
-        props.function_set_current_value('setting_select_locale', props.user_settings.regional_language_locale);
-        props.function_set_current_value('setting_select_report_locale_second', props.user_settings.regional_second_language_locale);
+        props.methods.set_current_value('setting_select_locale', props.data.user_settings.regional_language_locale);
+        props.methods.set_current_value('setting_select_report_locale_second', props.data.user_settings.regional_second_language_locale);
 
-        props.function_set_current_value('setting_select_report_coltitle', props.user_settings.regional_column_title);
+        props.methods.set_current_value('setting_select_report_coltitle', props.data.user_settings.regional_column_title);
 
-        props.function_set_current_value('setting_select_report_timezone', props.user_settings.regional_timezone);
-        props.function_set_current_value('setting_select_report_numbersystem', props.user_settings.regional_number_system);
-        props.function_set_current_value('setting_select_report_direction', props.user_settings.regional_layout_direction);
-        props.function_set_current_value('setting_select_report_arabic_script', props.user_settings.regional_arabic_script);
-        props.function_set_current_value('setting_select_calendartype', props.user_settings.regional_calendar_type);
-        props.function_set_current_value('setting_select_calendar_hijri_type', props.user_settings.regional_calendar_hijri_type);
+        props.methods.set_current_value('setting_select_report_timezone', props.data.user_settings.regional_timezone);
+        props.methods.set_current_value('setting_select_report_numbersystem', props.data.user_settings.regional_number_system);
+        props.methods.set_current_value('setting_select_report_direction', props.data.user_settings.regional_layout_direction);
+        props.methods.set_current_value('setting_select_report_arabic_script', props.data.user_settings.regional_arabic_script);
+        props.methods.set_current_value('setting_select_calendartype', props.data.user_settings.regional_calendar_type);
+        props.methods.set_current_value('setting_select_calendar_hijri_type', props.data.user_settings.regional_calendar_hijri_type);
 
         //display live timezone time
-        props.function_component_setting_update('REGIONAL', 'TIMEZONE');
+        props.methods.component_setting_update('REGIONAL', 'TIMEZONE');
 
     };
     return {
         props:  {function_post:post_component},
         data:   null,
-        template: template({user_timezone:props.user_timezone})
+        template: template({user_timezone:props.data.user_timezone})
     };
 };
 export default method;

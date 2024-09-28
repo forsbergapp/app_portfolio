@@ -61,11 +61,15 @@ const template = () =>`  <div id='user_settings'>
                                 </div>
                             </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          user_settings:import('../js/types.js').APP_user_setting,
- *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      user_settings:import('../js/types.js').APP_user_setting,
+ *                      },
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']
+ *                       },
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function},
  *                      data:null, 
  *                      template:string}>}
@@ -73,20 +77,20 @@ const template = () =>`  <div id='user_settings'>
 const method = async props => {
     const post_component = async () =>{
         
-        await props.function_ComponentRender({mountDiv:'setting_select_user_setting',
-            props:{
-                default_data_value:props.user_settings.current_id,
-                default_value:props.user_settings.data[props.user_settings.current_id].json_data.description,
-                options: props.user_settings.data.map((setting, index)=>{return {value:index, text:setting.json_data.description};}),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_user_setting',
+            data:       {
+                        default_data_value:props.data.user_settings.current_id,
+                        default_value:props.data.user_settings.data[props.data.user_settings.current_id].json_data.description,
+                        options: props.data.user_settings.data.map((setting, index)=>{return {value:index, text:setting.json_data.description};}),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
             lifecycle:null,
             path:'/common/component/select.js'});
     };

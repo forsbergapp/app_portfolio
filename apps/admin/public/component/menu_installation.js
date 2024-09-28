@@ -5,7 +5,7 @@
  * Displays stat of users
  * @param {{spinner:string,
  *          system_admin:string|null,
- *          installed:boolean}} props
+ *          installed:boolean|null}} props
  */
 const template = props => props.system_admin?`  <div id='menu_7_content_widget1' class='widget'>
                                                     <div id='install_db'>
@@ -38,10 +38,11 @@ const template = props => props.system_admin?`  <div id='menu_7_content_widget1'
                                                 </div>`;
 /**
 * 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          system_admin:string,
-*          function_FFB:function}} props 
+* @param {{data:{       common_mountdiv:string,
+*                       system_admin:string},
+*          methods:{    common_document:import('../../../common_types.js').CommonAppDocument,
+*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*          lifecycle:   null}} props 
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:null, 
 *                      template:string}>}
@@ -49,12 +50,12 @@ const template = props => props.system_admin?`  <div id='menu_7_content_widget1'
 const component = async props => {
    const post_component = async () =>{
         //checks installed if system admin
-        /**@type{boolean} */
-        const installed = props.system_admin?props.function_FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
+        /**@type{boolean|null} */
+        const installed = props.data.system_admin?await props.methods.FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
                                     .then((/**@type{string}*/result)=>JSON.parse(result)[0].installed==1?true:false):null;
 
-       props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({  spinner:'',
-                                                                                                system_admin:props.system_admin,
+       props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({  spinner:'',
+                                                                                                system_admin:props.data.system_admin,
                                                                                                 installed:installed
                                                                                             });
    };
@@ -62,7 +63,7 @@ const component = async props => {
        props:  {function_post:post_component},
        data:   null,
        template: template({ spinner:'css_spinner',
-                            system_admin:props.system_admin,
+                            system_admin:props.data.system_admin,
                             installed:false
        })
    };

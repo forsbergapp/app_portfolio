@@ -2,7 +2,6 @@
  * @module apps/common/common
  */
 
-
 /**@type{import('../../../common_types.js').CommonAppWindow} */
 const CommonAppWindow = window;
 
@@ -196,6 +195,16 @@ const typewatch = (function_name, ...parameter) =>{
         function_name(...parameter);
     }, type_delay);
 };
+/**
+ * Rounds a number with 2 decimals
+ * @param {number} num 
+ * @returns number
+ */
+const roundOff = num => {
+    const x = Math.pow(10,2);
+    return Math.round(num * x) / x;
+  };
+
 /**
  * Convert string to Base64
  * @param {string} str 
@@ -580,22 +589,23 @@ const theme_default_list = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}
 };
 /**
  * @returns {Promise<{  id:number,
-*                      value:string,
-*                      text:string,
-*                      app_setting_type_name:string,
-*                      data2:string,
-*                      data3:string,
-*                      data4:string,
-*                      data5:string}[]>}
-*/
+ *                      app_id:number,
+ *                      value:string,
+ *                      text:string,
+ *                      app_setting_type_name:string,
+ *                      data2:string,
+ *                      data3:string,
+ *                      data4:string,
+ *                      data5:string}[]>}
+ */
 const app_settings_get = async () =>await FFB('/server-db/app_settings', null, 'GET', 'APP_DATA').then((/**@type{string}*/result)=>JSON.parse(result).rows);
 /**
  * Sets current value for select div
  * Get json data for given key and value is found or matches value if not json
  * @param {string} div
- * @param {string|null} value
+ * @param {string|number|null} value
  * @param {string|null} json_key
- * @param {string|null} json_value
+ * @param {string|number|null} json_value
  */
 const set_current_value= (div, value, json_key=null, json_value=null) =>{
     CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).innerText = Array.from(CommonAppDocument.querySelectorAll(`#${div} .common_select_option`))
@@ -664,16 +674,19 @@ const select_event_action = async (event_target_id, target) =>{
         COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
         await user_preference_save().then(()=>{
             if (CommonAppDocument.querySelector('#common_dialogue_user_edit').innerHTML !='') {
-                ComponentRender({mountDiv:'common_dialogue_user_edit',
-                    props:{   user_account_id:COMMON_GLOBAL.user_account_id,
-                        common_app_id:COMMON_GLOBAL.common_app_id,
-                        function_FFB:FFB,
-                        function_show_message:show_message,
-                        function_format_json_date:format_json_date,
-                    },
-                    methods:null,
-                    lifecycle:null,
-                    path:'/common/component/dialogue_user_edit.js'})
+                ComponentRender({
+                    mountDiv:   'common_dialogue_user_edit',
+                    data:       {
+                                user_account_id:COMMON_GLOBAL.user_account_id,
+                                common_app_id:COMMON_GLOBAL.common_app_id
+                                },
+                    methods:    {
+                                FFB:FFB,
+                                show_message:show_message,
+                                format_json_date:format_json_date
+                                },
+                    lifecycle:  null,
+                    path:       '/common/component/dialogue_user_edit.js'})
                 .then(()=>{
                     ComponentRemove('common_dialogue_user_menu');
                 });
@@ -839,18 +852,19 @@ const WindowPrompt = text => CommonAppWindow.prompt(text);
  *                  all templates use analogic React iteration and React suspense patterns implemented using pure Javascript
  *      
  * @param {{mountDiv:string|null,
- *          props:{}|null,
+ *          data:{}|null,
  *          methods:{}|null,
  *          lifecycle:{beforeMounted:function}|null,
  *          path:string}} componentRender
  * @returns {Promise.<*>}
  */
 const ComponentRender = async componentRender => {
-    const {default:component_function} = await import(componentRender.path);
+    const {default:ComponentCreate} = await import(componentRender.path);
     //add document (less type errors), framework and mountdiv to props
     /**@type{import('../../../common_types.js').CommonComponentResult}*/
-    const component = await component_function({...componentRender.props, ...{ common_document:CommonAppDocument,
-                                                common_mountdiv:componentRender.mountDiv}})
+    const component = await ComponentCreate({   data:       {...componentRender.data,       ...{common_mountdiv:componentRender.mountDiv}},
+                                                methods:    {...componentRender.methods,    ...{common_document:CommonAppDocument}},
+                                                lifecycle:componentRender.lifecycle})
                                                 .catch((/**@type{Error}*/error)=>{
                                                     componentRender.mountDiv?ComponentRemove(componentRender.mountDiv, true):null;
                                                     exception(COMMON_GLOBAL.app_function_exception, error);
@@ -922,61 +936,70 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
     switch (dialogue) {
         case 'PASSWORD_NEW':
             {    
-                ComponentRender({mountDiv:'common_dialogue_user_password_new',
-                    props:{   user_account_id:COMMON_GLOBAL.user_account_id,
-                        common_app_id:COMMON_GLOBAL.common_app_id,
-                        function_FFB:FFB,
-                        function_show_message:show_message,
-                        function_format_json_date:format_json_date,
-                    },
-                    methods:null,
+                ComponentRender({
+                    mountDiv:   'common_dialogue_user_password_new',
+                    data:       {
+                                user_account_id:COMMON_GLOBAL.user_account_id,
+                                common_app_id:COMMON_GLOBAL.common_app_id
+                                },
+                    methods:    {
+                                FFB:FFB,
+                                show_message:show_message,
+                                format_json_date:format_json_date
+                                },
                     lifecycle:null,
                     path:'/common/component/dialogue_user_password_new.js'});
                 break;
             }
         case 'VERIFY':
             {    
-                ComponentRender({mountDiv:'common_dialogue_user_verify',
-                    props:{user_verification_type:user_verification_type,
-                        username_login:CommonAppDocument.querySelector('#common_user_start_login_username').innerHTML,
-                        password_login:CommonAppDocument.querySelector('#common_user_start_login_password').innerHTML,
-                        username_signup:CommonAppDocument.querySelector('#common_user_start_signup_username').innerHTML,
-                        password_signup:CommonAppDocument.querySelector('#common_user_start_signup_password').innerHTML,
-                        title: title,
-                        function_data_function:click_cancel_event},
-                    methods:null,
-                    lifecycle:null,
-                    path:'/common/component/dialogue_user_verify.js'});
+                ComponentRender({
+                    mountDiv:   'common_dialogue_user_verify',
+                    data:       {
+                                user_verification_type:user_verification_type,
+                                username_login:CommonAppDocument.querySelector('#common_user_start_login_username').innerHTML,
+                                password_login:CommonAppDocument.querySelector('#common_user_start_login_password').innerHTML,
+                                username_signup:CommonAppDocument.querySelector('#common_user_start_signup_username').innerHTML,
+                                password_signup:CommonAppDocument.querySelector('#common_user_start_signup_password').innerHTML,
+                                title: title
+                                },
+                    methods:    {data_function:click_cancel_event},
+                    lifecycle:  null,
+                    path:       '/common/component/dialogue_user_verify.js'});
                 ComponentRemove('common_dialogue_user_start');
                 break;
             }
         case 'LOGIN_ADMIN':{
             //show admin login as default
-            await ComponentRender({mountDiv:'common_dialogue_user_start',
-                props:{ user_click:                     COMMON_GLOBAL.system_admin_only==1?'common_user_start_login_system_admin':'common_user_start_login',
-                        app_id:                         COMMON_GLOBAL.app_id,
-                        common_app_id:                  COMMON_GLOBAL.common_app_id,
-                        system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
-                        system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
-                        function_FFB:                   FFB},
-                methods:null,
-                lifecycle:null,
-                path:'/common/component/dialogue_user_start.js'});
+            await ComponentRender({
+                mountDiv:       'common_dialogue_user_start',
+                data:           {
+                                user_click:                     COMMON_GLOBAL.system_admin_only==1?'common_user_start_login_system_admin':'common_user_start_login',
+                                app_id:                         COMMON_GLOBAL.app_id,
+                                common_app_id:                  COMMON_GLOBAL.common_app_id,
+                                system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
+                                system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time
+                                },
+                methods:        {FFB: FFB},
+                lifecycle:      null,
+                path:           '/common/component/dialogue_user_start.js'});
             break;
         }
         case 'LOGIN':
         case 'SIGNUP':
         case 'FORGOT':{
-            await ComponentRender({mountDiv:'common_dialogue_user_start',
-                props:{ user_click:                     `common_user_start_${dialogue.toLowerCase()}`,
-                        app_id:                         COMMON_GLOBAL.app_id,
-                        common_app_id:                  COMMON_GLOBAL.common_app_id,
-                        system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
-                        system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time,
-                        function_FFB:                   FFB},
-                methods:null,
-                lifecycle:null,
-                path:'/common/component/dialogue_user_start.js'});
+            await ComponentRender({
+                mountDiv:       'common_dialogue_user_start',
+                data:           {
+                                user_click:                     `common_user_start_${dialogue.toLowerCase()}`,
+                                app_id:                         COMMON_GLOBAL.app_id,
+                                common_app_id:                  COMMON_GLOBAL.common_app_id,
+                                system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
+                                system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time
+                                },
+                methods:        {FFB: FFB},
+                lifecycle:      null,
+                path:           '/common/component/dialogue_user_start.js'});
             break;
         }
     }
@@ -991,18 +1014,22 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
  * @param {number|null} data_app_id 
  */
 const show_message = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
-    ComponentRender({mountDiv:'common_dialogue_message',
-        props:{ message_type:message_type,
-                data_app_id:data_app_id,
-                code:code,
-                text_class:text_class,
-                message:message,
-                function_componentremove:ComponentRemove,
-                function_FFB:FFB, 
-                function_event:function_event},
-        methods:null,
-        lifecycle:null,
-        path:'/common/component/dialogue_message.js'});
+    ComponentRender({
+        mountDiv:       'common_dialogue_message',
+        data:           {
+                        message_type:message_type,
+                        data_app_id:data_app_id,
+                        code:code,
+                        text_class:text_class,
+                        message:message
+                        },
+        methods:        {
+                        componentRemove:ComponentRemove,
+                        FFB:FFB, 
+                        event:function_event
+                        },
+        lifecycle:      null,
+        path:           '/common/component/dialogue_message.js'});
 };
 /**
  * Dialogue password new clear
@@ -1117,15 +1144,19 @@ const lov_close = () => {
  * @returns {void} 
  */
 const lov_show = parameters => {
-    ComponentRender({mountDiv:'common_dialogue_lov',
-        props:{lov:parameters.lov,
-            lov_custom_list:parameters.lov_custom_list,
-            lov_custom_value:parameters.lov_custom_value,
-            function_FFB:FFB, 
-            function_event:parameters.function_event},
-        methods:null,
-        lifecycle:null,
-        path:'/common/component/dialogue_lov.js'});        
+    ComponentRender({
+        mountDiv:   'common_dialogue_lov',
+        data:       {
+                    lov:parameters.lov,
+                    lov_custom_list:parameters.lov_custom_list,
+                    lov_custom_value:parameters.lov_custom_value
+                    },
+        methods:    {
+                    FFB:FFB, 
+                    function_event:parameters.function_event
+                    },
+        lifecycle:  null,
+        path:       '/common/component/dialogue_lov.js'});        
 };
 /**
  * Lov filter
@@ -1224,18 +1255,20 @@ const profile_follow_like = async (function_name) => {
  * @returns {Promise.<void>}
  */
 const profile_stat = async (statchoice, app_rest_url = null, function_user_click=null) => {
-    await ComponentRender({mountDiv:'common_dialogue_profile',
-        props:{   
-            tab:'TOP',
-            top_app_rest_url:app_rest_url,
-            top_statchoice:statchoice,
-            function_common_setTimeout:common_setTimeout,
-            function_FFB:FFB,
-            top_function_user_click:function_user_click
-        },
-        methods:null,
-        lifecycle:null,
-        path:'/common/component/dialogue_profile.js'});
+    await ComponentRender({
+        mountDiv:   'common_dialogue_profile',
+        data:       {   
+                    tab:'TOP',
+                    top_app_rest_url:app_rest_url,
+                    top_statchoice:statchoice
+                    },
+        methods:    {
+                    common_setTimeout:common_setTimeout,
+                    FFB:FFB,
+                    top_function_user_click:function_user_click
+                    },
+        lifecycle:  null,
+        path:       '/common/component/dialogue_profile.js'});
 };
 /**
  * Profile detail
@@ -1249,16 +1282,20 @@ const profile_detail = (detailchoice, click_function=null) => {
         CommonAppDocument.querySelector('#common_profile_detail_list').innerHTML = '';
     }
     else{
-        ComponentRender({mountDiv:'common_profile_detail_list',
-            props:{ user_account_id:COMMON_GLOBAL.user_account_id,
-                user_account_id_profile:CommonAppDocument.querySelector('#common_profile_id').innerText,
-                detailchoice:detailchoice,
-                function_show_common_dialogue:show_common_dialogue,
-                function_click:click_function,
-                function_FFB:FFB},
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/profile_detail.js'});
+        ComponentRender({
+            mountDiv:   'common_profile_detail_list',
+            data:       {
+                        user_account_id:COMMON_GLOBAL.user_account_id,
+                        user_account_id_profile:CommonAppDocument.querySelector('#common_profile_id').innerText,
+                        detailchoice:detailchoice
+                        },
+            methods:    {
+                        show_common_dialogue:show_common_dialogue,
+                        function_click:click_function,
+                        FFB:FFB
+                        },
+            lifecycle:  null,
+            path:       '/common/component/profile_detail.js'});
     }
 };
 /**
@@ -1267,18 +1304,20 @@ const profile_detail = (detailchoice, click_function=null) => {
  * @returns {void}
  */
 const search_profile = click_function => {
-    ComponentRender({mountDiv:'common_profile_search_list_wrap',
-        props:{
-            user_account_id:COMMON_GLOBAL.user_account_id,
-            client_latitude:COMMON_GLOBAL.client_latitude,
-            client_longitude:COMMON_GLOBAL.client_longitude,
-            function_input_control:input_control,
-            function_click_function:click_function,
-            function_FFB:FFB
-        },
-        methods:null,
-        lifecycle:null,
-        path:'/common/component/profile_search_list.js'})
+    ComponentRender({
+        mountDiv:   'common_profile_search_list_wrap',
+        data:       {
+                    user_account_id:COMMON_GLOBAL.user_account_id,
+                    client_latitude:COMMON_GLOBAL.client_latitude,
+                    client_longitude:COMMON_GLOBAL.client_longitude
+                    },
+        methods:    {
+                    input_control:input_control,
+                    function_click_function:click_function,
+                    FFB:FFB
+                    },
+        lifecycle:  null,
+        path:       '/common/component/profile_search_list.js'})
     .catch(()=>{
         CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         CommonAppDocument.querySelector('#common_profile_search_list_wrap').innerHTML = '';
@@ -1296,25 +1335,27 @@ const search_profile = click_function => {
  *                      private:number}|null>}
  */
 const profile_show = async (user_account_id_other = null, username = null) => {
-    return ComponentRender({mountDiv:'common_dialogue_profile',
-        props:{   
-            tab:'INFO',
-            info_user_account_id:COMMON_GLOBAL.user_account_id,
-            info_client_latitude:COMMON_GLOBAL.client_latitude,
-            info_client_longitude:COMMON_GLOBAL.client_longitude,
-            info_user_account_id_other:user_account_id_other,
-            info_username:username,
-            function_common_setTimeout:common_setTimeout,
-            function_FFB:FFB,
-            info_function_create_qr:create_qr,
-            info_function_getHostname:getHostname,
-            info_function_format_json_date:format_json_date,
-            info_function_show_common_dialogue:show_common_dialogue,
-            info_function_checkOnline:checkOnline
-        },
-        methods:null,
-        lifecycle:null,
-        path:'/common/component/dialogue_profile.js'});
+    return ComponentRender({
+        mountDiv:   'common_dialogue_profile',
+        data:       {   
+                    tab:'INFO',
+                    info_user_account_id:COMMON_GLOBAL.user_account_id,
+                    info_client_latitude:COMMON_GLOBAL.client_latitude,
+                    info_client_longitude:COMMON_GLOBAL.client_longitude,
+                    info_user_account_id_other:user_account_id_other,
+                    info_username:username
+                    },
+        methods:    {
+                    common_setTimeout:common_setTimeout,
+                    FFB:FFB,
+                    create_qr:create_qr,
+                    getHostname:getHostname,
+                    format_json_date:format_json_date,
+                    show_common_dialogue:show_common_dialogue,
+                    checkOnline:checkOnline
+                    },
+        lifecycle:  null,
+        path:       '/common/component/dialogue_profile.js'});
 };
 /**
  * Profile update stat
@@ -2224,46 +2265,49 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
      * 
      * @type {import('../../../common_types.js').CommonModuleLeafletData}
      */
-    const leaflet_data = await ComponentRender({mountDiv:mount_div,
-                            props:{   
-                                longitude:longitude,
-                                latitude:latitude,
-                                //module parameters
-                                module_leaflet_zoom:COMMON_GLOBAL.module_leaflet_zoom,
-                                module_leaflet_jumpto:COMMON_GLOBAL.module_leaflet_jumpto,
-                                module_leaflet_map_style:COMMON_GLOBAL.module_leaflet_style,
-                                module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                //functions
-                                function_FFB:FFB,
-                                function_event_doubleclick: doubleclick_event,
-                                function_get_place_from_gps:get_place_from_gps,
-                                function_map_update:map_update
-                            },
-                            methods:null,
-                            lifecycle:null,
-                            path:'/common/component/module_leaflet.js'})
+    const leaflet_data = await ComponentRender({
+                            mountDiv:   mount_div,
+                            data:       {   
+                                        longitude:longitude,
+                                        latitude:latitude,
+                                        //module parameters
+                                        module_leaflet_zoom:COMMON_GLOBAL.module_leaflet_zoom,
+                                        module_leaflet_jumpto:COMMON_GLOBAL.module_leaflet_jumpto,
+                                        module_leaflet_map_style:COMMON_GLOBAL.module_leaflet_style,
+                                        module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps
+                                        },
+                            methods:    {
+                                        FFB:FFB,
+                                        function_event_doubleclick: doubleclick_event,
+                                        get_place_from_gps:get_place_from_gps,
+                                        map_update:map_update
+                                        },
+                            lifecycle:  null,
+                            path:       '/common/component/module_leaflet.js'})
     .catch(error=>{throw error;});
     COMMON_GLOBAL.module_leaflet =              leaflet_data.library_Leaflet;
     COMMON_GLOBAL.module_leaflet_session_map =  leaflet_data.module_map;
-    await ComponentRender({mountDiv:mount_div, //outer app div
-        props:{   
-            data_app_id:COMMON_GLOBAL.common_app_id,
-            locale:COMMON_GLOBAL.user_locale,
-            longitude:longitude,
-            latitude:latitude,
-            map_layer:COMMON_GLOBAL.module_leaflet_style,
-            map_layers:COMMON_GLOBAL.module_leaflet_map_styles,
-            module_leaflet_container:leaflet_data.leaflet_container,    //inner Leaflet div returned from Leaflet
-            function_ComponentRender:ComponentRender,
-            function_map_country:map_country,
-            function_map_city_empty:map_city_empty,
-            function_FFB:FFB,
-            function_search_event:search_event_function,
-            function_map_setstyle:map_setstyle
-        },
-        methods:null,
-        lifecycle:null,
-        path:'/common/component/module_leaflet_control.js'});
+    await ComponentRender({
+        mountDiv:   mount_div, //outer app div
+        data:       {   
+                    data_app_id:COMMON_GLOBAL.common_app_id,
+                    locale:COMMON_GLOBAL.user_locale,
+                    longitude:longitude,
+                    latitude:latitude,
+                    map_layer:COMMON_GLOBAL.module_leaflet_style,
+                    map_layers:COMMON_GLOBAL.module_leaflet_map_styles,
+                    module_leaflet_container:leaflet_data.leaflet_container,    //inner Leaflet div returned from Leaflet
+                    },
+        methods:    {
+                    ComponentRender:ComponentRender,
+                    map_country:map_country,
+                    map_city_empty:map_city_empty,
+                    FFB:FFB,
+                    function_search_event:search_event_function,
+                    map_setstyle:map_setstyle
+                    },
+        lifecycle:  null,
+        path:       '/common/component/module_leaflet_control.js'});
 };
 /**
  * Map country
@@ -2286,31 +2330,31 @@ const map_country = async lang_code =>  [{value:'', text:'...'}].concat(await FF
  */
 const map_city = async country_code =>{
     if (country_code!=null){
-        await ComponentRender({mountDiv:'common_module_leaflet_select_city',
-            props:{
-                default_data_value:'',
-                default_value:'...',
-                options:[{value:'', text:''}].concat((await get_cities(country_code.toUpperCase())).map(city=>{
-                                                                        return {value:JSON.stringify({  id:city.id,
-                                                                                                        countrycode:city.iso2, 
-                                                                                                        country:city.country, 
-                                                                                                        admin_name:city.admin_name, 
-                                                                                                        city:city.city,
-                                                                                                        latitude:city.lat, 
-                                                                                                        longitude:city.lng}),
-                                                                                text:`${city.admin_name} - ${city.city}`};
-                                                                        })),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await ComponentRender({
+            mountDiv:       'common_module_leaflet_select_city',
+            data:           {
+                            default_data_value:'',
+                            default_value:'...',
+                            options:[{value:'', text:''}].concat((await get_cities(country_code.toUpperCase())).map(city=>{
+                                                                                    return {value:JSON.stringify({  id:city.id,
+                                                                                                                    countrycode:city.iso2, 
+                                                                                                                    country:city.country, 
+                                                                                                                    admin_name:city.admin_name, 
+                                                                                                                    city:city.city,
+                                                                                                                    latitude:city.lat, 
+                                                                                                                    longitude:city.lng}),
+                                                                                            text:`${city.admin_name} - ${city.city}`};
+                                                                                    })),
+                            path:null,
+                            query:null,
+                            method:null,
+                            authorization_type:null,
+                            column_value:'value',
+                            column_text:'text'
+                            },
+            methods:        {FFB:null},
+            lifecycle:      null,
+            path:           '/common/component/select.js'});
     }
 };
 /**
@@ -2319,22 +2363,22 @@ const map_city = async country_code =>{
  */
 const map_city_empty = () =>{
     //set city select with first empty city
-    ComponentRender({mountDiv:'common_module_leaflet_select_city',
-        props:{
-            default_data_value:'',
-            default_value:'...',
-            options:[{value:'', text:''}],
-            path:null,
-            query:null,
-            method:null,
-            authorization_type:null,
-            column_value:'value',
-            column_text:'text',
-            function_FFB:null
-        },
-        methods:null,
-        lifecycle:null,
-        path:'/common/component/select.js'});
+    ComponentRender({
+        mountDiv:       'common_module_leaflet_select_city',
+        data:           {
+                        default_data_value:'',
+                        default_value:'...',
+                        options:[{value:'', text:''}],
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+        methods:        {FFB:null},
+        lifecycle:      null,
+        path:           '/common/component/select.js'});
 };
 /**
  * Map toolbar reset
@@ -2381,22 +2425,22 @@ const map_control_toggle_expand = async item =>{
         CommonAppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display ==''){
             style_display = 'block';
             if (item == 'search')
-                await ComponentRender({mountDiv:'common_module_leaflet_select_country',
-                    props:{
-                        default_data_value:'',
-                        default_value:'...',
-                        options: await map_country(COMMON_GLOBAL.user_locale),
-                        path:null,
-                        query:null,
-                        method:null,
-                        authorization_type:null,
-                        column_value:'value',
-                        column_text:'text',
-                        function_FFB:null
-                    },
-                    methods:null,
-                    lifecycle:null,
-                    path:'/common/component/select.js'});
+                await ComponentRender({
+                    mountDiv:   'common_module_leaflet_select_country',
+                    data:       {
+                                default_data_value:'',
+                                default_value:'...',
+                                options: await map_country(COMMON_GLOBAL.user_locale),
+                                path:null,
+                                query:null,
+                                method:null,
+                                authorization_type:null,
+                                column_value:'value',
+                                column_text:'text'
+                                },
+                    methods:    {FFB:null},
+                    lifecycle:  null,
+                    path:       '/common/component/select.js'});
         }
     else
         style_display = 'none';
@@ -2530,22 +2574,23 @@ const map_update = async (parameters) => {
         if (parameters.timezone_text == null)
             parameters.timezone_text = getTimezone(parameters.latitude, parameters.longitude);
 
-        ComponentRender({mountDiv:null,
-            props:{  
-                timezone_text:parameters.timezone_text,
-                latitude:parameters.latitude,
-                longitude:parameters.longitude,
-                marker_id:parameters.marker_id,
-                text_place:parameters.text_place,
-                country:parameters.country,
-                city:parameters.city,
-                module_leaflet:COMMON_GLOBAL.module_leaflet,
-                module_leaflet_popup_offset: COMMON_GLOBAL.module_leaflet_popup_offset,
-                module_leaflet_session_map:COMMON_GLOBAL.module_leaflet_session_map
-            },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/module_leaflet_popup.js'})
+        ComponentRender({
+            mountDiv:   null,
+            data:       {  
+                        timezone_text:parameters.timezone_text,
+                        latitude:parameters.latitude,
+                        longitude:parameters.longitude,
+                        marker_id:parameters.marker_id,
+                        text_place:parameters.text_place,
+                        country:parameters.country,
+                        city:parameters.city,
+                        module_leaflet:COMMON_GLOBAL.module_leaflet,
+                        module_leaflet_popup_offset: COMMON_GLOBAL.module_leaflet_popup_offset,
+                        module_leaflet_session_map:COMMON_GLOBAL.module_leaflet_session_map
+                        },
+            methods:    null,
+            lifecycle:  null,
+            path:       '/common/component/module_leaflet_popup.js'})
         .then(()=>resolve(parameters.timezone_text));
     });
 };
@@ -2735,11 +2780,12 @@ const show_broadcast = (broadcast_message) => {
         }
         case 'CHAT':
         case 'ALERT':{
-            ComponentRender({mountDiv:'common_broadcast',
-                props:{message:CommonAppWindow.atob(message)},
-                methods:null,
-                lifecycle:null,
-                path:CommonAppDocument.querySelector('#common_dialogue_maintenance')?'/maintenance/component/broadcast.js':'/common/component/broadcast.js'});
+            ComponentRender({
+                mountDiv:   'common_broadcast',
+                data:       {message:CommonAppWindow.atob(message)},
+                methods:    null,
+                lifecycle:  null,
+                path:       CommonAppDocument.querySelector('#common_dialogue_maintenance')?'/maintenance/component/broadcast.js':'/common/component/broadcast.js'});
             break;
         }
 		case 'PROGRESS':{
@@ -2761,11 +2807,12 @@ const show_broadcast = (broadcast_message) => {
 const show_maintenance = (message, init=null) => {
     
     if (init==1){
-        ComponentRender({mountDiv:'common_dialogue_maintenance',
-            props:{function_common_setTimeout:common_setTimeout},
-            methods:null,
-            lifecycle:null,
-            path:'/maintenance/component/dialogue_maintenance.js'});
+        ComponentRender({
+            mountDiv:   'common_dialogue_maintenance',
+            data:       null,
+            methods:    {common_setTimeout:common_setTimeout},
+            lifecycle:  null,
+            path:       '/maintenance/component/dialogue_maintenance.js'});
     }
     else
         CommonAppDocument.querySelector('#common_maintenance_footer').innerHTML = message ?? '';
@@ -2881,15 +2928,15 @@ const get_cities = async countrycode => {
  * @returns {Promise.<void>}
  */
 const worldcities_search = async (event_function) =>{
-    ComponentRender({mountDiv:'common_module_leaflet_search_list_wrap',
-        props:{
-            search:CommonAppDocument.querySelector('#common_module_leaflet_search_input').innerText,
-            function_click_function:event_function,
-            function_FFB:FFB
-        },
-        methods:null,
-        lifecycle:null,
-        path:'/common/component/module_leaflet_search_city.js'});
+    ComponentRender({
+        mountDiv:   'common_module_leaflet_search_list_wrap',
+        data:       {search:CommonAppDocument.querySelector('#common_module_leaflet_search_input').innerText},
+        methods:    {
+                    click_function:event_function,
+                    FFB:FFB
+                    },
+        lifecycle:  null,
+        path:       '/common/component/module_leaflet_search_city.js'});
 };
 /**
  * Exception function
@@ -3089,39 +3136,45 @@ const common_event = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_dialogue_info_info_link1':{
-                            ComponentRender({mountDiv:'common_window_info',
-                                props:{   info:1,
-                                    url:COMMON_GLOBAL.info_link_policy_url,
-                                    content_type:null, 
-                                    iframe_content:null,
-                                    function_common_setTimeout:common_setTimeout},
-                                methods:null,
-                                lifecycle:null,
-                                path:'/common/component/window_info.js'});
+                            ComponentRender({
+                                mountDiv:   'common_window_info',
+                                data:       {
+                                            info:1,
+                                            url:COMMON_GLOBAL.info_link_policy_url,
+                                            content_type:null, 
+                                            iframe_content:null
+                                            },
+                                methods:    {common_setTimeout:common_setTimeout},
+                                lifecycle:  null,
+                                path:       '/common/component/window_info.js'});
                             break;
                         }
                         case 'common_dialogue_info_info_link2':{
-                            ComponentRender({mountDiv:'common_window_info',
-                                props:{   info:1,
-                                    url:COMMON_GLOBAL.info_link_disclaimer_url,
-                                    content_type:null, 
-                                    iframe_content:null,
-                                    function_common_setTimeout:common_setTimeout},
-                                methods:null,
-                                lifecycle:null,
-                                path:'/common/component/window_info.js'});
+                            ComponentRender({
+                                mountDiv:   'common_window_info',
+                                data:       {
+                                            info:1,
+                                            url:COMMON_GLOBAL.info_link_disclaimer_url,
+                                            content_type:null, 
+                                            iframe_content:null
+                                            },
+                                methods:    {common_setTimeout:common_setTimeout},
+                                lifecycle:  null,
+                                path:       '/common/component/window_info.js'});
                             break;
                         }
                         case 'common_dialogue_info_info_link3':{
-                            ComponentRender({mountDiv:'common_window_info',
-                                props:{ info:1,
-                                        url:COMMON_GLOBAL.info_link_terms_url,
-                                        content_type:null, 
-                                        iframe_content:null,
-                                        function_common_setTimeout:common_setTimeout},
-                                methods:null,
-                                lifecycle:null,
-                                path:'/common/component/window_info.js'});
+                            ComponentRender({
+                                mountDiv:   'common_window_info',
+                                data:       {
+                                            info:1,
+                                            url:COMMON_GLOBAL.info_link_terms_url,
+                                            content_type:null, 
+                                            iframe_content:null
+                                            },
+                                methods:    {common_setTimeout:common_setTimeout},
+                                lifecycle:  null,
+                                path:       '/common/component/window_info.js'});
                             break;
                         }
                         //dialogue app_data_display
@@ -3184,16 +3237,19 @@ const common_event = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_dialogue_user_menu_edit':{
-                            ComponentRender({mountDiv:'common_dialogue_user_edit',
-                                props:{ user_account_id:COMMON_GLOBAL.user_account_id,
-                                        common_app_id:COMMON_GLOBAL.common_app_id,
-                                        function_FFB:FFB,
-                                        function_show_message:show_message,
-                                        function_format_json_date:format_json_date,
-                                    },
-                                methods:null,
-                                lifecycle:null,
-                                path:'/common/component/dialogue_user_edit.js'})
+                            ComponentRender({
+                                mountDiv:   'common_dialogue_user_edit',
+                                data:       {
+                                            user_account_id:COMMON_GLOBAL.user_account_id,
+                                            common_app_id:COMMON_GLOBAL.common_app_id
+                                            },
+                                methods:    {
+                                            FFB:FFB,
+                                            show_message:show_message,
+                                            format_json_date:format_json_date
+                                            },
+                                lifecycle:  null,
+                                path:       '/common/component/dialogue_user_edit.js'})
                             .then(()=>{
                                 ComponentRemove('common_dialogue_user_menu');
                             });
@@ -3917,18 +3973,18 @@ const init_common = async (parameters) => {
     const decoded_parameters = JSON.parse(fromBase64(parameters));
     setUserAgentAttributes();
     custom_framework();
-    await ComponentRender({ mountDiv:'common_app',
-                            props:{
-                                font_default:   true,
-                                font_arabic:    true,
-                                font_asian:     true,
-                                font_prio1:     true,
-                                font_prio2:     true,
-                                font_prio3:     true
-                                },
-                            methods:null,
-                            lifecycle:null,
-                            path:'/common/component/app.js'});
+    await ComponentRender({ mountDiv:   'common_app',
+                            data:       {
+                                        font_default:   true,
+                                        font_arabic:    true,
+                                        font_asian:     true,
+                                        font_prio1:     true,
+                                        font_prio2:     true,
+                                        font_prio3:     true
+                                        },
+                            methods:    null,
+                            lifecycle:  null,
+                            path:       '/common/component/app.js'});
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL.app_id ==null)
             set_app_service_parameters(decoded_parameters.app_service);
@@ -3951,7 +4007,7 @@ const init_common = async (parameters) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS,
        /* MISC */
-       element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, typewatch, toBase64, fromBase64, 
+       element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, typewatch, roundOff, toBase64, fromBase64, format_json_date,
        mobile,
        convert_image,
        show_image, getHostname, input_control, getUserAgentPlatform,
@@ -3987,7 +4043,7 @@ export{/* GLOBALS*/
        /*FFB */
        FFB,
        /* SERVICE BROADCAST */
-       show_broadcast, show_maintenance, connectOnline,
+       show_broadcast, show_maintenance, connectOnline,checkOnline,
        /* SERVICE GEOLOCATION */
        get_place_from_gps, get_gps_from_ip,
        /* SERVICE WORLDCITIES */

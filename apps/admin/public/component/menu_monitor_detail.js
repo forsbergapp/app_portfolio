@@ -327,23 +327,24 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                             
 /**
 * 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          app_id:number,
-*          system_admin:string,
-*          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
-*          query:string,
-*          sort:string,
-*          order_by:string,
-*          service_socket_client_ID:number,
-*          limit:number,
-*          function_input_control:function,
-*          function_ComponentRender:function,
-*          function_getUserAgentPlatform:function,
-*          function_get_log_parameters:function,
-*          function_show_app_log:function,
-*          function_roundOff:function,
-*          function_FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}} props 
+* @param {{ data:{      common_mountdiv:string,
+*                       app_id:number,
+*                       system_admin:string,
+*                       monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
+*                       query:string,
+*                       sort:string,
+*                       order_by:string,
+*                       service_socket_client_ID:number,
+*                       limit:number},
+*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+*                       input_control:import('../../../common_types.js').CommonModuleCommon['input_control'],
+*                       ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+*                       getUserAgentPlatform:import('../../../common_types.js').CommonModuleCommon['getUserAgentPlatform'],
+*                       get_log_parameters:import('../js/secure.js')['get_log_parameters'],
+*                       show_app_log:import('../js/secure.js')['show_app_log'],
+*                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
+*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*           lifecycle:  null}} props 
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:{function_page_navigation:function, function_monitor_detail_server_log:function},
 *                      template:string}>}
@@ -354,9 +355,9 @@ const component = async props => {
     let page = 0;
     let page_last= 0;
     let service_log_file_interval = '';
-    switch (props.monitor_detail){
+    switch (props.data.monitor_detail){
         case 'CONNECTED':{
-            if (props.system_admin!=null){
+            if (props.data.system_admin!=null){
                 path = '/server-socket/socket';
                 token_type = 'SYSTEMADMIN';
             }
@@ -402,7 +403,7 @@ const component = async props => {
      * Get order by if column matches
      * @param {string} column
      */
-    const get_order_by = column =>column==props.sort?props.order_by:'';
+    const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
 
     /**
      * Get column sort
@@ -411,7 +412,7 @@ const component = async props => {
      */
     const get_sort = (order_by=0) => {
         const sort = '';
-        for (const col_title of props.common_document.querySelectorAll('#list_app_log .list_title')){
+        for (const col_title of props.methods.common_document.querySelectorAll('#list_app_log .list_title')){
             if (col_title.classList.contains('asc'))
                 if (order_by==0)
                     return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
@@ -440,59 +441,63 @@ const component = async props => {
         switch (item){
             case 'list_app_log_first':{
                 page = 0;
-                props.function_show_app_log(sort, order_by, 0);
+                props.methods.show_app_log(sort, order_by, 0);
                 break;
             }
             case 'list_app_log_previous':{
-                page = page - props.limit;
-                if (page - props.limit < 0)
+                page = page - props.data.limit;
+                if (page - props.data.limit < 0)
                     page = 0;
                 else
-                    page = page - props.limit;
-                props.function_show_app_log(sort, order_by, page);
+                    page = page - props.data.limit;
+                props.methods.show_app_log(sort, order_by, page);
                 break;
             }
             case 'list_app_log_next':{
-                if (page + props.limit > page_last)
+                if (page + props.data.limit > page_last)
                     page = page_last;
                 else
-                    page = page + props.limit;
-                props.function_show_app_log(sort, order_by, page);
+                    page = page + props.data.limit;
+                props.methods.show_app_log(sort, order_by, page);
                 break;
             }
             case 'list_app_log_last':{
                 page = page_last;
-                props.function_show_app_log(sort, order_by, page);
+                props.methods.show_app_log(sort, order_by, page);
                 break;
             }
         }
     };
+    /**
+     * Returns query
+     * @returns {string}
+     */
     const get_query = ()=>{
-        const app_id = props.common_document.querySelector('#select_app_menu5 .common_select_dropdown_value').getAttribute('data-value'); 
-        const year = props.common_document.querySelector('#select_year_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        const month = props.common_document.querySelector('#select_month_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        const day  = props.common_document.querySelector('#select_day_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        const app_id = props.methods.common_document.querySelector('#select_app_menu5 .common_select_dropdown_value').getAttribute('data-value'); 
+        const year = props.methods.common_document.querySelector('#select_year_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        const month = props.methods.common_document.querySelector('#select_month_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        const day  = props.methods.common_document.querySelector('#select_day_menu5 .common_select_dropdown_value').getAttribute('data-value');
         
-        switch (props.monitor_detail){
+        switch (props.data.monitor_detail){
             case 'CONNECTED':
             case 'APP_LOG':{
-                props.common_document.querySelector('#select_app_menu5').style.display = 'inline-block';
+                props.methods.common_document.querySelector('#select_app_menu5').style.display = 'inline-block';
                 //search month + 1 for CONNECTED
-                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${props.sort}&order_by=${props.order_by}${props.query}&limit=${props.limit}`;
+                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${props.data.sort}&order_by=${props.data.order_by}${props.data.query}&limit=${props.data.limit}`;
             }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
-                const logscope = props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
-                const loglevel = props.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
+                const logscope = props.methods.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
+                const loglevel = props.methods.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
                 let app_id_filter='';
                 if (logscope=='APP' || logscope=='SERVICE' || logscope=='SERVER-DB'){
                     //show app filter and use it
-                    props.common_document.querySelector('#select_app_menu5').style.display = 'inline-block';
+                    props.methods.common_document.querySelector('#select_app_menu5').style.display = 'inline-block';
                     app_id_filter = `select_app_id=${app_id}&`;
                 }
                 else{
                     //no app filter for request
-                    props.common_document.querySelector('#select_app_menu5').style.display = 'none';
+                    props.methods.common_document.querySelector('#select_app_menu5').style.display = 'none';
                     app_id_filter = 'select_app_id=&';
                 }
                 let url_parameters;
@@ -501,7 +506,7 @@ const component = async props => {
                     url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
                 else
                     url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
-                return `${url_parameters}&sort=${props.sort}&order_by=${props.order_by}&limit=${props.limit}`;
+                return `${url_parameters}&sort=${props.data.sort}&order_by=${props.data.order_by}&limit=${props.data.limit}`;
                 
             }
         }
@@ -512,30 +517,31 @@ const component = async props => {
      * @param {string} order_by
      */
     const monitor_detail_server_log = (sort, order_by) =>{
-        let search = props.common_document.querySelector('#list_server_log_search_input').innerText;
+        let search = props.methods.common_document.querySelector('#list_server_log_search_input').innerText;
         if (search != null){
-            if (props.function_input_control(null,{check_valid_list_elements:[[props.common_document.querySelector('#list_server_log_search_input'),100]]})==false)
+            if (props.methods.input_control(null,{check_valid_list_elements:[[props.methods.common_document.querySelector('#list_server_log_search_input'),100]]})==false)
                 return;
         }
         search=search?encodeURI(search):search;
-        props.function_ComponentRender(
+        props.methods.ComponentRender(
                 {   mountDiv:'list_server_log',
-                    props:{system_admin:props.system_admin,
-                        path:path,
-                        query:`${get_query()}&search=${search ?? ''}`,
-                        token_type: token_type,
-                        sort:sort,
-                        order_by:order_by,
-                        function_roundOff:props.function_roundOff,
-                        function_FFB:props.function_FFB},
-                    methods:null,
+                    data:{  
+                                system_admin:props.data.system_admin,
+                                path:path,
+                                query:`${get_query()}&search=${search ?? ''}`,
+                                token_type: token_type,
+                                sort:sort,
+                                order_by:order_by,
+                    },
+                    methods:{   roundOff:props.methods.roundOff,
+                                FFB:props.methods.FFB},
                     lifecycle:null,
                     path:'/component/menu_monitor_detail_server_log.js'});
     };
     const post_component = async () =>{
         //fetch log parameter data if SERVER_LOG
-        const monitor_log_data = props.monitor_detail=='SERVER_LOG'?
-                                    await props.function_get_log_parameters():{ parameters:{SCOPE_REQUEST:'',
+        const monitor_log_data = props.data.monitor_detail=='SERVER_LOG'?
+                                    await props.methods.get_log_parameters():{ parameters:{SCOPE_REQUEST:'',
                                                                                             SCOPE_SERVER:'', 
                                                                                             SCOPE_SERVICE:'',
                                                                                             SCOPE_APP:'',
@@ -548,51 +554,52 @@ const component = async props => {
                                                                                             LEVEL_INFO:'',
                                                                                             FILE_INTERVAL:''},
                                                                                 logscope_level_options:
-                                    ''};
+                                    []};
         //save value for query
         service_log_file_interval = monitor_log_data.parameters.FILE_INTERVAL ?? '';
         //fetch logs except for SERVER_LOG
-        const logs = props.monitor_detail=='SERVER_LOG'?[]:await props.function_FFB(path, get_query(), 'GET', token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        const limit = await props.function_FFB(`/server-config/config-apps/${props.app_id}`, 'key=PARAMETERS', 'GET', props.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
+        const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.FFB(path, get_query(), 'GET', token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+        const limit = await props.methods.FFB(`/server-config/config-apps/${props.data.app_id}`, 'key=PARAMETERS', 'GET', props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
                             .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS));
-        if (props.monitor_detail=='APP_LOG')
+        if (props.data.monitor_detail=='APP_LOG')
             page_last = logs.length>0?(Math.floor(logs[0].total_rows/limit) * limit):0;
 
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:  '',
-                                                                                                system_admin:props.system_admin, 
-                                                                                                service_socket_client_ID:props.service_socket_client_ID,
-                                                                                                monitor_detail:props.monitor_detail,
-                                                                                                function_getUserAgentPlatform:props.function_getUserAgentPlatform,
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:  '',
+                                                                                                system_admin:props.data.system_admin, 
+                                                                                                service_socket_client_ID:props.data.service_socket_client_ID,
+                                                                                                monitor_detail:props.data.monitor_detail,
+                                                                                                function_getUserAgentPlatform:props.methods.getUserAgentPlatform,
                                                                                                 function_role_icon_class:role_icon_class,
                                                                                                 function_get_order_by:get_order_by,
-                                                                                                function_roundOff: props.function_roundOff,
+                                                                                                function_roundOff: props.methods.roundOff,
                                                                                                 logs:logs,
                                                                                                 monitor_log_data:monitor_log_data.parameters});
 
         //mount list_server_log to outerHTML removing spinner class if SERVER_LOG
-        if (props.monitor_detail=='SERVER_LOG'){
+        if (props.data.monitor_detail=='SERVER_LOG'){
             //convert normalized arrary to options in array format
-            /**@type{[{VALUE:string, TEXT:string}]} */
+            /**@type{{VALUE:string, TEXT:string}[]} */
             const options = monitor_log_data.logscope_level_options.map((/**@type{{log_scope:string, log_level: string}}*/row)=>{
                                 return {VALUE:`${row.log_scope}-${row.log_level}`, TEXT:`${row.log_scope} - ${row.log_level}`};});
 
-            await props.function_ComponentRender('select_logscope5', 
-                {
-                    default_value:'REQUEST - INFO',
-                    default_data_value:'REQUEST-INFO',
-                    options:options,
-                    path:'',
-                    query:'',
-                    method:'',
-                    authorization_type:'',
-                    column_value:'VALUE',
-                    column_text:'TEXT',
-                    function_FFB:props.function_FFB
-                }, null, null, '/common/component/select.js');
-            monitor_detail_server_log(props.sort, props.order_by);
+            await props.methods.ComponentRender({
+                mountDiv:'select_logscope5', 
+                data:{ 
+                            default_value:'REQUEST - INFO',
+                            default_data_value:'REQUEST-INFO',
+                            options:options,
+                            path:'',
+                            query:'',
+                            method:'',
+                            authorization_type:'',
+                            column_value:'VALUE',
+                            column_text:'TEXT'
+                },
+                methods:{   FFB:props.methods.FFB},
+                lifecycle:  null,
+                path:       '/common/component/select.js'});
+            monitor_detail_server_log(props.data.sort, props.data.order_by);
         }
-            
-            
     };
     return {
         props:  {function_post:post_component},
@@ -600,13 +607,13 @@ const component = async props => {
                  function_monitor_detail_server_log:monitor_detail_server_log
         },
         template: template({spinner:'css_spinner', 
-                            system_admin:props.system_admin, 
-                            service_socket_client_ID:props.service_socket_client_ID,
-                            monitor_detail:props.monitor_detail,
-                            function_getUserAgentPlatform:props.function_getUserAgentPlatform,
+                            system_admin:props.data.system_admin, 
+                            service_socket_client_ID:props.data.service_socket_client_ID,
+                            monitor_detail:props.data.monitor_detail,
+                            function_getUserAgentPlatform:props.methods.getUserAgentPlatform,
                             function_role_icon_class:role_icon_class,
                             function_get_order_by:get_order_by,
-                            function_roundOff:props.function_roundOff,
+                            function_roundOff:props.methods.roundOff,
                             logs:[],
                             monitor_log_data:{  SCOPE_REQUEST:'',
                                                 SCOPE_SERVER:'', 

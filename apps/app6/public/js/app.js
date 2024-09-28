@@ -118,36 +118,38 @@ const product_update = async () =>{
 
     const product_variant_id = CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id] .common_select_dropdown_value .common_app_data_display_master_col_list[data-id]')[0].getAttribute('data-id');
 
-    await common.ComponentRender({mountDiv:CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].id, 
-        props:{
-            app_id:common.COMMON_GLOBAL.app_id,
-            display_type:'VERTICAL_KEY_VALUE',
-            master_path:'/app-function/PRODUCT_LOCATION_GET',
-            master_query:'fields=stock',
-            master_body:{data_app_id:common.COMMON_GLOBAL.app_id, resource_id : product_variant_id},
-            master_method:'POST',
-            master_token_type:'APP_DATA',
-            master_resource:'PRODUCT_VARIANT_LOCATION_METADATA',
-            detail_path:null,
-            detail_query:null,
-            detail_method:null,
-            detail_token_type:null,
-            detail_class:null,
-            new_resource:false,
-            mode:'READ',
-            timezone:common.COMMON_GLOBAL.user_timezone,
-            locale:common.COMMON_GLOBAL.user_locale,
-            button_print: false,
-            button_update: false,
-            button_post: false,
-            button_delete: false,
-            function_FFB:common.FFB,
-            function_button_print:null,
-            function_button_update:null,
-            function_button_post:null,
-            function_button_delete:null
-        },
-        methods:null,
+    await common.ComponentRender({
+        mountDiv:   CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].id, 
+        data:       {
+                    app_id:common.COMMON_GLOBAL.app_id,
+                    display_type:'VERTICAL_KEY_VALUE',
+                    master_path:'/app-function/PRODUCT_LOCATION_GET',
+                    master_query:'fields=stock',
+                    master_body:{data_app_id:common.COMMON_GLOBAL.app_id, resource_id : product_variant_id},
+                    master_method:'POST',
+                    master_token_type:'APP_DATA',
+                    master_resource:'PRODUCT_VARIANT_LOCATION_METADATA',
+                    detail_path:null,
+                    detail_query:null,
+                    detail_method:null,
+                    detail_token_type:null,
+                    detail_class:null,
+                    new_resource:false,
+                    mode:'READ',
+                    timezone:common.COMMON_GLOBAL.user_timezone,
+                    locale:common.COMMON_GLOBAL.user_locale,
+                    button_print: false,
+                    button_update: false,
+                    button_post: false,
+                    button_delete: false
+                    },
+        methods:    {
+                    FFB:common.FFB,
+                    button_print:null,
+                    button_update:null,
+                    button_post:null,
+                    button_delete:null
+                    },
         lifecycle:null,
         path:'/common/component/app_data_display.js'});
     CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].innerHTML = CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[2].innerHTML;
@@ -189,38 +191,40 @@ const payment_request = async () =>{
             currency_code:  CommonAppDocument.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-currency_code]')[0].getAttribute('data-currency_code'),
             message:        'Shop app'
         };
-        await common.ComponentRender({mountDiv:'common_dialogue_app_data_display', 
-            props:{
-                app_id:common.COMMON_GLOBAL.app_id,
-                display_type:'VERTICAL_KEY_VALUE',
-                dialogue:true,
-                master_path:'/app-function/PAYMENT_REQUEST_CREATE',
-                master_query:'',
-                master_body:data,
-                master_method:'POST',
-                master_token_type:'APP_DATA',
-                master_resource:'PAYMENT_REQUEST_METADATA',
-                detail_path:null,
-                detail_query:null,
-                detail_method:null,
-                detail_token_type:null,
-                detail_class:null,
-                new_resource:false,
-                mode:'READ',
-                timezone:common.COMMON_GLOBAL.user_timezone,
-                locale:common.COMMON_GLOBAL.user_locale,
-                button_print: false,
-                button_update: false,
-                button_post: false,
-                button_delete: true,
-                button_delete_icon_class:'common_data_display_icon_cancel',
-                function_FFB:common.FFB,
-                function_button_print:null,
-                function_button_update:null,
-                function_button_post:null,
-                function_button_delete:pay_cancel
-            },
-            methods:null,
+        await common.ComponentRender({
+            mountDiv:   'common_dialogue_app_data_display', 
+            data:       {
+                        app_id:common.COMMON_GLOBAL.app_id,
+                        display_type:'VERTICAL_KEY_VALUE',
+                        dialogue:true,
+                        master_path:'/app-function/PAYMENT_REQUEST_CREATE',
+                        master_query:'',
+                        master_body:data,
+                        master_method:'POST',
+                        master_token_type:'APP_DATA',
+                        master_resource:'PAYMENT_REQUEST_METADATA',
+                        detail_path:null,
+                        detail_query:null,
+                        detail_method:null,
+                        detail_token_type:null,
+                        detail_class:null,
+                        new_resource:false,
+                        mode:'READ',
+                        timezone:common.COMMON_GLOBAL.user_timezone,
+                        locale:common.COMMON_GLOBAL.user_locale,
+                        button_print: false,
+                        button_update: false,
+                        button_post: false,
+                        button_delete: true,
+                        button_delete_icon_class:'common_data_display_icon_cancel'
+                        },
+            methods:    {
+                        FFB:common.FFB,
+                        button_print:null,
+                        button_update:null,
+                        button_post:null,
+                        button_delete:pay_cancel
+                        },
             lifecycle:null,
             path:'/common/component/app_data_display.js'})
             .then(()=>{
@@ -248,42 +252,43 @@ const pay_cancel = async () =>{
  * Pay product
  */
 const pay = async () =>{
-    await common.ComponentRender({mountDiv:'common_dialogue_app_data_display', 
-        props:{
-            app_id:common.COMMON_GLOBAL.app_id,
-            display_type:'VERTICAL_KEY_VALUE',
-            dialogue:true,
-            master_path:'/app-function/PAYMENT_METADATA',
-            master_query:'fields=json_data',
-            master_body:{data_app_id:common.COMMON_GLOBAL.app_id},
-            master_method:'POST',
-            master_token_type:'APP_DATA',
-            master_resource:'PAYMENT_METADATA',
-            detail_path:null,
-            detail_query:null,
-            detail_body:null,
-            detail_method:null,
-            detail_token_type:null,
-            detail_class:null,
-            new_resource:true,
-            mode:'EDIT',
-            timezone:common.COMMON_GLOBAL.user_timezone,
-            locale:common.COMMON_GLOBAL.user_locale,
-            button_print: false,
-            button_update: false,
-            button_post: true,
-            button_post_icon_class:'common_data_display_icon_ok',
-            button_delete: true,
-            button_delete_icon_class:'common_data_display_icon_cancel',
-            function_FFB:common.FFB,
-            function_button_print:null,
-            function_button_update:null,
-            function_button_post:payment_request,
-            function_button_delete:pay_cancel,
-        },
-        methods:null,
-        lifecycle:null,
-        path:'/common/component/app_data_display.js'});
+    await common.ComponentRender({
+        mountDiv:   'common_dialogue_app_data_display', 
+        data:       {
+                    app_id:common.COMMON_GLOBAL.app_id,
+                    display_type:'VERTICAL_KEY_VALUE',
+                    dialogue:true,
+                    master_path:'/app-function/PAYMENT_METADATA',
+                    master_query:'fields=json_data',
+                    master_body:{data_app_id:common.COMMON_GLOBAL.app_id},
+                    master_method:'POST',
+                    master_token_type:'APP_DATA',
+                    master_resource:'PAYMENT_METADATA',
+                    detail_path:null,
+                    detail_query:null,
+                    detail_body:null,
+                    detail_method:null,
+                    detail_token_type:null,
+                    detail_class:null,
+                    new_resource:true,
+                    mode:'EDIT',
+                    timezone:common.COMMON_GLOBAL.user_timezone,
+                    locale:common.COMMON_GLOBAL.user_locale,
+                    button_print: false,
+                    button_update: false,
+                    button_post: true,
+                    button_post_icon_class:'common_data_display_icon_ok',
+                    button_delete: true,
+                    button_delete_icon_class:'common_data_display_icon_cancel'
+                    },
+        methods:    {
+                    FFB:common.FFB,
+                    button_print:null,
+                    button_update:null,
+                    button_post:payment_request,
+                    button_delete:pay_cancel},
+        lifecycle:  null,
+        path:       '/common/component/app_data_display.js'});
         CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
         CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
         CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
@@ -308,20 +313,25 @@ const pay = async () =>{
  */
 const init_app = async () => {
     CommonAppDocument.body.className = 'app_theme1';
-    await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div, 
-        props:null,
-        methods:null,
-        lifecycle:null,
+    await common.ComponentRender({
+        mountDiv:   common.COMMON_GLOBAL.app_div, 
+        data:       null,
+        methods:    null,
+        lifecycle:  null,
         path:'/component/app.js'});
-    await common.ComponentRender({mountDiv:'app_main_page', 
-        props:{app_id:common.COMMON_GLOBAL.app_id,
-            timezone:common.COMMON_GLOBAL.user_timezone,
-            locale:common.COMMON_GLOBAL.user_locale,
-            function_pay:pay,
-            function_FFB:common.FFB,
-            function_ComponentRender:common.ComponentRender,
-            function_show_message:common.show_message},
-        methods:null,
+    await common.ComponentRender({
+        mountDiv:   'app_main_page', 
+        data:       {
+                    app_id:common.COMMON_GLOBAL.app_id,
+                    timezone:common.COMMON_GLOBAL.user_timezone,
+                    locale:common.COMMON_GLOBAL.user_locale
+                    },
+        methods:    {
+                    pay:pay,
+                    FFB:common.FFB,
+                    ComponentRender:common.ComponentRender,
+                    show_message:common.show_message
+                    },
         lifecycle:null,
         path:'/component/page_start.js'});
     product_update();

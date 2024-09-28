@@ -67,10 +67,11 @@ const template = props => ` <div id='menu_8_content_widget1' class='widget'>
                             </div>`;
 /**
 * 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          function_roundOff:function,
-*          function_FFB:function}} props 
+* @param {{ data:{      common_mountdiv:string},
+*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+*                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
+*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*           lifecycle:  null}} props 
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:null, 
 *                      template:string}>}
@@ -87,15 +88,15 @@ const component = async props => {
          *          connections:string,
          *          started:string}}
          */
-        const db = await props.function_FFB('/server-db_admin/database', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
-        const db_detail = await props.function_FFB('/server-db_admin/database-space', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        const db_detail_sum = await props.function_FFB('/server-db_admin/database-spacesum', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'',
+        const db = await props.methods.FFB('/server-db_admin/database', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
+        const db_detail = await props.methods.FFB('/server-db_admin/database-space', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+        const db_detail_sum = await props.methods.FFB('/server-db_admin/database-spacesum', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'',
                                                                                                 size:size,
                                                                                                 db:db,
                                                                                                 db_detail:db_detail,
                                                                                                 db_detail_sum:db_detail_sum,
-                                                                                                function_roundOff:props.function_roundOff
+                                                                                                function_roundOff:props.methods.roundOff
                                                                                             });
   };
   return {
@@ -116,7 +117,7 @@ const component = async props => {
                                             data_used:'',
                                             data_free:'',
                                             pct_used:''},
-                            function_roundOff:props.function_roundOff
+                            function_roundOff:props.methods.roundOff
       })
   };
 };

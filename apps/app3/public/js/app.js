@@ -66,15 +66,17 @@ const app_event_click = event => {
                 case event.target.classList.contains('doc_list_item_image')?event_target_id:'':{
                     const target_row = common.element_row(event.target);
                     if (target_row.querySelector('.doc_list_item_image')?.getAttribute('data-full_size'))
-                        common.ComponentRender({mountDiv:'common_window_info',
-                            props:{   info:0,
-                                url:target_row.querySelector('.doc_list_item_image')?.getAttribute('data-full_size'),
-                                content_type:null, 
-                                iframe_content:null,
-                                function_common_setTimeout:common.common_setTimeout},
-                            methods:null,
-                            lifecycle:null,
-                            path:'/common/component/window_info.js'});
+                        common.ComponentRender({
+                            mountDiv:   'common_window_info',
+                            data:       {
+                                        info:0,
+                                        url:target_row.querySelector('.doc_list_item_image')?.getAttribute('data-full_size'),
+                                        content_type:null, 
+                                        iframe_content:null
+                                        },
+                            methods:    {common_setTimeout:common.common_setTimeout},
+                            lifecycle:  null,
+                            path:       '/common/component/window_info.js'});
                     break;
                 }
             }
@@ -100,16 +102,18 @@ const framework_set = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const init_app = async () => {
-    await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
-        props:null,
-        methods:null,
-        lifecycle:null,
-        path:'/component/app.js'});
-    common.ComponentRender({mountDiv:'doc_list',
-        props:{docs:APP_GLOBAL.docs},
-        methods:null,
-        lifecycle:null,
-        path:'/component/docs.js'});
+    await common.ComponentRender({
+        mountDiv:   common.COMMON_GLOBAL.app_div,
+        data:       null,
+        methods:    null,
+        lifecycle:  null,
+        path:       '/component/app.js'});
+    common.ComponentRender({
+        mountDiv:   'doc_list',
+        data:       {docs:APP_GLOBAL.docs},
+        methods:    null,
+        lifecycle:  null,
+        path:       '/component/docs.js'});
     CommonAppDocument.querySelector('#dialogue_documents').style.visibility = 'visible';
    framework_set();
 };

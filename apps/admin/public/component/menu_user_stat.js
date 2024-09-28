@@ -36,9 +36,10 @@ const template = props => `<div id='menu_2_content_widget1' class='widget'>
                             </div>` ;
 /**
  * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          function_FFB:function}} props 
+ * @param {{ data:{      common_mountdiv:string},
+ *           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+ *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+ *           lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
@@ -51,20 +52,20 @@ const component = async props => {
      * @returns{Promise.<{count_connected:number}>}
      */
     const get_count = async (identity_provider_id, logged_in) => {
-        return props.function_FFB('/server-socket/socket-stat', 
+        return props.methods.FFB('/server-socket/socket-stat', 
                                 `identity_provider_id=${identity_provider_id}&logged_in=${logged_in}`, 'GET', 'APP_ACCESS', null)
         .then((/**@type{string}*/result)=>JSON.parse(result));
     };
     const post_component = async () =>{
         /**@type{[{identity_provider_id:string, provider_name:String, count_users:number, count_connected:number}]} */
-        const user_stat = await props.function_FFB('/server-db_admin/user_account-stat', null, 'GET', 'APP_ACCESS', null)
+        const user_stat = await props.methods.FFB('/server-db_admin/user_account-stat', null, 'GET', 'APP_ACCESS', null)
                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
         //add count stat
         for (const row of user_stat)
             row.count_connected = await get_count(row.identity_provider_id ?? '',1).then(result=>result.count_connected);
 
         const count_not_connected = await get_count('',0).then(result=>result.count_connected);
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'',
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'',
                                                                                                 records_user_stat:user_stat,
                                                                                                 count_not_connected:count_not_connected
                                                                                             });

@@ -101,117 +101,119 @@ const template = props =>`  <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                             </div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          app_id:number,
- *          user_settings:import('../js//types.js').APP_user_setting_record,
- *          themes:import('../js//types.js').APP_GLOBAL['themes'],
- *          function_set_current_value:function,
- *          function_update_all_theme_thumbnails:function
- *          function_ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *          function_app_settings_get:function}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      app_id:number,
+ *                      user_settings:import('../js//types.js').APP_user_setting_record,
+ *                      themes:import('../js//types.js').APP_GLOBAL['themes']
+ *                      },
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
+ *                      update_all_theme_thumbnails:function
+ *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+ *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get'],},
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
  */
 const method = async props => {
     const post_component = async () =>{
-        /**@type{{app_id:number, value:string, text:string, app_setting_type_name:string}[]|[]} */
-        const settings = await props.function_app_settings_get();
+        const settings = await props.methods.app_settings_get();
         //update APP_GLOBAL with themes
         /**@type{import('../js//types.js').APP_GLOBAL['themes']} */
-        props.themes.data = settings.filter(setting=>
-                                setting.app_id == props.app_id && 
+        props.data.themes.data = settings.filter(setting=>
+                                setting.app_id == props.data.app_id && 
                                 setting.app_setting_type_name.startsWith('REPORT_THEME'))
                                 .map(theme=>{
                                     return {type:theme.app_setting_type_name, value:theme.value, text:theme.text};
                                 });
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'', 
-                                                                                                theme_id_day:props.user_settings.design_theme_day_id,
-                                                                                                theme_id_month:props.user_settings.design_theme_month_id,
-                                                                                                theme_id_year:props.user_settings.design_theme_year_id});
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'', 
+                                                                                                theme_id_day:props.data.user_settings.design_theme_day_id,
+                                                                                                theme_id_month:props.data.user_settings.design_theme_month_id,
+                                                                                                theme_id_year:props.data.user_settings.design_theme_year_id});
         //
         //paper size
-        await props.function_ComponentRender({mountDiv:'setting_select_report_papersize',
-            props:{
-                default_data_value:settings.filter((/**@type{*}*/setting)=>
-                                        setting.app_setting_type_name.startsWith('PAPER_SIZE'))[0].value,
-                default_value:settings.filter((/**@type{*}*/setting)=>
-                                setting.app_setting_type_name.startsWith('PAPER_SIZE'))[0].text,
-                options: settings.filter((/**@type{*}*/setting)=>
-                            setting.app_setting_type_name.startsWith('PAPER_SIZE')),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
-            lifecycle:null,
-            path:'/common/component/select.js'});
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_report_papersize',
+            data:       {
+                        default_data_value:settings.filter((/**@type{*}*/setting)=>
+                                                setting.app_setting_type_name.startsWith('PAPER_SIZE'))[0].value,
+                        default_value:settings.filter((/**@type{*}*/setting)=>
+                                        setting.app_setting_type_name.startsWith('PAPER_SIZE'))[0].text,
+                        options: settings.filter((/**@type{*}*/setting)=>
+                                    setting.app_setting_type_name.startsWith('PAPER_SIZE')),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
+            lifecycle:  null,
+            path:       '/common/component/select.js'});
         //highlight row
-        await props.function_ComponentRender({mountDiv:'setting_select_report_highlight_row',
-            props:{
-                default_data_value:settings.filter((/**@type{*}*/setting)=>
-                                        setting.app_id == props.app_id && 
-                                        setting.app_setting_type_name.startsWith('HIGHLIGHT_ROW'))[0].value,
-                default_value:settings.filter((/**@type{*}*/setting)=>
-                                setting.app_id == props.app_id && 
-                                setting.app_setting_type_name.startsWith('HIGHLIGHT_ROW'))[0].text,
-                options: settings.filter((/**@type{*}*/setting)=>
-                            setting.app_id == props.app_id && 
-                            setting.app_setting_type_name.startsWith('HIGHLIGHT_ROW')),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
-                column_value:'value',
-                column_text:'text',
-                function_FFB:null
-            },
-            methods:null,
+        await props.methods.ComponentRender({
+            mountDiv:   'setting_select_report_highlight_row',
+            data:       {
+                        default_data_value:settings.filter((/**@type{*}*/setting)=>
+                                                setting.app_id == props.data.app_id && 
+                                                setting.app_setting_type_name.startsWith('HIGHLIGHT_ROW'))[0].value,
+                        default_value:settings.filter((/**@type{*}*/setting)=>
+                                        setting.app_id == props.data.app_id && 
+                                        setting.app_setting_type_name.startsWith('HIGHLIGHT_ROW'))[0].text,
+                        options: settings.filter((/**@type{*}*/setting)=>
+                                    setting.app_id == props.data.app_id && 
+                                    setting.app_setting_type_name.startsWith('HIGHLIGHT_ROW')),
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'value',
+                        column_text:'text'
+                        },
+            methods:    {FFB:null},
             lifecycle:null,
             path:'/common/component/select.js'});
 
-        props.function_set_current_value('setting_select_report_papersize', props.user_settings.design_paper_size);
+        props.methods.set_current_value('setting_select_report_papersize', props.data.user_settings.design_paper_size);
         
-        props.common_document.querySelector('#paper').className=props.user_settings.design_paper_size;
+        props.methods.common_document.querySelector('#paper').className=props.data.user_settings.design_paper_size;
 
-        props.function_set_current_value('setting_select_report_highlight_row', props.user_settings.design_row_highlight);
+        props.methods.set_current_value('setting_select_report_highlight_row', props.data.user_settings.design_row_highlight);
 
-        if (Number(props.user_settings.design_column_weekday_checked))
-            props.common_document.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
+        if (Number(props.data.user_settings.design_column_weekday_checked))
+            props.methods.common_document.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
         else
-            props.common_document.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
-        if (Number(props.user_settings.design_column_calendartype_checked))
-            props.common_document.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
+            props.methods.common_document.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
+        if (Number(props.data.user_settings.design_column_calendartype_checked))
+            props.methods.common_document.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
         else
-            props.common_document.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
-        if (Number(props.user_settings.design_column_notes_checked))
-            props.common_document.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
+            props.methods.common_document.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
+        if (Number(props.data.user_settings.design_column_notes_checked))
+            props.methods.common_document.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
         else
-            props.common_document.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
-        if (Number(props.user_settings.design_column_gps_checked))
-            props.common_document.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
+            props.methods.common_document.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
+        if (Number(props.data.user_settings.design_column_gps_checked))
+            props.methods.common_document.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
         else
-            props.common_document.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
-        if (Number(props.user_settings.design_column_timezone_checked))
-            props.common_document.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
+            props.methods.common_document.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
+        if (Number(props.data.user_settings.design_column_timezone_checked))
+            props.methods.common_document.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
         else
-            props.common_document.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
+            props.methods.common_document.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
 
-        props.function_update_all_theme_thumbnails();
+        props.methods.update_all_theme_thumbnails();
     };
     return {
         props:  {function_post:post_component},
         data:   null,
         template: template({spinner:'css_spinner',
-                            theme_id_day:props.user_settings.design_theme_day_id,
-                            theme_id_month:props.user_settings.design_theme_month_id,
-                            theme_id_year:props.user_settings.design_theme_year_id})
+                            theme_id_day:props.data.user_settings.design_theme_day_id,
+                            theme_id_month:props.data.user_settings.design_theme_month_id,
+                            theme_id_year:props.data.user_settings.design_theme_year_id})
     };
 };
 export default method;

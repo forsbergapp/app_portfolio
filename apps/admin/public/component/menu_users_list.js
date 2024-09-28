@@ -152,15 +152,16 @@ const template = props => ` ${props.spinner!=''?
                             }`;
 /**
 * 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          user_account_id:number,
-*          user_app_role_id:number,
-*          sort:string,
-*          order_by:string,
-*          focus:boolean,
-*          function_list_url_style:function,
-*          function_FFB:function}} props 
+* @param {{ data:{      common_mountdiv:string,
+*                       user_account_id:number,
+*                       user_app_role_id:number,
+*                       sort:string,
+*                       order_by:string,
+*                       focus:boolean},
+*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+*                       ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*           lifecycle:  null}} props
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:null, 
 *                      template:string}>}
@@ -171,48 +172,48 @@ const component = async props => {
      * Get order by if column matches
      * @param {string} column
      */
-    const get_order_by = column =>column==props.sort?props.order_by:'';
+    const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
 
     const post_component = async () =>{
         let search_user='*';
         //show all records if no search criteria
-        if (props.common_document.querySelector('#list_user_account_search_input').innerText.replaceAll('\n','')!='')
-            search_user = encodeURI(props.common_document.querySelector('#list_user_account_search_input').innerText.replaceAll('\n',''));
-        const users = await props.function_FFB('/server-db_admin/user_account', `search=${search_user}&sort=${props.sort}&order_by=${props.order_by}`, 'GET', 'APP_ACCESS', null)
+        if (props.methods.common_document.querySelector('#list_user_account_search_input').innerText.replaceAll('\n','')!='')
+            search_user = encodeURI(props.methods.common_document.querySelector('#list_user_account_search_input').innerText.replaceAll('\n',''));
+        const users = await props.methods.FFB('/server-db_admin/user_account', `search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, 'GET', 'APP_ACCESS', null)
                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
       
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'',
-                                                                                                user_account_id:props.user_account_id,
-                                                                                                user_app_role_id:props.user_app_role_id,
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'',
+                                                                                                user_account_id:props.data.user_account_id,
+                                                                                                user_app_role_id:props.data.user_app_role_id,
                                                                                                 users:users,
                                                                                                 function_get_order_by:get_order_by
                                                                                                 });
-        if (props.common_document.querySelectorAll('#list_user_account .list_edit')[0])
-            if (props.focus==true){
+        if (props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0])
+            if (props.data.focus==true){
                 //set focus at start
                 //set focus first column in first row
                 //this will trigger to show detail records
-                if (props.common_document.querySelectorAll('#list_user_account .list_edit')[0].getAttribute('readonly')==true){
-                    props.common_document.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', false);
-                    props.common_document.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                    props.common_document.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', true);
+                if (props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].getAttribute('readonly')==true){
+                    props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', false);
+                    props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].focus();
+                    props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', true);
                 }
                 else
-                    props.common_document.querySelectorAll('#list_user_account .list_edit')[0].focus();
+                    props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].focus();
                     
             }
             else{
                 //trigger focus event on first row set focus back again to search field
-                props.common_document.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                props.common_document.querySelector('#list_user_account_search_input').focus();
+                props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].focus();
+                props.methods.common_document.querySelector('#list_user_account_search_input').focus();
             }
   };
   return {
       props:  {function_post:post_component},
       data:   null,
       template: template({  spinner:'css_spinner',
-                            user_account_id:props.user_account_id,
-                            user_app_role_id:props.user_app_role_id,
+                            user_account_id:props.data.user_account_id,
+                            user_app_role_id:props.data.user_app_role_id,
                             users:[],
                             function_get_order_by:get_order_by
       })

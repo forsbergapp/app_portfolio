@@ -23,39 +23,40 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
                                 data-longitude='${props.longitude}'>${props.latitude + ', ' + props.longitude}</div>
                         `;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          timezone_text:string,
- *          latitude:string,
- *          longitude:string,
- *          marker_id:string,
- *          country:string,
- *          city:string,
- *          text_place:string,
- *          module_leaflet:*,
- *          module_leaflet_popup_offset: number,
- *          module_leaflet_session_map:*}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      timezone_text:string,
+ *                      latitude:string,
+ *                      longitude:string,
+ *                      marker_id:string,
+ *                      country:string,
+ *                      city:string,
+ *                      text_place:string,
+ *                      module_leaflet:*,
+ *                      module_leaflet_popup_offset: number,
+ *                      module_leaflet_session_map:*},
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:null}, 
  *                      data:   null,
  *                      template:null}>}
  */
 const component = async props => {
     
-    props.module_leaflet.popup({ offset: [0, props.module_leaflet_popup_offset], closeOnClick: false })
-        .setLatLng([props.latitude, props.longitude])
+    props.data.module_leaflet.popup({ offset: [0, props.data.module_leaflet_popup_offset], closeOnClick: false })
+        .setLatLng([props.data.latitude, props.data.longitude])
         .setContent(template({
-            country:props.country,
-            city:props.city,
-            text_place:props.text_place,
-            timezone_text:props.timezone_text,
-            latitude:props.latitude,
-            longitude:props.longitude
+            country:props.data.country,
+            city:props.data.city,
+            text_place:props.data.text_place,
+            timezone_text:props.data.timezone_text,
+            latitude:props.data.latitude,
+            longitude:props.data.longitude
         }))
-        .openOn(props.module_leaflet_session_map);
-    const marker = props.module_leaflet.marker([props.latitude, props.longitude]).addTo(props.module_leaflet_session_map);
+        .openOn(props.data.module_leaflet_session_map);
+    const marker = props.data.module_leaflet.marker([props.data.latitude, props.data.longitude]).addTo(props.data.module_leaflet_session_map);
     //setting id so apps can customize if necessary
-    marker._icon.id = props.marker_id;
+    marker._icon.id = props.data.marker_id;
     
     return {
         props:  {function_post:null},

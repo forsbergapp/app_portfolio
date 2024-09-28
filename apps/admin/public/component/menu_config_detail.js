@@ -47,10 +47,11 @@ const template = props => ` ${props.file=='SERVER'?
                             }`;
 /**
 * 
-* @param {{common_document:import('../../../common_types.js').CommonAppDocument,
-*          common_mountdiv:string,
-*          file:'SERVER'|'IAM_BLOCKIP'|'IAM_USERAGENT'|'IAM_POLICY',
-*          function_FFB:function}} props 
+* @param {{data:{       common_mountdiv:string,
+*                       file:'SERVER'|'IAM_BLOCKIP'|'IAM_USERAGENT'|'IAM_POLICY'},
+*          methods:{    common_document:import('../../../common_types.js').CommonAppDocument,
+*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*          lifecycle:   null}} props 
 * @returns {Promise.<{ props:{function_post:function}, 
 *                      data:null, 
 *                      template:string}>}
@@ -58,14 +59,14 @@ const template = props => ` ${props.file=='SERVER'?
 const component = async props => {
 const server_groups = [0,1,2,3,4];
    const post_component = async () =>{
-        const config_server = await props.function_FFB(`/server-config/config/${props.file}`, 'saved=1', 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result).data);
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({ spinner:'',
+        const config_server = await props.methods.FFB(`/server-config/config/${props.data.file}`, 'saved=1', 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result).data);
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'',
                                                                                                 server_group:server_groups,
-                                                                                                file:props.file,
+                                                                                                file:props.data.file,
                                                                                                 config:config_server});
-        if (props.file=='SERVER'){
+        if (props.data.file=='SERVER'){
             //set focus first column in first row
-            props.common_document.querySelectorAll('#list_config .common_input')[0].focus();
+            props.methods.common_document.querySelectorAll('#list_config .common_input')[0].focus();
         }
  };
  
@@ -74,7 +75,7 @@ const server_groups = [0,1,2,3,4];
      data:   null,
      template: template({   spinner:'css_spinner',
                             server_group:server_groups, 
-                            file:props.file,
+                            file:props.data.file,
                             config:[]})
  };
 };

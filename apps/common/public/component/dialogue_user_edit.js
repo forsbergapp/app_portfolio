@@ -185,21 +185,25 @@ const template = () => `<div id='common_user_edit_common'>
                         </div>
                         <div id='common_user_edit_close' class='common_dialogue_button common_icon' ></div>`;
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          user_account_id:number,
- *          common_app_id:number,
- *          function_format_json_date:function,
- *          function_show_message:function,
- *          function_FFB:function}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      user_account_id:number,
+ *                      common_app_id:number,
+ *                      },
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      format_json_date:import('../../../common_types.js').CommonModuleCommon['format_json_date'],
+ *                      show_message:import('../../../common_types.js').CommonModuleCommon['show_message'],
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      },
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:   null,
  *                      template:string}>}
  */
 const component = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show1');
-    props.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show1');
+    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
     /**
      * User get
@@ -207,57 +211,57 @@ const component = async props => {
      */
     const user_get = async () => {
         //get user from REST API
-        props.function_FFB(`/server-db/user_account/${props.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
+        props.methods.FFB(`/server-db/user_account/${props.data.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
         .then((/**@type{string}*/result)=>{
             const user = JSON.parse(result);
-            if (props.user_account_id == parseInt(user.id)) {
-                props.common_document.querySelector('#common_user_edit_local').style.display = 'none';
-                props.common_document.querySelector('#common_user_edit_provider').style.display = 'none';
-                props.common_document.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
+            if (props.data.user_account_id == parseInt(user.id)) {
+                props.methods.common_document.querySelector('#common_user_edit_local').style.display = 'none';
+                props.methods.common_document.querySelector('#common_user_edit_provider').style.display = 'none';
+                props.methods.common_document.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
 
                 if (Number(user.private))
-                    props.common_document.querySelector('#common_user_edit_checkbox_profile_private').classList.add('checked');
+                    props.methods.common_document.querySelector('#common_user_edit_checkbox_profile_private').classList.add('checked');
                 else
-                    props.common_document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
+                    props.methods.common_document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
 
-                props.common_document.querySelector('#common_user_edit_input_username').innerHTML = user.username;
-                props.common_document.querySelector('#common_user_edit_input_bio').innerHTML = user.bio ?? '';
+                props.methods.common_document.querySelector('#common_user_edit_input_username').innerHTML = user.username;
+                props.methods.common_document.querySelector('#common_user_edit_input_bio').innerHTML = user.bio ?? '';
 
                 if (user.provider_id == null) {
-                    props.common_document.querySelector('#common_user_edit_local').style.display = 'block';
-                    props.common_document.querySelector('#common_user_edit_provider').style.display = 'none';
+                    props.methods.common_document.querySelector('#common_user_edit_local').style.display = 'block';
+                    props.methods.common_document.querySelector('#common_user_edit_provider').style.display = 'none';
 
                     //display fetched avatar editable
-                    props.common_document.querySelector('#common_user_edit_avatar').style.display = 'block';
-                    props.common_document.querySelector('#common_user_edit_avatar_img').style.backgroundImage= user.avatar?`url('${user.avatar}')`:'url()';
-                    props.common_document.querySelector('#common_user_edit_input_email').innerHTML = user.email;
-                    props.common_document.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
-                    props.common_document.querySelector('#common_user_edit_input_password').innerHTML = '',
-                        props.common_document.querySelector('#common_user_edit_input_password_confirm').innerHTML = '',
-                        props.common_document.querySelector('#common_user_edit_input_password_new').innerHTML = '';
-                    props.common_document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
+                    props.methods.common_document.querySelector('#common_user_edit_avatar').style.display = 'block';
+                    props.methods.common_document.querySelector('#common_user_edit_avatar_img').style.backgroundImage= user.avatar?`url('${user.avatar}')`:'url()';
+                    props.methods.common_document.querySelector('#common_user_edit_input_email').innerHTML = user.email;
+                    props.methods.common_document.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
+                    props.methods.common_document.querySelector('#common_user_edit_input_password').innerHTML = '',
+                        props.methods.common_document.querySelector('#common_user_edit_input_password_confirm').innerHTML = '',
+                        props.methods.common_document.querySelector('#common_user_edit_input_password_new').innerHTML = '';
+                    props.methods.common_document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
 
-                    props.common_document.querySelector('#common_user_edit_input_password_reminder').innerHTML = user.password_reminder;
+                    props.methods.common_document.querySelector('#common_user_edit_input_password_reminder').innerHTML = user.password_reminder;
                 } else{
-                        props.common_document.querySelector('#common_user_edit_local').style.display = 'none';
-                        props.common_document.querySelector('#common_user_edit_provider').style.display = 'block';
-                        props.common_document.querySelector('#common_user_edit_provider_id').innerHTML = user.identity_provider_id;
-                        props.common_document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = user.provider_id;
-                        props.common_document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = user.provider_first_name + ' ' + user.provider_last_name;
-                        props.common_document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
-                        props.common_document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
-                        props.common_document.querySelector('#common_user_edit_avatar').style.display = 'none';
-                        props.common_document.querySelector('#common_user_edit_avatar_img').style.backgroundImage= user.provider_image?`url('${user.provider_image}')`:'url()';
+                        props.methods.common_document.querySelector('#common_user_edit_local').style.display = 'none';
+                        props.methods.common_document.querySelector('#common_user_edit_provider').style.display = 'block';
+                        props.methods.common_document.querySelector('#common_user_edit_provider_id').innerHTML = user.identity_provider_id;
+                        props.methods.common_document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = user.provider_id;
+                        props.methods.common_document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = user.provider_first_name + ' ' + user.provider_last_name;
+                        props.methods.common_document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
+                        props.methods.common_document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
+                        props.methods.common_document.querySelector('#common_user_edit_avatar').style.display = 'none';
+                        props.methods.common_document.querySelector('#common_user_edit_avatar_img').style.backgroundImage= user.provider_image?`url('${user.provider_image}')`:'url()';
                     } 
-                props.common_document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = props.function_format_json_date(user.last_logontime, null);
-                props.common_document.querySelector('#common_user_edit_label_data_account_created').innerHTML = props.function_format_json_date(user.date_created, null);
-                props.common_document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = props.function_format_json_date(user.date_modified, null);
-                props.common_document.querySelector('#common_user_menu_avatar_img').style.backgroundImage= (user.avatar ?? user.provider_image)?
+                props.methods.common_document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = props.methods.format_json_date(user.last_logontime, null);
+                props.methods.common_document.querySelector('#common_user_edit_label_data_account_created').innerHTML = props.methods.format_json_date(user.date_created, null);
+                props.methods.common_document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = props.methods.format_json_date(user.date_modified, null);
+                props.methods.common_document.querySelector('#common_user_menu_avatar_img').style.backgroundImage= (user.avatar ?? user.provider_image)?
                                                                                                                 `url('${user.avatar ?? user.provider_image}')`:
                                                                                                                 'url()';
             } else {
                 //User not found
-                props.function_show_message('ERROR', '20305', null, null, props.common_app_id);
+                props.methods.show_message('ERROR', '20305', null, null, props.data.common_app_id);
             }
         })
         .catch(()=>null);

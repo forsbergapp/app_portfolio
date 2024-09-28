@@ -54,42 +54,46 @@ const template = props => `
                             </div>`;
 
 /**
- * 
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
- *          common_app_id:number,
- *          app_id:number,
- *          app_copyright:string,
- *          app_email:string,
- *          app_link_url:string,
- *          app_link_title:string,
- *          info_link_policy_name:string,
- *          info_link_disclaimer_name:string,
- *          info_link_terms_name:string,
- *          function_FFB:function}} props 
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      common_app_id:number,
+ *                      app_id:number,
+ *                      app_copyright:string,
+ *                      app_email:string,
+ *                      app_link_url:string,
+ *                      app_link_title:string,
+ *                      info_link_policy_name:string,
+ *                      info_link_disclaimer_name:string,
+ *                      info_link_terms_name:string
+ *                      },
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      },
+ *          lifecycle:  null}} props
  * @returns {Promise.<{ props:{function_post:function}, 
  *                      data:null, 
  *                      template:string}>}
  */
 const component = async props => {
-    props.common_document.querySelector(`#${props.common_mountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
     /**
      * @returns {Promise<void>}
      */
     const post_component = async () =>{
-        const apps = await props.function_FFB('/app/apps/', null, 'GET', 'APP_DATA', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.APP_ID != props.app_id))
+        const apps = await props.methods.FFB('/app/apps/', null, 'GET', 'APP_DATA', null)
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.APP_ID != props.data.app_id))
                             .catch((/**@type{Error}*/error)=>{throw error;});
-        props.common_document.querySelector(`#${props.common_mountdiv}`).innerHTML = template({
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({
             spinner:'',
             apps:apps,
-            app_copyright:props.app_copyright,
-            app_email:props.app_email,
-            app_link_url:props.app_link_url,
-            app_link_title:props.app_link_title,
-            info_link_policy_name:props.info_link_policy_name,
-            info_link_disclaimer_name:props.info_link_disclaimer_name,
-            info_link_terms_name:props.info_link_terms_name
+            app_copyright:props.data.app_copyright,
+            app_email:props.data.app_email,
+            app_link_url:props.data.app_link_url,
+            app_link_title:props.data.app_link_title,
+            info_link_policy_name:props.data.info_link_policy_name,
+            info_link_disclaimer_name:props.data.info_link_disclaimer_name,
+            info_link_terms_name:props.data.info_link_terms_name
         });
     };
     return {
