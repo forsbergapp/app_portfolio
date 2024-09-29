@@ -19,7 +19,7 @@
  *  CommonAppRecord
  *  CommonCountryType
  *  CommonProfileUser
- *  CommonProfileTopRecord
+ *  CommonProfileStatRecord
  *  CommonProvider
  *  CommonProfileSearchRecord
  *  CommonMasterObjectType
@@ -300,8 +300,8 @@
  */
 
 /**
- * Type CommonProfileTopRecord
- * @typedef {{id:number, username:string, avatar:string|null, provider_image: string|null, count:number}}   CommonProfileTopRecord
+ * Type CommonProfileStatRecord
+ * @typedef {{id:number, username:string, avatar:string|null, provider_image: string|null, count:number}}   CommonProfileStatRecord
  */
 /**
  * Type CommonProvider

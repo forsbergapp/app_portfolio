@@ -193,7 +193,7 @@ const app_event_click = event => {
                     break;
                 }
                 /**Dialogue profile */
-                case 'common_profile_home':{
+                case 'common_dialogue_profile_home':{
                     common.profile_stat(1);
                     break;
                 }
