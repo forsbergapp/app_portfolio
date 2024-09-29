@@ -15,11 +15,15 @@ const template = props => ` <div id='send_broadcast_form'>
                             </div>`;
 /**
  * 
- * @param {{data:{      common_mountdiv:string,
- *                      system_admin:boolean},
- *          methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+ * @param {{data:       {
+ *                      common_mountdiv:string,
+ *                      system_admin:boolean
+ *                      },
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      },
  *          lifecycle:  null}} props 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn,
  *                      data:null, 

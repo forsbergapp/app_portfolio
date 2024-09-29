@@ -112,64 +112,17 @@ const app_event_click = event => {
                                 path:       '/component/app_theme.js'}));
                         break;
                     }
-                case 'common_dialogue_user_menu_username':{
-                    profile_show_app(null,null);
-                    common.ComponentRemove('common_dialogue_user_menu');
-                    break;
-                }
                 case 'common_dialogue_user_menu_log_out':{
                     user_logout_app();
                     break;
                 }
-                //profile button
-                case 'common_profile_btn_top':{
-                    common.profile_stat(1,null, profile_show_app);
-                    break;
-                }
-                //common with app specific settings
-                case 'common_profile_home':{
-                    common.profile_stat(1,null, profile_show_app);
-                    break;
-                }
-                case 'common_profile_stat_row1_1':{
-                    common.profile_stat(1,null, profile_show_app);
-                    break;
-                }
-                case 'common_profile_stat_row1_2':{
-                    common.profile_stat(2,null, profile_show_app);
-                    break;
-                }
-                case 'common_profile_stat_row1_3':{
-                    common.profile_stat(3,null, profile_show_app);
-                    break;
-                }
+                //dialogue profile info
                 case 'common_profile_follow':{
                     common.profile_follow_like('FOLLOW');
                     break;
                 }
                 case 'common_profile_like':{
                     common.profile_follow_like('LIKE');
-                    break;
-                }
-                case 'common_profile_main_btn_following':{
-                    common.profile_detail(1);
-                    break;
-                }
-                case 'common_profile_main_btn_followed':{
-                    common.profile_detail(2);
-                    break;
-                }
-                case 'common_profile_main_btn_likes':{
-                    common.profile_detail(3);
-                    break;
-                }
-                case 'common_profile_main_btn_liked':
-                case 'common_profile_main_btn_liked_users':{
-                    common.profile_detail(4);
-                    break;
-                }
-                case 'common_profile_info_main_btn_cloud':{
-                    common.profile_detail(5);
                     break;
                 }
                 case 'common_user_start_login_button':{
@@ -317,15 +270,7 @@ const profile_show_app = async (user_account_id_other, username) =>{
                     data:       null,
                     methods:    {app_theme_update:app_preferences_post_mount},
                     lifecycle:  null,
-                    path:       '/component/profile_info.js'})
-                .then(()=>{
-                    common.ComponentRender({
-                        mountDiv:   'profile_info_apps',
-                        data:       null,
-                        methods:    {app_theme_update:app_preferences_post_mount},
-                        lifecycle:  null,
-                        path:       '/common/component/common_dialogue_profile_info_apps.js'});
-                });
+                    path:       '/component/profile_info.js'});
         }
     });
 };
@@ -444,7 +389,7 @@ const init_app = async (parameters) => {
     const user = common.LocationPathname(1);
     if (user !='') {
         //show profile for user entered in url
-        profile_show_app(null, user);
+        common.profile_show(null, user);
     }
    framework_set();
 };

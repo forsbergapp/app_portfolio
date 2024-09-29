@@ -52,8 +52,8 @@
 #common_profile_stat_row1_1::before{									content:var(--common_app_icon_user_views)}
 #common_profile_stat_row1_2::before{									content:var(--common_app_icon_user_follows)}
 #common_profile_stat_row1_3::before{									content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_user_follows)}
-#common_profile_home::before{											content:var(--common_app_icon_user_profile_stat)}
-#common_profile_close::before{											content:var(--common_app_icon_close)}
+#common_dialogue_profile_home::before{											content:var(--common_app_icon_user_profile_stat)}
+#common_dialogue_profile_close::before{											content:var(--common_app_icon_close)}
 #common_profile_info_view_count_icon::before{							content:var(--common_app_icon_user_views)}
 #common_profile_main_btn_following::before{								content:var(--common_app_icon_user_follows)}
 #common_profile_main_btn_followed::before{								content:var(--common_app_icon_user_followed)}
@@ -1074,7 +1074,11 @@ body.rtl{
 	word-break: unset;
 	position:fixed;
 }
-#common_profile_close{
+#common_dialogue_profile_content {
+	width: 100%;
+	height: 100%;
+}
+#common_dialogue_profile_close{
 	display: block;
     inset-inline-start: calc(50% - 30px);
 	bottom:30px;
@@ -1249,12 +1253,7 @@ body.rtl{
 .common_profile_detail_list_app_url, .common_profile_detail_list_date_created{
 	display: none;
 }
-/*profie_top*/
-#common_profile_stat {
-	width: 100%;
-	height: 100%;
-}
-
+/*dialogue profile stat*/
 #common_profile_stat_row1{
 	text-align: center;
 }
@@ -1272,7 +1271,7 @@ body.rtl{
 }
 .common_profile_stat_list_row{
 	height: 1.8em;
-	width: 300px;
+	width: 90%;
     margin: 0 auto;
 }
 .common_profile_stat_list_col:nth-child(1){
