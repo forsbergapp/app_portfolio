@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/dialogue_user_start
+ * @module apps/common/component/common_dialogue_user_start
  */
 
 /**

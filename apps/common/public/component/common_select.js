@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/select
+ * @module apps/common/component/common_select
  */
 /**
  * Displays stat of users

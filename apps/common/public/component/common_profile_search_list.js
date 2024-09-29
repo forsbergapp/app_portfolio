@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/profile_search_list
+ * @module apps/common/component/common_profile_search_list
  */
 
 /**

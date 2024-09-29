@@ -1,14 +1,13 @@
 /**
- * @module apps/common/component/profile_info_apps
+ * @module apps/common/component/common_profile_toolbar
  */
 
-const template = () => `<div id='common_profile_info_cloud'>
-                            <div id='common_profile_info_main_btn_cloud' class='common_link common_icon'></div>
-                        </div>`;
+const template = () => ' <div id=\'common_profile_btn_top\' class=\'common_toolbar_button common_icon\' ></div>';
 /**
+ * 
  * @param {{data:       {common_mountdiv:string},
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
- *          lifecycle:  null}} props 
+ *          lifecycle:  null}} props  
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:   null,
  *                      methods:null,

@@ -192,7 +192,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //Method asr
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_asr',
@@ -209,7 +209,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //Highlatitude adjustment
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_highlatitude',
@@ -226,7 +226,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:null,
-            path:'/common/component/select.js'});
+            path:'/common/component/common_select.js'});
         //Timeformat
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_timeformat',
@@ -243,7 +243,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //Hijri date adjustment
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_hijri_adjustment',
@@ -260,7 +260,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:null,
-            path:'/common/component/select.js'});
+            path:'/common/component/common_select.js'});
         //Iqamat
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_fajr',
@@ -277,7 +277,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_dhuhr',
             data:       {
@@ -293,7 +293,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_asr',
             data:       {
@@ -309,7 +309,7 @@ const method = async props => {
                         },
             methods:    null,
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_maghrib',
             data:       {
@@ -325,7 +325,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_isha',
             data:       {
@@ -341,7 +341,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //Fasting start end
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_show_fast_start_end',
@@ -358,7 +358,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
 
         props.methods.set_current_value('setting_select_method', props.data.user_settings.prayer_method);
         props.methods.component_setting_update('PRAYER', 'METHOD');

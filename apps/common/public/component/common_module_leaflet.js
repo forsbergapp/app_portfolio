@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/module_leaflet
+ * @module apps/common/component/common_module_leaflet
  */
 /**
  * @param {{css_url:string,

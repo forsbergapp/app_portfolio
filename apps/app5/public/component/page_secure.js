@@ -89,7 +89,7 @@ const component = async props => {
                             button_post:props.methods.button_post,
                             button_delete:null},
                 lifecycle:  null,
-                path:       '/common/component/app_data_display.js'});
+                path:       '/common/component/common_app_data_display.js'});
         }
     };
     return {

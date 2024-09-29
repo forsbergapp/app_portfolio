@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/window_info
+ * @module apps/common/component/common_window_info
  */
 
 /**

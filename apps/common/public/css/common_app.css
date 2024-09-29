@@ -1154,21 +1154,12 @@ body.rtl{
 	height:20px;
 	text-align:start;
 }
-#common_profile_main_btn_following,
-#common_profile_main_btn_followed,
-#common_profile_main_btn_likes{
-	width:20px;
-}
-#common_profile_main_btn_liked{
-	width:50px;
-}
 #common_profile_qr {
 	padding:3px;
 	padding-bottom:0px;
 	width: 132px;
 	display: inline-block;
 }
-
 #common_profile_follow_followed,
 #common_profile_like_unlike{
 	display:none;
