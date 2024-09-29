@@ -3535,6 +3535,10 @@ const common_event = async (event_type,event=null) =>{
                             }
                             break;
                         }
+                        case 'common_profile_search_input':{
+                            list_key_event(event, 'profile', profile_show);
+                            break;
+                        }        
                         case 'common_lov_search_input':{
                             if (event.target.innerText.indexOf('\n')>-1)
                                 event.target.innerText = event.target.innerText.replace('\n','');

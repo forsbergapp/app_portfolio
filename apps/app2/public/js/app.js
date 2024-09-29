@@ -2237,10 +2237,6 @@ const app_event_keyup = event => {
                     break;
                 }
                 //common
-                case 'common_profile_search_input':{
-                    common.list_key_event(event, 'profile', common.profile_show);
-                    break;
-                }
                 case 'common_user_start_login_username':
                 case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
