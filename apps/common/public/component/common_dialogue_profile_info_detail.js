@@ -74,7 +74,6 @@ const template = props => ` ${props.spinner==''?
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      show_common_dialogue:import('../../../common_types.js').CommonModuleCommon['show_common_dialogue'],
- *                      function_click:function,
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
  *                      },
  *          lifecycle:  null}} props
@@ -120,7 +119,6 @@ const component = async props => {
                                                                                                     detailchoice:props.data.detailchoice,
                                                                                                     list:list
                                                                                                 });
-            props.methods.common_document.querySelector('#common_profile_detail_list')['data-function'] = props.methods.function_click;
         }
         else
         props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = '';
