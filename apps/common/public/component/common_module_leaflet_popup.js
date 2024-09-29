@@ -28,12 +28,10 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
  *                      timezone_text:string,
  *                      latitude:string,
  *                      longitude:string,
- *                      marker_id:string,
  *                      country:string,
  *                      city:string,
  *                      text_place:string,
  *                      module_leaflet:*,
- *                      module_leaflet_popup_offset: number,
  *                      module_leaflet_session_map:*},
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
  *          lifecycle:  null}} props
@@ -43,8 +41,9 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
  *                      template:null}>}
  */
 const component = async props => {
-    
-    props.data.module_leaflet.popup({ offset: [0, props.data.module_leaflet_popup_offset], closeOnClick: false })
+
+    const OFFSET = -25;
+    props.data.module_leaflet.popup({ offset: [0, OFFSET], closeOnClick: false })
         .setLatLng([props.data.latitude, props.data.longitude])
         .setContent(template({
             country:props.data.country,
@@ -55,9 +54,7 @@ const component = async props => {
             longitude:props.data.longitude
         }))
         .openOn(props.data.module_leaflet_session_map);
-    const marker = props.data.module_leaflet.marker([props.data.latitude, props.data.longitude]).addTo(props.data.module_leaflet_session_map);
-    //setting id so apps can customize if necessary
-    marker._icon.id = props.data.marker_id;
+    props.data.module_leaflet.marker([props.data.latitude, props.data.longitude]).addTo(props.data.module_leaflet_session_map);
     
     return {
         lifecycle:  {onMounted:null},

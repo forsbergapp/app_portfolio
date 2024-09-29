@@ -52,10 +52,12 @@ const template = props => ` ${props.spinner==''?
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
  *          lifecycle:  null}} props
  * @returns {Promise.<{ lifecycle:{onMounted:onMounted}, 
- *                      data:{  function_profile_user_setting_update:       function,
- *                              function_profile_show_user_setting_detail:  function,
- *                              function_profile_user_setting_stat:         function},
- *                      methods:null,
+ *                      data:       null,
+ *                      methods:    {
+ *                                  profile_user_setting_update:       function,
+ *                                  profile_show_user_setting_detail:  function,
+ *                                  profile_user_setting_stat:         function
+ *                                  },
  *                      template:string}>}
  */
 const method = async props => {
@@ -148,12 +150,13 @@ const method = async props => {
 
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   {function_profile_user_setting_update:profile_user_setting_update,
-                 function_profile_show_user_setting_detail:profile_show_user_setting_detail,
-                 function_profile_user_setting_stat:profile_user_setting_stat
-        },
-        methods:null,
-        template: template({spinner:'css_spinner'})
+        data:       null,
+        methods:    {
+                    profile_user_setting_update:profile_user_setting_update,
+                    profile_show_user_setting_detail:profile_show_user_setting_detail,
+                    profile_user_setting_stat:profile_user_setting_stat
+                    },
+        template:   template({spinner:'css_spinner'})
     };
 };
 export default method;
