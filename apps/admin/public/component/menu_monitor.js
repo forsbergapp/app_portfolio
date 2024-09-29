@@ -119,10 +119,12 @@ const component = async props => {
 
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   {limit:await props.methods.FFB(`/server-config/config-apps/${props.data.app_id}`, 'key=PARAMETERS', 'GET', props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
-                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS))},
-        methods:null,
-        template: template({spinner:'css_spinner', system_admin:props.data.system_admin})
+        data:       {
+                    limit:await props.methods.FFB(`/server-config/config-apps/${props.data.app_id}`, 'key=PARAMETERS', 'GET', props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
+                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS))
+                    },
+        methods:    null,
+        template:   template({spinner:'css_spinner', system_admin:props.data.system_admin})
     };
 };
 export default component;

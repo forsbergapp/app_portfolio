@@ -80,22 +80,12 @@ const COMMON_GLOBAL = {
     module_leaflet:null,
     module_leaflet_flyto:0,
     module_leaflet_jumpto:0,
-    module_leaflet_popup_offset:0,
     module_leaflet_style:'',
-    module_leaflet_session_map:{doubleClickZoom:null,
-                                invalidateSize:null,
-                                removeLayer:null,
-                                setView:null,
-                                flyTo:null,
-                                setZoom:null,
-                                getZoom:null},
+    module_leaflet_session_map:null,
     module_leaflet_session_map_layer:[],
     module_leaflet_zoom:0, 
     module_leaflet_zoom_city:0,
     module_leaflet_zoom_pp:0,
-    module_leaflet_marker_div_gps:'',
-    module_leaflet_marker_div_city:'',
-    module_leaflet_marker_div_pp:'',
     module_leaflet_map_styles:[{id:null, display_data:null, value:null, data2:null, data3:null, data4:null, session_map_layer:null}],
     'module_easy.qrcode_width':null,
     'module_easy.qrcode_height':null,
@@ -610,10 +600,10 @@ const app_settings_get = async () =>await FFB('/server-db/app_settings', null, '
 const set_current_value= (div, value, json_key=null, json_value=null) =>{
     CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).innerText = Array.from(CommonAppDocument.querySelectorAll(`#${div} .common_select_option`))
                                                                                             .filter(option=>(json_key?JSON.parse(option.getAttribute('data-value'))[json_key]:
-                                                                                                                option.getAttribute('data-value'))==(json_value ?? value ?? ''))[0].innerText;
-    if (json_value)
+                                                                                                                option.getAttribute('data-value'))==(json_value ?? value))[0].innerText;
+    if (json_key)
         Array.from(CommonAppDocument.querySelectorAll(`#${div} .common_select_option`))
-            .filter(option=>json_key?JSON.parse(option.getAttribute('data-value'))[json_key]:''==json_value ?? '')[0].getAttribute('data-value');
+            .filter(option=>json_key?JSON.parse(option.getAttribute('data-value'))[json_key]:''==json_value)[0].getAttribute('data-value');
     else
         CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).setAttribute('data-value', value);
       
@@ -646,7 +636,6 @@ const select_event_action = async (event_target_id, target) =>{
                             country:        '',
                             city:           '',
                             timezone_text:  null,
-                            marker_id:      COMMON_GLOBAL.module_leaflet_marker_div_city,
                             to_method:      COMMON_GLOBAL.module_leaflet_flyto
                         }).then(()=> {
             map_toolbar_reset();
@@ -856,7 +845,7 @@ const WindowPrompt = text => CommonAppWindow.prompt(text);
  *          methods:{}|null,
  *          lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *          path:string}} componentRender
- * @returns {Promise.<*>}
+ * @returns {Promise.<{data:*, methods:*}>}
  */
 const ComponentRender = async componentRender => {
     const {default:ComponentCreate} = await import(componentRender.path);
@@ -902,15 +891,11 @@ const ComponentRender = async componentRender => {
             }
         //run onMounted function after component is mounted
         if (component.lifecycle.onMounted){
-            if (componentRender.path == '/common/component/common_module_leaflet.js'){
-                COMMON_GLOBAL.module_leaflet =              component.data.library_Leaflet;
-                COMMON_GLOBAL.module_leaflet_session_map =  component.data.module_map;
-                COMMON_GLOBAL.module_leaflet_map_styles =   component.data.map_layer_array;
-            }
             await component.lifecycle.onMounted();
         }
-        return component.data;
     }
+    //return data and methods from component to be used in apps
+    return {data:component.data, methods:component.methods};
 };
 /**
  * Component remove
@@ -2277,9 +2262,10 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
     COMMON_GLOBAL.module_leaflet_map_styles =   map_layer_array;
     /**
      * 
-     * @type {import('../../../common_types.js').CommonModuleLeafletData}
+     * @type {{ data:null,
+     *          methods:import('../../../common_types.js').CommonModuleLeafletMethods}}
      */
-    const leaflet_data = await ComponentRender({
+    const module_leaflet = await ComponentRender({
                             mountDiv:   mount_div,
                             data:       {   
                                         longitude:longitude,
@@ -2288,7 +2274,6 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                                         module_leaflet_zoom:COMMON_GLOBAL.module_leaflet_zoom,
                                         module_leaflet_jumpto:COMMON_GLOBAL.module_leaflet_jumpto,
                                         module_leaflet_map_style:COMMON_GLOBAL.module_leaflet_style,
-                                        module_leaflet_marker_div_gps:COMMON_GLOBAL.module_leaflet_marker_div_gps
                                         },
                             methods:    {
                                         FFB:FFB,
@@ -2299,8 +2284,11 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                             lifecycle:  null,
                             path:       '/common/component/common_module_leaflet.js'})
     .catch(error=>{throw error;});
-    COMMON_GLOBAL.module_leaflet =              leaflet_data.library_Leaflet;
-    COMMON_GLOBAL.module_leaflet_session_map =  leaflet_data.module_map;
+    COMMON_GLOBAL.module_leaflet =              module_leaflet.methods.library_Leaflet;
+    COMMON_GLOBAL.module_leaflet_session_map =  module_leaflet.methods.module_map;
+
+    // COMMON_GLOBAL.module_leaflet_map_styles =   component.data.map_layer_array;
+
     await ComponentRender({
         mountDiv:   mount_div, //outer app div
         data:       {   
@@ -2310,7 +2298,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                     latitude:latitude,
                     map_layer:COMMON_GLOBAL.module_leaflet_style,
                     map_layers:COMMON_GLOBAL.module_leaflet_map_styles,
-                    module_leaflet_container:leaflet_data.leaflet_container,    //inner Leaflet div returned from Leaflet
+                    module_leaflet_container:COMMON_GLOBAL.module_leaflet_session_map._container.id
                     },
         methods:    {
                     ComponentRender:ComponentRender,
@@ -2423,7 +2411,6 @@ const map_show_search_on_map = async data =>{
                         country:'',
                         city:'',
                         timezone_text :null,
-                        marker_id:COMMON_GLOBAL.module_leaflet_marker_div_city,
                         to_method:COMMON_GLOBAL.module_leaflet_jumpto
                     });
     map_toolbar_reset();
@@ -2549,7 +2536,6 @@ const map_setstyle = mapstyle => {
  *          country:string,
  *          city:string,
  *          timezone_text :string|null,
- *          marker_id:string,
  *          to_method:number
  *          }} parameters
  * @returns {Promise.<string|null>}
@@ -2594,12 +2580,10 @@ const map_update = async (parameters) => {
                         timezone_text:parameters.timezone_text,
                         latitude:parameters.latitude,
                         longitude:parameters.longitude,
-                        marker_id:parameters.marker_id,
                         text_place:parameters.text_place,
                         country:parameters.country,
                         city:parameters.city,
                         module_leaflet:COMMON_GLOBAL.module_leaflet,
-                        module_leaflet_popup_offset: COMMON_GLOBAL.module_leaflet_popup_offset,
                         module_leaflet_session_map:COMMON_GLOBAL.module_leaflet_session_map
                         },
             methods:    null,
@@ -3444,7 +3428,6 @@ const common_event = async (event_type,event=null) =>{
                                             country:'',
                                             city:'',
                                             timezone_text :null,
-                                            marker_id:COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                             to_method:COMMON_GLOBAL.module_leaflet_jumpto
                                         });
                                 CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
@@ -3666,14 +3649,10 @@ const set_app_parameters = (common_parameters) => {
             case ('IMAGE_AVATAR_HEIGHT' in parameter)                  :{COMMON_GLOBAL.image_avatar_height = parseInt(parameter['IMAGE_AVATAR_HEIGHT']);break;}
             case ('MODULE_LEAFLET_FLYTO' in parameter)                 :{COMMON_GLOBAL.module_leaflet_flyto = parseInt(parameter['MODULE_LEAFLET_FLYTO']);break;}
             case ('MODULE_LEAFLET_JUMPTO' in parameter)                :{COMMON_GLOBAL.module_leaflet_jumpto = parseInt(parameter['MODULE_LEAFLET_JUMPTO']);break;}
-            case ('MODULE_LEAFLET_POPUP_OFFSET' in parameter)          :{COMMON_GLOBAL.module_leaflet_popup_offset = parseInt(parameter['MODULE_LEAFLET_POPUP_OFFSET']);break;}
             case ('MODULE_LEAFLET_STYLE' in parameter)                 :{COMMON_GLOBAL.module_leaflet_style = parameter['MODULE_LEAFLET_STYLE'];break;}
             case ('MODULE_LEAFLET_ZOOM' in parameter)                  :{COMMON_GLOBAL.module_leaflet_zoom = parseInt(parameter['MODULE_LEAFLET_ZOOM']);break;}
             case ('MODULE_LEAFLET_ZOOM_CITY' in parameter)             :{COMMON_GLOBAL.module_leaflet_zoom_city = parseInt(parameter['MODULE_LEAFLET_ZOOM_CITY']);break;}
             case ('MODULE_LEAFLET_ZOOM_PP' in parameter)               :{COMMON_GLOBAL.module_leaflet_zoom_pp = parseInt(parameter['MODULE_LEAFLET_ZOOM_PP']);break;}
-            case ('MODULE_LEAFLET_MARKER_DIV_GPS' in parameter)        :{COMMON_GLOBAL.module_leaflet_marker_div_gps = parameter['MODULE_LEAFLET_MARKER_DIV_GPS'];break;}
-            case ('MODULE_LEAFLET_MARKER_DIV_CITY' in parameter)       :{COMMON_GLOBAL.module_leaflet_marker_div_city = parameter['MODULE_LEAFLET_MARKER_DIV_CITY'];break;}
-            case ('MODULE_LEAFLET_MARKER_DIV_PP' in parameter)         :{COMMON_GLOBAL.module_leaflet_marker_div_pp = parameter['MODULE_LEAFLET_MARKER_DIV_PP'];break;}
         }
     }
 };

@@ -790,7 +790,6 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                                 country:'',
                                 city:'',
                                 timezone_text :null,
-                                marker_id:common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                 to_method:common.COMMON_GLOBAL.module_leaflet_jumpto
                             });
                 break;
@@ -831,7 +830,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                     CommonAppDocument.querySelector('#setting_input_place').innerHTML = city + ', ' + country;
                 }
                 //display empty popular place select
-                common.set_current_value('setting_select_popular_place', null, 'id', '');
+                common.set_current_value('setting_select_popular_place', null, 'id', null);
                 map_show_qibbla();
                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone;
                 APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
@@ -861,7 +860,6 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                                     country:        '',
                                     city:           '',
                                     timezone_text : timezone_selected,
-                                    marker_id:      common.COMMON_GLOBAL.module_leaflet_marker_div_pp, //marker for popular places
                                     to_method:      common.COMMON_GLOBAL.module_leaflet_flyto
                                 });
                     //display empty country
@@ -880,7 +878,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 const gps_lat_input = CommonAppDocument.querySelector('#setting_input_lat');
                 const gps_long_input = CommonAppDocument.querySelector('#setting_input_long');
                 
-                common.set_current_value('setting_select_popular_place', null, 'id', '');
+                common.set_current_value('setting_select_popular_place', null, 'id', null);
 
                 common.get_place_from_gps(gps_long_input.innerHTML, gps_lat_input.innerHTML).then((/**@type{string}*/gps_place) => {
                     //Update map
@@ -892,7 +890,6 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                                     country:'',
                                     city:'',
                                     timezone_text :null,
-                                    marker_id:common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                     to_method:common.COMMON_GLOBAL.module_leaflet_jumpto})
                     .then((timezone_text) => {
                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone_text ?? '';
@@ -1494,9 +1491,7 @@ const settings_update = setting_tab => {
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_type,
                         regional_calendar_hijri_type:       setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_calendar_hijri_type .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_hijri_type,
-                        gps_popular_place_id:               setting_tab=='GPS'?
-                                                                (JSON.parse(CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value')).id==''?null:
-                                                                Number(JSON.parse(CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value')).id)):
+                        gps_popular_place_id:               setting_tab=='GPS'?JSON.parse(CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value')).id:
                                                                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_popular_place_id,
                         gps_lat_text:                       setting_tab=='GPS'?fixFloat(CommonAppDocument.querySelector('#setting_input_lat').innerHTML):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text,
@@ -2141,17 +2136,21 @@ const app_event_click = event => {
                                         },
                             lifecycle:  null,
                             path:       '/component/profile_info.js'})
-                        .then(data=>{
-                            APP_GLOBAL.function_profile_user_setting_update = data.function_profile_user_setting_update;
-                            APP_GLOBAL.function_profile_show_user_setting_detail= data.function_profile_show_user_setting_detail;
-                            APP_GLOBAL.function_profile_user_setting_stat = data.function_profile_user_setting_stat;
+                        .then((/**@type{{data:       null, 
+                                        methods:    {
+                                                    profile_user_setting_update:function,
+                                                    profile_show_user_setting_detail:function, 
+                                                    profile_user_setting_stat:function}}}*/component)=>{
+                            APP_GLOBAL.function_profile_user_setting_update = component.methods.profile_user_setting_update;
+                            APP_GLOBAL.function_profile_show_user_setting_detail= component.methods.profile_show_user_setting_detail;
+                            APP_GLOBAL.function_profile_user_setting_stat = component.methods.profile_user_setting_stat;
                         });
                     break;
                 }
 
                 //module leaflet
                 case 'common_module_leaflet_control_my_location_id':{
-                    common.set_current_value('setting_select_popular_place', null, 'id', '');
+                    common.set_current_value('setting_select_popular_place', null, 'id', null);
                     CommonAppDocument.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
                     CommonAppDocument.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
                     CommonAppDocument.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
@@ -2216,7 +2215,7 @@ const app_event_keyup = event => {
             switch(event_target_id){
                 //settings gps
                 case 'setting_input_place':{
-                    common.set_current_value('setting_select_popular_place', null, 'id', '');
+                    common.set_current_value('setting_select_popular_place', null, 'id', null);
                     settings_update('GPS');
                     break;
                 }
@@ -2300,7 +2299,6 @@ const map_show_qibbla = () => {
  *          country:string,
  *          city:string,
  *          timezone_text :string|null,
- *          marker_id:string,
  *          to_method:number
  *          }} parameters
  * @returns {Promise.<string|null>}
@@ -2315,7 +2313,6 @@ const map_update_app = async (parameters) => {
                             country:'',
                             city:'',
                             timezone_text :parameters.timezone_text,
-                            marker_id:parameters.marker_id,
                             to_method:parameters.to_method
                         }).then(timezonetext=> {
             resolve(timezonetext);

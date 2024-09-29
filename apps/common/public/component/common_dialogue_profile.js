@@ -19,8 +19,7 @@ const template = () =>` <div id='common_dialogue_profile_home' class='common_dia
  *                      },
  *          lifecycle:  null}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
- *                      data:   {   profile_id:number|null,
- *                                  private:number|null}|null,
+ *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
  */
