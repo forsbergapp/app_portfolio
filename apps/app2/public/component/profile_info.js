@@ -133,7 +133,7 @@ const method = async props => {
                         },
             methods:    {FFB:props.methods.FFB},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         
         const profile_select_user_settings = props.methods.common_document.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
         profile_show_user_setting_detail(   JSON.parse(profile_select_user_settings).liked,

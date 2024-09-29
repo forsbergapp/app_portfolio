@@ -62,7 +62,7 @@ const component = async props => {
                         button_delete:null
                         },
             lifecycle:  null,
-            path:       '/common/component/app_data_display.js'});
+            path:       '/common/component/common_app_data_display.js'});
     };
     return {
         lifecycle:  {onMounted:onMounted},

@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/module_leaflet_search_city
+ * @module apps/common/component/common_module_leaflet_search_city
  */
 
 /**

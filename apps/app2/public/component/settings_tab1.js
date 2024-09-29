@@ -163,7 +163,7 @@ const method = async props => {
                         },
             methods:    {FFB:props.methods.FFB},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //Locale second using setting locale with first one empty
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_locale_second',
@@ -180,7 +180,7 @@ const method = async props => {
                         },
             methods:    {FFB:props.methods.FFB},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //app
         //Column title
         await props.methods.ComponentRender({
@@ -198,7 +198,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //commmon
         //Timezone
         await props.methods.ComponentRender({
@@ -216,7 +216,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //number system
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_numbersystem',
@@ -233,7 +233,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //direction with first one empty
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_direction',
@@ -250,7 +250,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //arabic script with first one empty
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_arabic_script',
@@ -267,7 +267,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //calendar type
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_calendartype',
@@ -284,7 +284,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //calendar hijri type
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_calendar_hijri_type',
@@ -301,7 +301,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:null,
-            path:'/common/component/select.js'});
+            path:'/common/component/common_select.js'});
       
         //update select with settings values
         props.methods.set_current_value('setting_select_locale', props.data.user_settings.regional_language_locale);

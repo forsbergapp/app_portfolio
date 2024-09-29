@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/app_data_display
+ * @module apps/common/component/common_app_data_display
  */
 
 /**

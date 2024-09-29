@@ -46,7 +46,7 @@ const component = async props => {
                 },
                 methods:{FFB:props.methods.FFB},
                 lifecycle:null,
-                path:'/common/component/select.js'});
+                path:'/common/component/common_select.js'});
         // select apps
         await props.methods.ComponentRender( 
             {   mountDiv:'select_app_broadcast',
@@ -62,7 +62,7 @@ const component = async props => {
                   },
                 methods:{FFB:props.methods.FFB},
                 lifecycle:null,
-                path:'/common/component/select.js'});
+                path:'/common/component/common_select.js'});
     };
     return {
         lifecycle:  {onMounted:onMounted},

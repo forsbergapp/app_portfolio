@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/profile_detail
+ * @module apps/common/component/common_dialogue_profile_info_detail
  */
 /**
  * Displays profile detail

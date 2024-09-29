@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/user_account
+ * @module apps/common/component/common_user_account
  */
 const template = () =>` <div id='common_user_menu'>
                             <div id='common_user_menu_logged_in'>

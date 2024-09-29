@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/app_theme
+ * @module apps/common/component/common_dialogue_user_menu_app_theme
  */
 
 const template = () => '';
@@ -35,7 +35,7 @@ const component = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //set app theme
         props.methods.app_theme_update();
     };

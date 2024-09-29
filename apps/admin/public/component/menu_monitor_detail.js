@@ -598,7 +598,7 @@ const component = async props => {
                 },
                 methods:{   FFB:props.methods.FFB},
                 lifecycle:  null,
-                path:       '/common/component/select.js'});
+                path:       '/common/component/common_select.js'});
             monitor_detail_server_log(props.data.sort, props.data.order_by);
         }
     };

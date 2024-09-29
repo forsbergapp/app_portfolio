@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/dialogue_user_password_new
+ * @module apps/common/component/common_dialogue_user_password_new
  */
 /**
  * @param {{auth:string}} props

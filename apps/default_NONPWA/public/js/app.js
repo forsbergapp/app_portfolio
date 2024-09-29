@@ -76,7 +76,7 @@ const init_app = async () => {
                                         props:null,
                                         methods:null,
                                         lifecycle:null,
-                                        path:'/common/component/construction.js'}));
+                                        path:'/common/component/common_construction.js'}));
    framework_set();
 };
 /**

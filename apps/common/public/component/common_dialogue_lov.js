@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/dialogue_lov
+ * @module apps/common/component/common_dialogue_lov
  */
 
 /**

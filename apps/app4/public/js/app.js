@@ -80,7 +80,7 @@ const app_event_click = event =>{
                                     show_message:common.show_message
                                     },
                         lifecycle:  null,
-                        path:       '/common/component/dialogue_user_menu.js'})
+                        path:       '/common/component/common_dialogue_user_menu.js'})
                     .then(()=>
                         common.ComponentRender({
                             mountDiv:   'common_dialogue_user_menu_app_theme',
@@ -91,7 +91,7 @@ const app_event_click = event =>{
                                         app_theme_update:common.common_preferences_post_mount
                                         },
                             lifecycle:  null,
-                            path:       '/common/component/app_theme.js'}));
+                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'}));
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
@@ -200,7 +200,7 @@ const init_app = async () =>{
         data:       null,
         methods:    null,
         lifecycle:  null,
-        path:       '/common/component/user_account.js'});
+        path:       '/common/component/common_user_account.js'});
     APP_GLOBAL.module_leaflet_map_container      ='mapid';
     init_map();
 };

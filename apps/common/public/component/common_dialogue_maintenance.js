@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/dialogue_maintenance
+ * @module apps/common/component/common_dialogue_maintenance
  */
 
 const template = () =>` <div id='common_dialogue_maintenance_content' class='common_dialogue_content'>

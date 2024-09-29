@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/dialogue_profile
+ * @module apps/common/component/common_dialogue_profile
  */
 
 const profile_empty = { id:null, 

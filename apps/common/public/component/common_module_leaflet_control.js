@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/module_leaflet_control
+ * @module apps/common/component/common_module_leaflet_control
  */
 
 /**
@@ -92,7 +92,7 @@ const component = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:null,
-            path:'/common/component/select.js'});
+            path:'/common/component/common_select.js'});
         //cities, caal function that sets empty record
         props.methods.map_city_empty();
 
@@ -112,7 +112,7 @@ const component = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:null,
-            path:'/common/component/select.js'});
+            path:'/common/component/common_select.js'});
         
         if (props.methods.function_search_event){
             //add search function in data-function that event delegation will use            

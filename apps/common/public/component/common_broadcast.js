@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/broadcast
+ * @module apps/common/component/common_broadcast
  */
 /**
  * @param {{message:string}} props

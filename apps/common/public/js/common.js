@@ -686,7 +686,7 @@ const select_event_action = async (event_target_id, target) =>{
                                 format_json_date:format_json_date
                                 },
                     lifecycle:  null,
-                    path:       '/common/component/dialogue_user_edit.js'})
+                    path:       '/common/component/common_dialogue_user_edit.js'})
                 .then(()=>{
                     ComponentRemove('common_dialogue_user_menu');
                 });
@@ -902,7 +902,7 @@ const ComponentRender = async componentRender => {
             }
         //run onMounted function after component is mounted
         if (component.lifecycle.onMounted){
-            if (componentRender.path == '/common/component/module_leaflet.js'){
+            if (componentRender.path == '/common/component/common_module_leaflet.js'){
                 COMMON_GLOBAL.module_leaflet =              component.data.library_Leaflet;
                 COMMON_GLOBAL.module_leaflet_session_map =  component.data.module_map;
                 COMMON_GLOBAL.module_leaflet_map_styles =   component.data.map_layer_array;
@@ -957,7 +957,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 format_json_date:format_json_date
                                 },
                     lifecycle:null,
-                    path:'/common/component/dialogue_user_password_new.js'});
+                    path:'/common/component/common_dialogue_user_password_new.js'});
                 break;
             }
         case 'VERIFY':
@@ -974,7 +974,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 },
                     methods:    {data_function:click_cancel_event},
                     lifecycle:  null,
-                    path:       '/common/component/dialogue_user_verify.js'});
+                    path:       '/common/component/common_dialogue_user_verify.js'});
                 ComponentRemove('common_dialogue_user_start');
                 break;
             }
@@ -991,7 +991,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 },
                 methods:        {FFB: FFB},
                 lifecycle:      null,
-                path:           '/common/component/dialogue_user_start.js'});
+                path:           '/common/component/common_dialogue_user_start.js'});
             break;
         }
         case 'LOGIN':
@@ -1008,7 +1008,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 },
                 methods:        {FFB: FFB},
                 lifecycle:      null,
-                path:           '/common/component/dialogue_user_start.js'});
+                path:           '/common/component/common_dialogue_user_start.js'});
             break;
         }
     }
@@ -1038,7 +1038,7 @@ const show_message = async (message_type, code, function_event, text_class=null,
                         event:function_event
                         },
         lifecycle:      null,
-        path:           '/common/component/dialogue_message.js'});
+        path:           '/common/component/common_dialogue_message.js'});
 };
 /**
  * Dialogue password new clear
@@ -1165,7 +1165,7 @@ const lov_show = parameters => {
                     function_event:parameters.function_event
                     },
         lifecycle:  null,
-        path:       '/common/component/dialogue_lov.js'});        
+        path:       '/common/component/common_dialogue_lov.js'});        
 };
 /**
  * Lov filter
@@ -1277,7 +1277,7 @@ const profile_stat = async (statchoice, app_rest_url = null, function_user_click
                     function_user_click:function_user_click
                     },
         lifecycle:  null,
-        path:       '/common/component/dialogue_profile.js'});
+        path:       '/common/component/common_dialogue_profile.js'});
 };
 /**
  * Profile detail
@@ -1304,7 +1304,7 @@ const profile_detail = (detailchoice, click_function=null) => {
                         FFB:FFB
                         },
             lifecycle:  null,
-            path:       '/common/component/profile_detail.js'});
+            path:       '/common/component/common_dialogue_profile_info_detail.js'});
     }
 };
 /**
@@ -1326,7 +1326,7 @@ const search_profile = click_function => {
                     FFB:FFB
                     },
         lifecycle:  null,
-        path:       '/common/component/profile_search_list.js'})
+        path:       '/common/component/common_profile_search_list.js'})
     .catch(()=>{
         CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         CommonAppDocument.querySelector('#common_profile_search_list_wrap').innerHTML = '';
@@ -1364,7 +1364,7 @@ const profile_show = async (user_account_id_other = null, username = null) => {
                     checkOnline:checkOnline
                     },
         lifecycle:  null,
-        path:       '/common/component/dialogue_profile.js'});
+        path:       '/common/component/common_dialogue_profile.js'});
 };
 /**
  * Profile update stat
@@ -2292,7 +2292,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                                         map_update:map_update
                                         },
                             lifecycle:  null,
-                            path:       '/common/component/module_leaflet.js'})
+                            path:       '/common/component/common_module_leaflet.js'})
     .catch(error=>{throw error;});
     COMMON_GLOBAL.module_leaflet =              leaflet_data.library_Leaflet;
     COMMON_GLOBAL.module_leaflet_session_map =  leaflet_data.module_map;
@@ -2316,7 +2316,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                     map_setstyle:map_setstyle
                     },
         lifecycle:  null,
-        path:       '/common/component/module_leaflet_control.js'});
+        path:       '/common/component/common_module_leaflet_control.js'});
 };
 /**
  * Map country
@@ -2363,7 +2363,7 @@ const map_city = async country_code =>{
                             },
             methods:        {FFB:null},
             lifecycle:      null,
-            path:           '/common/component/select.js'});
+            path:           '/common/component/common_select.js'});
     }
 };
 /**
@@ -2387,7 +2387,7 @@ const map_city_empty = () =>{
                         },
         methods:        {FFB:null},
         lifecycle:      null,
-        path:           '/common/component/select.js'});
+        path:           '/common/component/common_select.js'});
 };
 /**
  * Map toolbar reset
@@ -2449,7 +2449,7 @@ const map_control_toggle_expand = async item =>{
                                 },
                     methods:    {FFB:null},
                     lifecycle:  null,
-                    path:       '/common/component/select.js'});
+                    path:       '/common/component/common_select.js'});
         }
     else
         style_display = 'none';
@@ -2599,7 +2599,7 @@ const map_update = async (parameters) => {
                         },
             methods:    null,
             lifecycle:  null,
-            path:       '/common/component/module_leaflet_popup.js'})
+            path:       '/common/component/common_module_leaflet_popup.js'})
         .then(()=>resolve(parameters.timezone_text));
     });
 };
@@ -2794,7 +2794,7 @@ const show_broadcast = (broadcast_message) => {
                 data:       {message:CommonAppWindow.atob(message)},
                 methods:    null,
                 lifecycle:  null,
-                path:       CommonAppDocument.querySelector('#common_dialogue_maintenance')?'/maintenance/component/broadcast.js':'/common/component/broadcast.js'});
+                path:       CommonAppDocument.querySelector('#common_dialogue_maintenance')?'/maintenance/component/broadcast.js':'/common/component/common_broadcast.js'});
             break;
         }
 		case 'PROGRESS':{
@@ -2945,7 +2945,7 @@ const worldcities_search = async (event_function) =>{
                     FFB:FFB
                     },
         lifecycle:  null,
-        path:       '/common/component/module_leaflet_search_city.js'});
+        path:       '/common/component/common_module_leaflet_search_city.js'});
 };
 /**
  * Exception function
@@ -3155,7 +3155,7 @@ const common_event = async (event_type,event=null) =>{
                                             },
                                 methods:    {common_setTimeout:common_setTimeout},
                                 lifecycle:  null,
-                                path:       '/common/component/window_info.js'});
+                                path:       '/common/component/common_window_info.js'});
                             break;
                         }
                         case 'common_dialogue_info_info_link2':{
@@ -3169,7 +3169,7 @@ const common_event = async (event_type,event=null) =>{
                                             },
                                 methods:    {common_setTimeout:common_setTimeout},
                                 lifecycle:  null,
-                                path:       '/common/component/window_info.js'});
+                                path:       '/common/component/common_window_info.js'});
                             break;
                         }
                         case 'common_dialogue_info_info_link3':{
@@ -3183,7 +3183,7 @@ const common_event = async (event_type,event=null) =>{
                                             },
                                 methods:    {common_setTimeout:common_setTimeout},
                                 lifecycle:  null,
-                                path:       '/common/component/window_info.js'});
+                                path:       '/common/component/common_window_info.js'});
                             break;
                         }
                         //dialogue app_data_display
@@ -3258,7 +3258,7 @@ const common_event = async (event_type,event=null) =>{
                                             format_json_date:format_json_date
                                             },
                                 lifecycle:  null,
-                                path:       '/common/component/dialogue_user_edit.js'})
+                                path:       '/common/component/common_dialogue_user_edit.js'})
                             .then(()=>{
                                 ComponentRemove('common_dialogue_user_menu');
                             });
@@ -3993,7 +3993,7 @@ const init_common = async (parameters) => {
                                         },
                             methods:    null,
                             lifecycle:  null,
-                            path:       '/common/component/app.js'});
+                            path:       '/common/component/common_app.js'});
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL.app_id ==null)
             set_app_service_parameters(decoded_parameters.app_service);

@@ -76,7 +76,7 @@ const app_event_click = event => {
                                         },
                             methods:    {common_setTimeout:common.common_setTimeout},
                             lifecycle:  null,
-                            path:       '/common/component/window_info.js'});
+                            path:       '/common/component/common_window_info.js'});
                     break;
                 }
             }

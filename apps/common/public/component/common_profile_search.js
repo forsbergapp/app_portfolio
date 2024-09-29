@@ -1,13 +1,17 @@
 /**
- * @module apps/common/component/construction
+ * @module apps/common/component/common_profile_search
  */
 
-const template = () => ' <div class=\'common_construction common_icon\'></div>';
+const template = () =>` <div id='common_profile_input_row'>
+                            <div id='common_profile_search_input' contentEditable='true' class='common_input '/></div>
+                            <div id='common_profile_search_icon' class='common_icon'></div>
+                        </div>
+                        <div id='common_profile_search_list_wrap'></div>`;
 /**
  * 
  * @param {{data:       {common_mountdiv:string},
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
- *          lifecycle:  null}} props
+ *          lifecycle:  null}} props  
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:   null,
  *                      methods:null,

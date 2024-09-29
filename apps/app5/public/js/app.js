@@ -74,7 +74,7 @@ const app_event_click = event => {
                                             button_delete:null
                                             },
                                 lifecycle:null,
-                                path:'/common/component/app_data_display.js'});
+                                path:'/common/component/common_app_data_display.js'});
                             break;
                         }
                         case 'tab2':{
@@ -111,7 +111,7 @@ const app_event_click = event => {
                                             button_delete:null
                                             },
                                 lifecycle:  null,
-                                path:       '/common/component/app_data_display.js'});
+                                path:       '/common/component/common_app_data_display.js'});
                             break;
                         }
                         case 'tab3':{
@@ -148,7 +148,7 @@ const app_event_click = event => {
                                             button_delete:null
                                             },
                                 lifecycle:  null,
-                                path:       '/common/component/app_data_display.js'});
+                                path:       '/common/component/common_app_data_display.js'});
                             break;
                         }
                     }
@@ -207,7 +207,7 @@ const app_event_click = event => {
                                     show_message:common.show_message
                                     },
                         lifecycle:  null,
-                        path:       '/common/component/dialogue_user_menu.js'})
+                        path:       '/common/component/common_dialogue_user_menu.js'})
                     .then(()=>
                         common.ComponentRender({
                             mountDiv:   'common_dialogue_user_menu_app_theme', 
@@ -218,7 +218,7 @@ const app_event_click = event => {
                                         },
                             methods:null,
                             lifecycle:null,
-                            path:'/common/component/app_theme.js'}));
+                            path:'/common/component/common_dialogue_user_menu_app_theme.js'}));
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
@@ -415,7 +415,7 @@ const show_payment_request = async message =>{
                             button_delete:payment_request_cancel
                             },
                 lifecycle:  null,
-                path:       '/common/component/app_data_display.js'})
+                path:       '/common/component/common_app_data_display.js'})
             .then(()=>{
                 CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
                 CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
@@ -465,7 +465,7 @@ const init_app = async () => {
             data:       null,
             methods:    null,
             lifecycle:  null,
-            path:       '/common/component/user_account.js'}))
+            path:       '/common/component/common_user_account.js'}))
     .then(()=> 
         common.ComponentRender({
             mountDiv:   'app_main_page', 

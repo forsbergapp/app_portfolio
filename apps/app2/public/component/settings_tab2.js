@@ -95,7 +95,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         props.methods.set_current_value(   'setting_select_popular_place', null, 'id', props.data.user_settings.gps_popular_place_id);
         props.methods.common_document.querySelector('#setting_input_place').innerHTML = props.data.user_settings.description;
         props.methods.common_document.querySelector('#setting_input_lat').innerHTML = props.data.user_settings.gps_lat_text;

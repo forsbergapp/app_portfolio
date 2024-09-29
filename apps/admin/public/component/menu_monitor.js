@@ -64,7 +64,7 @@ const component = async props => {
               },
             methods:{FFB:props.methods.FFB},
             lifecycle:null,
-            path:'/common/component/select.js'});
+            path:'/common/component/common_select.js'});
         await props.methods.ComponentRender({mountDiv:'select_month_menu5',
                 data:{
                     default_value:new Date().getMonth()+1,
@@ -79,7 +79,7 @@ const component = async props => {
                 },
                 methods:{FFB:props.methods.FFB},
                 lifecycle:null,
-                path:'/common/component/select.js'});
+                path:'/common/component/common_select.js'});
 
         await props.methods.ComponentRender({mountDiv:'select_day_menu5',
                 data:{
@@ -95,7 +95,7 @@ const component = async props => {
                 },
                 methods:{FFB:props.methods.FFB},
                 lifecycle:null,
-                path:'/common/component/select.js'});
+                path:'/common/component/common_select.js'});
 
         await props.methods.ComponentRender({mountDiv:'select_app_menu5',
                 data:{
@@ -110,7 +110,7 @@ const component = async props => {
                   },
                 methods:{FFB:props.methods.FFB},
                 lifecycle:null,
-                path:'/common/component/select.js'});
+                path:'/common/component/common_select.js'});
 
         //mount the map
         props.methods.map_mount();

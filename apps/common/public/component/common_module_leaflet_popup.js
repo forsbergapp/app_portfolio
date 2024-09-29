@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/module_leaflet_popup
+ * @module apps/common/component/common_module_leaflet_popup
  */
 
 /**
