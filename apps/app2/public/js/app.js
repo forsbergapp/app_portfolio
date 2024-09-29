@@ -83,7 +83,7 @@ const APP_GLOBAL = {
     app_report_timetable:'',
 
     regional_default_direction:'',
-    regional_default_locale_second:'0',
+    regional_default_locale_second:'',
     regional_default_coltitle:'0',
     regional_default_arabic_script:'',
     regional_default_calendartype:'',
