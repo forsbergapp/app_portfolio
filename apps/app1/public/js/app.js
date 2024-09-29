@@ -174,10 +174,6 @@ const app_event_keyup = event => {
         common.common_event('keyup',event)
         .then(()=>{
             switch (event_target_id){
-                case 'common_profile_search_input':{
-                    common.list_key_event(event, 'profile', profile_show_app);
-                    break;
-                }
                 case 'common_user_start_login_username':
                 case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
@@ -251,29 +247,7 @@ const app_theme_update = (toggle_theme=false) => {
     common.common_preferences_update_body_class_from_preferences();
     app_theme_update_from_body();
 };
-/**
- * @param {number|null} user_account_id_other 
- * @param {string|null} username 
- * @returns {Promise.<void>}
- */
-const profile_show_app = async (user_account_id_other, username) =>{
-    await common.profile_show(user_account_id_other, username)
-    .then(result=>{
-        if (result && result.profile_id != null){
-            if (result.private==1 && (common.COMMON_GLOBAL.user_account_id == result.profile_id)==false) {
-                //private
-                null;
-            }
-            else
-                common.ComponentRender({
-                    mountDiv:   'common_profile_main_stat_row2',
-                    data:       null,
-                    methods:    {app_theme_update:app_preferences_post_mount},
-                    lifecycle:  null,
-                    path:       '/component/profile_info.js'});
-        }
-    });
-};
+
 /**
  * User login app
  * @param {boolean|null} system_admin 
