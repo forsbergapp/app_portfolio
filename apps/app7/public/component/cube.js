@@ -112,14 +112,15 @@ const template = props =>`  <div id='cube'>
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
  *          lifecycle:  null}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
- *                      data:{  cube_init:                  function, 
+ *                      data:   null
+ *                      methods:{
+ *                              cube_init:                  function, 
  *                              cube_show_solution:         function,
  *                              cube_solve:                 function,
  *                              cube_makeIdentityAffine:    function,
  *                              cube_multiplyAffine:        function,
  *                              cube_makeRotateAffineX:     function,
  *                              cube_makeRotateAffineY:     function},
- *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
@@ -223,14 +224,16 @@ const component = async props => {
     };
    return {
         lifecycle:  {onMounted:null},
-        data:   {cube_init:                  cube_init, 
-                cube_show_solution:         cube_show_solution,
-                cube_solve:                 cube_solve,
-                cube_makeIdentityAffine:    cube_lib.makeIdentityAffine,
-                cube_multiplyAffine:        cube_lib.multiplyAffine,
-                cube_makeRotateAffineX:     cube_lib.makeRotateAffineX,
-                cube_makeRotateAffineY:     cube_lib.makeRotateAffineY},
-        methods:null,
+        data:       null,
+        methods:    {
+                    cube_init:                  cube_init, 
+                    cube_show_solution:         cube_show_solution,
+                    cube_solve:                 cube_solve,
+                    cube_makeIdentityAffine:    cube_lib.makeIdentityAffine,
+                    cube_multiplyAffine:        cube_lib.multiplyAffine,
+                    cube_makeRotateAffineX:     cube_lib.makeRotateAffineX,
+                    cube_makeRotateAffineY:     cube_lib.makeRotateAffineY
+                    },
         template: template({ icon_robot:ICONS.robot,
                             icon_human:ICONS.human, 
                             icon_solution:ICONS.solution,

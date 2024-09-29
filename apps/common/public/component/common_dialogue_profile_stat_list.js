@@ -40,8 +40,7 @@ const template = props =>`
  *                      },
  *          lifecycle:  null}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
- *                      data:   {   profile_id:number|null,
- *                                  private:number|null}|null,
+ *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
  */

@@ -14,8 +14,7 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  *                      longitude:string,
  *                      latitude:string,
  *                      module_leaflet_zoom:number,
- *                      module_leaflet_jumpto:number,
- *                      module_leaflet_marker_div_gps:string},
+ *                      module_leaflet_jumpto:number},
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      function_event_doubleclick:function,
@@ -24,8 +23,8 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  *                       },
  *          lifecycle:  null}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
- *                      data:   import('../../../common_types.js').CommonModuleLeafletData,
- *                      methods:null,
+ *                      data:   null,
+ *                      methods:import('../../../common_types.js').CommonModuleLeafletMethods,
  *                      template:null}>}
  */
 const component = async props => {
@@ -70,7 +69,6 @@ const component = async props => {
                                                         country:'',
                                                         city:'',
                                                         timezone_text :null,
-                                                        marker_id:props.data.module_leaflet_marker_div_gps,
                                                         to_method:props.data.module_leaflet_jumpto
                                                     });
                         });
@@ -89,14 +87,12 @@ const component = async props => {
                                                                                             });    
     return {
         lifecycle:  {onMounted:null},
-        data:   {   
+        data:       null,
+        methods:    {
                     library_Leaflet:Leaflet,
                     //return Leaflet mounted map on already mounted div
                     module_map:await map_init(props.data.longitude, props.data.latitude, props.methods.function_event_doubleclick),
-                    //return Leaflet inner mounted map div to add custom code inside Leaflet
-                    leaflet_container:LEAFLET_CONTAINER
-                },
-        methods:null,
+                    },
         template: null
     };
 };

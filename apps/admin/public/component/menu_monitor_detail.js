@@ -346,8 +346,8 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props 
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
-*                      data:{function_page_navigation:function, function_monitor_detail_server_log:function},
-*                      methods:null,
+*                      data:    null,
+*                      methods: {page_navigation:function, monitor_detail_server_log:function},
 *                      template:string}>}
 */
 const component = async props => {
@@ -604,11 +604,12 @@ const component = async props => {
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   {function_page_navigation:page_navigation,
-                 function_monitor_detail_server_log:monitor_detail_server_log
-        },
-        methods:null,
-        template: template({spinner:'css_spinner', 
+        data:       null,
+        methods:    {
+                    page_navigation:page_navigation,
+                    monitor_detail_server_log:monitor_detail_server_log
+                    },
+        template:   template({spinner:'css_spinner', 
                             system_admin:props.data.system_admin, 
                             service_socket_client_ID:props.data.service_socket_client_ID,
                             monitor_detail:props.data.monitor_detail,

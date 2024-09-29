@@ -235,7 +235,7 @@ body.rtl{
 	display: inline-block;
 	vertical-align: middle;
 	border: 1px solid;
-	min-width: 20px;
+	min-width: 5em;
     min-height: 1.5em;
 	background-color: var(--common_app_color_white);
 }
@@ -271,6 +271,7 @@ body.rtl{
 	position: absolute;
 	border: 1px solid;
 	min-width: 20px;
+	max-height: 30em;
 	border-radius: 2px;
 	cursor:pointer;
 	overflow-y:auto;
@@ -1562,10 +1563,6 @@ body.rtl{
 	width:95%;
 	line-height: 1.5em;
 }
-#common_module_leaflet_select_country .common_select_options, #common_module_leaflet_select_city .common_select_options{
-	max-height: 300px;
-}
-
 #common_module_leaflet_input_row{
 	position: fixed;
 	z-index: 1;

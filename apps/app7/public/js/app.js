@@ -227,20 +227,21 @@ const init_app = async () => {
                     FFB:common.FFB},
         lifecycle:  null,
         path:       '/component/cube.js'})
-    .then((/**@type{{   cube_init:                  function, 
-                        cube_show_solution:         function,
-                        cube_solve:                 function,
-                        cube_makeIdentityAffine:    function,
-                        cube_multiplyAffine:        function,
-                        cube_makeRotateAffineX:     function,
-                        cube_makeRotateAffineY:     function}}*/data)=>{
-        APP_GLOBAL.cube_init =                  data.cube_init;
-        APP_GLOBAL.cube_show_solution =         data.cube_show_solution;
-        APP_GLOBAL.cube_solve =                 data.cube_solve;
-        APP_GLOBAL.cube_makeIdentityAffine =    data.cube_makeIdentityAffine;
-        APP_GLOBAL.cube_multiplyAffine =        data.cube_multiplyAffine;
-        APP_GLOBAL.cube_makeRotateAffineX =     data.cube_makeRotateAffineX;
-        APP_GLOBAL.cube_makeRotateAffineY =     data.cube_makeRotateAffineY;
+    .then((/**@type{{   data:null,
+                        methods:{   cube_init:                  function, 
+                                    cube_show_solution:         function,
+                                    cube_solve:                 function,
+                                    cube_makeIdentityAffine:    function,
+                                    cube_multiplyAffine:        function,
+                                    cube_makeRotateAffineX:     function,
+                                    cube_makeRotateAffineY:     function}}}*/component)=>{
+        APP_GLOBAL.cube_init =                  component.methods.cube_init;
+        APP_GLOBAL.cube_show_solution =         component.methods.cube_show_solution;
+        APP_GLOBAL.cube_solve =                 component.methods.cube_solve;
+        APP_GLOBAL.cube_makeIdentityAffine =    component.methods.cube_makeIdentityAffine;
+        APP_GLOBAL.cube_multiplyAffine =        component.methods.cube_multiplyAffine;
+        APP_GLOBAL.cube_makeRotateAffineX =     component.methods.cube_makeRotateAffineX;
+        APP_GLOBAL.cube_makeRotateAffineY =     component.methods.cube_makeRotateAffineY;
         const init_cube = APP_GLOBAL.cube_init();
         APP_GLOBAL.cube = init_cube.cube;
         APP_GLOBAL.cube_controls = init_cube.controls;

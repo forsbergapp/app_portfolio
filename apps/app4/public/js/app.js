@@ -184,7 +184,6 @@ const init_map = async ()=>{
                             country:'',
                             city:'',
                             timezone_text :null,
-                            marker_id:common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
                             to_method:common.COMMON_GLOBAL.module_leaflet_jumpto
                         }))
     .then(()=>  

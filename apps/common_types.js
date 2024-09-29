@@ -27,7 +27,7 @@
  * Common module types
  *  CommonModuleLeafletEvent
  *  CommonModuleLeafletMapData
- *  CommonModuleLeafletData
+ *  CommonModuleLeafletMethods
  *  CommonModuleLeafletMapLayer
  *  CommonModuleLeafletMapLayer_array
  * 
@@ -212,22 +212,12 @@
  *              module_leaflet:*,
  *              module_leaflet_flyto:number,
  *              module_leaflet_jumpto:number,
- *              module_leaflet_popup_offset:number,
  *              module_leaflet_style:string,
- *              module_leaflet_session_map:{doubleClickZoom:function|null,
- *                                          invalidateSize:function|null,
- *                                          removeLayer:function|null,
- *                                          setView:function|null,
- *                                          flyTo:function|null,
- *                                          setZoom:function|null,
- *                                          getZoom:function|null}|null,
+ *              module_leaflet_session_map:CommonModuleLeafletMapData|null,
  *           module_leaflet_session_map_layer:[],
  *           module_leaflet_zoom:number, 
  *           module_leaflet_zoom_city:number,
  *           module_leaflet_zoom_pp:number,
- *           module_leaflet_marker_div_gps:string,
- *           module_leaflet_marker_div_city:string,
- *           module_leaflet_marker_div_pp:string,
  *           module_leaflet_map_styles:CommonModuleLeafletMapLayer[],
  *           'module_easy.qrcode_width':number|null,
  *           'module_easy.qrcode_height':number|null,
@@ -345,7 +335,8 @@
 
 /**
  * Type CommonModuleLeafletMapData
- * @typedef {{  doubleClickZoom:function,
+ * @typedef {{  _container:{id:string},
+ *              doubleClickZoom:function,
  *              invalidateSize:function,
  *              removeLayer:function,
  *              setView:function,
@@ -355,10 +346,9 @@
  *
  */
 /**
- * Type CommonModuleLeafletData
+ * Type CommonModuleLeafletMethods
  * @typedef {{  library_Leaflet:*,
- *              module_map: CommonModuleLeafletMapData,
- *              leaflet_container:string}} CommonModuleLeafletData
+ *              module_map: CommonModuleLeafletMapData}} CommonModuleLeafletMethods
  */
 
 /**
