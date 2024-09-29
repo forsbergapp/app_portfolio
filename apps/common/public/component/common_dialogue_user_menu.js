@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/dialogue_user_menu
+ * @module apps/common/component/common_dialogue_user_menu
  */
 
 /**
@@ -137,7 +137,7 @@ const component = async props => {
                             },
                 methods:    {FFB:props.methods.FFB},
                 lifecycle:  null,
-                path:       '/common/component/select.js'});
+                path:       '/common/component/common_select.js'});
             //Timezone
             await props.methods.ComponentRender({
                 mountDiv:  'common_dialogue_user_menu_user_timezone_select', 
@@ -154,7 +154,7 @@ const component = async props => {
                             },
                 methods:    {FFB:props.methods.FFB},
                 lifecycle:null,
-                path:'/common/component/select.js'});
+                path:'/common/component/common_select.js'});
             //Direction with default ' '
             await props.methods.ComponentRender({
                 mountDiv:   'common_dialogue_user_menu_user_direction_select', 
@@ -171,7 +171,7 @@ const component = async props => {
                             },
                 methods:    {FFB:props.methods.FFB},
                 lifecycle:  null,
-                path:       '/common/component/select.js'});   
+                path:       '/common/component/common_select.js'});   
             //Arabic script with default ' '
             await props.methods.ComponentRender({
                 mountDiv:   'common_dialogue_user_menu_user_arabic_script_select', 
@@ -188,7 +188,7 @@ const component = async props => {
                             },
                 methods:    {FFB:props.methods.FFB},
                 lifecycle:  null,
-                path:       '/common/component/select.js'});
+                path:       '/common/component/common_select.js'});
         }
         if ((props.data.system_admin_only == 1)==false){
             //set current value on all the selects

@@ -102,7 +102,7 @@ const app_event_click = event => {
                                         show_message:common.show_message
                                         },
                             lifecycle:  null,
-                            path:       '/common/component/dialogue_user_menu.js'})
+                            path:       '/common/component/common_dialogue_user_menu.js'})
                         .then(()=>
                             common.ComponentRender({
                                 mountDiv:   'common_dialogue_user_menu_app_theme',
@@ -324,7 +324,7 @@ const profile_show_app = async (user_account_id_other, username) =>{
                         data:       null,
                         methods:    {app_theme_update:app_preferences_post_mount},
                         lifecycle:  null,
-                        path:       '/common/component/profile_info_apps.js'});
+                        path:       '/common/component/common_dialogue_profile_info_apps.js'});
                 });
         }
     });
@@ -370,7 +370,7 @@ const get_apps = () => {
                     },
         methods:    {FFB:common.FFB},
         lifecycle:  null,
-        path:       '/common/component/dialogue_apps.js'});
+        path:       '/common/component/common_dialogue_apps.js'});
 };
 /**
  * App exception function
@@ -413,21 +413,21 @@ const init_app = async (parameters) => {
             data:       null,
             methods:    null,
             lifecycle:  null,
-            path:       '/common/component/profile_search.js'}))
+            path:       '/common/component/common_profile_search.js'}))
     .then(()=>
         common.ComponentRender({
             mountDiv:   'app_profile_toolbar',
             data:       null,
             methods:    null,
             lifecycle:  null,
-            path:       '/common/component/profile_toolbar.js'}))
+            path:       '/common/component/common_profile_toolbar.js'}))
     .then(()=>
         common.ComponentRender({
             mountDiv:   'common_user_account',
             data:       null,
             methods:    null,
             lifecycle:  null,
-            path:       '/common/component/user_account.js'}));
+            path:       '/common/component/common_user_account.js'}));
 
     for (const parameter of parameters.app) {
         if (parameter['MODULE_EASY.QRCODE_WIDTH'])

@@ -178,7 +178,7 @@ const printTimetable = async () => {
                                                 },
                                     methods:    {common_setTimeout:common.common_setTimeout},
                                     lifecycle:  null,
-                                    path:       '/common/component/window_info.js'});
+                                    path:       '/common/component/common_window_info.js'});
     
 };
 /**
@@ -1259,7 +1259,7 @@ const user_setting_link = (item) => {
                                 },
                     methods:    {common_setTimeout:common.common_setTimeout},
                     lifecycle:  null,
-                    path:       '/common/component/window_info.js'});
+                    path:       '/common/component/common_window_info.js'});
             break;
         }
     }
@@ -1345,7 +1345,7 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                                     },
                         methods:    {FFB:null},
                         lifecycle:  null,
-                        path:       '/common/component/select.js'});
+                        path:       '/common/component/common_select.js'});
                     break;
                 }
                 case 'ADD_LOGIN':{
@@ -1418,7 +1418,7 @@ const user_settings_delete = (choice=null) => {
                                     },
                         methods:    {FFB:null},
                         lifecycle:  null,
-                        path:       '/common/component/select.js'});
+                        path:       '/common/component/common_select.js'});
                     CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner');
                 }
                 
@@ -1637,7 +1637,7 @@ const profile_user_setting_link = item => {
                                 },
                     methods:    {common_setTimeout:common.common_setTimeout},
                     lifecycle:  null,
-                    path:       '/common/component/window_info.js'});
+                    path:       '/common/component/common_window_info.js'});
             break;
         }
         case 'profile_user_settings_like':{
@@ -1776,7 +1776,7 @@ const app_event_click = event => {
                                     },
                         methods:    {common_setTimeout:common.common_setTimeout},
                         lifecycle:  null,
-                        path:       '/common/component/window_info.js'});
+                        path:       '/common/component/common_window_info.js'});
                     break;
                 }
                 case 'info_link2':{
@@ -1789,7 +1789,7 @@ const app_event_click = event => {
                                     iframe_content:null},
                         methods:    {common_setTimeout:common.common_setTimeout},
                         lifecycle:  null,
-                        path:       '/common/component/window_info.js'});
+                        path:       '/common/component/common_window_info.js'});
                     break;
                 }
                 case 'info_link3':{
@@ -1802,7 +1802,7 @@ const app_event_click = event => {
                                     iframe_content:null},
                         methods:    {common_setTimeout:common.common_setTimeout},
                         lifecycle:  null,
-                        path:       '/common/component/window_info.js'});
+                        path:       '/common/component/common_window_info.js'});
                     break;
                 }
                 case 'info_link4':{
@@ -1816,7 +1816,7 @@ const app_event_click = event => {
                                     },
                         methods:    {common_setTimeout:common.common_setTimeout},
                         lifecycle:  null,
-                        path:       '/common/component/window_info.js'});
+                        path:       '/common/component/common_window_info.js'});
                     break;
                 }
                 case 'info_close':{
@@ -2105,7 +2105,7 @@ const app_event_click = event => {
                                         show_message:common.show_message
                                         },
                             lifecycle:  null,
-                            path:       '/common/component/dialogue_user_menu.js'})
+                            path:       '/common/component/common_dialogue_user_menu.js'})
                         .then(()=>
                             common.ComponentRender({
                                 mountDiv:   'common_dialogue_user_menu_app_theme',
@@ -2116,7 +2116,7 @@ const app_event_click = event => {
                                             app_theme_update:common.common_preferences_post_mount
                                             },
                                 lifecycle:  null,
-                                path:       '/common/component/app_theme.js'}));
+                                path:       '/common/component/common_dialogue_user_menu_app_theme.js'}));
                         break;
                     }
                 case 'common_dialogue_user_menu_log_out':{
@@ -2430,21 +2430,21 @@ const init_app = async parameters => {
             data:       null,
             methods:    null,
             lifecycle:  null,
-            path:       '/common/component/profile_search.js'}))
+            path:       '/common/component/common_profile_search.js'}))
     .then(()=>
         common.ComponentRender({
             mountDiv:   'app_profile_toolbar',
             data:       null,
             methods:    null,
             lifecycle:  null,
-            path:       '/common/component/profile_toolbar.js'}))
+            path:       '/common/component/common_profile_toolbar.js'}))
     .then(()=>
         common.ComponentRender({
             mountDiv:   'app_user_account',
             data:       null,
             methods:    null,
             lifecycle:  null,
-            path:       '/common/component/user_account.js'}));
+            path:       '/common/component/common_user_account.js'}));
     dialogue_loading(1);
     //set papersize
     zoom_paper();

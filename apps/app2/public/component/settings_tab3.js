@@ -154,7 +154,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:  null,
-            path:       '/common/component/select.js'});
+            path:       '/common/component/common_select.js'});
         //highlight row
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_highlight_row',
@@ -177,7 +177,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:null,
-            path:'/common/component/select.js'});
+            path:'/common/component/common_select.js'});
 
         props.methods.set_current_value('setting_select_report_papersize', props.data.user_settings.design_paper_size);
         

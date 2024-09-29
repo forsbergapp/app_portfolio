@@ -151,7 +151,7 @@ const product_update = async () =>{
                     button_delete:null
                     },
         lifecycle:null,
-        path:'/common/component/app_data_display.js'});
+        path:'/common/component/common_app_data_display.js'});
     CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].innerHTML = CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[2].innerHTML;
     
 };
@@ -226,7 +226,7 @@ const payment_request = async () =>{
                         button_delete:pay_cancel
                         },
             lifecycle:null,
-            path:'/common/component/app_data_display.js'})
+            path:'/common/component/common_app_data_display.js'})
             .then(()=>{
                 CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
                 CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
@@ -288,7 +288,7 @@ const pay = async () =>{
                     button_post:payment_request,
                     button_delete:pay_cancel},
         lifecycle:  null,
-        path:       '/common/component/app_data_display.js'});
+        path:       '/common/component/common_app_data_display.js'});
         CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
         CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
         CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');

@@ -93,7 +93,7 @@ const method = async props => {
                         },
             methods:    {FFB:null},
             lifecycle:null,
-            path:'/common/component/select.js'});
+            path:'/common/component/common_select.js'});
     };
     return {
         lifecycle:  {onMounted:onMounted},
