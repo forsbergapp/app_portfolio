@@ -6,8 +6,7 @@
  * 
  */
 /**
- * @param {{spinner:string,
- *          system_admin:string|null,
+ * @param {{system_admin:string|null,
  *          maintenance:0|1|null}} props
  */
 const template = props => ` <div id='menu_1_content_widget1' class='widget'>
@@ -51,35 +50,33 @@ const template = props => ` <div id='menu_1_content_widget1' class='widget'>
 *                      template:string}>}
 */
 const component = async props => {
+    //system admin
+    /**@type{{status_codes:[number, string][]}} */
+    const result_obj = props.data.system_admin!=null?await props.methods.FFB('/server/info-statuscode', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)):[];
+
+    //system admin
+    // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]', TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']}
+    // response has empty statgroup
+    const stat_options = props.data.system_admin!=null?[
+        {VALUE:'request#ip_total#0#ip',                             TEXT:'REQUEST - IP TOTAL'},
+        {VALUE:'request#ip_unqiue#1#ip',                            TEXT:'REQUEST - IP UNIQUE'},
+        {VALUE:'request#url_total#0#url',                           TEXT:'REQUEST - URL TOTAL'},
+        {VALUE:'request#url_unqiue#1#url',                          TEXT:'REQUEST - URL UNIQUE'},
+        {VALUE:'request#accept_language_total#0#accept-language',   TEXT:'REQUEST - ACCEPT LANGUAGE TOTAL'},
+        {VALUE:'request#accept_language_unqiue#1#accept-language',  TEXT:'REQUEST - ACCEPT LANGUAGE UNIQUE'},
+        {VALUE:'request#user_agent_total#0#user-agent',             TEXT:'REQUEST - USER#AGENT TOTAL'},
+        {VALUE:'request#user_agent_unqiue#1#user-agent',            TEXT:'REQUEST - USER#AGENT UNIQUE'},
+        {VALUE:'response##0#',                                 TEXT:'REPONSE - ∞'},
+        ...Object.entries(result_obj.status_codes).map(code=>{
+            return {VALUE:`response#${code[0]}#1#`, TEXT:`RESPONSE - ${code[0]} - ${code[1]}`};
+        })
+    ]:[];
+    //system admin
+    /**@type{0|1|null} */
+    const maintenance = props.data.system_admin!=null?await props.methods.FFB('/server-config/config/SERVER', 'config_group=METADATA&parameter=MAINTENANCE', 'GET', 'SYSTEMADMIN', null)
+                                .then((/**@type{string}*/result)=>JSON.parse(result).data):null;
+
    const onMounted = async () =>{
-        //system admin
-        /**@type{{status_codes:[number, string][]}} */
-        const result_obj = props.data.system_admin!=null?await props.methods.FFB('/server/info-statuscode', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)):[];
-
-        //system admin
-        // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]', TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']}
-        // response has empty statgroup
-        const stat_options = props.data.system_admin!=null?[
-            {VALUE:'request#ip_total#0#ip',                             TEXT:'REQUEST - IP TOTAL'},
-            {VALUE:'request#ip_unqiue#1#ip',                            TEXT:'REQUEST - IP UNIQUE'},
-            {VALUE:'request#url_total#0#url',                           TEXT:'REQUEST - URL TOTAL'},
-            {VALUE:'request#url_unqiue#1#url',                          TEXT:'REQUEST - URL UNIQUE'},
-            {VALUE:'request#accept_language_total#0#accept-language',   TEXT:'REQUEST - ACCEPT LANGUAGE TOTAL'},
-            {VALUE:'request#accept_language_unqiue#1#accept-language',  TEXT:'REQUEST - ACCEPT LANGUAGE UNIQUE'},
-            {VALUE:'request#user_agent_total#0#user-agent',             TEXT:'REQUEST - USER#AGENT TOTAL'},
-            {VALUE:'request#user_agent_unqiue#1#user-agent',            TEXT:'REQUEST - USER#AGENT UNIQUE'},
-            {VALUE:'response##0#',                                 TEXT:'REPONSE - ∞'},
-            ...Object.entries(result_obj.status_codes).map(code=>{
-                return {VALUE:`response#${code[0]}#1#`, TEXT:`RESPONSE - ${code[0]} - ${code[1]}`};
-            })
-        ]:[];
-        //system admin
-        /**@type{0|1|null} */
-        const maintenance = props.data.system_admin!=null?await props.methods.FFB('/server-config/config/SERVER', 'config_group=METADATA&parameter=MAINTENANCE', 'GET', 'SYSTEMADMIN', null)
-                                    .then((/**@type{string}*/result)=>JSON.parse(result).data):null;
-
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:'', system_admin:props.data.system_admin, maintenance:maintenance});
-
         //mount select
         if (props.data.system_admin)
             await props.methods.ComponentRender({mountDiv:'select_system_admin_stat',
@@ -149,7 +146,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:   null,
         methods:null,
-        template: template({spinner:'css_spinner', system_admin:props.data.system_admin, maintenance:0})
+        template: template({system_admin:props.data.system_admin, maintenance:maintenance})
     };
 };
 export default component;

@@ -3,13 +3,12 @@
  */
 /**
  * Displays stat of users
- * @param {{spinner:string,
- *          system_admin:string|null,
+ * @param {{system_admin:string|null,
  *          installed:boolean|null}} props
  */
 const template = props => props.system_admin?`  <div id='menu_7_content_widget1' class='widget'>
                                                     <div id='install_db'>
-                                                        <div id='install_db_icon' class='common_icon ${props.spinner} ${props.installed?'installed':''}'></div>
+                                                        <div id='install_db_icon' class='common_icon ${props.installed?'installed':''}'></div>
                                                         <div id='install_db_button_row'>
                                                             <div id='install_db_button_install' class='common_dialogue_button common_icon'></div>
                                                             <div id='install_db_button_uninstall' class='common_dialogue_button common_icon'></div>
@@ -49,24 +48,18 @@ const template = props => props.system_admin?`  <div id='menu_7_content_widget1'
 *                      template:string}>}
 */
 const component = async props => {
-   const onMounted = async () =>{
-        //checks installed if system admin
-        /**@type{boolean|null} */
-        const installed = props.data.system_admin?await props.methods.FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
-                                    .then((/**@type{string}*/result)=>JSON.parse(result)[0].installed==1?true:false):null;
+    //checks installed if system admin
+    /**@type{boolean|null} */
+    const installed = props.data.system_admin?await props.methods.FFB('/server-db_admin/database-installation', null, 'GET', 'SYSTEMADMIN', null)
+                                .then((/**@type{string}*/result)=>JSON.parse(result)[0].installed==1?true:false):null;
 
-       props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({  spinner:'',
-                                                                                                system_admin:props.data.system_admin,
-                                                                                                installed:installed
-                                                                                            });
-   };
+
    return {
-       lifecycle:  {onMounted:onMounted},
-       data:   null,
-       methods:null,
-       template: template({ spinner:'css_spinner',
-                            system_admin:props.data.system_admin,
-                            installed:false
+       lifecycle:   null,
+       data:        null,
+       methods:     null,
+       template:    template({  system_admin:props.data.system_admin,
+                                installed:installed
        })
    };
 };

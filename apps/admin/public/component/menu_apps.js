@@ -5,32 +5,29 @@
  * Displays apps
 */
 /**
- * @param {{spinner:string, apps:[{ ID:Number, 
- *                                  NAME:string, 
- *                                  PROTOCOL:string, 
- *                                  SUBDOMAIN:string, 
- *                                  HOST:string, 
- *                                  PORT:string, 
- *                                  STATUS:string, 
- *                                  LOGO:string, 
- *                                  APP_CATEGORY_ID:number, 
- *                                  APP_CATEGORY_TEXT:string}]|[]}} props
+ * @param {{apps:[{ ID:Number, 
+ *                  NAME:string, 
+ *                  PROTOCOL:string, 
+ *                  SUBDOMAIN:string, 
+ *                  HOST:string, 
+ *                  PORT:string, 
+ *                  STATUS:string, 
+ *                  LOGO:string, 
+ *                  APP_CATEGORY_ID:number, 
+ *                  APP_CATEGORY_TEXT:string}]|[]}} props
  */
 const template = props => ` <div id='menu_4_content_widget1' class='widget'>
                                 <div id='list_apps_title' class='common_icon'></div>
-                                <div id='list_apps' class='common_list_scrollbar ${props.spinner}'>
-                                    ${props.spinner==''?
-                                        `<div id='list_apps_row_title' class='list_apps_row'>
-                                            <div id='list_apps_col_title1' class='list_apps_col list_title'>ID</div>
-                                            <div id='list_apps_col_title2' class='list_apps_col list_title'>NAME</div>
-                                            <div id='list_apps_col_title3' class='list_apps_col list_title'>URL</div>
-                                            <div id='list_apps_col_title4' class='list_apps_col list_title'>LOGO</div>
-                                            <div id='list_apps_col_title5' class='list_apps_col list_title'>STATUS</div>
-                                            <div id='list_apps_col_title6' class='list_apps_col list_title'>CATEGORY ID</div>
-                                            <div id='list_apps_col_title7' class='list_apps_col list_title'>CATEGORY NAME</div>
-                                        </div>`:
-                                        ''
-                                    }
+                                <div id='list_apps' class='common_list_scrollbar'>
+                                    <div id='list_apps_row_title' class='list_apps_row'>
+                                        <div id='list_apps_col_title1' class='list_apps_col list_title'>ID</div>
+                                        <div id='list_apps_col_title2' class='list_apps_col list_title'>NAME</div>
+                                        <div id='list_apps_col_title3' class='list_apps_col list_title'>URL</div>
+                                        <div id='list_apps_col_title4' class='list_apps_col list_title'>LOGO</div>
+                                        <div id='list_apps_col_title5' class='list_apps_col list_title'>STATUS</div>
+                                        <div id='list_apps_col_title6' class='list_apps_col list_title'>CATEGORY ID</div>
+                                        <div id='list_apps_col_title7' class='list_apps_col list_title'>CATEGORY NAME</div>
+                                    </div>
                                     ${props.apps.map(app=>
                                         `<div data-changed-record='0' data-app_id = '${app.ID}' class='list_apps_row common_row' >
                                             <div class='list_apps_col'>
@@ -78,20 +75,18 @@ const template = props => ` <div id='menu_4_content_widget1' class='widget'>
 *                      template:string}>}
 */
 const component = async props => {
-    
+    const apps = await props.methods.FFB('/app_admin/apps', null, 'GET', 'APP_ACCESS', null)
+                    .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+
     const onMounted = async () =>{
-        const apps = await props.methods.FFB('/app_admin/apps', null, 'GET', 'APP_ACCESS', null)
-                        .then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:'', apps:apps});
         if (apps.length>0)
             props.methods.common_document.querySelectorAll('#list_apps .list_edit')[0].focus();
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template({spinner:'css_spinner', apps:[]})
+        data:       null,
+        methods:    null,
+        template:   template({apps:apps})
 };
 };
 export default component;
