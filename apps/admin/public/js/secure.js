@@ -16,7 +16,7 @@ const common = await import(common_path);
  *          monitor_detail_server_log:function, 
  *          limit:number, 
  *          previous_row:{}, 
- *          module_leaflet_map_container:*, 
+ *          moduleLeafletDiv:*, 
  *          service_log_file_interval:string}}
  */
 const APP_GLOBAL = {
@@ -24,7 +24,7 @@ const APP_GLOBAL = {
     monitor_detail_server_log:()=>null,
     limit:0,
     previous_row:{},
-    module_leaflet_map_container:'',
+    moduleLeafletDiv:'',
     service_log_file_interval:''
 };
 Object.seal(APP_GLOBAL);
@@ -37,7 +37,7 @@ const delete_globals = () => {
     APP_GLOBAL.monitor_detail_server_log = ()=>null,
     APP_GLOBAL.limit = 0;
     APP_GLOBAL.previous_row = {};
-    APP_GLOBAL.module_leaflet_map_container = '';
+    APP_GLOBAL.moduleLeafletDiv = '';
     APP_GLOBAL.service_log_file_interval = '';
 };
 
@@ -563,19 +563,19 @@ const update_record = async (table,
 const map_mount = () =>{
     //show map only for this condition
     if (common.COMMON_GLOBAL.system_admin_only != 1)
-        common.map_init(APP_GLOBAL.module_leaflet_map_container,
+        common.map_init(APP_GLOBAL.moduleLeafletDiv,
                         common.COMMON_GLOBAL.client_longitude,
                         common.COMMON_GLOBAL.client_latitude,
                         null,
                         null).then(() => {
             common.map_update({ longitude:common.COMMON_GLOBAL.client_longitude,
                                 latitude:common.COMMON_GLOBAL.client_latitude,
-                                zoomvalue:common.COMMON_GLOBAL.module_leaflet_zoom,
+                                zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
                                 text_place:common.COMMON_GLOBAL.client_place,
                                 country:'',
                                 city:'',
                                 timezone_text :null,
-                                to_method:common.COMMON_GLOBAL.module_leaflet_jumpto
+                                to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
                             });
             common.map_resize();
         });
@@ -774,14 +774,14 @@ const list_item_click = (item_type, data) => {
                 const geodata = JSON.parse(result);
                 common.map_update({ longitude:geodata.geoplugin_longitude,
                                     latitude:geodata.geoplugin_latitude,
-                                    zoomvalue:common.COMMON_GLOBAL.module_leaflet_zoom,
+                                    zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
                                     text_place: geodata.geoplugin_city + ', ' +
                                                 geodata.geoplugin_regionName + ', ' +
                                                 geodata.geoplugin_countryName,
                                     country:'',
                                     city:'',
                                     timezone_text :null,
-                                    to_method:common.COMMON_GLOBAL.module_leaflet_jumpto
+                                    to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
                                 });
             })
             .catch(()=>null);
@@ -793,14 +793,14 @@ const list_item_click = (item_type, data) => {
                 const geodata = JSON.parse(result);
                 common.map_update({ longitude:data['longitude'],
                                     latitude:data['latitude'],
-                                    zoomvalue:common.COMMON_GLOBAL.module_leaflet_zoom,
+                                    zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
                                     text_place: geodata.geoplugin_place + ', ' + 
                                                 geodata.geoplugin_region + ', ' + 
                                                 geodata.geoplugin_countryCode,
                                     country:'',
                                     city:'',
                                     timezone_text :null,
-                                    to_method:common.COMMON_GLOBAL.module_leaflet_jumpto
+                                    to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
                                 });
             })
             .catch(()=>null);
@@ -1270,12 +1270,12 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
 const init = () => {
     //SET GLOBALS
     APP_GLOBAL.previous_row= {};
-    APP_GLOBAL.module_leaflet_map_container      ='mapid';
+    APP_GLOBAL.moduleLeafletDiv      ='mapid';
     APP_GLOBAL.service_log_file_interval= '';
 
     if (common.COMMON_GLOBAL.system_admin!=null){
-        common.COMMON_GLOBAL.module_leaflet_style			            ='OpenStreetMap_Mapnik';
-        common.COMMON_GLOBAL.module_leaflet_jumpto		                =0;
+        common.COMMON_GLOBAL.moduleLeafletStyle		='OpenStreetMap_Mapnik';
+        common.COMMON_GLOBAL.moduleLeafletJumpTo    =0;
     }
     for (let i=1;i<=10;i++){
         CommonAppDocument.querySelector(`#menu_${i}`).style.display='none';
