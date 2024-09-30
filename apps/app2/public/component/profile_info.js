@@ -2,9 +2,9 @@
  * @module apps/app2/component/profile_info
  */
 /**
- * @param {{spinner:string}} props
+ * @param {{user_settings:{value:string, text:string}[]}} props
  */
-const template = props => ` ${props.spinner==''?
+const template = props => ` ${props.user_settings.length>0?
                                 `<div id='profile_info_user_settings'>
                                     <div id='profile_main_btn_user_settings' class='common_link common_icon'></div>
                                 </div>
@@ -36,8 +36,7 @@ const template = props => ` ${props.spinner==''?
                                         <div id='profile_user_settings_info_views_count'></div>
                                     </div>
                                 </div>`:
-                                `<div id='profile_info_user_settings' class='${props.spinner}'>
-                                 </div>`
+                                ''
                             }
                             `;
 /**
@@ -116,30 +115,34 @@ const method = async props => {
                                                                                                                 paper_size:setting.design_paper_size,
                                                                                                                 description:setting.description}), 
                                                                                                         text:setting.description};}));
-
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:''});
-        //show current setting or first setting if showing first time
-        await props.methods.ComponentRender({
-            mountDiv:   'profile_select_user_settings',
-            data:       {
-                        default_data_value:   sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].value:user_settings[0].value,
-                        default_value:        sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].text:user_settings[0].text,
-                        options: user_settings,
-                        path:null,
-                        query:null,
-                        method:null,
-                        authorization_type:null,
-                        column_value:'value',
-                        column_text:'text'
-                        },
-            methods:    {FFB:props.methods.FFB},
-            path:       '/common/component/common_select.js'});
         
-        const profile_select_user_settings = props.methods.common_document.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
-        profile_show_user_setting_detail(   JSON.parse(profile_select_user_settings).liked,
-                                            JSON.parse(profile_select_user_settings).count_likes,
-                                            JSON.parse(profile_select_user_settings).count_views);
-        profile_user_setting_stat(profile_id);
+        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({user_settings:user_settings});
+
+        //show setting info if user has settings
+        if (user_settings.length>0){
+            //show current setting or first setting if showing first time
+            await props.methods.ComponentRender({
+                mountDiv:   'profile_select_user_settings',
+                data:       {
+                            default_data_value:   sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].value:user_settings[0].value,
+                            default_value:        sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].text:user_settings[0].text,
+                            options: user_settings,
+                            path:null,
+                            query:null,
+                            method:null,
+                            authorization_type:null,
+                            column_value:'value',
+                            column_text:'text'
+                            },
+                methods:    {FFB:props.methods.FFB},
+                path:       '/common/component/common_select.js'});
+            
+            const profile_select_user_settings = props.methods.common_document.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
+            profile_show_user_setting_detail(   JSON.parse(profile_select_user_settings).liked,
+                                                JSON.parse(profile_select_user_settings).count_likes,
+                                                JSON.parse(profile_select_user_settings).count_views);
+            profile_user_setting_stat(profile_id);
+        }
     };
 
     const onMounted = async ()=>{
@@ -154,7 +157,7 @@ const method = async props => {
                     profile_show_user_setting_detail:profile_show_user_setting_detail,
                     profile_user_setting_stat:profile_user_setting_stat
                     },
-        template:   template({spinner:'css_spinner'})
+        template:   template({user_settings:[]})
     };
 };
 export default method;
