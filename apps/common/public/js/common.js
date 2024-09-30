@@ -77,16 +77,16 @@ const COMMON_GLOBAL = {
                         NEW_PASSWORD_CONFIRM:'New password confirm',
                         NEW_PASSWORD:'New password',
                         CONFIRM_QUESTION:''},
-    module_leaflet:null,
-    module_leaflet_flyto:0,
-    module_leaflet_jumpto:0,
-    module_leaflet_style:'',
-    module_leaflet_session_map:null,
-    module_leaflet_session_map_layer:[],
-    module_leaflet_zoom:0, 
-    module_leaflet_zoom_city:0,
-    module_leaflet_zoom_pp:0,
-    module_leaflet_map_styles:[{id:null, display_data:null, value:null, data2:null, data3:null, data4:null, session_map_layer:null}],
+    moduleLeaflet:null,
+    moduleLeafletFlyTo:0,
+    moduleLeafletJumpTo:0,
+    moduleLeafletStyle:'',
+    moduleLeafletContainer:()=>null,
+    moduleLeafletMapLayer:[],
+    moduleLeafletZoom:0, 
+    moduleLeafletZoomCity:0,
+    moduleLeafletZoomPp:0,
+    moduleLeafletMapStyles:[{id:null, display_data:null, value:null, data2:null, data3:null, data4:null, session_map_layer:null}],
     'module_easy.qrcode_width':null,
     'module_easy.qrcode_height':null,
     'module_easy.qrcode_color_dark':null,
@@ -631,12 +631,12 @@ const select_event_action = async (event_target_id, target) =>{
         const city = CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
         await map_update({  longitude:      city==''?'':JSON.parse(city).longitude,
                             latitude:       city==''?'':JSON.parse(city).latitude,
-                            zoomvalue:      COMMON_GLOBAL.module_leaflet_zoom_city,
+                            zoomvalue:      COMMON_GLOBAL.moduleLeafletZoomCity,
                             text_place:     city==''?'':JSON.parse(city).city,
                             country:        '',
                             city:           '',
                             timezone_text:  null,
-                            to_method:      COMMON_GLOBAL.module_leaflet_flyto
+                            to_method:      COMMON_GLOBAL.moduleLeafletFlyTo
                         }).then(()=> {
             map_toolbar_reset();
         });
@@ -895,7 +895,7 @@ const ComponentRender = async componentRender => {
         }
     }
     //return data and methods from component to be used in apps
-    return {data:component.data, methods:component.methods};
+    return {data:component?component.data:null, methods:component?component.methods:null};
 };
 /**
  * Component remove
@@ -2242,7 +2242,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
         }
     }
     COMMON_GLOBAL.app_eventListeners.LEAFLET = [];
-    COMMON_GLOBAL.module_leaflet_session_map = null;
+    COMMON_GLOBAL.moduleLeafletContainer = ()=>null;
     
     /** @type {import('../../../common_types.js').CommonModuleLeafletMapLayer[]}*/
     const map_layers = await FFB('/server-db/app_settings_display', `data_app_id=${COMMON_GLOBAL.common_app_id}&setting_type=MAP_STYLE`, 'GET', 'APP_DATA')
@@ -2259,7 +2259,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                                 data4:map_layer_option.data4,
                                 session_map_layer:null});
     }
-    COMMON_GLOBAL.module_leaflet_map_styles =   map_layer_array;
+    COMMON_GLOBAL.moduleLeafletMapStyles =   map_layer_array;
     /**
      * 
      * @type {{ data:null,
@@ -2271,9 +2271,9 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                                         longitude:longitude,
                                         latitude:latitude,
                                         //module parameters
-                                        module_leaflet_zoom:COMMON_GLOBAL.module_leaflet_zoom,
-                                        module_leaflet_jumpto:COMMON_GLOBAL.module_leaflet_jumpto,
-                                        module_leaflet_map_style:COMMON_GLOBAL.module_leaflet_style,
+                                        moduleLeafletZoom:COMMON_GLOBAL.moduleLeafletZoom,
+                                        moduleLeafletJumpTo:COMMON_GLOBAL.moduleLeafletJumpTo,
+                                        moduleLeafletMapStyle:COMMON_GLOBAL.moduleLeafletStyle,
                                         },
                             methods:    {
                                         FFB:FFB,
@@ -2284,10 +2284,10 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                             lifecycle:  null,
                             path:       '/common/component/common_module_leaflet.js'})
     .catch(error=>{throw error;});
-    COMMON_GLOBAL.module_leaflet =              module_leaflet.methods.library_Leaflet;
-    COMMON_GLOBAL.module_leaflet_session_map =  module_leaflet.methods.module_map;
+    COMMON_GLOBAL.moduleLeaflet             =  module_leaflet.methods.leafletLibrary;
+    COMMON_GLOBAL.moduleLeafletContainer    =  module_leaflet.methods.leafletContainer;
 
-    // COMMON_GLOBAL.module_leaflet_map_styles =   component.data.map_layer_array;
+    // COMMON_GLOBAL.moduleLeafletMapStyles =   component.data.map_layer_array;
 
     await ComponentRender({
         mountDiv:   mount_div, //outer app div
@@ -2296,9 +2296,8 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                     locale:COMMON_GLOBAL.user_locale,
                     longitude:longitude,
                     latitude:latitude,
-                    map_layer:COMMON_GLOBAL.module_leaflet_style,
-                    map_layers:COMMON_GLOBAL.module_leaflet_map_styles,
-                    module_leaflet_container:COMMON_GLOBAL.module_leaflet_session_map._container.id
+                    map_layer:COMMON_GLOBAL.moduleLeafletStyle,
+                    map_layers:COMMON_GLOBAL.moduleLeafletMapStyles
                     },
         methods:    {
                     ComponentRender:ComponentRender,
@@ -2306,7 +2305,8 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                     map_city_empty:map_city_empty,
                     FFB:FFB,
                     function_search_event:search_event_function,
-                    map_setstyle:map_setstyle
+                    map_setstyle:map_setstyle,
+                    moduleLeafletContainer:COMMON_GLOBAL.moduleLeafletContainer
                     },
         lifecycle:  null,
         path:       '/common/component/common_module_leaflet_control.js'});
@@ -2406,12 +2406,12 @@ const map_show_search_on_map = async data =>{
     const place =  data.city + ', ' + data.country;
     await map_update({  longitude:data.longitude,
                         latitude:data.latitude,
-                        zoomvalue:COMMON_GLOBAL.module_leaflet_zoom_city,
+                        zoomvalue:COMMON_GLOBAL.moduleLeafletZoomCity,
                         text_place:place,
                         country:'',
                         city:'',
                         timezone_text :null,
-                        to_method:COMMON_GLOBAL.module_leaflet_jumpto
+                        to_method:COMMON_GLOBAL.moduleLeafletJumpTo
                     });
     map_toolbar_reset();
 };
@@ -2453,18 +2453,18 @@ const map_control_toggle_expand = async item =>{
  */
 const map_resize = async () => {
     //fixes not rendering correct showing map div
-    COMMON_GLOBAL.module_leaflet_session_map?.invalidateSize?.();
+    COMMON_GLOBAL.moduleLeafletContainer()?.invalidateSize?.();
 };
 /**
  * Map line remove all
  * @returns {void}
  */
 const map_line_removeall = () => {
-    if(COMMON_GLOBAL.module_leaflet_session_map_layer)
-        for (let i=0;i<COMMON_GLOBAL.module_leaflet_session_map_layer.length;i++){
-            COMMON_GLOBAL.module_leaflet_session_map?.removeLayer?.(COMMON_GLOBAL.module_leaflet_session_map_layer[i]);
+    if(COMMON_GLOBAL.moduleLeafletMapLayer)
+        for (let i=0;i<COMMON_GLOBAL.moduleLeafletMapLayer.length;i++){
+            COMMON_GLOBAL.moduleLeafletContainer()?.removeLayer?.(COMMON_GLOBAL.moduleLeafletMapLayer[i]);
         }
-    COMMON_GLOBAL.module_leaflet_session_map_layer=[];
+    COMMON_GLOBAL.moduleLeafletMapLayer=[];
 };
 /**
  * Map line create 
@@ -2501,9 +2501,9 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
         opacity: opacity
     };
     
-    const layer = COMMON_GLOBAL.module_leaflet.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
+    const layer = COMMON_GLOBAL.moduleLeaflet.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL.moduleLeafletContainer());
     /**@ts-ignore*/
-    COMMON_GLOBAL.module_leaflet_session_map_layer.push(layer);
+    COMMON_GLOBAL.moduleLeafletMapLayer.push(layer);
 };
 /**
  * Map set style
@@ -2511,21 +2511,21 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
  * @returns {void}
  */
 const map_setstyle = mapstyle => {
-    for (const module_leaflet_map_style of COMMON_GLOBAL.module_leaflet_map_styles){
-        if (COMMON_GLOBAL.module_leaflet_session_map && module_leaflet_map_style.session_map_layer){
-            COMMON_GLOBAL.module_leaflet_session_map?.removeLayer?.(module_leaflet_map_style.session_map_layer);
+    for (const module_leaflet_map_style of COMMON_GLOBAL.moduleLeafletMapStyles){
+        if (COMMON_GLOBAL.moduleLeafletContainer() && module_leaflet_map_style.session_map_layer){
+            COMMON_GLOBAL.moduleLeafletContainer()?.removeLayer?.(module_leaflet_map_style.session_map_layer);
         }
     }
-    const mapstyle_record = COMMON_GLOBAL.module_leaflet_map_styles.filter(map_style=>map_style.value==mapstyle)[0];
+    const mapstyle_record = COMMON_GLOBAL.moduleLeafletMapStyles.filter(map_style=>map_style.value==mapstyle)[0];
     if (mapstyle_record.data3)
-        mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet.tileLayer(mapstyle_record.data2, {
+        mapstyle_record.session_map_layer = COMMON_GLOBAL.moduleLeaflet.tileLayer(mapstyle_record.data2, {
             maxZoom: mapstyle_record.data3,
             attribution: mapstyle_record.data4
-        }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
+        }).addTo(COMMON_GLOBAL.moduleLeafletContainer());
     else
-        mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet.tileLayer(mapstyle_record.data2, {
+        mapstyle_record.session_map_layer = COMMON_GLOBAL.moduleLeaflet.tileLayer(mapstyle_record.data2, {
             attribution: mapstyle_record.data4
-        }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
+        }).addTo(COMMON_GLOBAL.moduleLeafletContainer());
 };
 /**
  * Map update
@@ -2556,18 +2556,18 @@ const map_update = async (parameters) => {
             switch (to_method){
                 case 0:{
                     if (zoomvalue == null){
-                        COMMON_GLOBAL.module_leaflet_session_map?.setView?.(new COMMON_GLOBAL.module_leaflet.LatLng(latitude, longitude));
+                        COMMON_GLOBAL.moduleLeafletContainer()?.setView?.(new COMMON_GLOBAL.moduleLeaflet.LatLng(latitude, longitude));
                     }
                     else{
-                        COMMON_GLOBAL.module_leaflet_session_map?.setView?.(new COMMON_GLOBAL.module_leaflet.LatLng(latitude, longitude), zoomvalue);
+                        COMMON_GLOBAL.moduleLeafletContainer()?.setView?.(new COMMON_GLOBAL.moduleLeaflet.LatLng(latitude, longitude), zoomvalue);
                     }
                     break;
                 }
                 case 1:{
-                    COMMON_GLOBAL.module_leaflet_session_map?.flyTo?.([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
+                    COMMON_GLOBAL.moduleLeafletContainer()?.flyTo?.([latitude, longitude], COMMON_GLOBAL.moduleLeafletZoom);
                     break;
                 }
-                //also have COMMON_GLOBAL.module_leaflet_session_map.panTo(new COMMON_GLOBAL.module_leaflet.LatLng({lng: longitude, lat: latitude}));
+                //also have COMMON_GLOBAL.moduleLeafletContainer().panTo(new COMMON_GLOBAL.moduleLeaflet.LatLng({lng: longitude, lat: latitude}));
             }
         };
         map_update_gps(parameters.to_method, parameters.zoomvalue, parameters.longitude, parameters.latitude);
@@ -2582,11 +2582,12 @@ const map_update = async (parameters) => {
                         longitude:parameters.longitude,
                         text_place:parameters.text_place,
                         country:parameters.country,
-                        city:parameters.city,
-                        module_leaflet:COMMON_GLOBAL.module_leaflet,
-                        module_leaflet_session_map:COMMON_GLOBAL.module_leaflet_session_map
+                        city:parameters.city
                         },
-            methods:    null,
+            methods:    {
+                        moduleLeaflet:COMMON_GLOBAL.moduleLeaflet,
+                        moduleLeafletContainer:COMMON_GLOBAL.moduleLeafletContainer
+                        },
             lifecycle:  null,
             path:       '/common/component/common_module_leaflet_popup.js'})
         .then(()=>resolve(parameters.timezone_text));
@@ -3423,12 +3424,12 @@ const common_event = async (event_type,event=null) =>{
                             if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
                                 map_update({longitude:COMMON_GLOBAL.client_longitude,
                                             latitude:COMMON_GLOBAL.client_latitude,
-                                            zoomvalue:COMMON_GLOBAL.module_leaflet_zoom,
+                                            zoomvalue:COMMON_GLOBAL.moduleLeafletZoom,
                                             text_place:COMMON_GLOBAL.client_place,
                                             country:'',
                                             city:'',
                                             timezone_text :null,
-                                            to_method:COMMON_GLOBAL.module_leaflet_jumpto
+                                            to_method:COMMON_GLOBAL.moduleLeafletJumpTo
                                         });
                                 CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
                                 CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
@@ -3486,10 +3487,10 @@ const common_event = async (event_type,event=null) =>{
                         }        
                         default:{
                             if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in')){
-                                COMMON_GLOBAL.module_leaflet_session_map?.setZoom?.(COMMON_GLOBAL.module_leaflet_session_map?.getZoom?.() + 1);
+                                COMMON_GLOBAL.moduleLeafletContainer()?.setZoom?.(COMMON_GLOBAL.moduleLeafletContainer()?.getZoom?.() + 1);
                             }
                             if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out')){
-                                COMMON_GLOBAL.module_leaflet_session_map?.setZoom?.(COMMON_GLOBAL.module_leaflet_session_map?.getZoom?.() - 1);
+                                COMMON_GLOBAL.moduleLeafletContainer()?.setZoom?.(COMMON_GLOBAL.moduleLeafletContainer()?.getZoom?.() - 1);
                             }
                             break;
                         }
@@ -3647,12 +3648,12 @@ const set_app_parameters = (common_parameters) => {
             case ('IMAGE_FILE_MAX_SIZE' in parameter)                  :{COMMON_GLOBAL.image_file_max_size = parseInt(parameter['IMAGE_FILE_MAX_SIZE']);break;}
             case ('IMAGE_AVATAR_WIDTH' in parameter)                   :{COMMON_GLOBAL.image_avatar_width = parseInt(parameter['IMAGE_AVATAR_WIDTH']);break;}
             case ('IMAGE_AVATAR_HEIGHT' in parameter)                  :{COMMON_GLOBAL.image_avatar_height = parseInt(parameter['IMAGE_AVATAR_HEIGHT']);break;}
-            case ('MODULE_LEAFLET_FLYTO' in parameter)                 :{COMMON_GLOBAL.module_leaflet_flyto = parseInt(parameter['MODULE_LEAFLET_FLYTO']);break;}
-            case ('MODULE_LEAFLET_JUMPTO' in parameter)                :{COMMON_GLOBAL.module_leaflet_jumpto = parseInt(parameter['MODULE_LEAFLET_JUMPTO']);break;}
-            case ('MODULE_LEAFLET_STYLE' in parameter)                 :{COMMON_GLOBAL.module_leaflet_style = parameter['MODULE_LEAFLET_STYLE'];break;}
-            case ('MODULE_LEAFLET_ZOOM' in parameter)                  :{COMMON_GLOBAL.module_leaflet_zoom = parseInt(parameter['MODULE_LEAFLET_ZOOM']);break;}
-            case ('MODULE_LEAFLET_ZOOM_CITY' in parameter)             :{COMMON_GLOBAL.module_leaflet_zoom_city = parseInt(parameter['MODULE_LEAFLET_ZOOM_CITY']);break;}
-            case ('MODULE_LEAFLET_ZOOM_PP' in parameter)               :{COMMON_GLOBAL.module_leaflet_zoom_pp = parseInt(parameter['MODULE_LEAFLET_ZOOM_PP']);break;}
+            case ('MODULE_LEAFLET_FLYTO' in parameter)                 :{COMMON_GLOBAL.moduleLeafletFlyTo = parseInt(parameter['MODULE_LEAFLET_FLYTO']);break;}
+            case ('MODULE_LEAFLET_JUMPTO' in parameter)                :{COMMON_GLOBAL.moduleLeafletJumpTo = parseInt(parameter['MODULE_LEAFLET_JUMPTO']);break;}
+            case ('MODULE_LEAFLET_STYLE' in parameter)                 :{COMMON_GLOBAL.moduleLeafletStyle = parameter['MODULE_LEAFLET_STYLE'];break;}
+            case ('MODULE_LEAFLET_ZOOM' in parameter)                  :{COMMON_GLOBAL.moduleLeafletZoom = parseInt(parameter['MODULE_LEAFLET_ZOOM']);break;}
+            case ('MODULE_LEAFLET_ZOOM_CITY' in parameter)             :{COMMON_GLOBAL.moduleLeafletZoomCity = parseInt(parameter['MODULE_LEAFLET_ZOOM_CITY']);break;}
+            case ('MODULE_LEAFLET_ZOOM_PP' in parameter)               :{COMMON_GLOBAL.moduleLeafletZoomPp = parseInt(parameter['MODULE_LEAFLET_ZOOM_PP']);break;}
         }
     }
 };
@@ -3922,7 +3923,8 @@ const custom_framework = () => {
     /**
      * Custom function used to replace default addEventListener function for Window
      * to keep track of framework events so they can be removed when necessary
-     * Window events are created on app_root
+     * Window events are created on CommonAppDocument
+     * No event is created for React
      * Using funtion declaration here to support arguments
      * @param  {...any} eventParameters 
      */
@@ -3931,7 +3933,6 @@ const custom_framework = () => {
         COMMON_GLOBAL.app_eventListeners[eventmodule]
             /**@ts-ignore */
             .push(['WINDOW', this, eventParameters[0], eventParameters[1], eventParameters[2]]);
-        //do not create any event for React and create event on app root
         if (eventmodule!='REACT')
             COMMON_GLOBAL.app_eventListeners.original.apply(
                 CommonAppDocument, 
@@ -3940,7 +3941,8 @@ const custom_framework = () => {
     /**
      * Custom function used to replace default addEventListener function for Document
      * to keep track of framework events so they can be removed when necessary
-     * Document events are created on app_root
+     * Document events are created on CommonAppDocument
+     * No event is created for React
      * Using funtion declaration here to support arguments
      * @param  {...any} eventParameters 
      */
@@ -3949,7 +3951,6 @@ const custom_framework = () => {
         COMMON_GLOBAL.app_eventListeners[eventmodule]
             /**@ts-ignore */
             .push(['DOCUMENT',this, eventParameters[0], eventParameters[1], eventParameters[2]]);
-        //do not create any event for React and create event on app root
         if (eventmodule!='REACT')
             COMMON_GLOBAL.app_eventListeners.original.apply(
                 CommonAppDocument, 
@@ -3958,6 +3959,7 @@ const custom_framework = () => {
     /**
      * Custom function used to replace default addEventListener function for HTMLElement
      * to keep track of framework events so they can be removed when necessary
+     * No event is created for React
      * Using funtion declaration here to support arguments
      * @param  {...any} eventParameters 
      */
@@ -3966,7 +3968,6 @@ const custom_framework = () => {
         COMMON_GLOBAL.app_eventListeners[eventmodule]
             /**@ts-ignore */
             .push(['HTMLELEMENT', this, eventParameters[0], eventParameters[1], eventParameters[2]]);
-        //do not create any event for React
         if (eventmodule!='REACT')
             COMMON_GLOBAL.app_eventListeners.original.apply(
                 /**@ts-ignore */

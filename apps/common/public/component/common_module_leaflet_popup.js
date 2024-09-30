@@ -30,10 +30,12 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
  *                      longitude:string,
  *                      country:string,
  *                      city:string,
- *                      text_place:string,
- *                      module_leaflet:*,
- *                      module_leaflet_session_map:*},
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
+ *                      text_place:string},
+ *          methods:    {
+ *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      moduleLeaflet:*,
+ *                      moduleLeafletContainer:function
+ *                      },
  *          lifecycle:  null}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
  *                      data:   null,
@@ -43,7 +45,7 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
 const component = async props => {
 
     const OFFSET = -25;
-    props.data.module_leaflet.popup({ offset: [0, OFFSET], closeOnClick: false })
+    props.methods.moduleLeaflet.popup({ offset: [0, OFFSET], closeOnClick: false })
         .setLatLng([props.data.latitude, props.data.longitude])
         .setContent(template({
             country:props.data.country,
@@ -53,8 +55,8 @@ const component = async props => {
             latitude:props.data.latitude,
             longitude:props.data.longitude
         }))
-        .openOn(props.data.module_leaflet_session_map);
-    props.data.module_leaflet.marker([props.data.latitude, props.data.longitude]).addTo(props.data.module_leaflet_session_map);
+        .openOn(props.methods.moduleLeafletContainer());
+    props.methods.moduleLeaflet.marker([props.data.latitude, props.data.longitude]).addTo(props.methods.moduleLeafletContainer());
     
     return {
         lifecycle:  {onMounted:null},

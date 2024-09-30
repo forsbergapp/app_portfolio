@@ -9,10 +9,6 @@ const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
 
-const APP_GLOBAL = {
-    'module_leaflet_map_container':''
-};
-Object.seal(APP_GLOBAL);
 /**
  * App exception function
  * @param {*} error 
@@ -170,21 +166,21 @@ const init_map = async ()=>{
         methods:    null,
         lifecycle:  null,
         path:       '/component/app.js'});
-    common.map_init(APP_GLOBAL.module_leaflet_map_container,
-                                common.COMMON_GLOBAL.client_longitude,
-                                common.COMMON_GLOBAL.client_latitude,
-                                null,
-                                null)
+    common.map_init('mapid',
+                    common.COMMON_GLOBAL.client_longitude,
+                    common.COMMON_GLOBAL.client_latitude,
+                    null,
+                    null)
     .then(()=>  
         common.map_update({ 
                             longitude:common.COMMON_GLOBAL.client_longitude,
                             latitude:common.COMMON_GLOBAL.client_latitude,
-                            zoomvalue:common.COMMON_GLOBAL.module_leaflet_zoom,
+                            zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
                             text_place: common.COMMON_GLOBAL.client_place,
                             country:'',
                             city:'',
                             timezone_text :null,
-                            to_method:common.COMMON_GLOBAL.module_leaflet_jumpto
+                            to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
                         }))
     .then(()=>  
        framework_set());
@@ -200,7 +196,6 @@ const init_app = async () =>{
         methods:    null,
         lifecycle:  null,
         path:       '/common/component/common_user_account.js'});
-    APP_GLOBAL.module_leaflet_map_container      ='mapid';
     init_map();
 };
 /**

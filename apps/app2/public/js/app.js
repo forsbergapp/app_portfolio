@@ -785,12 +785,12 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 const gps_long_input = CommonAppDocument.querySelector('#setting_input_long');
                 map_update_app({longitude:gps_long_input.innerHTML,
                                 latitude:gps_lat_input.innerHTML,
-                                zoomvalue:common.COMMON_GLOBAL.module_leaflet_zoom,
+                                zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
                                 text_place:CommonAppDocument.querySelector('#setting_input_place').innerHTML,
                                 country:'',
                                 city:'',
                                 timezone_text :null,
-                                to_method:common.COMMON_GLOBAL.module_leaflet_jumpto
+                                to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
                             });
                 break;
             }
@@ -855,12 +855,12 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                     //Update map
                     map_update_app({longitude:      longitude_selected,
                                     latitude:       latitude_selected,
-                                    zoomvalue:      common.COMMON_GLOBAL.module_leaflet_zoom_pp, //zoom for popular places
+                                    zoomvalue:      common.COMMON_GLOBAL.moduleLeafletZoomPp, //zoom for popular places
                                     text_place:     CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').innerText,
                                     country:        '',
                                     city:           '',
                                     timezone_text : timezone_selected,
-                                    to_method:      common.COMMON_GLOBAL.module_leaflet_flyto
+                                    to_method:      common.COMMON_GLOBAL.moduleLeafletFlyTo
                                 });
                     //display empty country
                     CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
@@ -890,7 +890,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                                     country:'',
                                     city:'',
                                     timezone_text :null,
-                                    to_method:common.COMMON_GLOBAL.module_leaflet_jumpto})
+                                    to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo})
                     .then((timezone_text) => {
                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone_text ?? '';
                     });
