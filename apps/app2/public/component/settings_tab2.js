@@ -57,14 +57,13 @@ const template = () => `<div id='mapid'></div>
  *                      map_init:import('../../../common_types.js').CommonModuleCommon['map_init'],
  *                      map_resize:import('../../../common_types.js').CommonModuleCommon['map_resize'],
  *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']},
- *          lifecycle:  null}} props
+ *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']}}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          common_mountdiv:string,
  *          app_id:number,
  *          user_settings:import('../js//types.js').APP_user_setting_record,
  *          }} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -94,7 +93,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         props.methods.set_current_value(   'setting_select_popular_place', null, 'id', props.data.user_settings.gps_popular_place_id);
         props.methods.common_document.querySelector('#setting_input_place').innerHTML = props.data.user_settings.description;

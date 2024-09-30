@@ -228,7 +228,8 @@
  *                                       onerror:function,
  *                                       close:function}|null}} CommonGlobal
  */
-/**
+
+ /**
  * Type CommonIcons
  *  @typedef {{ app_maintenance:          string,
  *              app_alert:                string,
@@ -237,18 +238,14 @@
 
 /**
  * Type CommonComponentLifecycle
- * @typedef  {{ beforeMounted?:function|null,
- *              onMounted?:function|null}|null} CommonComponentLifecycle
- */
-/**
- * Type CommonComponentLifecycleReturn
- * @typedef  {{ onMounted?:function|null}|null} CommonComponentLifecycleReturn
+ * @typedef  {{ onBeforeMounted?:function|null,
+ *              onMounted?:function|null, 
+ *              onUnmounted?:function|null}|null} CommonComponentLifecycle
 */
-
 
 /**
  * Type CommonComponentResult
- * @typedef  {{ lifecycle:{onMounted:function|null, onError:function|null}, 
+ * @typedef  {{ lifecycle:CommonComponentLifecycle,
  *              data:*,
  *              methods:*,
  *              template:string|null}} CommonComponentResult

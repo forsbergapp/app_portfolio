@@ -9,9 +9,8 @@ const template = () => '';
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      theme_default_list:import('../../../common_types.js').CommonModuleCommon['theme_default_list'],
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      app_theme_update:function},
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      app_theme_update:function}}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
@@ -34,7 +33,6 @@ const component = async props => {
                         column_text:'TEXT'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //set app theme
         props.methods.app_theme_update();

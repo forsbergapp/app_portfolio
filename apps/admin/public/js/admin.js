@@ -42,14 +42,12 @@ const admin_login = async () => {
             mountDiv:   'admin_secure',
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/component/admin_secure.js'})
         .then(()=>{
             common.ComponentRender({
                 mountDiv:   'app_user_account',
                 data:       null,
                 methods:    null,
-                lifecycle:  null,
                 path:       '/common/component/common_user_account.js'})
             .then(()=>{
                 if (system_admin){
@@ -156,7 +154,6 @@ const app_event_click = event => {
                                                     user_session_countdown:common.user_session_countdown,
                                                     show_message:common.show_message
                                                     },
-                                        lifecycle:  null,
                                         path:       '/common/component/common_dialogue_user_menu.js'})
 
                         .then(()=>common.ComponentRender(
@@ -167,7 +164,6 @@ const app_event_click = event => {
                                                     ComponentRender:common.ComponentRender, 
                                                     app_theme_update:common.common_preferences_post_mount
                                                     },
-                                        lifecycle:null,
                                         path:'/common/component/common_dialogue_user_menu_app_theme.js'}));
                     break;
                 }
@@ -388,7 +384,6 @@ const init_app = async (parameters) => {
     await common.ComponentRender({  mountDiv:   common.COMMON_GLOBAL.app_div,
                                     data:       null,
                                     methods:    null,
-                                    lifecycle:  null,
                                     path:       '/component/app.js'});
     if (parameters.app_service.system_admin_only == 0)
         for (const parameter of parameters.app) {

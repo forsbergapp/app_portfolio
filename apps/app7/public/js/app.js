@@ -210,7 +210,6 @@ const init_app = async () => {
         mountDiv:   common.COMMON_GLOBAL.app_div, 
         data:       null,
         methods:    null,
-        lifecycle:  null,
         path:       '/component/app.js'});
     await common.ComponentRender({
         mountDiv:   'app_main_page', 
@@ -225,7 +224,6 @@ const init_app = async () => {
                     show_message:common.show_message,
                     ComponentRemove:common.ComponentRemove,
                     FFB:common.FFB},
-        lifecycle:  null,
         path:       '/component/cube.js'})
     .then((/**@type{{   data:null,
                         methods:{   cube_init:                  function, 

@@ -10,9 +10,8 @@ const template = () => `<div id='scan_open_mobile_qrcode'></div>
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      create_qr:import('../../../common_types.js').CommonModuleCommon['create_qr'],
- *                      getHostname:import('../../../common_types.js').CommonModuleCommon['getHostname']},
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      getHostname:import('../../../common_types.js').CommonModuleCommon['getHostname']}}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

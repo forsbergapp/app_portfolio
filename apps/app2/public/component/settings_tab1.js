@@ -133,9 +133,8 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get'],
  *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -162,7 +161,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:props.methods.FFB},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //Locale second using setting locale with first one empty
         await props.methods.ComponentRender({
@@ -179,7 +177,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:props.methods.FFB},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //app
         //Column title
@@ -197,7 +194,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //commmon
         //Timezone
@@ -215,7 +211,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //number system
         await props.methods.ComponentRender({
@@ -232,7 +227,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //direction with first one empty
         await props.methods.ComponentRender({
@@ -249,7 +243,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //arabic script with first one empty
         await props.methods.ComponentRender({
@@ -266,7 +259,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //calendar type
         await props.methods.ComponentRender({
@@ -283,7 +275,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //calendar hijri type
         await props.methods.ComponentRender({
@@ -300,7 +291,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:null,
             path:'/common/component/common_select.js'});
       
         //update select with settings values

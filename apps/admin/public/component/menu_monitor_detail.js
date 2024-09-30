@@ -345,7 +345,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:    null,
 *                      methods: {page_navigation:function, monitor_detail_server_log:function},
 *                      template:string}>}
@@ -536,7 +536,6 @@ const component = async props => {
                     },
                     methods:{   roundOff:props.methods.roundOff,
                                 FFB:props.methods.FFB},
-                    lifecycle:null,
                     path:'/component/menu_monitor_detail_server_log.js'});
     };
     const onMounted = async () =>{
@@ -597,7 +596,6 @@ const component = async props => {
                             column_text:'TEXT'
                 },
                 methods:{   FFB:props.methods.FFB},
-                lifecycle:  null,
                 path:       '/common/component/common_select.js'});
             monitor_detail_server_log(props.data.sort, props.data.order_by);
         }

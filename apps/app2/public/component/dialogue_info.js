@@ -29,9 +29,8 @@ const template = props => ` <div id='about_logo'></div>
  *                      info_link_terms_name:string,
  *                      info_link_about_name:string
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
- *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null,
  *                      methods:null, 
  *                      template:string}>}

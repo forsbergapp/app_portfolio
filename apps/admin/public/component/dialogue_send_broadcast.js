@@ -23,9 +23,8 @@ const template = props => ` <div id='send_broadcast_form'>
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
- *                      },
- *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn,
+ *                      }}} props 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -49,7 +48,6 @@ const component = async props => {
                     column_text:'TEXT'
                 },
                 methods:{FFB:props.methods.FFB},
-                lifecycle:null,
                 path:'/common/component/common_select.js'});
         // select apps
         await props.methods.ComponentRender( 
@@ -65,7 +63,6 @@ const component = async props => {
                     column_text:'NAME'
                   },
                 methods:{FFB:props.methods.FFB},
-                lifecycle:null,
                 path:'/common/component/common_select.js'});
     };
     return {

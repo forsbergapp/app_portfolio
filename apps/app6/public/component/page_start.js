@@ -18,9 +18,8 @@ const template = () => `<div id='app_page_start_shop' class='app_page_start_shop
  *                      pay:function,
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      show_message:function},
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      show_message:function}}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -61,7 +60,6 @@ const component = async props => {
                         button_post:props.methods.pay,
                         button_delete:null
                         },
-            lifecycle:  null,
             path:       '/common/component/common_app_data_display.js'});
     };
     return {

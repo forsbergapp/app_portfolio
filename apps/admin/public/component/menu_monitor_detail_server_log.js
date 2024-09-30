@@ -327,7 +327,7 @@ const template = props => ` ${  /*
 *                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifeycle:   null}} props 
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null,
 *                      methods:null,
 *                      template:string}>}

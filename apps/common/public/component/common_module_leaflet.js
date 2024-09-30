@@ -14,15 +14,15 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  *                      longitude:string,
  *                      latitude:string,
  *                      moduleLeafletZoom:number,
- *                      moduleLeafletJumpTo:number},
+ *                      moduleLeafletJumpTo:number,
+ *                      app_eventListeners:import('../../../common_types.js').CommonGlobal['app_eventListeners']},
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      function_event_doubleclick:function,
  *                      get_place_from_gps:import('../../../common_types.js').CommonModuleCommon['get_place_from_gps'],
  *                      map_update:import('../../../common_types.js').CommonModuleCommon['map_update']
- *                       },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                       }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:import('../../../common_types.js').CommonModuleLeafletMethods,
  *                      template:string}>}
@@ -78,8 +78,22 @@ const component = async props => {
             LEAFLET_CONTAINER.on('dblclick', default_dbl_click_event);
         }
     };
+    const onUnmounted = ()=>{
+        //remove Leaflet listeners if any one used
+        if (props.data.app_eventListeners.LEAFLET.length>0){
+            for (const listener of props.data.app_eventListeners.LEAFLET){
+                if(listener[0]=='DOCUMENT' || listener[0]=='WINDOW'){
+                    //document and window events are both created on document
+                    props.methods.common_document.removeEventListener(listener[2], listener[3]);
+                }
+                else
+                    listener[1].removeEventListener(listener[2], listener[3]);
+            }
+        }
+        props.data.app_eventListeners.LEAFLET = [];
+    };
     return {
-        lifecycle:  {onMounted:onMounted},
+        lifecycle:  {onMounted:onMounted, onUnmounted:onUnmounted},
         data:       null,
         methods:    {
                     leafletLibrary:Leaflet,

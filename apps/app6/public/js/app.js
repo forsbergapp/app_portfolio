@@ -150,7 +150,6 @@ const product_update = async () =>{
                     button_post:null,
                     button_delete:null
                     },
-        lifecycle:null,
         path:'/common/component/common_app_data_display.js'});
     CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[1].innerHTML = CommonAppDocument.querySelectorAll('.common_app_data_display_master_row[id]')[2].innerHTML;
     
@@ -225,7 +224,6 @@ const payment_request = async () =>{
                         button_post:null,
                         button_delete:pay_cancel
                         },
-            lifecycle:null,
             path:'/common/component/common_app_data_display.js'})
             .then(()=>{
                 CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
@@ -287,7 +285,6 @@ const pay = async () =>{
                     button_update:null,
                     button_post:payment_request,
                     button_delete:pay_cancel},
-        lifecycle:  null,
         path:       '/common/component/common_app_data_display.js'});
         CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
         CommonAppDocument.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
@@ -317,7 +314,6 @@ const init_app = async () => {
         mountDiv:   common.COMMON_GLOBAL.app_div, 
         data:       null,
         methods:    null,
-        lifecycle:  null,
         path:'/component/app.js'});
     await common.ComponentRender({
         mountDiv:   'app_main_page', 
@@ -332,7 +328,6 @@ const init_app = async () => {
                     ComponentRender:common.ComponentRender,
                     show_message:common.show_message
                     },
-        lifecycle:null,
         path:'/component/page_start.js'});
     product_update();
     framework_set();

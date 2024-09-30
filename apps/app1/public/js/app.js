@@ -101,14 +101,12 @@ const app_event_click = event => {
                                         user_session_countdown:common.user_session_countdown,
                                         show_message:common.show_message
                                         },
-                            lifecycle:  null,
                             path:       '/common/component/common_dialogue_user_menu.js'})
                         .then(()=>
                             common.ComponentRender({
                                 mountDiv:   'common_dialogue_user_menu_app_theme',
                                 data:       null,
                                 methods:    {app_theme_update:app_preferences_post_mount},
-                                lifecycle:  null,
                                 path:       '/component/app_theme.js'}));
                         break;
                     }
@@ -288,7 +286,6 @@ const get_apps = () => {
                     info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name
                     },
         methods:    {FFB:common.FFB},
-        lifecycle:  null,
         path:       '/common/component/common_dialogue_apps.js'});
 };
 /**
@@ -324,28 +321,24 @@ const init_app = async (parameters) => {
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
         methods:    null,
-        lifecycle:  null,
         path:       '/component/app.js'})
     .then(()=>
         common.ComponentRender({
             mountDiv:   'common_profile_search',
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/common/component/common_profile_search.js'}))
     .then(()=>
         common.ComponentRender({
             mountDiv:   'app_profile_toolbar',
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/common/component/common_profile_toolbar.js'}))
     .then(()=>
         common.ComponentRender({
             mountDiv:   'common_user_account',
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/common/component/common_user_account.js'}));
 
     for (const parameter of parameters.app) {
