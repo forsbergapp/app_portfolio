@@ -55,9 +55,8 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      function_search_event:function,
  *                      map_setstyle:import('../../../common_types.js').CommonModuleCommon['map_setstyle'],
  *                      moduleLeafletContainer:function
- *                      },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:  null,
  *                      methods:null,
  *                      template:null}>}
@@ -68,7 +67,7 @@ const component = async props => {
         
 
         //mount custom code inside Leaflet container
-        props.methods.common_document.querySelectorAll(`#${props.data.common_mountdiv} #${props.methods.moduleLeafletContainer()._container.id} .leaflet-control`)[0].innerHTML += 
+        props.methods.common_document.querySelectorAll(`#${props.methods.moduleLeafletContainer()._container.id} .leaflet-control`)[0].innerHTML += 
             template({
                         title_search:'Search',
                         title_fullscreen:'Fullscreen',
@@ -91,7 +90,6 @@ const component = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:null,
             path:'/common/component/common_select.js'});
         //cities, caal function that sets empty record
         props.methods.map_city_empty();
@@ -111,7 +109,6 @@ const component = async props => {
                         column_text:'display_data'
                         },
             methods:    {FFB:null},
-            lifecycle:null,
             path:'/common/component/common_select.js'});
         
         if (props.methods.function_search_event){

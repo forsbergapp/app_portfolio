@@ -75,9 +75,8 @@ const template = props => ` ${props.spinner==''?
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      show_common_dialogue:import('../../../common_types.js').CommonModuleCommon['show_common_dialogue'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
- *                      },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn,
+ *                      }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

@@ -177,7 +177,6 @@ const printTimetable = async () => {
                                                 iframe_content:template
                                                 },
                                     methods:    {common_setTimeout:common.common_setTimeout},
-                                    lifecycle:  null,
                                     path:       '/common/component/common_window_info.js'});
     
 };
@@ -367,7 +366,6 @@ const update_all_theme_thumbnails = async (theme=null) => {
                         html:timetable
                         },
             methods:    null,
-            lifecycle:  null,
             path:       '/component/settings_tab3_theme_thumbnail.js'});
     }
     if (theme?.type =='month' || theme?.type=='year' || theme==null){
@@ -379,7 +377,6 @@ const update_all_theme_thumbnails = async (theme=null) => {
                                                     html:APP_GLOBAL.lib_timetable.displayMonth(APP_GLOBAL.lib_prayTimes, getReportSettings(), null)
                                                     },
                                         methods:    null,
-                                        lifecycle:  null,
                                         path:       '/component/settings_tab3_theme_thumbnail.js'});
         await common.ComponentRender({  mountDiv:   'setting_design_theme_year',
                                         data:       { 
@@ -389,7 +386,6 @@ const update_all_theme_thumbnails = async (theme=null) => {
                                                     html:APP_GLOBAL.lib_timetable.displayYear(APP_GLOBAL.lib_prayTimes, getReportSettings(), null)
                                                     },
                                         methods:    null,
-                                        lifecycle:  null,
                                         path:       '/component/settings_tab3_theme_thumbnail.js'});
     }
 };
@@ -559,7 +555,6 @@ const toolbar_button = async (choice) => {
                     mountDiv:   'common_profile_stat_row2',
                     data:       null,
                     methods:    null,
-                    lifecycle:  null,
                     path:       '/component/profile_stat.js'});
                 break;
             }
@@ -596,7 +591,6 @@ const SettingShow = async (tab_selected) => {
                             ComponentRender:common.ComponentRender,
                             FFB:common.FFB
                             },
-                lifecycle:  null,
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
         }
@@ -619,7 +613,6 @@ const SettingShow = async (tab_selected) => {
                             ComponentRender:common.ComponentRender,
                             app_settings_get:common.app_settings_get
                             },
-                lifecycle:  null,
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
         }
@@ -636,7 +629,6 @@ const SettingShow = async (tab_selected) => {
                             ComponentRender:common.ComponentRender,
                             app_settings_get:common.app_settings_get
                             },
-                lifecycle:  null,
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
         }
@@ -648,7 +640,6 @@ const SettingShow = async (tab_selected) => {
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
                             },
                 methods:    null,
-                lifecycle:  null,
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
         }
@@ -660,7 +651,6 @@ const SettingShow = async (tab_selected) => {
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
                             },
                 methods:    {component_setting_update:component_setting_update},
-                lifecycle:null,
                 path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
@@ -677,7 +667,6 @@ const SettingShow = async (tab_selected) => {
                             ComponentRender:common.ComponentRender,
                             app_settings_get:common.app_settings_get
                             },
-                lifecycle:null,
                 path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
@@ -686,7 +675,6 @@ const SettingShow = async (tab_selected) => {
                 mountDiv:   'settings_content',
                 data:       {user_settings:APP_GLOBAL.user_settings},
                 methods:    {ComponentRender:common.ComponentRender},
-                lifecycle:  null,
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
         }
@@ -719,7 +707,6 @@ const dialogue_loading = (visible) => {
             mountDiv:   'dialogue_loading',
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/component/dialogue_loading.js'});
     }
     else
@@ -761,7 +748,6 @@ const show_dialogue = (dialogue) => {
                                             create_qr:common.create_qr,
                                             getHostname:common.getHostname
                                             },
-                                lifecycle:  null,
                                 path:       '/component/dialogue_scan_open_mobile.js'});
     }
 };
@@ -1045,7 +1031,6 @@ const login_common = (avatar) => {
             mountDiv:   'settings_tab_nav_7',
             data:       {avatar:avatar},
             methods:    null,
-            lifecycle:  null,
             path:       '/component/settings_tab_nav_7.js'});
 
         //Hide settings
@@ -1094,7 +1079,6 @@ const profile_update_stat_app = async () => {
             mountDiv:   'common_profile_stat_row2',
             data:      null,
             methods:    null,
-            lifecycle:  null,
             path:       '/component/profile_stat.js'});
     });
  };
@@ -1220,7 +1204,6 @@ const user_setting_link = (item) => {
                                 iframe_class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size
                                 },
                     methods:    {common_setTimeout:common.common_setTimeout},
-                    lifecycle:  null,
                     path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1306,7 +1289,6 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                                     column_text:'text'
                                     },
                         methods:    {FFB:null},
-                        lifecycle:  null,
                         path:       '/common/component/common_select.js'});
                     break;
                 }
@@ -1379,7 +1361,6 @@ const user_settings_delete = (choice=null) => {
                                     column_text:'text'
                                     },
                         methods:    {FFB:null},
-                        lifecycle:  null,
                         path:       '/common/component/common_select.js'});
                     CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner');
                 }
@@ -1596,7 +1577,6 @@ const profile_user_setting_link = item => {
                                 iframe_class:paper_size
                                 },
                     methods:    {common_setTimeout:common.common_setTimeout},
-                    lifecycle:  null,
                     path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1735,7 +1715,6 @@ const app_event_click = event => {
                                     iframe_content:null
                                     },
                         methods:    {common_setTimeout:common.common_setTimeout},
-                        lifecycle:  null,
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
@@ -1748,7 +1727,6 @@ const app_event_click = event => {
                                     content_type:null, 
                                     iframe_content:null},
                         methods:    {common_setTimeout:common.common_setTimeout},
-                        lifecycle:  null,
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
@@ -1761,7 +1739,6 @@ const app_event_click = event => {
                                     content_type:null, 
                                     iframe_content:null},
                         methods:    {common_setTimeout:common.common_setTimeout},
-                        lifecycle:  null,
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
@@ -1775,7 +1752,6 @@ const app_event_click = event => {
                                     iframe_content:null
                                     },
                         methods:    {common_setTimeout:common.common_setTimeout},
-                        lifecycle:  null,
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
@@ -1833,7 +1809,6 @@ const app_event_click = event => {
                                     info_link_about_name:common.COMMON_GLOBAL.info_link_about_name
                                     },
                         methods:    null,
-                        lifecycle:  null,
                         path:       '/component/dialogue_info.js'});
                     break;
                 }
@@ -2064,7 +2039,6 @@ const app_event_click = event => {
                                         user_session_countdown:common.user_session_countdown,
                                         show_message:common.show_message
                                         },
-                            lifecycle:  null,
                             path:       '/common/component/common_dialogue_user_menu.js'})
                         .then(()=>
                             common.ComponentRender({
@@ -2075,7 +2049,6 @@ const app_event_click = event => {
                                             ComponentRender:common.ComponentRender, 
                                             app_theme_update:common.common_preferences_post_mount
                                             },
-                                lifecycle:  null,
                                 path:       '/common/component/common_dialogue_user_menu_app_theme.js'}));
                         break;
                     }
@@ -2134,7 +2107,6 @@ const app_event_click = event => {
                                         ComponentRender:common.ComponentRender,
                                         FFB:common.FFB
                                         },
-                            lifecycle:  null,
                             path:       '/component/profile_info.js'})
                         .then((/**@type{{data:       null, 
                                         methods:    {
@@ -2373,28 +2345,24 @@ const init_app = async parameters => {
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
         methods:    null,
-        lifecycle:  null,
         path:       '/component/app.js'})
     .then(()=>
         common.ComponentRender({
             mountDiv:   'app_profile_search',
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/common/component/common_profile_search.js'}))
     .then(()=>
         common.ComponentRender({
             mountDiv:   'app_profile_toolbar',
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/common/component/common_profile_toolbar.js'}))
     .then(()=>
         common.ComponentRender({
             mountDiv:   'app_user_account',
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/common/component/common_user_account.js'}));
     dialogue_loading(1);
     //set papersize

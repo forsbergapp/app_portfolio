@@ -165,9 +165,8 @@ const template = () =>`   <div class='setting_horizontal_row'>
  *                      component_setting_update:import('../js/app.js')['component_setting_update'],
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get']
- *                       },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                       }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -191,7 +190,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //Method asr
         await props.methods.ComponentRender({
@@ -208,7 +206,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //Highlatitude adjustment
         await props.methods.ComponentRender({
@@ -225,7 +222,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:null,
             path:'/common/component/common_select.js'});
         //Timeformat
         await props.methods.ComponentRender({
@@ -242,7 +238,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //Hijri date adjustment
         await props.methods.ComponentRender({
@@ -259,7 +254,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:null,
             path:'/common/component/common_select.js'});
         //Iqamat
         await props.methods.ComponentRender({
@@ -276,7 +270,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_dhuhr',
@@ -292,7 +285,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_asr',
@@ -308,7 +300,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    null,
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_maghrib',
@@ -324,7 +315,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_isha',
@@ -340,7 +330,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //Fasting start end
         await props.methods.ComponentRender({
@@ -357,7 +346,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
 
         props.methods.set_current_value('setting_select_method', props.data.user_settings.prayer_method);

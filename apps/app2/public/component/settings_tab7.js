@@ -68,9 +68,8 @@ const template = () =>`  <div id='user_settings'>
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']
- *                       },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn,
+ *                       }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -92,7 +91,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:null,
             path:'/common/component/common_select.js'});
     };
     return {

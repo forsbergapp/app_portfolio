@@ -59,9 +59,8 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
  *                      function_event:function,
  *                      componentRemove:import('../../../common_types.js').CommonModuleCommon['ComponentRemove']
- *                      },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null, 
  *                      template:string}>}

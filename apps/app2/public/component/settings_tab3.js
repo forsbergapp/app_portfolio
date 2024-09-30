@@ -112,9 +112,8 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
  *                      update_all_theme_thumbnails:function
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get']},
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get']}}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -153,7 +152,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         //highlight row
         await props.methods.ComponentRender({
@@ -176,7 +174,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:null},
-            lifecycle:null,
             path:'/common/component/common_select.js'});
 
         props.methods.set_current_value('setting_select_report_papersize', props.data.user_settings.design_paper_size);

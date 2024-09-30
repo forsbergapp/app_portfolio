@@ -37,9 +37,8 @@ const template = props =>`  <div id='common_profile_search_list' ${props.spinner
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      input_control:import('../../../common_types.js').CommonModuleCommon['input_control'],
  *                      function_click_function:function,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn,
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

@@ -75,7 +75,6 @@ const app_event_click = event => {
                                         iframe_content:null
                                         },
                             methods:    {common_setTimeout:common.common_setTimeout},
-                            lifecycle:  null,
                             path:       '/common/component/common_window_info.js'});
                     break;
                 }
@@ -106,13 +105,11 @@ const init_app = async () => {
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
         methods:    null,
-        lifecycle:  null,
         path:       '/component/app.js'});
     common.ComponentRender({
         mountDiv:   'doc_list',
         data:       {docs:APP_GLOBAL.docs},
         methods:    null,
-        lifecycle:  null,
         path:       '/component/docs.js'});
     CommonAppDocument.querySelector('#dialogue_documents').style.visibility = 'visible';
    framework_set();

@@ -109,9 +109,8 @@ const template = props =>`  <div id='cube'>
  *                      lov_close:import('../../../common_types.js').CommonModuleCommon['lov_close'],
  *                      show_message:import('../../../common_types.js').CommonModuleCommon['show_message'],
  *                      ComponentRemove:import('../../../common_types.js').CommonModuleCommon['ComponentRemove'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null
  *                      methods:{
  *                              cube_init:                  function, 

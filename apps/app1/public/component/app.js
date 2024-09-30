@@ -48,9 +48,8 @@ const template = () =>` <div id="theme_background">
 /**
  * 
  * @param {{data:       {common_mountdiv:string},
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
- *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

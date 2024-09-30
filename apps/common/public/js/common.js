@@ -674,7 +674,6 @@ const select_event_action = async (event_target_id, target) =>{
                                 show_message:show_message,
                                 format_json_date:format_json_date
                                 },
-                    lifecycle:  null,
                     path:       '/common/component/common_dialogue_user_edit.js'})
                 .then(()=>{
                     ComponentRemove('common_dialogue_user_menu');
@@ -832,47 +831,40 @@ const WindowPrompt = text => CommonAppWindow.prompt(text);
 /**
  * Renders component
  * Components use analogic Vue SFC structure
- * Components are mounted before post component function using given framework
+ * Components are mounted using given framework
  * Components return:
- *      props       post function is implemented to manage spinner for analogic React suspense pattern and 
- *                  other post activities after HTML is mounted
- *      data        optional data to be used for specific purposes such as variables or functions
- *      template    rendered HTML to mount on given div or empty if component is mounted inside third party component, 
- *                  all templates use analogic React iteration and React suspense patterns implemented using pure Javascript
+ *      data        
+ *      methods
+ *      lifecycle   implemented onMounted, onBeforeMounted, onUnmounted
+ *      template    rendered HTML to mount
  *      
  * @param {{mountDiv:string|null,
  *          data:{}|null,
  *          methods:{}|null,
- *          lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *          path:string}} componentRender
  * @returns {Promise.<{data:*, methods:*}>}
  */
 const ComponentRender = async componentRender => {
     const {default:ComponentCreate} = await import(componentRender.path);
-    //set spinner for where subcomponent should be mounted, no spinner for main component
-	if (componentRender?.lifecycle?.beforeMounted){
-        //subcomponent with async function  to wait result before component is called
-        //the subcomponent manages the result
-        //set spinner inside sub component and in mount div if component should be mounted to a div
-        if (componentRender.mountDiv)
-            CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
-    }
+    if (componentRender.mountDiv)
+        CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
+
     /**@type{import('../../../common_types.js').CommonComponentResult}*/
     const component = await ComponentCreate({   data:       {...componentRender.data,       ...{common_mountdiv:componentRender.mountDiv}},
-                                                methods:    {...componentRender.methods,    ...{common_document:CommonAppDocument}},
-                                                lifecycle:  {beforeMounted:componentRender?.lifecycle?.beforeMounted?
-                                                                await componentRender.lifecycle.beforeMounted():
-                                                                null}})
+                                                methods:    {...componentRender.methods,    ...{common_document:CommonAppDocument}}})
                                                 .catch((/**@type{Error}*/error)=>{
                                                     componentRender.mountDiv?ComponentRemove(componentRender.mountDiv, true):null;
                                                     exception(COMMON_GLOBAL.app_function_exception, error);
                                                     return null;
                                                 });
-    //component can be mounted inside a third party component
-    //and div can be empty and no component is returned in this case    
-    if (componentRender.mountDiv && component){
-        // a third party component can already be rendered and can output an empty template
-        if (component.template)
+    if (component){
+        if (component.lifecycle?.onBeforeMounted){
+            await component.lifecycle.onBeforeMounted();
+        }
+        
+        //component can be mounted inside a third party component
+        //and div and template can be empty in this case    
+        if (componentRender.mountDiv && component.template)
             switch (COMMON_GLOBAL.app_framework){
                 case 2:{
                     //Vue
@@ -889,8 +881,22 @@ const ComponentRender = async componentRender => {
                     CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).innerHTML = component.template;
                 }
             }
+        if (component.lifecycle?.onUnmounted){
+            const Unmounted = () =>{
+                                    if (!CommonAppDocument.querySelector(`#${componentRender.mountDiv}`) || 
+                                        CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).innerHTML==''){
+                                            if (component.lifecycle?.onUnmounted){
+                                                ComponentHook.disconnect();
+                                                component.lifecycle.onUnmounted();
+                                            }
+                                        }
+                                    };
+            const ComponentHook = new MutationObserver(Unmounted);
+            ComponentHook.observe(CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).parentNode, {attributes:true, subtree:true});
+        }
+
         //run onMounted function after component is mounted
-        if (component.lifecycle.onMounted){
+        if (component.lifecycle?.onMounted){
             await component.lifecycle.onMounted();
         }
     }
@@ -941,7 +947,6 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 show_message:show_message,
                                 format_json_date:format_json_date
                                 },
-                    lifecycle:null,
                     path:'/common/component/common_dialogue_user_password_new.js'});
                 break;
             }
@@ -958,7 +963,6 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 title: title
                                 },
                     methods:    {data_function:click_cancel_event},
-                    lifecycle:  null,
                     path:       '/common/component/common_dialogue_user_verify.js'});
                 ComponentRemove('common_dialogue_user_start');
                 break;
@@ -975,7 +979,6 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time
                                 },
                 methods:        {FFB: FFB},
-                lifecycle:      null,
                 path:           '/common/component/common_dialogue_user_start.js'});
             break;
         }
@@ -992,7 +995,6 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time
                                 },
                 methods:        {FFB: FFB},
-                lifecycle:      null,
                 path:           '/common/component/common_dialogue_user_start.js'});
             break;
         }
@@ -1022,7 +1024,6 @@ const show_message = async (message_type, code, function_event, text_class=null,
                         FFB:FFB, 
                         event:function_event
                         },
-        lifecycle:      null,
         path:           '/common/component/common_dialogue_message.js'});
 };
 /**
@@ -1149,7 +1150,6 @@ const lov_show = parameters => {
                     FFB:FFB, 
                     function_event:parameters.function_event
                     },
-        lifecycle:  null,
         path:       '/common/component/common_dialogue_lov.js'});        
 };
 /**
@@ -1258,7 +1258,6 @@ const profile_stat = async (statchoice, app_rest_url = null) => {
                     ComponentRender:ComponentRender,
                     FFB:FFB
                     },
-        lifecycle:  null,
         path:       '/common/component/common_dialogue_profile.js'});
 };
 /**
@@ -1283,7 +1282,6 @@ const profile_detail = (detailchoice) => {
                         show_common_dialogue:show_common_dialogue,
                         FFB:FFB
                         },
-            lifecycle:  null,
             path:       '/common/component/common_dialogue_profile_info_detail.js'});
     }
 };
@@ -1305,7 +1303,6 @@ const search_profile = click_function => {
                     function_click_function:click_function,
                     FFB:FFB
                     },
-        lifecycle:  null,
         path:       '/common/component/common_profile_search_list.js'})
     .catch(()=>{
         CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
@@ -1333,7 +1330,6 @@ const profile_show = async (user_account_id_other = null, username = null) => {
                     common_setTimeout:null,
                     FFB:null,
                     },
-        lifecycle:  null,
         path:       '/common/component/common_dialogue_profile.js'});
     await ComponentRender({
         mountDiv:   'common_dialogue_profile_content',
@@ -1353,7 +1349,6 @@ const profile_show = async (user_account_id_other = null, username = null) => {
                     show_common_dialogue:show_common_dialogue,
                     checkOnline:checkOnline
                     },
-        lifecycle:  null,
         path:       '/common/component/common_dialogue_profile_info.js'});
 };
 /**
@@ -2229,19 +2224,7 @@ const create_qr = async (div, url) => {
  * @returns {Promise.<void>}
  */
 const map_init = async (mount_div, longitude, latitude, doubleclick_event, search_event_function) => {
-    CommonAppDocument.querySelector(`#${mount_div}`).outerHTML = `<div id='${mount_div}'></div>`;
-    //remove Leaflet listeners if any one used
-    if (COMMON_GLOBAL.app_eventListeners.LEAFLET.length>0){
-        for (const listener of COMMON_GLOBAL.app_eventListeners.LEAFLET){
-            if(listener[0]=='DOCUMENT' || listener[0]=='WINDOW'){
-                //document and window events are both created on document
-                CommonAppDocument.removeEventListener(listener[2], listener[3]);
-            }
-            else
-                listener[1].removeEventListener(listener[2], listener[3]);
-        }
-    }
-    COMMON_GLOBAL.app_eventListeners.LEAFLET = [];
+    COMMON_GLOBAL.moduleLeaflet          =  null;
     COMMON_GLOBAL.moduleLeafletContainer = ()=>null;
     
     /** @type {import('../../../common_types.js').CommonModuleLeafletMapLayer[]}*/
@@ -2270,10 +2253,9 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                             data:       {   
                                         longitude:longitude,
                                         latitude:latitude,
-                                        //module parameters
                                         moduleLeafletZoom:COMMON_GLOBAL.moduleLeafletZoom,
                                         moduleLeafletJumpTo:COMMON_GLOBAL.moduleLeafletJumpTo,
-                                        moduleLeafletMapStyle:COMMON_GLOBAL.moduleLeafletStyle,
+                                        app_eventListeners:COMMON_GLOBAL.app_eventListeners
                                         },
                             methods:    {
                                         FFB:FFB,
@@ -2281,7 +2263,6 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                                         get_place_from_gps:get_place_from_gps,
                                         map_update:map_update
                                         },
-                            lifecycle:  null,
                             path:       '/common/component/common_module_leaflet.js'})
     .catch(error=>{throw error;});
     COMMON_GLOBAL.moduleLeaflet             =  module_leaflet.methods.leafletLibrary;
@@ -2290,7 +2271,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
     // COMMON_GLOBAL.moduleLeafletMapStyles =   component.data.map_layer_array;
 
     await ComponentRender({
-        mountDiv:   mount_div, //outer app div
+        mountDiv:   null, 
         data:       {   
                     data_app_id:COMMON_GLOBAL.common_app_id,
                     locale:COMMON_GLOBAL.user_locale,
@@ -2308,7 +2289,6 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                     map_setstyle:map_setstyle,
                     moduleLeafletContainer:COMMON_GLOBAL.moduleLeafletContainer
                     },
-        lifecycle:  null,
         path:       '/common/component/common_module_leaflet_control.js'});
 };
 /**
@@ -2355,7 +2335,6 @@ const map_city = async country_code =>{
                             column_text:'text'
                             },
             methods:        {FFB:null},
-            lifecycle:      null,
             path:           '/common/component/common_select.js'});
     }
 };
@@ -2379,7 +2358,6 @@ const map_city_empty = () =>{
                         column_text:'text'
                         },
         methods:        {FFB:null},
-        lifecycle:      null,
         path:           '/common/component/common_select.js'});
 };
 /**
@@ -2440,7 +2418,6 @@ const map_control_toggle_expand = async item =>{
                                 column_text:'text'
                                 },
                     methods:    {FFB:null},
-                    lifecycle:  null,
                     path:       '/common/component/common_select.js'});
         }
     else
@@ -2588,7 +2565,6 @@ const map_update = async (parameters) => {
                         moduleLeaflet:COMMON_GLOBAL.moduleLeaflet,
                         moduleLeafletContainer:COMMON_GLOBAL.moduleLeafletContainer
                         },
-            lifecycle:  null,
             path:       '/common/component/common_module_leaflet_popup.js'})
         .then(()=>resolve(parameters.timezone_text));
     });
@@ -2783,7 +2759,6 @@ const show_broadcast = (broadcast_message) => {
                 mountDiv:   'common_broadcast',
                 data:       {message:CommonAppWindow.atob(message)},
                 methods:    null,
-                lifecycle:  null,
                 path:       CommonAppDocument.querySelector('#common_dialogue_maintenance')?'/maintenance/component/broadcast.js':'/common/component/common_broadcast.js'});
             break;
         }
@@ -2810,7 +2785,6 @@ const show_maintenance = (message, init=null) => {
             mountDiv:   'common_dialogue_maintenance',
             data:       null,
             methods:    {common_setTimeout:common_setTimeout},
-            lifecycle:  null,
             path:       '/maintenance/component/dialogue_maintenance.js'});
     }
     else
@@ -2934,7 +2908,6 @@ const worldcities_search = async (event_function) =>{
                     click_function:event_function,
                     FFB:FFB
                     },
-        lifecycle:  null,
         path:       '/common/component/common_module_leaflet_search_city.js'});
 };
 /**
@@ -3144,7 +3117,6 @@ const common_event = async (event_type,event=null) =>{
                                             iframe_content:null
                                             },
                                 methods:    {common_setTimeout:common_setTimeout},
-                                lifecycle:  null,
                                 path:       '/common/component/common_window_info.js'});
                             break;
                         }
@@ -3158,7 +3130,6 @@ const common_event = async (event_type,event=null) =>{
                                             iframe_content:null
                                             },
                                 methods:    {common_setTimeout:common_setTimeout},
-                                lifecycle:  null,
                                 path:       '/common/component/common_window_info.js'});
                             break;
                         }
@@ -3172,7 +3143,6 @@ const common_event = async (event_type,event=null) =>{
                                             iframe_content:null
                                             },
                                 methods:    {common_setTimeout:common_setTimeout},
-                                lifecycle:  null,
                                 path:       '/common/component/common_window_info.js'});
                             break;
                         }
@@ -3252,7 +3222,6 @@ const common_event = async (event_type,event=null) =>{
                                             show_message:show_message,
                                             format_json_date:format_json_date
                                             },
-                                lifecycle:  null,
                                 path:       '/common/component/common_dialogue_user_edit.js'})
                             .then(()=>{
                                 ComponentRemove('common_dialogue_user_menu');
@@ -4027,7 +3996,6 @@ const init_common = async (parameters) => {
                                         font_prio3:     true
                                         },
                             methods:    null,
-                            lifecycle:  null,
                             path:       '/common/component/common_app.js'});
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL.app_id ==null)

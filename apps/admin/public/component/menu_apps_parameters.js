@@ -40,9 +40,8 @@ const template = props => ` ${props.spinner==''?
  * @param {{data:{      common_mountdiv:string,
  *                      app_id_data:number},
  *          methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
- *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

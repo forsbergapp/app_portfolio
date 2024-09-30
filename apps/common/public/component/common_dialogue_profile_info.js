@@ -120,9 +120,8 @@ const template = props =>`  <div id='common_profile_main'>
  *                      checkOnline:import('../../../common_types.js').CommonModuleCommon['checkOnline'],
  *                      common_setTimeout:import('../../../common_types.js').CommonModuleCommon['common_setTimeout'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
- *                      },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

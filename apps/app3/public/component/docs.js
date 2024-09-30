@@ -16,9 +16,8 @@ const template = props => ` ${props.docs.map(doc=>
  *                      common_mountdiv:string,
  *                      docs:[{id:number, doc_url:string, doc_url_small:string, doc_title:string}]
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
- *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

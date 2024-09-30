@@ -59,7 +59,6 @@ const show_menu = menu => {
                                                 ComponentRender:common.ComponentRender, 
                                                 FFB:common.FFB
                                                 },
-                                    lifecycle:  null,
                                     path:       '/component/menu_start.js'})
             .then(()=>show_charts());
             
@@ -71,7 +70,6 @@ const show_menu = menu => {
                 mountDiv:   'menu_content',
                 data:       null,
                 methods:    {FFB:common.FFB},
-                lifecycle:  null,
                 path:       '/component/menu_user_stat.js'});
             break;    
         }
@@ -81,7 +79,6 @@ const show_menu = menu => {
                 mountDiv:   'menu_content',
                 data:       null,
                 methods:    null,
-                lifecycle:  null,
                 path:       '/component/menu_users.js'})
             .then(()=>search_users());
             break;
@@ -92,7 +89,6 @@ const show_menu = menu => {
                 mountDiv:   'menu_content',
                 data:       null,
                 methods:    {FFB:common.FFB},
-                lifecycle:  null,
                 path:       '/component/menu_apps.js'});
             break;    
         }
@@ -109,7 +105,6 @@ const show_menu = menu => {
                             ComponentRender:common.ComponentRender,
                             FFB:common.FFB
                             },
-                lifecycle:  null,
                 path:       '/component/menu_monitor.js'})
             .then((/**@type{{data:{limit:number}, methods:null}}*/result)=>{
                 APP_GLOBAL.limit = result.data.limit;
@@ -123,7 +118,6 @@ const show_menu = menu => {
                 mountDiv:   'menu_content',
                 data:       null,
                 methods:    {nav_click:nav_click},
-                lifecycle:  null,
                 path:       '/component/menu_config.js'});
             break;
         }
@@ -133,7 +127,6 @@ const show_menu = menu => {
                 mountDiv:   'menu_content',
                 data:       {system_admin:common.COMMON_GLOBAL.system_admin},
                 methods:    {FFB:common.FFB},
-                lifecycle:  null,
                 path:       '/component/menu_installation.js'});
             break;
         }
@@ -143,7 +136,6 @@ const show_menu = menu => {
                 mountDiv:   'menu_content',
                 data:       null,
                 methods:    {roundOff:common.roundOff, FFB:common.FFB},
-                lifecycle:  null,
                 path:       '/component/menu_db_info.js'});
             break;
         }
@@ -157,7 +149,6 @@ const show_menu = menu => {
                 mountDiv:   'menu_content',
                 data:       null,
                 methods:    {FFB:common.FFB},
-                lifecycle:  null,
                 path:       '/component/menu_server.js'});
             break;
         }
@@ -175,7 +166,6 @@ const show_charts = async () => {
                     ComponentRender:common.ComponentRender,
                     FFB:common.FFB
                     },
-        lifecycle:  null,
         path:       '/component/menu_start_chart.js'});
 };
 /**
@@ -249,7 +239,6 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
                         ComponentRender:common.ComponentRender,
                         FFB:common.FFB
                         },
-        lifecycle:      null,
         path:           '/component/dialogue_send_broadcast.js'})
     .then(()=>{
         switch (dialogue_type){
@@ -346,7 +335,6 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
                     focus:focus
                     },
         methods:    {FFB:common.FFB},
-        lifecycle:  null,
         path:       '/component/menu_users_list.js'});
  
 };
@@ -629,7 +617,6 @@ const nav_click = (item_id) => {
                 mountDiv:       'list_config_container',
                 data:           {file:'SERVER'},
                 methods:        {FFB:common.FFB},
-                lifecycle:      null,
                 path:           '/component/menu_config_detail.js'});
             break;
         }
@@ -640,7 +627,6 @@ const nav_click = (item_id) => {
                 mountDiv:       'list_config_container',
                 data:           {file:'IAM_BLOCKIP'},
                 methods:        {FFB:common.FFB},
-                lifecycle:      null,
                 path:           '/component/menu_config_detail.js'});
             break;
         }
@@ -651,7 +637,6 @@ const nav_click = (item_id) => {
                 mountDiv:       'list_config_container',
                 data:           {file:'IAM_USERAGENT'},
                 methods:        {FFB:common.FFB},
-                lifecycle:      null,
                 path:           '/component/menu_config_detail.js'});
             break;
         }
@@ -662,7 +647,6 @@ const nav_click = (item_id) => {
                 mountDiv:       'list_config_container',
                 data:           {file:'IAM_POLICY'},
                 methods:        {FFB:common.FFB},
-                lifecycle:      null,
                 path:           '/component/menu_config_detail.js'});
             break;
         }
@@ -697,7 +681,6 @@ const show_list = async (list_detail, query, sort, order_by) => {
                     roundOff:common.roundOff,
                     FFB:common.FFB
                     },
-        lifecycle:  null,
         path:       '/component/menu_monitor_detail.js'})
     .then((/**@type{{   data:null, 
                         methods:{page_navigation:function, monitor_detail_server_log:function}}}*/result)=>{
@@ -1167,7 +1150,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                             mountDiv:   'list_app_parameter',
                             data:       {app_id_data:parseInt(common.element_row(event.target).getAttribute('data-app_id') ?? '')},
                             methods:    {FFB:common.FFB},
-                            lifecycle:  null,
                             path:       '/component/menu_apps_parameters.js'});
                     }
                     break;
@@ -1180,7 +1162,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                             mountDiv:   'list_user_account_logon',
                             data:       {user_account_id:parseInt(common.element_row(event.target).getAttribute('data-user_account_id') ?? '')},
                             methods:    {FFB:common.FFB},
-                            lifecycle:  null,
                             path:       '/component/menu_users_logon.js'});
                     }
                     break;

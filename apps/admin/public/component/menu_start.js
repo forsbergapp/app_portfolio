@@ -45,7 +45,7 @@ const template = props => ` <div id='menu_1_content_widget1' class='widget'>
 *                       ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *           lifecycle:  null}} props
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null,
 *                      methods:null,
 *                      template:string}>}
@@ -95,7 +95,6 @@ const component = async props => {
                     column_text:'TEXT'
                     },
                 methods:{FFB:props.methods.FFB},
-                lifecycle:null,
                 path:'/common/component/common_select.js'});
 
         await props.methods.ComponentRender({mountDiv:'select_year_menu1',
@@ -116,7 +115,6 @@ const component = async props => {
                     column_text:'TEXT'
                     },
                 methods:{FFB:props.methods.FFB},
-                lifecycle:null,
                 path:'/common/component/common_select.js'});
 
         await props.methods.ComponentRender({mountDiv:'select_month_menu1',
@@ -132,7 +130,6 @@ const component = async props => {
                     column_text:'TEXT'
                  },
                 methods:{FFB:props.methods.FFB},
-                lifecycle:null,
                 path:'/common/component/common_select.js'});
         await props.methods.ComponentRender({mountDiv:'select_app_menu1',
                 data:{
@@ -146,7 +143,6 @@ const component = async props => {
                     column_text:'NAME'
                    },
                 methods:{FFB:props.methods.FFB},
-                lifecycle:null,
                 path:'/common/component/common_select.js'});
    };
     return {

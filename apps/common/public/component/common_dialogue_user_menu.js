@@ -67,9 +67,8 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      user_session_countdown:import('../../../common_types.js').CommonModuleCommon['user_session_countdown'],
  *                      show_message:import('../../../common_types.js').CommonModuleCommon['show_message']
- *                      },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
@@ -136,7 +135,6 @@ const component = async props => {
                             column_text:'text'
                             },
                 methods:    {FFB:props.methods.FFB},
-                lifecycle:  null,
                 path:       '/common/component/common_select.js'});
             //Timezone
             await props.methods.ComponentRender({
@@ -153,7 +151,6 @@ const component = async props => {
                             column_text:'display_data'
                             },
                 methods:    {FFB:props.methods.FFB},
-                lifecycle:null,
                 path:'/common/component/common_select.js'});
             //Direction with default ' '
             await props.methods.ComponentRender({
@@ -170,7 +167,6 @@ const component = async props => {
                             column_text:'display_data'
                             },
                 methods:    {FFB:props.methods.FFB},
-                lifecycle:  null,
                 path:       '/common/component/common_select.js'});   
             //Arabic script with default ' '
             await props.methods.ComponentRender({
@@ -187,7 +183,6 @@ const component = async props => {
                             column_text:'display_data'
                             },
                 methods:    {FFB:props.methods.FFB},
-                lifecycle:  null,
                 path:       '/common/component/common_select.js'});
         }
         if ((props.data.system_admin_only == 1)==false){
