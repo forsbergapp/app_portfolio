@@ -6,8 +6,7 @@
  * 
  */
 /**
- * @param {{spinner:string,
-*          system_admin:string|null,
+ * @param {{system_admin:string|null,
 *          function_get_order_by:function,
 *          function_roundOff:function,
 *          logs:[],
@@ -333,33 +332,22 @@ const template = props => ` ${  /*
 *                      template:string}>}
 */
 const component = async props => {
-    props.methods.common_document.querySelector('#list_server_log').classList.add('css_spinner');
+    const logs = await props.methods.FFB(props.data.path, props.data.query, 'GET', props.data.token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     /**
      * Get order by if column matches
      * @param {string} column
      */
     const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
 
-    const onMounted = async () =>{   
-        const logs = await props.methods.FFB(props.data.path, props.data.query, 'GET', props.data.token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'', 
-                                                                                                system_admin:props.data.system_admin, 
-                                                                                                function_get_order_by:get_order_by,
-                                                                                                function_roundOff:props.methods.roundOff,
-                                                                                                logs:logs,
-                                                                                                logscope:props.methods.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]});
-        props.methods.common_document.querySelector('#list_server_log').classList.remove('css_spinner');
-    };
-    
+
     return {
-        lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template({spinner:'css_spinner', 
-                            system_admin:props.data.system_admin, 
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({system_admin:props.data.system_admin, 
                             function_get_order_by:get_order_by,
                             function_roundOff:props.methods.roundOff,
-                            logs:[],
+                            logs:logs,
                             logscope:props.methods.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
     };
 };

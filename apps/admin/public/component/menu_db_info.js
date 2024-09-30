@@ -3,8 +3,7 @@
  */
 /**
  * Displays stat of users
- * @param {{spinner:string,
- *          size:string,
+ * @param {{size:string,
  *          db:{database_use:string, 
  *              database_name:string,
  *              version:string,
@@ -25,21 +24,19 @@
  *          function_roundOff:function}} props
  */
 const template = props => ` <div id='menu_8_content_widget1' class='widget'>
-                                <div id='menu_8_db_info1' class='${props.spinner}'>
-                                    ${props.spinner?'':
-                                        `<div id='menu_8_db_info_database_title' class='common_icon'></div>          <div id='menu_8_db_info_database_data'>${props.db.database_use}</div>
-                                        <div id='menu_8_db_info_name_title' class='common_icon'></div>              <div id='menu_8_db_info_name_data'>${props.db.database_name}</div>
-                                        <div id='menu_8_db_info_version_title' class='common_icon'></div>           <div id='menu_8_db_info_version_data'>${props.db.version}</div>
-                                        <div id='menu_8_db_info_database_schema_title' class='common_icon'></div>   <div id='menu_8_db_info_database_schema_data'>${props.db.database_schema}</div>
-                                        <div id='menu_8_db_info_host_title' class='common_icon'></div>              <div id='menu_8_db_info_host_data'>${props.db.hostname}</div>
-                                        <div id='menu_8_db_info_connections_title' class='common_icon'></div>       <div id='menu_8_db_info_connections_data'>${props.db.connections}</div>
-                                        <div id='menu_8_db_info_started_title' class='common_icon'></div>           <div id='menu_8_db_info_started_data'>${props.db.started}</div>`
-                                    }
+                                <div id='menu_8_db_info1' >
+                                    <div id='menu_8_db_info_database_title' class='common_icon'></div>          <div id='menu_8_db_info_database_data'>${props.db.database_use}</div>
+                                    <div id='menu_8_db_info_name_title' class='common_icon'></div>              <div id='menu_8_db_info_name_data'>${props.db.database_name}</div>
+                                    <div id='menu_8_db_info_version_title' class='common_icon'></div>           <div id='menu_8_db_info_version_data'>${props.db.version}</div>
+                                    <div id='menu_8_db_info_database_schema_title' class='common_icon'></div>   <div id='menu_8_db_info_database_schema_data'>${props.db.database_schema}</div>
+                                    <div id='menu_8_db_info_host_title' class='common_icon'></div>              <div id='menu_8_db_info_host_data'>${props.db.hostname}</div>
+                                    <div id='menu_8_db_info_connections_title' class='common_icon'></div>       <div id='menu_8_db_info_connections_data'>${props.db.connections}</div>
+                                    <div id='menu_8_db_info_started_title' class='common_icon'></div>           <div id='menu_8_db_info_started_data'>${props.db.started}</div>
                                 </div>
                             </div>
                             <div id='menu_8_content_widget2' class='widget'>
                                 <div id='menu_8_db_info_space_title' class='common_icon'></div>
-                                <div id='menu_8_db_info_space_detail' class='common_list_scrollbar ${props.spinner}'>
+                                <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'>
                                     <div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
                                         <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>TABLE NAME</div>
                                         <div id='menu_8_db_info_space_detail_col_title2' class='menu_8_db_info_space_detail_col list_title'>SIZE ${props.size}</div>
@@ -79,47 +76,28 @@ const template = props => ` <div id='menu_8_content_widget1' class='widget'>
 */
 const component = async props => {
     const size = '(Mb)';
-    const onMounted = async () =>{
-        /**
-         * @type {{ database_use:string,
-         *          database_name:string,
-         *          version:string,
-         *          database_schema:string,
-         *          hostname:string,
-         *          connections:string,
-         *          started:string}}
-         */
-        const db = await props.methods.FFB('/server-db_admin/database', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
-        const db_detail = await props.methods.FFB('/server-db_admin/database-space', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        const db_detail_sum = await props.methods.FFB('/server-db_admin/database-spacesum', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'',
-                                                                                                size:size,
-                                                                                                db:db,
-                                                                                                db_detail:db_detail,
-                                                                                                db_detail_sum:db_detail_sum,
-                                                                                                function_roundOff:props.methods.roundOff
-                                                                                            });
-  };
+    /**
+     * @type {{ database_use:string,
+     *          database_name:string,
+     *          version:string,
+     *          database_schema:string,
+     *          hostname:string,
+     *          connections:string,
+     *          started:string}}
+     */
+    const db = await props.methods.FFB('/server-db_admin/database', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
+    const db_detail = await props.methods.FFB('/server-db_admin/database-space', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const db_detail_sum = await props.methods.FFB('/server-db_admin/database-spacesum', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
+
   return {
-      lifecycle:  {onMounted:onMounted},
-      data:   null,
-      methods:null,
-      template: template({  spinner:'css_spinner',
-                            size:size,
-                            db:{  database_use:'',
-                                database_name:'',
-                                version:'',
-                                database_schema:'',
-                                hostname:'',
-                                connections:'',
-                                started:''},
-                            db_detail:[],
-                            db_detail_sum:{   table_name:'',
-                                            total_size: 0,
-                                            data_used:'',
-                                            data_free:'',
-                                            pct_used:''},
-                            function_roundOff:props.methods.roundOff
+      lifecycle:    null,
+      data:         null,
+      methods:      null,
+      template:     template({  size:size,
+                                db:db,
+                                db_detail:db_detail,
+                                db_detail_sum:db_detail_sum,
+                                function_roundOff:props.methods.roundOff
       })
   };
 };

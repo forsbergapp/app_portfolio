@@ -265,6 +265,10 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 #menu_content{
 	height: 85%;
 }
+#menu_content > .css_spinner{
+	display: inline-block;
+  	top: calc(50% - 30px);
+}
 .widget{
 	width: 87%;
 	margin:20px;
@@ -1572,6 +1576,9 @@ body{
 .common_password_container{
 	display: inline-block !important;
     vertical-align: super;
+}
+#menu_content .css_spinner::before{
+	background: var(--app_theme_background_color);
 }
 #list_user_account .css_spinner::before,
 #list_user_account_logon .css_spinner::before,

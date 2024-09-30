@@ -3,8 +3,7 @@
  */
 /**
  * Displays stat of users
- * @param {{spinner:string,
- *          records_user_stat:[{identity_provider_id:string, provider_name:string, count_users:number, count_connected:number}]|[],
+ * @param {{records_user_stat:[{identity_provider_id:string, provider_name:string, count_users:number, count_connected:number}]|[],
  *          count_not_connected:number}} props
  */
 const template = props => `<div id='menu_2_content_widget1' class='widget'>
@@ -14,7 +13,7 @@ const template = props => `<div id='menu_2_content_widget1' class='widget'>
                                     <div id='list_user_stat_col_title3' class='list_user_stat_col common_icon'></div>
                                     <div id='list_user_stat_col_title4' class='list_user_stat_col common_icon'></div>
                                 </div>
-                                <div id='list_user_stat' class='common_list_scrollbar ${props.spinner}'>
+                                <div id='list_user_stat' class='common_list_scrollbar'>
                                     ${props.records_user_stat.map(record=>
                                     `<div class='list_user_stat_row'>
                                         <div class='list_user_stat_col'>${record.identity_provider_id ?? ''}</div>
@@ -57,27 +56,21 @@ const component = async props => {
                                 `identity_provider_id=${identity_provider_id}&logged_in=${logged_in}`, 'GET', 'APP_ACCESS', null)
         .then((/**@type{string}*/result)=>JSON.parse(result));
     };
-    const onMounted = async () =>{
-        /**@type{[{identity_provider_id:string, provider_name:String, count_users:number, count_connected:number}]} */
-        const user_stat = await props.methods.FFB('/server-db_admin/user_account-stat', null, 'GET', 'APP_ACCESS', null)
-                                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        //add count stat
-        for (const row of user_stat)
-            row.count_connected = await get_count(row.identity_provider_id ?? '',1).then(result=>result.count_connected);
+    /**@type{[{identity_provider_id:string, provider_name:String, count_users:number, count_connected:number}]} */
+    const user_stat = await props.methods.FFB('/server-db_admin/user_account-stat', null, 'GET', 'APP_ACCESS', null)
+                        .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    //add count stat
+    for (const row of user_stat)
+    row.count_connected = await get_count(row.identity_provider_id ?? '',1).then(result=>result.count_connected);
 
-        const count_not_connected = await get_count('',0).then(result=>result.count_connected);
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:'',
-                                                                                                records_user_stat:user_stat,
-                                                                                                count_not_connected:count_not_connected
-                                                                                            });
-    };
+    const count_not_connected = await get_count('',0).then(result=>result.count_connected);
+
     return {
-        lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template({spinner:'css_spinner',
-                            records_user_stat:[],
-                            count_not_connected:0
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({  records_user_stat:user_stat,
+                                count_not_connected:count_not_connected
         })
     };
 };
