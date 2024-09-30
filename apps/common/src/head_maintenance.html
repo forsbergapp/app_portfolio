@@ -17,10 +17,7 @@
 <link rel='stylesheet' type='text/css' href='/maintenance/css/common.css' />
 <link rel='stylesheet' type='text/css' href='/maintenance/css/maintenance.css' />
 <script type='text/javascript' type='module' >
-    import('maintenance').then(function(maintenance){
-            window.maintenance = maintenance;
-            maintenance.init(<ITEM_COMMON_PARAMETERS/>);
-    })
+    import('maintenance').then((maintenance)=>maintenance.init(<ITEM_COMMON_PARAMETERS/>))
 </script>
 <meta name="HandheldFriendly" content="true"/>
 <meta name='mobile-web-app-capable' content='yes'>
