@@ -209,22 +209,22 @@
  *									NEW_PASSWORD_CONFIRM:string,
  *									NEW_PASSWORD:string,
  *									CONFIRM_QUESTION:string},
- *              module_leaflet:*,
- *              module_leaflet_flyto:number,
- *              module_leaflet_jumpto:number,
- *              module_leaflet_style:string,
- *              module_leaflet_session_map:CommonModuleLeafletMapData|null,
- *           module_leaflet_session_map_layer:[],
- *           module_leaflet_zoom:number, 
- *           module_leaflet_zoom_city:number,
- *           module_leaflet_zoom_pp:number,
- *           module_leaflet_map_styles:CommonModuleLeafletMapLayer[],
- *           'module_easy.qrcode_width':number|null,
- *           'module_easy.qrcode_height':number|null,
- *           'module_easy.qrcode_color_dark':string|null,
- *           'module_easy.qrcode_color_light':string|null,
- *           service_socket_client_ID:number|null,
- *           service_socket_eventsource:{onmessage:function,
+ *              moduleLeaflet:*,
+ *              moduleLeafletFlyTo:number,
+ *              moduleLeafletJumpTo:number,
+ *              moduleLeafletStyle:string,
+ *              moduleLeafletContainer:function,
+ *              moduleLeafletMapLayer:[],
+ *              moduleLeafletZoom:number, 
+ *              moduleLeafletZoomCity:number,
+ *              moduleLeafletZoomPp:number,
+ *              moduleLeafletMapStyles:CommonModuleLeafletMapLayer[],
+ *              'module_easy.qrcode_width':number|null,
+ *              'module_easy.qrcode_height':number|null,
+ *              'module_easy.qrcode_color_dark':string|null,
+ *              'module_easy.qrcode_color_light':string|null,
+ *              service_socket_client_ID:number|null,
+ *              service_socket_eventsource:{onmessage:function,
  *                                       onerror:function,
  *                                       close:function}|null}} CommonGlobal
  */
@@ -336,19 +336,20 @@
 /**
  * Type CommonModuleLeafletMapData
  * @typedef {{  _container:{id:string},
- *              doubleClickZoom:function,
+ *              doubleClickZoom:{disable:function},
  *              invalidateSize:function,
  *              removeLayer:function,
  *              setView:function,
  *              flyTo:function,
  *              setZoom:function,
- *              getZoom:function}} CommonModuleLeafletMapData
+ *              getZoom:function,
+ *              on:function}} CommonModuleLeafletMapData
  *
  */
 /**
  * Type CommonModuleLeafletMethods
- * @typedef {{  library_Leaflet:*,
- *              module_map: CommonModuleLeafletMapData}} CommonModuleLeafletMethods
+ * @typedef {{  leafletLibrary:*,
+ *              leafletContainer: function}} CommonModuleLeafletMethods
  */
 
 /**

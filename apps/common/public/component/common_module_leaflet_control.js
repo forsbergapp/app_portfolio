@@ -45,8 +45,7 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      longitude:string,
  *                      latitude:string,
  *                      map_layer:string,
- *                      map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[],
- *                      module_leaflet_container:string},
+ *                      map_layers:import('../../../common_types.js').CommonModuleLeafletMapLayer_array[]},
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
@@ -54,7 +53,8 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      map_city_empty:import('../../../common_types.js').CommonModuleCommon['map_city_empty'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
  *                      function_search_event:function,
- *                      map_setstyle:import('../../../common_types.js').CommonModuleCommon['map_setstyle']
+ *                      map_setstyle:import('../../../common_types.js').CommonModuleCommon['map_setstyle'],
+ *                      moduleLeafletContainer:function
  *                      },
  *          lifecycle:  null}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
@@ -68,7 +68,7 @@ const component = async props => {
         
 
         //mount custom code inside Leaflet container
-        props.methods.common_document.querySelectorAll(`#${props.data.common_mountdiv} #${props.data.module_leaflet_container} .leaflet-control`)[0].innerHTML += 
+        props.methods.common_document.querySelectorAll(`#${props.data.common_mountdiv} #${props.methods.moduleLeafletContainer()._container.id} .leaflet-control`)[0].innerHTML += 
             template({
                         title_search:'Search',
                         title_fullscreen:'Fullscreen',
