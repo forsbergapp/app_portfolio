@@ -2785,7 +2785,7 @@ const show_maintenance = (message, init=null) => {
             mountDiv:   'common_dialogue_maintenance',
             data:       null,
             methods:    {common_setTimeout:common_setTimeout},
-            path:       '/maintenance/component/dialogue_maintenance.js'});
+            path:       '/maintenance/component/common_dialogue_maintenance.js'});
     }
     else
         CommonAppDocument.querySelector('#common_maintenance_footer').innerHTML = message ?? '';
