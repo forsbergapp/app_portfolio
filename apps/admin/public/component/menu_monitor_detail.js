@@ -15,31 +15,31 @@
  * 
  */
 /**
- * @param {{spinner:string,
-*          system_admin:string|null,
-*          service_socket_client_ID:number,
-*          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
-*          function_getUserAgentPlatform:function,
-*          function_role_icon_class:function,
-*          function_get_order_by:function,
-*          function_roundOff:function,
-*          logs:[],
-*          monitor_log_data:{   SCOPE_REQUEST:string,
-*                               SCOPE_SERVER:string, 
-*                               SCOPE_SERVICE:string,
-*                               SCOPE_APP:string,
-*                               SCOPE_DB:string,
-*                               REQUEST_LEVEL:number,
-*                               SERVICE_LEVEL:number,
-*                               DB_LEVEL:number,
-*                               LEVEL_VERBOSE:string,
-*                               LEVEL_ERROR:string,
-*                               LEVEL_INFO:string,
-*                               FILE_INTERVAL:string}}} props
-*/
+ * @param {{
+ *          system_admin:string|null,
+ *          service_socket_client_ID:number,
+ *          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
+ *          function_getUserAgentPlatform:function,
+ *          function_role_icon_class:function,
+ *          function_get_order_by:function,
+ *          function_roundOff:function,
+ *          logs:[],
+ *          monitor_log_data:{   SCOPE_REQUEST:string,
+ *                               SCOPE_SERVER:string, 
+ *                               SCOPE_SERVICE:string,
+ *                               SCOPE_APP:string,
+ *                               SCOPE_DB:string,
+ *                               REQUEST_LEVEL:number,
+ *                               SERVICE_LEVEL:number,
+ *                               DB_LEVEL:number,
+ *                               LEVEL_VERBOSE:string,
+ *                               LEVEL_ERROR:string,
+ *                               LEVEL_INFO:string,
+ *                               FILE_INTERVAL:string}}} props
+ */
 const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 `<div id='list_connected_form'>    
-                                    <div id='list_connected' class='common_list_scrollbar ${props.spinner}'>
+                                    <div id='list_connected' class='common_list_scrollbar'>
                                         <div class='list_connected_row'>
                                             <div data-column='id' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                                 ID
@@ -146,7 +146,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                             }
                             ${props.monitor_detail=='APP_LOG'?`
                                 <div id='list_app_log_form'>
-                                    <div id='list_app_log' class='common_list_scrollbar ${props.spinner}'>
+                                    <div id='list_app_log' class='common_list_scrollbar'>
                                         <div class='list_app_log_row'>
                                             <div data-column='date_created' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('date_created')}'>
                                                 DATE
@@ -288,43 +288,40 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 ''
                             }
                             ${props.monitor_detail=='SERVER_LOG'?
-                                `<div id='list_server_log_form' class='${props.spinner}'>
-                                    ${props.spinner==''?
-                                        `<div id='select_logscope5'></div>
-                                        <div id='filesearch_menu5' class='common_dialogue_button common_icon'></div>
-                                        <div id='menu5_row_parameters'>
-                                            <div class='menu5_row_parameters_col'>
-                                                <div id='menu5_row_parameters_col1' class='common_icon'></div>
-                                                ${(props.monitor_log_data.REQUEST_LEVEL==1 ||props.monitor_log_data.REQUEST_LEVEL==2)?
-                                                    '<div id=\'menu5_row_parameters_col1_1\' class=\'common_icon\'></div>':
-                                                    '<div id=\'menu5_row_parameters_col1_0\' class=\'common_icon\'></div>'
-                                                }
-                                            </div>
-                                            <div class='menu5_row_parameters_col'>
-                                                <div id='menu5_row_parameters_col2' class='common_icon'></div>
-                                                ${(props.monitor_log_data.SERVICE_LEVEL==1 || props.monitor_log_data.SERVICE_LEVEL==2)?
-                                                    '<div id=\'menu5_row_parameters_col2_1\' class=\'common_icon\'></div>':
-                                                    '<div id=\'menu5_row_parameters_col2_0\' class=\'common_icon\'></div>'
-                                                }
-                                            </div>
-                                            <div class='menu5_row_parameters_col'>
-                                                <div id='menu5_row_parameters_col3' class='common_icon'></div>
-                                                ${(props.monitor_log_data.DB_LEVEL==1 || props.monitor_log_data.DB_LEVEL==2)?
-                                                    '<div id=\'menu5_row_parameters_col3_1\' class=\'common_icon\'></div>':
-                                                    '<div id=\'menu5_row_parameters_col3_0\' class=\'common_icon\'></div>'
-                                                }
-                                            </div>
+                                `<div id='list_server_log_form'>
+                                    <div id='select_logscope5'></div>
+                                    <div id='filesearch_menu5' class='common_dialogue_button common_icon'></div>
+                                    <div id='menu5_row_parameters'>
+                                        <div class='menu5_row_parameters_col'>
+                                            <div id='menu5_row_parameters_col1' class='common_icon'></div>
+                                            ${(props.monitor_log_data.REQUEST_LEVEL==1 ||props.monitor_log_data.REQUEST_LEVEL==2)?
+                                                '<div id=\'menu5_row_parameters_col1_1\' class=\'common_icon\'></div>':
+                                                '<div id=\'menu5_row_parameters_col1_0\' class=\'common_icon\'></div>'
+                                            }
                                         </div>
-                                        <div class='list_search'>
-                                            <div id='list_server_log_search_input' contentEditable='true' class='common_input list_search_input'/></div>
-                                            <div id='list_server_log_search_icon' class='list_search_icon common_icon'></div>
+                                        <div class='menu5_row_parameters_col'>
+                                            <div id='menu5_row_parameters_col2' class='common_icon'></div>
+                                            ${(props.monitor_log_data.SERVICE_LEVEL==1 || props.monitor_log_data.SERVICE_LEVEL==2)?
+                                                '<div id=\'menu5_row_parameters_col2_1\' class=\'common_icon\'></div>':
+                                                '<div id=\'menu5_row_parameters_col2_0\' class=\'common_icon\'></div>'
+                                            }
                                         </div>
-                                        <div id='list_server_log' class='common_list_scrollbar css_spinner'></div>`:''
-                                    }
-                                </div>
-                                `:''
+                                        <div class='menu5_row_parameters_col'>
+                                            <div id='menu5_row_parameters_col3' class='common_icon'></div>
+                                            ${(props.monitor_log_data.DB_LEVEL==1 || props.monitor_log_data.DB_LEVEL==2)?
+                                                '<div id=\'menu5_row_parameters_col3_1\' class=\'common_icon\'></div>':
+                                                '<div id=\'menu5_row_parameters_col3_0\' class=\'common_icon\'></div>'
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class='list_search'>
+                                        <div id='list_server_log_search_input' contentEditable='true' class='common_input list_search_input'/></div>
+                                        <div id='list_server_log_search_icon' class='list_search_icon common_icon'></div>
+                                    </div>
+                                    <div id='list_server_log' class='common_list_scrollbar css_spinner'></div>
+                                </div>`:
+                                ''
                             }`;
-                            
 /**
 * 
 * @param {{ data:{      common_mountdiv:string,
@@ -379,6 +376,7 @@ const component = async props => {
             break;
         }
     }
+    
     /**
      * @param {string} system_admin
      * @param {number|null} app_role_id
@@ -538,44 +536,33 @@ const component = async props => {
                                 FFB:props.methods.FFB},
                     path:'/component/menu_monitor_detail_server_log.js'});
     };
+    //fetch log parameter data if SERVER_LOG
+    const monitor_log_data = props.data.monitor_detail=='SERVER_LOG'?
+                                await props.methods.get_log_parameters():{ parameters:{SCOPE_REQUEST:'',
+                                                                                        SCOPE_SERVER:'', 
+                                                                                        SCOPE_SERVICE:'',
+                                                                                        SCOPE_APP:'',
+                                                                                        SCOPE_DB:'',
+                                                                                        REQUEST_LEVEL:0,
+                                                                                        SERVICE_LEVEL:0,
+                                                                                        DB_LEVEL:0,
+                                                                                        LEVEL_VERBOSE:'',
+                                                                                        LEVEL_ERROR:'',
+                                                                                        LEVEL_INFO:'',
+                                                                                        FILE_INTERVAL:''},
+                                                                            logscope_level_options:
+                                []};
+    //save value for query
+    service_log_file_interval = monitor_log_data.parameters.FILE_INTERVAL ?? '';
+    //fetch logs except for SERVER_LOG
+    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.FFB(path, get_query(), 'GET', token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const limit = await props.methods.FFB(`/server-config/config-apps/${props.data.app_id}`, 'key=PARAMETERS', 'GET', props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
+                        .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS));
+    if (props.data.monitor_detail=='APP_LOG')
+        page_last = logs.length>0?(Math.floor(logs[0].total_rows/limit) * limit):0;
+
+
     const onMounted = async () =>{
-        //fetch log parameter data if SERVER_LOG
-        const monitor_log_data = props.data.monitor_detail=='SERVER_LOG'?
-                                    await props.methods.get_log_parameters():{ parameters:{SCOPE_REQUEST:'',
-                                                                                            SCOPE_SERVER:'', 
-                                                                                            SCOPE_SERVICE:'',
-                                                                                            SCOPE_APP:'',
-                                                                                            SCOPE_DB:'',
-                                                                                            REQUEST_LEVEL:0,
-                                                                                            SERVICE_LEVEL:0,
-                                                                                            DB_LEVEL:0,
-                                                                                            LEVEL_VERBOSE:'',
-                                                                                            LEVEL_ERROR:'',
-                                                                                            LEVEL_INFO:'',
-                                                                                            FILE_INTERVAL:''},
-                                                                                logscope_level_options:
-                                    []};
-        //save value for query
-        service_log_file_interval = monitor_log_data.parameters.FILE_INTERVAL ?? '';
-        //fetch logs except for SERVER_LOG
-        const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.FFB(path, get_query(), 'GET', token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        const limit = await props.methods.FFB(`/server-config/config-apps/${props.data.app_id}`, 'key=PARAMETERS', 'GET', props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
-                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS));
-        if (props.data.monitor_detail=='APP_LOG')
-            page_last = logs.length>0?(Math.floor(logs[0].total_rows/limit) * limit):0;
-
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ spinner:  '',
-                                                                                                system_admin:props.data.system_admin, 
-                                                                                                service_socket_client_ID:props.data.service_socket_client_ID,
-                                                                                                monitor_detail:props.data.monitor_detail,
-                                                                                                function_getUserAgentPlatform:props.methods.getUserAgentPlatform,
-                                                                                                function_role_icon_class:role_icon_class,
-                                                                                                function_get_order_by:get_order_by,
-                                                                                                function_roundOff: props.methods.roundOff,
-                                                                                                logs:logs,
-                                                                                                monitor_log_data:monitor_log_data.parameters});
-
-        //mount list_server_log to outerHTML removing spinner class if SERVER_LOG
         if (props.data.monitor_detail=='SERVER_LOG'){
             //convert normalized arrary to options in array format
             /**@type{{VALUE:string, TEXT:string}[]} */
@@ -607,27 +594,15 @@ const component = async props => {
                     page_navigation:page_navigation,
                     monitor_detail_server_log:monitor_detail_server_log
                     },
-        template:   template({spinner:'css_spinner', 
-                            system_admin:props.data.system_admin, 
-                            service_socket_client_ID:props.data.service_socket_client_ID,
-                            monitor_detail:props.data.monitor_detail,
-                            function_getUserAgentPlatform:props.methods.getUserAgentPlatform,
-                            function_role_icon_class:role_icon_class,
-                            function_get_order_by:get_order_by,
-                            function_roundOff:props.methods.roundOff,
-                            logs:[],
-                            monitor_log_data:{  SCOPE_REQUEST:'',
-                                                SCOPE_SERVER:'', 
-                                                SCOPE_SERVICE:'',
-                                                SCOPE_APP:'',
-                                                SCOPE_DB:'',
-                                                REQUEST_LEVEL:0,
-                                                SERVICE_LEVEL:0,
-                                                DB_LEVEL:0,
-                                                LEVEL_VERBOSE:'',
-                                                LEVEL_ERROR:'',
-                                                LEVEL_INFO:'',
-                                                FILE_INTERVAL:''}})
+        template:   template({  system_admin:props.data.system_admin, 
+                                service_socket_client_ID:props.data.service_socket_client_ID,
+                                monitor_detail:props.data.monitor_detail,
+                                function_getUserAgentPlatform:props.methods.getUserAgentPlatform,
+                                function_role_icon_class:role_icon_class,
+                                function_get_order_by:get_order_by,
+                                function_roundOff: props.methods.roundOff,
+                                logs:logs,
+                                monitor_log_data:monitor_log_data.parameters})
     };
 };
 export default component;

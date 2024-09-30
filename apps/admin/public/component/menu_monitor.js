@@ -6,8 +6,7 @@
  * 
  */
 /**
- * @param {{spinner:string,
- *          system_admin:string|null}} props
+ * @param {{system_admin:string|null}} props
  */
 const template = props => `<div id='menu_5_content_widget1' class='widget'>
                                 <div id='list_monitor_nav' class='list_nav'>
@@ -15,7 +14,7 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
                                     ${props.system_admin==null?'<div id=\'list_monitor_nav_app_log\' class=\'list_nav_list list_button common_icon\'></div>':''}
                                     ${props.system_admin!=null?'<div id=\'list_monitor_nav_server_log\' class=\'list_nav_list list_button common_icon\'></div>':''}
                                 </div>
-                                <div id='list_row_sample' class='${props.spinner}'>
+                                <div id='list_row_sample'>
                                     <div id='select_app_menu5'></div>
                                     <div id='select_year_menu5'></div>
                                     <div id='select_month_menu5'></div>
@@ -42,7 +41,6 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
  */
 const component = async props => {
     const onMounted = async () =>{
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:'', system_admin:props.data.system_admin});
         //mount select
         await props.methods.ComponentRender({mountDiv:'select_year_menu5',
             data:{
@@ -119,7 +117,7 @@ const component = async props => {
                             .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS))
                     },
         methods:    null,
-        template:   template({spinner:'css_spinner', system_admin:props.data.system_admin})
+        template:   template({system_admin:props.data.system_admin})
     };
 };
 export default component;

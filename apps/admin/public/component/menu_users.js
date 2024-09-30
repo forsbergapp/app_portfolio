@@ -32,10 +32,10 @@ const template = () => `<div id='menu_3_content_widget1' class='widget'>
 const component = async props => {
     props;
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template()
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template()
 };
 };
 export default component;

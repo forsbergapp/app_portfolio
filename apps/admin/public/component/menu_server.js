@@ -3,8 +3,7 @@
  */
 /**
  * Displays stat of users
- * @param {{spinner:string,
- *          function_seconds_to_time:function,
+ * @param {{function_seconds_to_time:function,
  *          server_info:{os:{   hostname:string,
  *                              cpus:{length:number},
  *                              arch:string,
@@ -32,7 +31,7 @@
 */
 const template = props => ` <div id='menu_10_content_widget1' class='widget'>
                                 <div id='menu_10_os_title' class='common_icon'></div>
-                                <div id='menu_10_os_info' class='${props.spinner}'>
+                                <div id='menu_10_os_info'>
                                     ${props.server_info?
                                         `<div id='menu_10_os_info_hostname_title'>HOSTNAME</div><div id='menu_10_os_info_hostname_data'>${props.server_info.os.hostname}</div>
                                         <div id='menu_10_os_info_cpus_title'>${'CPUS'}</div><div id='menu_10_os_info_cpus_data'>${props.server_info.os.cpus.length}</div>
@@ -99,23 +98,17 @@ const component = async props => {
         ut_sec = ut_sec%60;
         return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
     };
-   const onMounted = async () =>{
-       const server_info = await props.methods.FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
-                               .then((/**@type{string}*/result)=>JSON.parse(result));
-       
-       props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({  spinner:'',
-                                                                                                function_seconds_to_time:seconds_to_time,
-                                                                                                server_info:server_info,
-                                                                                            });
-   };
+    const server_info = await props.methods.FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
+                            .then((/**@type{string}*/result)=>JSON.parse(result));
+
+   
    return {
-       lifecycle:  {onMounted:onMounted},
-       data:   null,
-       methods:null,
-       template: template({ spinner:'css_spinner',
-                            function_seconds_to_time:seconds_to_time,
-                            server_info:null
-       })
+       lifecycle:   null,
+       data:        null,
+       methods:     null,
+       template:    template({  function_seconds_to_time:seconds_to_time,
+                                server_info:server_info,
+                            })
    };
 };
 export default component;
