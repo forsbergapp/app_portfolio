@@ -192,9 +192,8 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      button_print:function,
  *                      button_update:function,
  *                      button_post:function,
- *                      button_delete:function},
- *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      button_delete:function}}} props 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null,
  *                      methods:null,
  *                      template:string}>}

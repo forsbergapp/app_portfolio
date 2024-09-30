@@ -24,7 +24,7 @@ const template = () => `<div id='menu_3_content_widget1' class='widget'>
 * @param {{ data:{      common_mountdiv:string},
 *           methods:{   common_document:import('../../../common_types.js').CommonAppDocument},
 *           lifecycle:  null}} props
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null, 
 *                      methods:null,
 *                      template:string}>}

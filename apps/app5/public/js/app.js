@@ -73,7 +73,6 @@ const app_event_click = event => {
                                             button_post:null,
                                             button_delete:null
                                             },
-                                lifecycle:null,
                                 path:'/common/component/common_app_data_display.js'});
                             break;
                         }
@@ -110,7 +109,6 @@ const app_event_click = event => {
                                             button_post:null,
                                             button_delete:null
                                             },
-                                lifecycle:  null,
                                 path:       '/common/component/common_app_data_display.js'});
                             break;
                         }
@@ -147,7 +145,6 @@ const app_event_click = event => {
                                             button_post:null,
                                             button_delete:null
                                             },
-                                lifecycle:  null,
                                 path:       '/common/component/common_app_data_display.js'});
                             break;
                         }
@@ -206,7 +203,6 @@ const app_event_click = event => {
                                     user_session_countdown:common.user_session_countdown,
                                     show_message:common.show_message
                                     },
-                        lifecycle:  null,
                         path:       '/common/component/common_dialogue_user_menu.js'})
                     .then(()=>
                         common.ComponentRender({
@@ -217,7 +213,6 @@ const app_event_click = event => {
                                         app_theme_update:common.common_preferences_post_mount
                                         },
                             methods:null,
-                            lifecycle:null,
                             path:'/common/component/common_dialogue_user_menu_app_theme.js'}));
                     break;
                 }
@@ -307,7 +302,6 @@ const user_logout_app = () =>{
             mountDiv:   'app_main_page', 
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/component/page_start.js'}));
 };
 /**
@@ -414,7 +408,6 @@ const show_payment_request = async message =>{
                             button_post:payment_request_accept,
                             button_delete:payment_request_cancel
                             },
-                lifecycle:  null,
                 path:       '/common/component/common_app_data_display.js'})
             .then(()=>{
                 CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
@@ -444,7 +437,6 @@ const init_secure = () => {
                     button_post:customer_create,
                     ComponentRender:common.ComponentRender,
                     FFB:common.FFB},
-        lifecycle:  null,
         path:       '/component/page_secure.js'});
 };
 /**
@@ -457,21 +449,18 @@ const init_app = async () => {
         mountDiv:   common.COMMON_GLOBAL.app_div, 
         data:       null,
         methods:    null,
-        lifecycle:  null,
         path:       '/component/app.js'})
     .then(()=> 
         common.ComponentRender({
             mountDiv:   'app_top_usermenu', 
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/common/component/common_user_account.js'}))
     .then(()=> 
         common.ComponentRender({
             mountDiv:   'app_main_page', 
             data:       null,
             methods:    null,
-            lifecycle:  null,
             path:       '/component/page_start.js'}));
    framework_set();
 };

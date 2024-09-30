@@ -38,9 +38,8 @@ const template = props =>`  <div id='common_module_leaflet_search_list' class='$
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      click_function:function,
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
- *                      },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

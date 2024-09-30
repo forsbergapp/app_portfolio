@@ -49,8 +49,7 @@ const template = props => ` ${props.spinner==''?
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
- *          lifecycle:  null}} props
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props
  * @returns {Promise.<{ lifecycle:{onMounted:onMounted}, 
  *                      data:       null,
  *                      methods:    {
@@ -134,7 +133,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {FFB:props.methods.FFB},
-            lifecycle:  null,
             path:       '/common/component/common_select.js'});
         
         const profile_select_user_settings = props.methods.common_document.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');

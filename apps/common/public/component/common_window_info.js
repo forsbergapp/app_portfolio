@@ -34,9 +34,8 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      common_setTimeout:import('../../../common_types.js').CommonModuleCommon['common_setTimeout']
- *                      },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}

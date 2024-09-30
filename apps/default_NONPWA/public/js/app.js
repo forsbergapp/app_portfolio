@@ -68,14 +68,12 @@ const app_event_click = event => {
  */
 const init_app = async () => {
     await common.ComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
-        props:null,
+        data:null,
         methods:null,
-        lifecycle:null,
         path:'/component/app.js'})
     .then(()=>common.ComponentRender({  mountDiv:'app_construction',
-                                        props:null,
+                                        data:null,
                                         methods:null,
-                                        lifecycle:null,
                                         path:'/common/component/common_construction.js'}));
    framework_set();
 };

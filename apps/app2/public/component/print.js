@@ -24,11 +24,10 @@ const template = props =>`  <!DOCTYPE html>
  *                      common_mountdiv:string,
  *                      html:string
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument},
- *          lifecycle:  null}} props
+ *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
  *          html:string}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

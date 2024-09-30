@@ -40,9 +40,8 @@ const template = props => ` <div id='app_page_secure'>
  *                      button_post:function,
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
- *                      },
- *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      }}} props 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -88,7 +87,6 @@ const component = async props => {
                             button_update:null,
                             button_post:props.methods.button_post,
                             button_delete:null},
-                lifecycle:  null,
                 path:       '/common/component/common_app_data_display.js'});
         }
     };

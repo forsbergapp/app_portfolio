@@ -34,9 +34,8 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
  *          methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
  *                      map_mount:import('../js/secure.js')['map_mount'],
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
- *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:{limit:number},
  *                      methods:null,
  *                      template:string}>}
@@ -63,7 +62,6 @@ const component = async props => {
                 column_text:'TEXT'
               },
             methods:{FFB:props.methods.FFB},
-            lifecycle:null,
             path:'/common/component/common_select.js'});
         await props.methods.ComponentRender({mountDiv:'select_month_menu5',
                 data:{
@@ -78,7 +76,6 @@ const component = async props => {
                     column_text:'TEXT'
                 },
                 methods:{FFB:props.methods.FFB},
-                lifecycle:null,
                 path:'/common/component/common_select.js'});
 
         await props.methods.ComponentRender({mountDiv:'select_day_menu5',
@@ -94,7 +91,6 @@ const component = async props => {
                     column_text:'TEXT'
                 },
                 methods:{FFB:props.methods.FFB},
-                lifecycle:null,
                 path:'/common/component/common_select.js'});
 
         await props.methods.ComponentRender({mountDiv:'select_app_menu5',
@@ -109,7 +105,6 @@ const component = async props => {
                     column_text:'NAME'
                   },
                 methods:{FFB:props.methods.FFB},
-                lifecycle:null,
                 path:'/common/component/common_select.js'});
 
         //mount the map

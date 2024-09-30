@@ -75,7 +75,6 @@ const app_event_click = event =>{
                                     user_session_countdown:common.user_session_countdown,
                                     show_message:common.show_message
                                     },
-                        lifecycle:  null,
                         path:       '/common/component/common_dialogue_user_menu.js'})
                     .then(()=>
                         common.ComponentRender({
@@ -86,7 +85,6 @@ const app_event_click = event =>{
                                         ComponentRender:common.ComponentRender, 
                                         app_theme_update:common.common_preferences_post_mount
                                         },
-                            lifecycle:  null,
                             path:       '/common/component/common_dialogue_user_menu_app_theme.js'}));
                     break;
                 }
@@ -164,7 +162,6 @@ const init_map = async ()=>{
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
         methods:    null,
-        lifecycle:  null,
         path:       '/component/app.js'});
     common.map_init('mapid',
                     common.COMMON_GLOBAL.client_longitude,
@@ -194,7 +191,6 @@ const init_app = async () =>{
         mountDiv:   'common_user_account',
         data:       null,
         methods:    null,
-        lifecycle:  null,
         path:       '/common/component/common_user_account.js'});
     init_map();
 };

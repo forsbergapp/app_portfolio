@@ -19,9 +19,8 @@ const template = () =>  `   <div id='common_profile_stat_row1'>
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
- *                      },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
@@ -38,7 +37,6 @@ const component = async props => {
                 methods:    {
                             FFB:props.methods.FFB
                             },
-                lifecycle:  null,
                 path:       '/common/component/common_dialogue_profile_stat_list.js'});
     };
     return {

@@ -44,9 +44,8 @@ const template = () =>` <div class='setting_horizontal_row'>
  *          methods:    {
  *                       common_document:import('../../../common_types.js').CommonAppDocument,
  *                       component_setting_update:import('../js/app.js')['component_setting_update']
- *                       },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                       }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

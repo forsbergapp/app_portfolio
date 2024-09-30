@@ -195,9 +195,8 @@ const template = () => `<div id='common_user_edit_common'>
  *                      format_json_date:import('../../../common_types.js').CommonModuleCommon['format_json_date'],
  *                      show_message:import('../../../common_types.js').CommonModuleCommon['show_message'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
- *                      },
- *          lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycleReturn, 
+ *                      }}} props
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
