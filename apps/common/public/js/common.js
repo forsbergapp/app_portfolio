@@ -3890,58 +3890,48 @@ const custom_framework = () => {
         }
     };
     /**
-     * Custom function used to replace default addEventListener function for Window
-     * to keep track of framework events so they can be removed when necessary
-     * Window events are created on CommonAppDocument
+     * Custom common event to keep track of framework events so they can be removed when necessary
      * No event is created for React
-     * Using funtion declaration here to support arguments
-     * @param  {...any} eventParameters 
+     * @param {string} scope
+     * @param {*} object
+     * @param {*[]} eventParameters
      */
-    function  customEventWindow (...eventParameters){
+    const customEventCommon = (scope, object, eventParameters) => {
         const eventmodule = module(Error().stack);
         COMMON_GLOBAL.app_eventListeners[eventmodule]
             /**@ts-ignore */
-            .push(['WINDOW', this, eventParameters[0], eventParameters[1], eventParameters[2]]);
+            .push([scope, object, eventParameters[0], eventParameters[1], eventParameters[2]]);
         if (eventmodule!='REACT')
-            COMMON_GLOBAL.app_eventListeners.original.apply(
-                CommonAppDocument, 
-                arguments);
+            COMMON_GLOBAL.app_eventListeners.original.apply(object, eventParameters);
+    };
+    /**
+     * Custom function used to replace default addEventListener function for Window
+     * Window events are created on CommonAppDocument
+     * Using funtion declaration here to support arguments
+     * @param  {...any} eventParameters 
+     */
+    function customEventWindow (...eventParameters){
+        customEventCommon('WINDOW', CommonAppDocument, eventParameters);
     }
     /**
      * Custom function used to replace default addEventListener function for Document
-     * to keep track of framework events so they can be removed when necessary
      * Document events are created on CommonAppDocument
-     * No event is created for React
      * Using funtion declaration here to support arguments
      * @param  {...any} eventParameters 
      */
     function customEventDocument (...eventParameters) {
-        const eventmodule = module(Error().stack);
-        COMMON_GLOBAL.app_eventListeners[eventmodule]
-            /**@ts-ignore */
-            .push(['DOCUMENT',this, eventParameters[0], eventParameters[1], eventParameters[2]]);
-        if (eventmodule!='REACT')
-            COMMON_GLOBAL.app_eventListeners.original.apply(
-                CommonAppDocument, 
-                arguments);
+        customEventCommon('DOCUMENT', CommonAppDocument, eventParameters);
     }
     /**
      * Custom function used to replace default addEventListener function for HTMLElement
-     * to keep track of framework events so they can be removed when necessary
-     * No event is created for React
      * Using funtion declaration here to support arguments
      * @param  {...any} eventParameters 
      */
     function customEventHTMLElement (...eventParameters) {
-        const eventmodule = module(Error().stack);
-        COMMON_GLOBAL.app_eventListeners[eventmodule]
-            /**@ts-ignore */
-            .push(['HTMLELEMENT', this, eventParameters[0], eventParameters[1], eventParameters[2]]);
-        if (eventmodule!='REACT')
-            COMMON_GLOBAL.app_eventListeners.original.apply(
-                /**@ts-ignore */
-                this, 
-                arguments);
+        customEventCommon('HTMLELEMENT', 
+                            /**@ts-ignore */
+                            this, 
+                            eventParameters);
     }
 
     //set custom functions on both window, document and HTMLElement level
