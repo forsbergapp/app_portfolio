@@ -348,7 +348,8 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                      template:string}>}
 */
 const component = async props => {
-    let token_type = '';
+    /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
+    let token_type;
     let path = '';
     let page = 0;
     let page_last= 0;
@@ -555,8 +556,8 @@ const component = async props => {
     //save value for query
     service_log_file_interval = monitor_log_data.parameters.FILE_INTERVAL ?? '';
     //fetch logs except for SERVER_LOG
-    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.FFB(path, get_query(), 'GET', token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-    const limit = await props.methods.FFB(`/server-config/config-apps/${props.data.app_id}`, 'key=PARAMETERS', 'GET', props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
+    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.FFB({path:path, query:get_query(), method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const limit = await props.methods.FFB({path:`/server-config/config-apps/${props.data.app_id}`, query:'key=PARAMETERS', method:'GET', authorization_type:props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS'})
                         .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS));
     if (props.data.monitor_detail=='APP_LOG')
         page_last = logs.length>0?(Math.floor(logs[0].total_rows/limit) * limit):0;

@@ -318,7 +318,7 @@ const template = props => ` ${  /*
 *                       system_admin:string,
 *                       path:string,
 *                       query:string,
-*                       token_type:string,
+*                       token_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
 *                       sort:string,
 *                       logs:[],
 *                       order_by:string},
@@ -332,13 +332,12 @@ const template = props => ` ${  /*
 *                      template:string}>}
 */
 const component = async props => {
-    const logs = await props.methods.FFB(props.data.path, props.data.query, 'GET', props.data.token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const logs = await props.methods.FFB({path:props.data.path, query:props.data.query, method:'GET', authorization_type:props.data.token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     /**
      * Get order by if column matches
      * @param {string} column
      */
     const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
-
 
     return {
         lifecycle:  null,

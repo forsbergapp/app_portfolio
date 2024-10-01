@@ -54,7 +54,7 @@ const component = async props => {
         path = props.data.stat_list_app_rest_url ?? '';
     }
     /**@type{import('../../../common_types.js').CommonProfileStatRecord[]} */
-    const stat_list = await props.methods.FFB(path, `statchoice=${props.data.stat_choice}`, 'GET', 'APP_DATA', null)
+    const stat_list = await props.methods.FFB({path:path, query:`statchoice=${props.data.stat_choice}`, method:'GET', authorization_type:'APP_DATA'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     return {

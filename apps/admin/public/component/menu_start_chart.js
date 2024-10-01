@@ -166,7 +166,7 @@ const component = async props => {
      *          day:number,
      *          amount:number,
      *          statValue:string}[]} */
-    const charts = await props.methods.FFB(path, query, 'GET', authorization_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const charts = await props.methods.FFB({path:path, query:query, method:'GET', authorization_type:authorization_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
       
     return {
         lifecycle:  null,

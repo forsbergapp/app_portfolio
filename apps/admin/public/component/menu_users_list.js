@@ -172,7 +172,7 @@ const component = async props => {
     //show all records if no search criteria
     if (props.methods.common_document.querySelector('#list_user_account_search_input').innerText.replaceAll('\n','')!='')
         search_user = encodeURI(props.methods.common_document.querySelector('#list_user_account_search_input').innerText.replaceAll('\n',''));
-    const users = await props.methods.FFB('/server-db_admin/user_account', `search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, 'GET', 'APP_ACCESS', null)
+    const users = await props.methods.FFB({path:'/server-db_admin/user_account', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'APP_ACCESS'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{

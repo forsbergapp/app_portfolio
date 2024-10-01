@@ -46,7 +46,7 @@ const template = props => ` <div id='app_page_secure'>
  *                      template:string}>}
  */
 const component = async props => {
-    const customer = await props.methods.FFB('/app-function/CUSTOMER_GET', null, 'POST', 'APP_ACCESS', {user_account_id:props.data.user_account_id,data_app_id:props.data.app_id})
+    const customer = await props.methods.FFB({path:'/app-function/CUSTOMER_GET', method:'POST', authorization_type:'APP_ACCESS', body:{user_account_id:props.data.user_account_id,data_app_id:props.data.app_id}})
                         .then((/**@type{string}*/result)=>JSON.parse(result));
 
     const onMounted = async () =>{

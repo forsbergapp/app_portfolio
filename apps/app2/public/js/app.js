@@ -978,7 +978,7 @@ const user_login_app = async (system_admin=false, username_verify=null, password
 
 /**
  * User function
- * @param {string} function_name 
+ * @param {'FOLLOW'|'LIKE'} function_name 
  * @returns {Promise.<void>}
  */
 const user_function_app = async (function_name) => {
@@ -1093,7 +1093,7 @@ const profile_detail_app = (detailchoice) => {
  */
 const user_settings_get = async () => {
     return new Promise(resolve=>{
-        common.FFB(`/server-db/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, null, 'GET', 'APP_DATA', null)
+        common.FFB({path:`/server-db/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, method:'GET', authorization_type:'APP_DATA'})
         .then((/**@type{string}*/result)=>{
             APP_GLOBAL.user_settings = {current_id:0,
                                         data:[]};
@@ -1193,7 +1193,7 @@ const user_setting_link = (item) => {
 };
 /**
  * User settings function
- * @param {string} function_name 
+ * @param {'ADD'|'ADD_LOGIN'|'SAVE'} function_name 
  * @param {boolean} initial_user_setting 
  * @param {boolean} add_settings
  * @returns {Promise.<void>}
@@ -1217,35 +1217,33 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                             json_data:          APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
                             user_account_id:    common.COMMON_GLOBAL.user_account_id
                         };
-        let method = '';
+        /**@type {import('../../../common_types.js').CommonRESTAPIMethod}*/
+        let method;
         let path = '';
         let query = null;
+        let spinner_id;
         switch (function_name){
             case 'ADD_LOGIN':
             case 'ADD':{
                 if (function_name=='ADD')
-                    CommonAppDocument.querySelector('#setting_btn_user_add').classList.add('css_spinner');
+                    spinner_id = 'setting_btn_user_add';
                 method = 'POST';
                 path = '/server-db/user_account_app_data_post';
                 query = `initial=${initial_user_setting==true?1:0}`;
                 break;
             }
             case 'SAVE':{
-                CommonAppDocument.querySelector('#setting_btn_user_save').classList.add('css_spinner');
+                spinner_id = 'setting_btn_user_save';
                 method = 'PUT';
                 const user_setting_id = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id;
                 path = `/server-db/user_account_app_data_post/${user_setting_id}`;
                 break;
             }
-            default:{
-                break;
-            }
         }
-        await common.FFB(path, query, method, 'APP_ACCESS', json_data)
+        await common.FFB({path:path, query:query, method:method, authorization_type:'APP_ACCESS', body:json_data, spinner_id:spinner_id?spinner_id:null})
         .then((/**@type{string}*/result)=>{
             switch (function_name){
                 case 'ADD':{
-                    CommonAppDocument.querySelector('#setting_btn_user_add').classList.remove('css_spinner');
                     if (add_settings==true){
                         //update user settings
                         /** @type{import('./types.js').APP_user_setting['data'][0]}*/
@@ -1278,21 +1276,10 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id = JSON.parse(result).id ?? JSON.parse(result).insertId;
                     break;
                 }
-                case 'SAVE':{
-                    CommonAppDocument.querySelector('#setting_btn_user_save').classList.remove('css_spinner');
-                    break;
-                }
                 default:{
                     break;
                 }
             }
-        })
-        .catch((/**@type{Error}*/err)=>{
-            if (function_name=='ADD')
-                CommonAppDocument.querySelector('#setting_btn_user_add').classList.remove('css_spinner');
-            if (function_name=='SAVE')
-                CommonAppDocument.querySelector('#setting_btn_user_save').classList.remove('css_spinner');
-            throw err;
         });
     }
 };
@@ -1311,15 +1298,12 @@ const user_settings_delete = (choice=null) => {
             break;
         }
         case 1:{
-            CommonAppDocument.querySelector('#setting_btn_user_delete').classList.add('css_spinner');
-            common.FFB(`/server-db/user_account_app_data_post/${user_setting_id}`, null, 'DELETE', 'APP_ACCESS', {user_account_id:common.COMMON_GLOBAL.user_account_id})
+            common.FFB({path:`/server-db/user_account_app_data_post/${user_setting_id}`, method:'DELETE', authorization_type:'APP_ACCESS', body:{user_account_id:common.COMMON_GLOBAL.user_account_id}, spinner_id:'setting_btn_user_delete'})
             .then(()=>{
                 common.ComponentRemove('common_dialogue_message', true);
                 //check if last setting
-                if (APP_GLOBAL.user_settings.data.length == 1) {
-                    user_settings_function('ADD', false, false)
-                    .then(()=>CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
-                }
+                if (APP_GLOBAL.user_settings.data.length == 1)
+                    user_settings_function('ADD', false, false);
                 else{
                     //remove current element from array
                     APP_GLOBAL.user_settings.data.splice(CommonAppDocument.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value'),1);
@@ -1344,12 +1328,10 @@ const user_settings_delete = (choice=null) => {
                                     },
                         methods:    {FFB:null},
                         path:       '/common/component/common_select.js'});
-                    CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner');
                 }
                 
             })
-            .catch(()=>{common.ComponentRemove('common_dialogue_message', true);
-                        CommonAppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner');});
+            .catch(()=>common.ComponentRemove('common_dialogue_message', true));
         }
     }
 };
@@ -1575,6 +1557,7 @@ const profile_user_setting_link = item => {
  * @returns {void}
  */
 const user_settings_like = user_account_app_data_post_id => {
+    /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
     let method;
     const json_data = {user_account_app_data_post_id: user_account_app_data_post_id};
     if (common.COMMON_GLOBAL.user_account_id == null)
@@ -1584,9 +1567,7 @@ const user_settings_like = user_account_app_data_post_id => {
             method = 'POST';
         else
             method = 'DELETE';
-        common.FFB( `/server-db/user_account_app_data_post_like/${common.COMMON_GLOBAL.user_account_id??''}`,
-                    null, 
-                    method, 'APP_ACCESS', json_data)
+        common.FFB({path:`/server-db/user_account_app_data_post_like/${common.COMMON_GLOBAL.user_account_id??''}`, method:method, authorization_type:'APP_ACCESS', body:json_data})
         .then(()=>APP_GLOBAL.function_profile_user_setting_update(  CommonAppDocument.querySelector('#common_profile_id').innerHTML,
                                                                     JSON.parse(CommonAppDocument.querySelector('#profile_select_user_settings .common_select_dropdown_value')
                                                                                 .getAttribute('data-value')).sid))
@@ -2310,11 +2291,9 @@ const framework_set = async (framework=null) => {
  * @returns {Promise.<void>}
  */
  const settings_method = async () => {
-    return await common.FFB('/server-db/app_settings_display', 
-                            `data_app_id=${common.COMMON_GLOBAL.app_id}&setting_type=METHOD`, 
-                            'GET', 'APP_DATA')
-                            .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                            .catch((/**@type{Error}*/error)=>error);
+    return await common.FFB({path:'/server-db/app_settings_display', query:`data_app_id=${common.COMMON_GLOBAL.app_id}&setting_type=METHOD`, method:'GET', authorization_type:'APP_DATA'})
+                        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
+                        .catch((/**@type{Error}*/error)=>error);
  }; 
 
 /**

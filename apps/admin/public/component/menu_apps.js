@@ -75,7 +75,7 @@ const template = props => ` <div id='menu_4_content_widget1' class='widget'>
 *                      template:string}>}
 */
 const component = async props => {
-    const apps = await props.methods.FFB('/app_admin/apps', null, 'GET', 'APP_ACCESS', null)
+    const apps = await props.methods.FFB({path:'/app_admin/apps', method:'GET', authorization_type:'APP_ACCESS'})
                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{

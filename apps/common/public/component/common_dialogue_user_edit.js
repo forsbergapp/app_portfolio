@@ -205,7 +205,7 @@ const component = async props => {
     props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show1');
     props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
-    const user = await props.methods.FFB(`/server-db/user_account/${props.data.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
+    const user = await props.methods.FFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
                     .then((/**@type{string}*/result)=>JSON.parse(result));
     /**
      * User get
