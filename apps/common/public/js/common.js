@@ -603,7 +603,7 @@ const set_current_value= (div, value, json_key=null, json_value=null) =>{
                                                                                                                 option.getAttribute('data-value'))==(json_value ?? value))[0].innerText;
     if (json_key)
         Array.from(CommonAppDocument.querySelectorAll(`#${div} .common_select_option`))
-            .filter(option=>json_key?JSON.parse(option.getAttribute('data-value'))[json_key]:''==json_value)[0].getAttribute('data-value');
+            .filter(option=>JSON.parse(option.getAttribute('data-value'))[json_key])[0].getAttribute('data-value');
     else
         CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).setAttribute('data-value', value);
       
@@ -730,15 +730,20 @@ const common_wait = async milliseconds => new Promise ((resolve)=>{common_setTim
 const NavigatorLocale = () => CommonAppWindow.navigator.language.toLowerCase();
 
 /**
- * Returns info about location pathname for given argument number
- * @param {number} argumentNumber
- */
-const LocationPathname = argumentNumber => CommonAppWindow.location.pathname.substring(argumentNumber);
-
-/**
  * Returns frames document element
  */
 const DocumentFrame = () => CommonAppWindow.frames.document;
+
+/**
+ * Returns info about location pathname for given argument number
+ * @param {number} argumentNumber
+ */
+const WindowLocationPathname = argumentNumber => CommonAppWindow.location.pathname.substring(argumentNumber);
+
+/**
+ * Reloads window
+ */
+const WindowLocationReload = () => CommonAppWindow.location.reload();
 
 /**
  * Opens an url in a new window
@@ -1469,8 +1474,10 @@ const list_key_event = (event, module, event_function=null) => {
                     if (rows[i].classList.contains('common_list_row_selected')){
                         /*Show profile and leave searchresult so user can go back to searchresult again*/
                         if (event_function ==null){
-                            if (module=='profile')
-                                profile_show(rows[i].children[0].children[0].innerHTML,null);
+                            if (module=='profile'){
+                                //dispatch same event as clicked
+                                rows[i].querySelectorAll('.common_profile_search_list_username')[0].click();
+                            }
                             else{
                                 map_show_search_on_map({city:rows[i].getAttribute('data-city'),
                                                         country:rows[i].getAttribute('data-country'),
@@ -1480,8 +1487,10 @@ const list_key_event = (event, module, event_function=null) => {
                             }
                         }
                         else{
-                            if (module=='profile')
-                                event_function(rows[i].children[0].children[0].innerHTML);
+                            if (module=='profile'){
+                                //dispatch same event as clicked
+                                rows[i].querySelectorAll('.common_profile_search_list_username')[0].click(); 
+                            }
                             else
                                 event_function({city:rows[i].getAttribute('data-city'),
                                                 country:rows[i].getAttribute('data-country'),
@@ -2784,7 +2793,7 @@ const show_maintenance = (message, init=null) => {
         ComponentRender({
             mountDiv:   'common_dialogue_maintenance',
             data:       null,
-            methods:    {common_setTimeout:common_setTimeout},
+            methods:    {common_setTimeout:common_setTimeout, WindowLocationReload:WindowLocationReload},
             path:       '/maintenance/component/common_dialogue_maintenance.js'});
     }
     else
@@ -3269,7 +3278,7 @@ const common_event = async (event_type,event=null) =>{
                         case 'common_profile_search_list':{
                             if (event.target.classList.contains('common_profile_search_list_username')){
                                 if (CommonAppDocument.querySelector('#common_profile_search_list')['data-function']){
-                                    CommonAppDocument.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                                    await CommonAppDocument.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                                 }
                                 else
                                     await profile_show(Number(element_row(event.target).getAttribute('data-user_account_id')),null);
@@ -4021,8 +4030,9 @@ export{/* GLOBALS*/
        common_setTimeout,
        common_wait,
        NavigatorLocale,
-       LocationPathname,
        DocumentFrame,
+       WindowLocationPathname,
+       WindowLocationReload,
        WindowOpen,
        WindowPrompt,
        /* COMPONENTS */

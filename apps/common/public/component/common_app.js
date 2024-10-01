@@ -246,10 +246,10 @@ const template = props =>`  <div id='common_toolbar_framework'>
 const component = async props => {
     
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template({
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({
                         font_default:   props.data.font_default,
                         font_arabic:    props.data.font_arabic,
                         font_asian:     props.data.font_asian,

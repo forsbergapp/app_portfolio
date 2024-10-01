@@ -222,7 +222,7 @@ const component = async props => {
         }
     };
    return {
-        lifecycle:  {onMounted:null},
+        lifecycle:  null,
         data:       null,
         methods:    {
                     cube_init:                  cube_init, 
@@ -233,7 +233,7 @@ const component = async props => {
                     cube_makeRotateAffineX:     cube_lib.makeRotateAffineX,
                     cube_makeRotateAffineY:     cube_lib.makeRotateAffineY
                     },
-        template: template({ icon_robot:ICONS.robot,
+        template: template({icon_robot:ICONS.robot,
                             icon_human:ICONS.human, 
                             icon_solution:ICONS.solution,
                             icon_solution_list:ICONS.solution_list})

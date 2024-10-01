@@ -353,7 +353,7 @@ const init_app = async (parameters) => {
     }
     get_apps();
     
-    const user = common.LocationPathname(1);
+    const user = common.WindowLocationPathname(1);
     if (user !='') {
         //show profile for user entered in url
         common.profile_show(null, user);

@@ -40,7 +40,7 @@ body {
 	height: 60%;
 	width: 50%;
     margin: auto;
-	display: grid;
+	display: block;
 	align-content: space-around;
 }
 #app_top_end{
@@ -51,7 +51,9 @@ body {
 }
 #app_main_page{
 	height: 100%;
-	display: grid;
+	display: block;
+	text-align: center;
+	align-content: center;
 }
 .dialogue{
 	width: 100%;
@@ -92,7 +94,6 @@ body {
     width: 1em !important;
 	rotate:45deg;
     display: inline-block;
-	position:absolute;
 }
 @keyframes glowing {
 	0% {background-position: 0 0;}
@@ -147,6 +148,8 @@ body {
 }
 .common_app_data_display_master_row{
 	margin-bottom:unset !important;
+	display: block;
+  	text-align: center;
 }
 .common_app_data_display_master_row .common_select_options{
 	margin-inline-start: 80px;
@@ -206,8 +209,6 @@ body {
 
 /*APP THEME*/
 body {
-	--common_app_color_spinner:var(--common_app_color_black);
-	--common_app_color_background_spinner:var(--common_app_color_blue1);
 	color: var(--common_app_color_blue1);
 	background: var(--common_app_color_white);
 	caret-color: var(--common_app_color_blue1);

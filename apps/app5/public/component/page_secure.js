@@ -4,8 +4,7 @@
 
 /**
  *  
- * @param {{spinner:string,
- *          customer:[]}} props 
+ * @param {{customer:[]}} props 
  * @returns 
  */
 const template = props => ` <div id='app_page_secure'>
@@ -16,14 +15,14 @@ const template = props => ` <div id='app_page_secure'>
                                         <div id='tab2' class='app_page_secure_tab common_link common_icon'></div>
                                         <div id='tab3' class='app_page_secure_tab common_link common_icon'></div>
                                     </div>
-                                    <div id='app_page_secure_tab_content' class='app_bank_div ${props.spinner}' >
+                                    <div id='app_page_secure_tab_content' class='app_bank_div' >
                                     </div>
                                     `:
                                     `
                                     <div id='app_page_secure_nav'>
                                         <div id='tab0' class='app_page_secure_tab common_link common_icon'></div>
                                     </div>
-                                    <div id='app_page_secure_tab_content' class='app_bank_div ${props.spinner}' >
+                                    <div id='app_page_secure_tab_content' class='app_bank_div' >
                                     </div>
                                     `
                                 }
@@ -47,12 +46,11 @@ const template = props => ` <div id='app_page_secure'>
  *                      template:string}>}
  */
 const component = async props => {
+    const customer = await props.methods.FFB('/app-function/CUSTOMER_GET', null, 'POST', 'APP_ACCESS', {user_account_id:props.data.user_account_id,data_app_id:props.data.app_id})
+                        .then((/**@type{string}*/result)=>JSON.parse(result));
+
     const onMounted = async () =>{
-        const customer = await props.methods.FFB('/app-function/CUSTOMER_GET', null, 'POST', 'APP_ACCESS', {user_account_id:props.data.user_account_id,data_app_id:props.data.app_id})
-                                            .then((/**@type{string}*/result)=>JSON.parse(result))
-                                            .catch((/**@type{Error}*/error)=>{throw error;});
         
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({  spinner:'', customer:customer.rows});
         if (customer.rows.length>0)
             props.methods.common_document.querySelector('#tab1').click();
         else{
@@ -92,9 +90,9 @@ const component = async props => {
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template({spinner:'css_spinner', customer:[]})
+        data:       null,
+        methods:    null,
+        template:   template({customer:customer.rows})
     };
 };
 export default component;

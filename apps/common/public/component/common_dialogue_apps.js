@@ -3,8 +3,7 @@
  */
 
 /**
- * @param {{spinner:String,
- *          apps:import('../../../common_types.js').CommonAppRecord[],
+ * @param {{apps:import('../../../common_types.js').CommonAppRecord[],
  *          app_copyright:string,
  *          app_email:string,
  *          app_link_url:string,
@@ -15,7 +14,7 @@
  * @returns {string}
  */
 const template = props => ` 
-                            <div id='common_dialogue_apps_list' class='${props.spinner}'>
+                            <div id='common_dialogue_apps_list'>
                                 ${props.apps.map(row=>
                                     `<div class='common_dialogue_apps_app_link_row common_row'>
                                         <div class='common_dialogue_apps_app_link_col'>
@@ -77,38 +76,24 @@ const template = props => `
  */
 const component = async props => {
     props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
-    /**
-     * @returns {Promise<void>}
-     */
-    const onMounted = async () =>{
-        const apps = await props.methods.FFB('/app/apps/', null, 'GET', 'APP_DATA', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.APP_ID != props.data.app_id))
-                            .catch((/**@type{Error}*/error)=>{throw error;});
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({
-            spinner:'',
-            apps:apps,
-            app_copyright:props.data.app_copyright,
-            app_email:props.data.app_email,
-            app_link_url:props.data.app_link_url,
-            app_link_title:props.data.app_link_title,
-            info_link_policy_name:props.data.info_link_policy_name,
-            info_link_disclaimer_name:props.data.info_link_disclaimer_name,
-            info_link_terms_name:props.data.info_link_terms_name
-        });
-    };
+
+    const apps = await props.methods.FFB('/app/apps/', null, 'GET', 'APP_DATA', null)
+                        .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.APP_ID != props.data.app_id));
+
+
     return {
-        lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template({    spinner:'css_spinner',
-                                apps:[],
-                                app_copyright:'',
-                                app_email:'',
-                                app_link_url:'',
-                                app_link_title:'',
-                                info_link_policy_name:'',
-                                info_link_disclaimer_name:'',
-                                info_link_terms_name:''
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({    
+                            apps:apps,
+                            app_copyright:props.data.app_copyright,
+                            app_email:props.data.app_email,
+                            app_link_url:props.data.app_link_url,
+                            app_link_title:props.data.app_link_title,
+                            info_link_policy_name:props.data.info_link_policy_name,
+                            info_link_disclaimer_name:props.data.info_link_disclaimer_name,
+                            info_link_terms_name:props.data.info_link_terms_name
                             })
     };
 };

@@ -114,18 +114,7 @@ const component = async props => {
                     };
         }
     };
-    const render_template = () =>{
-        if (props.data.info==3)
-            return template({   info:'', 
-                                iframe_class:props.methods.common_document.querySelector('#paper').className, 
-                                content:''});
-        else{
-            props.methods.common_document.querySelector('#common_window_info').style.visibility='visible';
-            return template({   info:variables.INFO, 
-                                iframe_class:variables.IFRAME_CLASS, 
-                                content:variables.CONTENT});
-        }
-    };
+    const variables = get_variables(props.data.info);
     const onMounted = async () =>{
         if (props.data.info==3){
             //print content only
@@ -138,18 +127,22 @@ const component = async props => {
             .then(()=>props.methods.common_document.querySelector('#common_window_info').innerHTML='');
         }
         else{
+            props.methods.common_document.querySelector('#common_window_info').style.visibility='visible';
             props.methods.common_document.querySelector('#common_window_info_toolbar').style.display= variables.STYLE_TOOLBAR_DISPLAY;
             props.methods.common_document.querySelector('#common_window_info_content').style.display= variables.STYLE_CONTENT_DISPLAY;
             props.methods.common_document.querySelector('#common_window_info').style.overflowY= variables.STYLE_INFO_OVERFLOWY;
             props.methods.common_document.querySelector('#common_window_info_info').style.display= variables.STYLE_INFO_INFO_DISPLAY;
         }
     };
-    const variables = get_variables(props.data.info);
+    
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: render_template()
+        data:       null,
+        methods:    null,
+        template:   template({  info:           props.data.info==3?'':variables.INFO,
+                                iframe_class:   props.data.info==3?props.methods.common_document.querySelector('#paper').className:variables.IFRAME_CLASS,
+                                content:        props.data.info==3?'':variables.CONTENT
+        })
     };
 };
 export default component;

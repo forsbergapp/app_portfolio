@@ -41,37 +41,36 @@ const template = () => `<div class='setting_horizontal_row'>
 const method = async props => {
     const onMounted = async () =>{
         //Image
-            //dont set null value, it will corrupt IMG tag
-            props.methods.common_document.querySelector('#setting_input_reportheader_img').value = '';
-            if (props.data.user_settings.image_header_image_img == null ||
-                props.data.user_settings.image_header_image_img == '') {
-                props.methods.common_document.querySelector('#setting_reportheader_img').style.backgroundImage= 'url()';
-                props.methods.common_document.querySelector('#setting_reportheader_img').setAttribute('data-image','');
-            } else{
-                props.methods.common_document.querySelector('#setting_reportheader_img').style.backgroundImage= props.data.user_settings.image_header_image_img?
-                                                                                                        `url('${props.data.user_settings.image_header_image_img}')`:
-                                                                                                        'url()';
-                props.methods.common_document.querySelector('#setting_reportheader_img').setAttribute('data-image',props.data.user_settings.image_header_image_img);
-            }
-                
+        props.methods.common_document.querySelector('#setting_input_reportheader_img').value = '';
+        if (props.data.user_settings.image_header_image_img == null ||
+            props.data.user_settings.image_header_image_img == '') {
+            props.methods.common_document.querySelector('#setting_reportheader_img').style.backgroundImage= 'url()';
+            props.methods.common_document.querySelector('#setting_reportheader_img').setAttribute('data-image','');
+        } else{
+            props.methods.common_document.querySelector('#setting_reportheader_img').style.backgroundImage= props.data.user_settings.image_header_image_img?
+                                                                                                    `url('${props.data.user_settings.image_header_image_img}')`:
+                                                                                                    'url()';
+            props.methods.common_document.querySelector('#setting_reportheader_img').setAttribute('data-image',props.data.user_settings.image_header_image_img);
+        }
+            
 
-            props.methods.common_document.querySelector('#setting_input_reportfooter_img').value = '';
-            if (props.data.user_settings.image_footer_image_img == null ||
-                props.data.user_settings.image_footer_image_img == '') {
-                    props.methods.common_document.querySelector('#setting_reportfooter_img').style.backgroundImage= 'url()';
-                    props.methods.common_document.querySelector('#setting_reportfooter_img').setAttribute('data-image','');
-            } else{
-                props.methods.common_document.querySelector('#setting_reportfooter_img').style.backgroundImage= props.data.user_settings.image_footer_image_img?
-                                                                                                        `url('${props.data.user_settings.image_footer_image_img}')`:
-                                                                                                        'url()';
-                props.methods.common_document.querySelector('#setting_reportfooter_img').setAttribute('data-image',props.data.user_settings.image_footer_image_img);
-            }
+        props.methods.common_document.querySelector('#setting_input_reportfooter_img').value = '';
+        if (props.data.user_settings.image_footer_image_img == null ||
+            props.data.user_settings.image_footer_image_img == '') {
+                props.methods.common_document.querySelector('#setting_reportfooter_img').style.backgroundImage= 'url()';
+                props.methods.common_document.querySelector('#setting_reportfooter_img').setAttribute('data-image','');
+        } else{
+            props.methods.common_document.querySelector('#setting_reportfooter_img').style.backgroundImage= props.data.user_settings.image_footer_image_img?
+                                                                                                    `url('${props.data.user_settings.image_footer_image_img}')`:
+                                                                                                    'url()';
+            props.methods.common_document.querySelector('#setting_reportfooter_img').setAttribute('data-image',props.data.user_settings.image_footer_image_img);
+        }
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template()
+        data:       null,
+        methods:    null,
+        template:   template()
     };
 };
 export default method;

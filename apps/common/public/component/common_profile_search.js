@@ -19,10 +19,10 @@ const template = () =>` <div id='common_profile_input_row'>
 const component = async props => {
     props;
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template()
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template()
     };
 };
 export default component;

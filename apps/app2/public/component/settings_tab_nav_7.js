@@ -21,10 +21,10 @@ const template = props => `<div id='user_setting_avatar_img' class='common_image
  */
 const method = async props => {
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template({avatar:props.data.avatar})
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({avatar:props.data.avatar})
     };
 };
 export default method;

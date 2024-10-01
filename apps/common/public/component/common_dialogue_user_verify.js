@@ -74,9 +74,10 @@ const component = async props => {
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template({title: props.data.title,
+        data:       null,
+        methods:    null,
+        template:   template({
+                            title: props.data.title,
                             verification_type:verification_type,
                             username:username,
                             password:password})

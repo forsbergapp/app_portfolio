@@ -500,21 +500,19 @@ body.rtl{
     grid-template-columns: 50% 50%;
 	font-size: 0.7em;
 	justify-items: start;
-	margin-inline-start: 33%;
+	margin-inline-start: 25%;
 }
 
 .common_app_data_display_master_col1,
 .common_app_data_display_master_col2{
 	display: inline-block;
 	text-align: start;
-    width: calc(50% - 1em);
 	word-wrap: break-word;
 	vertical-align: middle;
 }
 .common_app_data_display_type_image{
 	width: 8em;
 	height: 8em;
-	margin-inline-start: -2em;
 }
 .common_app_data_display_master_col2[contentEditable=true]{
 	border:1px solid;
@@ -1010,6 +1008,9 @@ body.rtl{
 #common_profile_search{
 	z-index: 1;
     position: absolute;
+	display: block;
+  	width: 100%;
+  	text-align: center;
 }
 #common_profile_input_row{
 	position: fixed;
@@ -1298,12 +1299,11 @@ body.rtl{
 /* profile button top*/
 #common_profile_btn_top{
 	font-size: 48px;
-	text-align: center;
 	cursor:pointer;
 	position:fixed;
 	bottom:60px;
 	width:60px;
-	margin-inline-start: calc(50% - 30px) !important;
+	margin-inline-start: -30px;
 	border-radius: 4px 4px 0px 0px;
 }
 .common_profile_search_list_username,
@@ -1438,6 +1438,7 @@ body.rtl{
 	margin-left: 15px !important;
     margin-right: 15px !important;
 	margin-top: 6px;
+	display: inline-block;
 }
 .css_spinner::before{
 	content:'' !important;

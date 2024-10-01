@@ -2,27 +2,6 @@
  * @module apps/common/component/common_dialogue_profile_info
  */
 
-const profile_empty = { id:null, 
-                        bio:null, 
-                        private:null, 
-                        friends:null, 
-                        user_level:null, 
-                        date_created:null, 
-                        username:null,
-                        avatar:null,
-                        identity_provider_id:null,
-                        provider_id:null,
-                        provider_first_name:null,
-                        provider_last_name:null,
-                        provider_image:null,
-                        provider_image_url:null,
-                        count_following:null,
-                        count_followed:null,
-                        count_likes:null,
-                        count_liked:null,
-                        count_views:null,
-                        followed:null,
-                        liked:null};
 /**
  * 
  * @param {{profile:import('../../../common_types.js').CommonProfileUser,
@@ -127,31 +106,26 @@ const template = props =>`  <div id='common_profile_main'>
  *                      template:string}>}
  */
 const component = async props => {
-       
-    const onMounted = async () => {
-        const pathInfoGet =() =>{
-            if (props.data.user_account_id_other !== null)
-                return `/server-db/user_account-profile/${props.data.user_account_id_other ?? ''}`;
+    const pathInfoGet =() =>{
+        if (props.data.user_account_id_other !== null)
+            return `/server-db/user_account-profile/${props.data.user_account_id_other ?? ''}`;
+        else
+            if (props.data.username !== null)
+                return `/server-db/user_account-profile-name/${props.data.username}`;
             else
-                if (props.data.username !== null)
-                    return `/server-db/user_account-profile-name/${props.data.username}`;
-                else
-                    return `/server-db/user_account-profile/${props.data.user_account_id ?? ''}`;
-        };
-        const profile = await props.methods.FFB(
-                                pathInfoGet(), 
-                                `id=${props.data.user_account_id ?? ''}&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
-                                'GET', 'APP_DATA', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result)[0])
-                            .catch((/**@type{Error}*/error)=>{throw error;});
-            
-
+                return `/server-db/user_account-profile/${props.data.user_account_id ?? ''}`;
+    };
+    const profile = await props.methods.FFB(
+                            pathInfoGet(), 
+                            `id=${props.data.user_account_id ?? ''}&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
+                            'GET', 'APP_DATA', null)
+                        .then((/**@type{string}*/result)=>JSON.parse(result)[0]);
+   
+    const onMounted = async () => {
+        
         if (props.data.user_account_id_other == null && props.data.user_account_id == null && props.data.username == null) {
             null;
         } else {
-            props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({profile:profile, 
-                                                                                                                function_format_json_date:props.methods.format_json_date});
-
             props.methods.common_document.querySelector('#common_profile_avatar').style.backgroundImage= (profile.avatar ?? profile.provider_image)?
                                                                                                     `url('${profile.avatar ?? profile.provider_image}')`:
                                                                                                     'url()'; 
@@ -187,7 +161,7 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({
-                            profile:profile_empty,
+                            profile:profile,
                             function_format_json_date:props.methods.format_json_date
                         })
     };

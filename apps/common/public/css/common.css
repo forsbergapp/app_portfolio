@@ -38,7 +38,7 @@
 	--common_app_color_white3: #f2f2f2;
 	--common_app_color_white4: #e2e2e2;
 	--common_app_color_white_transparent: rgb(255,255,255,0.25);
-	--common_app_color_spinner:var(--common_app_color_blue1);
+	--common_app_color_spinner:var(--common_app_color_black);
 	--common_app_color_background_spinner:var(--common_app_color_light);
 	/*report colors*/
 	--common_report_color_black: #404040;

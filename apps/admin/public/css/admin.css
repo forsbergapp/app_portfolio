@@ -265,7 +265,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 #menu_content{
 	height: 85%;
 }
-#menu_content > .css_spinner{
+#menu_content .css_spinner{
 	display: inline-block;
   	top: calc(50% - 30px);
 }
@@ -1578,15 +1578,17 @@ body{
     vertical-align: super;
 }
 #menu_content .css_spinner::before{
-	background: var(--app_theme_background_color);
+	background-color: var(--app_theme_background_color);
+}
+#menu_content .widget .css_spinner::before{
+	background-color: var(--app_theme_dialogue_background_color);
 }
 #list_user_account .css_spinner::before,
 #list_user_account_logon .css_spinner::before,
 #list_app_parameter .css_spinner::before
 {
-	background-color: var(--app_theme_list_background_color);
+	background-color: var(--app_theme_list_background_color) !important;
 }
-
 /*APP THEME COMMON*/
 .common_toolbar_selected{
 	background-color: var(--app_theme_login_nav_selected_background_color) !important;

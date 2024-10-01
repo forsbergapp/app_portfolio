@@ -697,22 +697,6 @@ const align_button_value = (report_align_where) => {
     return '';
 };
 /**
- * Dialogue loading
- * @param {number} visible 
- * @returns {void}
- */
-const dialogue_loading = (visible) => {
-    if (visible==1){
-        common.ComponentRender({  
-            mountDiv:   'dialogue_loading',
-            data:       null,
-            methods:    null,
-            path:       '/component/dialogue_loading.js'});
-    }
-    else
-        common.ComponentRemove('dialogue_loading', true);
-};
-/**
  * Zoom paper
  * @param {number|null} zoomvalue 
  * @returns {void}
@@ -1038,11 +1022,9 @@ const login_common = (avatar) => {
         common.ComponentRemove('common_dialogue_profile');
         
         CommonAppDocument.querySelector('#paper').innerHTML='';
-        dialogue_loading(1);
         user_settings_get().then(() => {
             //show default startup
             toolbar_button(APP_GLOBAL.app_default_startup_page);
-            dialogue_loading(0);
         });
     });
 };
@@ -2095,6 +2077,7 @@ const app_event_click = event => {
                     break;
                 }
                 //dialogue profile stat and info list
+                case 'common_profile_search_list':
                 case 'common_profile_detail_list':
                 case 'common_profile_stat_list':{
                     if (CommonAppDocument.querySelector('#common_profile_main_stat_row2'))
@@ -2364,7 +2347,6 @@ const init_app = async parameters => {
             data:       null,
             methods:    null,
             path:       '/common/component/common_user_account.js'}));
-    dialogue_loading(1);
     //set papersize
     zoom_paper();
     //set app and report globals
@@ -2533,14 +2515,13 @@ const init_app = async parameters => {
             const show_start = async () => {
                 //show default startup
                 await toolbar_button(APP_GLOBAL.app_default_startup_page);
-                const user = common.LocationPathname(1);
+                const user = common.WindowLocationPathname(1);
                 if (user !='') {
                     //show profile for user entered in url
                     common.profile_show(null, user);
                 }
             };
             show_start().then(() => {
-                dialogue_loading(0);
                 common.serviceworker();
                 framework_set();
             });

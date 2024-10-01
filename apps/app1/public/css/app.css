@@ -3,7 +3,14 @@
 body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	top: -5px;
 }
-
+#app > .css_spinner{
+	top: calc(50% - 30px);
+	left: calc(50% - 30px);
+	position: absolute;
+}
+#app_profile_toolbar{
+	text-align: center;
+}
 /* Background with clouds*/
 #theme_background {
     bottom: 0;
@@ -662,8 +669,6 @@ div.ray8 {
 }
 /*app colors*/
 body{
-	--common_app_color_spinner:var(--app_theme_dialogue_button_color);
-	--common_app_color_background_spinner:var(--app_theme_dialogue_background_color);
 	color: var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
 	caret-color: var(--app_theme_text_color);
@@ -708,8 +713,14 @@ border-left: 12px solid var(--app_theme_sun_color);
 .app_theme_moon .moon{
 	display:inline-block;	
 }
-
+#app_profile_toolbar >.css_spinner::before,
+#app >.css_spinner::before{
+	background-color:var(--app_theme_spinner_background_color);
+}
 /*THEME COMMON*/
+#common_profile_search >.css_spinner::before{
+	background-color:var(--app_theme_spinner_background_color);
+}
 .common_list_row_selected{
 	background-color: var(--app_theme_list_selected_background_color);
 }

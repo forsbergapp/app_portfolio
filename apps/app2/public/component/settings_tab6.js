@@ -172,9 +172,8 @@ const template = () =>`   <div class='setting_horizontal_row'>
  *                      template:string}>}
  */
 const method = async props => {
-    
+    const settings = await props.methods.app_settings_get();
     const onMounted = async () =>{
-        const settings = await props.methods.app_settings_get();
         //Method
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_method',
@@ -376,9 +375,9 @@ const method = async props => {
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template()
+        data:       null,
+        methods:    null,
+        template:   template()
     };
 };
 export default method;

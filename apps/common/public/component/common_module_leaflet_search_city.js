@@ -4,12 +4,11 @@
 
 /**
  * 
- * @param {{spinner:string,
- *          records:import('../../../common_types.js').CommonMicroserviceWorldcitiesRecordType[]}
+ * @param {{records:import('../../../common_types.js').CommonMicroserviceWorldcitiesRecordType[]}
  *          } props 
  * @returns {string}
  */
-const template = props =>`  <div id='common_module_leaflet_search_list' class='${props.spinner}'>
+const template = props =>`  <div id='common_module_leaflet_search_list'>
                                 ${props.records.map(row=>
                                     `<div data-city='${row.city}' data-country='${row.admin_name + ',' + row.country}' data-latitude='${row.lat}' data-longitude='${row.lng}' class='common_module_leaflet_search_list_row common_row' tabindex=-1>
                                         <div class='common_module_leaflet_search_list_col'>
@@ -45,12 +44,9 @@ const template = props =>`  <div id='common_module_leaflet_search_list' class='$
  *                      template:string}>}
  */
 const component = async props => {
-    
+    const records = props.data.search==''?[]:await props.methods.FFB('/worldcities/city', `search=${encodeURI(props.data.search)}`, 'GET', 'APP_DATA', null)
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const onMounted = async () =>{
-        const records = props.data.search==''?[]:await props.methods.FFB('/worldcities/city', `search=${encodeURI(props.data.search)}`, 'GET', 'APP_DATA', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                            .catch((/**@type{Error}*/error)=>{throw error;});
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({spinner:'', records:records});
         if (props.data.search.length>0)
             props.methods.common_document.querySelector('#common_module_leaflet_search_list')['data-function'] = props.methods.click_function;
     };
@@ -58,7 +54,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:   null,
         methods:null,
-        template: template({spinner:'css_spinner', records:[]})
+        template: template({records:records})
     };
 };
 export default component;

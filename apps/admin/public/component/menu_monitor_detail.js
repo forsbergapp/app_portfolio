@@ -318,7 +318,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                         <div id='list_server_log_search_input' contentEditable='true' class='common_input list_search_input'/></div>
                                         <div id='list_server_log_search_icon' class='list_search_icon common_icon'></div>
                                     </div>
-                                    <div id='list_server_log' class='common_list_scrollbar css_spinner'></div>
+                                    <div id='list_server_log' class='common_list_scrollbar'></div>
                                 </div>`:
                                 ''
                             }`;

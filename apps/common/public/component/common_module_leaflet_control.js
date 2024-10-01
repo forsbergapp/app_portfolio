@@ -64,8 +64,6 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
 const component = async props => {
     
     const onMounted = async () =>{
-        
-
         //mount custom code inside Leaflet container
         props.methods.common_document.querySelectorAll(`#${props.methods.moduleLeafletContainer()._container.id} .leaflet-control`)[0].innerHTML += 
             template({
@@ -120,9 +118,9 @@ const component = async props => {
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: null
+        data:       null,
+        methods:    null,
+        template:   null
     };
 };
 export default component;

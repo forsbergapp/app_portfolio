@@ -140,12 +140,12 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      template:string}>}
  */
 const method = async props => {
-    const onMounted = async () =>{
-        const settings = await props.methods.app_settings_get();
-        //get locales using user locale
-        /**@type{{locale:string, text:string}[]} */
-        const locales = await props.methods.FFB('/server-db/locale', `lang_code=${props.data.user_locale}`, 'GET', 'APP_DATA', null)
+    const settings = await props.methods.app_settings_get();
+    //get locales using user locale
+    /**@type{{locale:string, text:string}[]} */
+    const locales = await props.methods.FFB('/server-db/locale', `lang_code=${props.data.user_locale}`, 'GET', 'APP_DATA', null)
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const onMounted = async () =>{
         //Locale using setting locale
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_locale',
