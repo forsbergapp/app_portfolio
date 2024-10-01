@@ -60,7 +60,7 @@
  *              addEventListener:function,  //used to override default function with custom function to keep track of third party libraries
  *              EventSource:*,
  *              navigator:{language:string, userAgent:string, serviceWorker:{register:function}},
- *              location:{pathname:string},
+ *              location:{pathname:string, reload:function},
  *              Intl:{DateTimeFormat()      :{resolvedOptions(): Intl.ResolvedDateTimeFormatOptions},
  *                    NumberFormat()        :{resolvedOptions(): Intl.ResolvedNumberFormatOptions},
  *                    DateTimeFormatOptions?:Intl.DateTimeFormatOptions},

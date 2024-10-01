@@ -24,10 +24,10 @@ const template = props => ` ${props.docs.map(doc=>
  */
 const component = async props => {
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template({docs:props.data.docs})
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({docs:props.data.docs})
     };
 };
 export default component;

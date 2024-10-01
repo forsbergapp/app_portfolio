@@ -48,7 +48,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template: template()
+        template:   template()
     };
 };
 export default component;

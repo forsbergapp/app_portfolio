@@ -51,10 +51,10 @@ const template = ()=>`  <div id='toolbar_top'>
 const component = async props => {
     props;
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template()
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template()
     };
 };
 export default component;

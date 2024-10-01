@@ -15,10 +15,10 @@ const template = () => ' <div id=\'common_profile_btn_top\' class=\'common_toolb
 const component = async props => {
     props;
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template()
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template()
     };
 };
 export default component;

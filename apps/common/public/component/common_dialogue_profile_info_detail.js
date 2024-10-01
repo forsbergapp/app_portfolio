@@ -3,8 +3,7 @@
  */
 /**
  * Displays profile detail
- * @param {{spinner:string,
- *          user_account_id:number,
+ * @param {{user_account_id:number,
  *          user_account_id_profile:number,
  *          detailchoice:number,
  *          list:[{ id:number|null, 
@@ -20,8 +19,7 @@
  *                  provider_image:string,
  *                  username:string}]|[]}} props
  */
-const template = props => ` ${props.spinner==''?
-                                `${props.list.map(row=>
+const template = props => `     ${props.list.map(row=>
                                     `${props.detailchoice==5 && typeof row.id =='undefined'?
                                         `<div data-app_id='${row.APP_ID}' data-url='${row.PROTOCOL}${row.SUBDOMAIN}.${row.HOST}:${row.PORT}' class='common_profile_detail_list_row common_row'>
                                             <div class='common_profile_detail_list_col'>
@@ -60,10 +58,7 @@ const template = props => ` ${props.spinner==''?
                                         </div>`
                                     }`
                                 ).join('')
-                                }`:
-                                `<div class='${props.spinner}'></div>`
-                            }
-                            ` ;
+                                }`;
 /**
  * @param {{data:       {
  *                      common_mountdiv:string,
@@ -82,56 +77,43 @@ const template = props => ` ${props.spinner==''?
  *                      template:string}>}
  */
 const component = async props => {
-
+    let path;
+    switch (props.data.detailchoice){
+        case 1:
+        case 2:
+        case 3:
+        case 4:{
+            /*detailchoice 1,2,3, 4: user_account*/
+            path = '/server-db/user_account-profile-detail';
+            break;
+        }
+        case 5:{
+            /* detailchoice 5, apps, returns same columns*/
+            path = '/server-db/user_account_app-apps';
+            break;
+        }
+        case 6:
+        case 7:{
+            /*detailchoice 6, 7: app specific */
+            path = '/server-db/user_account_app_data_post-profile-detail';
+            break;
+        }    
+    }
     if (!props.data.user_account_id)
         props.methods.show_common_dialogue('LOGIN');
-   const onMounted = async () =>{
-        if (props.data.user_account_id){
-            let path;
-            switch (props.data.detailchoice){
-                case 1:
-                case 2:
-                case 3:
-                case 4:{
-                    /*detailchoice 1,2,3, 4: user_account*/
-                    path = '/server-db/user_account-profile-detail';
-                    break;
-                }
-                case 5:{
-                    /* detailchoice 5, apps, returns same columns*/
-                    path = '/server-db/user_account_app-apps';
-                    break;
-                }
-                case 6:
-                case 7:{
-                    /*detailchoice 6, 7: app specific */
-                    path = '/server-db/user_account_app_data_post-profile-detail';
-                    break;
-                }    
-            }
-           const list = await props.methods.FFB(`${path}/${props.data.user_account_id_profile}`, `detailchoice=${props.data.detailchoice}`, 'GET', 'APP_ACCESS', null)
-                                       .then((/**@type{string}*/result)=>JSON.parse(result));
-    
-           props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({  spinner:'',
-                                                                                                    user_account_id:props.data.user_account_id,
-                                                                                                    user_account_id_profile:props.data.user_account_id_profile,
-                                                                                                    detailchoice:props.data.detailchoice,
-                                                                                                    list:list
-                                                                                                });
-        }
-        else
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = '';
-  };
-  return {
-      lifecycle:  {onMounted:onMounted},
-      data:   null,
-      methods:null,
-      template: template({  spinner:'css_spinner',
-                            user_account_id:props.data.user_account_id,
-                            user_account_id_profile:props.data.user_account_id_profile,
-                            detailchoice:props.data.detailchoice,
-                            list:[]
-      })
-  };
+
+    return {
+      lifecycle:    null,
+      data:         null,
+      methods:      null,
+      template:     template({  user_account_id:props.data.user_account_id,
+                                user_account_id_profile:props.data.user_account_id_profile,
+                                detailchoice:props.data.detailchoice,
+                                list:props.data.user_account_id?
+                                        await props.methods.FFB(`${path}/${props.data.user_account_id_profile}`, `detailchoice=${props.data.detailchoice}`, 'GET', 'APP_ACCESS', null)
+                                                .then((/**@type{string}*/result)=>JSON.parse(result)):
+                                        []
+                            })
+    };
 };
 export default component;

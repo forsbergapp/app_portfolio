@@ -32,10 +32,10 @@ const template = props =>` <div id='common_broadcast_info'>
  */
 const component = async props => {
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template({message:props.data.message})
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({message:props.data.message})
     };
 };
 export default component;

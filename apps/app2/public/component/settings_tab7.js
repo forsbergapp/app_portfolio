@@ -95,9 +95,9 @@ const method = async props => {
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template()
+        data:       null,
+        methods:    null,
+        template:   template()
     };
 };
 export default method;

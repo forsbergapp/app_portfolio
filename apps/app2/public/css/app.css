@@ -126,7 +126,7 @@
 }
 /* TOOLBAR BOTTOM*/
 #app_profile_toolbar{
-	position: fixed;
+	text-align: center;
 }
 #toolbar_bottom {
 	width: 100%;
@@ -173,15 +173,7 @@
 	margin-right:10px;
 	display: inline-block;
 }
-/*Dialogue loading */
-#dialogue_loading.common_dialogue_show0{
-	text-align:center;
-	width: 100%;
-	background-color: inherit;
-	display: block;
-	position: absolute;
-	top: calc(50% - 100px);
-}
+
 /*Dialogue Info */
 #dialogue_info.common_dialogue_show0{
 	width: 300px;
@@ -210,12 +202,6 @@
 	font-size: 48px;
 	display: block;
 }
-#dialogue_loading_content.css_spinner{
-	display: inline-block;
-	top: 50%;
-	transform: scale(1);
-}
-
 /* SETTINGS*/
 #settings {
 	visibility: hidden;
@@ -884,9 +870,6 @@ body{
 	--common_app_color_spinner:var(--app_theme_main_color3);
 	--common_app_color_background_spinner:var(--app_theme_main_color1);
 	caret-color: var(--app_theme_main_color3);
-}
-#dialogue_loading{
-	background-color: var(--common_app_color_background_spinner);
 }
 body,
 #settings select,

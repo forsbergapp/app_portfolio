@@ -14,7 +14,8 @@ const template = () =>` <div id='common_dialogue_maintenance_content' class='com
  * @param {{data:       {common_mountdiv:string},
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      common_setTimeout:import('../../../common_types.js').CommonModuleCommon['common_setTimeout']
+ *                      common_setTimeout:import('../../../common_types.js').CommonModuleCommon['common_setTimeout'],
+ *                      WindowLocationReload:import('../../../common_types.js').CommonModuleCommon['WindowLocationReload']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
@@ -28,7 +29,7 @@ const component = async props => {
      */
     const maintenance_countdown = (remaining = null) => {
         if(remaining && remaining <= 0)
-            location.reload();
+            props.methods.WindowLocationReload();
         else{
             props.methods.common_document.querySelector('#common_maintenance_countdown').innerHTML = remaining;
             props.methods.common_setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
@@ -36,9 +37,9 @@ const component = async props => {
     };    
     return {
         lifecycle:  {onMounted:maintenance_countdown},
-        data:   null,
-        methods:null,
-        template: template()
+        data:       null,
+        methods:    null,
+        template:   template()
     };
 };
 export default component;

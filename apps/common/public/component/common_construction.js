@@ -15,10 +15,10 @@ const template = () => ' <div class=\'common_construction common_icon\'></div>';
 const component = async props => {
     props;
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template()
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template()
     };
 };
 export default component;

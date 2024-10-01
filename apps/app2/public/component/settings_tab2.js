@@ -69,13 +69,13 @@ const template = () => `<div id='mapid'></div>
  *                      template:string}>}
  */
 const method = async props => {
-    
+    const settings = (await props.methods.app_settings_get()).filter((/**@type{*}*/setting)=>
+        setting.app_id == props.data.app_id && 
+        setting.app_setting_type_name.startsWith('PLACE'));
+
+    const empty_place = {value:JSON.stringify({id:null, latitude:'0', longitude:'0', timezone:''}), text:'...'};
+
     const onMounted = async () =>{
-        const settings = (await props.methods.app_settings_get()).filter((/**@type{*}*/setting)=>
-                                                                                        setting.app_id == props.data.app_id && 
-                                                                                        setting.app_setting_type_name.startsWith('PLACE'));
-        
-        const empty_place = {value:JSON.stringify({id:null, latitude:'0', longitude:'0', timezone:''}), text:'...'};
         //places uses json in value to save multiple attributes
         await props.methods.ComponentRender({
             mountDiv:   'setting_select_popular_place',

@@ -32,13 +32,13 @@ const template = props => ` <div id='app_page_start_divs'>
 const component = async props => {
     props;
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template({text_account:'BANK ACCOUNT',
-                            text_statements:'BANK STATEMENTS',
-                            text_directpayment:'DIRECT PAYMENT',
-                            text_iso:'ISO STANDARDS'})
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({  text_account:'BANK ACCOUNT',
+                                text_statements:'BANK STATEMENTS',
+                                text_directpayment:'DIRECT PAYMENT',
+                                text_iso:'ISO STANDARDS'})
     };
 };
 export default component;
