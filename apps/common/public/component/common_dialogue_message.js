@@ -50,7 +50,7 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  * @param {{data:       {
  *                      common_mountdiv:string,
  *                      text_class:string,
- *                      message_type:string,
+ *                      message_type:'ERROR_BFF'|'ERROR'|'INFO'|'EXCEPTION'|'LOG'|'CONFIRM'|'PROGRESS',
  *                      data_app_id:number,
  *                      code:string,
  *                      message:*},
@@ -67,69 +67,62 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  */
 const component = async props => {
     props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show3');
-    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
-    /**
-     * 
-     * @param {*} display_message
-     * @param {string|null} display_message_font_class
-     * @returns{void}
-     */
-    const render_message = (display_message, display_message_font_class) =>{
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template(
-            {   message:display_message,
-                message_type:props.data.message_type,
-                message_title_font_class:display_message_font_class,
-                message_title_icon_class:props.data.text_class,
-            });
-    };
-    const onMounted = async () => {
-        const function_close = () => { props.methods.componentRemove('common_dialogue_message', true);};
-        
-        switch (props.data.message_type){
-            case 'ERROR_BFF':{
-                /**@type{import('../../../common_types.js').CommonErrorMessageISO20022} */
-                const message_iso = JSON.parse(props.data.message);
-                render_message(message_iso.error.text, 'common_font_normal');
-                props.methods.common_document.querySelector('#common_message_close')['data-function'] = function_close;
-                props.methods.common_document.querySelector('#common_message_close').focus();
-                break;
-            }
-            case 'ERROR':
-            case 'INFO':
-            case 'EXCEPTION':
-            case 'LOG':{
-                const display_message = props.data.message_type=='ERROR'?await props.methods.FFB(
-                                                    '/server-db/app_settings_display', 
-                                                    `data_app_id=${props.data.data_app_id}&setting_type=MESSAGE&value=${props.data.code}`, 
-                                                    'GET', 'APP_DATA')
-                                    .then((/**@type{string}*/result)=>JSON.parse(result)[0].display_data)
-                                    .catch((/**@type{Error}*/error)=>error):props.data.message;
-                render_message(display_message, props.data.message_type=='LOG'?'common_font_log':'common_font_normal');
-                props.methods.common_document.querySelector('#common_message_close')['data-function'] = function_close;
-                props.methods.common_document.querySelector('#common_message_close').focus();
-                break;
-            }
-            case 'CONFIRM':{
-                render_message(null, null);
-                props.methods.common_document.querySelector('#common_message_close')['data-function'] = props.methods.function_event;
-                props.methods.common_document.querySelector('#common_message_close').focus();
-                break;
-            }
-            case 'PROGRESS':{
-                render_message(props.data.message.text, 'common_font_log');
-                props.methods.common_document.querySelector('#common_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
-                break;
-            }
+    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');      
+
+    const function_close = () => { props.methods.componentRemove('common_dialogue_message', true);};
+    let display_message = null;
+    let display_message_font_class = null;
+    switch (props.data.message_type){
+        case 'ERROR_BFF':{
+            /**@type{import('../../../common_types.js').CommonErrorMessageISO20022} */
+            const message_iso = JSON.parse(props.data.message);
+            display_message = message_iso.error.text;
+            display_message_font_class = 'common_font_normal';
+            break;
         }
+        case 'ERROR':
+        case 'INFO':
+        case 'EXCEPTION':
+        case 'LOG':{
+            display_message = props.data.message_type=='ERROR'?await props.methods.FFB(
+                                                '/server-db/app_settings_display', 
+                                                `data_app_id=${props.data.data_app_id}&setting_type=MESSAGE&value=${props.data.code}`, 
+                                                'GET', 'APP_DATA')
+                                .then((/**@type{string}*/result)=>JSON.parse(result)[0].display_data)
+                                .catch((/**@type{Error}*/error)=>error):props.data.message;
+            
+            display_message_font_class = props.data.message_type=='LOG'?'common_font_log':'common_font_normal';
+            break;
+        }
+        case 'CONFIRM':{
+            display_message = null;
+            display_message_font_class = null;
+            break;
+        }
+        case 'PROGRESS':{
+            display_message = props.data.message.text;
+            display_message_font_class = 'common_font_log';
+            break;
+        }
+    }
+    const onMounted = async () =>{
+        if (props.data.message_type == 'PROGRESS')
+            props.methods.common_document.querySelector('#common_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
+        else{
+            props.methods.common_document.querySelector('#common_message_close')['data-function'] = props.data.message_type == 'CONFIRM'?props.methods.function_event:function_close;
+            props.methods.common_document.querySelector('#common_message_close').focus();
+        }
+
     };
+
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template({    message:'',
-                                message_type:'',
-                                message_title_font_class:'',
-                                message_title_icon_class:''
+        data:       null,
+        methods:    null,
+        template:   template({  message:                    display_message,
+                                message_type:               props.data.message_type,
+                                message_title_font_class:   display_message_font_class,
+                                message_title_icon_class:   props.data.text_class
                             })
     };
 };

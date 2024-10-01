@@ -16,9 +16,9 @@ const template = () => '';
  *                      template:string}>}
  */
 const component = async props => {
-    
+    const themes = props.methods.theme_default_list();
+
     const onMounted = async () =>{
-        const themes = props.methods.theme_default_list();
         await props.methods.ComponentRender({
             mountDiv:   props.data.common_mountdiv, 
             data:       {
@@ -39,9 +39,9 @@ const component = async props => {
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template()
+        data:       null,
+        methods:    null,
+        template:   template()
     };
 };
 export default component;

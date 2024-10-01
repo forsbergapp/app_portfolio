@@ -76,10 +76,17 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
 const component = async props => {
     props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show1');
     props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
-    const is_provider_user = async () =>{
-        const user = await props.methods.FFB(`/server-db/user_account/${props.data.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
-                            .then((/**@type{string}*/result)=>JSON.parse(result))
-                            .catch((/**@type{Error}*/error)=>{throw error;});
+
+    //Fetch settings with direction, timezone and arabic script
+    /**@type{{id:number, app_setting_type_name:string, value:string, display_data:string}[]} */
+    const settings = props.data.system_admin_only == 1?[]:await props.methods.FFB('/server-db/app_settings_display', `data_app_id=${props.data.data_app_id}`, 'GET', 'APP_DATA')
+                                                                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+
+    const user = (props.data.username || props.data.user_account_id!=null)?await props.methods.FFB(`/server-db/user_account/${props.data.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
+                                                                .then((/**@type{string}*/result)=>JSON.parse(result))
+                                                                .catch((/**@type{Error}*/error)=>{throw error;}):null;
+                                    
+    const is_provider_user = () =>{
         if (props.data.user_account_id == parseInt(user.id))
             return user.identity_provider_id!=null;
         else {
@@ -89,9 +96,9 @@ const component = async props => {
         }
     };
     
-    const adjust_logged_out_logged_in = async () =>{
+    const adjust_logged_out_logged_in = () =>{
         //set logged out or logged in
-        if (props.data.username || (props.data.user_account_id!=null && await is_provider_user())){
+        if (props.data.username || (props.data.user_account_id!=null && is_provider_user())){
             props.methods.common_document.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'inline-block';
             props.methods.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'none';
             //admin does not show log out icon here
@@ -110,14 +117,7 @@ const component = async props => {
             }
     };
     const onMounted = async () =>{                                                               
-        //Fetch settings with direction, timezone and arabic script
-        /**@type{{id:number, app_setting_type_name:string, value:string, display_data:string}[]} */
-        const settings = props.data.system_admin_only == 1?[]:await props.methods.FFB('/server-db/app_settings_display', `data_app_id=${props.data.data_app_id}`, 'GET', 'APP_DATA')
-                                                                .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                                                                .catch((/**@type{Error}*/error)=>{throw error;});
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({ username:props.data.username ?? props.data.system_admin ?? '',
-                                                                                                countdown:(props.data.token_exp && props.data.token_iat)?1:0
-                                                                                                });
+        
         //mount select
         if (props.data.system_admin_only!=1){
             //Locale
@@ -189,10 +189,10 @@ const component = async props => {
             //set current value on all the selects
             props.methods.set_current_value('common_dialogue_user_menu_user_locale_select', props.data.user_locale);
             props.methods.set_current_value('common_dialogue_user_menu_user_timezone_select', props.data.user_timezone);
-            props.methods.set_current_value('common_dialogue_user_menu_user_direction_select', props.data.user_direction);
-            props.methods.set_current_value('common_dialogue_user_menu_user_arabic_script_select', props.data.user_arabic_script);
+            props.methods.set_current_value('common_dialogue_user_menu_user_direction_select', props.data.user_direction ?? '');
+            props.methods.set_current_value('common_dialogue_user_menu_user_arabic_script_select', props.data.user_arabic_script ?? '');
         }
-        await adjust_logged_out_logged_in();
+        adjust_logged_out_logged_in();
         if (props.data.token_exp && props.data.token_iat){
             const element_id = 'common_dialogue_user_menu_token_countdown_time';
             props.methods.user_session_countdown(props.methods.common_document.querySelector(`#${element_id}`), props.data.token_exp);
@@ -200,9 +200,10 @@ const component = async props => {
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template({username:props.data.username ?? props.data.system_admin ?? '', countdown:0})
+        data:       null,
+        methods:    null,
+        template:   template({  username:props.data.username ?? props.data.system_admin ?? '',
+                                countdown:(props.data.token_exp && props.data.token_iat)?1:0})
     };
 };
 export default component;

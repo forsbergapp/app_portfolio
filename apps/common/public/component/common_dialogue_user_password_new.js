@@ -34,10 +34,10 @@ const component = async props => {
     props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template({auth:props.data.auth})
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({auth:props.data.auth})
     };
 };
 export default component;

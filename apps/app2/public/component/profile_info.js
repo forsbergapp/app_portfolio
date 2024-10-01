@@ -2,9 +2,9 @@
  * @module apps/app2/component/profile_info
  */
 /**
- * @param {{user_settings:{value:string, text:string}[]}} props
+ * @param {{setting:boolean}} props
  */
-const template = props => ` ${props.user_settings.length>0?
+const template = props => ` ${props.setting?
                                 `<div id='profile_info_user_settings'>
                                     <div id='profile_main_btn_user_settings' class='common_link common_icon'></div>
                                 </div>
@@ -49,7 +49,7 @@ const template = props => ` ${props.user_settings.length>0?
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props
- * @returns {Promise.<{ lifecycle:{onMounted:onMounted}, 
+ * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:       null,
  *                      methods:    {
  *                                  profile_user_setting_update:       function,
@@ -59,6 +59,34 @@ const template = props => ` ${props.user_settings.length>0?
  *                      template:string}>}
  */
 const method = async props => {
+
+    /**
+     * @param {number} profile_id
+     * @returns {Promise<{value:string, text:string}[]>}
+     */
+    const user_settings_get = async profile_id => {
+        return props.methods.FFB(  `/server-db/user_account_app_data_post-profile/${profile_id}`, 
+                                                        `id_current_user=${props.data.user_account_id??''}`, 
+                                                        'GET', 
+                                                        'APP_DATA', null)
+                                    .then((/**@type{string}*/result)=>
+                                            JSON.parse(result)
+                                            .map((/**@type{{id:number, 
+                                                            user_account_app_user_account_id:number, 
+                                                            liked:number, 
+                                                            count_likes:number, 
+                                                            count_views:number,
+                                                            design_paper_size:string, 
+                                                            description:string}}}*/setting)=>{return {  value:JSON.stringify({   
+                                                                                                                sid:setting.id, 
+                                                                                                                user_account_id:setting.user_account_app_user_account_id, 
+                                                                                                                liked:setting.liked,
+                                                                                                                count_likes:setting.count_likes,
+                                                                                                                count_views:setting.count_views,
+                                                                                                                paper_size:setting.design_paper_size,
+                                                                                                                description:setting.description}), 
+                                                                                                        text:setting.description};}));
+    }; 
     /**
      * Profile show user setting detail
      * @param {number} liked 
@@ -91,32 +119,11 @@ const method = async props => {
     /**
      * @param {number} profile_id
      * @param {number|null} sid
+     * @param {{value:string, text:string}[]|null} user_settings_mount
+     * @returns {Promise<void>}
      */
-    const profile_user_setting_update = async (profile_id, sid=null) =>{
-        /**@type{{value:string, text:string}[]}*/
-        const user_settings = await props.methods.FFB(  `/server-db/user_account_app_data_post-profile/${profile_id}`, 
-                                                        `id_current_user=${props.data.user_account_id??''}`, 
-                                                        'GET', 
-                                                        'APP_DATA', null)
-                                    .then((/**@type{string}*/result)=>
-                                            JSON.parse(result)
-                                            .map((/**@type{{id:number, 
-                                                            user_account_app_user_account_id:number, 
-                                                            liked:number, 
-                                                            count_likes:number, 
-                                                            count_views:number,
-                                                            design_paper_size:string, 
-                                                            description:string}}}*/setting)=>{return {  value:JSON.stringify({   
-                                                                                                                sid:setting.id, 
-                                                                                                                user_account_id:setting.user_account_app_user_account_id, 
-                                                                                                                liked:setting.liked,
-                                                                                                                count_likes:setting.count_likes,
-                                                                                                                count_views:setting.count_views,
-                                                                                                                paper_size:setting.design_paper_size,
-                                                                                                                description:setting.description}), 
-                                                                                                        text:setting.description};}));
-        
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({user_settings:user_settings});
+    const profile_user_setting_update = async (profile_id, sid=null, user_settings_mount = null) =>{
+        const user_settings = user_settings_mount ?? await user_settings_get(profile_id);
 
         //show setting info if user has settings
         if (user_settings.length>0){
@@ -144,11 +151,10 @@ const method = async props => {
             profile_user_setting_stat(profile_id);
         }
     };
-
+    const user_settings = await user_settings_get(props.data.profile_id);
     const onMounted = async ()=>{
-        await profile_user_setting_update(props.data.profile_id);
+        await profile_user_setting_update(props.data.profile_id, null, user_settings);
     };
-
     return {
         lifecycle:  {onMounted:onMounted},
         data:       null,
@@ -157,7 +163,7 @@ const method = async props => {
                     profile_show_user_setting_detail:profile_show_user_setting_detail,
                     profile_user_setting_stat:profile_user_setting_stat
                     },
-        template:   template({user_settings:[]})
+        template:   template({setting:user_settings.length>0})
     };
 };
 export default method;

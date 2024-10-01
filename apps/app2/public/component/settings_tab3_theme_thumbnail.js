@@ -31,10 +31,10 @@ const template = props => ` <div class='paper ${props.class}'>
 const method = async props => {
 
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template({class:props.data.class, theme_id:props.data.theme_id, type:props.data.type, html:props.data.html})
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({class:props.data.class, theme_id:props.data.theme_id, type:props.data.type, html:props.data.html})
     };
 };
 export default method;

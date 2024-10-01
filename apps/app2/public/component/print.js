@@ -35,12 +35,12 @@ const template = props =>`  <!DOCTYPE html>
 const method = async props => {
     props;
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template({app_link_app_report_css:props.methods.common_document.querySelector('#app_link_app_report_css').attributes['href'].nodeValue,
-                            common_link_common_css:props.methods.common_document.querySelector('#common_link_common_css').attributes['href'].nodeValue,
-                            html: props.data.html})
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template({  app_link_app_report_css:props.methods.common_document.querySelector('#app_link_app_report_css').attributes['href'].nodeValue,
+                                common_link_common_css:props.methods.common_document.querySelector('#common_link_common_css').attributes['href'].nodeValue,
+                                html: props.data.html})
     };
 };
 export default method;

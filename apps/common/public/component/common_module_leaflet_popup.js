@@ -58,10 +58,10 @@ const component = async props => {
     props.methods.moduleLeaflet.marker([props.data.latitude, props.data.longitude]).addTo(props.methods.moduleLeafletContainer());
     
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: null
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   null
     };
 };
 export default component;

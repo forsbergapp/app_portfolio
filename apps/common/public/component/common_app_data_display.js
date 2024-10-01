@@ -14,7 +14,6 @@
  *              function_div_id:function,
  *              timezone:string,
  *              locale:string,
- *              spinner:string,
  *              button_print:boolean,
  *              button_print_icon_class:string,
  *              button_update:boolean,
@@ -141,7 +140,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                     }`:''
                                 }`:''
                             }
-                            <div class='common_app_data_display_buttons ${props.spinner}'>
+                            <div class='common_app_data_display_buttons'>
                                 ${props.button_print?
                                     `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_dialogue_button common_icon ${props.button_print_icon_class ?? ''}' ></div>`:''
                                 }
@@ -203,7 +202,6 @@ const component = async props => {
         props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show1');
 		props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     }
-    let spinner = 'css_spinner';
     const div_id = () =>Date.now().toString() + Math.floor(Math.random() *100000).toString();
     /**
      * 
@@ -263,74 +261,51 @@ const component = async props => {
         else
             return '';
     };
-
-    const onMounted = async () => {
-        
-        const master_object = props.data.master_path?
-                                    await props.methods.FFB(   props.data.master_path, 
-                                                                props.data.master_query, 
-                                                                props.data.master_method, props.data.master_token_type, props.data.master_body)
-                                            .then((/**@type{*}*/result)=>
-                                                props.data.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>
-                                                    JSON.parse(row.json_data)):
-                                    JSON.parse(result).rows[0]):{};
-        const detail_rows = props.data.detail_path?
-                                    await props.methods.FFB(   props.data.detail_path, 
-                                                                props.data.detail_query, 
-                                                                props.data.detail_method, props.data.detail_token_type, props.data.detail_body)
-                                            .then((/**@type{*}*/result)=>JSON.parse(result).rows):
-                                    [];
-        
-        if (props.data.new_resource==false){
-            const master_metadata = await props.methods.FFB(   `/app-function/${props.data.master_resource}`, 
-                                                                'fields=json_data', 
-                                                                'POST', 'APP_DATA', {data_app_id:props.data.app_id})
-                                            .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
-            for (const key of Object.entries(master_object)){
-                master_object[key[0]] = {   
-                                            value:key[1], 
-                                            default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].default_text:key[0],
-                                            type:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].type:key[0]
-                                        };
-            }
-        }
-        if (props.data.detail_resource){
-            const detail_metadata = await props.methods.FFB(   `/app-function/${props.data.detail_resource}`, 
+    const master_object = props.data.master_path?
+                                await props.methods.FFB(   props.data.master_path, 
+                                                            props.data.master_query, 
+                                                            props.data.master_method, props.data.master_token_type, props.data.master_body)
+                                        .then((/**@type{*}*/result)=>
+                                            props.data.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>
+                                                JSON.parse(row.json_data)):
+                                JSON.parse(result).rows[0]):{};
+    const detail_rows = props.data.detail_path?
+                                await props.methods.FFB(   props.data.detail_path, 
+                                                            props.data.detail_query, 
+                                                            props.data.detail_method, props.data.detail_token_type, props.data.detail_body)
+                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows):
+                                [];
+    
+    if (props.data.new_resource==false){
+        const master_metadata = await props.methods.FFB(   `/app-function/${props.data.master_resource}`, 
                                                             'fields=json_data', 
                                                             'POST', 'APP_DATA', {data_app_id:props.data.app_id})
-                                            .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
-            for (const row of detail_rows){
-                for (const key of Object.entries(row)){
-                    for (const key_metadata of detail_metadata){
-                        if (Object.entries(key_metadata)[0][0] == key[0]){
-                            row[key[0]] = {value:key[1], default_text: Object.entries(key_metadata)[0][1].default_text};
-                        }
+                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
+        for (const key of Object.entries(master_object)){
+            master_object[key[0]] = {   
+                                        value:key[1], 
+                                        default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].default_text:key[0],
+                                        type:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].type:key[0]
+                                    };
+        }
+    }
+    if (props.data.detail_resource){
+        const detail_metadata = await props.methods.FFB(   `/app-function/${props.data.detail_resource}`, 
+                                                        'fields=json_data', 
+                                                        'POST', 'APP_DATA', {data_app_id:props.data.app_id})
+                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
+        for (const row of detail_rows){
+            for (const key of Object.entries(row)){
+                for (const key_metadata of detail_metadata){
+                    if (Object.entries(key_metadata)[0][0] == key[0]){
+                        row[key[0]] = {value:key[1], default_text: Object.entries(key_metadata)[0][1].default_text};
                     }
                 }
             }
         }
-            
-        spinner = '';
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = 
-            template({  display_type:props.data.display_type,
-                        master_object:master_object,
-                        rows:(props.data.detail_path && detail_rows.length>0)?(Object.values(detail_rows[0])[0].constructor===Array?Object.values(detail_rows[0])[0]:detail_rows):[],
-                        detail_class:props.data.detail_class,
-                        new_resource:props.data.new_resource,
-                        mode:props.data.mode,
-                        function_format_value:format_value,
-                        function_div_id:div_id,
-                        timezone:props.data.timezone, 
-                        locale:props.data.locale,
-                        spinner:spinner,
-                        button_print:props.data.button_print,
-                        button_print_icon_class:props.data.button_print_icon_class,
-                        button_update:props.data.button_update,
-                        button_update_icon_class:props.data.button_update_icon_class,
-                        button_post:props.data.button_post,
-                        button_post_icon_class:props.data.button_post_icon_class,
-                        button_delete:props.data.button_delete,
-                        button_delete_icon_class:props.data.button_delete_icon_class});
+    }
+
+    const onMounted = async () => {
         if (props.methods.button_print)
             props.methods.common_document.querySelector(`#${props.data.common_mountdiv} .common_app_data_display_button_print`)['data-function'] = props.methods.button_print;
         if (props.methods.button_update)
@@ -342,26 +317,28 @@ const component = async props => {
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:   null,
-        methods:null,
-        template: template({display_type:props.data.display_type,
-                            master_object:null,
-                            rows:[],
+        data:       null,
+        methods:    null,
+        template:   template({
+                            display_type:props.data.display_type,
+                            master_object:master_object,
+                            rows:(props.data.detail_path && detail_rows.length>0)?
+                                    (Object.values(detail_rows[0])[0].constructor===Array?Object.values(detail_rows[0])[0]:detail_rows):
+                                    [],
                             detail_class:props.data.detail_class,
                             new_resource:props.data.new_resource,
                             mode:props.data.mode,
                             function_format_value:format_value,
                             function_div_id:div_id,
-                            timezone:props.data.timezone,
+                            timezone:props.data.timezone, 
                             locale:props.data.locale,
-                            spinner:spinner,
-                            button_print:false,
+                            button_print:props.data.button_print,
                             button_print_icon_class:props.data.button_print_icon_class,
-                            button_update:false,
+                            button_update:props.data.button_update,
                             button_update_icon_class:props.data.button_update_icon_class,
-                            button_post:false,
+                            button_post:props.data.button_post,
                             button_post_icon_class:props.data.button_post_icon_class,
-                            button_delete:false,
+                            button_delete:props.data.button_delete,
                             button_delete_icon_class:props.data.button_delete_icon_class})
     };
 };

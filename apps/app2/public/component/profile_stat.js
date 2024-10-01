@@ -21,10 +21,10 @@ const template = () =>` <div id='profile_stat_app2'>
 const method = async props => {
     props;
     return {
-        lifecycle:  {onMounted:null},
-        data:   null,
-        methods:null,
-        template: template()
+        lifecycle:  null,
+        data:       null,
+        methods:    null,
+        template:   template()
     };
 };
 export default method;

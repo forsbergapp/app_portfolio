@@ -44,28 +44,24 @@ const template = props =>`
  *                      template:string}>}
  */
 const component = async props => {
-
-    const onMounted = async () => {
-        let path;
-        if (props.data.stat_choice ==1 || props.data.stat_choice ==2 || props.data.stat_choice ==3){
-            /*statschoice 1,2,3: user_account*/
-            path = '/server-db/user_account-profile-stat';
-        }
-        else{
-            /*other statschoice, apps can use >3 and return same columns*/
-            path = props.data.stat_list_app_rest_url ?? '';
-        }
-        /**@type{import('../../../common_types.js').CommonProfileStatRecord[]} */
-        const stat_list = await props.methods.FFB(path, `statchoice=${props.data.stat_choice}`, 'GET', 'APP_DATA', null)
-                                        .then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).innerHTML = template({stat_list:stat_list});
-    };
+    let path;
+    if (props.data.stat_choice ==1 || props.data.stat_choice ==2 || props.data.stat_choice ==3){
+        /*statschoice 1,2,3: user_account*/
+        path = '/server-db/user_account-profile-stat';
+    }
+    else{
+        /*other statschoice, apps can use >3 and return same columns*/
+        path = props.data.stat_list_app_rest_url ?? '';
+    }
+    /**@type{import('../../../common_types.js').CommonProfileStatRecord[]} */
+    const stat_list = await props.methods.FFB(path, `statchoice=${props.data.stat_choice}`, 'GET', 'APP_DATA', null)
+                                    .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     return {
-        lifecycle:  {onMounted:onMounted},
+        lifecycle:  null,
         data:       null,
         methods:    null,
-        template:   template({stat_list:[]})
+        template:   template({stat_list:stat_list})
     };
 };
 export default component;
