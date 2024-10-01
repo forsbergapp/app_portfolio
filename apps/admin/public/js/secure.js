@@ -199,6 +199,7 @@ const sendBroadcast = () => {
                             broadcast_type:     broadcast_type, 
                             broadcast_message:  common.toBase64(broadcast_message)};
         let path='';
+        /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
         let token_type;
         if (common.COMMON_GLOBAL.system_admin!=null){
             path = '/server-socket/message';
@@ -497,7 +498,8 @@ const update_record = async (table,
                              parameters) => {
     let path = '';
     let json_data;
-    let token_type = '';
+    /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
+    let token_type;
     /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
     let method;
     switch (table){
@@ -911,7 +913,7 @@ const show_existing_logfiles = () => {
  * @param {string} path 
  * @param {string} query
  * @param {import('../../../common_types.js').CommonRESTAPIMethod} method 
- * @param {string} tokentype 
+ * @param {import('../../../common_types.js').CommonRESTAPIAuthorizationType} tokentype 
  * @param {{demo_password:string}|null} data 
  * @returns {void}
  */
