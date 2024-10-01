@@ -85,9 +85,12 @@ const component = async props => {
         case 'EXCEPTION':
         case 'LOG':{
             display_message = props.data.message_type=='ERROR'?await props.methods.FFB(
-                                                '/server-db/app_settings_display', 
-                                                `data_app_id=${props.data.data_app_id}&setting_type=MESSAGE&value=${props.data.code}`, 
-                                                'GET', 'APP_DATA')
+                                                {
+                                                    path:'/server-db/app_settings_display', 
+                                                    query:`data_app_id=${props.data.data_app_id}&setting_type=MESSAGE&value=${props.data.code}`, 
+                                                    method:'GET', 
+                                                    authorization_type:'APP_DATA'
+                                                })
                                 .then((/**@type{string}*/result)=>JSON.parse(result)[0].display_data)
                                 .catch((/**@type{Error}*/error)=>error):props.data.message;
             

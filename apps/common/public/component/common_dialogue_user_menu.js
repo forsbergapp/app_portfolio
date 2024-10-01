@@ -79,10 +79,10 @@ const component = async props => {
 
     //Fetch settings with direction, timezone and arabic script
     /**@type{{id:number, app_setting_type_name:string, value:string, display_data:string}[]} */
-    const settings = props.data.system_admin_only == 1?[]:await props.methods.FFB('/server-db/app_settings_display', `data_app_id=${props.data.data_app_id}`, 'GET', 'APP_DATA')
+    const settings = props.data.system_admin_only == 1?[]:await props.methods.FFB({path:'/server-db/app_settings_display', query:`data_app_id=${props.data.data_app_id}`, method:'GET', authorization_type:'APP_DATA'})
                                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
-    const user = (props.data.username || props.data.user_account_id!=null)?await props.methods.FFB(`/server-db/user_account/${props.data.user_account_id ?? ''}`, null, 'GET', 'APP_ACCESS', null)
+    const user = (props.data.username || props.data.user_account_id!=null)?await props.methods.FFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
                                                                 .then((/**@type{string}*/result)=>JSON.parse(result))
                                                                 .catch((/**@type{Error}*/error)=>{throw error;}):null;
                                     

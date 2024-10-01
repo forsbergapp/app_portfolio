@@ -92,7 +92,7 @@ const component = async props => {
             token_type = 'APP_DATA';
         }
     }
-    const lov_rows          = props.data.lov=='CUSTOM'?props.data.lov_custom_list:await props.methods.FFB(path, query, 'GET', token_type, null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const lov_rows          = props.data.lov=='CUSTOM'?props.data.lov_custom_list:await props.methods.FFB({path:path, query:query, method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const lov_column_value  = props.data.lov=='CUSTOM'?(props.data.lov_custom_value ??''):lov_column;
 
     /**

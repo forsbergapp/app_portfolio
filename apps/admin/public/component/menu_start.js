@@ -52,7 +52,7 @@ const template = props => ` <div id='menu_1_content_widget1' class='widget'>
 const component = async props => {
     //system admin
     /**@type{{status_codes:[number, string][]}} */
-    const result_obj = props.data.system_admin!=null?await props.methods.FFB('/server/info-statuscode', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)):[];
+    const result_obj = props.data.system_admin!=null?await props.methods.FFB({path:'/server/info-statuscode', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result)):[];
 
     //system admin
     // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]', TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']}
@@ -73,7 +73,7 @@ const component = async props => {
     ]:[];
     //system admin
     /**@type{0|1|null} */
-    const maintenance = props.data.system_admin!=null?await props.methods.FFB('/server-config/config/SERVER', 'config_group=METADATA&parameter=MAINTENANCE', 'GET', 'SYSTEMADMIN', null)
+    const maintenance = props.data.system_admin!=null?await props.methods.FFB({path:'/server-config/config/SERVER', query:'config_group=METADATA&parameter=MAINTENANCE', method:'GET', authorization_type:'SYSTEMADMIN'})
                                 .then((/**@type{string}*/result)=>JSON.parse(result).data):null;
 
    const onMounted = async () =>{

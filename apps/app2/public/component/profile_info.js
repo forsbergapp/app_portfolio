@@ -65,27 +65,24 @@ const method = async props => {
      * @returns {Promise<{value:string, text:string}[]>}
      */
     const user_settings_get = async profile_id => {
-        return props.methods.FFB(  `/server-db/user_account_app_data_post-profile/${profile_id}`, 
-                                                        `id_current_user=${props.data.user_account_id??''}`, 
-                                                        'GET', 
-                                                        'APP_DATA', null)
-                                    .then((/**@type{string}*/result)=>
-                                            JSON.parse(result)
-                                            .map((/**@type{{id:number, 
-                                                            user_account_app_user_account_id:number, 
-                                                            liked:number, 
-                                                            count_likes:number, 
-                                                            count_views:number,
-                                                            design_paper_size:string, 
-                                                            description:string}}}*/setting)=>{return {  value:JSON.stringify({   
-                                                                                                                sid:setting.id, 
-                                                                                                                user_account_id:setting.user_account_app_user_account_id, 
-                                                                                                                liked:setting.liked,
-                                                                                                                count_likes:setting.count_likes,
-                                                                                                                count_views:setting.count_views,
-                                                                                                                paper_size:setting.design_paper_size,
-                                                                                                                description:setting.description}), 
-                                                                                                        text:setting.description};}));
+        return props.methods.FFB({path:`/server-db/user_account_app_data_post-profile/${profile_id}`, query:`id_current_user=${props.data.user_account_id??''}`, method:'GET', authorization_type:'APP_DATA'})
+                    .then((/**@type{string}*/result)=>
+                            JSON.parse(result)
+                            .map((/**@type{{id:number, 
+                                            user_account_app_user_account_id:number, 
+                                            liked:number, 
+                                            count_likes:number, 
+                                            count_views:number,
+                                            design_paper_size:string, 
+                                            description:string}}}*/setting)=>{return {  value:JSON.stringify({   
+                                                                                                sid:setting.id, 
+                                                                                                user_account_id:setting.user_account_app_user_account_id, 
+                                                                                                liked:setting.liked,
+                                                                                                count_likes:setting.count_likes,
+                                                                                                count_views:setting.count_views,
+                                                                                                paper_size:setting.design_paper_size,
+                                                                                                description:setting.description}), 
+                                                                                        text:setting.description};}));
     }; 
     /**
      * Profile show user setting detail
@@ -109,7 +106,7 @@ const method = async props => {
      * @returns {void}
      */
     const profile_user_setting_stat = id => {
-        props.methods.FFB(`/server-db/user_account_app_data_post-profile-stat-like/${id}`, null, 'GET', 'APP_DATA', null)
+        props.methods.FFB({path:`/server-db/user_account_app_data_post-profile-stat-like/${id}`, method:'GET', authorization_type:'APP_DATA'})
         .then((/**@type{string}*/result)=>{
             props.methods.common_document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
             props.methods.common_document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;

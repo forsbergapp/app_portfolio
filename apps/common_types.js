@@ -12,10 +12,13 @@
  * Common app types
  *  CommonGlobal
  *  CommonIcons
+ *  CommonComponentLifecycle
  *  CommonComponentResult
  *  CommonErrorMessageISO20022
  * 
  * Common REST API types
+ *  CommonRESTAPIMethod
+ *  CommonRESTAPIAuthorizationType
  *  CommonAppRecord
  *  CommonCountryType
  *  CommonProfileUser
@@ -298,6 +301,15 @@
 /**
  * Type CommonProfileSearchRecord
  * @typedef {{id:number, avatar:string, provider_image:string, username:string}} CommonProfileSearchRecord
+ */
+
+/**
+ * Type CommonRESTAPIMethod
+ * @typedef{'GET'|'POST'|'PUT'|'PATCH'|'DELETE'} CommonRESTAPIMethod
+ */
+/**
+ * Type CommonRESTAPIMethod
+ * @typedef{'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'SUPERADMIN'|'SYSTEMADMIN'|'SOCKET'|'IAM_SYSTEMADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
  */
 
 /**

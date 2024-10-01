@@ -320,12 +320,10 @@ const framework_set = async (framework=null) => {
 };
 
 const customer_create = async () => {
-    CommonAppDocument.querySelector('.common_app_data_display_button_post').classList.add('css_spinner');
-    await common.FFB(   '/app-function/CUSTOMER_CREATE', 
-                        null, 
-                        'POST', 
-                        'APP_ACCESS', 
-                        {
+    await common.FFB({  path:'/app-function/CUSTOMER_CREATE', 
+                        method:'POST', 
+                        authorization_type:'APP_ACCESS', 
+                        body:{
                             user_account_id :common.COMMON_GLOBAL.user_account_id,
                             data_app_id     :common.COMMON_GLOBAL.app_id,
                             customer_type   :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').innerHTML,
@@ -333,8 +331,9 @@ const customer_create = async () => {
                             address         :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'address\']').innerHTML,
                             city            :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'city\']').innerHTML,
                             country         :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'country\']').innerHTML
-                        }
-                    );
+                        },
+                        spinner_id:CommonAppDocument.querySelector('.common_app_data_display_button_post').id
+                    });
     init_secure();
 };
 /**
@@ -342,16 +341,15 @@ const customer_create = async () => {
  * @param {1|0} status 
  */
 const payment_request_update = async status => {
-    await common.FFB(   '/app-function/PAYMENT_REQUEST_UPDATE', 
-        null, 
-        'POST', 
-        'APP_ACCESS', 
-        {
-            data_app_id     :common.COMMON_GLOBAL.app_id,
-            user_account_id :common.COMMON_GLOBAL.user_account_id,
-            payment_request_id:CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value'),
-            status:status
-        })
+    await common.FFB({  path:'/app-function/PAYMENT_REQUEST_UPDATE', 
+                        method:'POST', 
+                        authorization_type:'APP_ACCESS', 
+                        body:{
+                            data_app_id     :common.COMMON_GLOBAL.app_id,
+                            user_account_id :common.COMMON_GLOBAL.user_account_id,
+                            payment_request_id:CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value'),
+                            status:status
+                        }})
     .then((result)=>status==1?common.show_message('INFO', null, null, null,JSON.parse(result).rows[0].status, common.COMMON_GLOBAL.common_app_id):null)
     .finally(()=>common.ComponentRemove('common_dialogue_app_data_display', true));
 };

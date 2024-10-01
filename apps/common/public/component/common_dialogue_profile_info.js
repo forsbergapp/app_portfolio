@@ -116,9 +116,12 @@ const component = async props => {
                 return `/server-db/user_account-profile/${props.data.user_account_id ?? ''}`;
     };
     const profile = await props.methods.FFB(
-                            pathInfoGet(), 
-                            `id=${props.data.user_account_id ?? ''}&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
-                            'GET', 'APP_DATA', null)
+                            {
+                                path:pathInfoGet(), 
+                                query:`id=${props.data.user_account_id ?? ''}&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
+                                method:'GET', 
+                                authorization_type:'APP_DATA'
+                            })
                         .then((/**@type{string}*/result)=>JSON.parse(result)[0]);
    
     const onMounted = async () => {

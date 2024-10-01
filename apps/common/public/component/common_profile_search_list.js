@@ -54,10 +54,14 @@ const component = async props => {
         props.methods.common_document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         props.methods.common_document.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
-    const records = input_control?await props.methods.FFB(   '/server-db/user_account-profile/', 
-                                                    `id=${props.data.user_account_id ?? ''}&search=${encodeURI(searched_username)}` +
-                                                    `&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
-                                                    'GET', 'APP_DATA', null)
+    const records = input_control?await props.methods.FFB(
+                                                {
+                                                    path:   '/server-db/user_account-profile/', 
+                                                    query:  `id=${props.data.user_account_id ?? ''}&search=${encodeURI(searched_username)}` +
+                                                            `&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
+                                                    method: 'GET', 
+                                                    authorization_type:'APP_DATA'
+                                                })
                                         .then((/**@type{string}*/result)=>JSON.parse(result).rows):[];
 
     const onMounted = async () =>{           

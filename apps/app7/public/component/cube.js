@@ -194,7 +194,6 @@ const component = async props => {
      */
     const cube_solve = (cube, cube_controls, button_id, cube_goalstate=null) => {
         if (cube.rotating == false){
-            props.methods.common_document.querySelector(`#${button_id}`).classList.add('css_spinner');
             /**
              *  Solve using generative AI parameters
              * 
@@ -204,20 +203,19 @@ const component = async props => {
              *  cube current state  string of cube state
              *  cube goalstate      empty to solve or to given cube state
              */
-            props.methods.FFB('/app-function/CUBE_SOLVE', null, 'POST', 'APP_DATA',
-                {   model:              Number(props.methods.common_document.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
-                    preamble:           0,
-                    temperature:        Number(props.methods.common_document.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
-                    cube_currentstate: 	cube.getState(),
-                    cube_goalstate: 	cube_goalstate})
+            props.methods.FFB({ path:'/app-function/CUBE_SOLVE', method:'POST', authorization_type:'APP_DATA',
+                                body:{  model:              Number(props.methods.common_document.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
+                                        preamble:           0,
+                                        temperature:        Number(props.methods.common_document.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
+                                        cube_currentstate: 	cube.getState(),
+                                        cube_goalstate: 	cube_goalstate}, 
+                                spinner_id:button_id})
                     .then((/**@type{string}*/result)=>{
                         props.methods.ComponentRemove('common_dialogue_message', true);
-                        props.methods.common_document.querySelector(`#${button_id}`).classList.remove('css_spinner');
                         cube_show_solution(cube, cube_controls, result, button_id);
                     })
                     .catch(()=>{
                         props.methods.ComponentRemove('common_dialogue_message', true);
-                        props.methods.common_document.querySelector(`#${button_id}`).classList.remove('css_spinner');
                     });
         }
     };

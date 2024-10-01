@@ -70,7 +70,7 @@ const template = props => ` <div id='list_user_account_logon_row_title' class='l
 *                      template:string}>}
 */
 const component = async props => {
-    const user_logon = await props.methods.FFB('/server-db_admin/user_account_logon', `data_user_account_id=${props.data.user_account_id}&data_app_id=''`, 'GET', 'APP_ACCESS', null)
+    const user_logon = await props.methods.FFB({path:'/server-db_admin/user_account_logon', query:`data_user_account_id=${props.data.user_account_id}&data_app_id=''`, method:'GET', authorization_type:'APP_ACCESS'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result));
  
     return {

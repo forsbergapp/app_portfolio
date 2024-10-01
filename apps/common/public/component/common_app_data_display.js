@@ -163,14 +163,14 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      master_path:string,
  *                      master_query:string,
  *                      master_body:string,
- *                      master_method:string,
- *                      master_token_type:string,
+ *                      master_method:import('../../../common_types.js').CommonRESTAPIMethod,
+ *                      master_token_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
  *                      master_resource:string,
  *                      detail_path:string,
  *                      detail_query:string,
  *                      detail_body:string,
- *                      detail_method:string,
- *                      detail_token_type:string,
+ *                      detail_method:import('../../../common_types.js').CommonRESTAPIMethod,
+ *                      detail_token_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
  *                      detail_resource:string,
  *                      detail_class:string,
  *                      new_resource:boolean,
@@ -262,24 +262,24 @@ const component = async props => {
             return '';
     };
     const master_object = props.data.master_path?
-                                await props.methods.FFB(   props.data.master_path, 
-                                                            props.data.master_query, 
-                                                            props.data.master_method, props.data.master_token_type, props.data.master_body)
+                                await props.methods.FFB({   path: props.data.master_path, 
+                                                            query:props.data.master_query, 
+                                                            method:props.data.master_method, authorization_type:props.data.master_token_type, body:props.data.master_body})
                                         .then((/**@type{*}*/result)=>
                                             props.data.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>
                                                 JSON.parse(row.json_data)):
                                 JSON.parse(result).rows[0]):{};
     const detail_rows = props.data.detail_path?
-                                await props.methods.FFB(   props.data.detail_path, 
-                                                            props.data.detail_query, 
-                                                            props.data.detail_method, props.data.detail_token_type, props.data.detail_body)
+                                await props.methods.FFB({   path:props.data.detail_path, 
+                                                            query:props.data.detail_query, 
+                                                            method:props.data.detail_method, authorization_type:props.data.detail_token_type, body:props.data.detail_body})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows):
                                 [];
     
     if (props.data.new_resource==false){
-        const master_metadata = await props.methods.FFB(   `/app-function/${props.data.master_resource}`, 
-                                                            'fields=json_data', 
-                                                            'POST', 'APP_DATA', {data_app_id:props.data.app_id})
+        const master_metadata = await props.methods.FFB({   path:`/app-function/${props.data.master_resource}`, 
+                                                            query:'fields=json_data', 
+                                                            method:'POST', authorization_type:'APP_DATA', body:{data_app_id:props.data.app_id}})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
         for (const key of Object.entries(master_object)){
             master_object[key[0]] = {   
@@ -290,9 +290,9 @@ const component = async props => {
         }
     }
     if (props.data.detail_resource){
-        const detail_metadata = await props.methods.FFB(   `/app-function/${props.data.detail_resource}`, 
-                                                        'fields=json_data', 
-                                                        'POST', 'APP_DATA', {data_app_id:props.data.app_id})
+        const detail_metadata = await props.methods.FFB({   path:`/app-function/${props.data.detail_resource}`, 
+                                                            query:'fields=json_data', 
+                                                            method:'POST', authorization_type:'APP_DATA', body:{data_app_id:props.data.app_id}})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
         for (const row of detail_rows){
             for (const key of Object.entries(row)){

@@ -27,8 +27,8 @@ const template = props => ` <div class='common_select_dropdown'>
  *                      options:[{value:string, text:string}],
  *                      path:string,
  *                      query:string,
- *                      method:string,
- *                      authorization_type:string,
+ *                      method:import('../../../common_types.js').CommonRESTAPIMethod,
+ *                      authorization_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
  *                      column_value:string,
  *                      column_text:string
  *                      },
@@ -43,7 +43,7 @@ const template = props => ` <div class='common_select_dropdown'>
  */
 const component = async props => {
     // add first static option first if any then add fetched options
-    const ffb_options = props.data.path?await props.methods.FFB(props.data.path, props.data.query, props.data.method, props.data.authorization_type, null)
+    const ffb_options = props.data.path?await props.methods.FFB({path:props.data.path, query:props.data.query, method:props.data.method, authorization_type:props.data.authorization_type})
                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows):[];
     /**@type{[{value:string, text:string}]|[]} */
     const options = props.data.options?props.data.options.concat(ffb_options):ffb_options;

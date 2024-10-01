@@ -208,7 +208,7 @@ const sendBroadcast = () => {
             path = '/server-socket/message';
             token_type = 'APP_ACCESS';
         }
-        common.FFB(path, null, 'POST', token_type, json_data)
+        common.FFB({path:path, method:'POST', authorization_type:token_type, body:json_data})
         .then((/**@type{string}*/result)=>{
             if (Number(JSON.parse(result).sent) > 0)
                 common.show_message('INFO', null, null, 'message_success', `(${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
@@ -315,7 +315,7 @@ const set_maintenance = () => {
     else
         check_value = 0;
     const json_data = {maintenance:check_value};
-    common.FFB('/server-config/config/SERVER', null, 'PUT', 'SYSTEMADMIN', json_data).catch(()=>null);
+    common.FFB({path:'/server-config/config/SERVER', method:'PUT', authorization_type:'SYSTEMADMIN', body:json_data}).catch(()=>null);
 };
 /**
  * 
@@ -462,17 +462,14 @@ const button_save = async (item) => {
             //file:'SERVER', 'APPS', 'IAM_BLOCKIP', 'IAM_POLICY', 'IAM_USERAGENT', 'IAM_USER', 'MICROSERVICE_CONFIG', 'MICROSERVICE_SERVICES'
             const json_data = { config:    file=='SERVER'?config_create_server_json():JSON.parse(CommonAppDocument.querySelector('#list_config_edit').innerHTML)};
 
-            CommonAppDocument.querySelector('#' + item).classList.add('css_spinner');
-            common.FFB(`/server-config/config/${file}`, null, 'PUT', 'SYSTEMADMIN', json_data)
-            .then(()=>CommonAppDocument.querySelector('#' + item).classList.remove('css_spinner'))
-            .catch(()=>CommonAppDocument.querySelector('#' + item).classList.remove('css_spinner'));
+            common.FFB({path:`/server-config/config/${file}`, method: 'PUT', authorization_type:'SYSTEMADMIN', body:json_data, spinner_id:item});
             break;
         }
     }
 };
 /**
  * Update record
- * @param {string} table 
+ * @param {'user_account'|'app'|'app_parameter'} table 
  * @param {HTMLElement} row_element 
  * @param {string} button 
  * @param {{user_account:{  id:number,
@@ -501,8 +498,8 @@ const update_record = async (table,
     let path = '';
     let json_data;
     let token_type = '';
-    let method = '';
-    CommonAppDocument.querySelector('#' + button).classList.add('css_spinner');
+    /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
+    let method;
     switch (table){
         case 'user_account':{
             json_data = {   app_role_id:        parameters.user_account.app_role_id,
@@ -540,10 +537,8 @@ const update_record = async (table,
             break;
         }
     }
-    await common.FFB(path, null, method, token_type, json_data)
-    .then(()=>{ row_element.setAttribute('data-changed-record', '0');
-                CommonAppDocument.querySelector('#' + button).classList.remove('css_spinner');})
-    .catch(()=>CommonAppDocument.querySelector('#' + button).classList.remove('css_spinner'));
+    await common.FFB({path:path, method:method, authorization_type:token_type, body:json_data, spinner_id:button})
+            .then(()=>row_element.setAttribute('data-changed-record', '0'));
 };
 /**
  * Mounts map in monitor component
@@ -752,7 +747,7 @@ const list_item_click = (item_type, data) => {
     //check if gps_click and if not system admin only when map is not loaded
     if (item_type=='GPS' && common.COMMON_GLOBAL.system_admin_only != 1){
         if (data['ip']){
-            common.FFB('/geolocation/ip', data['ip'] != '::1'?`ip=${data['ip']}`:null, 'GET', 'APP_DATA', null)
+            common.FFB({path:'/geolocation/ip', query:data['ip'] != '::1'?`ip=${data['ip']}`:null, method: 'GET', authorization_type:'APP_DATA'})
             .then((/**@type{string}*/result)=>{
                 const geodata = JSON.parse(result);
                 common.map_update({ longitude:geodata.geoplugin_longitude,
@@ -770,7 +765,7 @@ const list_item_click = (item_type, data) => {
             .catch(()=>null);
         }
         else{
-            common.FFB('/geolocation/place', `latitude=${data['latitude']}&longitude=${data['longitude']}`, 'GET', 'APP_DATA', null)
+            common.FFB({path:'/geolocation/place', query:`latitude=${data['latitude']}&longitude=${data['longitude']}`, method:'GET', authorization_type:'APP_DATA'})
             .then((/**@type{string}*/result)=>{
                 /**@type{{geoplugin_place:string, geoplugin_region:string, geoplugin_countryCode:string}} */
                 const geodata = JSON.parse(result);
@@ -814,7 +809,7 @@ const list_item_click = (item_type, data) => {
  */
 const get_log_parameters = async () => {
     return new Promise((resolve)=>{
-        common.FFB('/server-config/config/SERVER', 'config_group=SERVICE_LOG', 'GET', 'SYSTEMADMIN', null)
+        common.FFB({path:'/server-config/config/SERVER', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'SYSTEMADMIN'})
         .then((/**@type{string}*/result)=>{
             const log_parameters = {
                 SCOPE_REQUEST : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],
@@ -915,24 +910,21 @@ const show_existing_logfiles = () => {
  * @param {boolean|null} db_icon 
  * @param {string} path 
  * @param {string} query
- * @param {string} method 
+ * @param {import('../../../common_types.js').CommonRESTAPIMethod} method 
  * @param {string} tokentype 
  * @param {{demo_password:string}|null} data 
  * @returns {void}
  */
 const installation_function = (id, db_icon, path, query, method, tokentype, data) => {
-    CommonAppDocument.querySelector(`#${id}`).classList.add('css_spinner');
-    common.FFB(path, query, method, tokentype, data)
+    common.FFB({path:path, query:query, method:method, authorization_type:tokentype, body:data, spinner_id:id})
     .then((/**@type{string}*/result)=>{
-        CommonAppDocument.querySelector(`#${id}`).classList.remove('css_spinner');
         if (db_icon!=null)
             if (db_icon)
                 CommonAppDocument.querySelector('#install_db_icon').classList.add('installed');
             else
                 CommonAppDocument.querySelector('#install_db_icon').classList.remove('installed');
         common.show_message('LOG', null, null, null, JSON.parse(result).info, common.COMMON_GLOBAL.common_app_id);
-    })
-    .catch(()=>CommonAppDocument.querySelector(`#${id}`).classList.remove('css_spinner'));
+    });
 };
 /**
  * Installs DB
