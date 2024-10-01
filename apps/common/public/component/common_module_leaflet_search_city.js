@@ -44,7 +44,7 @@ const template = props =>`  <div id='common_module_leaflet_search_list'>
  *                      template:string}>}
  */
 const component = async props => {
-    const records = props.data.search==''?[]:await props.methods.FFB('/worldcities/city', `search=${encodeURI(props.data.search)}`, 'GET', 'APP_DATA', null)
+    const records = props.data.search==''?[]:await props.methods.FFB({path:'/worldcities/city', query:`search=${encodeURI(props.data.search)}`, method:'GET', authorization_type:'APP_DATA'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const onMounted = async () =>{
         if (props.data.search.length>0)

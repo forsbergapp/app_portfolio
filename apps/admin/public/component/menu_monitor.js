@@ -113,7 +113,7 @@ const component = async props => {
     return {
         lifecycle:  {onMounted:onMounted},
         data:       {
-                    limit:await props.methods.FFB(`/server-config/config-apps/${props.data.app_id}`, 'key=PARAMETERS', 'GET', props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS', null)
+                    limit:await props.methods.FFB({path:`/server-config/config-apps/${props.data.app_id}`, query:'key=PARAMETERS', method:'GET', authorization_type:props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS'})
                             .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS))
                     },
         methods:    null,

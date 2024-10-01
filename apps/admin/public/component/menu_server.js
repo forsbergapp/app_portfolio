@@ -98,7 +98,7 @@ const component = async props => {
         ut_sec = ut_sec%60;
         return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
     };
-    const server_info = await props.methods.FFB('/server/info', null, 'GET', 'SYSTEMADMIN', null)
+    const server_info = await props.methods.FFB({path:'/server/info', method:'GET', authorization_type:'SYSTEMADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result));
 
    

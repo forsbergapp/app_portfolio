@@ -143,7 +143,7 @@ const method = async props => {
     const settings = await props.methods.app_settings_get();
     //get locales using user locale
     /**@type{{locale:string, text:string}[]} */
-    const locales = await props.methods.FFB('/server-db/locale', `lang_code=${props.data.user_locale}`, 'GET', 'APP_DATA', null)
+    const locales = await props.methods.FFB({path:'/server-db/locale', query:`lang_code=${props.data.user_locale}`, method:'GET', authorization_type:'APP_DATA'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const onMounted = async () =>{
         //Locale using setting locale

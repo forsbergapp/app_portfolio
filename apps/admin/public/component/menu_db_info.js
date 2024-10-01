@@ -85,9 +85,9 @@ const component = async props => {
      *          connections:string,
      *          started:string}}
      */
-    const db = await props.methods.FFB('/server-db_admin/database', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
-    const db_detail = await props.methods.FFB('/server-db_admin/database-space', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-    const db_detail_sum = await props.methods.FFB('/server-db_admin/database-spacesum', null, 'GET', 'SYSTEMADMIN', null).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
+    const db = await props.methods.FFB({path:'/server-db_admin/database', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
+    const db_detail = await props.methods.FFB({path:'/server-db_admin/database-space', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const db_detail_sum = await props.methods.FFB({path:'/server-db_admin/database-spacesum', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
 
   return {
       lifecycle:    null,

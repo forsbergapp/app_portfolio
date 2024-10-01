@@ -162,9 +162,7 @@ const payment_request_status = ()=>{
     if ( new Date().getSeconds() % 2){
         const payment_request_id = CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
     
-        common.FFB('/app-function/PAYMENT_REQUEST_GET_STATUS', null, 'POST', 'APP_DATA',   {
-                                                                                    payment_request_id: payment_request_id
-                                                                                    })
+        common.FFB({path:'/app-function/PAYMENT_REQUEST_GET_STATUS', method:'POST', authorization_type:'APP_DATA',   body:{payment_request_id: payment_request_id}})
         .then((/**@type{*}*/result)=>{
             const status = JSON.parse(result).rows[0].status;
             if (status != 'PENDING'){

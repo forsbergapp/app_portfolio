@@ -110,7 +110,7 @@ const component = async props => {
                                 user_account_id_profile:props.data.user_account_id_profile,
                                 detailchoice:props.data.detailchoice,
                                 list:props.data.user_account_id?
-                                        await props.methods.FFB(`${path}/${props.data.user_account_id_profile}`, `detailchoice=${props.data.detailchoice}`, 'GET', 'APP_ACCESS', null)
+                                        await props.methods.FFB({path:`${path}/${props.data.user_account_id_profile}`, query:`detailchoice=${props.data.detailchoice}`, method:'GET', authorization_type:'APP_ACCESS'})
                                                 .then((/**@type{string}*/result)=>JSON.parse(result)):
                                         []
                             })

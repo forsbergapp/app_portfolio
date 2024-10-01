@@ -52,13 +52,12 @@ const component = async props => {
      * @returns{Promise.<{count_connected:number}>}
      */
     const get_count = async (identity_provider_id, logged_in) => {
-        return props.methods.FFB('/server-socket/socket-stat', 
-                                `identity_provider_id=${identity_provider_id}&logged_in=${logged_in}`, 'GET', 'APP_ACCESS', null)
-        .then((/**@type{string}*/result)=>JSON.parse(result));
+        return props.methods.FFB({path:'/server-socket/socket-stat', query:`identity_provider_id=${identity_provider_id}&logged_in=${logged_in}`, method:'GET', authorization_type:'APP_ACCESS'})
+                .then((/**@type{string}*/result)=>JSON.parse(result));
     };
     /**@type{[{identity_provider_id:string, provider_name:String, count_users:number, count_connected:number}]} */
-    const user_stat = await props.methods.FFB('/server-db_admin/user_account-stat', null, 'GET', 'APP_ACCESS', null)
-                        .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const user_stat = await props.methods.FFB({path:'/server-db_admin/user_account-stat', method:'GET', authorization_type:'APP_ACCESS'})
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     //add count stat
     for (const row of user_stat)
     row.count_connected = await get_count(row.identity_provider_id ?? '',1).then(result=>result.count_connected);
