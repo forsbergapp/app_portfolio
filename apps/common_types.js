@@ -32,7 +32,6 @@
  *  CommonModuleLeafletMapData
  *  CommonModuleLeafletMethods
  *  CommonModuleLeafletMapLayer
- *  CommonModuleLeafletMapLayer_array
  * 
  * Common Microservice types
  *  CommonMicroserviceWorldcitiesRecordType
@@ -212,16 +211,35 @@
  *									NEW_PASSWORD_CONFIRM:string,
  *									NEW_PASSWORD:string,
  *									CONFIRM_QUESTION:string},
- *              moduleLeaflet:*,
+ *              moduleLeaflet: {methods:{
+ *                                          eventClickCountry:          function, 
+ *                                          eventClickCity:             function,
+ *                                          eventClickMapLayer:         function,
+ *                                          eventClickControlSearch:    function,
+ *                                          eventClickControlFullscreen:function,
+ *                                          eventClickControlLocation:  function,
+ *                                          eventClickControlLayer:     function,
+ *                                          eventClickSearchList:       function,
+ *                                          eventKeyUpSearch:           function,
+ *                                          map_country:                function,
+ *                                          map_city:                   function,
+ *                                          map_city_empty:             function,
+ *                                          map_toolbar_reset:          function,
+ *                                          map_show_search_on_map:     function,
+ *                                          map_control_toggle_expand:  function,
+ *                                          map_resize:                 function,
+ *                                          map_line_removeall:         function,
+ *                                          map_line_create:            function,
+ *                                          map_setstyle:               function,
+ *                                          map_update:                 function,
+ *                                          moduleLeafletContainer:     function
+ *                                      }
+ *                              },
  *              moduleLeafletFlyTo:number,
  *              moduleLeafletJumpTo:number,
- *              moduleLeafletStyle:string,
- *              moduleLeafletContainer:function,
- *              moduleLeafletMapLayer:[],
  *              moduleLeafletZoom:number, 
  *              moduleLeafletZoomCity:number,
  *              moduleLeafletZoomPp:number,
- *              moduleLeafletMapStyles:CommonModuleLeafletMapLayer[],
  *              'module_easy.qrcode_width':number|null,
  *              'module_easy.qrcode_height':number|null,
  *              'module_easy.qrcode_color_dark':string|null,
@@ -370,18 +388,6 @@
  *              data3:string|null, 
  *              data4:string|null,
  *              session_map_layer:string|null}}  CommonModuleLeafletMapLayer
- */
-
-/**
- * Type CommonModuleLeafletMapLayer_array
- * @typedef {{  id:number,
- *              display_data:string,
- *              value:string,
- *              data:string,
- *              data2:string,
- *              data3:string,
- *              data4:string,
- *              session_map_layer:*}} CommonModuleLeafletMapLayer_array
  */
 
 /**
