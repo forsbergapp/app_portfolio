@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: microservice/geolocation/service.js</title>
+    <base href='/info/jsdoc/'/>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+
+    <link media="all" href="/common/css/common.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font1.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font2.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font3.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font4.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font5.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font6.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font7.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: microservice/geolocation/service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @module microservice/geolocation/service */
+
+/**@type{import('../../microservice/registry.service.js')} */
+const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+
+const fs = await import('node:fs');
+const http = await import('node:http');
+
+/**
+ * 
+ * @param {'IP'|'PLACE'} geotype 
+ * @returns {*}
+ */
+const getGeodataEmpty = (geotype) => {
+	switch (geotype){
+		case 'IP':{
+			//http://www.geoplugin.net/json.gp?ip=
+			//used geoplugin_city, geoplugin_regionName, geoplugin_countryName,geoplugin_latitude, geoplugin_longitude
+			return `{
+				"geoplugin_request":"::1",
+				"geoplugin_status":null,
+				"geoplugin_delay":"",
+				"geoplugin_credit":"",
+				"geoplugin_city":"",
+				"geoplugin_region":"",
+				"geoplugin_regionCode":"",
+				"geoplugin_regionName":"",
+				"geoplugin_areaCode":"",
+				"geoplugin_dmaCode":"",
+				"geoplugin_countryCode":"",
+				"geoplugin_countryName":"",
+				"geoplugin_inEU":null,
+				"geoplugin_euVATrate":null,
+				"geoplugin_continentCode":"",
+				"geoplugin_continentName":"",
+				"geoplugin_latitude":"",
+				"geoplugin_longitude":"",
+				"geoplugin_locationAccuracyRadius":"",
+				"geoplugin_timezone":"",
+				"geoplugin_currencyCode":"",
+				"geoplugin_currencySymbol":"",
+				"geoplugin_currencySymbol_UTF8":"",
+				"geoplugin_currencyConverter":null
+			  }`;
+		}
+		case 'PLACE':{
+			//http://www.geoplugin.net/extras/location.gp?format=json&amp;lat=[latitude]&amp;lon=[longitude]
+			//used geoplugin_place. geoplugin_countryCode, geoplugin_region
+			return `{
+				"geoplugin_place":"",
+				"geoplugin_countryCode":"",
+				"geoplugin_region":"",
+				"geoplugin_regionAbbreviated":"",
+				"geoplugin_county":"",
+				"geoplugin_latitude":"",
+				"geoplugin_longitude":"",
+				"geoplugin_distanceMiles":null,
+				"geoplugin_distanceKilometers":null
+			}`;
+		}
+		default: return null;
+	}
+};
+/**
+ * 
+ * @param {'IP'|'PLACE'} cachetype 
+ * @param {string|null} ip 
+ * @param {string} latitude 
+ * @param {string} longitude 
+ * @returns {Promise.&lt;*>}
+ */
+const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
+    /**@type{import('../../types.js').microservice_config_service_record}*/
+    const config_service = ConfigServices('GEOLOCATION');
+    let geodata_cache;
+    try {
+        switch (cachetype){
+            case 'IP':{
+                geodata_cache = await fs.promises.readFile(`${process.cwd()}${CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_ip.log`, 'utf8');
+                geodata_cache = geodata_cache.split('\r\n');
+                for (const row of geodata_cache){
+                    const row_obj = JSON.parse(row);
+                    if (row_obj.geoplugin_request==ip || 
+                        ((row_obj.geoplugin_request == '::1' || row_obj.geoplugin_request == '::ffff:127.0.0.1' ) &amp;&amp;
+                         (ip == '::1' || ip == '::ffff:127.0.0.1' )))
+                        return row;
+                }
+                return null;
+            }
+            case 'PLACE':{
+                geodata_cache = await fs.promises.readFile(`${process.cwd()}${CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_place.log`, 'utf8');
+                geodata_cache =  geodata_cache.split('\r\n');
+                /**
+                 * 
+                 * @param {string} v 
+                 * @param {number} d 
+                 * @returns {string}
+                 */
+                const getFixed = (v, d) => {
+                    return (Math.floor(Number(v) * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d);
+                };
+                /**
+                 * 
+                 * @param {string} number_row 
+                 * @param {string} number_search 
+                 * @returns {boolean}
+                 */
+                const check_aprox = (number_row, number_search) =>{
+                    //check aproximate value range -+ 0.07
+                    if ((Number(number_row) >= Number(number_search) - 0.07) &amp;&amp;
+                        (Number(number_row) &lt;= Number(number_search) + 0.07))
+                         return true;
+                    else
+                        return false;
+                };
+                for (const row of geodata_cache){
+                    const row_obj = JSON.parse(row);
+                    //check 1 decimal for current service provider without round
+                    const lat_row = getFixed(row_obj.geoplugin_latitude,2);
+                    const lat_search = getFixed(latitude,2);
+                    const long_row = getFixed(row_obj.geoplugin_longitude,2);
+                    const long_search = getFixed(longitude,2);
+                    if (check_aprox(lat_row, lat_search) &amp;&amp; check_aprox(long_row, long_search))
+                        return row;
+                }
+                return null;
+            }
+            default:{
+                return null;
+            }
+        }
+    } catch (error) {
+        return null;
+    }
+    
+};
+/**
+ * 
+ * @param {'IP'|'PLACE'} cachetype 
+ * @param {*} geodata 
+ */
+const writeCacheGeodata = async (cachetype, geodata) =>{
+    /**@type{import('../../types.js').microservice_config_service_record}*/
+    const config_service = ConfigServices('GEOLOCATION');
+    switch (cachetype){
+        case 'IP':{
+            await fs.promises.appendFile(`${process.cwd()}${CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_ip.log`, 
+                                                          JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
+            break;
+        }
+        case 'PLACE':{
+            await fs.promises.appendFile(`${process.cwd()}${CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_place.log`, 
+                                                             JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
+            break;
+        }
+        default:{
+            break;
+        }
+    }
+};
+/**
+ * 
+ * @param {string} url 
+ * @param {string} language 
+ * @returns 
+ */
+const getGeodata = async (url, language) => {
+    return new Promise((resolve) =>{
+        //geolocation service using http 
+
+        const options = {
+            method: 'GET',
+            headers : {
+                'User-Agent': 'Server',
+                'Accept-Language': language
+            }
+        };
+        
+        const request = http.request(url, options, res =>{
+            let responseBody = '';
+            res.setEncoding('utf8');
+            res.on('data', (chunk) =>{
+                responseBody += chunk;
+            });
+            res.on('end', ()=>{
+                resolve (responseBody);
+            });
+        });
+        request.end();        
+    });
+};
+/**
+ * 
+ * @param {string} latitude
+ * @param {string} longitude
+ * @param {string} accept_language
+ */
+ const getPlace = async (latitude, longitude, accept_language) => {
+	let geodata;
+	geodata = await getCacheGeodata('PLACE', null, latitude, longitude);
+	if (geodata != null)
+        return geodata;
+	else{
+        const url = ConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_PLACE')[0].URL_PLACE
+                    .replace('&lt;LATITUDE/>', latitude)
+                    .replace('&lt;LONGITUDE/>', longitude);
+		geodata = await getGeodata(url, accept_language);
+		if (geodata != '[[]]')
+			writeCacheGeodata('PLACE', geodata);
+		return geodata;
+	}
+};
+/**
+ * 
+ * @param {string} ip
+ * @param {string} accept_language
+ */
+const getIp = async (ip, accept_language) => {
+	let geodata;
+	let url;
+	geodata = await getCacheGeodata('IP', ip, '', '');
+	if (geodata != null)
+		return geodata;
+	else{
+		if (ip == '::1' || ip == '::ffff:127.0.0.1' || ip == '127.0.0.1'){
+			//create empty record with ip ::1 first time
+			writeCacheGeodata('IP', getGeodataEmpty('IP'));
+            url =   ConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
+                    .replace('&lt;IP/>', '');
+		}
+		else
+            url =   ConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
+                    .replace('&lt;IP/>', ip);
+		geodata = await getGeodata(url, accept_language);
+		writeCacheGeodata('IP', geodata);
+        return geodata;
+	}
+};
+export {getGeodataEmpty, getCacheGeodata, writeCacheGeodata, getGeodata, getIp, getPlace};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_praytimes.html">apps/app2/report/lib_praytimes</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_praytimes.html">apps/app2/src/modules/module_praytimes</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_country.html">server/db/components/country</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_locale.html">server/db/components/locale</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_country.html">server/db/sql/country</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_locale.html">server/db/sql/locale</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_logon.html">server/db/sql/user_account_logon</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

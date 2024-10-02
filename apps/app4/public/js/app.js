@@ -1,4 +1,5 @@
 /**
+ * Map app
  * @module apps/app4/app
  */
 

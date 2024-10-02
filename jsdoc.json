@@ -9,8 +9,10 @@
                     ".vscode",
                     ".well_known",
                     "apps/common/public/modules",
+                    "apps/common/src/jsdoc",
+                    "apps/common/src/jsdoc_template",
                     "config", "data", "dev", "docs", "logs", "node_modules", "scripts"],
-        "includePattern": ".+\\.js",
+        "includePattern": ".+\\.js?$",
         "excludePattern": ""
     },
     "plugins": ["plugins/markdown"],
@@ -18,10 +20,15 @@
     "sourceType": "module",
     "templates": {
         "cleverLinks": false,
-        "monospaceLinks": false
+        "monospaceLinks": false,        
+        "default": {
+            "outputSourceFiles": true,
+            "includeDate":false
+        }
     },
     "opts": {
-        "destination": "./docs/jsdoc",
+        "template":"./apps/common/src/jsdoc_template",
+        "destination": "./apps/common/src/jsdoc",
         "encoding": "utf8",
         "private": true,
         "recurse": true

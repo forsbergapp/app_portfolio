@@ -1,4 +1,5 @@
 /** 
+ * Cube app
  * @module apps/app7/app
  */
 /**@type{import('../../../common_types.js').CommonAppDocument} */

@@ -110,6 +110,8 @@ class RubiksCube {
 	 * corner and moving to the bottom right, as if reading lines of text.
 	 *
 	 * See this example: http://2.bp.blogspot.com/_XQ7FznWBAYE/S9Sbric1KNI/AAAAAAAAAFs/wGAb_LcSOwo/s1600/rubik.png
+	 * Also available here:
+	 * /apps/app7/src/functions/solver3/models/rubik.png
 	 */
 	constructor(cubeState) {
 		if (cubeState.length !== 9 * 6) {

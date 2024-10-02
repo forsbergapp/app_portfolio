@@ -1,4 +1,5 @@
 /**
+ * Shop app
  * @module apps/app6/app
  */
 

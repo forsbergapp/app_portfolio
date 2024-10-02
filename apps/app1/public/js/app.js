@@ -1,4 +1,5 @@
 /**
+ * App Portfolio app
  * @module apps/app1/app
  */
 

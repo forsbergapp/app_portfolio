@@ -871,6 +871,12 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
             case (url == '/sw.js'):{
                 return await getAssetFile(app_id, url, ConfigGetApp(app_id, app_id,'PATH'), res).catch(()=>null);
             }
+            case (url == '/info/jsdoc'):{
+                return await getAssetFile(app_id, '/info/jsdoc/index.html'.substring('/info/jsdoc'.length), '/apps/common/src/jsdoc', res).catch(()=>null);
+            }
+            case (url.toLowerCase().startsWith('/info/jsdoc')):{
+                return await getAssetFile(app_id, url.substring('/info/jsdoc'.length), '/apps/common/src/jsdoc', res).catch(()=>null);
+            }
             case (url.toLowerCase().startsWith('/info/about')):
             case (url.toLowerCase().startsWith('/info/disclaimer')):
             case (url.toLowerCase().startsWith('/info/privacy_policy')):

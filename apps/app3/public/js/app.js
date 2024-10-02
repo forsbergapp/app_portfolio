@@ -1,4 +1,5 @@
 /**
+ * Presentation app
  * @module apps/app3/app
  */
 

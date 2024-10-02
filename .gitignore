@@ -1,7 +1,6 @@
 .well-known/
 config/
 data/
-docs/jsdoc/
 logs/
 node_modules/
 microservice/config/

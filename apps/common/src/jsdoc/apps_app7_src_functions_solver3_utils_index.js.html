@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: apps/app7/src/functions/solver3/utils/index.js</title>
+    <base href='/info/jsdoc/'/>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+
+    <link media="all" href="/common/css/common.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font1.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font2.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font3.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font4.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font5.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font6.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font7.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: apps/app7/src/functions/solver3/utils/index.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module apps/app7/src/functions/solver3/utils
+ */
+
+//import cross from 'gl-vec3/cross';
+/**@ts-ignore */
+const {default:{cross}} = await import('../module/gl-vec3/index.js');
+
+import { Face } from '../models/Face.js';
+import { Vector } from '../models/Vector.js';
+
+// maps each face with the notation for their middle moves
+const _middlesMatchingFace = {
+	f: 's',
+	r: 'mprime',
+	u: 'eprime',
+	d: 'e',
+	l: 'm',
+	b: 'sprime'
+};
+
+/**
+ * @param {string} move - The notation of a move, e.g. rPrime.
+ * @return {string}
+ */
+export const getFaceOfMove = (move) => {
+	if (typeof move !== 'string') {
+		throw new TypeError('move must be a string');
+	}
+
+	const faceLetter = move[0].toLowerCase();
+
+	if (faceLetter === 'f') return 'front';
+	if (faceLetter === 'r') return 'right';
+	if (faceLetter === 'u') return 'up';
+	if (faceLetter === 'd') return 'down';
+	if (faceLetter === 'l') return 'left';
+	if (faceLetter === 'b') return 'back';
+};
+
+/**
+ * Almost useless. Almost.
+ * @param {string} face - The string identifying a face.
+ * @return {string}
+ */
+export const getMoveOfFace = (face) => {
+	if (typeof face !== 'string') {
+		throw new TypeError('face must be a string');
+	}
+
+	face = face.toLowerCase();
+
+	if (!['front', 'right', 'up', 'down', 'left', 'back'].includes(face)) {
+		throw new Error(`${face} is not valid face`);
+	}
+
+	return face[0];
+};
+
+export const getMiddleMatchingFace = (face) => {
+	face = face.toLowerCase()[0];
+	return _middlesMatchingFace[face];
+};
+
+export const getFaceMatchingMiddle = (middle) => {
+	middle = middle.toLowerCase();
+
+	for (const face of Object.keys(_middlesMatchingFace)) {
+		const testMiddle = _middlesMatchingFace[face];
+		if (middle === testMiddle) {
+			return face;
+		}
+	}
+};
+
+/**
+ * @param {string|array} notations - The move notation.
+ * @param {object} options - Move options.
+ * @prop {boolean} options.upperCase - Turn all moves to upper case (i.e. no "double" moves).
+ *
+ * @return {string|array} -- whichever was initially given.
+ */
+export const transformNotations = (notations, options = {}) => {
+	let normalized = normalizeNotations(notations);
+
+	if (options.upperCase) {
+		normalized = normalized.map(n => n[0].toUpperCase() + n.slice(1));
+	}
+
+	if (options.orientation) {
+		normalized = orientMoves(normalized, options.orientation);
+	}
+
+	if (options.reverse) {
+		normalized = _reverseNotations(normalized);
+	}
+
+	return typeof notations === 'string' ? normalized.join(' ') : normalized;
+};
+
+/**
+ * @param {array|string} notations - The notations to noramlize.
+ * @return {array}
+ */
+export const normalizeNotations = (notations) => {
+	if (typeof notations === 'string') {
+		notations = notations.split(' ');
+	}
+
+	notations = notations.filter(notation => notation !== '');
+
+	return notations.map(notation => {
+		const isPrime = notation.toLowerCase().includes('prime');
+		const isDouble = notation.includes('2');
+
+		notation = notation[0];
+
+		if (isDouble) notation = notation[0] + '2';
+		else if (isPrime) notation = notation + 'prime';
+
+		return notation;
+	});
+};
+
+/**
+ * Finds the direction from an origin face to a target face. The origin face
+ * will be oriented so that it becomes FRONT. An orientation object must be
+ * provided that specifies any of these faces (exclusively): TOP, RIGHT, DOWN,
+ * LEFT.
+ * If FRONT or BACK is provided along with one of those faces, it will be
+ * ignored. If FRONT or BACK is the only face provided, the orientation is
+ * ambiguous and an error will be thrown.
+ *
+ * Example:
+ * getDirectionFromFaces('back', 'up', { down: 'right' })
+ * Step 1) orient the BACK face so that it becomes FRONT.
+ * Step 2) orient the DOWN face so that it becomes RIGHT.
+ * Step 3) Find the direction from BACK (now FRONT) to UP (now LEFT).
+ * Step 4) Returns 'left'.
+ *
+ * @param {string} origin - The origin face.
+ * @param {string} target - The target face.
+ * @param {object} orientation - The object that specifies the cube orientation.
+ * @return {string|number}
+ */
+export const getDirectionFromFaces = (origin, target, orientation) => {
+	orientation = _toLowerCase(orientation);
+	orientation = _prepOrientationForDirection(orientation, origin);
+
+	const fromFace = new Face(origin);
+	const toFace = new Face(target);
+
+	const rotations = _getRotationsForOrientation(orientation);
+	_rotateFacesByRotations([fromFace, toFace], rotations);
+
+	const axis = new Vector(cross([], fromFace.normal(), toFace.normal())).getAxis();
+	const direction = Vector.getAngle(fromFace.normal(), toFace.normal());
+
+	if (axis === 'x' &amp;&amp; direction > 0) return 'down';
+	if (axis === 'x' &amp;&amp; direction &lt; 0) return 'up';
+	if (axis === 'y' &amp;&amp; direction > 0) return 'right';
+	if (axis === 'y' &amp;&amp; direction &lt; 0) return 'left';
+
+	if (direction === 0) {
+		return 'front';
+	} else if (direction === Math.PI) {
+		return 'back';
+	}
+};
+
+/**
+ * See `getDirectionFromFaces`. Almost identical, but instead of finding a
+ * direction from an origin face and target face, this finds a target face from
+ * an origin face and direction.
+ * @param {string} origin - The origin face.
+ * @param {string} direction - The direction.
+ * @param {object} orientation - The orientation object.
+ * @return {string}
+ */
+export const getFaceFromDirection = (origin, direction, orientation) => {
+	orientation = _toLowerCase(orientation);
+	orientation = _prepOrientationForDirection(orientation, origin);
+
+	const fromFace = new Face(origin);
+
+	const rotations = _getRotationsForOrientation(orientation);
+	_rotateFacesByRotations([fromFace], rotations);
+
+	const directionFace = new Face(direction);
+	const { axis, angle } = Vector.getRotationFromNormals(fromFace.normal(), directionFace.normal());
+	fromFace.rotate(axis, angle);
+
+	// at this point fromFace is now the target face, but we still need to revert
+	// the orientation to return the correct string
+	const reversedRotations = rotations.map(rotation => Vector.reverseRotation(rotation)).reverse();
+	_rotateFacesByRotations([fromFace], reversedRotations);
+	return fromFace.toString();
+};
+
+/**
+ * Finds a move that rotates the given face around its normal, by the angle
+ * described by normal1 -> normal2.
+ * @param {string} face - The face to rotate.
+ * @param {string} from - The origin face.
+ * @param {string} to - The target face.
+ * @return {string}
+ */
+export const getRotationFromTo = (face, from, to) => {
+	const rotationFace = new Face(face);
+	const fromFace = new Face(from);
+	const toFace = new Face(to);
+
+	const rotationAxis = rotationFace.vector.getAxis();
+	const [fromAxis, toAxis] = [fromFace.vector.getAxis(), toFace.vector.getAxis()];
+
+	if ([fromAxis.toLowerCase(), toAxis.toLowerCase()].includes(rotationAxis.toLowerCase())) {
+		throw new Error(`moving ${rotationFace} from ${fromFace} to ${toFace} is not possible.`);
+	}
+
+	const move = getMoveOfFace(face).toUpperCase();
+	let angle = Vector.getAngle(fromFace.normal(), toFace.normal());
+	if (rotationFace.vector.getMagnitude() &lt; 0) {
+		angle *= -1;
+	}
+
+	if (angle === 0) {
+		return '';
+	} else if (Math.abs(angle) === Math.PI) {
+		return `${move} ${move}`;
+	} else if (angle &lt; 0) {
+		return `${move}`;
+	} else if (angle > 0) {
+		return `${move}Prime`;
+	}
+};
+
+/**
+ * Returns an array of transformed notations so that if done when the cube's
+ * orientation is default (FRONT face is FRONT, RIGHT face is RIGHT, etc.), the
+ * moves will have the same effect as performing the given notations on a cube
+ * oriented by the specified orientation.
+ *
+ * Examples:
+ * orientMoves(['R', 'U'], { front: 'front', up: 'up' })      === ['R', 'U']
+ * orientMoves(['R', 'U'], { front: 'front', down: 'right' }) === ['U', 'L']
+ * orientMoves(['R', 'U', 'LPrime', 'D'], { up: 'back', right: 'down' }) === ['D', 'B', 'UPrime', 'F']
+ *
+ * @param {array} notations - An array of notation strings.
+ * @param {object} orientation - The orientation object.
+ */
+export const orientMoves = (notations, orientation) => {
+	orientation = _toLowerCase(orientation);
+	const rotations = _getRotationsForOrientation(orientation);
+	rotations.reverse().map(rotation => Vector.reverseRotation(rotation));
+
+	return notations.map(notation => {
+		const isPrime = notation.toLowerCase().includes('prime');
+		const isDouble = notation.includes('2');
+		const isWithMiddle = notation[0] === notation[0].toLowerCase();
+		const isMiddle = ['m', 'e', 's'].includes(notation[0].toLowerCase());
+
+		if (isDouble) {
+			notation = notation.replace('2', '');
+		}
+
+		let face;
+
+		if (isMiddle) {
+			const faceStr = getFaceOfMove(getFaceMatchingMiddle(notation));
+			face = new Face(faceStr);
+		} else {
+			const faceStr = getFaceOfMove(notation[0]);
+			face = new Face(faceStr);
+		}
+
+		_rotateFacesByRotations([face], rotations);
+
+		let newNotation; // this will always be lower case
+
+		if (isMiddle) {
+			newNotation = getMiddleMatchingFace(face.toString());
+		} else {
+			newNotation = face.toString()[0];
+		}
+
+		if (!isWithMiddle) newNotation = newNotation.toUpperCase();
+		if (isDouble) newNotation = newNotation + '2';
+		if (isPrime &amp;&amp; !isMiddle) newNotation += 'prime';
+
+		return newNotation;
+	});
+};
+
+//-----------------
+// Helper functions
+//-----------------
+
+/**
+ * Returns an object with all keys and values lowercased. Assumes all keys and
+ * values are strings.
+ * @param {object} object - The object to map.
+ */
+function _toLowerCase(object) {
+	const ret = {};
+	Object.keys(object).forEach(key => {
+		ret[key.toLowerCase()] = object[key].toLowerCase();
+	});
+	return ret;
+}
+
+/**
+ * This function is specificly for `getDirectionFromFaces` and
+ * `getFaceFromDirection`. It removes all keys that are either 'front' or 'back'
+ * and sets the given front face to orientation.front.
+ * @param {object} orientation - The orientation object.
+ * @param {string} front - The face to set as front.
+ */
+function _prepOrientationForDirection(orientation, front) {
+	const keys = Object.keys(orientation);
+
+	if (keys.length &lt;= 1 &amp;&amp; ['front', 'back'].includes(keys[0])) {
+		throw new Error(`Orientation object "${orientation}" is ambiguous. Please specify one of these faces: "up", "right", "down", "left"`);
+	}
+
+	// remove "front" and "back" from provided orientation object
+	const temp = orientation;
+	orientation = {};
+
+	keys.forEach(key => {
+		if (['front', 'back'].includes(key)) {
+			return;
+		}
+		orientation[key] = temp[key];
+	});
+
+	orientation.front = front.toLowerCase();
+
+	return orientation;
+}
+
+/**
+ * @param {object} orientation - The orientation object.
+ * @return {array}
+ */
+function _getRotationsForOrientation(orientation) {
+	if (Object.keys(orientation) &lt;= 1) {
+		throw new Error(`Orientation object "${orientation}" is ambiguous. Please specify 2 faces.`);
+	}
+
+	const keys = Object.keys(orientation);
+	const origins = keys.map(key => new Face(orientation[key]));
+	const targets = keys.map(key => new Face(key));
+
+	// perform the first rotation, and save it
+	const rotation1 = Vector.getRotationFromNormals(
+		origins[0].normal(),
+		origins[0].orientTo(targets[0]).normal()
+	);
+
+	// perform the first rotation on the second origin face
+	origins[1].rotate(rotation1.axis, rotation1.angle);
+
+	// peform the second rotation, and save it
+	const rotation2 = Vector.getRotationFromNormals(
+		origins[1].normal(),
+		origins[1].orientTo(targets[1]).normal()
+	);
+
+	// if the rotation angle is PI, there are 3 possible axes that can perform the
+	// rotation. however only one axis will perform the rotation while keeping
+	// the first origin face on the target. this axis is the same as the origin
+	// face's normal.
+	if (Math.abs(rotation2.angle) === Math.PI) {
+		const rotation2Axis = new Face(keys[0]).vector.getAxis();
+		rotation2.axis = rotation2Axis;
+	}
+
+	return [rotation1, rotation2];
+}
+
+/**
+ * @param {array} - Array of Face objects to rotate.
+ * @param {array} - Array of rotations to apply to faces.
+ * @return {null}
+ */
+function _rotateFacesByRotations(faces, rotations) {
+	for (const face of faces) {
+		for (const rotation of rotations) {
+			face.rotate(rotation.axis, rotation.angle);
+		}
+	}
+}
+
+/**
+ * @param {array} notations
+ * @return {array}
+ */
+function _reverseNotations(notations) {
+	const reversed = [];
+
+	for (let notation of notations) {
+		const isPrime = notation.includes('prime');
+		notation = isPrime ? notation[0] : notation[0] + 'prime';
+		reversed.push(notation);
+	}
+
+	return typeof moves === 'string' ? reversed.join(' ') : reversed;
+}
+
+export default {
+	getFaceOfMove,
+	getMoveOfFace,
+	getMiddleMatchingFace,
+	getFaceMatchingMiddle,
+	transformNotations,
+	normalizeNotations,
+	getDirectionFromFaces,
+	getRotationFromTo,
+	getFaceFromDirection,
+	orientMoves
+};
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_praytimes.html">apps/app2/report/lib_praytimes</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_praytimes.html">apps/app2/src/modules/module_praytimes</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_country.html">server/db/components/country</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_locale.html">server/db/components/locale</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_country.html">server/db/sql/country</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_locale.html">server/db/sql/locale</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_logon.html">server/db/sql/user_account_logon</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

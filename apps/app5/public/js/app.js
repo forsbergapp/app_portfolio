@@ -1,4 +1,5 @@
 /**
+ * Bank app
  * @module apps/app5/app
  */
 
