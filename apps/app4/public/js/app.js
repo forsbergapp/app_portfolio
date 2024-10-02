@@ -169,7 +169,7 @@ const init_map = async ()=>{
                     null,
                     null)
     .then(()=>  
-        common.map_update({ 
+        common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ 
                             longitude:common.COMMON_GLOBAL.client_longitude,
                             latitude:common.COMMON_GLOBAL.client_latitude,
                             zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,

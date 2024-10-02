@@ -608,7 +608,7 @@ const SettingShow = async (tab_selected) => {
                             getTimezone:getTimezone,
                             getTimezoneDate:common.getTimezoneDate,
                             map_init:common.map_init,
-                            map_resize:common.map_resize,
+                            map_resize:common.COMMON_GLOBAL.moduleLeaflet.methods.map_resize,
                             set_current_value:common.set_current_value,
                             ComponentRender:common.ComponentRender,
                             app_settings_get:common.app_settings_get
@@ -766,7 +766,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             }
         case 'GPS_CITIES':
             {
-                common.map_city(CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').getAttribute('data-value')==''?
+                common.COMMON_GLOBAL.moduleLeaflet.methods.map_city(CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').getAttribute('data-value')==''?
                                 null:
                                 JSON.parse(CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').getAttribute('data-value')).country_code);
                 break;
@@ -835,7 +835,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                     //display empty country
                     CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
                     CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '...';
-                    common.map_city_empty();
+                    common.COMMON_GLOBAL.moduleLeaflet.methods.map_city_empty();
                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone_selected;
                 const title = CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').innerText;
                 CommonAppDocument.querySelector('#setting_input_place').innerHTML = title;
@@ -867,7 +867,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                     //display empty country and city
                     CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
                     CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
-                    common.map_city_empty();
+                    common.COMMON_GLOBAL.moduleLeaflet.methods.map_city_empty();
                     settings_update('GPS');
                 });
                 break;
@@ -2204,8 +2204,8 @@ const app_event_keyup = event => {
  * @returns {void}
  */
 const map_show_qibbla = () => {
-    common.map_line_removeall();
-    common.map_line_create('qibbla', 
+    common.COMMON_GLOBAL.moduleLeaflet.methods.map_line_removeall();
+    common.COMMON_GLOBAL.moduleLeaflet.methods.map_line_create('qibbla', 
                     APP_GLOBAL.gps_module_leaflet_qibbla_title,
                     APP_GLOBAL.gps_module_leaflet_qibbla_text_size,
                     APP_GLOBAL.gps_module_leaflet_qibbla_long,
@@ -2215,7 +2215,7 @@ const map_show_qibbla = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_color,
                     APP_GLOBAL.gps_module_leaflet_qibbla_width,
                     APP_GLOBAL.gps_module_leaflet_qibbla_opacity);
-    common.map_line_create('qibbla_old', 
+    common.COMMON_GLOBAL.moduleLeaflet.methods.map_line_create('qibbla_old', 
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_title,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_long,
@@ -2242,15 +2242,15 @@ const map_show_qibbla = () => {
 const map_update_app = async (parameters) => {
     return new Promise((resolve) => {
         map_show_qibbla();
-        common.map_update({ longitude:parameters.longitude,
-                            latitude:parameters.latitude,
-                            zoomvalue:parameters.zoomvalue,
-                            text_place:parameters.text_place,
-                            country:'',
-                            city:'',
-                            timezone_text :parameters.timezone_text,
-                            to_method:parameters.to_method
-                        }).then(timezonetext=> {
+        common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:parameters.longitude,
+                                                                latitude:parameters.latitude,
+                                                                zoomvalue:parameters.zoomvalue,
+                                                                text_place:parameters.text_place,
+                                                                country:'',
+                                                                city:'',
+                                                                timezone_text :parameters.timezone_text,
+                                                                to_method:parameters.to_method
+                                                            }).then((/**@type{string}*/timezonetext)=> {
             resolve(timezonetext);
         });
     });
@@ -2261,7 +2261,7 @@ const map_update_app = async (parameters) => {
  * @returns {Promise.<void>}
  */
 const map_show_search_on_map_app = async (data) =>{
-    await common.map_show_search_on_map(data);
+    await common.COMMON_GLOBAL.moduleLeaflet.methods.map_show_search_on_map(data);
     component_setting_update('GPS', 'CITY');
 };
 /**
