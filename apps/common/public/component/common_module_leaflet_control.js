@@ -331,181 +331,181 @@ const component = async props => {
         if (props.methods.common_document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
             map_control_toggle_expand('layer');
     };
-/**
- * Map control toogle expand
- * @param {string} item 
- * @returns {Promise.<void>}
- */
-const map_control_toggle_expand = async item =>{
-    let style_display;
-    if (props.methods.common_document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
-    props.methods.common_document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display ==''){
-            style_display = 'block';
-            if (item == 'search')
-                await props.methods.ComponentRender({
-                    mountDiv:   'common_module_leaflet_select_country',
-                    data:       {
-                                default_data_value:'',
-                                default_value:'...',
-                                options: await map_country(props.data.user_locale),
-                                path:null,
-                                query:null,
-                                method:null,
-                                authorization_type:null,
-                                column_value:'value',
-                                column_text:'text'
-                                },
-                    methods:    {FFB:null},
-                    path:       '/common/component/common_select.js'});
-        }
-    else
-        style_display = 'none';
-    props.methods.common_document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
-};
-/**
- * Map resize
- * @returns {Promise.<void>}
- */
-const map_resize = async () => {
-    //fixes not rendering correct showing map div
-    props.methods.moduleLeafletContainer()?.invalidateSize?.();
-};
-/**
- * Map line remove all
- * @returns {void}
- */
-const map_line_removeall = () => {
-    if(MODULE_LEAFLET_GEOJSON)
-        for (let i=0;i<MODULE_LEAFLET_GEOJSON.length;i++){
-            props.methods.moduleLeafletContainer()?.removeLayer?.(MODULE_LEAFLET_GEOJSON[i]);
-        }
-        MODULE_LEAFLET_GEOJSON=[];
-};
-/**
- * Map line create 
- * @param {string} id 
- * @param {string} title 
- * @param {number} text_size 
- * @param {number} from_longitude 
- * @param {number} from_latitude 
- * @param {number} to_longitude 
- * @param {number} to_latitude 
- * @param {string} color 
- * @param {number} width 
- * @param {number} opacity 
- * @returns {void}
- */
-const map_line_create = (id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity) => {
-    /**Text size to be implemented */
-    const geojsonFeature = {
-        id: `"${id}"`,
-        type: 'Feature',
-        properties: { title: title },
-        geometry: {
-            type: 'LineString',
-                coordinates: [
-                    [from_longitude, from_latitude],
-                    [to_longitude, to_latitude]
-                ]
-        }
+    /**
+     * Map control toogle expand
+     * @param {string} item 
+     * @returns {Promise.<void>}
+     */
+    const map_control_toggle_expand = async item =>{
+        let style_display;
+        if (props.methods.common_document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
+        props.methods.common_document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display ==''){
+                style_display = 'block';
+                if (item == 'search')
+                    await props.methods.ComponentRender({
+                        mountDiv:   'common_module_leaflet_select_country',
+                        data:       {
+                                    default_data_value:'',
+                                    default_value:'...',
+                                    options: await map_country(props.data.user_locale),
+                                    path:null,
+                                    query:null,
+                                    method:null,
+                                    authorization_type:null,
+                                    column_value:'value',
+                                    column_text:'text'
+                                    },
+                        methods:    {FFB:null},
+                        path:       '/common/component/common_select.js'});
+            }
+        else
+            style_display = 'none';
+        props.methods.common_document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
     };
-    //use GeoJSON to draw a line
-    const myStyle = {
-        color: color,
-        weight: width,
-        opacity: opacity
+    /**
+     * Map resize
+     * @returns {Promise.<void>}
+     */
+    const map_resize = async () => {
+        //fixes not rendering correct showing map div
+        props.methods.moduleLeafletContainer()?.invalidateSize?.();
     };
-    
-    const layer = props.methods.moduleLeafletLibrary().geoJSON(geojsonFeature, {style: myStyle}).addTo(props.methods.moduleLeafletContainer());
-    /**@ts-ignore */
-    MODULE_LEAFLET_GEOJSON.push(layer);
-};
-/**
- * Map set style
- * @param {string} mapstyle 
- * @returns {void}
- */
-const map_setstyle = mapstyle => {
-    for (const module_leaflet_map_style of MODULE_LEAFLET_SELECT_MAP_LAYERS){
-        if (props.methods.moduleLeafletContainer() && module_leaflet_map_style.session_map_layer){
-            props.methods.moduleLeafletContainer()?.removeLayer?.(module_leaflet_map_style.session_map_layer);
-        }
-    }
-    const mapstyle_record = MODULE_LEAFLET_SELECT_MAP_LAYERS.filter(map_style=>map_style.value==mapstyle)[0];
-    if (mapstyle_record.data3)
-        mapstyle_record.session_map_layer = props.methods.moduleLeafletLibrary().tileLayer(mapstyle_record.data2, {
-            maxZoom: mapstyle_record.data3,
-            attribution: mapstyle_record.data4
-        }).addTo(props.methods.moduleLeafletContainer());
-    else
-        mapstyle_record.session_map_layer = props.methods.moduleLeafletLibrary().tileLayer(mapstyle_record.data2, {
-            attribution: mapstyle_record.data4
-        }).addTo(props.methods.moduleLeafletContainer());
-};
-/**
- * Map update
- * @param {{longitude:string,
- *          latitude:string,
- *          zoomvalue?:number|null,
- *          text_place:string,
- *          country:string,
- *          city:string,
- *          timezone_text :string|null,
- *          to_method?:number
- *          }} parameters
- * @returns {Promise.<string|null>}
- */
-const map_update = async (parameters) => {
-    const path_regional ='regional';
-    /**@type {import('../../../common_types.js').CommonModuleRegional} */
-    const {getTimezone} = await import(path_regional);
-    return new Promise((resolve)=> {
-        /**
-         * Map update GPS
-         * @param {number|null} to_method 
-         * @param {number|null} zoomvalue 
-         * @param {string} longitude 
-         * @param {string} latitude 
-         */
-        const map_update_gps = (to_method, zoomvalue, longitude, latitude) => {
-            switch (to_method){
-                case MODULE_LEAFLET_JUMPTO:{
-                    if (zoomvalue == null){
-                        props.methods.moduleLeafletContainer()?.setView?.(new (props.methods.moduleLeafletLibrary()).LatLng(latitude, longitude));
-                    }
-                    else{
-                        props.methods.moduleLeafletContainer()?.setView?.(new (props.methods.moduleLeafletLibrary()).LatLng(latitude, longitude), zoomvalue);
-                    }
-                    break;
-                }
-                case MODULE_LEAFLET_FLYTO:{
-                    props.methods.moduleLeafletContainer()?.flyTo?.([latitude, longitude], zoomvalue, {duration:MODULE_LEAFLET_FLY_TO_DURATION});
-                    break;
-                }
+    /**
+     * Map line remove all
+     * @returns {void}
+     */
+    const map_line_removeall = () => {
+        if(MODULE_LEAFLET_GEOJSON)
+            for (let i=0;i<MODULE_LEAFLET_GEOJSON.length;i++){
+                props.methods.moduleLeafletContainer()?.removeLayer?.(MODULE_LEAFLET_GEOJSON[i]);
+            }
+            MODULE_LEAFLET_GEOJSON=[];
+    };
+    /**
+     * Map line create 
+     * @param {string} id 
+     * @param {string} title 
+     * @param {number} text_size 
+     * @param {number} from_longitude 
+     * @param {number} from_latitude 
+     * @param {number} to_longitude 
+     * @param {number} to_latitude 
+     * @param {string} color 
+     * @param {number} width 
+     * @param {number} opacity 
+     * @returns {void}
+     */
+    const map_line_create = (id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity) => {
+        /**Text size to be implemented */
+        const geojsonFeature = {
+            id: `"${id}"`,
+            type: 'Feature',
+            properties: { title: title },
+            geometry: {
+                type: 'LineString',
+                    coordinates: [
+                        [from_longitude, from_latitude],
+                        [to_longitude, to_latitude]
+                    ]
             }
         };
-        map_update_gps(parameters?.to_method ?? MODULE_LEAFLET_JUMPTO, parameters.zoomvalue ?? MODULE_LEAFLET_ZOOM, parameters.longitude, parameters.latitude);
-        if (parameters.timezone_text == null)
-            parameters.timezone_text = getTimezone(parameters.latitude, parameters.longitude);
+        //use GeoJSON to draw a line
+        const myStyle = {
+            color: color,
+            weight: width,
+            opacity: opacity
+        };
+        
+        const layer = props.methods.moduleLeafletLibrary().geoJSON(geojsonFeature, {style: myStyle}).addTo(props.methods.moduleLeafletContainer());
+        /**@ts-ignore */
+        MODULE_LEAFLET_GEOJSON.push(layer);
+    };
+    /**
+     * Map set style
+     * @param {string} mapstyle 
+     * @returns {void}
+     */
+    const map_setstyle = mapstyle => {
+        for (const module_leaflet_map_style of MODULE_LEAFLET_SELECT_MAP_LAYERS){
+            if (props.methods.moduleLeafletContainer() && module_leaflet_map_style.session_map_layer){
+                props.methods.moduleLeafletContainer()?.removeLayer?.(module_leaflet_map_style.session_map_layer);
+            }
+        }
+        const mapstyle_record = MODULE_LEAFLET_SELECT_MAP_LAYERS.filter(map_style=>map_style.value==mapstyle)[0];
+        if (mapstyle_record.data3)
+            mapstyle_record.session_map_layer = props.methods.moduleLeafletLibrary().tileLayer(mapstyle_record.data2, {
+                maxZoom: mapstyle_record.data3,
+                attribution: mapstyle_record.data4
+            }).addTo(props.methods.moduleLeafletContainer());
+        else
+            mapstyle_record.session_map_layer = props.methods.moduleLeafletLibrary().tileLayer(mapstyle_record.data2, {
+                attribution: mapstyle_record.data4
+            }).addTo(props.methods.moduleLeafletContainer());
+    };
+    /**
+     * Map update
+     * @param {{longitude:string,
+     *          latitude:string,
+     *          zoomvalue?:number|null,
+     *          text_place:string,
+     *          country:string,
+     *          city:string,
+     *          timezone_text :string|null,
+     *          to_method?:number
+     *          }} parameters
+     * @returns {Promise.<string|null>}
+     */
+    const map_update = async (parameters) => {
+        const path_regional ='regional';
+        /**@type {import('../../../common_types.js').CommonModuleRegional} */
+        const {getTimezone} = await import(path_regional);
+        return new Promise((resolve)=> {
+            /**
+             * Map update GPS
+             * @param {number|null} to_method 
+             * @param {number|null} zoomvalue 
+             * @param {string} longitude 
+             * @param {string} latitude 
+             */
+            const map_update_gps = (to_method, zoomvalue, longitude, latitude) => {
+                switch (to_method){
+                    case MODULE_LEAFLET_JUMPTO:{
+                        if (zoomvalue == null){
+                            props.methods.moduleLeafletContainer()?.setView?.(new (props.methods.moduleLeafletLibrary()).LatLng(latitude, longitude));
+                        }
+                        else{
+                            props.methods.moduleLeafletContainer()?.setView?.(new (props.methods.moduleLeafletLibrary()).LatLng(latitude, longitude), zoomvalue);
+                        }
+                        break;
+                    }
+                    case MODULE_LEAFLET_FLYTO:{
+                        props.methods.moduleLeafletContainer()?.flyTo?.([latitude, longitude], zoomvalue, {duration:MODULE_LEAFLET_FLY_TO_DURATION});
+                        break;
+                    }
+                }
+            };
+            map_update_gps(parameters?.to_method ?? MODULE_LEAFLET_JUMPTO, parameters.zoomvalue ?? MODULE_LEAFLET_ZOOM, parameters.longitude, parameters.latitude);
+            if (parameters.timezone_text == null)
+                parameters.timezone_text = getTimezone(parameters.latitude, parameters.longitude);
 
-        props.methods.ComponentRender({
-            mountDiv:   null,
-            data:       {  
-                        timezone_text:parameters.timezone_text,
-                        latitude:parameters.latitude,
-                        longitude:parameters.longitude,
-                        text_place:parameters.text_place,
-                        country:parameters.country,
-                        city:parameters.city
-                        },
-            methods:    {
-                        moduleLeafletLibrary:props.methods.moduleLeafletLibrary,
-                        moduleLeafletContainer:props.methods.moduleLeafletContainer
-                        },
-            path:       '/common/component/common_module_leaflet_popup.js'})
-        .then(()=>resolve(parameters.timezone_text));
-    });
-};
+            props.methods.ComponentRender({
+                mountDiv:   null,
+                data:       {  
+                            timezone_text:parameters.timezone_text,
+                            latitude:parameters.latitude,
+                            longitude:parameters.longitude,
+                            text_place:parameters.text_place,
+                            country:parameters.country,
+                            city:parameters.city
+                            },
+                methods:    {
+                            moduleLeafletLibrary:props.methods.moduleLeafletLibrary,
+                            moduleLeafletContainer:props.methods.moduleLeafletContainer
+                            },
+                path:       '/common/component/common_module_leaflet_popup.js'})
+            .then(()=>resolve(parameters.timezone_text));
+        });
+    };
     const onMounted = async () =>{
         //mount custom code inside Leaflet container
         props.methods.common_document.querySelectorAll(`#${props.methods.moduleLeafletContainer()._container.id} .leaflet-control`)[0].innerHTML += 

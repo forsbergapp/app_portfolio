@@ -1606,8 +1606,6 @@ const app_event_click = event => {
                     //module leaflet
                     if (event_target_id == 'common_module_leaflet_select_country')
                         settings_update('GPS');
-                    if (event_target_id == 'common_module_leaflet_search_list')
-                        component_setting_update('GPS', 'CITY');
                     if(event_target_id == 'common_module_leaflet_select_city'){
                         //popular place not on map is read when saving
                         component_setting_update('GPS', 'CITY');
@@ -2067,6 +2065,10 @@ const app_event_click = event => {
                 }
 
                 //module leaflet
+                case 'common_module_leaflet_search_list':{
+                    component_setting_update('GPS', 'CITY');
+                    break;
+                }
                 case 'common_module_leaflet_control_my_location_id':{
                     common.set_current_value('setting_select_popular_place', null, 'id', null);
                     CommonAppDocument.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;

@@ -627,7 +627,7 @@ const select_event_action = async (event_target_id, target) =>{
     if(event_target_id== 'common_module_leaflet_select_country')
         COMMON_GLOBAL.moduleLeaflet.methods.eventClickCountry(event_target_id);
     if (event_target_id== 'common_module_leaflet_select_city')
-        COMMON_GLOBAL.moduleLeaflet.methods.eventClickCity(event_target_id);
+        await COMMON_GLOBAL.moduleLeaflet.methods.eventClickCity(event_target_id);
     if(event_target_id == 'common_module_leaflet_select_mapstyle')
         COMMON_GLOBAL.moduleLeaflet.methods.eventClickMapLayer(target);
 
