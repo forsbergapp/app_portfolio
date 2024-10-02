@@ -3061,7 +3061,7 @@ const common_event = async (event_type,event=null) =>{
                 break;
             }
             case 'keyup':{
-                if (event.target.innerText.indexOf('\n')>-1 ||event.target.innerText.indexOf('<br>')>-1){
+                if (event.target.classList.contains('common_input') &&(event.target.innerText.indexOf('\n')>-1 ||event.target.innerText.indexOf('<br>')>-1)){
                     event.target.innerText = event.target.innerText.replace('\n','');
                     event.target.innerText = event.target.innerText.replace('<br>','');
                 }
