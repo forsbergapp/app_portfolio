@@ -13,14 +13,9 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  *                      common_mountdiv:string,
  *                      longitude:string,
  *                      latitude:string,
- *                      moduleLeafletZoom:number,
- *                      moduleLeafletJumpTo:number,
  *                      app_eventListeners:import('../../../common_types.js').CommonGlobal['app_eventListeners']},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      function_event_doubleclick:function,
- *                      get_place_from_gps:import('../../../common_types.js').CommonModuleCommon['get_place_from_gps'],
- *                      map_update:import('../../../common_types.js').CommonModuleCommon['map_update']
+ *                      common_document:import('../../../common_types.js').CommonAppDocument
  *                       }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -30,53 +25,30 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
 const component = async props => {
     const path_leaflet ='leaflet';
     /**@type {import('../../../common_types.js').CommonModuleLeaflet} */
-    const Leaflet = await import(path_leaflet);
+    const LEAFLET = await import(path_leaflet);
     const LEAFLET_CONTAINER_DIV = 'leaflet';
     /**@type{import('../../../common_types.js').CommonModuleLeafletMapData} */
     let LEAFLET_CONTAINER;
+    const MODULE_LEAFLET_ZOOM       =14;
     
     /**
      * Returns Leaflet container
      */
     const leafletContainer =()=>LEAFLET_CONTAINER;
 
+    /**
+     * Returns Leaflet library
+     */
+    const leafletLibrary =()=>LEAFLET;
+
     const onMounted = async () =>{
-         LEAFLET_CONTAINER = Leaflet.map(LEAFLET_CONTAINER_DIV).setView([props.data.latitude, props.data.longitude], props.data.moduleLeafletZoom);
+         LEAFLET_CONTAINER = leafletLibrary().map(LEAFLET_CONTAINER_DIV).setView([props.data.latitude, props.data.longitude], MODULE_LEAFLET_ZOOM);
         //disable doubleclick in event dblclick since e.preventdefault() does not work
-        LEAFLET_CONTAINER.doubleClickZoom.disable(); 
+        leafletContainer().doubleClickZoom.disable(); 
         //add scale
         //position values: 'topleft', 'topright', 'bottomleft' or 'bottomright'
-        Leaflet.control.scale({position: 'topright'}).addTo(LEAFLET_CONTAINER);
+        leafletLibrary().control.scale({position: 'topright'}).addTo(leafletContainer());
         
-        if (props.methods.function_event_doubleclick){
-            LEAFLET_CONTAINER.on('dblclick', props.methods.function_event_doubleclick);
-        }
-        else{
-            /**
-             * @param{import('../../../common_types.js').CommonModuleLeafletEvent} e
-             */
-            const default_dbl_click_event = e => {
-                if (e.originalEvent.target.id == LEAFLET_CONTAINER_DIV){
-                    const lng = e.latlng.lng;
-                    const lat = e.latlng.lat;
-                    //Update GPS position
-                    props.methods.get_place_from_gps(lng, lat).then((/**@type{string}*/gps_place) => {
-                        props.methods.map_update({ longitude:lng,
-                                                    latitude:lat,
-                                                    zoomvalue:null,//do not change zoom 
-                                                    text_place: gps_place,
-                                                    country:'',
-                                                    city:'',
-                                                    timezone_text :null,
-                                                    to_method:props.data.moduleLeafletJumpTo
-                                                });
-                    });
-                }
-            };
-            //also creates event:
-            //Leaflet.DomEvent.addListener(LEAFLET_CONTAINER, 'dblclick', default_dbl_click_event);
-            LEAFLET_CONTAINER.on('dblclick', default_dbl_click_event);
-        }
     };
     const onUnmounted = ()=>{
         //remove Leaflet listeners if any one used
@@ -96,7 +68,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted, onUnmounted:onUnmounted},
         data:       null,
         methods:    {
-                    leafletLibrary:Leaflet,
+                    leafletLibrary:leafletLibrary,
                     leafletContainer:leafletContainer},
         template:   template({  css_url:'/common/modules/leaflet/leaflet.css',
                                 leaflet_container:LEAFLET_CONTAINER_DIV

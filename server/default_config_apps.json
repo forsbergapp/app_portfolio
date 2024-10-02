@@ -69,7 +69,6 @@
                     {"IMAGE_AVATAR_WIDTH": "64"},
                     {"MODULE_LEAFLET_FLYTO": "1"},
                     {"MODULE_LEAFLET_JUMPTO": "0"},
-                    {"MODULE_LEAFLET_STYLE": "OpenStreetMap_Mapnik"},
                     {"MODULE_LEAFLET_ZOOM": "14"},
                     {"MODULE_LEAFLET_ZOOM_CITY": "8"},
                     {"MODULE_LEAFLET_ZOOM_PP": "14"},

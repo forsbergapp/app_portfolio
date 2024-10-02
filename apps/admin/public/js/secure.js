@@ -553,7 +553,7 @@ const map_mount = () =>{
                         common.COMMON_GLOBAL.client_latitude,
                         null,
                         null).then(() => {
-            common.map_update({ longitude:common.COMMON_GLOBAL.client_longitude,
+            common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:common.COMMON_GLOBAL.client_longitude,
                                 latitude:common.COMMON_GLOBAL.client_latitude,
                                 zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
                                 text_place:common.COMMON_GLOBAL.client_place,
@@ -562,7 +562,7 @@ const map_mount = () =>{
                                 timezone_text :null,
                                 to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
                             });
-            common.map_resize();
+            common.COMMON_GLOBAL.moduleLeaflet.methods.map_resize();
         });
 };
 
@@ -752,17 +752,17 @@ const list_item_click = (item_type, data) => {
             common.FFB({path:'/geolocation/ip', query:data['ip'] != '::1'?`ip=${data['ip']}`:null, method: 'GET', authorization_type:'APP_DATA'})
             .then((/**@type{string}*/result)=>{
                 const geodata = JSON.parse(result);
-                common.map_update({ longitude:geodata.geoplugin_longitude,
-                                    latitude:geodata.geoplugin_latitude,
-                                    zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
-                                    text_place: geodata.geoplugin_city + ', ' +
-                                                geodata.geoplugin_regionName + ', ' +
-                                                geodata.geoplugin_countryName,
-                                    country:'',
-                                    city:'',
-                                    timezone_text :null,
-                                    to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
-                                });
+                common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:geodata.geoplugin_longitude,
+                                                                        latitude:geodata.geoplugin_latitude,
+                                                                        zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
+                                                                        text_place: geodata.geoplugin_city + ', ' +
+                                                                                    geodata.geoplugin_regionName + ', ' +
+                                                                                    geodata.geoplugin_countryName,
+                                                                        country:'',
+                                                                        city:'',
+                                                                        timezone_text :null,
+                                                                        to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
+                                                                    });
             })
             .catch(()=>null);
         }
@@ -771,17 +771,17 @@ const list_item_click = (item_type, data) => {
             .then((/**@type{string}*/result)=>{
                 /**@type{{geoplugin_place:string, geoplugin_region:string, geoplugin_countryCode:string}} */
                 const geodata = JSON.parse(result);
-                common.map_update({ longitude:data['longitude'],
-                                    latitude:data['latitude'],
-                                    zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
-                                    text_place: geodata.geoplugin_place + ', ' + 
-                                                geodata.geoplugin_region + ', ' + 
-                                                geodata.geoplugin_countryCode,
-                                    country:'',
-                                    city:'',
-                                    timezone_text :null,
-                                    to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
-                                });
+                common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:data['longitude'],
+                                                                        latitude:data['latitude'],
+                                                                        zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
+                                                                        text_place: geodata.geoplugin_place + ', ' + 
+                                                                                    geodata.geoplugin_region + ', ' + 
+                                                                                    geodata.geoplugin_countryCode,
+                                                                        country:'',
+                                                                        city:'',
+                                                                        timezone_text :null,
+                                                                        to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
+                                                                    });
             })
             .catch(()=>null);
         }
@@ -1249,7 +1249,6 @@ const init = () => {
     APP_GLOBAL.service_log_file_interval= '';
 
     if (common.COMMON_GLOBAL.system_admin!=null){
-        common.COMMON_GLOBAL.moduleLeafletStyle		='OpenStreetMap_Mapnik';
         common.COMMON_GLOBAL.moduleLeafletJumpTo    =0;
     }
     for (let i=1;i<=10;i++){
