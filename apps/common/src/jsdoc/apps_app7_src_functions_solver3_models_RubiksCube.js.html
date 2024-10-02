@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: apps/app7/src/functions/solver3/models/RubiksCube.js</title>
+    <base href='/info/jsdoc/'/>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+
+    <link media="all" href="/common/css/common.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font1.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font2.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font3.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font4.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font5.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font6.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font7.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: apps/app7/src/functions/solver3/models/RubiksCube.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module apps/app7/src/functions/solver3/models/rubikscube
+ */
+
+import { Cubie } from './Cubie.js';
+import { algorithmShortener } from '../algorithm-shortener.js';
+import {
+	transformNotations, getMiddleMatchingFace
+} from '../utils/index.js';
+
+const SOLVED_STATE = 'fffffffffrrrrrrrrruuuuuuuuudddddddddlllllllllbbbbbbbbb';
+
+class RubiksCube {
+	/**
+	 * Factory method. Returns an instance of a solved Rubiks Cube.
+	 */
+	static Solved() {
+		return new RubiksCube(SOLVED_STATE);
+	}
+
+	/**
+	 * Factory method.
+	 * @param {string|array} moves
+	 */
+	static FromMoves(moves) {
+		const cube = RubiksCube.Solved();
+		cube.move(moves);
+		return cube;
+	}
+
+	/**
+	 * Factory method. Returns an instance of a scrambled Rubiks Cube.
+	 */
+	static Scrambled() {
+		const cube = RubiksCube.Solved();
+		const randomMoves = RubiksCube.getRandomMoves(25);
+		cube.move(randomMoves);
+
+		return cube;
+	}
+
+	/**
+	 * @param {string|array} notations - The list of moves to reverse.
+	 * @return {string|array} -- whichever was initially given.
+	 */
+	static reverseMoves(moves) {
+		return RubiksCube.transformMoves(moves, { reverse: true });
+	}
+
+	/**
+	 * @param {string|array} moves - The moves to transform;
+	 * @param {object} options
+	 * @prop {boolean} options.upperCase - Turn lowercase moves into uppercase.
+	 * @prop {object} options.orientation - An object describing the orientation
+	 * from which to makes the moves. See src/js/utils#orientMoves.
+	 *
+	 * @return {string|array} -- whichever was initially given.
+	 */
+	static transformMoves(moves, options = {}) {
+		return transformNotations(moves, options);
+	}
+
+	static getRandomMoves(length = 25) {
+		let randomMoves = [];
+		const totalMoves = [
+			'F',
+			'Fprime',
+			'R',
+			'Rprime',
+			'U',
+			'Uprime',
+			'D',
+			'Dprime',
+			'L',
+			'Lprime',
+			'B',
+			'Bprime'
+		];
+
+		while (randomMoves.length &lt; length) {
+			for (let i = 0; i &lt; length - randomMoves.length; i++) {
+				const idx = ~~(Math.random() * totalMoves.length);
+				randomMoves.push(totalMoves[idx]);
+			}
+
+			randomMoves = algorithmShortener(randomMoves).split(' ');
+		}
+
+		return randomMoves.join(' ');
+	}
+
+	/**
+	 * @param {string} cubeState - The string representing the Rubik's Cube.
+	 *
+	 * The cube state are represented as:
+	 * 'FFFFFFFFFRRRRRRRRRUUUUUUUUUDDDDDDDDDLLLLLLLLLBBBBBBBBB'
+	 *
+	 * where:
+	 * F stands for the FRONT COLOR
+	 * R stands for the RIGHT COLOR
+	 * U stands for the UP COLOR
+	 * D stands for the DOWN COLOR
+	 * L stands for the LEFT COLOR
+	 * B stands for the BACK COLOR
+	 *
+	 * and the faces are given in the order of:
+	 * FRONT, RIGHT, UP, DOWN, LEFT, BACK
+	 *
+	 * The order of each color per face is ordered by starting from the top left
+	 * corner and moving to the bottom right, as if reading lines of text.
+	 *
+	 * See this example: http://2.bp.blogspot.com/_XQ7FznWBAYE/S9Sbric1KNI/AAAAAAAAAFs/wGAb_LcSOwo/s1600/rubik.png
+	 * Also available here:
+	 * /apps/app7/src/functions/solver3/models/rubik.png
+	 */
+	constructor(cubeState) {
+		if (cubeState.length !== 9 * 6) {
+			throw new Error('Wrong number of colors provided');
+		}
+
+		this._notationToRotation = {
+			f: { axis: 'z', mag: -1 },
+			r: { axis: 'x', mag: -1 },
+			u: { axis: 'y', mag: -1 },
+			d: { axis: 'y', mag: 1 },
+			l: { axis: 'x', mag: 1 },
+			b: { axis: 'z', mag: 1 },
+			m: { axis: 'x', mag: 1 },
+			e: { axis: 'y', mag: 1 },
+			s: { axis: 'z', mag: -1 }
+		};
+
+		this._build(cubeState);
+	}
+
+	/**
+	 * Grab all the cubes on a given face, and return them in order from top left
+	 * to bottom right.
+	 * @param {string} face - The face to grab.
+	 * @return {array}
+	 */
+	getFace(face) {
+		if (typeof face !== 'string') {
+			throw new Error(`"face" must be a string (received: ${face})`);
+		}
+
+		face = face.toLowerCase()[0];
+
+		// The 3D position of cubies and the way they're ordered on each face
+		// do not play nicely. Below is a shitty way to reconcile the two.
+		// The way the cubies are sorted depends on the row and column they
+		// occupy on their face. Cubies on a higher row will have a lower sorting
+		// index, but rows are not always denoted by cubies' y position, and
+		// "higher rows" do not always mean "higher axis values".
+
+		let row, col, rowOrder, colOrder;
+		let cubies;
+
+		// grab correct cubies
+		if (face === 'f') {
+			[row, col, rowOrder, colOrder] = ['Y', 'X', -1, 1];
+			cubies = this._cubies.filter(cubie => cubie.getZ() === 1);
+		} else if (face === 'r') {
+			[row, col, rowOrder, colOrder] = ['Y', 'Z', -1, -1];
+			cubies = this._cubies.filter(cubie => cubie.getX() === 1);
+		} else if (face === 'u') {
+			[row, col, rowOrder, colOrder] = ['Z', 'X', 1, 1];
+			cubies = this._cubies.filter(cubie => cubie.getY() === 1);
+		} else if (face === 'd') {
+			[row, col, rowOrder, colOrder] = ['Z', 'X', -1, 1];
+			cubies = this._cubies.filter(cubie => cubie.getY() === -1);
+		} else if (face === 'l') {
+			[row, col, rowOrder, colOrder] = ['Y', 'Z', -1, 1];
+			cubies = this._cubies.filter(cubie => cubie.getX() === -1);
+		} else if (face === 'b') {
+			[row, col, rowOrder, colOrder] = ['Y', 'X', -1, -1];
+			cubies = this._cubies.filter(cubie => cubie.getZ() === -1);
+		} else if (['m', 'e', 's'].includes(face)) {
+			return this._getMiddleCubiesForMove(face);
+		}
+
+		// order cubies from top left to bottom right
+		return cubies.sort((first, second) => {
+			const firstCubieRow = first[`get${row}`]() * rowOrder;
+			const firstCubieCol = first[`get${col}`]() * colOrder;
+
+			const secondCubieRow = second[`get${row}`]() * rowOrder;
+			const secondCubieCol = second[`get${col}`]() * colOrder;
+
+			if (firstCubieRow &lt; secondCubieRow) {
+				return -1;
+			} else if (firstCubieRow > secondCubieRow) {
+				return 1;
+			} else {
+				return firstCubieCol &lt; secondCubieCol ? -1 : 1;
+			}
+		});
+	}
+
+	/**
+	 * @param {array} faces - The list of faces the cubie belongs on.
+	 */
+	getCubie(faces) {
+		return this._cubies.find(cubie => {
+			if (faces.length != cubie.faces().length) {
+				return false;
+			}
+
+			for (const face of faces) {
+				if (!cubie.faces().includes(face)) {
+					return false;
+				}
+			}
+
+			return true;
+		});
+	}
+
+	/**
+	 * Finds and returns all cubies with three colors.
+	 * @return {array}
+	 */
+	corners() {
+		return this._cubies.filter(cubie => cubie.isCorner());
+	}
+
+	/**
+	 * Finds and returns all cubies with two colors.
+	 * @return {array}
+	 */
+	edges() {
+		return this._cubies.filter(cubie => cubie.isEdge());
+	}
+
+	/**
+	 * Finds and returns all cubies with one color.
+	 * @return {array}
+	 */
+	middles() {
+		return this._cubies.filter(cubie => cubie.isMiddle());
+	}
+
+	/**
+	 * Gets the rotation axis and magnitude of rotation based on notation.
+	 * Then finds all cubes on the correct face, and rotates them around the
+	 * rotation axis.
+	 * @param {string|array} notations - The move notation.
+	 * @param {object} options - Move options.
+	 * @prop {boolean} options.upperCase - Turn all moves to upper case (i.e. no "double" moves).
+	 */
+	move(notations, options = {}) {
+		if (typeof notations === 'string') {
+			notations = notations.split(' ');
+		}
+
+		notations = transformNotations(notations, options);
+
+		for (const notation of notations) {
+			const move = notation[0];
+
+			if (!move) {
+				continue;
+			}
+
+			const isPrime = notation.toLowerCase().includes('prime');
+			const isWithMiddle = move === move.toLowerCase();
+			const isDoubleMove  = notation.includes('2');
+
+			let { axis, mag } = this._getRotationForFace(move);
+			let cubesToRotate = this.getFace(move);
+
+			if (isPrime) mag *= -1;
+			if (isDoubleMove) mag *= 2;
+
+			if (isWithMiddle) {
+				const middleMove = getMiddleMatchingFace(move);
+				const middleCubies = this._getMiddleCubiesForMove(middleMove);
+				cubesToRotate = [...cubesToRotate, ...middleCubies];
+			}
+
+			for (const cubie of cubesToRotate) {
+				cubie.rotate(axis, mag);
+			}
+		}
+	}
+
+	isSolved() {
+		return this.toString() === SOLVED_STATE;
+	}
+
+	toString() {
+		let cubeState = '';
+
+		const faces = ['front', 'right', 'up', 'down', 'left', 'back'];
+		for (const face of faces) {
+			const cubies = this.getFace(face);
+			for (const cubie of cubies) {
+				cubeState += cubie.getColorOfFace(face);
+			}
+		}
+
+		return cubeState;
+	}
+
+	clone() {
+		return new RubiksCube(this.toString());
+	}
+
+	/**
+	 * Create a "virtual" cube, with individual "cubies" having a 3D coordinate
+	 * position and 1 or more colors attached to them.
+	 */
+	_build(cubeState) {
+		this._cubies = [];
+		this._populateCube();
+
+		const parsedColors = this._parseColors(cubeState);
+
+		for (const face of Object.keys(parsedColors)) {
+			const colors = parsedColors[face];
+			this._colorFace(face, colors);
+		}
+	}
+
+	/**
+	 * Populates the "virtual" cube with 26 "empty" cubies by their position.
+	 * @return {null}
+	 */
+	_populateCube() {
+		for (let x = -1; x &lt;= 1; x++) {
+			for (let y = -1; y &lt;= 1; y++) {
+				for (let z = -1; z &lt;= 1; z++) {
+					// no cubie in the center of the rubik's cube
+					if (x === 0 &amp;&amp; y === 0 &amp;&amp; z === 0) {
+						continue;
+					}
+
+					const cubie = new Cubie({ position: [x, y, z] });
+					this._cubies.push(cubie);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @return {object} - A map with faces for keys and colors for values
+	 */
+	_parseColors(cubeState) {
+		const faceColors = {
+			front: [],
+			right: [],
+			up: [],
+			down: [],
+			left: [],
+			back: []
+		};
+
+		let currentFace;
+
+		for (let i = 0; i &lt; cubeState.length; i++) {
+			const color = cubeState[i];
+
+			if (i &lt; 9) {
+				currentFace = 'front';
+			} else if (i &lt; 9 * 2) {
+				currentFace = 'right';
+			} else if (i &lt; 9 * 3) {
+				currentFace = 'up';
+			} else if (i &lt; 9 * 4) {
+				currentFace = 'down';
+			} else if (i &lt; 9 * 5) {
+				currentFace = 'left';
+			} else {
+				currentFace = 'back';
+			}
+
+			faceColors[currentFace].push(color);
+		}
+
+		return faceColors;
+	}
+
+	/**
+	 * @param {array} face - An array of the cubies on the given face.
+	 * @param {array} colors - An array of the colors on the given face.
+	 */
+	_colorFace(face, colors) {
+		const cubiesToColor = this.getFace(face);
+		for (let i = 0; i &lt; colors.length; i++) {
+			cubiesToColor[i].colorFace(face, colors[i]);
+		}
+	}
+
+	/**
+	 * @return {object} - The the rotation axis and magnitude for the given face.
+	 */
+	_getRotationForFace(face) {
+		if (typeof face !== 'string') {
+			throw new Error(`"face" must be a string (received: ${face})`);
+		}
+
+		face = face.toLowerCase();
+
+		return {
+			axis: this._notationToRotation[face].axis,
+			mag: this._notationToRotation[face].mag * Math.PI / 2
+		};
+	}
+
+	_getMiddleCubiesForMove(move) {
+		move = move[0].toLowerCase();
+
+		let nonMiddles;
+		if (move === 'm') {
+			nonMiddles = ['left', 'right'];
+		} else if (move === 'e') {
+			nonMiddles = ['up', 'down'];
+		} else if (move === 's') {
+			nonMiddles = ['front', 'back'];
+		}
+
+		return this._cubies.filter(cubie => {
+			return !cubie.hasFace(nonMiddles[0]) &amp;&amp; !cubie.hasFace(nonMiddles[1]);
+		});
+	}
+}
+
+export { RubiksCube };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_praytimes.html">apps/app2/report/lib_praytimes</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_praytimes.html">apps/app2/src/modules/module_praytimes</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_country.html">server/db/components/country</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_locale.html">server/db/components/locale</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_country.html">server/db/sql/country</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_locale.html">server/db/sql/locale</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_logon.html">server/db/sql/user_account_logon</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

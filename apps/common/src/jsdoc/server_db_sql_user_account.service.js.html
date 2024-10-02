@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/db/sql/user_account.service.js</title>
+    <base href='/info/jsdoc/'/>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+
+    <link media="all" href="/common/css/common.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font1.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font2.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font3.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font4.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font5.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font6.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font7.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: server/db/sql/user_account.service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @module server/db/sql/user_account */
+
+/**@type{import('../../db/common.service.js')} */
+const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+
+/**
+ * @param {string|null} password 
+ * @returns {Promise.&lt;string|null>}
+ */
+const set_password = async (password) =>{
+	/**@type{import('../../security.service.js')} */
+	const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.service.js`);
+	return password==null?null:await PasswordCreate(password);
+};
+/**
+ * Checks password between 10 and 100 characters
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_updatePassword} data 
+ * @returns {object|null}
+ */
+const data_validation_password = (data) => {
+    if (data.password_new == null || data.password_new.length &lt; 10 || data.password_new.length > 100){
+        //'Password 10 - 100 characters'
+		return {'errorNum' : 20106};
+    }
+    else
+        return null;
+};
+/**
+ * Generate random verification code between 100000 and 999999
+ * @returns {string}
+ */
+const verification_code = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+};
+/**
+ * 
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_updateUserCommon} data 
+ * @returns {object|null}
+ */
+ const data_validation_common = data => {
+	data.username = data.username ?? null;
+	data.bio = data.bio ?? null;
+	if (data.username != null &amp;&amp; (data.username.length &lt; 5 || data.username.length > 100)){
+		//'username 5 - 100 characters'
+		return {'errorNum' : 20100};
+	}
+	else
+		if (data.username != null &amp;&amp;
+			(data.username.indexOf(' ') > -1 || 
+			data.username.indexOf('?') > -1 ||
+			data.username.indexOf('/') > -1 ||
+			data.username.indexOf('+') > -1 ||
+			data.username.indexOf('"') > -1 ||
+			data.username.indexOf('\'\'') > -1)){
+			//'not valid username'
+			return {'errorNum' : 20101};
+		}
+		else
+			return null;
+ };
+/**
+ * 
+ * @param {	import('../../../types.js').server_db_sql_parameter_user_account_create|
+ * 			import('../../../types.js').server_db_sql_parameter_user_account_updateUserLocal|
+ *         	import('../../../types.js').server_db_sql_parameter_user_account_updateUserSuperAdmin} data 
+ * @returns {object|null}
+ */
+const data_validation = data => {
+	data.username = data.username ?? null;
+	data.bio = data.bio ?? null;
+	data.password_reminder = data.password_reminder ?? null;
+	data.email_unverified = data.email_unverified ?? null;
+	data.verification_code = data.verification_code ?? null;
+	data.provider_id = data.provider_id ?? null;
+	
+	if (data.provider_id != null){
+		data.password = null;
+		data.password_new = null;
+		data.password_reminder = null;
+		data.email = null;
+		data.email_unverified = null;
+		data.avatar = null;
+		data.verification_code = null;
+	}
+    if (data.username != null &amp;&amp; (data.username.length &lt; 5 || data.username.length > 100)){
+		//'username 5 - 100 characters'
+		return {'errorNum' : 20100};
+	}
+	else 
+		if (data.username != null &amp;&amp;
+			(data.username.indexOf(' ') > -1 || 
+			data.username.indexOf('?') > -1 ||
+			data.username.indexOf('/') > -1 ||
+			data.username.indexOf('+') > -1 ||
+			data.username.indexOf('"') > -1 ||
+			data.username.indexOf('\'\'') > -1)){
+			//'not valid username'
+			return {'errorNum' : 20101};
+		}
+		else
+			if (data.bio != null &amp;&amp; data.bio.length > 100){
+				//'bio max 100 characters'
+				return {'errorNum' : 20102};
+			}
+			else 
+				if (data.email != null &amp;&amp; data.email.length > 100){
+					//'email max 100 characters'
+					return {'errorNum' : 20103};
+				}
+				else
+					if (data.password_reminder != null &amp;&amp; data.password_reminder.length > 100){
+						//'reminder max 100 characters'
+						return {'errorNum' : 20104};
+					}
+					else{
+						//Email validation: sequence of non-whitespace characters, followed by an @, followed by more non-whitespace characters, a dot, and more non-whitespace.
+						/**
+						 * 
+						 * @param {string} email 
+						 * @returns 
+						 */
+						const email_ok = email =>{
+							const email_regexp = /[^\s@]+@[^\s@]+\.[^\s@]+/gi;
+							try {
+								/**@ts-ignore */
+								return email == email.match(email_regexp)[0];	
+							} catch (error) {
+								return false;
+							}
+							
+						};
+						if (data.email != null &amp;&amp; data.email.slice(-10) != '@localhost' &amp;&amp; email_ok(data.email)==false){
+							//'not valid email' (ignore emails that ends with '@localhost')
+							return {'errorNum' : 20105};
+						}
+						else
+							if (data.email_unverified != null &amp;&amp; email_ok(data.email_unverified)==false){
+								//'not valid email'
+								return {'errorNum' : 20105};
+							}
+							else
+								if (data.provider_id == null &amp;&amp; (data.username == null || (data.password_new??data.admin==1?data.admin:data.password)==null || data.email==null)){
+									//'Username, password and email are required'
+									return {'errorNum' : 20107};
+								}
+								else
+									if (data.provider_id == null &amp;&amp; ((data.admin==1 &amp;&amp; data.password_new != null) || data.admin==0))
+										return data_validation_password({password_new: data.password_new??data.password, auth:null});
+									else
+										return null;
+					}
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} search 
+ * @param {string} sort 
+ * @param {string} order_by 
+ * @param {number|null} offset 
+ * @param {number|null} limit 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getUsersAdmin[]>}
+ */
+const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
+		const sql = `SELECT ua.id "id",
+							ua.avatar "avatar",
+							ua.app_role_id "app_role_id",
+							(SELECT ap_user.icon
+								FROM &lt;DB_SCHEMA/>.app_role ap_user
+								WHERE ap_user.id = COALESCE(ua.app_role_id,2)) "app_role_icon",
+							ua.active "active",
+							ua.user_level "user_level",
+							ua.private "private",
+							ua.username "username",
+							ua.bio "bio",
+							ua.email "email",
+							ua.email_unverified "email_unverified",
+							ua.password "password",
+							ua.password_reminder "password_reminder",
+							ua.verification_code "verification_code",
+							ua.identity_provider_id "identity_provider_id",
+							ip.provider_name "provider_name",
+							ua.provider_id "provider_id",
+							ua.provider_first_name "provider_first_name",
+							ua.provider_last_name "provider_last_name",
+							ua.provider_image "provider_image",
+							ua.provider_image_url "provider_image_url",
+							ua.provider_email "provider_email",
+							ua.date_created "date_created",
+							ua.date_modified "date_modified",
+							count(*) over() "total_rows"
+						FROM &lt;DB_SCHEMA/>.user_account ua
+							LEFT OUTER JOIN &lt;DB_SCHEMA/>.identity_provider ip
+								ON ip.id = ua.identity_provider_id
+							LEFT OUTER JOIN &lt;DB_SCHEMA/>.app_role ap
+								ON ap.id = ua.app_role_id
+						WHERE (ua.username LIKE :search
+						OR ua.bio LIKE :search
+						OR ua.email LIKE :search
+						OR ua.email_unverified LIKE :search
+						OR ua.provider_first_name LIKE :search
+						OR ua.provider_last_name LIKE :search
+						OR ua.provider_email LIKE :search
+						OR CAST(ua.id as VARCHAR(11)) LIKE :search)
+						OR :search = '*'
+						ORDER BY ${sort} ${order_by}
+						&lt;APP_PAGINATION_LIMIT_OFFSET/>`;
+		if (search!='*')
+			search = '%' + search + '%';
+		const parameters = {search: search,
+							offset: offset ?? 0,
+							limit: limit
+							};
+		return await db_execute(app_id, sql, parameters, null, null);
+    };
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getUserAppRoleAdmin[]>}
+ */
+const getUserAppRoleAdmin = async (app_id, id) => {
+	const sql = `SELECT app_role_id "app_role_id"
+				   FROM &lt;DB_SCHEMA/>.user_account
+				  WHERE id = :id`;
+	const parameters = {id: id};
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getStatCountAdmin[]>}
+ */
+const getStatCountAdmin = async app_id => {
+	const sql = `SELECT ua.identity_provider_id "identity_provider_id",
+						CASE 
+						WHEN ip.provider_name IS NULL THEN 
+							NULL
+						ELSE 
+							ip.provider_name 
+						END "provider_name",
+						COUNT(*) "count_users"
+				   FROM &lt;DB_SCHEMA/>.user_account ua
+						LEFT OUTER JOIN &lt;DB_SCHEMA/>.identity_provider ip
+						ON ip.id = ua.identity_provider_id
+				  GROUP BY ua.identity_provider_id, ip.provider_name
+				  ORDER BY ua.identity_provider_id`;
+	const parameters = {};
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_updateUserSuperAdmin} data 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_updateUserSuperAdmin>}
+ */
+const updateUserSuperAdmin = async (app_id, id, data) => {
+	let sql;
+	let parameters;
+	if (data.email_unverified =='')
+		data.email_unverified = null;
+	if (data.bio=='')
+		data.bio = null;
+	if (data.password_reminder=='')
+		data.password_reminder = null;
+	if (data.verification_code=='')
+		data.verification_code = null;
+	const error_code = data_validation(data);
+	if (error_code==null){
+		sql = `UPDATE &lt;DB_SCHEMA/>.user_account
+				SET app_role_id = :app_role_id,
+					active = :active,
+					user_level = :user_level,
+					private = :private,
+					username = :username,
+					bio = :bio,
+					email = :email,
+					email_unverified = :email_unverified,
+					password = 	CASE WHEN :password_new IS NULL THEN 
+									password 
+								ELSE 
+									:password_new 
+								END,
+					password_reminder = :password_reminder,
+					verification_code = :verification_code
+				WHERE id = :id`;
+		parameters = {id: id,
+					app_role_id: data.app_role_id,
+					active: data.active,
+					user_level: data.user_level,
+					private: data.private,
+					username: data.username,
+					bio: data.bio,
+					email: data.email,
+					email_unverified: data.email_unverified,
+					password_new: await set_password(data.password_new),
+					password_reminder: data.password_reminder,
+					verification_code: data.verification_code
+					};
+		return await db_execute(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_create} data 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_create>}
+ */
+const create = async (app_id, data) => {
+	let sql;
+	let parameters;
+	
+	const error_code = data_validation(data);
+	if (error_code==null){
+		sql = `INSERT INTO &lt;DB_SCHEMA/>.user_account(
+					bio,
+					private,
+					user_level,
+					date_created,
+					date_modified,
+					username,
+					password,
+					password_reminder,
+					email,
+					avatar,
+					verification_code,
+					active,
+					identity_provider_id,
+					provider_id,
+					provider_first_name,
+					provider_last_name,
+					provider_image,
+					provider_image_url,
+					provider_email)
+				VALUES( :bio,
+						:private,
+						:user_level,
+						CURRENT_TIMESTAMP,
+						CURRENT_TIMESTAMP,
+						:username,
+						:password_new,
+						:password_reminder,
+						:email,
+						:avatar,
+						:verification_code,
+						:active,
+						:identity_provider_id,
+						:provider_id,
+						:provider_first_name,
+						:provider_last_name,
+						:provider_image,
+						:provider_image_url,
+						:provider_email) `;				
+		parameters = {
+						bio: data.bio,
+						private: data.private,
+						user_level: data.user_level,
+						username: data.username,
+						password_new: await set_password(data.password_new),
+						password_reminder: data.password_reminder,
+						email: data.email,
+						avatar: data.avatar,
+						verification_code: data.verification_code,
+						active: data.active,
+						identity_provider_id: data.identity_provider_id,
+						provider_id: data.provider_id,
+						provider_first_name: data.provider_first_name,
+						provider_last_name: data.provider_last_name,
+						provider_image: data.provider_image,
+						provider_image_url: data.provider_image_url,
+						provider_email: data.provider_email,
+						DB_RETURN_ID:'id',
+						DB_CLOB: ['avatar', 'provider_image']
+					};
+			return await db_execute(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;      
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {number|null} verification_type 
+ * @param {string} verification_code 
+ * @param {string|null} auth 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_activateUser>}
+ */
+const activateUser = async (app_id, id, verification_type, verification_code, auth) => {
+	const sql = `UPDATE &lt;DB_SCHEMA/>.user_account
+					SET active = 1,
+						verification_code = :auth,
+						email = CASE 
+								WHEN  :verification_type = 4 THEN 
+									email_unverified
+								ELSE 
+									email
+								END,
+						email_unverified = CASE 
+											WHEN  :verification_type = 4 THEN 
+												NULL
+											ELSE 
+												email_unverified
+											END,
+						date_modified = CURRENT_TIMESTAMP
+				WHERE id = :id
+				AND verification_code = :verification_code `;
+	const parameters ={
+						auth: auth,
+						verification_type: verification_type,
+						id: id,
+						verification_code: verification_code
+					};
+	return await db_execute(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {string} verification_code 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_updateUserVerificationCode>}
+ */
+const updateUserVerificationCode = async (app_id, id, verification_code) => {
+	const sql = `UPDATE &lt;DB_SCHEMA/>.user_account
+					SET verification_code = :verification_code,
+						active = 0,
+						date_modified = CURRENT_TIMESTAMP
+				WHERE id = :id `;
+	const parameters ={
+						verification_code: verification_code,
+						id: id   
+					}; 
+	return await db_execute(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getUserByUserId[]>}
+ */
+const getUserByUserId = async (app_id, id) => {
+	const sql = `SELECT	u.id "id",
+						u.bio "bio",
+						u.private "private",
+						u.user_level "user_level",
+						u.username "username",
+						u.password "password",
+						u.password_reminder "password_reminder",
+						u.email "email",
+						u.email_unverified "email_unverified",
+						u.avatar "avatar",
+						u.verification_code "verification_code",
+						u.active "active",
+						u.identity_provider_id "identity_provider_id",
+						u.provider_id "provider_id",
+						u.provider_first_name "provider_first_name",
+						u.provider_last_name "provider_last_name",
+						u.provider_image "provider_image",
+						u.provider_image_url "provider_image_url",
+						u.provider_email "provider_email",
+						u.date_created "date_created",
+						u.date_modified "date_modified"
+				FROM   &lt;DB_SCHEMA/>.user_account u
+			WHERE   u.id = :id `;
+	const parameters = {id: id};
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number|null} resource_id_number 
+ * @param {string|null} resource_id_name 
+ * @param {string|null} search
+ * @param {number|null} id_current_user
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getProfileUser[]>}
+ */
+const getProfileUser = async (app_id, resource_id_number, resource_id_name, search, id_current_user) => {
+	const user_where = () =>{
+		switch (true){
+			case (search!='' &amp;&amp; search != null):{
+				return 'u.username LIKE :user_value OR u.provider_first_name LIKE :user_value';
+			}
+			case (resource_id_name!='' &amp;&amp; resource_id_name != null):{
+				return 'u.username = :user_value';
+			}
+			case (resource_id_number != null):{
+				return 'u.id = :user_value';
+			}
+			default:{
+				return '1=2';
+			}
+		}
+	};
+	const user_where_value = () =>{
+		switch (true){
+			case (search!='' &amp;&amp; search != null):{
+				return `${search}%`;
+			}
+			case (resource_id_name!='' &amp;&amp; resource_id_name != null):{
+				return resource_id_name;
+			}
+			case (resource_id_number != null):{
+				return resource_id_number;
+			}
+			default:{
+				return null;
+			}
+		}
+	};
+	const sql = `SELECT	u.id "id",
+						u.bio "bio",
+						u.private "private",
+						(SELECT 1 
+							FROM &lt;DB_SCHEMA/>.user_account ua_current
+						   WHERE ua_current.id = :user_accound_id_current_user
+								AND EXISTS 
+							(SELECT NULL
+							   FROM &lt;DB_SCHEMA/>.user_account_follow  uaf 
+							  WHERE (uaf.user_account_id = u.id
+									 AND uaf.user_account_id_follow = ua_current.id)
+								or  (
+									 uaf.user_account_id_follow = u.id
+									 AND uaf.user_account_id = ua_current.id)
+							)
+				
+						) "friends",
+						u.user_level "user_level",
+						u.date_created "date_created",
+						u.username "username",
+						u.avatar "avatar",
+						u.identity_provider_id "identity_provider_id",
+						u.provider_id "provider_id",
+						u.provider_first_name "provider_first_name",
+						u.provider_last_name "provider_last_name",
+						u.provider_image "provider_image",
+						u.provider_image_url "provider_image_url",
+						(SELECT COUNT(u_following.user_account_id)   
+							FROM &lt;DB_SCHEMA/>.user_account_follow  u_following
+							WHERE u_following.user_account_id = u.id) 					"count_following",
+						(SELECT COUNT(u_followed.user_account_id_follow) 
+							FROM &lt;DB_SCHEMA/>.user_account_follow  u_followed
+							WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
+						(SELECT COUNT(u_likes.user_account_id)
+							FROM &lt;DB_SCHEMA/>.user_account_like    u_likes
+							WHERE u_likes.user_account_id = u.id ) 						"count_likes",
+						(SELECT COUNT(u_likes.user_account_id_like)
+							FROM &lt;DB_SCHEMA/>.user_account_like    u_likes
+							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
+						(SELECT COUNT(u_views.user_account_id_view)
+							FROM &lt;DB_SCHEMA/>.user_account_view    u_views
+							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
+						(SELECT COUNT(u_followed_current_user.user_account_id)
+							FROM &lt;DB_SCHEMA/>.user_account_follow  u_followed_current_user 
+							WHERE u_followed_current_user.user_account_id_follow = u.id
+							AND u_followed_current_user.user_account_id = :user_accound_id_current_user) 	"followed",
+						(SELECT COUNT(u_liked_current_user.user_account_id)  
+							FROM &lt;DB_SCHEMA/>.user_account_like    u_liked_current_user
+							WHERE u_liked_current_user.user_account_id_like = u.id
+							AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
+				 FROM &lt;DB_SCHEMA/>.user_account u
+				WHERE ${user_where()}
+				  AND u.active = 1`;
+	const parameters ={
+						user_accound_id_current_user: id_current_user,
+						user_value: user_where_value()
+					}; 
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {number|null} detailchoice
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getProfileDetail[]>}
+ */
+const getProfileDetail = async (app_id, id, detailchoice) => {
+	const sql = `SELECT detail "detail",
+						id "id",
+						provider_id "provider_id",
+						avatar "avatar",
+						provider_image "provider_image",
+						provider_image_url "provider_image_url",
+						username "username",
+						provider_first_name "provider_first_name",
+						count(*) over() "total_rows"
+				FROM (SELECT 	'FOLLOWING' detail,
+								u.id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name
+						FROM &lt;DB_SCHEMA/>.user_account_follow u_follow,
+							&lt;DB_SCHEMA/>.user_account u
+						WHERE u_follow.user_account_id = :user_account_id
+						AND u.id = u_follow.user_account_id_follow
+						AND u.active = 1
+						AND 1 = :detailchoice
+						UNION ALL
+					SELECT 	'FOLLOWED' detail,
+								u.id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name
+						FROM &lt;DB_SCHEMA/>.user_account_follow u_followed,
+							&lt;DB_SCHEMA/>.user_account u
+						WHERE u_followed.user_account_id_follow = :user_account_id
+						AND u.id = u_followed.user_account_id
+						AND u.active = 1
+						AND 2 = :detailchoice
+						UNION ALL
+					SELECT	'LIKE_USER' detail,
+								u.id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name
+						FROM &lt;DB_SCHEMA/>.user_account_like u_like,
+							&lt;DB_SCHEMA/>.user_account u
+						WHERE u_like.user_account_id = :user_account_id
+						AND u.id = u_like.user_account_id_like
+						AND u.active = 1
+						AND 3 = :detailchoice
+						UNION ALL
+					SELECT	'LIKED_USER' detail,
+								u.id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name
+						FROM &lt;DB_SCHEMA/>.user_account_like u_liked,
+							&lt;DB_SCHEMA/>.user_account u
+						WHERE u_liked.user_account_id_like = :user_account_id
+						AND u.id = u_liked.user_account_id
+						AND u.active = 1
+						AND 4 = :detailchoice) t
+					ORDER BY 1, COALESCE(username, provider_first_name) 
+					&lt;APP_LIMIT_RECORDS/>`;
+	const parameters ={
+						user_account_id: id,
+						detailchoice: detailchoice
+					}; 
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number|null} statchoice 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getProfileStat[]>}
+ */
+const getProfileStat = async (app_id, statchoice) => {
+	const sql = `SELECT	top "top", 
+						id "id", 
+						identity_provider_id "identity_provider_id", 
+						provider_id "provider_id", 
+						avatar "avatar",
+						provider_image "provider_image",
+						provider_image_url "provider_image_url",
+						username "username",
+						provider_first_name "provider_first_name",
+						count "count",
+						count(*) over() "total_rows"
+				FROM (SELECT 	'VISITED' top,
+								u.id,
+								u.identity_provider_id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name,
+								(SELECT COUNT(u_visited.user_account_id_view)
+								FROM &lt;DB_SCHEMA/>.user_account_view u_visited
+								WHERE u_visited.user_account_id_view = u.id) count
+						FROM &lt;DB_SCHEMA/>.user_account u
+						WHERE u.active = 1
+						AND u.private &lt;> 1
+						AND 1 = :statchoice
+						UNION ALL
+					SELECT 	'FOLLOWING' top,
+								u.id,
+								u.identity_provider_id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name,
+								(SELECT COUNT(u_follow.user_account_id_follow)
+								FROM &lt;DB_SCHEMA/>.user_account_follow u_follow
+								WHERE u_follow.user_account_id_follow = u.id) count
+						FROM &lt;DB_SCHEMA/>.user_account u
+						WHERE u.active = 1
+						AND u.private &lt;> 1
+						AND 2 = :statchoice
+						UNION ALL
+					SELECT 	'LIKE_USER' top,
+								u.id,
+								u.identity_provider_id,
+								u.provider_id,
+								u.avatar,
+								u.provider_image,
+								u.provider_image_url,
+								u.username,
+								u.provider_first_name,
+								(SELECT COUNT(u_like.user_account_id_like)
+								FROM &lt;DB_SCHEMA/>.user_account_like u_like
+								WHERE u_like.user_account_id_like = u.id) count
+						FROM &lt;DB_SCHEMA/>.user_account u
+						WHERE  u.active = 1
+						AND  u.private &lt;> 1
+						AND  3 = :statchoice) t
+				WHERE EXISTS(SELECT NULL
+							FROM &lt;DB_SCHEMA/>.user_account_app uap
+							WHERE uap.user_account_id = t.id
+								AND uap.app_id = :app_id)
+				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
+				&lt;APP_LIMIT_RECORDS/>`;
+	const parameters = {
+						statchoice: statchoice,
+						app_id: app_id
+					};
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_checkPassword[]>}
+ */
+const checkPassword = async (app_id, id) => {
+	const sql = `SELECT password "password"
+				   FROM &lt;DB_SCHEMA/>.user_account
+				  WHERE id = :id `;
+	const parameters = {id: id};
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_updatePassword} data 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_updatePassword>}
+ */
+const updatePassword = async (app_id, id, data) => {
+	const error_code = data_validation_password(data);
+	if (error_code==null){
+		const sql = `UPDATE &lt;DB_SCHEMA/>.user_account
+						SET password = :password_new,
+							verification_code = null
+						WHERE id = :id  
+						AND verification_code = :auth
+						AND verification_code IS NOT NULL`;
+		const parameters ={
+							password_new: await set_password(data.password_new),
+							id: id,
+							auth: data.auth
+						}; 
+		return await db_execute(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_updateUserLocal} data 
+ * @param {number} search_id
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_updateUserLocal>}
+ */
+const updateUserLocal = async (app_id, data, search_id) => {
+	let sql;
+	let parameters;
+	const error_code = data_validation(data);
+	if (error_code==null){
+		sql = `UPDATE &lt;DB_SCHEMA/>.user_account
+					SET bio = :bio,
+						private = :private,
+						username = :username,
+						password = 	COALESCE(:password_new, password),
+						password_reminder = :password_reminder,
+						email = :email,
+						email_unverified = :email_unverified,
+						avatar = :avatar,
+						verification_code = :verification_code,
+						date_modified = CURRENT_TIMESTAMP
+				  WHERE id = :id `;
+		parameters ={
+						bio: data.bio,
+						private: data.private,
+						username: data.username,
+						password_new: await set_password(data.password_new),
+						password_reminder: data.password_reminder,
+						email: data.email,
+						email_unverified: data.email_unverified,
+						avatar: data.avatar,
+						verification_code: data.verification_code,
+						id: search_id,
+						DB_CLOB: ['avatar']
+					}; 
+		return await db_execute(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_updateUserCommon} data 
+ * @param {number} id 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_updateUserCommon>}
+ */
+const updateUserCommon = async (app_id, data, id) => {
+	let sql;
+	let parameters;
+	const error_code = data_validation_common(data);
+	if (error_code==null){
+		sql = `UPDATE &lt;DB_SCHEMA/>.user_account
+					SET username = :username,
+						bio = :bio,
+						private = :private,
+						date_modified = CURRENT_TIMESTAMP
+				  WHERE id = :id `;
+		parameters ={	username: data.username,
+						bio: data.bio,
+						private: data.private,
+						id: id
+					};
+		return await db_execute(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_deleteUser>}
+ */
+const deleteUser = async (app_id, id) => {
+	const sql = `DELETE FROM &lt;DB_SCHEMA/>.user_account
+				  WHERE id = :id `;
+	const parameters = {id: id};
+	return await db_execute(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_userLogin} data
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_userLogin[]>}
+ */
+const userLogin = async (app_id, data) => {
+	const sql = `SELECT	id "id",
+						bio "bio",
+						username "username",
+						password "password",
+						email "email",
+						active "active",
+						avatar "avatar",
+						app_role_id "app_role_id"
+				   FROM &lt;DB_SCHEMA/>.user_account
+				  WHERE username = :username 
+					AND provider_id IS NULL`;
+	const parameters ={
+						username: data.username
+					};
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {import('../../../types.js').server_db_sql_parameter_user_account_create} data
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_updateSigninProvider>}
+ */
+const updateSigninProvider = async (app_id, id, data) => {
+	let parameters;
+	const error_code = data_validation(data);
+	if (error_code==null){
+		const sql = `UPDATE &lt;DB_SCHEMA/>.user_account
+						SET identity_provider_id = :identity_provider_id,
+							provider_id = :provider_id,
+							provider_first_name = :provider_first_name,
+							provider_last_name = :provider_last_name,
+							provider_image = :provider_image,
+							provider_image_url = :provider_image_url,
+							provider_email = :provider_email,
+							date_modified = CURRENT_TIMESTAMP
+					WHERE id = :id
+						AND active =1 `;
+		parameters ={
+						identity_provider_id: data.identity_provider_id,
+						provider_id: data.provider_id,
+						provider_first_name: data.provider_first_name,
+						provider_last_name: data.provider_last_name,
+						provider_image: data.provider_image,
+						provider_image_url: data.provider_image_url,
+						provider_email: data.provider_email,
+						id: id,
+						DB_CLOB: ['provider_image']
+					};
+		return await db_execute(app_id, sql, parameters);
+	}
+	else
+		throw error_code;
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number|null} identity_provider_id 
+ * @param {number} search_id
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_providerSignIn[]>}
+ */
+const providerSignIn = async (app_id, identity_provider_id, search_id) => {
+	const sql = `SELECT	u.id "id",
+						u.bio "bio",
+						u.username "username",
+						u.identity_provider_id "identity_provider_id",
+						u.provider_id "provider_id",
+						u.provider_first_name "provider_first_name",
+						u.provider_last_name "provider_last_name",
+						u.provider_image "provider_image",
+						u.provider_image_url "provider_image_url",
+						u.provider_email "provider_email",
+						u.app_role_id "app_role_id"
+				FROM &lt;DB_SCHEMA/>.user_account u
+				WHERE u.provider_id = :provider_id
+				AND u.identity_provider_id = :identity_provider_id`;
+	const parameters = {
+						provider_id: search_id,
+						identity_provider_id: identity_provider_id
+					};
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} email 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getEmailUser[]>}
+ */
+const getEmailUser = async (app_id, email) => {
+	const sql = `SELECT id "id",
+						email "email"
+				   FROM &lt;DB_SCHEMA/>.user_account
+				  WHERE email = :email `;
+	const parameters ={
+					email: email
+				};
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number|null} user_account_id 
+ * @param {number} dba 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getUserRoleAdmin[]>}
+ */
+const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
+	const sql = `SELECT app_role_id "app_role_id",
+						COALESCE(ar.icon,ar_user.icon) "icon"
+				   FROM &lt;DB_SCHEMA/>.user_account ua
+						LEFT OUTER JOIN &lt;DB_SCHEMA/>.app_role ar
+						ON ar.id = ua.app_role_id,
+						&lt;DB_SCHEMA/>.app_role ar_user
+				  WHERE ua.id = :id 
+					AND ar_user.id = :id_user_icon
+					AND :id IS NOT NULL
+				UNION ALL
+				 SELECT	NULL "app_role_id",
+						ar.icon "icon"
+				   FROM &lt;DB_SCHEMA/>.app_role ar
+				  WHERE ar.id = :id_user_icon
+					AND :id IS NULL`;
+	const parameters ={
+					id: user_account_id,
+					id_user_icon: 2
+				};
+	return await db_execute(app_id, sql, parameters, dba, null);
+};
+/**
+ * 
+ * @param {number} app_id
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getDemousers[]>}
+ */
+const getDemousers = async app_id => {
+	const sql = `SELECT id "id",
+						username "username"	
+				   FROM &lt;DB_SCHEMA/>.user_account
+				  WHERE user_level = :demo_level`;
+	const parameters ={
+					demo_level: 2
+				};
+	return await db_execute(app_id, sql, parameters, null, null);
+};
+
+export{	verification_code,
+		/* database functions */
+		getUsersAdmin, getUserAppRoleAdmin, getStatCountAdmin, updateUserSuperAdmin, create,
+		activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
+		getProfileDetail, getProfileStat, checkPassword, updatePassword,
+		updateUserLocal, updateUserCommon, deleteUser, userLogin, updateSigninProvider, providerSignIn,
+		getEmailUser, getUserRoleAdmin, getDemousers};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_praytimes.html">apps/app2/report/lib_praytimes</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_praytimes.html">apps/app2/src/modules/module_praytimes</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_country.html">server/db/components/country</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_locale.html">server/db/components/locale</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_country.html">server/db/sql/country</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_locale.html">server/db/sql/locale</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_logon.html">server/db/sql/user_account_logon</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

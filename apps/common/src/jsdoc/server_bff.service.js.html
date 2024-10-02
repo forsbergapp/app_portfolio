@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/bff.service.js</title>
+    <base href='/info/jsdoc/'/>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+
+    <link media="all" href="/common/css/common.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font1.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font2.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font3.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font4.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font5.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font6.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font7.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: server/bff.service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @module server/bff/service */
+
+/**@type{import('./server.service.js')} */
+const {responsetime, response_send_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./config.service.js')} */
+const {CheckFirstTime, ConfigGet, ConfigGetAppHost, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+
+/**@type{import('./log.service.js')} */
+const {LogRequestI, LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/log.service.js`);
+/**@type{import('./iam.service.js')} */
+const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
+/**@type{import('./security.service.js')} */
+const {createUUID, createRequestId, createCorrelationId}= await import(`file://${process.cwd()}/server/security.service.js`);
+const fs = await import('node:fs');
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {import('../types.js').server_bff_parameters} bff_parameters
+ * @param {string} service
+ * @param {import('../types.js').server_server_error} error 
+ */
+const BFF_log_error = (app_id, bff_parameters, service, error) =>{
+    LogServiceE(app_id, service, bff_parameters.query, error).then(() => {
+        if (bff_parameters.res){
+            const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
+            if (error.error &amp;&amp; error.error.code=='MICROSERVICE')
+                response_send_error( bff_parameters.res, 
+                                error.error.http,
+                                error.error.code, 
+                                `MICROSERVICE ${bff_parameters.route_path.split('/')[1].toUpperCase()} ERROR`, 
+                                error.error.developer_text, 
+                                error.error.more_info);
+            else
+                response_send_error( bff_parameters.res, 
+                                statusCode, 
+                                null, 
+                                error, 
+                                null, 
+                                null);
+        }
+    });
+};
+
+/**
+ * Backend for frontend (BFF) init for all methods
+ * 
+ * Logs if the request is from EventSource
+ * Logs when the response is closed
+ * Authenticates the request
+ * Sets header values on both on the response and on the request
+ * Checks robots.txt and favicon.ico
+ * Returns a reason if response should be closed
+ * 
+ * @param {import('../types.js').server_server_req} req
+ * @param {import('../types.js').server_server_res} res
+ * @returns Promise.&lt;{  reason:'ROBOT'|'FAVICON'|'REQUEST'|null}>
+ */
+const BFF_init = async (req, res) =>{
+    if (req.headers.accept == 'text/event-stream'){
+        //Eventsource, log since response is open and log again when closing
+        LogRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', responsetime(res));
+    }
+    res.on('close',()=>{	
+        //eventsource response time will be time connected until disconnected
+        LogRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', responsetime(res)).then(() => {
+            // do not return any StatusMessage to client, this is only used for logging purpose
+            res.statusMessage = '';
+            res.end();
+        });
+    });
+    //access control that stops request if not passing controls
+    /**@type{import('../types.js').server_iam_authenticate_request}*/
+    const result = await AuthenticateRequest(req.ip, req.headers.host, req.method, req.headers['user-agent'], req.headers['accept-language'], req.path)
+                        .catch((/**@type{import('../types.js').server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
+    if (result != null){
+        res.statusCode = result.statusCode;
+        res.statusMessage = 'access control: ' + result.statusMessage;
+        res.write('⛔');
+        return {reason:'REQUEST'};
+    }
+    else{
+        //set headers
+        res.setHeader('X-Response-Time', process.hrtime());
+        req.headers['X-Request-Id'] =  createUUID().replaceAll('-','');
+        if (req.headers.authorization)
+            req.headers['X-Correlation-Id'] = createRequestId();
+        else
+            req.headers['X-Correlation-Id'] = createCorrelationId(req.hostname +  req.ip + req.method);
+        res.setHeader('Access-Control-Max-Age','5');
+        res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+        if (ConfigGet('SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1'){
+            /**@type{import('./../types.js').server_config_iam_policy}*/
+            const iam_policy = await ConfigFileGet('IAM_POLICY', false);
+            res.setHeader('content-security-policy', iam_policy['content-security-policy']);
+        }
+        res.setHeader('cross-origin-opener-policy','same-origin');
+        res.setHeader('cross-origin-resource-policy',	'same-origin');
+        res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
+        res.setHeader('strict-transport-security', `max-age=${180 * 24 * 60 * 60}; includeSubDomains`);
+        res.setHeader('x-content-type-options', 'nosniff');
+        res.setHeader('x-dns-prefetch-control', 'off');
+        res.setHeader('x-download-options', 'noopen');
+        res.setHeader('x-frame-options', 'SAMEORIGIN');
+        res.setHeader('x-permitted-cross-domain-policies', 'none');
+        res.setHeader('x-xss-protection', '0');
+        res.removeHeader('X-Powered-By');
+        //check robots.txt
+        if (req.originalUrl=='/robots.txt'){
+            res.type('text/plain');
+            res.write('User-agent: *\nDisallow: /');
+            return {reason:'ROBOT'};
+        }
+        else{
+            //browser favorite icon to ignore
+            if (req.originalUrl=='/favicon.ico'){
+                res.write('');
+                return {reason:'FAVICON'};
+            }
+            else{
+                return {reason:null};
+            }
+        }
+    }
+};
+/**
+ * Backend for frontend (BFF) start for get method
+ * 
+ * If first time, when no admin exists, then redirect everything to admin
+ * Checks if SSL verification using Letsencrypt is enabled when validating domain
+ * and sends requested verifcation file
+ * Redirects naked domain to www except for localhost
+ * Redirects from http to https if https is enabled
+ * 
+ * @param {import('../types.js').server_server_req} req
+ * @param {import('../types.js').server_server_res} res
+ * @returns Promise.&lt;{reason:'REDIRECT'|'SEND'|null,redirect:string}>
+ */
+const BFF_start = async (req, res) =>{
+    const check_redirect = () =>{
+        //redirect naked domain to www except for localhost
+        if (req.headers.host.startsWith(ConfigGet('SERVER','HOST') ?? '') &amp;&amp; req.headers.host.indexOf('localhost')==-1)
+            if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
+                return {reason:'REDIRECT', redirect:`https://www.${req.headers.host}${req.originalUrl}`};
+            else
+                return {reason:'REDIRECT', redirect:`http://www.${req.headers.host}${req.originalUrl}`};
+        else{
+            //redirect from http to https if https is enabled
+            if (req.protocol=='http' &amp;&amp; ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
+                return {reason:'REDIRECT', redirect:`https://${req.headers.host}${req.originalUrl}`};
+            else
+                return {reason:null, redirect:null};
+        }
+    };
+    //if first time, when no system admin exists, then redirect everything to admin
+    if (CheckFirstTime() &amp;&amp; req.headers.host.startsWith('admin') == false &amp;&amp; req.headers.referer==undefined)
+        return {reason:'REDIRECT', redirect:`http://admin.${ConfigGet('SERVER','HOST')}`};
+    else{
+        //check if SSL verification using letsencrypt is enabled when validating domains
+        if (ConfigGet('SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
+            if (req.originalUrl.startsWith(ConfigGet('SERVER', 'HTTPS_SSL_VERIFICATION_PATH') ?? '')){
+                res.type('text/plain');
+                res.write(await fs.promises.readFile(`${process.cwd()}${req.originalUrl}`, 'utf8'));
+                return {reason:'SEND', redirect:null};
+            }
+            else
+                return check_redirect();
+        }
+        else
+            return check_redirect();
+    }
+};
+/**
+ * Backend for frontend (BFF) called from client
+ * 
+ * @param {import('../types.js').server_bff_parameters} bff_parameters
+ */
+ const BFF = (bff_parameters) =>{
+    const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
+    const app_id = ConfigGetAppHost(bff_parameters.host ?? '');
+    
+    if (app_id !=null){
+        let decodedquery = '';
+        if ((bff_parameters.endpoint=='APP')){
+            //App route for app asset, common asset, app info page, app report (using query) and app
+            decodedquery = bff_parameters.route_path;
+        }
+        else{
+            //REST API requests from client are encoded
+            decodedquery = bff_parameters.query?Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString():'';
+        }
+        serverRoutes({  app_id:app_id, 
+                        endpoint:bff_parameters.endpoint,
+                        method:bff_parameters.method.toUpperCase(), 
+                        ip:bff_parameters.ip, 
+                        host:bff_parameters.host ?? '', 
+                        url:bff_parameters.url ?? '',
+                        route_path:bff_parameters.route_path,
+                        user_agent:bff_parameters.user_agent, 
+                        accept_language:bff_parameters.accept_language, 
+                        authorization:bff_parameters.authorization ?? '', 
+                        parameters:decodedquery, 
+                        body:bff_parameters.body, 
+                        res:bff_parameters.res})
+        .then((/**@type{*}*/result_service) => {
+            if (bff_parameters.endpoint=='APP' &amp;&amp; result_service!=null &amp;&amp; result_service.STATIC){
+                if (result_service.SENDFILE){
+                    bff_parameters.res?bff_parameters.res.sendFile(result_service.SENDFILE):null;
+                    bff_parameters.res?bff_parameters.res.status(200):null;
+                }
+                else
+                    bff_parameters.res?bff_parameters.res.status(200).send(result_service.SENDCONTENT):null;
+            }
+            else{
+                const log_result = getNumberValue(ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
+                LogServiceI(app_id, service, bff_parameters.query, log_result).then(()=>{
+                    if (bff_parameters.endpoint=='SOCKET'){
+                        //This endpoint only allowed for EventSource so no more update of response
+                        null;
+                    }
+                    else{
+                        if (bff_parameters.res){
+                            //result from APP can request to redirect
+                            if (bff_parameters.endpoint=='APP' &amp;&amp; bff_parameters.res.statusCode==301)
+                                bff_parameters.res.redirect('/');
+                            else 
+                                if (bff_parameters.endpoint=='APP' &amp;&amp; bff_parameters.res.statusCode==404){
+                                    if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
+                                        bff_parameters.res.redirect(`https://${ConfigGet('SERVER', 'HOST')}`);
+                                    else
+                                        bff_parameters.res.redirect(`http://${ConfigGet('SERVER', 'HOST')}`);
+                                }
+                                else{
+                                    if (bff_parameters.method.toUpperCase() == 'POST' &amp;&amp; !bff_parameters.route_path.toLowerCase().startsWith('/app-function'))
+                                        bff_parameters.res.status(201).send(result_service);
+                                    else{
+                                        if (decodedquery &amp;&amp; new URLSearchParams(decodedquery).get('fields')){
+                                            if (result_service.rows){
+                                                //limit fields/keys in rows
+                                                const limit_fields = result_service.rows.map((/**@type{*}*/row)=>{
+                                                    const row_new = {};
+                                                    /**@ts-ignore */
+                                                    for (const field of new URLSearchParams(decodedquery).get('fields').split(',')){
+                                                        /**@ts-ignore */
+                                                        row_new[field] = row[field];
+                                                    }
+                                                    return row_new;
+                                                });
+                                                result_service.rows = limit_fields;
+                                                bff_parameters.res.status(200).send(result_service);
+                                            }
+                                            else{
+                                                //limit fields/keys in object
+                                                const result_service_fields = {};
+                                                /**@ts-ignore */
+                                                for (const field of new URLSearchParams(decodedquery).get('fields').split(',')){
+                                                    /**@ts-ignore */
+                                                    result_service_fields[field] = result_service[field];
+                                                }
+                                                bff_parameters.res.status(200).send(result_service_fields);
+                                            }
+                                        }
+                                        else
+                                            bff_parameters.res.status(200).send(result_service);
+                                    }
+                                        
+                                }
+                        }
+                        else{
+                            //function called from server return result
+                            return result_service;
+                        }
+                    }  
+                });
+            }
+        })
+        .catch((/**@type{import('../types.js').server_server_error}*/error) => {
+            BFF_log_error(app_id, bff_parameters, service, error);
+        });
+    }
+    else{
+        //unknown appid, domain or subdomain, redirect to hostname
+        if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
+            bff_parameters.res?bff_parameters.res.redirect(`https://${ConfigGet('SERVER', 'HOST')}`):null;
+        else
+            bff_parameters.res?bff_parameters.res.redirect(`http://${ConfigGet('SERVER', 'HOST')}`):null;
+    }
+};
+/**
+ * BFF called from server
+ * @param {number|null} app_id
+ * @param {import('../types.js').server_bff_parameters} bff_parameters
+ * @returns {Promise&lt;(*)>}
+ */
+ const BFF_server = async (app_id, bff_parameters) => {
+    return new Promise((resolve, reject) => {
+        const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
+        if (app_id !=null &amp;&amp; bff_parameters.endpoint){
+            serverRoutes({  app_id:app_id, 
+                            endpoint:bff_parameters.endpoint,
+                            method:bff_parameters.method.toUpperCase(), 
+                            ip:bff_parameters.ip, 
+                            host:bff_parameters.host ?? '', 
+                            url:bff_parameters.url ?? '',
+                            route_path:bff_parameters.route_path,
+                            user_agent:bff_parameters.user_agent, 
+                            accept_language:bff_parameters.accept_language, 
+                            authorization:bff_parameters.authorization ?? '', 
+                            parameters:bff_parameters.query, 
+                            body:bff_parameters.body, 
+                            res:bff_parameters.res})
+            .then((/**@type{string}*/result)=>resolve(result))
+            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                LogServiceE(app_id, service, bff_parameters.query, error).then(() => {
+                    reject(error);
+                });
+            });
+        }
+        else{
+            //required parameters not provided
+            reject({
+                message: '⛔'
+            });
+        }
+    });
+};
+export{response_send_error, BFF_init, BFF_start, BFF, BFF_server};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_praytimes.html">apps/app2/report/lib_praytimes</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_praytimes.html">apps/app2/src/modules/module_praytimes</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_country.html">server/db/components/country</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_locale.html">server/db/components/locale</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_country.html">server/db/sql/country</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_locale.html">server/db/sql/locale</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_logon.html">server/db/sql/user_account_logon</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

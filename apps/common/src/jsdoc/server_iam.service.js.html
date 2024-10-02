@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/iam.service.js</title>
+    <base href='/info/jsdoc/'/>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+
+    <link media="all" href="/common/css/common.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font1.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font2.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font3.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font4.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font5.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font6.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font7.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: server/iam.service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @module server/iam/service */
+
+/**@type{import('./server.service.js')} */
+const {response_send_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./config.service.js')} */
+const {ConfigGet, ConfigFileGet, ConfigGetApp, ConfigGetAppHost, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./db/file.service.js')} */
+const {file_get, file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+
+const {default:jwt} = await import('jsonwebtoken');
+
+/**
+ * 
+ * @param {string} query 
+ * @returns {URLSearchParams}
+ */
+ const iam_decode = query =>{
+    return new URLSearchParams(atob(query));
+};
+/**
+ * @param {number|null}  app_id
+ * @param {'APP_ACCESS'|'APP_DATA'|'SYSTEMADMIN'} token_type 
+ * @param {string} token 
+ * @returns {boolean}
+ */
+const expired_token = (app_id, token_type, token) =>{
+    switch (token_type){
+        case 'APP_ACCESS':{
+            //exp, iat, tokentimestamp on token
+            try {
+                /**@ts-ignore*/
+                return ((jwt.verify(token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET).exp ?? 0) * 1000) - Date.now()&lt;0;    
+            } catch (error) {
+                return true;
+            }
+            
+        }
+        case 'SYSTEMADMIN':{
+            //exp, iat, tokentimestamp on token
+            try {
+                /**@ts-ignore*/
+                return ((jwt.verify(token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET')).exp ?? 0) * 1000) - Date.now()&lt;0;    
+            } catch (error) {
+                return true;
+            }
+        }
+        default:
+            return false;
+    }
+};
+/**
+ * @param {import('../types.js').server_server_res} res
+ * @param {number} status
+ * @param {string} reason
+ * @param {boolean} bff
+ * @returns {string|null|void}
+ */
+ const not_authorized = (res, status, reason, bff=false) => {
+    if (bff){
+        res.statusCode = status;
+        res.statusMessage = reason;
+        return '⛔';
+    }
+    else
+        return response_send_error(res, status, null, '⛔', null, reason);
+};
+
+/**
+ * Middleware authenticates system admin login
+ * @param {number} app_id
+ * @param {string} iam
+ * @param {string} authorization
+ * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {import('../types.js').server_server_res} res 
+ * @return {Promise.&lt;{
+ *                  username:string,
+ *                  token_at:string,
+ *                  exp:number,
+ *                  iat:number,
+ *                  tokentimestamp:number}>}
+ */
+const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agent, accept_language, res)=>{
+    /**@type{import('./socket.service.js')} */
+    const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    return new Promise((resolve, reject)=>{
+        const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
+            /**@type{import('./security.service.js')} */
+            const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.service.js`);
+            const config_username = ConfigGetUser('username');
+            const config_password = ConfigGetUser('password');
+            let result = 0;
+            if (username == config_username &amp;&amp; await PasswordCompare(password, config_password) &amp;&amp; app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID')))
+                result = 1;
+            else
+                result = 0;
+            const jwt_data = AuthorizeToken(app_id, 'SYSTEMADMIN', {id:null, name:username, ip:ip, scope:'USER'});
+            /**@type{import('../types.js').server_iam_systemadmin_login_record} */
+            const file_content = {	app_id:             app_id,
+                                    username:		    username,
+                                    result:				1,
+                                    systemadmin_token:  jwt_data.token,
+                                    client_ip:          ip,
+                                    client_user_agent:  null,
+                                    client_longitude:   null,
+                                    client_latitude:    null,
+                                    date_created:       new Date().toISOString()};
+            await file_append_log('IAM_SYSTEMADMIN_LOGIN', file_content, 'YYYYMMDD')
+            .then(()=>{
+                if (result == 1){
+                    ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), null, username, iam_decode(iam).get('authorization_bearer'), null, jwt_data.token, ip, user_agent, accept_language, res)
+                    .then(()=>{
+                        resolve({   username:username,
+                                    token_at: jwt_data.token,
+                                    exp:jwt_data.exp,
+                                    iat:jwt_data.iat,
+                                    tokentimestamp:jwt_data.tokentimestamp});
+                                })
+                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+                }
+                else
+                    reject (not_authorized(res, 401, 'AuthenticateSystemadmin, file_append_log', true));
+            });
+        };
+        if(authorization){       
+            const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+            const username = userpass.split(':')[0];
+            const password = userpass.split(':')[1];
+            if (CheckFirstTime())
+                CreateSystemAdmin(username, password)
+                .then(()=>check_user(username, password));
+            else
+                check_user(username, password);
+        }
+        else{
+            reject (not_authorized(res, 401, 'AuthenticateSystemadmin, authorization', true));
+        }
+    });
+    
+};
+
+/**
+ * Middleware authenticate socket used for EventSource
+ * @param {string} path
+ * @param {string} host
+ * @param {string} iam
+ * @param {string} ip
+ * @param {import('../types.js').server_server_res} res
+ * @param {function} next
+ */
+const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
+    if (iam &amp;&amp; iam_decode(iam).get('authorization_bearer') &amp;&amp; path.startsWith('/server-socket')){
+        AuthenticateUserCommon(iam, 'APP_DATA', iam_decode(iam).get('authorization_bearer')??'', host, ip, res, next);
+    }
+    else
+        not_authorized(res, 401, 'AuthenticateSocket');
+};
+/**
+ * Middleware authenticate IAM users
+ * @param {string} iam
+ * @param {'AUTH_SYSTEMADMIN'|'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'APP_SYSTEMADMIN'|'APP_ACCESS'|'APP_ACCESS_ADMIN'|'APP_ACCESS_SUPERADMIN'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
+ * @param {string} authorization
+ * @param {string} host
+ * @param {string} ip
+ * @param {import('../types.js').server_server_res} res
+ * @param {function} next
+ */
+ const AuthenticateUserCommon = async (iam, scope, authorization, host, ip, res, next) =>{
+    const app_id_host = getNumberValue(ConfigGetAppHost(host));
+    //iam required for SOCKET update using iam.client_id that can be changed any moment and not validated here
+    if (iam &amp;&amp; scope &amp;&amp; authorization &amp;&amp; app_id_host !=null){
+        const app_id_admin = getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'));
+        // APP_DATA uses req.headers.authorization ID token except for SOCKET where ID token is in iam.authorization_bearer
+        // other requests uses BASIC or BEARER access token in req.headers.authorization and ID token in iam.authorization_bearer
+        const id_token = scope=='APP_DATA'?authorization?.split(' ')[1] ?? '':iam_decode(iam).get('authorization_bearer')?.split(' ')[1] ?? '';
+        try {
+            //authenticate id token
+            /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
+            const id_token_decoded = jwt.verify(id_token, ConfigGetApp(app_id_host, app_id_host, 'SECRETS').APP_ID_SECRET);
+            /**@type{import('../types.js').server_iam_app_token_record[]}*/
+            const log_id_token = await file_get_log('IAM_APP_TOKEN', 'YYYYMMDD');
+            if (id_token_decoded.app_id == app_id_host &amp;&amp; 
+                id_token_decoded.scope == 'APP' &amp;&amp; 
+                id_token_decoded.ip == ip &amp;&amp;
+                log_id_token.filter((/**@type{import('../types.js').server_iam_app_token_record}*/row)=> 
+                                    row.app_id == app_id_host &amp;&amp; row.client_ip == ip &amp;&amp; row.app_token == id_token).length==1){
+                if (scope=='APP_DATA')
+                    next();
+                else{
+                    /**
+                     * 
+                     * @param {number|null} user_id 
+                     * @returns {Promise.&lt;boolean>}
+                     */
+                    const superadmin = async (user_id) => {
+                        if (user_id){
+                            /**@type{import('./db/sql/user_account.service.js')} */
+                            const {getUserAppRoleAdmin} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
+                            /**@type{import('../types.js').server_db_sql_result_user_account_getUserAppRoleAdmin[]}*/
+                            const result = await getUserAppRoleAdmin(app_id_host, user_id)
+                                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                                                        not_authorized(res, 500, error);
+                                                        return [];
+                                                    });
+                            return result[0].app_role_id == 0;
+                        }
+                        else
+                            return false;
+                    };
+                    //validate scope, app_id and authorization
+                    switch (true){
+                        case (scope=='AUTH_SYSTEMADMIN' || scope=='AUTH_ADMIN') &amp;&amp; app_id_host== app_id_admin &amp;&amp; authorization.toUpperCase().startsWith('BASIC'):{
+                            next();
+                            break;
+                        }
+                        case (scope=='AUTH_USER' || scope=='AUTH_PROVIDER') &amp;&amp; app_id_host!= app_id_admin &amp;&amp; authorization.toUpperCase().startsWith('BASIC'):{
+                            if (getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1){
+                                next();
+                            }
+                            else
+                                not_authorized(res, 403, 'AuthenticateUserCommon, user login disabled');
+                            break;
+                        }
+                        case scope=='APP_SYSTEMADMIN' &amp;&amp; app_id_host== app_id_admin &amp;&amp; authorization.toUpperCase().startsWith('BEARER'):{
+                            //authenticate access token
+                            const access_token = authorization?.split(' ')[1] ?? '';
+                            /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
+                            const access_token_decoded = jwt.verify(access_token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '');
+                            /**@type{import('../types.js').server_iam_systemadmin_login_record[]}*/
+                            const log_access_token = await file_get_log('IAM_SYSTEMADMIN_LOGIN', 'YYYYMMDD');
+
+                            if (access_token_decoded.app_id == app_id_host &amp;&amp; 
+                                access_token_decoded.scope == 'USER' &amp;&amp; 
+                                access_token_decoded.ip == ip &amp;&amp;
+                                access_token_decoded.name == iam_decode(iam).get('system_admin') &amp;&amp;
+                                log_access_token.filter((/**@type{import('../types.js').server_iam_systemadmin_login_record}*/row)=>
+                                    row.app_id == app_id_host &amp;&amp; 
+                                    row.username == access_token_decoded.name &amp;&amp; 
+                                    row.client_ip == ip &amp;&amp; 
+                                    row.systemadmin_token == access_token).length==1)
+                                next();
+                            else
+                                not_authorized(res, 401, 'AuthenticateUserCommon');
+                            break;
+                        }
+                        case scope=='APP_DATA_REGISTRATION' &amp;&amp; getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 &amp;&amp; app_id_host!= app_id_admin &amp;&amp; authorization.toUpperCase().startsWith('BEARER'):{
+                            next();
+                            break;
+                        }
+                        
+                        case scope=='APP_ACCESS_SUPERADMIN' &amp;&amp; app_id_host== app_id_admin &amp;&amp; authorization.toUpperCase().startsWith('BEARER'):
+                        case scope=='APP_ACCESS_ADMIN' &amp;&amp; app_id_host== app_id_admin &amp;&amp; authorization.toUpperCase().startsWith('BEARER'):
+                        case scope=='APP_ACCESS' &amp;&amp; getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 &amp;&amp; authorization.toUpperCase().startsWith('BEARER'):{
+                            //authenticate access token
+                            const access_token = authorization?.split(' ')[1] ?? '';
+                            /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
+                            const access_token_decoded = jwt.verify(access_token, ConfigGetApp(app_id_host, app_id_host, 'SECRETS').APP_ACCESS_SECRET ?? '');
+                            const user_id = getNumberValue(iam_decode(iam).get('user_id'));
+                            if (access_token_decoded.app_id == app_id_host &amp;&amp; 
+                                access_token_decoded.scope == 'USER' &amp;&amp; 
+                                access_token_decoded.ip == ip &amp;&amp;
+                                access_token_decoded.id == user_id &amp;&amp;
+                                ((scope=='APP_ACCESS_SUPERADMIN' &amp;&amp; await superadmin(user_id))|| scope!='APP_ACCESS_SUPERADMIN'))
+                                //check access token belongs to user_account.id, app_id and ip saved when logged in
+                                //and if app_id=0 then check user is admin
+                                import(`file://${process.cwd()}/server/db/sql/user_account_logon.service.js`)
+                                .then((/**@type{import('./db/sql/user_account_logon.service.js')} */{checkLogin}) => {
+                                    checkLogin(app_id_host, user_id)
+                                    .then((/**@type{import('../types.js').server_db_sql_result_user_account_logon_Checklogin[]}*/result)=>{
+                                        if (result.filter(row=>
+                                            JSON.parse(row.json_data).result==1 &amp;&amp; 
+                                            JSON.parse(row.json_data).access_token == access_token &amp;&amp; 
+                                            JSON.parse(row.json_data).client_ip == ip).length==1)
+                                            next();
+                                        else
+                                            not_authorized(res, 401, 'AuthenticateUserCommon, no record APP_ACCESS');
+                                    })
+                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                                        res.status(500).send(
+                                            error
+                                        );
+                                    });
+                                });
+                            else
+                                not_authorized(res, 401, 'AuthenticateUserCommon, token claim error');
+                            break;
+                        }
+                        default:{
+                            not_authorized(res, 401, 'AuthenticateUserCommon, scope error or wrong app or wrong header authorization');
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+                not_authorized(res, 401, 'AuthenticateUserCommon, not IAM or no authorization');
+        } catch (error) {
+            not_authorized(res, 401, 'AuthenticateUserCommon, token error');
+        }
+    }
+    else
+        not_authorized(res, 401, 'AuthenticateUserCommon, not IAM or no authorization');
+};
+
+/**
+ * 
+ * @param {'APP_EXTERNAL'} endpoint 
+ * @param {string} host 
+ * @param {string} user_agent 
+ * @param {string} accept_language 
+ * @param {string} ip 
+ * @param {*} body
+ * @param {import('../types.js').server_server_res} res
+ * @param {function} next
+ */
+const AuthenticateExternal = (endpoint, host, user_agent, accept_language, ip, body, res, next) => {
+    //add host, user_agent, accept_language and ip validation if needed
+    if (endpoint =='APP_EXTERNAL' &amp;&amp; ('id' in body) &amp;&amp; ('message' in body))
+        next();
+    else
+        not_authorized(res, 401, 'AuthenticateExternal');
+};
+/**
+ * Authorize request
+ * Controls if AUTHENTICATE_REQUEST_ENABLE=1 else skips all checks
+ *  if ip is blocked return 403
+ *  if AUTHENTICATE_REQUEST_HOST_EXIST=1 then check if host exists else return 406
+ *  if AUTHENTICATE_REQUEST_ACCESS_FROM=1 then check if request accessed from domain and not from os hostname else return 406
+ *  if user agent is in safe list then return ok else continue checks:
+ *  if AUTHENTICATE_REQUEST_USER_AGENT_EXIST=1 then check if user agent exists else return 406
+ *  if AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE=1 then check if accept language exists else return 406
+ *  if decodeURIComponent() no error then return null else return 400
+ * @param {string} ip
+ * @param {string} host
+ * @param {string} method
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {string} path
+ */
+ const AuthenticateRequest = (ip, host, method, user_agent, accept_language, path) => {
+    /**
+     * IP to number
+     * @param {string} ip
+     * @returns {number}
+     */
+    const IPtoNum = (ip) => {
+        return Number(
+            ip.split('.')
+            .map(d => ('000'+d).substr(-3) )
+            .join('')
+        );
+    };
+    /**
+     * Controls if ip is blocked
+     *  if ip is blocked return 403
+     * @param {string} ip_v4
+     * @returns {Promise.&lt;import('../types.js').server_iam_authenticate_request|null>}
+     */
+    const block_ip_control = async (ip_v4) => {
+        if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
+            /**@type{import('./../types.js').server_config_iam_blockip} */
+            const ranges = await ConfigFileGet('IAM_BLOCKIP');
+            //check if IP is blocked
+            if ((ip_v4.match(/\./g)||[]).length==3){
+                for (const element of ranges) {
+                    if (IPtoNum(element[0]) &lt;= IPtoNum(ip_v4) &amp;&amp;
+                        IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
+                            //403 Forbidden
+                            return {    statusCode: 403,
+                                        statusMessage: `${IPtoNum(element[0])}-${IPtoNum(element[1])}`};
+                    }
+                }
+            }
+            return null;
+        }
+        else
+            return null;
+    };
+    /**
+     * Controls if user agent is safe
+     * @param {string} client_user_agent
+     * @returns {Promise.&lt;boolean>}
+     */
+    const safe_user_agents = async (client_user_agent) => {
+        if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
+            /**@type{import('./../types.js').server_config_iam_useragent} */
+            const {user_agents} = await ConfigFileGet('IAM_USERAGENT');
+            for (const user_agent of user_agents){
+                if (user_agent.user_agent == client_user_agent)
+                    return true;
+            }
+            return false;
+        }
+        else
+            return false;
+    };
+    return new Promise((resolve)=>{
+        if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
+            const ip_v4 = ip.replace('::ffff:','');
+            block_ip_control(ip_v4).then((/**@type{import('../types.js').server_iam_authenticate_request}*/result_range)=>{
+                if (result_range){
+                    resolve({   statusCode:result_range.statusCode,
+                                statusMessage: `ip ${ip_v4} blocked, range: ${result_range.statusMessage}`});
+                }
+                else{
+                    //check if host exists
+                    if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_HOST_EXIST')=='1' &amp;&amp;
+                        typeof host=='undefined'){
+                        //406 Not Acceptable
+                        resolve({   statusCode: 406, 
+                                    statusMessage: `ip ${ip_v4} blocked, no host`});
+                    }
+                    else{
+                        //check if accessed from domain and not os hostname
+                        import('node:os').then(({hostname}) =>{
+                            if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ACCESS_FROM')=='1' &amp;&amp;
+                                host==hostname()){
+                                //406 Not Acceptable
+                                resolve({   statusCode: 406, 
+                                            statusMessage: `ip ${ip_v4} blocked, accessed from hostname ${host} not domain`});
+                            }
+                            else{
+                                safe_user_agents(user_agent).then((/**@type{boolean}*/safe)=>{
+                                    if (safe==true)
+                                        resolve(null);
+                                    else{
+                                        //check if user-agent exists
+                                        if(ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT_EXIST')=='1' &amp;&amp;
+                                            typeof user_agent=='undefined'){
+                                            //406 Not Acceptable
+                                            resolve({   statusCode: 406, 
+                                                        statusMessage: `ip ${ip_v4} blocked, no user-agent`});
+                                        }
+                                        else{
+                                            //check if accept-language exists
+                                            if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE')=='1' &amp;&amp;
+                                                typeof accept_language=='undefined'){
+                                                //406 Not Acceptable
+                                                resolve({   statusCode: 406, 
+                                                            statusMessage: `ip ${ip_v4} blocked, no accept-language`});
+                                            }
+                                            else{
+                                                //check request
+                                                let err = null;
+                                                try {
+                                                    decodeURIComponent(path);
+                                                }
+                                                catch(e) {
+                                                    err = e;
+                                                }
+                                                if (err){
+                                                    resolve({   statusCode: 400, 
+                                                                statusMessage: 'decodeURIComponent error'});
+                                                }
+                                                else{
+                                                    //check method
+                                                    if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==method).length==0)
+                                                        resolve({   statusCode: 405, 
+                                                                    statusMessage: 'method error'});
+                                                    else    
+                                                        resolve(null);
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        else
+            resolve(null);
+    });
+    
+};
+
+/**
+ * 
+ * @param {number|null} app_id 
+ * @param {string} authorization 
+ * @returns {Promise.&lt;boolean>}
+ */
+ const AuthenticateApp = async (app_id, authorization) =>{
+    const file = await file_get('APPS');
+    if (app_id != null){
+        const CLIENT_ID = file.file_content.APPS.filter((/**@type{import('../types.js').server_config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_ID;
+        const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{import('../types.js').server_config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_SECRET;
+        const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+        if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
+            return true;
+        else
+            return false;
+    }
+    else
+        return false;
+    
+};
+/**
+ * Authenticate resource
+ * @param { {app_id:number|null,
+ *           ip:string,
+ *           authorization:string,
+ *           resource_id:string|number|null,
+ *           scope: 'USER'|'APP',
+ *           claim_key:string}} parameters
+ */
+const AuthenticateResource = parameters =>  {
+    //authenticate access token
+    try {
+        /**@type{{app_id:number, id:number|null, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
+        const access_token_decoded = jwt.verify(parameters.authorization.split(' ')[1], ConfigGetApp(parameters.app_id, parameters.app_id, 'SECRETS').APP_ACCESS_SECRET);
+        return  parameters.resource_id &amp;&amp; 
+                access_token_decoded[parameters.claim_key] == parameters.resource_id &amp;&amp;
+                access_token_decoded.app_id == parameters.app_id &amp;&amp;
+                access_token_decoded.scope == parameters.scope &amp;&amp;
+                access_token_decoded.ip == parameters.ip;    
+    } catch (error) {
+        return false;
+    }
+    
+};
+                                            
+/**
+ * Authorize token app
+ * 
+ * @param {number} app_id
+ * @param {string|null} ip
+ * @returns {Promise.&lt;string>}
+ */
+ const AuthorizeTokenApp = async (app_id, ip)=>{
+    const jwt_data = AuthorizeToken(app_id, 'APP_ID', { id: null, 
+                                                        ip:ip ?? '', 
+                                                        name:'', 
+                                                        scope:'APP'});
+
+    /**@type{import('../types.js').server_iam_app_token_record} */
+    const file_content = {	app_id:             app_id,
+                            result:				1,
+                            app_token:   	    jwt_data.token,
+                            client_ip:          ip ?? '',
+                            client_user_agent:  null,
+                            client_longitude:   null,
+                            client_latitude:    null,
+                            date_created:       new Date().toISOString()};
+    return await file_append_log('IAM_APP_TOKEN', file_content, 'YYYYMMDD').then(()=>jwt_data.token);
+ };
+/**
+ * Authorize token
+ * 
+ * @param {number} app_id
+ * @param {'APP_ID'|'APP_ACCESS'|'SYSTEMADMIN'|'APP_CUSTOM'} endpoint
+ * @param {{id:number|string|null, 
+ *          name:string, 
+ *          ip:string, 
+ *          scope:'USER'|'APP'|'APP_CUSTOM'}} claim
+ * @param {string|null} app_custom_expire
+ * @returns {{
+ *              token:string, 
+ *              exp:number,             //expires at
+ *              iat:number,             //issued at
+ *              tokentimestamp:number}}
+ */
+ const AuthorizeToken = (app_id, endpoint, claim, app_custom_expire=null)=>{
+
+    let secret = '';
+    let expiresin = '';
+    switch (endpoint){
+        //APP ID Token
+        case 'APP_ID':{
+            secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_SECRET;
+            expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_EXPIRE;
+            break;
+        }
+        //USER Access token
+        case 'APP_ACCESS':{
+            secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET;
+            expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_EXPIRE;
+            break;
+        }
+        //USER Access token
+        case 'SYSTEMADMIN':{
+            secret = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '';
+            expiresin = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_EXPIRE_ACCESS') ?? '';
+            break;
+        }
+        //APP custom token
+        case 'APP_CUSTOM':{
+            secret = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_SECRET;
+            expiresin = app_custom_expire ?? '';
+            break;
+        }
+    }
+    /**@type{import('../types.js').server_iam_access_token_claim_type} */
+    const access_token_claim = {app_id:         app_id,
+                                id:             claim.id,
+                                name:           claim.name,
+                                ip:             claim.ip,
+                                scope:          claim.scope,
+                                tokentimestamp: Date.now()};
+    const token = jwt.sign (access_token_claim, secret, {expiresIn: expiresin});
+    return {token:token,
+            /**@ts-ignore */
+            exp:jwt.decode(token, { complete: true }).payload.exp,
+            /**@ts-ignore */
+            iat:jwt.decode(token, { complete: true }).payload.iat,
+            /**@ts-ignore */
+            tokentimestamp:jwt.decode(token, { complete: true }).payload.tokentimestamp};
+};
+
+export{ iam_decode,
+        expired_token,
+        not_authorized,
+        AuthenticateSystemadmin,
+        AuthenticateSocket,
+        AuthenticateUserCommon,
+        AuthenticateExternal,
+        AuthenticateRequest,
+        AuthenticateApp,
+        AuthenticateResource,
+        AuthorizeTokenApp,
+        AuthorizeToken}; </code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_praytimes.html">apps/app2/report/lib_praytimes</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_praytimes.html">apps/app2/src/modules/module_praytimes</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_country.html">server/db/components/country</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_locale.html">server/db/components/locale</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_country.html">server/db/sql/country</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_locale.html">server/db/sql/locale</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_logon.html">server/db/sql/user_account_logon</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
