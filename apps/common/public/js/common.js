@@ -80,31 +80,20 @@ const COMMON_GLOBAL = {
     moduleLeaflet:{methods:{eventClickCountry:          ()=>null, 
                             eventClickCity:             ()=>null,
                             eventClickMapLayer:         ()=>null,
+                            eventClickControlZoomIn:    ()=>null,
+                            eventClickControlZoomOut:    ()=>null,
                             eventClickControlSearch:    ()=>null,
                             eventClickControlFullscreen:()=>null,
                             eventClickControlLocation:  ()=>null,
                             eventClickControlLayer:     ()=>null,
                             eventClickSearchList:       ()=>null,
                             eventKeyUpSearch:           ()=>null,
-                            map_country:                ()=>null,
-                            map_city:                   ()=>null,
-                            map_city_empty:             ()=>null,
                             map_toolbar_reset:          ()=>null,
-                            map_show_search_on_map:     ()=>null,
-                            map_control_toggle_expand:  ()=>null,
-                            map_resize:                 ()=>null,
                             map_line_removeall:         ()=>null,
                             map_line_create:            ()=>null,
-                            map_setstyle:               ()=>null,
-                            map_update:                 ()=>null,
-                            moduleLeafletContainer:     ()=>null
+                            map_update:                 ()=>null
                         }
                     },
-    moduleLeafletFlyTo:0,
-    moduleLeafletJumpTo:0,
-    moduleLeafletZoom:0, 
-    moduleLeafletZoomCity:0,
-    moduleLeafletZoomPp:0,
     'module_easy.qrcode_width':null,
     'module_easy.qrcode_height':null,
     'module_easy.qrcode_color_dark':null,
@@ -635,35 +624,14 @@ const set_current_value= (div, value, json_key=null, json_value=null) =>{
  */
 const select_event_action = async (event_target_id, target) =>{
     //module leaflet events
-    if(event_target_id== 'common_module_leaflet_select_country'){
-        const country_code = CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')==''?
-                                null:
-                                JSON.parse(CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')).country_code;
-        if (country_code)
-            COMMON_GLOBAL.moduleLeaflet.methods.map_city(country_code);
-        else{
-            COMMON_GLOBAL.moduleLeaflet.methods.map_city_empty();
-        }
-    }
-    if (event_target_id== 'common_module_leaflet_select_city'){
-        const city = CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
-        await COMMON_GLOBAL.moduleLeaflet.methods.map_update({  longitude:      city==''?'':JSON.parse(city).longitude,
-                                                                latitude:       city==''?'':JSON.parse(city).latitude,
-                                                                zoomvalue:      COMMON_GLOBAL.moduleLeafletZoomCity,
-                                                                text_place:     city==''?'':JSON.parse(city).city,
-                                                                country:        '',
-                                                                city:           '',
-                                                                timezone_text:  null,
-                                                                to_method:      COMMON_GLOBAL.moduleLeafletFlyTo
-                                                            }).then(()=> {
-                                                                COMMON_GLOBAL.moduleLeaflet.methods.map_toolbar_reset();
-        });
-    }
-                    
-    if(event_target_id == 'common_module_leaflet_select_mapstyle'){
-        COMMON_GLOBAL.moduleLeaflet.methods.map_setstyle(target?.getAttribute('data-value'));
-    }
+    if(event_target_id== 'common_module_leaflet_select_country')
+        COMMON_GLOBAL.moduleLeaflet.methods.eventClickCountry(event_target_id);
+    if (event_target_id== 'common_module_leaflet_select_city')
+        COMMON_GLOBAL.moduleLeaflet.methods.eventClickCity(event_target_id);
+    if(event_target_id == 'common_module_leaflet_select_mapstyle')
+        COMMON_GLOBAL.moduleLeaflet.methods.eventClickMapLayer(target);
 
+    //dialogue user menu events
     if (event_target_id == 'common_dialogue_user_menu_app_theme'){
         CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
         common_preferences_update_body_class_from_preferences();
@@ -1490,33 +1458,13 @@ const list_key_event = (event, module, event_function=null) => {
                 const rows = CommonAppDocument.querySelectorAll(`.common_${list_name}_list_row`);
                 for (let i = 0; i <= rows.length -1; i++) {
                     if (rows[i].classList.contains('common_list_row_selected')){
-                        /*Show profile and leave searchresult so user can go back to searchresult again*/
-                        if (event_function ==null){
-                            if (module=='profile'){
-                                //dispatch same event as clicked
-                                rows[i].querySelectorAll('.common_profile_search_list_username')[0].click();
-                            }
-                            else{
-                                COMMON_GLOBAL.moduleLeaflet.methods.map_show_search_on_map({city:rows[i].getAttribute('data-city'),
-                                                                                            country:rows[i].getAttribute('data-country'),
-                                                                                            latitude:rows[i].getAttribute('data-latitude'),
-                                                                                            longitude:rows[i].getAttribute('data-longitude')
-                                                                                        });
-                            }
+                        if (module=='profile'){
+                            //dispatch same event as clicked
+                            rows[i].querySelectorAll('.common_profile_search_list_username')[0].click();
                         }
                         else{
-                            if (module=='profile'){
-                                //dispatch same event as clicked
-                                rows[i].querySelectorAll('.common_profile_search_list_username')[0].click(); 
-                            }
-                            else
-                                event_function({city:rows[i].getAttribute('data-city'),
-                                                country:rows[i].getAttribute('data-country'),
-                                                latitude:rows[i].getAttribute('data-latitude'),
-                                                longitude:rows[i].getAttribute('data-longitude')
-                                            });
-                        }
-                            
+                            rows[i].querySelectorAll('.common_module_leaflet_search_list_city')[0].click();
+                        }   
                         rows[i].classList.remove ('common_list_row_selected');
                     }
                 }
@@ -2216,11 +2164,10 @@ const create_qr = async (div, url) => {
  * @param {string} mount_div
  * @param {string} longitude 
  * @param {string} latitude 
- * @param {function|null} doubleclick_event 
- * @param {function|null} search_event_function 
+ * @param {function|null} doubleclick_event
  * @returns {Promise.<void>}
  */
-const map_init = async (mount_div, longitude, latitude, doubleclick_event, search_event_function) => {  
+const map_init = async (mount_div, longitude, latitude, doubleclick_event) => {  
     /**
      * 
      * @type {{ data:null,
@@ -2247,13 +2194,13 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event, searc
                     latitude:latitude
                     },
         methods:    {
-                    function_search_event:search_event_function,
                     function_event_doubleclick: doubleclick_event,
                     ComponentRender:ComponentRender,
                     get_place_from_gps:get_place_from_gps,
+                    element_row:element_row,
                     FFB:FFB,
                     moduleLeafletContainer:module_leaflet.methods.leafletContainer,
-                    moduleleafletLibrary:module_leaflet.methods.leafletLibrary
+                    moduleLeafletLibrary:module_leaflet.methods.leafletLibrary
                     },
         path:       '/common/component/common_module_leaflet_control.js'});
         
@@ -3056,57 +3003,24 @@ const common_event = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_module_leaflet_control_search_button':{
-                            if (CommonAppDocument.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
-                                COMMON_GLOBAL.moduleLeaflet.methods.map_control_toggle_expand('layer');
-                            COMMON_GLOBAL.moduleLeaflet.methods.map_control_toggle_expand('search');
+                            COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlSearch();
                             break;
                         }
                         case 'common_module_leaflet_control_fullscreen_id':{
-                            if (CommonAppDocument.fullscreenElement)
-                                CommonAppDocument.exitFullscreen();
-                            else
-                                CommonAppDocument.querySelector('.leaflet-container').requestFullscreen();
+                            COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlFullscreen();
                             break;
                         }
                         case 'common_module_leaflet_control_my_location_id':{
-                            if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
-                                COMMON_GLOBAL.moduleLeaflet.methods.map_update({longitude:COMMON_GLOBAL.client_longitude,
-                                                                                latitude:COMMON_GLOBAL.client_latitude,
-                                                                                zoomvalue:COMMON_GLOBAL.moduleLeafletZoom,
-                                                                                text_place:COMMON_GLOBAL.client_place,
-                                                                                country:'',
-                                                                                city:'',
-                                                                                timezone_text :null,
-                                                                                to_method:COMMON_GLOBAL.moduleLeafletJumpTo
-                                                                            });
-                                CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
-                                CommonAppDocument.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
-                                COMMON_GLOBAL.moduleLeaflet.methods.map_city_empty();
-                                COMMON_GLOBAL.moduleLeaflet.methods.map_toolbar_reset();
-                            }
+                            COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlLocation(COMMON_GLOBAL.client_latitude, COMMON_GLOBAL.client_longitude, COMMON_GLOBAL.client_place);
+                            
                             break;
                         }
                         case 'common_module_leaflet_control_layer_button':{
-                            if (CommonAppDocument.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
-                                COMMON_GLOBAL.moduleLeaflet.methods.map_toolbar_reset();
-                            COMMON_GLOBAL.moduleLeaflet.methods.map_control_toggle_expand('layer');
+                            COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlLayer();
                             break;
                         }
                         case 'common_module_leaflet_search_list':{
-                            //execute function from inparameter or use default when not specified
-                            if (event.target.classList.contains('common_module_leaflet_click_city')){
-                                const data = {  city: element_row(event.target).getAttribute('data-city') ?? '',
-                                                country: element_row(event.target).getAttribute('data-country') ??'',
-                                                latitude: element_row(event.target).getAttribute('data-latitude') ?? '',
-                                                longitude: element_row(event.target).getAttribute('data-longitude') ?? ''
-                                            };
-                                if (CommonAppDocument.querySelector('#common_module_leaflet_search_list')['data-function']){
-                                    CommonAppDocument.querySelector('#common_module_leaflet_search_list')['data-function'](data);
-                                    COMMON_GLOBAL.moduleLeaflet.methods.map_toolbar_reset();
-                                }
-                                else
-                                    COMMON_GLOBAL.moduleLeaflet.methods.map_show_search_on_map(data);
-                            }
+                            await COMMON_GLOBAL.moduleLeaflet.methods.eventClickSearchList(event.target);
                             break;
                         }
                         case 'common_toolbar_framework_js':
@@ -3135,10 +3049,10 @@ const common_event = async (event_type,event=null) =>{
                         }        
                         default:{
                             if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in')){
-                                COMMON_GLOBAL.moduleLeaflet.methods.moduleLeafletContainer()?.setZoom?.(COMMON_GLOBAL.moduleLeaflet.methods.moduleLeafletContainer()?.getZoom?.() + 1);
+                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlZoomIn();
                             }
                             if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out')){
-                                COMMON_GLOBAL.moduleLeaflet.methods.moduleLeafletContainer()?.setZoom?.(COMMON_GLOBAL.moduleLeaflet.methods.moduleLeafletContainer()?.getZoom?.() - 1);
+                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlZoomOut();
                             }
                             break;
                         }
@@ -3296,11 +3210,6 @@ const set_app_parameters = (common_parameters) => {
             case ('IMAGE_FILE_MAX_SIZE' in parameter)                  :{COMMON_GLOBAL.image_file_max_size = parseInt(parameter['IMAGE_FILE_MAX_SIZE']);break;}
             case ('IMAGE_AVATAR_WIDTH' in parameter)                   :{COMMON_GLOBAL.image_avatar_width = parseInt(parameter['IMAGE_AVATAR_WIDTH']);break;}
             case ('IMAGE_AVATAR_HEIGHT' in parameter)                  :{COMMON_GLOBAL.image_avatar_height = parseInt(parameter['IMAGE_AVATAR_HEIGHT']);break;}
-            case ('MODULE_LEAFLET_FLYTO' in parameter)                 :{COMMON_GLOBAL.moduleLeafletFlyTo = parseInt(parameter['MODULE_LEAFLET_FLYTO']);break;}
-            case ('MODULE_LEAFLET_JUMPTO' in parameter)                :{COMMON_GLOBAL.moduleLeafletJumpTo = parseInt(parameter['MODULE_LEAFLET_JUMPTO']);break;}
-            case ('MODULE_LEAFLET_ZOOM' in parameter)                  :{COMMON_GLOBAL.moduleLeafletZoom = parseInt(parameter['MODULE_LEAFLET_ZOOM']);break;}
-            case ('MODULE_LEAFLET_ZOOM_CITY' in parameter)             :{COMMON_GLOBAL.moduleLeafletZoomCity = parseInt(parameter['MODULE_LEAFLET_ZOOM_CITY']);break;}
-            case ('MODULE_LEAFLET_ZOOM_PP' in parameter)               :{COMMON_GLOBAL.moduleLeafletZoomPp = parseInt(parameter['MODULE_LEAFLET_ZOOM_PP']);break;}
         }
     }
 };

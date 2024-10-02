@@ -51,11 +51,9 @@ const template = () => `<div id='mapid'></div>
  *                      component_setting_update:import('../js/app.js')['component_setting_update'],
  *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get'],
  *                      lib_timetable_REPORT_GLOBAL:import('../js/types.js').APP_GLOBAL['lib_timetable']['REPORT_GLOBAL'],
- *                      map_show_search_on_map_app:import('../js/app.js')['map_show_search_on_map_app'],
  *                      getTimezone:import('../../../common_types.js').CommonModuleRegional['getTimezone'],
  *                      getTimezoneDate:import('../../../common_types.js').CommonModuleCommon['getTimezoneDate'],
  *                      map_init:import('../../../common_types.js').CommonModuleCommon['map_init'],
- *                      map_resize:import('../../../common_types.js').CommonModuleCommon['map_resize'],
  *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']}}} props
  * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
@@ -116,10 +114,8 @@ const method = async props => {
         await props.methods.map_init('mapid',
                         props.methods.common_document.querySelector('#setting_input_long').innerHTML, 
                         props.methods.common_document.querySelector('#setting_input_lat').innerHTML,
-                        dbl_click_event,
-                        props.methods.map_show_search_on_map_app).then(() => {
+                        dbl_click_event).then(() => {
             props.methods.component_setting_update('GPS', 'MAP');
-            props.methods.map_resize();
         });
     };
     return {

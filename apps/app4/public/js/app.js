@@ -166,18 +166,16 @@ const init_map = async ()=>{
     common.map_init('mapid',
                     common.COMMON_GLOBAL.client_longitude,
                     common.COMMON_GLOBAL.client_latitude,
-                    null,
                     null)
     .then(()=>  
         common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ 
                             longitude:common.COMMON_GLOBAL.client_longitude,
                             latitude:common.COMMON_GLOBAL.client_latitude,
-                            zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
                             text_place: common.COMMON_GLOBAL.client_place,
                             country:'',
                             city:'',
                             timezone_text :null,
-                            to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
+                            to_method:0
                         }))
     .then(()=>  
        framework_set());
