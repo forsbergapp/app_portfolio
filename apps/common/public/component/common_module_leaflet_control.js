@@ -11,7 +11,7 @@
  *          latitude : string}} props
  */
 const template = props =>` <div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='${props.title_search}' role='button'>
-                            <div id='common_module_leaflet_control_search_button' class='common_icon'></div>
+                            <div id='common_module_leaflet_control_search_button' class='common_module_leaflet_control_button common_icon'></div>
                             <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
                                 <div id='common_module_leaflet_select_country'></div>
                                 <div id='common_module_leaflet_select_city'></div>
@@ -48,39 +48,18 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      },
  *          methods:    {
  *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      function_search_event:function, 
  *                      function_event_doubleclick:function,
  *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
  *                      get_place_from_gps:import('../../../common_types.js').CommonModuleCommon['get_place_from_gps'],
+ *                      element_row:import('../../../common_types.js').CommonModuleCommon['element_row'],
  *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
  *                      moduleLeafletContainer:function,
- *                      moduleleafletLibrary:function
+ *                      moduleLeafletLibrary:function
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
- *                      data:  null,
- *                      methods:{
- *                                  eventClickCountry:          function, 
- *                                  eventClickCity:             function,
- *                                  eventClickMapLayer:         function,
- *                                  eventClickControlSearch:    function,
- *                                  eventClickControlFullscreen:function,
- *                                  eventClickControlLocation:  function,
- *                                  eventClickControlLayer:     function,
- *                                  eventClickSearchList:       function,
- *                                  eventKeyUpSearch:           function,
- *                                  map_country:                function,
- *                                  map_city:                   function,
- *                                  map_city_empty:             function,
- *                                  map_toolbar_reset:          function,
- *                                  map_show_search_on_map:     function,
- *                                  map_control_toggle_expand:  function,
- *                                  map_resize:                 function,
- *                                  map_line_removeall:         function,
- *                                  map_line_create:            function,
- *                                  map_setstyle:               function,
- *                                  map_update:                 function,
- *                                  moduleLeafletContainer:     function},
- *                      template:null}>}
+ * @returns {Promise.<{ lifecycle:  import('../../../common_types.js').CommonComponentLifecycle, 
+ *                      data:       null,
+ *                      methods:    import('../../../common_types.js').CommonGlobal['moduleLeaflet']['methods'],
+ *                      template:   null}>}
  */
 const component = async props => {
 
@@ -88,8 +67,8 @@ const component = async props => {
     const MODULE_LEAFLET_JUMPTO     =0;
     const MODULE_LEAFLET_STYLE      ='OpenStreetMap_Mapnik';
     const MODULE_LEAFLET_ZOOM       =14;
-    const MODULE_LEAFLET_ZOOM_CITY  =8;
-    const MODULE_LEAFLET_ZOOM_PP    =14;
+    const MODULE_LEAFLET_ZOOM_CITY  =14;
+    const MODULE_LEAFLET_FLY_TO_DURATION  =8; //seconds
     
     //get supported layers in database
     /** @type {import('../../../common_types.js').CommonModuleLeafletMapLayer[]}*/
@@ -138,29 +117,108 @@ const component = async props => {
         //Leaflet.DomEvent.addListener(leafletContainer(), 'dblclick', default_dbl_click_event);
         props.methods.moduleLeafletContainer().on('dblclick', default_dbl_click_event);
     }
-    const eventClickCountry = () =>{
-        return null;
+    /**
+     * @param {string} event_target_id
+     */
+    const eventClickCountry = event_target_id =>{
+        const country_code = props.methods.common_document.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')==''?
+                                null:
+                                JSON.parse(props.methods.common_document.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')).country_code;
+        if (country_code)
+            map_city(country_code);
+        else{
+            map_city_empty();
+        }
     };
-    const eventClickCity = () => {
-        return null;
+    /**
+     * @param {string} event_target_id
+     */
+    const eventClickCity = async event_target_id => {
+        const city = props.methods.common_document.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
+        await map_update({  longitude:      city==''?'':JSON.parse(city).longitude,
+                            latitude:       city==''?'':JSON.parse(city).latitude,
+                            zoomvalue:      MODULE_LEAFLET_ZOOM_CITY,
+                            text_place:     city==''?'':JSON.parse(city).city,
+                            country:        '',
+                            city:           '',
+                            timezone_text:  null,
+                            to_method:      MODULE_LEAFLET_FLYTO
+                        }).then(()=>map_toolbar_reset());
     };                        
-    const eventClickMapLayer = () =>{
-        return null;
+    /**
+     * @param {import('../../../common_types.js').CommonAppEvent['target']} target
+     */
+    const eventClickMapLayer = target =>{
+        map_setstyle(target?.getAttribute('data-value'));
+    };
+    const eventClickControlZoomIn = () =>{
+        props.methods.moduleLeafletContainer()?.setZoom?.(props.methods.moduleLeafletContainer()?.getZoom?.() + 1);  
+    };
+    const eventClickControlZoomOut = () =>{
+        props.methods.moduleLeafletContainer()?.setZoom?.(props.methods.moduleLeafletContainer()?.getZoom?.() - 1);  
     };
     const eventClickControlSearch = () =>{
-        return null;
+        if (props.methods.common_document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
+            map_control_toggle_expand('layer');
+        map_control_toggle_expand('search');
     };
     const eventClickControlFullscreen = () =>{
-        return null;
+        if (props.methods.common_document.fullscreenElement)
+            props.methods.common_document.exitFullscreen();
+        else
+            props.methods.common_document.querySelector('.leaflet-container').requestFullscreen();
     };
-    const eventClickControlLocation = () =>{
-        return null;
+    /**
+     * @param {string} client_latitude
+     * @param {string} client_longitude
+     * @param {string} client_place
+     */
+    const eventClickControlLocation = (client_latitude, client_longitude, client_place) =>{
+        if (client_latitude!='' && client_longitude!=''){
+            map_update({longitude:client_longitude,
+                        latitude:client_latitude,
+                        zoomvalue:MODULE_LEAFLET_ZOOM,
+                        text_place:client_place,
+                        country:'',
+                        city:'',
+                        timezone_text :null,
+                        to_method:MODULE_LEAFLET_FLYTO
+                    });
+            props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
+            props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
+            map_city_empty();
+            map_toolbar_reset();
+        }
     };
     const eventClickControlLayer = () =>{
-        return null;
+        if (props.methods.common_document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+            map_toolbar_reset();
+        map_control_toggle_expand('layer');
     };
-    const eventClickSearchList = () =>{
-        return null;
+    /**
+     * @param {import('../../../common_types.js').CommonAppEvent['target']} target
+     */
+    const eventClickSearchList = async target =>{
+        //execute function from inparameter or use default when not specified
+        if (target.classList.contains('common_module_leaflet_click_city')){
+            const row = props.methods.element_row(target);
+            const data = {  city:       row.getAttribute('data-city') ?? '',
+                            country:    row.getAttribute('data-country') ??'',
+                            latitude:   row.getAttribute('data-latitude') ?? '',
+                            longitude:  row.getAttribute('data-longitude') ?? ''
+                        };
+            const place =  data.city + ', ' + data.country;
+            await map_update({  longitude:data.longitude,
+                                latitude:data.latitude,
+                                zoomvalue:MODULE_LEAFLET_ZOOM_CITY,
+                                text_place:place,
+                                country:'',
+                                city:'',
+                                timezone_text :null,
+                                to_method:MODULE_LEAFLET_FLYTO
+                            });
+            map_toolbar_reset();
+        }
     };
     const eventKeyUpSearch = ()  => {
         return null;
@@ -274,24 +332,6 @@ const component = async props => {
             map_control_toggle_expand('layer');
     };
 /**
- * Map show search on map
- * @param {{city:string, country:string, longitude:string, latitude:string}} data 
- * @returns {Promise<void>}
- */
-const map_show_search_on_map = async data =>{
-    const place =  data.city + ', ' + data.country;
-    await map_update({  longitude:data.longitude,
-                        latitude:data.latitude,
-                        zoomvalue:MODULE_LEAFLET_ZOOM_CITY,
-                        text_place:place,
-                        country:'',
-                        city:'',
-                        timezone_text :null,
-                        to_method:MODULE_LEAFLET_JUMPTO
-                    });
-    map_toolbar_reset();
-};
-/**
  * Map control toogle expand
  * @param {string} item 
  * @returns {Promise.<void>}
@@ -376,7 +416,7 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
         opacity: opacity
     };
     
-    const layer = props.methods.moduleleafletLibrary().geoJSON(geojsonFeature, {style: myStyle}).addTo(props.methods.moduleLeafletContainer());
+    const layer = props.methods.moduleLeafletLibrary().geoJSON(geojsonFeature, {style: myStyle}).addTo(props.methods.moduleLeafletContainer());
     /**@ts-ignore */
     MODULE_LEAFLET_GEOJSON.push(layer);
 };
@@ -393,12 +433,12 @@ const map_setstyle = mapstyle => {
     }
     const mapstyle_record = MODULE_LEAFLET_SELECT_MAP_LAYERS.filter(map_style=>map_style.value==mapstyle)[0];
     if (mapstyle_record.data3)
-        mapstyle_record.session_map_layer = props.methods.moduleleafletLibrary().tileLayer(mapstyle_record.data2, {
+        mapstyle_record.session_map_layer = props.methods.moduleLeafletLibrary().tileLayer(mapstyle_record.data2, {
             maxZoom: mapstyle_record.data3,
             attribution: mapstyle_record.data4
         }).addTo(props.methods.moduleLeafletContainer());
     else
-        mapstyle_record.session_map_layer = props.methods.moduleleafletLibrary().tileLayer(mapstyle_record.data2, {
+        mapstyle_record.session_map_layer = props.methods.moduleLeafletLibrary().tileLayer(mapstyle_record.data2, {
             attribution: mapstyle_record.data4
         }).addTo(props.methods.moduleLeafletContainer());
 };
@@ -406,12 +446,12 @@ const map_setstyle = mapstyle => {
  * Map update
  * @param {{longitude:string,
  *          latitude:string,
- *          zoomvalue:number|null,
+ *          zoomvalue?:number|null,
  *          text_place:string,
  *          country:string,
  *          city:string,
  *          timezone_text :string|null,
- *          to_method:number
+ *          to_method?:number
  *          }} parameters
  * @returns {Promise.<string|null>}
  */
@@ -422,32 +462,29 @@ const map_update = async (parameters) => {
     return new Promise((resolve)=> {
         /**
          * Map update GPS
-         * @param {number} to_method 
+         * @param {number|null} to_method 
          * @param {number|null} zoomvalue 
          * @param {string} longitude 
          * @param {string} latitude 
          */
         const map_update_gps = (to_method, zoomvalue, longitude, latitude) => {
             switch (to_method){
-                case 0:{
+                case MODULE_LEAFLET_JUMPTO:{
                     if (zoomvalue == null){
-                        const LatLng = props.methods.moduleleafletLibrary().LatLng;
-                        props.methods.moduleLeafletContainer()?.setView?.(new LatLng(latitude, longitude));
+                        props.methods.moduleLeafletContainer()?.setView?.(new (props.methods.moduleLeafletLibrary()).LatLng(latitude, longitude));
                     }
                     else{
-                        const LatLng = props.methods.moduleleafletLibrary().LatLng;
-                        props.methods.moduleLeafletContainer()?.setView?.(new LatLng(latitude, longitude), zoomvalue);
+                        props.methods.moduleLeafletContainer()?.setView?.(new (props.methods.moduleLeafletLibrary()).LatLng(latitude, longitude), zoomvalue);
                     }
                     break;
                 }
-                case 1:{
-                    props.methods.moduleLeafletContainer()?.flyTo?.([latitude, longitude], MODULE_LEAFLET_ZOOM);
+                case MODULE_LEAFLET_FLYTO:{
+                    props.methods.moduleLeafletContainer()?.flyTo?.([latitude, longitude], zoomvalue, {duration:MODULE_LEAFLET_FLY_TO_DURATION});
                     break;
                 }
-                //also have COMMON_GLOBAL.moduleLeafletContainer().panTo(new COMMON_GLOBAL.moduleLeaflet.LatLng({lng: longitude, lat: latitude}));
             }
         };
-        map_update_gps(parameters.to_method, parameters.zoomvalue, parameters.longitude, parameters.latitude);
+        map_update_gps(parameters?.to_method ?? MODULE_LEAFLET_JUMPTO, parameters.zoomvalue ?? MODULE_LEAFLET_ZOOM, parameters.longitude, parameters.latitude);
         if (parameters.timezone_text == null)
             parameters.timezone_text = getTimezone(parameters.latitude, parameters.longitude);
 
@@ -462,7 +499,7 @@ const map_update = async (parameters) => {
                         city:parameters.city
                         },
             methods:    {
-                        moduleLeafletLibrary:props.methods.moduleleafletLibrary,
+                        moduleLeafletLibrary:props.methods.moduleLeafletLibrary,
                         moduleLeafletContainer:props.methods.moduleLeafletContainer
                         },
             path:       '/common/component/common_module_leaflet_popup.js'})
@@ -515,12 +552,10 @@ const map_update = async (parameters) => {
             methods:    {FFB:null},
             path:'/common/component/common_select.js'});
         
-        if (props.methods.function_search_event){
-            //add search function in data-function that event delegation will use            
-            props.methods.common_document.querySelector('#common_module_leaflet_search_input')['data-function'] = props.methods.function_search_event;
-        }
         //set default map layer
         map_setstyle(MODULE_LEAFLET_STYLE);
+        //refresh Leaflet so div looks ok in browser
+        map_resize();
     };
     return {
         lifecycle:  {onMounted:onMounted},
@@ -528,24 +563,18 @@ const map_update = async (parameters) => {
         methods:    {	eventClickCountry:          eventClickCountry, 
                         eventClickCity:             eventClickCity,
                         eventClickMapLayer:         eventClickMapLayer,
+                        eventClickControlZoomIn:    eventClickControlZoomIn,
+                        eventClickControlZoomOut:   eventClickControlZoomOut,
                         eventClickControlSearch:    eventClickControlSearch,
                         eventClickControlFullscreen:eventClickControlFullscreen,
                         eventClickControlLocation:  eventClickControlLocation,
                         eventClickControlLayer:     eventClickControlLayer,
                         eventClickSearchList:       eventClickSearchList,
                         eventKeyUpSearch:           eventKeyUpSearch,
-                        map_country:                map_country,
-                        map_city:                   map_city,
-                        map_city_empty:             map_city_empty,
                         map_toolbar_reset:          map_toolbar_reset,
-                        map_show_search_on_map:     map_show_search_on_map,
-                        map_control_toggle_expand:  map_control_toggle_expand,
-                        map_resize:                 map_resize,
                         map_line_removeall:         map_line_removeall,
                         map_line_create:            map_line_create,
-                        map_setstyle:               map_setstyle,
-                        map_update:                 map_update,
-                        moduleLeafletContainer:     props.methods.moduleLeafletContainer
+                        map_update:                 map_update
                     },
         template:   null
     };

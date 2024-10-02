@@ -551,18 +551,14 @@ const map_mount = () =>{
         common.map_init(APP_GLOBAL.moduleLeafletDiv,
                         common.COMMON_GLOBAL.client_longitude,
                         common.COMMON_GLOBAL.client_latitude,
-                        null,
                         null).then(() => {
             common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:common.COMMON_GLOBAL.client_longitude,
                                 latitude:common.COMMON_GLOBAL.client_latitude,
-                                zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
                                 text_place:common.COMMON_GLOBAL.client_place,
                                 country:'',
                                 city:'',
-                                timezone_text :null,
-                                to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
+                                timezone_text :null
                             });
-            common.COMMON_GLOBAL.moduleLeaflet.methods.map_resize();
         });
 };
 
@@ -754,14 +750,12 @@ const list_item_click = (item_type, data) => {
                 const geodata = JSON.parse(result);
                 common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:geodata.geoplugin_longitude,
                                                                         latitude:geodata.geoplugin_latitude,
-                                                                        zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
                                                                         text_place: geodata.geoplugin_city + ', ' +
                                                                                     geodata.geoplugin_regionName + ', ' +
                                                                                     geodata.geoplugin_countryName,
                                                                         country:'',
                                                                         city:'',
-                                                                        timezone_text :null,
-                                                                        to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
+                                                                        timezone_text :null
                                                                     });
             })
             .catch(()=>null);
@@ -773,14 +767,12 @@ const list_item_click = (item_type, data) => {
                 const geodata = JSON.parse(result);
                 common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:data['longitude'],
                                                                         latitude:data['latitude'],
-                                                                        zoomvalue:common.COMMON_GLOBAL.moduleLeafletZoom,
                                                                         text_place: geodata.geoplugin_place + ', ' + 
                                                                                     geodata.geoplugin_region + ', ' + 
                                                                                     geodata.geoplugin_countryCode,
                                                                         country:'',
                                                                         city:'',
-                                                                        timezone_text :null,
-                                                                        to_method:common.COMMON_GLOBAL.moduleLeafletJumpTo
+                                                                        timezone_text :null
                                                                     });
             })
             .catch(()=>null);
@@ -1248,9 +1240,6 @@ const init = () => {
     APP_GLOBAL.moduleLeafletDiv      ='mapid';
     APP_GLOBAL.service_log_file_interval= '';
 
-    if (common.COMMON_GLOBAL.system_admin!=null){
-        common.COMMON_GLOBAL.moduleLeafletJumpTo    =0;
-    }
     for (let i=1;i<=10;i++){
         CommonAppDocument.querySelector(`#menu_${i}`).style.display='none';
     }
