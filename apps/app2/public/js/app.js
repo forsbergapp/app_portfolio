@@ -1,4 +1,5 @@
 /**
+ * Timetable app
  * @module apps/app2/app
  */
 

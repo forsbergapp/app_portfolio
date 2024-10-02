@@ -14,8 +14,6 @@ class PLLSolver extends BaseSolver {
 		super(...args);
 		this.phase = 'pll';
 
-		// permutations in order based on http://badmephisto.com/pll.php, however
-		// the actual algorithms may be different.
 		this.algorithms = {
 			[SOLVED_STATE]: '', // already solved
 			'2 -1 1 -1 1 0 0 2': 'R2 F2 RPrime BPrime R F2 RPrime B RPrime', // #1

@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/db/components/user_account.js</title>
+    <base href='/info/jsdoc/'/>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+
+    <link media="all" href="/common/css/common.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font1.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font2.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font3.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font4.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font5.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font6.css" rel="stylesheet">
+    <link media="all" href="/common/css/font/font7.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: server/db/components/user_account.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @module server/db/components/user_account */
+
+/**@type{import('../sql/user_account.service.js')} */
+const service = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
+
+/**@type{import('../../config.service.js')} */
+const { ConfigGet, ConfigGetApp } = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../../server.service.js')} */
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../iam.service.js')} */
+const { iam_decode, AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+/**@type{import('../../socket.service.js')} */
+const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
+
+/**@type{import('../../db/common.service.js')} */
+const { checked_error } = await import(`file://${process.cwd()}/server/db/common.service.js`);
+
+/**@type{import('../sql/app_setting.service.js')} */
+const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`);
+/**@type{import('../sql/user_account_app.service.js')} */
+const { createUserAccountApp} = await import(`file://${process.cwd()}/server/db/sql/user_account_app.service.js`);
+/**@type{import('../sql/user_account_logon.service.js')} */
+const { insertUserAccountLogon, getUserAccountLogon } = await import(`file://${process.cwd()}/server/db/sql/user_account_logon.service.js`);
+/**@type{import('../sql/user_account_event.service.js')} */
+const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/db/sql/user_account_event.service.js`);
+/**@type{import('../sql/user_account_follow.service.js')} */
+const user_account_follow_service = await import(`file://${process.cwd()}/server/db/sql/user_account_follow.service.js`);
+/**@type{import('../sql/user_account_like.service.js')} */
+const user_account_like_service = await import(`file://${process.cwd()}/server/db/sql/user_account_like.service.js`);
+/**@type{import('../../security.service.js')} */
+const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} emailtype 
+ * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {number} userid 
+ * @param {string|null} verification_code 
+ * @param {string} email 
+ */
+ const sendUserEmail = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
+    /**@type{import('../../../apps/apps.service.js')} */
+    const { createMail} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+    /**@type{import('../../bff.service.js')} */
+    const {BFF_server} = await import(`file://${process.cwd()}/server/bff.service.js`);
+    
+    const email_rendered = await createMail( app_id, 
+                                    {
+                                        emailtype:        emailtype,
+                                        host:             ConfigGet('SERVER', 'HOST'),
+                                        app_user_id:      userid,
+                                        verificationCode: verification_code,
+                                        to:               email,
+                                    })
+                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+        
+    /**@type{import('../../../types.js').server_bff_parameters}*/
+    const parameters = {endpoint:'SERVER_MAIL',
+                        host:null,
+                        url:'/mail/sendemail',
+                        route_path:'/mail/sendemail',
+                        method:'POST', 
+                        query:'',
+                        body:email_rendered,
+                        authorization:null,
+                        ip:ip, 
+                        user_agent:user_agent, 
+                        accept_language:accept_language,
+                        /**@ts-ignore */
+                        res:null};
+    return await BFF_server(app_id, parameters);
+};
+/**
+ * 
+ * @param {number} app_id 
+ */
+const login_error = async (app_id) =>{
+    return getSettingDisplayData(   app_id,
+                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                    'MESSAGE',
+                                    '20300')
+    .then(result_message=>result_message[0].display_data)
+    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+};
+/**
+ * 
+ * @param {number} app_id
+ * @param {string} iam
+ * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {*} data
+ * @param {import('../../../types.js').server_server_res} res
+ * @return {Promise.&lt;{
+ *                  accessToken:string|null,
+ *                  exp:number,
+ *                  iat:number,
+ *                  tokentimestamp:number,
+ *                  login:import('../../../types.js').server_db_sql_result_user_account_userLogin[]}>}
+ */
+const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
+    return new Promise((resolve, reject)=>{        
+        
+        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_userLogin} */
+        const data_login =    {   username: data.username};
+        service.userLogin(app_id, data_login)
+        .then(result_login=>{
+            const user_account_id = result_login[0]?getNumberValue(result_login[0].id):null;
+            /**@type{import('../../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
+            const data_body = { result:             0,
+                                client_ip:          ip,
+                                client_user_agent:  user_agent,
+                                client_longitude:   data.client_longitude ?? null,
+                                client_latitude:    data.client_latitude ?? null,
+                                access_token:       null};
+            if (result_login[0]) {
+                PasswordCompare(data.password, result_login[0].password).then((result_password)=>{
+                    data_body.result = Number(result_password);
+                    if (result_password) {
+                        if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) &amp;&amp; (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
+                                app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
+                            const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER'});
+                            data_body.access_token = jwt_data.token;
+                            insertUserAccountLogon(app_id, user_account_id, data_body)
+                            .then(()=>{
+                                createUserAccountApp(app_id, result_login[0].id)
+                                .then(()=>{
+                                    //if user not activated then send email with new verification code
+                                    const new_code = service.verification_code();
+                                    if (result_login[0].active == 0){
+                                        service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
+                                        .then(()=>{
+                                            //send email UNVERIFIED
+                                            sendUserEmail(  app_id, 
+                                                            ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_UNVERIFIED, 
+                                                            ip, 
+                                                            user_agent,
+                                                            accept_language,
+                                                            result_login[0].id, 
+                                                            new_code, 
+                                                            result_login[0].email)
+                                            .then(()=>{
+                                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.access_token, null, ip, user_agent, accept_language, res)
+                                                .then(()=>{
+                                                    resolve({
+                                                        accessToken: data_body.access_token,
+                                                        exp:jwt_data.exp,
+                                                        iat:jwt_data.iat,
+                                                        tokentimestamp:jwt_data.tokentimestamp,
+                                                        login: Array(result_login[0])
+                                                    });
+                                                })
+                                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                            })
+                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                        });
+                                    }
+                                    else{
+                                        ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.access_token, null, ip, user_agent, accept_language, res)
+                                        .then(()=>{
+                                            resolve({
+                                                accessToken: data_body.access_token,
+                                                exp:jwt_data.exp,
+                                                iat:jwt_data.iat,
+                                                tokentimestamp:jwt_data.tokentimestamp,
+                                                login: Array(result_login[0])
+                                            });
+                                        })
+                                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                    }
+                                })
+                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                            })
+                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                        }
+                        else{
+                            //Unauthorized, only admin allowed to log in to admin
+                            insertUserAccountLogon(app_id, user_account_id, data_body)
+                            .then(()=>{
+                                res.statusCode = 401;
+                                login_error(app_id)
+                                .then((/**@type{string}*/text)=>reject(text));
+                            });
+                        }
+                    } else {
+                        //Username or password not found
+                        insertUserAccountLogon(app_id, user_account_id, data_body)
+                        .then(()=>{
+                            res.statusCode = 400;
+                            login_error(app_id)
+                            .then((/**@type{string}*/text)=>reject(text));
+                        })
+                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                    }
+                });
+            } else{
+                //User not found
+                insertUserAccountLogon(app_id, null, data_body)
+                .then(()=>{
+                    res.statusCode = 404;
+                    login_error(app_id)
+                    .then((/**@type{string}*/text)=>reject(text));
+                })
+                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+            }
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} iam
+ * @param {number} resource_id
+ * @param {string} ip 
+ * @param {string} user_agent 
+ * @param {string} accept_language
+ * @param {*} query 
+ * @param {*} data 
+ * @param {import('../../../types.js').server_server_res} res
+ * @return {Promise.&lt;{
+ *                  accessToken:string|null,
+ *                  exp:number,
+ *                  iat:number,
+ *                  tokentimestamp:number,
+ *                  items:import('../../../types.js').server_db_sql_result_user_account_providerSignIn[],
+ *                  userCreated:0|1}>}
+ */
+const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_language, query, data, res) =>{
+    return new Promise((resolve, reject)=>{
+        service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
+        .then(result_signin=>{
+            /** @type{import('../../../types.js').server_db_sql_parameter_user_account_create} */
+            const data_user = { bio:                    null,
+                                private:                null,
+                                user_level:             null,
+                                username:               null,
+                                password:               null,
+                                password_new:           null,
+                                password_reminder:      null,
+                                email_unverified:       null,
+                                email:                  null,
+                                avatar:                 null,
+                                verification_code:      null,
+                                active:                 1,
+                                identity_provider_id:   getNumberValue(data.identity_provider_id),
+                                provider_id:            data.provider_id,
+                                provider_first_name:    data.provider_first_name,
+                                provider_last_name:     data.provider_last_name,
+                                provider_image:         data.provider_image,
+                                provider_image_url:     data.provider_image_url,
+                                provider_email:         data.provider_email,
+                                admin:                  0};
+            const user_account_id = result_signin[0]?result_signin[0].id:null;
+            /**@type{import('../../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
+            const data_login = {result:                 0,
+                                client_ip:              ip,
+                                client_user_agent:      user_agent,
+                                client_longitude:       data.client_longitude,
+                                client_latitude:        data.client_latitude,
+                                access_token:           null};
+            if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) &amp;&amp; result_signin[0] &amp;&amp; (result_signin[0].app_role_id == 0 || result_signin[0].app_role_id == 1))||
+                    app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
+                if (result_signin.length > 0) {        
+                    const jwt_data_exists = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER'});
+                    data_login.access_token = jwt_data_exists.token;
+                    data_login.result = 1;
+                    insertUserAccountLogon(app_id, user_account_id, data_login)
+                    .then(()=>{
+                        service.updateSigninProvider(app_id, result_signin[0].id, data_user)
+                        .then(()=>{
+                            createUserAccountApp(app_id, result_signin[0].id)
+                            .then(()=>{
+                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), data_login.access_token, null, ip, user_agent, accept_language, res)
+                                .then(()=>{
+                                    resolve({
+                                        accessToken: data_login.access_token,
+                                        exp:jwt_data_exists.exp,
+                                        iat:jwt_data_exists.iat,
+                                        tokentimestamp:jwt_data_exists.tokentimestamp,
+                                        items: result_signin,
+                                        userCreated: 0
+                                    });
+                                })
+                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                            })
+                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                        })
+                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+                            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                        });    
+                    })
+                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                }
+                else{
+                    //if provider user not found then create user and one user setting
+                    //avatar not used by providers, set default null
+                    data_user.avatar = data.avatar ?? null;
+                    data_user.provider_image = data.provider_image ?? null;
+                    //generate local username for provider 1
+                    data_user.username = `${data_user.provider_first_name}${Date.now()}`;
+                    
+                    service.create(app_id, data_user)
+                    .then(result_create=>{
+                        const jwt_data_new = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data_user.username ?? '', ip:ip, scope:'USER'});
+                        data_login.access_token = jwt_data_new.token;
+                        data_login.result = 1;
+    
+                        insertUserAccountLogon(app_id, result_create.insertId, data_login)
+                        .then(()=>{
+                            createUserAccountApp(app_id, result_create.insertId)
+                            .then(()=>{
+                                service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
+                                .then(result_signin2=>{
+                                    ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), data_login.access_token, null, ip, user_agent, accept_language, res)
+                                    .then(()=>{
+                                        resolve({
+                                            accessToken: data_login.access_token,
+                                            exp:jwt_data_new.exp,
+                                            iat:jwt_data_new.iat,
+                                            tokentimestamp:jwt_data_new.tokentimestamp,
+                                            items: result_signin2,
+                                            userCreated: 1
+                                        });
+                                    })
+                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                })
+                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                            })
+                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                        })
+                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                    })
+                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                }
+            }
+            else{
+                //Unauthorized, only admin allowed to log in to admin
+                //if data_login.user_account_id is empty then user has not logged in before
+                insertUserAccountLogon(app_id, user_account_id, data_login)
+                .then(()=>{
+                    res.statusCode = 401;
+                    login_error(app_id)
+                    .then((/**@type{string}*/text)=>reject(text));
+                });
+            }
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} ip 
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {*} query 
+ * @param {*} data 
+ * @param {import('../../../types.js').server_server_res} res 
+ * @return {Promise.&lt;{
+ *              accessToken:string|null,
+ *              exp:number,
+ *              iat:number,
+ *              tokentimestamp:number,
+ *              id:number,
+ *              data:import('../../../types.js').server_db_sql_result_user_account_create}>}
+ */
+const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
+    return new Promise((resolve, reject)=>{
+        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_create} */
+        const data_body = { bio:                    data.bio,
+                            private:                data.private,
+                            user_level:             data.user_level,
+                            username:               data.username,
+                            password:               null,
+                            password_new:           data.password,
+                            password_reminder:      data.password_reminder,
+                            email:                  data.email,
+                            email_unverified:       null,
+                            avatar:                 data.avatar,
+                            verification_code:      data.provider_id?null:service.verification_code(),
+                            active:                 getNumberValue(data.active) ?? 0,
+                            identity_provider_id:   getNumberValue(data.identity_provider_id),
+                            provider_id:            data.provider_id ?? null,
+                            provider_first_name:    data.provider_first_name,
+                            provider_last_name:     data.provider_last_name,
+                            provider_image:         data.provider_image,
+                            provider_image_url:     data.provider_image_url,
+                            provider_email:         data.provider_email,
+                            admin:                  0
+                        };
+        service.create(app_id, data_body)
+        .then(result_create=>{
+            if (data.provider_id == null ) {
+                //send email for local users only
+                //send email SIGNUP
+                sendUserEmail(  app_id, 
+                                ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_SIGNUP,
+                                ip, 
+                                user_agent,
+                                accept_language,
+                                result_create.insertId, 
+                                data_body.verification_code, 
+                                data_body.email ?? '')
+                .then(()=>{
+                    const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
+                    resolve({
+                        accessToken: jwt_data.token,
+                        exp:jwt_data.exp,
+                        iat:jwt_data.iat,
+                        tokentimestamp:jwt_data.tokentimestamp,
+                        id: result_create.insertId,
+                        data: result_create
+                    });
+                })
+                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+            }
+            else{
+                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
+                resolve({
+                    accessToken: jwt_data.token,
+                    exp:jwt_data.exp,
+                    iat:jwt_data.iat,
+                    tokentimestamp:jwt_data.tokentimestamp,
+                    id: result_create.insertId,
+                    data: result_create
+                });
+            }
+                
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {string} ip 
+ * @param {string} user_agent 
+ * @param {string} accept_language 
+ * @param {string} host 
+ * @param {*} query 
+ * @param {*} data 
+ * @param {import('../../../types.js').server_server_res} res
+ * @return {Promise.&lt;{
+ *              count: number,
+ *              auth: string|null,
+ *              accessToken: string|null,
+ *              exp:number|null,
+ *              iat:number|null,
+ *              tokentimestamp:number|null,
+ *              items: import('../../../types.js').server_db_sql_result_user_account_activateUser[]}>}
+ */
+const activate = (app_id, resource_id, ip, user_agent, accept_language, host, query, data, res) =>{
+    return new Promise((resolve, reject)=>{
+        /**@type{string|null} */
+        let auth_password_new = null;
+        if (getNumberValue(data.verification_type) == 3){
+            //reset password
+            auth_password_new = service.verification_code();
+        }
+        service.activateUser(app_id, resource_id, getNumberValue(data.verification_type), data.verification_code, auth_password_new)
+        .then(result_activate=>{
+            if (auth_password_new == null){
+                if (result_activate.affectedRows==1 &amp;&amp; getNumberValue(data.verification_type)==4){
+                    //new email verified
+                    /**@type{import('../../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
+                    const eventData = {
+                        user_account_id: resource_id,
+                        event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
+                        event_status: 'SUCCESSFUL',
+                        user_language: data.user_language,
+                        user_timezone: data.user_timezone,
+                        user_number_system: data.user_number_system,
+                        user_platform: data.user_platform,
+                        server_remote_addr : ip,
+                        server_user_agent : user_agent,
+                        server_http_host : host,
+                        server_http_accept_language : accept_language,
+                        client_latitude : data.client_latitude,
+                        client_longitude : data.client_longitude
+                    };
+                    insertUserEvent(app_id, eventData)
+                    .then(result_insert=>{
+                        resolve({
+                            count: result_insert.affectedRows,
+                            auth: null,
+                            accessToken: null,
+                            exp:null,
+                            iat:null,
+                            tokentimestamp:null,
+                            items: Array(result_insert)
+                        });
+                    })
+                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                }
+                else
+                    resolve({
+                        count: result_activate.affectedRows,
+                        auth: null,
+                        accessToken: null,
+                        exp:null,
+                        iat:null,
+                        tokentimestamp:null,
+                        items: Array(result_activate)
+                    });
+            }
+            else{
+                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:resource_id, name:'', ip:ip, scope:'USER'});
+                //return accessToken since PASSWORD_RESET is in progress
+                //email was verified and activated with id token, but now the password will be updated
+                //using accessToken and authentication code
+                /**@type{import('../../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
+                const data_body = { 
+                    result:             1,
+                    client_ip:          ip,
+                    client_user_agent:  user_agent,
+                    client_longitude:   data.client_longitude ?? null,
+                    client_latitude:    data.client_latitude ?? null,
+                    access_token:       jwt_data.token};
+                insertUserAccountLogon(app_id, resource_id, data_body)
+                .then(()=>{
+                    resolve({
+                        count: result_activate.affectedRows,
+                        auth: auth_password_new,
+                        accessToken: data_body.access_token,
+                        exp:jwt_data.exp,
+                        iat:jwt_data.iat,
+                        tokentimestamp:jwt_data.tokentimestamp,
+                        items: Array(result_activate)
+                    });
+                })
+                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+            }
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} ip 
+ * @param {string} user_agent 
+ * @param {string} accept_language 
+ * @param {*} host 
+ * @param {*} data 
+ * @returns {Promise.&lt;{sent: number,id?: number}>}
+ */
+const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
+    return new Promise((resolve, reject)=>{
+        const email = data.email ?? '';
+        if (email !='')
+            service.getEmailUser(app_id, email)
+            .then(result_emailuser=>{
+                if (result_emailuser[0]){
+                    getLastUserEvent(app_id, getNumberValue(result_emailuser[0].id), 'PASSWORD_RESET')
+                    .then(result_user_event=>{
+                        if (result_user_event[0] &amp;&amp;
+                            result_user_event[0].status_name == 'INPROGRESS' &amp;&amp;
+                            (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) &lt; 1)
+                            resolve({sent: 0});
+                        else{
+                            /**@type{import('../../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
+                            const eventData = {
+                                                user_account_id: result_emailuser[0].id,
+                                                event: 'PASSWORD_RESET',
+                                                event_status: 'INPROGRESS',
+                                                user_language: data.user_language,
+                                                user_timezone: data.user_timezone,
+                                                user_number_system: data.user_number_system,
+                                                user_platform: data.user_platform,
+                                                server_remote_addr : ip,
+                                                server_user_agent : user_agent,
+                                                server_http_host : host,
+                                                server_http_accept_language : accept_language,
+                                                client_latitude : data.client_latitude,
+                                                client_longitude : data.client_longitude
+                                            };
+                            insertUserEvent(app_id, eventData)
+                            .then(()=>{
+                                const new_code = service.verification_code();
+                                service.updateUserVerificationCode(app_id, result_emailuser[0].id, new_code)
+                                .then(()=>{
+                                    //send email PASSWORD_RESET
+                                    sendUserEmail(  app_id, 
+                                                    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_PASSWORD_RESET,
+                                                    ip, 
+                                                    user_agent,
+                                                    accept_language,
+                                                    result_emailuser[0].id, 
+                                                    new_code, 
+                                                    email)
+                                    .then(()=>{
+                                        resolve({
+                                            sent: 1,
+                                            id: result_emailuser[0].id
+                                        });  
+                                    })
+                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                })
+                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                            })
+                            .catch(()=> {
+                                resolve({sent: 0});
+                            });
+                        }
+                    })
+                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));         
+                }
+                else
+                    resolve({sent: 0});
+            })
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        else
+            resolve({sent: 0});
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number|null} resource_id_number
+ * @param {string|null} resource_id_name
+ * @param {string} ip 
+ * @param {string} user_agent 
+ * @param {*} query 
+ * @param {*} data
+ * @param {import('../../../types.js').server_server_res} res
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getProfileUser[]>}
+ */
+const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent, query, data, res) =>{
+    return new Promise((resolve, reject)=>{
+        /**
+         * Clear private data if private
+         * @param {import('../../../types.js').server_db_sql_result_user_account_getProfileUser[]} result_getProfileUser 
+         * @returns {import('../../../types.js').server_db_sql_result_user_account_getProfileUser[]}
+         */
+        const clear_private = result_getProfileUser =>
+            result_getProfileUser.map(row=>{
+                if (row.id ==resource_id_number){
+                    //profile of current logged in user should always be displayed
+                    row.private = null;
+                }
+                else
+                    if ((row.private==1 &amp;&amp; row.friends==null) || query.get('search')!=null){
+                        //private and not friends or anonymous visit, remove stats
+                        row.count_following = null;
+                        row.count_followed = null;
+                        row.count_likes = null;
+                        row.count_liked = null;
+                    }
+                    else
+                        if (row.private==1 &amp;&amp; row.friends==1){
+                            //private and friends, remove private
+                            row.private = null;
+                        }
+                return row;
+            });
+        //resource id can be number, string or empty if searching
+        service.getProfileUser(app_id, resource_id_number, resource_id_name, query.get('search'), getNumberValue(query.get('id')))
+        .then(result_getProfileUser=>{
+            if (query.get('search')){
+                //searching, return result
+                import(`file://${process.cwd()}/server/db/sql/app_data_stat.service.js`)
+                .then((/**@type{import('../sql/app_data_stat.service.js')} */{ post }) => {
+                    /**@type{import('../../../types.js').server_db_sql_parameter_app_data_stat_post} */
+                    const data_insert = {json_data:                                         {   search:             query.get('search') ?? resource_id_number ?? resource_id_name,
+                                                                                                client_ip:          ip,
+                                                                                                client_user_agent:  user_agent,
+                                                                                                client_longitude:   query.get('client_longitude'),
+                                                                                                client_latitude:    query.get('client_latitude')},
+                                        //if user logged not logged in then save resource on app
+                                        app_id:                                             getNumberValue(query.get('id'))?null:app_id,
+                                        user_account_id:                                    null,
+                                        //save user account if logged in else set null in both user account app columns
+                                        user_account_app_user_account_id:                   getNumberValue(query.get('id')) ?? null,
+                                        user_account_app_app_id:                            getNumberValue(query.get('id'))?app_id:null,
+                                        app_data_resource_master_id:                        null,
+                                        app_data_entity_resource_id:                        1,  //PROFILE_SEARCH
+                                        app_data_entity_resource_app_data_entity_app_id:    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) ?? 0,
+                                        app_data_entity_resource_app_data_entity_id:        0   //COMMON
+                                        };
+                    post(app_id, data_insert)
+                    .then(()=>{
+                        resolve(clear_private(result_getProfileUser));
+                    })
+                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                });
+            }
+            else
+                if (result_getProfileUser[0]){
+                    //always save stat who is viewing, same user, none or someone else
+                    import(`file://${process.cwd()}/server/db/sql/user_account_view.service.js`)
+                    .then((/**@type{import('../sql/user_account_view.service.js')} */{ insertUserAccountView }) => {
+                        const data_body = { user_account_id:        getNumberValue(query.get('id')),    //who views
+                                            user_account_id_view:   getNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
+                                            client_ip:              ip,
+                                            client_user_agent:      user_agent,
+                                            client_longitude:       query.get('client_longitude'),
+                                            client_latitude:        query.get('client_latitude')};
+                        insertUserAccountView(app_id, data_body)
+                        .then(()=>{
+                            resolve(clear_private(result_getProfileUser));
+                        })
+                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                    });
+                }
+                else{
+                    import(`file://${process.cwd()}/server/db/common.service.js`)
+                    .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
+                        record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                    });
+                }
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query
+ */
+const getProfileStat = (app_id, query) => service.getProfileStat(app_id, getNumberValue(query.get('statchoice')))
+                                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {*} query 
+ * @param {*} data
+ * @param {import('../../../types.js').server_server_res} res
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_updateUserSuperAdmin>}
+ */
+const updateAdmin =(app_id, resource_id, query, data, res) =>{
+    return new Promise((resolve, reject)=>{
+        // get avatar and provider column used to validate
+        service.getUserByUserId(app_id, resource_id)
+        .then(result_user=>{
+            if (result_user[0]) {
+                /**@type{import('../../../types.js').server_db_sql_parameter_user_account_updateUserSuperAdmin} */
+                const body = {  app_role_id:        getNumberValue(data.app_role_id),
+                                active:             getNumberValue(data.active),
+                                user_level:         getNumberValue(data.user_level),
+                                private:            getNumberValue(data.private),
+                                username:           data.username,
+                                bio:                data.bio,
+                                email:              data.email,
+                                email_unverified:   data.email_unverified,
+                                password:           null,
+                                password_new:       data.password_new==''?null:data.password_new,
+                                password_reminder:  data.password_reminder,
+                                verification_code:  data.verification_code,
+                                provider_id:        result_user[0].provider_id,
+                                avatar:             result_user[0].avatar,
+                                admin:              1};
+                service.updateUserSuperAdmin(app_id, resource_id, body)
+                .then(result_update=>{
+                    if (data.app_role_id!=0 &amp;&amp; data.app_role_id!=1){
+                        //delete admin app from user if user is not an admin anymore
+                        import(`file://${process.cwd()}/server/db/sql/user_account_app.service.js`)
+                        .then((/**@type{import('../sql/user_account_app.service.js')} */{ deleteUserAccountApp }) => {
+                            deleteUserAccountApp(app_id, resource_id, app_id)
+                            .then(()=>{
+                                resolve(result_update);
+                            });
+                        });
+                    }
+                    else
+                        resolve(result_update);
+                })
+                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+                    checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+            else{
+                import(`file://${process.cwd()}/server/db/common.service.js`)
+                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ */
+const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get('search'), query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+
+/**
+ * 
+ * @param {number} app_id 
+ */
+const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ */
+const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id, 
+                                                                getNumberValue(query.get('data_user_account_id')), 
+                                                                getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
+                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+    
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {string} ip 
+ * @param {string} user_agent 
+ * @param {string} host 
+ * @param {string} accept_language 
+ * @param {*} query 
+ * @param {*} data 
+ * @param {import('../../../types.js').server_server_res} res
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_updatePassword|{sent: number}>}
+ */
+ const updatePassword = (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
+    return new Promise((resolve, reject)=>{
+        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_updatePassword} */
+        const data_update = {   password_new:   data.password_new,
+                                auth:           data.auth};
+        service.updatePassword(app_id, resource_id, data_update)
+        .then(result_update=>{
+            if (result_update) {
+                /**@type{import('../../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
+                const eventData = {
+                    user_account_id: resource_id,
+                    event: 'PASSWORD_RESET',
+                    event_status: 'SUCCESSFUL',
+                    user_language: data.user_language,
+                    user_timezone: data.user_timezone,
+                    user_number_system: data.user_number_system,
+                    user_platform: data.user_platform,
+                    server_remote_addr : ip,
+                    server_user_agent : user_agent,
+                    server_http_host : host,
+                    server_http_accept_language : accept_language,
+                    client_latitude : data.client_latitude,
+                    client_longitude : data.client_longitude
+                };
+                insertUserEvent(app_id, eventData)
+                .then(()=>{
+                    resolve(result_update);
+                })
+                .catch(()=> {
+                    resolve({sent: 0});
+                });
+            }
+            else{
+                import(`file://${process.cwd()}/server/db/common.service.js`)
+                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} host
+ * @param {string} accept_language
+ * @param {*} query 
+ * @param {*} data 
+ * @param {import('../../../types.js').server_server_res} res 
+ * @returns {Promise.&lt;{sent_change_email: number}>}
+ */
+ const updateUserLocal = async (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
+    /**@type{import('../../../types.js').server_db_sql_result_user_account_getUserByUserId[]}*/
+    const result_user = await service.getUserByUserId(app_id, resource_id);
+    /**@type{import('../../../types.js').server_db_sql_result_user_account_event_getLastUserEvent[]}*/
+    const result_user_event = await getLastUserEvent(app_id, resource_id, 'EMAIL_VERIFIED_CHANGE_EMAIL');
+    return new Promise((resolve, reject)=>{
+        if (result_user[0]) {
+            PasswordCompare(data.password, result_user[0].password ?? '').then((result_compare)=>{
+                if (result_compare){
+                    let send_email=false;
+                    if (data.new_email &amp;&amp; data.new_email!=''){
+                        if ((result_user_event[0] &amp;&amp; 
+                            (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) >= 1)||
+                                result_user_event.length == 0)
+                            send_email=true;
+                    }
+                    /**@type{import('../../../types.js').server_db_sql_parameter_user_account_updateUserLocal} */
+                    const data_update = {   bio:                data.bio,
+                                            private:            data.private,
+                                            username:           data.username,
+                                            password:           data.password,
+                                            password_new:       (data.password_new &amp;&amp; data.password_new!='')==true?data.password_new:null,
+                                            password_reminder:  (data.password_reminder &amp;&amp; data.password_reminder!='')==true?data.password_reminder:null,
+                                            email:              data.email,
+                                            email_unverified:   (data.new_email &amp;&amp; data.new_email!='')==true?data.new_email:null,
+                                            avatar:             data.avatar,
+                                            verification_code:  send_email==true?service.verification_code():null,
+                                            provider_id:        result_user[0].provider_id,
+                                            admin:              0
+                                        };
+                    service.updateUserLocal(app_id, data_update, resource_id)
+                    .then(result_update=>{
+                        if (result_update){
+                            if (send_email){
+                                //no change email in progress or older than at least 1 day
+                                /**@type{import('../../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
+                                const eventData = {
+                                    user_account_id: resource_id,
+                                    event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
+                                    event_status: 'INPROGRESS',
+                                    user_language: data.user_language,
+                                    user_timezone: data.user_timezone,
+                                    user_number_system: data.user_number_system,
+                                    user_platform: data.user_platform,
+                                    server_remote_addr : ip,
+                                    server_user_agent : user_agent,
+                                    server_http_host : host,
+                                    server_http_accept_language : accept_language,
+                                    client_latitude : data.client_latitude,
+                                    client_longitude : data.client_longitude
+                                };
+                                insertUserEvent(app_id, eventData)
+                                .then(()=>{
+                                    //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
+                                    sendUserEmail(  app_id, 
+                                                    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_CHANGE_EMAIL,
+                                                    ip, 
+                                                    user_agent,
+                                                    accept_language,
+                                                    resource_id,
+                                                    data.verification_code, 
+                                                    data.new_email)
+                                    .then(()=>{
+                                        resolve({sent_change_email: 1});
+                                    })
+                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                })
+                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                            }
+                            else
+                                resolve({sent_change_email: 0});
+                        }
+                        else{
+                            import(`file://${process.cwd()}/server/db/common.service.js`)
+                            .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
+                                record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                            });
+                        }
+                    })
+                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+                        checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                    });
+                } 
+                else {
+                    res.statusCode=400;
+                    res.statusMessage = 'invalid password attempt for user id:' + resource_id;
+                    //invalid password
+                    getSettingDisplayData(  app_id,
+                                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                            'MESSAGE',
+                                            '20401')
+                    .then(result_message=>{
+                        reject(result_message[0].display_data);
+                    })
+                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                }
+            });
+        } 
+        else {
+            //user not found
+            res.statusCode=404;
+            getSettingDisplayData(  app_id,
+                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                    'MESSAGE',
+                                    '20305')
+            .then(result_message=>{
+                reject(result_message[0].display_data);
+            })
+            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        }
+    });
+};
+/**
+ * 
+ * @param {number} app_id
+ * @param {number} resource_id
+ * @param {*} query
+ * @param {*} data
+ * @param {import('../../../types.js').server_server_res} res
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_updateUserCommon>}
+ */
+ const updateUserCommon = (app_id, resource_id, query, data, res) => {
+    return new Promise((resolve, reject)=>{
+        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_updateUserCommon} */
+        const data_update = {   username:   data.username,
+                                bio:        data.bio,
+                                private:    data.private};
+        service.updateUserCommon(app_id, data_update, resource_id)
+        .then(result_update=>{
+            if (result_update)
+                resolve(result_update);
+            else{
+                import(`file://${process.cwd()}/server/db/common.service.js`)
+                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {*} query 
+ * @param {import('../../../types.js').server_server_res} res 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_getUserByUserId[]|{last_logontime:string|null}>}
+ */
+const getUserByUserId = (app_id, resource_id, query, res) => {
+    return new Promise((resolve, reject)=>{
+        service.getUserByUserId(app_id, resource_id)
+        .then(result=>{
+            if (result[0]){
+                getUserAccountLogon(    app_id, 
+                                        resource_id, 
+                                        app_id)
+                .then(user_account_logons=>{
+                    const last_logontime = user_account_logons.filter(row=>JSON.parse(row.json_data).result==1)[0];
+                    resolve({...result[0], ...{last_logontime:last_logontime?last_logontime.date_created:null}});
+                })
+                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+            }
+                
+            else{
+                import(`file://${process.cwd()}/server/db/common.service.js`)
+                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+    });
+};
+/**
+ * 
+ * @param {number} app_id
+ * @param {number} resource_id
+ * @param {*} query
+ * @param {*} data
+ * @param {import('../../../types.js').server_server_res} res 
+ * @returns {Promise.&lt;import('../../../types.js').server_db_sql_result_user_account_deleteUser>}
+ */
+ const deleteUser = (app_id, resource_id, query, data, res) => {
+    return new Promise((resolve, reject)=>{
+        service.getUserByUserId(app_id, resource_id)
+        .then(result_user=>{
+            if (result_user[0]) {
+                if (result_user[0].provider_id !=null){
+                    service.deleteUser(app_id, resource_id)
+                    .then(result_delete=>{
+                        if (result_delete)
+                            resolve(result_delete);
+                        else{
+                            import(`file://${process.cwd()}/server/db/common.service.js`)
+                            .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
+                                record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                            });
+                        }
+                    })
+                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                }
+                else{
+                    service.checkPassword(app_id, resource_id)
+                    .then(result_password=>{
+                        if (result_password[0]) {
+                            PasswordCompare(data.password, result_password[0].password).then((result_password)=>{
+                                if (result_password){
+                                    service.deleteUser(app_id, resource_id)
+                                    .then(result_delete=>{
+                                        if (result_delete)
+                                            resolve(result_delete);
+                                        else{
+                                            import(`file://${process.cwd()}/server/db/common.service.js`)
+                                            .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
+                                                record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                                            });
+                                        }
+                                    })
+                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                }
+                                else{
+                                    res.statusMessage = 'invalid password attempt for user id:' + resource_id;
+                                    res.statusCode = 400;
+                                    //invalid password
+                                    getSettingDisplayData(  app_id,
+                                                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                            'MESSAGE',
+                                                            '20401')
+                                    .then(result_message=>{
+                                        reject(result_message[0].display_data);
+                                    })
+                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                } 
+                            });
+                            
+                        }
+                        else{
+                            //user not found
+                            res.statusCode = 404;
+                            getSettingDisplayData(  app_id,
+                                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                    'MESSAGE',
+                                                    '20305')
+                            .then(result_message=>{
+                                reject(result_message[0].display_data);
+                            })
+                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                        }
+                    })
+                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                }
+            }
+            else{
+                //user not found
+                res.statusCode = 404;
+                getSettingDisplayData(  app_id,
+                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                        'MESSAGE',
+                                        '20305')
+                .then(result_message=>{
+                    reject(result_message[0].display_data);
+                });
+            }
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+    });
+};
+/**
+ * 
+ * @param {number} app_id
+ * @param {number} resource_id
+ * @param {*} query
+ * @param {import('../../../types.js').server_server_res} res 
+ */
+ const getProfileDetail = (app_id, resource_id, query, res) => {
+    return new Promise((resolve, reject)=>{
+        service.getProfileDetail(app_id, resource_id, getNumberValue(query.get('detailchoice')))
+        .then(result=>{
+            if (result)
+                resolve(result);
+            else {
+                import(`file://${process.cwd()}/server/db/common.service.js`)
+                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+        })
+        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+    });
+    
+};
+/**
+ * @param {number} app_id
+ * @param {number} resource_id
+ * @param {*} data
+ */
+const follow = (app_id, resource_id, data) => user_account_follow_service.follow(app_id, resource_id, getNumberValue(data.user_account_id))
+                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+/**
+ * @param {number} app_id
+ * @param {number} resource_id
+ * @param {*} data
+ */
+const unfollow = (app_id, resource_id, data) => user_account_follow_service.unfollow(app_id, resource_id, getNumberValue(data.user_account_id))
+                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {*} data
+ */
+const like = (app_id, resource_id, data) => user_account_like_service.like(app_id, resource_id, getNumberValue(data.user_account_id))
+                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+
+/**
+ * 
+ * @param {number} app_id
+ * @param {number} resource_id
+ * @param {*} data
+ */
+const unlike = (app_id, resource_id, data) => user_account_like_service.unlike(app_id, resource_id, getNumberValue(data.user_account_id))
+                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+
+export {/*DATA_LOGIN*/
+        login, login_provider, 
+        /*DATA_SIGNUP*/
+        signup, 
+        /*DATA*/
+        activate, forgot, getProfile, getProfileStat,
+        /*ADMIN*/
+        updateAdmin, getUsersAdmin, getStatCountAdmin, getLogonAdmin,
+        /*ACCESS*/
+        updatePassword, updateUserLocal, updateUserCommon, getUserByUserId, deleteUser, getProfileDetail,
+        follow, unfollow,
+        like, unlike};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_praytimes.html">apps/app2/report/lib_praytimes</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_praytimes.html">apps/app2/src/modules/module_praytimes</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_country.html">server/db/components/country</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_locale.html">server/db/components/locale</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_country.html">server/db/sql/country</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_locale.html">server/db/sql/locale</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_logon.html">server/db/sql/user_account_logon</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
