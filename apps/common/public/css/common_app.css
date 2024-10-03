@@ -420,7 +420,7 @@ body.rtl{
 	background: none;
 	border: none;
 	font-size: 30px;
-	width: 60px;
+	width: 50px;
 	height: 60px;
 	padding:0px;
 	text-transform: uppercase;
@@ -1497,16 +1497,14 @@ body.rtl{
 	height : 11in;
 }
 #common_window_info_toolbar{
-	display: block;
+	display: inline-block;
 	position: fixed;
-	bottom: 10px;
+	bottom: 20px;
     border-radius: 30px;
 	height: 60px;
-	max-width: calc(100% - 20px);
-    margin: 10px;
-	min-width:	460px;
+	min-width: 25em;
 	z-index: 10;
-	text-align: center;
+	margin-inline-start: -12.5em;
 }
 #common_window_info_toolbar .common_toolbar_button{
 	padding-top: 9px;
@@ -1635,14 +1633,13 @@ body.rtl{
 	.common_profile_detail_list{
 		height:5.6em;	
 	}
-	#common_window_info_toolbar{
-		margin-left: calc((100% - 420px)/2);
-		margin-right: calc((100% - 420px)/2);
-	}
 	#common_message_title #common_message_info_list{
 		width: 500px;
 	}	
 	#common_module_leaflet_search_list{
 		max-height: calc(3 * 3em);
+	}
+	.common_toolbar_button{
+		width: 60px;
 	}
 }
