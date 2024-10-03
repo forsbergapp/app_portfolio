@@ -1465,6 +1465,7 @@ body.rtl{
 	margin-bottom: 100px;
 	visibility: hidden;
 	text-align:center;
+	display: block;
 }
 #common_window_info_info{
 	text-align: center;
@@ -1485,6 +1486,7 @@ body.rtl{
 	width: 100%;
 	height: calc(100% - 60px);
 	border: 0px;
+	display: block;
 }
 #common_window_info_content.A4{
 	width : 210mm;
@@ -1495,12 +1497,16 @@ body.rtl{
 	height : 11in;
 }
 #common_window_info_toolbar{
+	display: block;
 	position: fixed;
 	bottom: 10px;
     border-radius: 30px;
 	height: 60px;
 	max-width: calc(100% - 20px);
     margin: 10px;
+	min-width:	460px;
+	z-index: 10;
+	text-align: center;
 }
 #common_window_info_toolbar .common_toolbar_button{
 	padding-top: 9px;

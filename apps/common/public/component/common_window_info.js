@@ -1,27 +1,44 @@
 /**
+ * Display info
+ * type content
+ * 0    image
+ * 1    url
+ * 2    HTML
+ * 3    print only
  * @module apps/common/component/common_window_info
  */
 
 /**
- * @param {{info:string, iframe_class:string, content:string}} props
+ * @param {{info_type:number, info:string, iframe_class:string, content:string}} props
  */
 const template = props => ` <div id='common_window_info_btn_close' class='common_toolbar_button common_icon'></div>
-                            <div id='common_window_info_info'>
-                                ${props.info?
-                                    `<div id='common_window_info_info_img' style='background-image:url("${props.info}");'></div>`:
-                                    ''
-                                }
-                            </div>
-                            <div id='common_window_info_toolbar'>
-                                <div id='common_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_window_info_toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_window_info_toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_window_info_toolbar_btn_up' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_window_info_toolbar_btn_down' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
-                            </div>
-                            <iframe id='common_window_info_content' scrolling='auto' class='${props.iframe_class}' src='${props.content}' ></iframe>`;
+                            ${props.info_type==0?
+                                `<div id='common_window_info_info'>
+                                    ${props.info?
+                                        `<div id='common_window_info_info_img' style='background-image:url("${props.info}");'></div>`:
+                                        ''
+                                    }
+                                </div>`:
+                                ''
+                            }
+                            ${(props.info_type==1 ||props.info_type==2 ||props.info_type==3)?
+                                `<iframe id='common_window_info_content' scrolling='auto' class='${props.iframe_class}' src='${props.content}' ></iframe>`:
+                                ''
+                            }
+                            ${(props.info_type==0 ||props.info_type==1)?
+                                `<div id='common_window_info_toolbar'>
+                                    ${props.info_type==0?
+                                        `   <div id='common_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
+                                            <div id='common_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
+                                            <div id='common_window_info_toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
+                                            <div id='common_window_info_toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
+                                            <div id='common_window_info_toolbar_btn_up' class='common_toolbar_button common_icon' ></div>
+                                            <div id='common_window_info_toolbar_btn_down' class='common_toolbar_button common_icon' ></div>`:
+                                        ''
+                                    }
+                                    <div id='common_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
+                                </div>`:''
+                            }`;
 /**
  * @param {{data:       {
  *                      common_mountdiv:string,
@@ -44,26 +61,20 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
 const component = async props => {
     /**
      * 
-     * @param {{}} info 
+     * @param {{}} info_type
      * @returns {{  INFO:string,
      *              CONTENT:string,
-     *              STYLE_TOOLBAR_DISPLAY:string,
-     *              STYLE_CONTENT_DISPLAY:string,
      *              STYLE_INFO_OVERFLOWY:string,
-     *              STYLE_INFO_INFO_DISPLAY:string,
      *              IFRAME_CLASS:string}}
      */
-    const get_variables = info => {
-        switch(info){
+    const get_variables = info_type => {
+        switch(info_type){
             case 0:{
                 //show image
                 return {
                     INFO:props.data.url,
                     CONTENT:'',
-                    STYLE_TOOLBAR_DISPLAY:'flex',
-                    STYLE_CONTENT_DISPLAY:'none',
                     STYLE_INFO_OVERFLOWY:'auto',
-                    STYLE_INFO_INFO_DISPLAY:'inline-block',
                     IFRAME_CLASS:''
                     }; 
             }
@@ -72,10 +83,7 @@ const component = async props => {
                 return {
                     INFO:'',
                     CONTENT:props.data.url,
-                    STYLE_TOOLBAR_DISPLAY:'none',
-                    STYLE_CONTENT_DISPLAY:'block',
                     STYLE_INFO_OVERFLOWY:'hidden',
-                    STYLE_INFO_INFO_DISPLAY:'none',
                     IFRAME_CLASS:''
                     }; 
             }    
@@ -84,10 +92,7 @@ const component = async props => {
                     return {
                         INFO:'',
                         CONTENT:props.data.iframe_content,
-                        STYLE_TOOLBAR_DISPLAY:'none',
-                        STYLE_CONTENT_DISPLAY:'block',
                         STYLE_INFO_OVERFLOWY:'auto',
-                        STYLE_INFO_INFO_DISPLAY:'none',
                         IFRAME_CLASS:props.data.iframe_class
                         };
                 }
@@ -95,10 +100,7 @@ const component = async props => {
                     return {
                         INFO:'',
                         CONTENT:'',
-                        STYLE_TOOLBAR_DISPLAY:'',
-                        STYLE_CONTENT_DISPLAY:'',
                         STYLE_INFO_OVERFLOWY:'',
-                        STYLE_INFO_INFO_DISPLAY:'',
                         IFRAME_CLASS:''
                         };
             }
@@ -106,10 +108,7 @@ const component = async props => {
                 return {
                     INFO:'',
                     CONTENT:'',
-                    STYLE_TOOLBAR_DISPLAY:'',
-                    STYLE_CONTENT_DISPLAY:'',
                     STYLE_INFO_OVERFLOWY:'',
-                    STYLE_INFO_INFO_DISPLAY:'',
                     IFRAME_CLASS:''
                     };
         }
@@ -120,7 +119,7 @@ const component = async props => {
             //print content only
             props.methods.common_document.querySelector('#common_window_info_content').contentWindow.document.open();
             props.methods.common_document.querySelector('#common_window_info_content').contentWindow.document.write(props.data.iframe_content);
-            props.data.frame?props.data.frame.querySelector('#common_window_info_content').focus():null;
+            props.data.frame?props.methods.common_document.querySelector('#common_window_info_content').focus():null;
             //await delay to avoid browser render error
             await new Promise ((resolve)=>{props.methods.common_setTimeout(()=> {props.methods.common_document.querySelector('#common_window_info_content').contentWindow.print();
                                                             resolve(null);}, 100);})
@@ -128,10 +127,7 @@ const component = async props => {
         }
         else{
             props.methods.common_document.querySelector('#common_window_info').style.visibility='visible';
-            props.methods.common_document.querySelector('#common_window_info_toolbar').style.display= variables.STYLE_TOOLBAR_DISPLAY;
-            props.methods.common_document.querySelector('#common_window_info_content').style.display= variables.STYLE_CONTENT_DISPLAY;
             props.methods.common_document.querySelector('#common_window_info').style.overflowY= variables.STYLE_INFO_OVERFLOWY;
-            props.methods.common_document.querySelector('#common_window_info_info').style.display= variables.STYLE_INFO_INFO_DISPLAY;
         }
     };
     
@@ -139,7 +135,8 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template({  info:           props.data.info==3?'':variables.INFO,
+        template:   template({  info_type:      props.data.info,
+                                info:           props.data.info==3?'':variables.INFO,
                                 iframe_class:   props.data.info==3?props.methods.common_document.querySelector('#paper').className:variables.IFRAME_CLASS,
                                 content:        props.data.info==3?'':variables.CONTENT
         })

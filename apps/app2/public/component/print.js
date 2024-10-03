@@ -25,8 +25,7 @@ const template = props =>`  <!DOCTYPE html>
  *                      html:string
  *                      },
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          html:string}} props 
+ * 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,

@@ -37,9 +37,6 @@
 #common_user_account{
 	visibility: hidden;
 }
-#common_window_info_content{
-	display: none;
-}
 #common_window_info{
 	z-index: 0 !important;
 	display:grid;
