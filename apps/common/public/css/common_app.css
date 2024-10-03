@@ -1498,13 +1498,11 @@ body.rtl{
 }
 #common_window_info_toolbar{
 	display: inline-block;
-	position: fixed;
-	bottom: 20px;
+	position: relative;
     border-radius: 30px;
 	height: 60px;
 	min-width: 25em;
 	z-index: 10;
-	margin-inline-start: -12.5em;
 }
 #common_window_info_toolbar .common_toolbar_button{
 	padding-top: 9px;
