@@ -93,6 +93,9 @@ body {
 #app_page_secure_tab_content .common_app_data_display_detail_horizontal_row.bank_statement {
 	grid-template-columns: 14em 5em minmax(20em, 20em) minmax(10em, 10em) minmax(10em, 10em) !important
 }
+.bank_statement{
+	font-size: 0.7em;
+}
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
