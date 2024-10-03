@@ -471,11 +471,10 @@ body.rtl{
 .common_app_data_display_master,
 .common_app_data_display_detail_horizontal_row_title,
 .common_app_data_display_detail_horizontal_row{
-	font-size: 0.7em;
 	text-align: start;
 }
 .common_app_data_display_master_row{
-	margin-bottom: 0.5em;
+	margin-bottom: 1em;
 }
 .common_app_data_display_master_col_list{
 	display: inline-block;
@@ -498,19 +497,19 @@ body.rtl{
 	display: grid;
 	grid-auto-flow: column;
     grid-template-columns: 50% 50%;
-	font-size: 0.7em;
 	justify-items: start;
 	margin-inline-start: 25%;
 }
-
 .common_app_data_display_master_col1,
 .common_app_data_display_master_col2{
 	display: inline-block;
 	text-align: start;
 	word-wrap: break-word;
 	vertical-align: middle;
+	width: calc(50% - 1em);
 }
-.common_app_data_display_type_image{
+.common_app_data_display_type_image > div,
+.common_app_data_display_type_image > svg{
 	width: 8em;
 	height: 8em;
 }

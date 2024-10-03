@@ -208,13 +208,13 @@ const app_event_click = event => {
                     .then(()=>
                         common.ComponentRender({
                             mountDiv:   'common_dialogue_user_menu_app_theme', 
-                            data:       {
+                            data:       null,
+                            methods:    {
                                         theme_default_list:common.theme_default_list,
                                         ComponentRender:common.ComponentRender, 
                                         app_theme_update:common.common_preferences_post_mount
                                         },
-                            methods:null,
-                            path:'/common/component/common_dialogue_user_menu_app_theme.js'}));
+                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'}));
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
