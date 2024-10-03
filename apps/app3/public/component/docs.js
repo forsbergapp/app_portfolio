@@ -2,11 +2,11 @@
  * @module apps/app3/component/docs
  */
 /**
- * @param {{docs:[{id:number, doc_url:string, doc_url_small:string, doc_title:string}]}} props
+ * @param {{docs:[{id:number, doc_type:'URL'|'IMAGE', doc_url:string, doc_image:string, doc_image_small:string, doc_title:string}]}} props
  */
 const template = props => ` ${props.docs.map(doc=>
                                 `<div class='doc_list_item common_row'>
-                                    <div id='doc_${doc.id}' data-full_size='${doc.doc_url}' class='doc_list_item_image' style='background-image:url("${doc.doc_url_small}")'></div>
+                                    <div id='doc_${doc.id}' data-type='${doc.doc_type}' data-url='${doc.doc_url}' class='doc_list_item_image' style='background-image:url("${doc.doc_image_small}")'></div>
                                     <div class='doc_list_item_title'>${doc.doc_title}</div>
                                 </div>`
                             ).join('')
@@ -14,7 +14,12 @@ const template = props => ` ${props.docs.map(doc=>
 /**
  * @param {{data:       {
  *                      common_mountdiv:string,
- *                      docs:[{id:number, doc_url:string, doc_url_small:string, doc_title:string}]
+ *                      docs:[{ id:number, 
+ *                              doc_type:'URL'|'IMAGE', 
+ *                              doc_url:string, 
+ *                              doc_image:string, 
+ *                              doc_image_small:string, 
+ *                              doc_title:string}]
  *                      },
  *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
