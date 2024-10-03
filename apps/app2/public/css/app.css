@@ -130,6 +130,7 @@
 /* TOOLBAR BOTTOM*/
 #app_profile_toolbar{
 	text-align: center;
+	margin-inline-start: -15px;
 }
 #toolbar_bottom {
 	width: 100%;
@@ -639,11 +640,11 @@
 #profile_info_user_setting_liked_count{
 	margin-inline-start: 0.5em;
 }
-
-/*COMMON*/
-.common_toolbar_button{
+#toolbar_top .common_toolbar_button,
+#toolbar_bottom .common_toolbar_button{
 	width:60px !important;
 }
+/*COMMON*/
 #common_toolbar_framework{
 	margin-inline-start: 0px !important;
     bottom: 60px !important;
