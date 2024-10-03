@@ -37,7 +37,7 @@ body {
 	vertical-align: middle;
 }
 #app_page_start_shop{
-	height: 70%;
+	height: 90%;
 	width: 80%;
     margin: auto;
 	display: grid;
@@ -102,11 +102,11 @@ body {
 }
 #app_page_start_shop .common_app_data_display_button_post::before{
 	margin-inline-start: -0.2em;
-	margin-top: -0.3em;
+	margin-top: -0.2em;
 	font-weight: bold;
 	rotate:135deg;
 	display: inline-block;
-	font-size: 33px;
+	font-size: 1.2em;
 }
 #common_profile_input_row,
 #common_profile_search_list_wrap{
