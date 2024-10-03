@@ -1207,11 +1207,11 @@ const move_info = (move1=null, move2=null) => {
  * @returns {void}
  */
 const show_hide_window_info_toolbar = () => {
-    if (CommonAppDocument.querySelector('#common_window_info_toolbar').style.display=='flex' ||
+    if (CommonAppDocument.querySelector('#common_window_info_toolbar').style.display=='inline-block' ||
         CommonAppDocument.querySelector('#common_window_info_toolbar').style.display=='')
         CommonAppDocument.querySelector('#common_window_info_toolbar').style.display='none';
     else
-        CommonAppDocument.querySelector('#common_window_info_toolbar').style.display='flex';
+        CommonAppDocument.querySelector('#common_window_info_toolbar').style.display='inline-block';
 };
 /**
  * Close window info
@@ -2708,7 +2708,7 @@ const common_event = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_user_password_new_ok':{
-                            await updatePassword();
+                            updatePassword();
                             break;
                         }
                         case 'common_profile_search_icon':{
@@ -2786,7 +2786,7 @@ const common_event = async (event_type,event=null) =>{
                             close_window();
                             break;
                         }
-                        case 'common_window_info_info':{
+                        case 'common_window_info_info_img':{
                             show_hide_window_info_toolbar();
                             break;
                         }

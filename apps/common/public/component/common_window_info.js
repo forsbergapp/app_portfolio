@@ -21,10 +21,6 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
                                 </div>`:
                                 ''
                             }
-                            ${(props.info_type==1 ||props.info_type==2 ||props.info_type==3)?
-                                `<iframe id='common_window_info_content' scrolling='auto' class='${props.iframe_class}' src='${props.content}' ></iframe>`:
-                                ''
-                            }
                             ${(props.info_type==0 ||props.info_type==1)?
                                 `<div id='common_window_info_toolbar'>
                                     ${props.info_type==0?
@@ -38,7 +34,12 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
                                     }
                                     <div id='common_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
                                 </div>`:''
-                            }`;
+                            }
+                            ${(props.info_type==1 ||props.info_type==2 ||props.info_type==3)?
+                                `<iframe id='common_window_info_content' scrolling='auto' class='${props.iframe_class}' src='${props.content}' ></iframe>`:
+                                ''
+                            }`
+;
 /**
  * @param {{data:       {
  *                      common_mountdiv:string,
