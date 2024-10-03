@@ -124,6 +124,9 @@
 #toolbar_btn_zoomin,#toolbar_btn_zoomout,#toolbar_btn_left, #toolbar_btn_right, #toolbar_btn_search {
 	font-size: 48px;
 }
+#app_user_account{
+	width:60px;
+}
 /* TOOLBAR BOTTOM*/
 #app_profile_toolbar{
 	text-align: center;
@@ -638,6 +641,9 @@
 }
 
 /*COMMON*/
+.common_toolbar_button{
+	width:60px !important;
+}
 #common_toolbar_framework{
 	margin-inline-start: 0px !important;
     bottom: 60px !important;
