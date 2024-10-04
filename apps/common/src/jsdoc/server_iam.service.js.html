@@ -396,7 +396,7 @@ const AuthenticateExternal = (endpoint, host, user_agent, accept_language, ip, b
     const block_ip_control = async (ip_v4) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
             /**@type{import('./../types.js').server_config_iam_blockip} */
-            const ranges = await ConfigFileGet('IAM_BLOCKIP');
+            const ranges = await ConfigFileGet('CONFIG_IAM_BLOCKIP');
             //check if IP is blocked
             if ((ip_v4.match(/\./g)||[]).length==3){
                 for (const element of ranges) {
@@ -421,7 +421,7 @@ const AuthenticateExternal = (endpoint, host, user_agent, accept_language, ip, b
     const safe_user_agents = async (client_user_agent) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
             /**@type{import('./../types.js').server_config_iam_useragent} */
-            const {user_agents} = await ConfigFileGet('IAM_USERAGENT');
+            const {user_agents} = await ConfigFileGet('CONFIG_IAM_USERAGENT');
             for (const user_agent of user_agents){
                 if (user_agent.user_agent == client_user_agent)
                     return true;
@@ -520,7 +520,7 @@ const AuthenticateExternal = (endpoint, host, user_agent, accept_language, ip, b
  * @returns {Promise.&lt;boolean>}
  */
  const AuthenticateApp = async (app_id, authorization) =>{
-    const file = await file_get('APPS');
+    const file = await file_get('CONFIG_APPS');
     if (app_id != null){
         const CLIENT_ID = file.file_content.APPS.filter((/**@type{import('../types.js').server_config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_ID;
         const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{import('../types.js').server_config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_SECRET;
