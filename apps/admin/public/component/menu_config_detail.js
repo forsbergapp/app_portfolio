@@ -7,10 +7,10 @@
  */
 /**
  * @param {{server_group:number[],
- *          file:'SERVER'|'IAM_BLOCKIP'|'IAM_USERAGENT'|'IAM_POLICY',
+ *          file:'CONFIG_SERVER'|'CONFIG_IAM_BLOCKIP'|'CONFIG_IAM_POLICY'|'CONFIG_IAM_USERAGENT',
  *          config:[]}} props
  */
-const template = props => ` ${props.file=='SERVER'?
+const template = props => ` ${props.file=='CONFIG_SERVER'?
                                 `<div id='list_config' class='common_list_scrollbar'>
                                     <div id='list_config_row_title' class='list_config_row'>
                                         <div id='list_config_col_title1' class='list_config_col list_title'>PARAMETER NAME</div>
@@ -47,7 +47,7 @@ const template = props => ` ${props.file=='SERVER'?
 /**
 * 
 * @param {{data:{       common_mountdiv:string,
-*                       file:'SERVER'|'IAM_BLOCKIP'|'IAM_USERAGENT'|'IAM_POLICY'},
+*                       file:'CONFIG_SERVER'|'CONFIG_IAM_BLOCKIP'|'CONFIG_IAM_POLICY'|'CONFIG_IAM_USERAGENT'},
 *          methods:{    common_document:import('../../../common_types.js').CommonAppDocument,
 *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
 *          lifecycle:   null}} props 
@@ -62,7 +62,7 @@ const component = async props => {
                                     .then((/**@type{string}*/result)=>JSON.parse(result).data);
 
    const onMounted = async () =>{        
-        if (props.data.file=='SERVER'){
+        if (props.data.file=='CONFIG_SERVER'){
             //set focus first column in first row
             props.methods.common_document.querySelectorAll('#list_config .common_input')[0].focus();
         }

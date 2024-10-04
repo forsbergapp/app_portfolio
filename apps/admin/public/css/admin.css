@@ -106,10 +106,10 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 
 #list_server_log_search_icon::before{					content:var(--common_app_icon_search)}
 
-#list_config_nav_server::before{						content:var(--common_app_icon_server)}
-#list_config_nav_iam_blockip::before{					content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_regional_numbersystem)}
-#list_config_nav_iam_useragent::before{					content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_browser)}
-#list_config_nav_iam_policy::before{					content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_misc_book)}
+#list_config_nav_config_server::before{					content:var(--common_app_icon_server)}
+#list_config_nav_config_iam_blockip::before{			content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_regional_numbersystem)}
+#list_config_nav_config_iam_useragent::before{			content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_browser)}
+#list_config_nav_config_iam_policy::before{				content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_misc_book)}
 
 #install_db_icon::before{								content:var(--common_app_icon_database)}
 #install_db_button_install::before{						content:var(--common_app_icon_add)}
