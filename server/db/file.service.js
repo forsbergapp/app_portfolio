@@ -10,15 +10,15 @@ else
     SLASH = '/';
 
 /**@type{import('../../types.js').server_db_file_db_record[]} */
-const FILE_DB = [   {NAME:'CONFIG_APPS',                        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_apps.json`, CACHE_CONTENT:null},
-                    {NAME:'CONFIG_SERVER',                      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_server.json`, CACHE_CONTENT:null},
-                    {NAME:'CONFIG_IAM_BLOCKIP',                 LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_iam_blockip.json`, CACHE_CONTENT:null},
-                    {NAME:'CONFIG_IAM_POLICY',                  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_iam_policy.json`, CACHE_CONTENT:null},
-                    {NAME:'CONFIG_IAM_USER',                    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_iam_user.json`, CACHE_CONTENT:null},
-                    {NAME:'CONFIG_IAM_USERAGENT',               LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_iam_useragent.json`, CACHE_CONTENT:null},
-                    {NAME:'CONFIG_MICROSERVICE',                LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_microservice.json`, CACHE_CONTENT:null},
-                    {NAME:'CONFIG_MICROSERVICE_SERVICES',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_microservice_services.json`, CACHE_CONTENT:null},
-                    {NAME:'DB_FILE',                            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}sqlite.db`},
+const FILE_DB = [   {NAME:'CONFIG_APPS',                        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_apps.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_SERVER',                      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_server.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_BLOCKIP',                 LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_iam_blockip.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_POLICY',                  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_iam_policy.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_USER',                    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_iam_user.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_USERAGENT',               LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_iam_useragent.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_MICROSERVICE',                LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_microservice.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_MICROSERVICE_SERVICES',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_microservice_services.json', CACHE_CONTENT:null},
+                    {NAME:'DB_FILE',                            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,   FILENAME:'sqlite.db'},
                     {NAME:'IAM_APP_TOKEN',                      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}iam_app_token_`},
                     {NAME:'IAM_SYSTEMADMIN_LOGIN',              LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}iam_systemadmin_login_`},
                     {NAME:'LOG_APP_INFO',                       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}APP_INFO_`},
@@ -168,7 +168,7 @@ const transaction_rollback = (file, transaction_id)=>{
  * @returns {Promise.<import('../../types.js').server_db_file_result_file_get>}
  */
 const file_get = async (file, lock=false) =>{
-    const filepath = fileDB(file).PATH;
+    const filepath = fileDB(file).PATH + (fileDB(file).FILENAME?fileDB(file).FILENAME:'');
     const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');    
     if (lock){
         const transaction_id = await transaction_start(file, JSON.parse(fileBuffer.toString()));
@@ -183,11 +183,11 @@ const file_get = async (file, lock=false) =>{
     }
 };
 /**
- * Returns FILE_DB.PATH for given file
+ * Returns file path for given file
  * @param {import('../../types.js').server_db_file_db_name} file 
  * @returns {string}
  */
-const file_get_path = file =>fileDB(file).PATH ?? '';
+const file_get_path = file =>(fileDB(file).PATH ?? '') + (fileDB(file).FILENAME?fileDB(file).FILENAME:'');
 /**
  * 
  * @returns {Promise.<string[]>}
@@ -206,8 +206,10 @@ const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}
  const file_set_cache_all = async () => {
     for (const file_db_record of FILE_DB){
         if ('CACHE_CONTENT' in file_db_record){
-            const fileBuffer = await fs.promises.readFile(process.cwd() + file_db_record.PATH, 'utf8').catch(()=>null);
-            file_db_record.CACHE_CONTENT = fileBuffer?JSON.parse(fileBuffer.toString()):null;
+            const file = await fs.promises.readFile(process.cwd() + file_db_record.PATH + file_db_record.FILENAME, 'utf8')
+                                .then((/**@type{string}*/file)=>JSON.parse(file.toString()))
+                                .catch(()=>null);
+            file_db_record.CACHE_CONTENT = file?file:null;
         }
     }
     /**@type{import('../../types.js').server_config_apps['APPS']}*/
@@ -222,6 +224,7 @@ const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}
  };
 /**
  * 
+ * Updates config files
  * @param {import('../../types.js').server_db_file_db_name} file 
  * @param {number|null} transaction_id 
  * @param {object} file_content 
@@ -231,9 +234,10 @@ const file_update = async (file, transaction_id, file_content) =>{
     if (!transaction_id || fileDB(file).TRANSACTION_ID != transaction_id)
         return ('⛔');
     else{
-        const filepath = fileDB(file).PATH;
-        //write backup of old file
-        await fs.promises.writeFile(process.cwd() + `${filepath}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
+        const filepath = fileDB(file).PATH + (fileDB(file).FILENAME?fileDB(file).FILENAME:'');
+        const filepath_backup = fileDB(file).PATH + 'backup/' + (fileDB(file).FILENAME?fileDB(file).FILENAME:'');
+        //write backup of old config file
+        await fs.promises.writeFile(process.cwd() + `${filepath_backup}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
                                     JSON.stringify(fileDB(file).TRANSACTION_CONTENT, undefined, 2),  
                                     'utf8');
         //write new file content
@@ -261,7 +265,7 @@ const file_update = async (file, transaction_id, file_content) =>{
  * @param {import('../../types.js').server_db_file_config_files} file_content 
  */
 const file_create = async (file, file_content) =>{
-    const filepath = fileDB(file).PATH;
+    const filepath = fileDB(file).PATH + (fileDB(file).FILENAME?fileDB(file).FILENAME:'');
     await fs.promises.writeFile(process.cwd() + filepath, JSON.stringify(file_content, undefined, 2),  'utf8')
     .then(() => {
         return null;
