@@ -20,7 +20,7 @@ const fs = await import('node:fs');
  const app_start = async (app_id=null)=>{
     const common_app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
-    if (file_get_cached('SERVER').METADATA.MAINTENANCE==0 && ConfigGet('SERVICE_DB', 'START')=='1' && 
+    if (file_get_cached('CONFIG_SERVER').METADATA.MAINTENANCE==0 && ConfigGet('SERVICE_DB', 'START')=='1' && 
         ConfigGetApp(app_id, common_app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START=='1' &&
         ((db_use==5 && await InstalledCheck(app_id, 1)
                                 .then((/**@type{{installed:boolean}[]}*/result)=>app_id?result[0].installed:true)

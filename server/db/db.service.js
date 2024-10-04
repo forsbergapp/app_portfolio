@@ -5,7 +5,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**@type{import('../config.service')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('./file.service')} */
-const {SLASH} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {file_get_path} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 //mysql module used for both MariaDB and MySQL
 const MYSQL               = await import('mysql');
@@ -78,9 +78,6 @@ const pool_delete_all = (db)=>{
  *    poolMax:                 pool max
  *    poolIncrement:           pool increment
  * 
- *    db 5 parameter
- *    fileName                 default app_portfolio.db saved in /data
- *    
  * @param {import('../../types.js').server_db_db_pool_parameters} dbparameters 
  * @returns {Promise.<null>}
  */
@@ -192,7 +189,7 @@ const pool_start = async (dbparameters) =>{
             POOL_DB.map(db=>{
                if (db[0]==dbparameters.use)
                   sqlite.open({
-                     filename: process.cwd() + `${SLASH}data${SLASH}${dbparameters.fileName ?? ''}`,
+                     filename: process.cwd() + file_get_path('DB_FILE'),
                      driver: sqlite3.Database
                   })
                   .then((sqlite_db)=>{

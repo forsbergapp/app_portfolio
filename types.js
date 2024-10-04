@@ -796,7 +796,6 @@
  * @property {number|null}  poolMin                 - DB 4 Oracle
  * @property {number|null}  poolMax                 - DB 4 Oracle
  * @property {number|null}  poolIncrement           - DB 4 Oracle
- * @property {string|null}  fileName                - DB 5 SQLite
  */
 
 /**
@@ -859,12 +858,15 @@
 /**
  * Server - db file db name
  * 
- * @typedef {   'APPS'|
- *              'SERVER'|
- *              'IAM_BLOCKIP'|
- *              'IAM_POLICY'|
- *              'IAM_USER'|
- *              'IAM_USERAGENT'|
+ * @typedef {   'CONFIG_APPS'|
+ *              'CONFIG_SERVER'|
+ *              'CONFIG_IAM_BLOCKIP'|
+ *              'CONFIG_IAM_POLICY'|
+ *              'CONFIG_IAM_USER'|
+ *              'CONFIG_IAM_USERAGENT'|
+ *              'CONFIG_MICROSERVICE'|
+ *              'CONFIG_MICROSERVICE_SERVICES'| 
+ *              'DB_FILE'| 
  *              'IAM_APP_TOKEN'|
  *              'IAM_SYSTEMADMIN_LOGIN'|
  *              'LOG_APP_INFO'|
@@ -878,11 +880,9 @@
  *              'LOG_SERVER_ERROR'|
  *              'LOG_SERVICE_INFO'|
  *              'LOG_SERVICE_ERROR'|
- *              'MICROSERVICE_CONFIG'|
- *              'MICROSERVICE_SERVICES'|
- *              'MESSAGE_QUEUE_PUBLISH'|
- *              'MESSAGE_QUEUE_CONSUME'|
- *              'MESSAGE_QUEUE_ERROR'} server_db_file_db_name
+ *              'MICROSERVICE_MESSAGE_QUEUE_PUBLISH'|
+ *              'MICROSERVICE_MESSAGE_QUEUE_CONSUME'|
+ *              'MICROSERVICE_MESSAGE_QUEUE_ERROR'} server_db_file_db_name
  */
 
 /** 
@@ -892,7 +892,7 @@
  *              TRANSACTION_ID:number|null, 
  *              TRANSACTION_CONTENT: object|string|null, 
  *              PATH:string|null, 
- *              CACHE_CONTENT?:object|null }} server_db_file_db_record
+ *              CACHE_CONTENT?:* }} server_db_file_db_record
  */
 
 /** 
@@ -2054,20 +2054,10 @@
 /** 
  * MicroService Config
  * @typedef {{  PATH_DATA                                   : string,
- *              PATH_TEMP                                   : string,
- *              MESSAGE_QUEUE_ERROR                         : string,
- *              MESSAGE_QUEUE_PUBLISH                       : string,
- *              MESSAGE_QUEUE_CONSUME                       : string,
  *              CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
  *              CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
  *              CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
  *              CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}|null} microservice_config
- */
-
-/**
- * Microservice Config service keys
- * @typedef {'NAME'|'HOST'|'PORT'|'HTTPS_ENABLE'|'HTTPS_KEYS'|'HTTPS_CERT'|'HTTPS_SSL_VERIFICATION'|
- *           'HTTPS_SSL_VERIFICATION_PATH'|'HTTPS_PORT'|'STATUS'|'PATH'|'CONFIG'} microservice_config_service_keys
  */
 
 /** 

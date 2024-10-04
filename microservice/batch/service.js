@@ -94,7 +94,7 @@ const get_batchlog_filename = () => {
  *          start:string|null,
  *          end:string|null,
  *          status:'PENDING'|'RUNNING'|'CANCELED'|'FAILED'|'FINISHED',
- *          result:string|import('../../types.js').error|null
+ *          result:*
  *          }} joblog
  * @returns {Promise.<{log_id:number, filename:string}>}
  */
