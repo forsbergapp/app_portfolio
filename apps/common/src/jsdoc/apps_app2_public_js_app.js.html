@@ -201,10 +201,13 @@ Object.seal(APP_GLOBAL);
 const printTimetable = async () => {
     //use app component to get HTML
     const component_print = '/component/print.js';
-    const {default:component_function} = await import(component_print);
+    const {default:component} = await import(component_print);
     /**@type{import('../../../common_types.js').CommonComponentResult}*/
-    const {template} = await component_function({   common_document:CommonAppDocument, 
-                                                    html:CommonAppDocument.querySelector('#paper').outerHTML});
+    const {template} = await component({ data:  {   
+                                                common_mountdiv:null, 
+                                                html:CommonAppDocument.querySelector('#paper').outerHTML
+                                                },
+                                        methods:{common_document:CommonAppDocument}});
     await common.ComponentRender({  mountDiv:   'common_window_info',
                                     data:       {
                                                 info:3,
