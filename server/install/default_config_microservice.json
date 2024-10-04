@@ -1,6 +1,5 @@
 {
-    "PATH_DATA"              : "data",
-    "PATH_TEMP"              : "temp",
+    "PATH_DATA"              : "",
     "CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS":5,
     "CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS":10,
     "CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS":5,

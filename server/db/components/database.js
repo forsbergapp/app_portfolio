@@ -8,7 +8,23 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**@type{import('../../config.service.js')} */
 const {ConfigGet, ConfigGetApp, ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
 
-const DBA=1;
+const DBA                       = 1;
+const DB_DEMO_PATH              = '/server/install/db/demo/';
+const DB_DEMO_FILE              = 'demo.json';
+
+const DB_INSTALL_PATH           = '/server/install/db/';
+const DB_INSTALL                = 'install_database.json';
+const DB_UNINSTALL              = 'uninstall_database.json';
+
+const DB_ADMIN_INSTALL_PATH     = '/apps/admin/scripts/';
+const DB_ADMIN_INSTALL          = 'install_database.json';
+const DB_ADMIN_UNINSTALL        = 'uninstall_database.json';
+
+const DB_APP_PATH               = '/apps/app';
+//each app should be installed in /apps[appid] and have these files:
+const DB_APP_INSTALL_PATH       = '/scripts/';
+const DB_APP_INSTALL            = 'install_database.json';
+const DB_APP_UNINSTALL          = 'uninstall_database.json';
 /**
  * 
  * @param {number} app_id
@@ -27,25 +43,25 @@ const InfoSpaceSum = (app_id) =>service.InfoSpaceSum(app_id, DBA);
 
 /**
   * Install get files
-  * @param {'install'|'uninstall'} json_type 
+  * @param {'install'|'uninstall'} install_type 
   * @returns {Promise.<import('../../../types.js').server_db_database_script_files>}
   */
-const install_db_get_files = async (json_type) =>{
+const install_db_get_files = async (install_type) =>{
     const fs = await import('node:fs');
     let app_id = 1;
     /**@type{import('../../../types.js').server_db_database_script_files} */
     const files = [
        //add main script with id 0 and without app_id
-       [0, `/scripts/${json_type}_database.json`, null],
+       [0, install_type=='install'?(DB_INSTALL_PATH + DB_INSTALL):(DB_INSTALL_PATH + DB_UNINSTALL), null],
        //add admin script with id 1 and without app_id
-       [1, `/apps/admin/scripts/${json_type}_database.json`, null]
+       [1, install_type=='install'?(DB_ADMIN_INSTALL_PATH + DB_ADMIN_INSTALL):(DB_ADMIN_INSTALL_PATH + DB_ADMIN_UNINSTALL), null]
     ];
     //Loop file directories /apps/app + id until not found anymore and return files found
     while (true){
        try {
-          await fs.promises.access(`${process.cwd()}/apps/app${app_id}/scripts/${json_type}_database.json`);   
+          await fs.promises.access(`${process.cwd()}${DB_APP_PATH}${app_id}${install_type=='install'?(DB_APP_INSTALL_PATH + DB_APP_INSTALL):(DB_APP_INSTALL_PATH + DB_APP_UNINSTALL)}`);
           //add app script, first index not used for apps, save app id instead
-          files.push([null, `/apps/app${app_id}/scripts/${json_type}_database.json`, app_id]);
+          files.push([null, `${DB_APP_PATH}${app_id}${install_type=='install'?(DB_APP_INSTALL_PATH + DB_APP_INSTALL):(DB_APP_INSTALL_PATH + DB_APP_UNINSTALL)}`, app_id]);
           app_id += 1; 
        } catch (error) {
           return files;
@@ -133,17 +149,17 @@ const install_db_get_files = async (json_type) =>{
                 switch (file[0]){
                     case 0:{
                         //main script
-                        install_sql = await fs.promises.readFile(`${process.cwd()}/scripts/${install_row.script}`, 'utf8');
+                        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + install_row.script}`, 'utf8');
                         break;
                     }
                     case 1:{
                         //admin script
-                        install_sql = await fs.promises.readFile(`${process.cwd()}/apps/admin/scripts/${install_row.script}`, 'utf8');
+                        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_ADMIN_INSTALL_PATH + install_row.script}`, 'utf8');
                         break;
                     }
                     default:{
                         //app scripts
-                        install_sql = await fs.promises.readFile(`${process.cwd()}/apps/app${file[2]}/scripts/${install_row.script}`, 'utf8');
+                        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_APP_PATH + file[2]}${DB_APP_INSTALL_PATH + install_row.script}`, 'utf8');
                     }
                 }
                 //remove comments
@@ -197,9 +213,7 @@ const install_db_get_files = async (json_type) =>{
                                         connectString:             null,
                                         poolMin:                   null,
                                         poolMax:                   null,
-                                        poolIncrement:             null,
-                                        //db 5 not used here
-                                        fileName:                  null
+                                        poolIncrement:             null
                                     };
                                 await pool_start(json_data);
                             }
@@ -228,9 +242,7 @@ const install_db_get_files = async (json_type) =>{
                                     connectString:             null,
                                     poolMin:                   null,
                                     poolMax:                   null,
-                                    poolIncrement:             null,
-                                    //db 5 not used here
-                                    fileName:                  null
+                                    poolIncrement:             null
                                 };
                                 await pool_start(json_data);
                                 //change to database value for the rest of the function
@@ -364,9 +376,7 @@ const install_db_get_files = async (json_type) =>{
                     connectString:             null,
                     poolMin:                   null,
                     poolMax:                   null,
-                    poolIncrement:             null,
-                    //db 5 not used here
-                    fileName:                  null
+                    poolIncrement:             null
                 };
                 await pool_start(json_data);
             }
@@ -381,7 +391,7 @@ const install_db_get_files = async (json_type) =>{
             
         }      
     }
-    //remove db users and password in apps.json
+    //remove db users and password
     ConfigAppSecretDBReset();
     LogServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {info:[  { count    : count_statements},
@@ -389,8 +399,11 @@ const install_db_get_files = async (json_type) =>{
                 ]};
 };
 /**
- * Install demo users with user settings from /scripts/demo/demo.json
- * and reading images in /scripts/demo/demo*.webp
+ * Install demo users 
+ * Creates user settings and imports images to base64 format
+ * Creates random social records for social types LIKE, VIEW, VIEW_ANONYMOUS, FOLLOWER, POSTS_LIKE, POSTS_VIEW and POSTS_VIEW_ANONYMOUS
+ * Random records are created using 2 lists of all users and creates records until two groups both have 50% samples with unique users in each sample of social type
+ * Returns log about records created
  * @param {number} app_id
  * @param {*} query
  * @param {*} data
@@ -434,7 +447,7 @@ const install_db_get_files = async (json_type) =>{
     /**@type{import('../../../types.js').server_db_database_install_result} */
     const install_result = [];
     install_result.push({'start': new Date().toISOString()});
-    const fileBuffer = await fs.promises.readFile(`${process.cwd()}/scripts/demo/demo.json`, 'utf8');
+    const fileBuffer = await fs.promises.readFile(`${process.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
     /**@type{[import('../../../types.js').server_db_database_demo_user]}*/
     const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
     //create social records
@@ -595,7 +608,7 @@ const install_db_get_files = async (json_type) =>{
     await create_users(demo_users);
     const apps = await getAppsAdminId(app_id);
     
-    //generate key pairs for each user that can be saved both in resource and apps.json.
+    //generate key pairs for each user that can be saved both in resource and apps configuration
     //Use same for all demo users since key creation can be slow
     SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'})));
     const {publicKey, privateKey} = await CreateKeyPair();
@@ -606,7 +619,7 @@ const install_db_get_files = async (json_type) =>{
         SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username})));
         install_count++;
 
-        //generate vpa for each user that can be saved both in resource and apps.json
+        //generate vpa for each user that can be saved both in resource and apps configuration
         const demo_vpa = createUUID();
         //create user_account_app record for all apps
         for (const app of apps){
@@ -620,7 +633,7 @@ const install_db_get_files = async (json_type) =>{
             else
                 settings_header_image = `${demo_user.username}.webp`;
             /**@type{Buffer} */
-            const image = await fs.promises.readFile(`${process.cwd()}/scripts/demo/${settings_header_image}`);
+            const image = await fs.promises.readFile(`${process.cwd()}${DB_DEMO_PATH}${settings_header_image}`);
             /**@ts-ignore */
             const image_string = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
             //update settings with loaded image into BASE64 format
@@ -1057,9 +1070,7 @@ const DemoUninstall = async (app_id, query)=> {
           connectString:             ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
           poolMin:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
           poolMax:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
-          poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)),
-          // db 5 parameters
-          fileName:                  ConfigGet('SERVICE_DB', `DB${db_use}_FILENAME`)
+          poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
        };
        pool_start(dbparameters)
        .then((/**@type{null}*/result)=>{

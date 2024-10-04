@@ -10,30 +10,31 @@ else
     SLASH = '/';
 
 /**@type{import('../../types.js').server_db_file_db_record[]} */
-const FILE_DB = [   {NAME:'APPS',                   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}apps.json`, CACHE_CONTENT:null},
-                    {NAME:'SERVER',                 LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}server.json`, CACHE_CONTENT:null},
-                    {NAME:'IAM_BLOCKIP',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_blockip.json`, CACHE_CONTENT:null},
-                    {NAME:'IAM_POLICY',             LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_policy.json`, CACHE_CONTENT:null},
-                    {NAME:'IAM_USER',               LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_user.json`, CACHE_CONTENT:null},
-                    {NAME:'IAM_USERAGENT',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_useragent.json`, CACHE_CONTENT:null},
-                    {NAME:'IAM_APP_TOKEN',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam_app_token_`},
-                    {NAME:'IAM_SYSTEMADMIN_LOGIN',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam_systemadmin_login_`},
-                    {NAME:'LOG_APP_INFO',           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}APP_INFO_`},
-                    {NAME:'LOG_APP_ERROR',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}APP_ERROR_`},
-                    {NAME:'LOG_DB_INFO',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}DB_INFO_`},
-                    {NAME:'LOG_DB_ERROR',           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}DB_ERROR_`},
-                    {NAME:'LOG_REQUEST_INFO',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}REQUEST_INFO_`},
-                    {NAME:'LOG_REQUEST_VERBOSE',    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}REQUEST_VERBOSE_`},
-                    {NAME:'LOG_REQUEST_ERROR',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}REQUEST_ERROR_`},
-                    {NAME:'LOG_SERVER_INFO',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}SERVER_INFO_`},
-                    {NAME:'LOG_SERVER_ERROR',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}SERVER_ERROR_`},
-                    {NAME:'LOG_SERVICE_INFO',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}SERVICE_INFO_`},
-                    {NAME:'LOG_SERVICE_ERROR',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}SERVICE_ERROR_`},
-                    {NAME:'MICROSERVICE_CONFIG',    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}config.json`, CACHE_CONTENT:null},
-                    {NAME:'MICROSERVICE_SERVICES',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}services.json`, CACHE_CONTENT:null},
-                    {NAME:'MESSAGE_QUEUE_PUBLISH',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}data${SLASH}message_queue_publish.log`},
-                    {NAME:'MESSAGE_QUEUE_CONSUME',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}data${SLASH}message_queue_consume.log`},
-                    {NAME:'MESSAGE_QUEUE_ERROR',    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}data${SLASH}message_queue_error.log`}];
+const FILE_DB = [   {NAME:'CONFIG_APPS',                        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_apps.json`, CACHE_CONTENT:null},
+                    {NAME:'CONFIG_SERVER',                      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_server.json`, CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_BLOCKIP',                 LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_iam_blockip.json`, CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_POLICY',                  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_iam_policy.json`, CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_USER',                    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_iam_user.json`, CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_USERAGENT',               LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_iam_useragent.json`, CACHE_CONTENT:null},
+                    {NAME:'CONFIG_MICROSERVICE',                LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_microservice.json`, CACHE_CONTENT:null},
+                    {NAME:'CONFIG_MICROSERVICE_SERVICES',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}config_microservice_services.json`, CACHE_CONTENT:null},
+                    {NAME:'DB_FILE',                            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}sqlite.db`},
+                    {NAME:'IAM_APP_TOKEN',                      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}iam_app_token_`},
+                    {NAME:'IAM_SYSTEMADMIN_LOGIN',              LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}iam_systemadmin_login_`},
+                    {NAME:'LOG_APP_INFO',                       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}APP_INFO_`},
+                    {NAME:'LOG_APP_ERROR',                      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}APP_ERROR_`},
+                    {NAME:'LOG_DB_INFO',                        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}DB_INFO_`},
+                    {NAME:'LOG_DB_ERROR',                       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}DB_ERROR_`},
+                    {NAME:'LOG_REQUEST_INFO',                   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}REQUEST_INFO_`},
+                    {NAME:'LOG_REQUEST_VERBOSE',                LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}REQUEST_VERBOSE_`},
+                    {NAME:'LOG_REQUEST_ERROR',                  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}REQUEST_ERROR_`},
+                    {NAME:'LOG_SERVER_INFO',                    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}SERVER_INFO_`},
+                    {NAME:'LOG_SERVER_ERROR',                   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}SERVER_ERROR_`},
+                    {NAME:'LOG_SERVICE_INFO',                   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}SERVICE_INFO_`},
+                    {NAME:'LOG_SERVICE_ERROR',                  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}SERVICE_ERROR_`},
+                    {NAME:'MICROSERVICE_MESSAGE_QUEUE_PUBLISH', LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}microservice${SLASH}message_queue_publish.log`},
+                    {NAME:'MICROSERVICE_MESSAGE_QUEUE_CONSUME', LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}microservice${SLASH}message_queue_consume.log`},
+                    {NAME:'MICROSERVICE_MESSAGE_QUEUE_ERROR',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}microservice${SLASH}message_queue_error.log`}];
 Object.seal(FILE_DB);
 
 /**
@@ -161,6 +162,7 @@ const transaction_rollback = (file, transaction_id)=>{
 };
 /**
  * 
+ * Returns file content in FILE_DB.PATH for given file
  * @param {import('../../types.js').server_db_file_db_name} file 
  * @param {boolean} lock
  * @returns {Promise.<import('../../types.js').server_db_file_result_file_get>}
@@ -181,10 +183,16 @@ const file_get = async (file, lock=false) =>{
     }
 };
 /**
+ * Returns FILE_DB.PATH for given file
+ * @param {import('../../types.js').server_db_file_db_name} file 
+ * @returns {string}
+ */
+const file_get_path = file =>fileDB(file).PATH ?? '';
+/**
  * 
  * @returns {Promise.<string[]>}
  */
-const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH}logs`);
+const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH}data${SLASH}logs`);
 /**
  * 
  * @param {import('../../types.js').server_db_file_db_name} file
@@ -202,12 +210,14 @@ const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}
             file_db_record.CACHE_CONTENT = fileBuffer?JSON.parse(fileBuffer.toString()):null;
         }
     }
-    /**@ts-ignore */
-    for (const app of fileDB('APPS').CACHE_CONTENT.APPS){
-        for (const renderfile of app.RENDER_CONFIG.RENDER_FILES){
-            //save file content (html) in new arrayindex so apps can read files faster
-            renderfile.push(await fs.promises.readFile(process.cwd() + renderfile[3], 'utf8').then(filebuffer=>filebuffer.toString()));
-        }
+    /**@type{import('../../types.js').server_config_apps['APPS']}*/
+    const APPS = fileDB('CONFIG_APPS').CACHE_CONTENT.APPS;
+    for (const app of APPS){
+        if (app.RENDER_CONFIG?.RENDER_FILES)
+            for (const renderfile of app.RENDER_CONFIG.RENDER_FILES){
+                //save file content (html) in new arrayindex so apps can read files faster
+                renderfile.push(await fs.promises.readFile(process.cwd() + renderfile[3], 'utf8').then(filebuffer=>filebuffer.toString()));
+            }
     }
  };
 /**
@@ -295,12 +305,15 @@ const create_config_and_logs_dir = async () => {
             throw error;
         });
     };
-    for (const dir of [ `${SLASH}config`,
-                        `${SLASH}data`,
-                        `${SLASH}logs`,
-                        `${SLASH}microservice${SLASH}config`,
-                        `${SLASH}microservice${SLASH}data`,
-                        `${SLASH}microservice${SLASH}temp`]){
+    for (const dir of [ `${SLASH}data`,
+                        `${SLASH}data${SLASH}backup`,
+                        `${SLASH}data${SLASH}db`,
+                        `${SLASH}data${SLASH}iam`,
+                        `${SLASH}data${SLASH}logs`,
+                        `${SLASH}data${SLASH}ssl`,
+                        `${SLASH}data${SLASH}microservice`,
+                        `${SLASH}data${SLASH}microservice${SLASH}data`,
+                        `${SLASH}data${SLASH}microservice${SLASH}ssl`]){
         await fs.promises.access(process.cwd() + dir)
         .catch(()=>{
             mkdir(dir);  
@@ -308,4 +321,4 @@ const create_config_and_logs_dir = async () => {
     }
 };
 
-export {SLASH, file_get, file_get_log_dir, file_get_log, file_get_cached, file_set_cache_all, file_update, file_create, file_append_log, create_config_and_logs_dir};
+export {SLASH, file_get, file_get_path, file_get_log_dir, file_get_log, file_get_cached, file_set_cache_all, file_update, file_create, file_append_log, create_config_and_logs_dir};

@@ -64,7 +64,6 @@
         {"DB4_POOL_MIN": "1", "COMMENT": ""},
         {"DB4_POOL_MAX": "1", "COMMENT": ""},
         {"DB4_POOL_INCREMENT": "0", "COMMENT": ""},
-        {"DB5_FILENAME": "app_portfolio.db", "COMMENT": "Saved in /data"},
         {"DB5_NAME": "MAIN", "COMMENT": ""}
     ],
     "SERVICE_LOG":[

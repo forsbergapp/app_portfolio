@@ -1013,7 +1013,7 @@ const show_message = async (message_type, code, function_event, text_class=null,
         methods:        {
                         componentRemove:ComponentRemove,
                         FFB:FFB, 
-                        event:function_event
+                        function_event:function_event
                         },
         path:           '/common/component/common_dialogue_message.js'});
 };

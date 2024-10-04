@@ -316,7 +316,7 @@ const set_maintenance = () => {
     else
         check_value = 0;
     const json_data = {maintenance:check_value};
-    common.FFB({path:'/server-config/config/SERVER', method:'PUT', authorization_type:'SYSTEMADMIN', body:json_data}).catch(()=>null);
+    common.FFB({path:'/server-config/config/CONFIG_SERVER', method:'PUT', authorization_type:'SYSTEMADMIN', body:json_data}).catch(()=>null);
 };
 /**
  * 
@@ -459,8 +459,8 @@ const button_save = async (item) => {
                             SERVICE_LOG:        config_json[4]
                         };
             };
-            const file = CommonAppDocument.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16).toUpperCase();
-            //file:'SERVER', 'APPS', 'IAM_BLOCKIP', 'IAM_POLICY', 'IAM_USERAGENT', 'IAM_USER', 'MICROSERVICE_CONFIG', 'MICROSERVICE_SERVICES'
+            const file = CommonAppDocument.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring('list_config_nav_'.length).toUpperCase();
+            //file:'CONFIG_SERVER', 'CONFIG_APPS', 'CONFIG_IAM_BLOCKIP', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_IAM_USER', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
             const json_data = { config:    file=='SERVER'?config_create_server_json():JSON.parse(CommonAppDocument.querySelector('#list_config_edit').innerHTML)};
 
             common.FFB({path:`/server-config/config/${file}`, method: 'PUT', authorization_type:'SYSTEMADMIN', body:json_data, spinner_id:item});
@@ -576,10 +576,10 @@ const nav_click = (item_id) => {
             CommonAppDocument.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_selected_tab');
     };
     const reset_config = () => {
-        CommonAppDocument.querySelector('#list_config_nav_server').classList.remove('list_nav_selected_tab');
-        CommonAppDocument.querySelector('#list_config_nav_iam_blockip').classList.remove('list_nav_selected_tab');
-        CommonAppDocument.querySelector('#list_config_nav_iam_useragent').classList.remove('list_nav_selected_tab');
-        CommonAppDocument.querySelector('#list_config_nav_iam_policy').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_config_nav_config_server').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_config_nav_config_iam_blockip').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_config_nav_config_iam_useragent').classList.remove('list_nav_selected_tab');
+        CommonAppDocument.querySelector('#list_config_nav_config_iam_policy').classList.remove('list_nav_selected_tab');
     };
     
     switch (item_id){
@@ -603,42 +603,42 @@ const nav_click = (item_id) => {
             break;
         }
         //SERVER CONFIG
-        case 'list_config_nav_server':{
+        case 'list_config_nav_config_server':{
             reset_config();
-            CommonAppDocument.querySelector('#list_config_nav_server').classList.add('list_nav_selected_tab');
+            CommonAppDocument.querySelector('#list_config_nav_config_server').classList.add('list_nav_selected_tab');
             common.ComponentRender({
                 mountDiv:       'list_config_container',
-                data:           {file:'SERVER'},
+                data:           {file:'CONFIG_SERVER'},
                 methods:        {FFB:common.FFB},
                 path:           '/component/menu_config_detail.js'});
             break;
         }
-        case 'list_config_nav_iam_blockip':{
+        case 'list_config_nav_config_iam_blockip':{
             reset_config();
-            CommonAppDocument.querySelector('#list_config_nav_iam_blockip').classList.add('list_nav_selected_tab');
+            CommonAppDocument.querySelector('#list_config_nav_config_iam_blockip').classList.add('list_nav_selected_tab');
             common.ComponentRender({
                 mountDiv:       'list_config_container',
-                data:           {file:'IAM_BLOCKIP'},
+                data:           {file:'CONFIG_IAM_BLOCKIP'},
                 methods:        {FFB:common.FFB},
                 path:           '/component/menu_config_detail.js'});
             break;
         }
-        case 'list_config_nav_iam_useragent':{
+        case 'list_config_nav_config_iam_useragent':{
             reset_config();
-            CommonAppDocument.querySelector('#list_config_nav_iam_useragent').classList.add('list_nav_selected_tab');
+            CommonAppDocument.querySelector('#list_config_nav_config_iam_useragent').classList.add('list_nav_selected_tab');
             common.ComponentRender({
                 mountDiv:       'list_config_container',
-                data:           {file:'IAM_USERAGENT'},
+                data:           {file:'CONFIG_IAM_USERAGENT'},
                 methods:        {FFB:common.FFB},
                 path:           '/component/menu_config_detail.js'});
             break;
         }
-        case 'list_config_nav_iam_policy':{
+        case 'list_config_nav_config_iam_policy':{
             reset_config();
-            CommonAppDocument.querySelector('#list_config_nav_iam_policy').classList.add('list_nav_selected_tab');
+            CommonAppDocument.querySelector('#list_config_nav_config_iam_policy').classList.add('list_nav_selected_tab');
             common.ComponentRender({
                 mountDiv:       'list_config_container',
-                data:           {file:'IAM_POLICY'},
+                data:           {file:'CONFIG_IAM_POLICY'},
                 methods:        {FFB:common.FFB},
                 path:           '/component/menu_config_detail.js'});
             break;
@@ -803,7 +803,7 @@ const list_item_click = (item_type, data) => {
  */
 const get_log_parameters = async () => {
     return new Promise((resolve)=>{
-        common.FFB({path:'/server-config/config/SERVER', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'SYSTEMADMIN'})
+        common.FFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'SYSTEMADMIN'})
         .then((/**@type{string}*/result)=>{
             const log_parameters = {
                 SCOPE_REQUEST : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],
@@ -1058,10 +1058,10 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     button_save('config_save');
                     break;
                 }
-                case 'list_config_nav_server' :
-                case 'list_config_nav_iam_blockip':
-                case 'list_config_nav_iam_useragent':
-                case 'list_config_nav_iam_policy':{
+                case 'list_config_nav_config_server' :
+                case 'list_config_nav_config_iam_blockip':
+                case 'list_config_nav_config_iam_useragent':
+                case 'list_config_nav_config_iam_policy':{
                     nav_click(event_target_id);
                     break;
                 }

@@ -1,7 +1,3 @@
 .well-known/
-config/
 data/
-logs/
 node_modules/
-microservice/config/
-microservice/data/

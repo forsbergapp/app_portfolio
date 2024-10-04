@@ -12,7 +12,7 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {string}
  */
  const ConfigGetUser = (parameter) => {
-    return file_get_cached('IAM_USER')[parameter];
+    return file_get_cached('CONFIG_IAM_USER')[parameter];
  };
 /**
  * Config get apps
@@ -21,7 +21,7 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {import('../types.js').server_config_apps_record[]|*}
  */
  const ConfigGetApps = (app_id=null, key = null) => {
-    const result = file_get_cached('APPS').APPS.filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
+    const result = file_get_cached('CONFIG_APPS').APPS.filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
                         .reduce((   /**@type{import('../types.js').server_config_apps_record} */app, 
                                     /**@type {*}*/current)=> 
                                     key?app.concat({APP_ID:current.APP_ID, [key]:current[key]}):app.concat(current), []);
@@ -37,12 +37,12 @@ const app_portfolio_title = 'App Portfolio';
         case 'localhost':
         case 'www':{
             //localhost
-            return Object.entries(file_get_cached('APPS'))[0][1].filter(
+            return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
                 (/**@type{import('../types.js').server_config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
         }
         default:{
             try {
-                return Object.entries(file_get_cached('APPS'))[0][1].filter(
+                return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
                     (/**@type{import('../types.js').server_config_apps_record}*/app)=>{return host.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
             } catch (error) {
                 //request can be called from unkown hosts
@@ -60,7 +60,7 @@ const app_portfolio_title = 'App Portfolio';
  */
  const ConfigGetApp = (app_id, data_app_id, parameter) => {
     if (parameter == 'PARAMETERS')
-        return Object.entries(file_get_cached('APPS'))[0][1].filter(
+        return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
                 (/**@type{import('../types.js').server_config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter]
                 .sort((/**@type{{}}*/a, /**@type{{}}*/b) => {
                     const x = Object.keys(a)[0].toLowerCase();
@@ -74,7 +74,7 @@ const app_portfolio_title = 'App Portfolio';
                     return 0;
                 });
     else
-        return Object.entries(file_get_cached('APPS'))[0][1].filter(
+        return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
                 (/**@type{import('../types.js').server_config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
  };
 /**
@@ -84,7 +84,7 @@ const app_portfolio_title = 'App Portfolio';
   const ConfigAppSecretDBReset = async () => {
     /**@type{import('./server.service.js')} */
     const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-    const file = await file_get('APPS', true);
+    const file = await file_get('CONFIG_APPS', true);
     /**@type{import('../types.js').server_config_apps_record[]}*/
     const APPS = file.file_content.APPS;
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
@@ -100,7 +100,7 @@ const app_portfolio_title = 'App Portfolio';
             app.SECRETS[`SERVICE_DB_DB${db_use}_APP_PASSWORD`] = '';
         }   
     }
-    await file_update('APPS', file.transaction_id, file.file_content);
+    await file_update('CONFIG_APPS', file.transaction_id, file.file_content);
     await file_set_cache_all();
  };
 
@@ -113,9 +113,9 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {Promise.<void>}
  */
 const ConfigAppSecretUpdate = async (app_id, data) => {
-    const file = await file_get('APPS', true);
+    const file = await file_get('CONFIG_APPS', true);
     file.file_content.APPS.filter((/**@type{*}*/row)=> row.APP_ID==data.app_id)[0].SECRETS[data.parameter_name] = data.parameter_value;
-    await file_update('APPS', file.transaction_id, file.file_content);
+    await file_update('CONFIG_APPS', file.transaction_id, file.file_content);
     await file_set_cache_all();
 };
  /**
@@ -128,7 +128,7 @@ const ConfigAppSecretUpdate = async (app_id, data) => {
  * @returns {Promise.<void>}
  */
   const ConfigAppParameterUpdate = async (app_id, resource_id, data) => {
-    const file = await file_get('APPS', true);
+    const file = await file_get('CONFIG_APPS', true);
     
     for (const app of file.file_content.APPS){
         if (app.APP_ID == resource_id)
@@ -141,7 +141,7 @@ const ConfigAppSecretUpdate = async (app_id, data) => {
                 }           
             }
     }
-    await file_update('APPS', file.transaction_id, file.file_content);
+    await file_update('CONFIG_APPS', file.transaction_id, file.file_content);
     await file_set_cache_all();
  };
 /**
@@ -152,9 +152,9 @@ const ConfigAppSecretUpdate = async (app_id, data) => {
  */
 const ConfigGet = (config_group, parameter) => {
     if (config_group=='METADATA')
-        return parameter?file_get_cached('SERVER')[config_group][parameter]:file_get_cached('SERVER')[config_group];
+        return parameter?file_get_cached('CONFIG_SERVER')[config_group][parameter]:file_get_cached('CONFIG_SERVER')[config_group];
     else{
-        for (const config_parameter_row of file_get_cached('SERVER')[config_group]){
+        for (const config_parameter_row of file_get_cached('CONFIG_SERVER')[config_group]){
             for (const key of Object.keys(config_parameter_row)){
                 if (key==parameter){
                     return config_parameter_row[key];
@@ -166,11 +166,19 @@ const ConfigGet = (config_group, parameter) => {
 };
 /**
  * Config exists
+ * Checks if all config files exist
  * @returns {Promise<boolean>}
  */
 const ConfigExists = async () => {
     try {
-        await file_get('SERVER');    
+        await file_get('CONFIG_APPS');
+        await file_get('CONFIG_SERVER');
+        await file_get('CONFIG_IAM_BLOCKIP');
+        await file_get('CONFIG_IAM_POLICY');
+        await file_get('CONFIG_IAM_USER');
+        await file_get('CONFIG_IAM_USERAGENT');
+        await file_get('CONFIG_MICROSERVICE');
+        await file_get('CONFIG_MICROSERVICE_SERVICES');
         return true;
     } catch (error) {
         return false;
@@ -202,22 +210,22 @@ const DefaultConfig = async () => {
                 [import('../types.js').server_db_file_db_name, import('../types.js').microservice_config_service]]} 
     */
     const config_obj = [
-                            ['SERVER',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APPS',                        await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_apps.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IAM_BLOCKIP',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_iam_blockip.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IAM_POLICY',                  await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IAM_USERAGENT',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_iam_useragent.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IAM_USER',                    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config_iam_user.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['MICROSERVICE_CONFIG',         await fs.promises.readFile(process.cwd() + `${SLASH}microservice${SLASH}default_microservice_config.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['MICROSERVICE_SERVICES',       await fs.promises.readFile(process.cwd() + `${SLASH}microservice${SLASH}default_microservices.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
+                            ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_APPS',                     await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_apps.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_BLOCKIP',              await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_iam_blockip.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_POLICY',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_USERAGENT',            await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_iam_useragent.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_USER',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_iam_user.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_MICROSERVICE',             await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_microservice.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_MICROSERVICE_SERVICES',    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_microservice_services.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
                         ]; 
     //set server parameters
     config_obj[0][1].SERVER.map((/**@type{import('../types.js').server_config_server_server}*/row)=>{
         for (const key of Object.keys(row)){
             if (key=='HTTPS_KEY')
-                row.HTTPS_KEY = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
+                row.HTTPS_KEY = `${SLASH}data${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
             if (key=='HTTPS_CERT')
-                row.HTTPS_CERT = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
+                row.HTTPS_CERT = `${SLASH}data${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
         } 
     });
     //generate hash
@@ -252,12 +260,11 @@ const DefaultConfig = async () => {
     //set paths in microservice config
     /**@type{import('../types.js').microservice_config} */
     const microservice_config = config_obj[6][1];
-    microservice_config?microservice_config.PATH_DATA             = `${SLASH}microservice${SLASH}${microservice_config.PATH_DATA}${SLASH}`:'';
-    microservice_config?microservice_config.PATH_TEMP             = `${SLASH}microservice${SLASH}${microservice_config.PATH_TEMP}${SLASH}`:'';
+    microservice_config?microservice_config.PATH_DATA             = `${SLASH}data${SLASH}microservice${SLASH}data${SLASH}`:'';
     //set paths in microservice services
     config_obj[7][1].SERVICES.map((/**@type{import('../types.js').microservice_config_service_record}*/row)=>{
-        row.HTTPS_KEY             = `${SLASH}microservice${SLASH}config${SLASH}${row.HTTPS_KEY}`;
-        row.HTTPS_CERT            = `${SLASH}microservice${SLASH}config${SLASH}${row.HTTPS_CERT}`;
+        row.HTTPS_KEY             = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_KEY}`;
+        row.HTTPS_CERT            = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_CERT}`;
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
     });
     for (const config_row of config_obj){
@@ -334,7 +341,7 @@ const ConfigFileSave = async (resource_id, config, maintenance, configuration, c
     const file_config = await file_get(resource_id, true);
     if (config){
         //file updated
-        if (resource_id=='SERVER'){
+        if (resource_id=='CONFIG_SERVER'){
             const metadata = file_config.file_content.METADATA;
             file_config.file_content = config;
             file_config.file_content.METADATA = metadata;
@@ -342,7 +349,7 @@ const ConfigFileSave = async (resource_id, config, maintenance, configuration, c
         else
             file_config.file_content = config;
     }
-    if (resource_id=='SERVER'){
+    if (resource_id=='CONFIG_SERVER'){
         file_config.file_content.METADATA.MAINTENANCE = maintenance ?? file_config.file_content.METADATA.MAINTENANCE;
         file_config.file_content.METADATA.CONFIGURATION = configuration ?? file_config.file_content.METADATA.CONFIGURATION;
         file_config.file_content.METADATA.COMMENT = comment ?? file_config.file_content.METADATA.COMMENT;
@@ -355,7 +362,7 @@ const ConfigFileSave = async (resource_id, config, maintenance, configuration, c
  * @returns {boolean}
  */
 const CheckFirstTime = () => {
-    if (file_get_cached('IAM_USER').username=='')
+    if (file_get_cached('CONFIG_IAM_USER').username=='')
         return true;
     else
         return false;
@@ -370,11 +377,11 @@ const CheckFirstTime = () => {
 const CreateSystemAdmin = async (admin_name, admin_password) => {
     /**@type{import('./security.service.js')} */
     const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.service.js`);
-    const file = await file_get('IAM_USER', true);
+    const file = await file_get('CONFIG_IAM_USER', true);
     file.file_content.username = admin_name;
     file.file_content.password = await PasswordCreate(admin_password);
     file.file_content.modified = new Date().toISOString();
-    await file_update('IAM_USER', file.transaction_id, file.file_content)
+    await file_update('CONFIG_IAM_USER', file.transaction_id, file.file_content)
     .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
 };
 
