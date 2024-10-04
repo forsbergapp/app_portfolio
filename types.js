@@ -891,7 +891,8 @@
  *              LOCK:number, 
  *              TRANSACTION_ID:number|null, 
  *              TRANSACTION_CONTENT: object|string|null, 
- *              PATH:string|null, 
+ *              PATH:string, 
+ *              FILENAME?:string,
  *              CACHE_CONTENT?:* }} server_db_file_db_record
  */
 
