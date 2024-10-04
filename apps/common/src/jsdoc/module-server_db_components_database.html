@@ -142,8 +142,11 @@
 
 
 <div class="description">
-    <p>Install demo users with user settings from /scripts/demo/demo.json
-and reading images in /scripts/demo/demo*.webp</p>
+    <p>Install demo users
+Creates user settings and imports images to base64 format
+Creates random social records for social types LIKE, VIEW, VIEW_ANONYMOUS, FOLLOWER, POSTS_LIKE, POSTS_VIEW and POSTS_VIEW_ANONYMOUS
+Random records are created using 2 lists of all users and creates records until two groups both have 50% samples with unique users in each sample of social type
+Returns log about records created</p>
 </div>
 
 
@@ -282,7 +285,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line399">line 399</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line412">line 412</a>
     </li></ul></dd>
     
 
@@ -448,7 +451,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line976">line 976</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line989">line 989</a>
     </li></ul></dd>
     
 
@@ -587,7 +590,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line16">line 16</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line32">line 32</a>
     </li></ul></dd>
     
 
@@ -720,7 +723,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line21">line 21</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line37">line 37</a>
     </li></ul></dd>
     
 
@@ -853,7 +856,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line26">line 26</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line42">line 42</a>
     </li></ul></dd>
     
 
@@ -1013,7 +1016,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line61">line 61</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -1156,7 +1159,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line304">line 304</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line316">line 316</a>
     </li></ul></dd>
     
 
@@ -1250,7 +1253,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line1078">line 1078</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line1089">line 1089</a>
     </li></ul></dd>
     
 
@@ -1410,7 +1413,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line317">line 317</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line329">line 329</a>
     </li></ul></dd>
     
 
@@ -1452,7 +1455,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
 
     
-    <h4 class="name" id="~install_db_get_files"><span class="type-signature">(async, inner) </span>install_db_get_files<span class="signature">(json_type)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~install_db_get_files"><span class="type-signature">(async, inner) </span>install_db_get_files<span class="signature">(install_type)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1496,7 +1499,7 @@ and reading images in /scripts/demo/demo*.webp</p>
 
         <tr>
             
-                <td class="name"><code>json_type</code></td>
+                <td class="name"><code>install_type</code></td>
             
 
             <td class="type">
@@ -1556,7 +1559,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line33">line 33</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line49">line 49</a>
     </li></ul></dd>
     
 
@@ -1806,7 +1809,7 @@ and reading images in /scripts/demo/demo*.webp</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line1032">line 1032</a>
+        <a href="server_db_components_database.js.html">server/db/components/database.js</a>, <a href="server_db_components_database.js.html#line1045">line 1045</a>
     </li></ul></dd>
     
 

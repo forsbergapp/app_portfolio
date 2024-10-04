@@ -49,12 +49,22 @@ const common = await import(path_common);
 const APP_GLOBAL = {
                     'docs':[{'id':1,
                             'doc_title':'Diagram',
+                            'doc_type':'IMAGE',
                             'doc_url':'/common/documents/app_portfolio.webp',
-                            'doc_url_small':'/common/documents/app_portfolio_small.webp'},
+                            'doc_image':'/common/documents/app_portfolio.webp',
+                            'doc_image_small':'/common/documents/app_portfolio_small.webp'},
                             {'id':2,
                             'doc_title':'Data Model',
+                            'doc_type':'IMAGE',
                             'doc_url':'/common/documents/data_model.webp',
-                            'doc_url_small':'/common/documents/data_model_small.webp'}
+                            'doc_image':'/common/documents/data_model.webp',
+                            'doc_image_small':'/common/documents/data_model_small.webp'},
+                            {'id':3,
+                            'doc_title':'JSDoc',
+                            'doc_type':'URL',
+                            'doc_url':'/info/jsdoc',
+                            'doc_image':null,
+                            'doc_image_small':null}
                             ]
 };
 Object.seal(APP_GLOBAL);
@@ -102,12 +112,13 @@ const app_event_click = event => {
                 case 'doc_list':
                 case event.target.classList.contains('doc_list_item_image')?event_target_id:'':{
                     const target_row = common.element_row(event.target);
-                    if (target_row.querySelector('.doc_list_item_image')?.getAttribute('data-full_size'))
+                    if (target_row.querySelector('.doc_list_item_image')?.getAttribute('data-type'))
                         common.ComponentRender({
                             mountDiv:   'common_window_info',
                             data:       {
-                                        info:0,
-                                        url:target_row.querySelector('.doc_list_item_image')?.getAttribute('data-full_size'),
+                                        //show IMAGE type 0 or URL type 1
+                                        info:target_row.querySelector('.doc_list_item_image')?.getAttribute('data-type')=='IMAGE'?0:1,
+                                        url:target_row.querySelector('.doc_list_item_image')?.getAttribute('data-url'),
                                         content_type:null, 
                                         iframe_content:null
                                         },

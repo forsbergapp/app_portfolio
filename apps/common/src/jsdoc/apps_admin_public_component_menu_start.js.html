@@ -109,7 +109,7 @@ const component = async props => {
     ]:[];
     //system admin
     /**@type{0|1|null} */
-    const maintenance = props.data.system_admin!=null?await props.methods.FFB({path:'/server-config/config/SERVER', query:'config_group=METADATA&amp;parameter=MAINTENANCE', method:'GET', authorization_type:'SYSTEMADMIN'})
+    const maintenance = props.data.system_admin!=null?await props.methods.FFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=METADATA&amp;parameter=MAINTENANCE', method:'GET', authorization_type:'SYSTEMADMIN'})
                                 .then((/**@type{string}*/result)=>JSON.parse(result).data):null;
 
    const onMounted = async () =>{
