@@ -434,34 +434,33 @@ const button_save = async (item) => {
             break;
         }
         case 'config_save':{
-            const config_create_server_json = () => {
-                /**@type{object[]} */
-                const config_json = [];
-                CommonAppDocument.querySelectorAll('#list_config .list_config_group').forEach((/**@type{HTMLElement}*/e_group) => 
+            const config_server = () => {
+                /**@type{object} */
+                let config_server = {};
+                CommonAppDocument.querySelectorAll('#list_config .list_config_group').forEach((/**@type{HTMLElement}*/config_group_element) => 
                     {
-                        let config_group='';
-                        CommonAppDocument.querySelectorAll(`#${e_group.id} .list_config_row`).forEach((/**@type{HTMLElement}*/e_row) => 
-                                {
-                                    config_group += `{"${e_row.children[0].children[0].innerHTML}": ${JSON.stringify(e_row.children[1].children[0].innerHTML)}, 
-                                                      "COMMENT": ${JSON.stringify(e_row.children[2].children[0].innerHTML)}}`;
-                                    if (e_group.lastChild != e_row)
-                                        config_group += ',';
-                                }
-                        );
-                        config_json.push(JSON.parse(`[${config_group}]`));
+                        const config_group  = {
+                                                [config_group_element.querySelector('.list_config_group_title div')?.innerHTML ?? '']:
+                                                        Array.from(config_group_element.querySelectorAll('.list_config_row')).map(config_group_row => 
+                                                            {
+                                                                return {
+                                                                    [config_group_row.querySelectorAll('.list_config_col div')[0].innerHTML]:
+                                                                                config_group_row.querySelectorAll('.list_config_col div')[1].innerHTML,
+                                                                    COMMENT:    config_group_row.querySelectorAll('.list_config_col div')[2].innerHTML ?? ''
+                                                                };
+                                                            }
+                                                        )
+                                            };
+                        config_server = {...config_server, ...config_group};
                     }
                 );
-                return {   
-                            SERVER:             config_json[0],
-                            SERVICE_IAM:        config_json[1],
-                            SERVICE_SOCKET:     config_json[2],
-                            SERVICE_DB:         config_json[3],
-                            SERVICE_LOG:        config_json[4]
-                        };
+                return config_server;
             };
-            const file = CommonAppDocument.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring('list_config_nav_'.length).toUpperCase();
+            const file = CommonAppDocument.querySelectorAll('#menu_content .list_nav .list_nav_selected_tab')[0].id.substring('list_config_nav_'.length).toUpperCase();
             //file:'CONFIG_SERVER', 'CONFIG_APPS', 'CONFIG_IAM_BLOCKIP', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_IAM_USER', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
-            const json_data = { config:    file=='SERVER'?config_create_server_json():JSON.parse(CommonAppDocument.querySelector('#list_config_edit').innerHTML)};
+            const json_data = { config:    file=='CONFIG_SERVER'?
+                                                config_server():
+                                                    JSON.parse(CommonAppDocument.querySelector('#list_config_edit').innerHTML)};
 
             common.FFB({path:`/server-config/config/${file}`, method: 'PUT', authorization_type:'SYSTEMADMIN', body:json_data, spinner_id:item});
             break;
