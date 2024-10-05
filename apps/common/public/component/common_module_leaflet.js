@@ -10,12 +10,12 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
 
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      longitude:string,
  *                      latitude:string,
  *                      app_eventListeners:import('../../../common_types.js').CommonGlobal['app_eventListeners']},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT
  *                       }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -56,7 +56,7 @@ const component = async props => {
             for (const listener of props.data.app_eventListeners.LEAFLET){
                 if(listener[0]=='DOCUMENT' || listener[0]=='WINDOW'){
                     //document and window events are both created on document
-                    props.methods.common_document.removeEventListener(listener[2], listener[3]);
+                    props.methods.COMMON_DOCUMENT.removeEventListener(listener[2], listener[3]);
                 }
                 else
                     listener[1].removeEventListener(listener[2], listener[3]);

@@ -45,7 +45,7 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
 /**
  * div common_dialogue_user_menu_app_theme used to show optional component app_theme.js
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      app_id:number,
  *                      user_account_id:number,
  *                      common_app_id:number,
@@ -61,12 +61,12 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
  *                      user_direction:string,
  *                      user_arabic_script:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      user_session_countdown:import('../../../common_types.js').CommonModuleCommon['user_session_countdown'],
- *                      show_message:import('../../../common_types.js').CommonModuleCommon['show_message']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB'],
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      commonUserSessionCountdown:import('../../../common_types.js').CommonModuleCommon['commonUserSessionCountdown'],
+ *                      commonMessageShow:import('../../../common_types.js').CommonModuleCommon['commonMessageShow']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -74,15 +74,15 @@ const template = props =>`  <div id='common_dialogue_user_menu_username'>${props
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show1');
-    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
+    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     //Fetch settings with direction, timezone and arabic script
     /**@type{{id:number, app_setting_type_name:string, value:string, display_data:string}[]} */
-    const settings = props.data.system_admin_only == 1?[]:await props.methods.FFB({path:'/server-db/app_settings_display', query:`data_app_id=${props.data.data_app_id}`, method:'GET', authorization_type:'APP_DATA'})
+    const settings = props.data.system_admin_only == 1?[]:await props.methods.commonFFB({path:'/server-db/app_settings_display', query:`data_app_id=${props.data.data_app_id}`, method:'GET', authorization_type:'APP_DATA'})
                                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
-    const user = (props.data.username || props.data.user_account_id!=null)?await props.methods.FFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
+    const user = (props.data.username || props.data.user_account_id!=null)?await props.methods.commonFFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
                                                                 .then((/**@type{string}*/result)=>JSON.parse(result))
                                                                 .catch((/**@type{Error}*/error)=>{throw error;}):null;
                                     
@@ -91,7 +91,7 @@ const component = async props => {
             return user.identity_provider_id!=null;
         else {
             //User not found
-            props.methods.show_message('ERROR', '20305', null, null, null, props.data.common_app_id);
+            props.methods.commonMessageShow('ERROR', '20305', null, null, null, props.data.common_app_id);
             return null;
         }
     };
@@ -99,21 +99,21 @@ const component = async props => {
     const adjust_logged_out_logged_in = () =>{
         //set logged out or logged in
         if (props.data.username || (props.data.user_account_id!=null && is_provider_user())){
-            props.methods.common_document.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'inline-block';
-            props.methods.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'none';
+            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'inline-block';
+            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'none';
             //admin does not show log out icon here
             if (props.data.app_id == props.data.common_app_id)
-                props.methods.common_document.querySelector('#common_dialogue_user_menu_log_out').style.display = 'none';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_log_out').style.display = 'none';
         }
         else
             if (props.data.system_admin){
-                props.methods.common_document.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'none';
-                props.methods.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'none';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'none';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'none';
             }
             else{
-                props.methods.common_document.querySelector('#common_dialogue_user_menu_username').style.display = 'none';
-                props.methods.common_document.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'none';
-                props.methods.common_document.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'inline-block';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_username').style.display = 'none';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'none';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'inline-block';
             }
     };
     const onMounted = async () =>{                                                               
@@ -121,7 +121,7 @@ const component = async props => {
         //mount select
         if (props.data.system_admin_only!=1){
             //Locale
-            await props.methods.ComponentRender({
+            await props.methods.commonComponentRender({
                 mountDiv:   'common_dialogue_user_menu_user_locale_select', 
                 data:       {
                             default_data_value:props.data.user_locale,
@@ -134,10 +134,10 @@ const component = async props => {
                             column_value:'locale',
                             column_text:'text'
                             },
-                methods:    {FFB:props.methods.FFB},
+                methods:    {commonFFB:props.methods.commonFFB},
                 path:       '/common/component/common_select.js'});
             //Timezone
-            await props.methods.ComponentRender({
+            await props.methods.commonComponentRender({
                 mountDiv:  'common_dialogue_user_menu_user_timezone_select', 
                 data:       {
                             default_data_value:props.data.user_timezone,
@@ -150,10 +150,10 @@ const component = async props => {
                             column_value:'value',
                             column_text:'display_data'
                             },
-                methods:    {FFB:props.methods.FFB},
+                methods:    {commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
             //Direction with default ' '
-            await props.methods.ComponentRender({
+            await props.methods.commonComponentRender({
                 mountDiv:   'common_dialogue_user_menu_user_direction_select', 
                 data:       {
                             default_data_value:props.data.user_direction,
@@ -166,10 +166,10 @@ const component = async props => {
                             column_value:'value',
                             column_text:'display_data'
                             },
-                methods:    {FFB:props.methods.FFB},
+                methods:    {commonFFB:props.methods.commonFFB},
                 path:       '/common/component/common_select.js'});   
             //Arabic script with default ' '
-            await props.methods.ComponentRender({
+            await props.methods.commonComponentRender({
                 mountDiv:   'common_dialogue_user_menu_user_arabic_script_select', 
                 data:       {
                             default_data_value:props.data.user_arabic_script,
@@ -182,20 +182,20 @@ const component = async props => {
                             column_value:'value',
                             column_text:'display_data'
                             },
-                methods:    {FFB:props.methods.FFB},
+                methods:    {commonFFB:props.methods.commonFFB},
                 path:       '/common/component/common_select.js'});
         }
         if ((props.data.system_admin_only == 1)==false){
             //set current value on all the selects
-            props.methods.set_current_value('common_dialogue_user_menu_user_locale_select', props.data.user_locale);
-            props.methods.set_current_value('common_dialogue_user_menu_user_timezone_select', props.data.user_timezone);
-            props.methods.set_current_value('common_dialogue_user_menu_user_direction_select', props.data.user_direction ?? '');
-            props.methods.set_current_value('common_dialogue_user_menu_user_arabic_script_select', props.data.user_arabic_script ?? '');
+            props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_locale_select', props.data.user_locale);
+            props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_timezone_select', props.data.user_timezone);
+            props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_direction_select', props.data.user_direction ?? '');
+            props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_arabic_script_select', props.data.user_arabic_script ?? '');
         }
         adjust_logged_out_logged_in();
         if (props.data.token_exp && props.data.token_iat){
             const element_id = 'common_dialogue_user_menu_token_countdown_time';
-            props.methods.user_session_countdown(props.methods.common_document.querySelector(`#${element_id}`), props.data.token_exp);
+            props.methods.commonUserSessionCountdown(props.methods.COMMON_DOCUMENT.querySelector(`#${element_id}`), props.data.token_exp);
         }   
     };
     return {

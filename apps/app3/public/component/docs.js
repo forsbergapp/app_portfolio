@@ -13,7 +13,7 @@ const template = props => ` ${props.docs.map(doc=>
                             }`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      docs:[{ id:number, 
  *                              doc_type:'URL'|'IMAGE', 
  *                              doc_url:string, 
@@ -21,7 +21,7 @@ const template = props => ` ${props.docs.map(doc=>
  *                              doc_image_small:string, 
  *                              doc_title:string}]
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props 
+ *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,

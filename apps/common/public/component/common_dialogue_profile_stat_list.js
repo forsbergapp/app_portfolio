@@ -30,13 +30,13 @@ const template = props =>`
 
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      stat_choice:number,
  *                      stat_list_app_rest_url:string,
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -54,7 +54,7 @@ const component = async props => {
         path = props.data.stat_list_app_rest_url ?? '';
     }
     /**@type{import('../../../common_types.js').CommonProfileStatRecord[]} */
-    const stat_list = await props.methods.FFB({path:path, query:`statchoice=${props.data.stat_choice}`, method:'GET', authorization_type:'APP_DATA'})
+    const stat_list = await props.methods.commonFFB({path:path, query:`statchoice=${props.data.stat_choice}`, method:'GET', authorization_type:'APP_DATA'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     return {

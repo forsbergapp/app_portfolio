@@ -24,7 +24,7 @@ const template = props => `
                             <div id='common_user_verify_cancel' class='common_dialogue_button common_icon'></div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      user_verification_type:string,
  *                      username_login:string,
  *                      password_login:string,
@@ -32,7 +32,7 @@ const template = props => `
  *                      password_signup:string,
  *                      title:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      function_data_function:function
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
@@ -41,8 +41,8 @@ const template = props => `
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show2');
-    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show2');
+    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     let verification_type ='';
     let username = '';
     let password = '';
@@ -70,7 +70,7 @@ const component = async props => {
     }
     
     const onMounted = async () =>{
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv} #common_user_verify_cancel`)['data-function'] = props.methods.function_data_function;
+        props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} #common_user_verify_cancel`)['data-function'] = props.methods.function_data_function;
     };
     return {
         lifecycle:  {onMounted:onMounted},

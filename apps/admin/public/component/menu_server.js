@@ -69,9 +69,9 @@ const template = props => ` <div id='menu_10_content_widget1' class='widget'>
                             </div>` ;
 /**
 * 
-* @param {{ data:{      common_mountdiv:string},
-*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
-*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+* @param {{ data:{      commonMountdiv:string},
+*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *           lifecycle:  null}} props 
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null, 
@@ -98,7 +98,7 @@ const component = async props => {
         ut_sec = ut_sec%60;
         return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
     };
-    const server_info = await props.methods.FFB({path:'/server/info', method:'GET', authorization_type:'SYSTEMADMIN'})
+    const server_info = await props.methods.commonFFB({path:'/server/info', method:'GET', authorization_type:'SYSTEMADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result));
 
    

@@ -21,7 +21,7 @@ const template = props => ` <div id='about_logo' style='background-image:url(${p
                             <div id='info_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      about_logo:string,
  *                      app_copyright:string,
  *                      app_link_url:string,
@@ -31,15 +31,15 @@ const template = props => ` <div id='about_logo' style='background-image:url(${p
  *                      info_link_terms_name:string,
  *                      info_link_about_name:string
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props 
+ *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null,
  *                      methods:null, 
  *                      template:string}>}
  */
 const method = async props => {
-    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
-    props.methods.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.COMMON_DOCUMENT.querySelector('#dialogues').classList.add('common_dialogues_modal');
     return {
         lifecycle:  null,
         data:       null,

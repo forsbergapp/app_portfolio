@@ -35,9 +35,9 @@ const template = props => `<div id='menu_2_content_widget1' class='widget'>
                             </div>` ;
 /**
  * 
- * @param {{ data:{      common_mountdiv:string},
- *           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
- *                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+ * @param {{ data:{      commonMountdiv:string},
+ *           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
  *           lifecycle:  null}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
@@ -52,11 +52,11 @@ const component = async props => {
      * @returns{Promise.<{count_connected:number}>}
      */
     const get_count = async (identity_provider_id, logged_in) => {
-        return props.methods.FFB({path:'/server-socket/socket-stat', query:`identity_provider_id=${identity_provider_id}&logged_in=${logged_in}`, method:'GET', authorization_type:'APP_ACCESS'})
+        return props.methods.commonFFB({path:'/server-socket/socket-stat', query:`identity_provider_id=${identity_provider_id}&logged_in=${logged_in}`, method:'GET', authorization_type:'APP_ACCESS'})
                 .then((/**@type{string}*/result)=>JSON.parse(result));
     };
     /**@type{[{identity_provider_id:string, provider_name:String, count_users:number, count_connected:number}]} */
-    const user_stat = await props.methods.FFB({path:'/server-db_admin/user_account-stat', method:'GET', authorization_type:'APP_ACCESS'})
+    const user_stat = await props.methods.commonFFB({path:'/server-db_admin/user_account-stat', method:'GET', authorization_type:'APP_ACCESS'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     //add count stat
     for (const row of user_stat)

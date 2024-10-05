@@ -5,7 +5,7 @@
 
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
-const {common_setTimeout} = await import(path_common);
+const {commonWindowSetTimeout} = await import(path_common);
 
 
 /**
@@ -642,7 +642,7 @@ RubiksCube.prototype.scramble = function(num) {
 			this.makeMove(moves[Math.floor(Math.random()*moves.length)] + (Math.random() > 1/2 ? '\'' : ''));
 		}
 		const checkAgain = function(){
-			common_setTimeout(function() {
+			commonWindowSetTimeout(function() {
 				if(me.queue.length == 0){
 					me.turnSpeed = turnSpeed;
 				} else {
@@ -739,7 +739,7 @@ RubiksCube.prototype.rotateFace = function(face, d){
 			me.makeNextMove();
 		}
 		else
-			common_setTimeout(() => {rotate();me.render()}, 10);
+			commonWindowSetTimeout(() => {rotate();me.render()}, 10);
 	};
 	rotate();
 };

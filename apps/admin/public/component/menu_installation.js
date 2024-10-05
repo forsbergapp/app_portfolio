@@ -37,10 +37,10 @@ const template = props => props.system_admin?`  <div id='menu_7_content_widget1'
                                                 </div>`;
 /**
 * 
-* @param {{data:{       common_mountdiv:string,
+* @param {{data:{       commonMountdiv:string,
 *                       system_admin:string},
-*          methods:{    common_document:import('../../../common_types.js').CommonAppDocument,
-*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*          methods:{    COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *          lifecycle:   null}} props 
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null, 
@@ -50,7 +50,7 @@ const template = props => props.system_admin?`  <div id='menu_7_content_widget1'
 const component = async props => {
     //checks installed if system admin
     /**@type{boolean|null} */
-    const installed = props.data.system_admin?await props.methods.FFB({path:'/server-db_admin/database-installation', method:'GET', authorization_type:'SYSTEMADMIN'})
+    const installed = props.data.system_admin?await props.methods.commonFFB({path:'/server-db_admin/database-installation', method:'GET', authorization_type:'SYSTEMADMIN'})
                                 .then((/**@type{string}*/result)=>JSON.parse(result)[0].installed==1?true:false):null;
    return {
        lifecycle:   null,

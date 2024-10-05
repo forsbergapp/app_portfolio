@@ -48,17 +48,17 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
                             </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      text_class:string,
  *                      message_type:'ERROR_BFF'|'ERROR'|'INFO'|'EXCEPTION'|'LOG'|'CONFIRM'|'PROGRESS',
  *                      data_app_id:number,
  *                      code:string,
  *                      message:*},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB'],
  *                      function_event:function,
- *                      componentRemove:import('../../../common_types.js').CommonModuleCommon['ComponentRemove']
+ *                      commonComponentRemove:import('../../../common_types.js').CommonModuleCommon['commonComponentRemove']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
@@ -66,10 +66,10 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show3');
-    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');      
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show3');
+    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');      
 
-    const function_close = () => { props.methods.componentRemove('common_dialogue_message', true);};
+    const function_close = () => { props.methods.commonComponentRemove('common_dialogue_message', true);};
     let display_message = null;
     let display_message_font_class = null;
     switch (props.data.message_type){
@@ -84,7 +84,7 @@ const component = async props => {
         case 'INFO':
         case 'EXCEPTION':
         case 'LOG':{
-            display_message = props.data.message_type=='ERROR'?await props.methods.FFB(
+            display_message = props.data.message_type=='ERROR'?await props.methods.commonFFB(
                                                 {
                                                     path:'/server-db/app_settings_display', 
                                                     query:`data_app_id=${props.data.data_app_id}&setting_type=MESSAGE&value=${props.data.code}`, 
@@ -110,10 +110,10 @@ const component = async props => {
     }
     const onMounted = async () =>{
         if (props.data.message_type == 'PROGRESS')
-            props.methods.common_document.querySelector('#common_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
+            props.methods.COMMON_DOCUMENT.querySelector('#common_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
         else{
-            props.methods.common_document.querySelector('#common_message_close')['data-function'] = props.data.message_type == 'CONFIRM'?props.methods.function_event:function_close;
-            props.methods.common_document.querySelector('#common_message_close').focus();
+            props.methods.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'] = props.data.message_type == 'CONFIRM'?props.methods.function_event:function_close;
+            props.methods.COMMON_DOCUMENT.querySelector('#common_message_close').focus();
         }
 
     };

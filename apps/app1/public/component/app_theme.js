@@ -25,9 +25,9 @@ const template = () =>` <div id="app_themes">
                         </div>`;
 /**
  * 
- * @param {{data:       {common_mountdiv:string},
+ * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      app_theme_update:import('../js/app.js')['app_theme_update']
  *                      }}} props 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 

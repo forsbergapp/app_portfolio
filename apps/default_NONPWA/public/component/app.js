@@ -10,8 +10,8 @@ const template = () =>` <div id='dialogue_documents' class='dialogue'>
                         </div>`;
 /**
  * 
- * @param {{data:       {common_mountdiv:string},
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props 
+ * @param {{data:       {commonMountdiv:string},
+ *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props 
  * @returns {Promise.<{ lifecycle:  import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:       null, 
  *                      methods:    null,

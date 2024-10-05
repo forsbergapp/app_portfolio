@@ -2,11 +2,11 @@
  * Declaration of all common types used in apps
  * 
  * BOM Browser Object Model (contains what is used)
- *  CommonAppWindow
+ *  COMMON_WINDOW
  *  CommonAppEventEventSource
  * 
  * DOM Document Object Model types (contains what is used)
- *  CommonAppDocument
+ *  COMMON_DOCUMENT
  *  CommonAppEvent
  * 
  * Common app types
@@ -50,7 +50,7 @@
 */
 
 /**
- * Type CommonAppWindow
+ * Type COMMON_WINDOW
  * @typedef {{  console:{ warn:function,
  *                      info:function,
  *                      error:function},
@@ -67,17 +67,17 @@
  *                    NumberFormat()        :{resolvedOptions(): Intl.ResolvedNumberFormatOptions},
  *                    DateTimeFormatOptions?:Intl.DateTimeFormatOptions},
  *              prompt:function,
- *              frames:{document:CommonAppDocument},
+ *              frames:{document:COMMON_DOCUMENT},
  *              Promise:function,
  *              ReactDOM?:*,
  *              React?:*,
  *              __VUE_DEVTOOLS_HOOK_REPLAY__?:*,
  *              __VUE_HMR_RUNTIME__?:*,
- *              __VUE__?:*}} CommonAppWindow
+ *              __VUE__?:*}} COMMON_WINDOW
  */
 
 /**
- * Type CommonAppDocument
+ * Type COMMON_DOCUMENT
  * @typedef {{  body:{className:string, requestFullscreen:function, classList:{add:function, remove:function}},
  *              createElement:function,
  *              addEventListener:function,
@@ -86,7 +86,7 @@
  *              exitFullscreen:function,
  *              querySelector:function,
  *              querySelectorAll:function,
- *              title:string}} CommonAppDocument
+ *              title:string}} COMMON_DOCUMENT
  */
 
 /**

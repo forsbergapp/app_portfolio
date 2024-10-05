@@ -19,7 +19,7 @@
  *          system_admin:string|null,
  *          service_socket_client_ID:number,
  *          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
- *          function_getUserAgentPlatform:function,
+ *          function_commonWindowUserAgentPlatform:function,
  *          function_role_icon_class:function,
  *          function_get_order_by:function,
  *          function_roundOff:function,
@@ -134,7 +134,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                     ${log.timezone}
                                                 </div>
                                                 <div class='list_connected_col common_wide_list_column'>
-                                                    ${props.function_getUserAgentPlatform(log.user_agent) ?? ''}
+                                                    ${props.function_commonWindowUserAgentPlatform(log.user_agent) ?? ''}
                                                 </div>
                                                 <div class='list_connected_col chat_click common_icon' data-id='${log.id}'></div>
                                             </div>`
@@ -324,7 +324,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                             }`;
 /**
 * 
-* @param {{ data:{      common_mountdiv:string,
+* @param {{ data:{      commonMountdiv:string,
 *                       app_id:number,
 *                       system_admin:string,
 *                       monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
@@ -333,14 +333,14 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                       order_by:string,
 *                       service_socket_client_ID:number,
 *                       limit:number},
-*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
-*                       input_control:import('../../../common_types.js').CommonModuleCommon['input_control'],
-*                       ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
-*                       getUserAgentPlatform:import('../../../common_types.js').CommonModuleCommon['getUserAgentPlatform'],
+*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
 *                       get_log_parameters:import('../js/secure.js')['get_log_parameters'],
 *                       show_app_log:import('../js/secure.js')['show_app_log'],
-*                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
-*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*                       commonInputControl:import('../../../common_types.js').CommonModuleCommon['commonInputControl'],
+*                       commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+*                       commonWindowUserAgentPlatform:import('../../../common_types.js').CommonModuleCommon['commonWindowUserAgentPlatform'],
+*                       commonRoundOff:import('../../../common_types.js').CommonModuleCommon['commonRoundOff'],
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *           lifecycle:  null}} props 
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:    null,
@@ -412,7 +412,7 @@ const component = async props => {
      */
     const get_sort = (order_by=0) => {
         const sort = '';
-        for (const col_title of props.methods.common_document.querySelectorAll('#list_app_log .list_title')){
+        for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#list_app_log .list_title')){
             if (col_title.classList.contains('asc'))
                 if (order_by==0)
                     return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
@@ -473,31 +473,31 @@ const component = async props => {
      * @returns {string}
      */
     const get_query = ()=>{
-        const app_id = props.methods.common_document.querySelector('#select_app_menu5 .common_select_dropdown_value').getAttribute('data-value'); 
-        const year = props.methods.common_document.querySelector('#select_year_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        const month = props.methods.common_document.querySelector('#select_month_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        const day  = props.methods.common_document.querySelector('#select_day_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        const app_id = props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5 .common_select_dropdown_value').getAttribute('data-value'); 
+        const year = props.methods.COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        const month = props.methods.COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        const day  = props.methods.COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').getAttribute('data-value');
         
         switch (props.data.monitor_detail){
             case 'CONNECTED':
             case 'APP_LOG':{
-                props.methods.common_document.querySelector('#select_app_menu5').style.display = 'inline-block';
+                props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'inline-block';
                 //search month + 1 for CONNECTED
                 return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${props.data.sort}&order_by=${props.data.order_by}${props.data.query}&limit=${props.data.limit}`;
             }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
-                const logscope = props.methods.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
-                const loglevel = props.methods.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
+                const logscope = props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
+                const loglevel = props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
                 let app_id_filter='';
                 if (logscope=='APP' || logscope=='SERVICE' || logscope=='SERVER-DB'){
                     //show app filter and use it
-                    props.methods.common_document.querySelector('#select_app_menu5').style.display = 'inline-block';
+                    props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'inline-block';
                     app_id_filter = `select_app_id=${app_id}&`;
                 }
                 else{
                     //no app filter for request
-                    props.methods.common_document.querySelector('#select_app_menu5').style.display = 'none';
+                    props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'none';
                     app_id_filter = 'select_app_id=&';
                 }
                 let url_parameters;
@@ -517,13 +517,13 @@ const component = async props => {
      * @param {string} order_by
      */
     const monitor_detail_server_log = (sort, order_by) =>{
-        let search = props.methods.common_document.querySelector('#list_server_log_search_input').textContent;
+        let search = props.methods.COMMON_DOCUMENT.querySelector('#list_server_log_search_input').textContent;
         if (search != null){
-            if (props.methods.input_control(null,{check_valid_list_elements:[[props.methods.common_document.querySelector('#list_server_log_search_input'),100]]})==false)
+            if (props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#list_server_log_search_input'),100]]})==false)
                 return;
         }
         search=search?encodeURI(search):search;
-        props.methods.ComponentRender(
+        props.methods.commonComponentRender(
                 {   mountDiv:'list_server_log',
                     data:{  
                                 system_admin:props.data.system_admin,
@@ -533,8 +533,8 @@ const component = async props => {
                                 sort:sort,
                                 order_by:order_by,
                     },
-                    methods:{   roundOff:props.methods.roundOff,
-                                FFB:props.methods.FFB},
+                    methods:{   commonRoundOff:props.methods.commonRoundOff,
+                               commonFFB:props.methods.commonFFB},
                     path:'/component/menu_monitor_detail_server_log.js'});
     };
     //fetch log parameter data if SERVER_LOG
@@ -556,8 +556,8 @@ const component = async props => {
     //save value for query
     service_log_file_interval = monitor_log_data.parameters.FILE_INTERVAL ?? '';
     //fetch logs except for SERVER_LOG
-    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.FFB({path:path, query:get_query(), method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-    const limit = await props.methods.FFB({path:`/server-config/config-apps/${props.data.app_id}`, query:'key=PARAMETERS', method:'GET', authorization_type:props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS'})
+    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(), method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const limit = await props.methods.commonFFB({path:`/server-config/config-apps/${props.data.app_id}`, query:'key=PARAMETERS', method:'GET', authorization_type:props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS'})
                         .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS));
     if (props.data.monitor_detail=='APP_LOG')
         page_last = logs.length>0?(Math.floor(logs[0].total_rows/limit) * limit):0;
@@ -570,7 +570,7 @@ const component = async props => {
             const options = monitor_log_data.logscope_level_options.map((/**@type{{log_scope:string, log_level: string}}*/row)=>{
                                 return {VALUE:`${row.log_scope}-${row.log_level}`, TEXT:`${row.log_scope} - ${row.log_level}`};});
 
-            await props.methods.ComponentRender({
+            await props.methods.commonComponentRender({
                 mountDiv:'select_logscope5', 
                 data:{ 
                             default_value:'REQUEST - INFO',
@@ -583,7 +583,7 @@ const component = async props => {
                             column_value:'VALUE',
                             column_text:'TEXT'
                 },
-                methods:{   FFB:props.methods.FFB},
+                methods:{  commonFFB:props.methods.commonFFB},
                 path:       '/common/component/common_select.js'});
             monitor_detail_server_log(props.data.sort, props.data.order_by);
         }
@@ -598,10 +598,10 @@ const component = async props => {
         template:   template({  system_admin:props.data.system_admin, 
                                 service_socket_client_ID:props.data.service_socket_client_ID,
                                 monitor_detail:props.data.monitor_detail,
-                                function_getUserAgentPlatform:props.methods.getUserAgentPlatform,
+                                function_commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
                                 function_role_icon_class:role_icon_class,
                                 function_get_order_by:get_order_by,
-                                function_roundOff: props.methods.roundOff,
+                                function_roundOff: props.methods.commonRoundOff,
                                 logs:logs,
                                 monitor_log_data:monitor_log_data.parameters})
     };

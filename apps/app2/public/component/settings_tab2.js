@@ -41,23 +41,23 @@ const template = () => `<div id='mapid'></div>
                         </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      app_id:number,
  *                      user_settings:import('../js//types.js').APP_user_setting_record,
  *                      user_locale:string,
  *                      user_timezone:string
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument,
+ *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      component_setting_update:import('../js/app.js')['component_setting_update'],
- *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get'],
  *                      lib_timetable_REPORT_GLOBAL:import('../js/types.js').APP_GLOBAL['lib_timetable']['REPORT_GLOBAL'],
  *                      getTimezone:import('../../../common_types.js').CommonModuleRegional['getTimezone'],
- *                      getTimezoneDate:import('../../../common_types.js').CommonModuleCommon['getTimezoneDate'],
- *                      map_init:import('../../../common_types.js').CommonModuleCommon['map_init'],
- *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']}}} props
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string,
+ *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet'],
+ *                      commonTimezoneDate:import('../../../common_types.js').CommonModuleCommon['commonTimezoneDate'],
+ *                      commonModuleLeafletInit:import('../../../common_types.js').CommonModuleCommon['commonModuleLeafletInit'],
+ *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender']}}} props
+ * @param {{COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *          commonMountdiv:string,
  *          app_id:number,
  *          user_settings:import('../js//types.js').APP_user_setting_record,
  *          }} props 
@@ -67,7 +67,7 @@ const template = () => `<div id='mapid'></div>
  *                      template:string}>}
  */
 const method = async props => {
-    const settings = (await props.methods.app_settings_get()).filter((/**@type{*}*/setting)=>
+    const settings = (await props.methods.commonDbAppSettingsGet()).filter((/**@type{*}*/setting)=>
         setting.app_id == props.data.app_id && 
         setting.app_setting_type_name.startsWith('PLACE'));
 
@@ -75,7 +75,7 @@ const method = async props => {
 
     const onMounted = async () =>{
         //places uses json in value to save multiple attributes
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_popular_place',
             data:       {
                         default_data_value:empty_place.value,
@@ -90,12 +90,12 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
-        props.methods.set_current_value(   'setting_select_popular_place', null, 'id', props.data.user_settings.gps_popular_place_id);
-        props.methods.common_document.querySelector('#setting_input_place').textContent = props.data.user_settings.description;
-        props.methods.common_document.querySelector('#setting_input_lat').textContent = props.data.user_settings.gps_lat_text;
-        props.methods.common_document.querySelector('#setting_input_long').textContent = props.data.user_settings.gps_long_text;
+        props.methods.commonSelectCurrentValueSet(   'setting_select_popular_place', null, 'id', props.data.user_settings.gps_popular_place_id);
+        props.methods.COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = props.data.user_settings.description;
+        props.methods.COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = props.data.user_settings.gps_lat_text;
+        props.methods.COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = props.data.user_settings.gps_long_text;
 
         //init map thirdparty module
         /**
@@ -103,17 +103,17 @@ const method = async props => {
          */
         const dbl_click_event = event => {
             if (event.originalEvent.target.parentNode.id == 'mapid'){
-                props.methods.common_document.querySelector('#setting_input_lat').textContent = event.latlng.lat;
-                props.methods.common_document.querySelector('#setting_input_long').textContent = event.latlng.lng;
+                props.methods.COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = event.latlng.lat;
+                props.methods.COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = event.latlng.lng;
                 //Update GPS position
                 props.methods.component_setting_update('GPS', 'POSITION');
                 const timezone = props.methods.getTimezone(   event.latlng.lat, event.latlng.lng);
-                props.methods.lib_timetable_REPORT_GLOBAL.session_currentDate = props.methods.getTimezoneDate(timezone);
+                props.methods.lib_timetable_REPORT_GLOBAL.session_currentDate = props.methods.commonTimezoneDate(timezone);
             }   
         };
-        await props.methods.map_init('mapid',
-                        props.methods.common_document.querySelector('#setting_input_long').textContent, 
-                        props.methods.common_document.querySelector('#setting_input_lat').textContent,
+        await props.methods.commonModuleLeafletInit('mapid',
+                        props.methods.COMMON_DOCUMENT.querySelector('#setting_input_long').textContent, 
+                        props.methods.COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent,
                         dbl_click_event).then(() => {
             props.methods.component_setting_update('GPS', 'MAP');
         });
