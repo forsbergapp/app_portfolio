@@ -223,8 +223,8 @@ const component = async props => {
             else
                 props.methods.common_document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
 
-            props.methods.common_document.querySelector('#common_user_edit_input_username').innerHTML = user.username;
-            props.methods.common_document.querySelector('#common_user_edit_input_bio').innerHTML = user.bio ?? '';
+            props.methods.common_document.querySelector('#common_user_edit_input_username').textContent = user.username;
+            props.methods.common_document.querySelector('#common_user_edit_input_bio').textContent = user.bio ?? '';
 
             if (user.provider_id == null) {
                 props.methods.common_document.querySelector('#common_user_edit_local').style.display = 'block';
@@ -233,28 +233,28 @@ const component = async props => {
                 //display fetched avatar editable
                 props.methods.common_document.querySelector('#common_user_edit_avatar').style.display = 'block';
                 props.methods.common_document.querySelector('#common_user_edit_avatar_img').style.backgroundImage= user.avatar?`url('${user.avatar}')`:'url()';
-                props.methods.common_document.querySelector('#common_user_edit_input_email').innerHTML = user.email;
-                props.methods.common_document.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
-                props.methods.common_document.querySelector('#common_user_edit_input_password').innerHTML = '',
-                    props.methods.common_document.querySelector('#common_user_edit_input_password_confirm').innerHTML = '',
-                    props.methods.common_document.querySelector('#common_user_edit_input_password_new').innerHTML = '';
-                props.methods.common_document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
+                props.methods.common_document.querySelector('#common_user_edit_input_email').textContent = user.email;
+                props.methods.common_document.querySelector('#common_user_edit_input_new_email').textContent = user.email_unverified;
+                props.methods.common_document.querySelector('#common_user_edit_input_password').textContent = '',
+                    props.methods.common_document.querySelector('#common_user_edit_input_password_confirm').textContent = '',
+                    props.methods.common_document.querySelector('#common_user_edit_input_password_new').textContent = '';
+                props.methods.common_document.querySelector('#common_user_edit_input_password_new_confirm').textContent = '';
 
-                props.methods.common_document.querySelector('#common_user_edit_input_password_reminder').innerHTML = user.password_reminder;
+                props.methods.common_document.querySelector('#common_user_edit_input_password_reminder').textContent = user.password_reminder;
             } else{
                     props.methods.common_document.querySelector('#common_user_edit_local').style.display = 'none';
                     props.methods.common_document.querySelector('#common_user_edit_provider').style.display = 'block';
-                    props.methods.common_document.querySelector('#common_user_edit_provider_id').innerHTML = user.identity_provider_id;
-                    props.methods.common_document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = user.provider_id;
-                    props.methods.common_document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = user.provider_first_name + ' ' + user.provider_last_name;
-                    props.methods.common_document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
-                    props.methods.common_document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
+                    props.methods.common_document.querySelector('#common_user_edit_provider_id').textContent = user.identity_provider_id;
+                    props.methods.common_document.querySelector('#common_user_edit_label_provider_id_data').textContent = user.provider_id;
+                    props.methods.common_document.querySelector('#common_user_edit_label_provider_name_data').textContent = user.provider_first_name + ' ' + user.provider_last_name;
+                    props.methods.common_document.querySelector('#common_user_edit_label_provider_email_data').textContent = user.provider_email;
+                    props.methods.common_document.querySelector('#common_user_edit_label_provider_image_url_data').textContent = user.provider_image_url;
                     props.methods.common_document.querySelector('#common_user_edit_avatar').style.display = 'none';
                     props.methods.common_document.querySelector('#common_user_edit_avatar_img').style.backgroundImage= user.provider_image?`url('${user.provider_image}')`:'url()';
                 } 
-            props.methods.common_document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = props.methods.format_json_date(user.last_logontime, null);
-            props.methods.common_document.querySelector('#common_user_edit_label_data_account_created').innerHTML = props.methods.format_json_date(user.date_created, null);
-            props.methods.common_document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = props.methods.format_json_date(user.date_modified, null);
+            props.methods.common_document.querySelector('#common_user_edit_label_data_last_logontime').textContent = props.methods.format_json_date(user.last_logontime, null);
+            props.methods.common_document.querySelector('#common_user_edit_label_data_account_created').textContent = props.methods.format_json_date(user.date_created, null);
+            props.methods.common_document.querySelector('#common_user_edit_label_data_account_modified').textContent = props.methods.format_json_date(user.date_modified, null);
             props.methods.common_document.querySelector('#common_user_menu_avatar_img').style.backgroundImage= (user.avatar ?? user.provider_image)?
                                                                                                             `url('${user.avatar ?? user.provider_image}')`:
                                                                                                             'url()';

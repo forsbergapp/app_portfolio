@@ -176,19 +176,19 @@ const sendBroadcast = () => {
     let broadcast_type ='';
     let client_id;
     let app_id;
-    const broadcast_message = CommonAppDocument.querySelector('#send_broadcast_message').innerHTML;
+    const broadcast_message = CommonAppDocument.querySelector('#send_broadcast_message').textContent;
 
     if (broadcast_message==''){
         common.show_message('INFO', null, null, 'message_text', '!', common.COMMON_GLOBAL.app_id);
     }
     else{
-        if (CommonAppDocument.querySelector('#client_id').innerHTML==''){
+        if (CommonAppDocument.querySelector('#client_id').textContent==''){
             app_id = CommonAppDocument.querySelector('#select_app_broadcast .common_select_dropdown_value').getAttribute('data-value');
             client_id = '';
             broadcast_type = CommonAppDocument.querySelector('#select_broadcast_type .common_select_dropdown_value').getAttribute('data-value');
         }
         else{
-            client_id = CommonAppDocument.querySelector('#client_id').innerHTML;
+            client_id = CommonAppDocument.querySelector('#client_id').textContent;
             app_id = '';
             broadcast_type = 'CHAT';
         }
@@ -251,7 +251,7 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
                 //show client id
                 CommonAppDocument.querySelector('#client_id_label').style.display = 'inline-block';
                 CommonAppDocument.querySelector('#client_id').style.display = 'inline-block';
-                CommonAppDocument.querySelector('#client_id').innerHTML = client_id;
+                CommonAppDocument.querySelector('#client_id').textContent = client_id;
                 break;
             }
             case 'APP':{
@@ -262,7 +262,7 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
                 //hide client id
                 CommonAppDocument.querySelector('#client_id_label').style.display = 'none';
                 CommonAppDocument.querySelector('#client_id').style.display = 'none';
-                CommonAppDocument.querySelector('#client_id').innerHTML = '';
+                CommonAppDocument.querySelector('#client_id').textContent = '';
                 break;
             }
             case 'ALL':{
@@ -273,7 +273,7 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
                 //hide client id
                 CommonAppDocument.querySelector('#client_id_label').style.display = 'none';
                 CommonAppDocument.querySelector('#client_id').style.display = 'none';
-                CommonAppDocument.querySelector('#client_id').innerHTML = '';
+                CommonAppDocument.querySelector('#client_id').textContent = '';
                 break;
             }
         }
@@ -291,7 +291,7 @@ const set_broadcast_type = () => {
             //hide client id
             CommonAppDocument.querySelector('#client_id_label').style.display = 'none';
             CommonAppDocument.querySelector('#client_id').style.display = 'none';
-            CommonAppDocument.querySelector('#client_id').innerHTML = '';
+            CommonAppDocument.querySelector('#client_id').textContent = '';
             break;
         }
         case 'MAINTENANCE':{
@@ -300,7 +300,7 @@ const set_broadcast_type = () => {
             //hide client id
             CommonAppDocument.querySelector('#client_id_label').style.display = 'none';
             CommonAppDocument.querySelector('#client_id').style.display = 'none';
-            CommonAppDocument.querySelector('#client_id').innerHTML = '';
+            CommonAppDocument.querySelector('#client_id').textContent = '';
             break;
         }
     }
@@ -366,8 +366,8 @@ const button_save = async (item) => {
                                                             password:'',
                                                             password_reminder:'',
                                                             verification_code:''},
-                                            app:{           id: record.children[0].children[0].innerHTML,
-                                                            app_category_id: record.children[5].children[0].innerHTML},
+                                            app:{           id: record.children[0].children[0].textContent,
+                                                            app_category_id: record.children[5].children[0].textContent},
                                             app_parameter: {app_id:0,
                                                             parameter_name:'',
                                                             parameter_value:'',
@@ -395,10 +395,10 @@ const button_save = async (item) => {
                                                             verification_code:''},
                                             app:{           id: 0,
                                                             app_category_id: 0},
-                                            app_parameter: {app_id:record.children[0].children[0].innerHTML,
-                                                            parameter_name:  record.children[1].children[0].innerHTML,
-                                                            parameter_value: record.children[2].children[0].innerHTML,
-                                                            parameter_comment: record.children[3].children[0].innerHTML}});
+                                            app_parameter: {app_id:record.children[0].children[0].textContent,
+                                                            parameter_name:  record.children[1].children[0].textContent,
+                                                            parameter_value: record.children[2].children[0].textContent,
+                                                            parameter_comment: record.children[3].children[0].textContent}});
                 }
             }
             break;
@@ -411,18 +411,18 @@ const button_save = async (item) => {
                     await update_record('user_account',
                                         record,
                                         item,
-                                        {   user_account:{  id:record.children[1].children[0].innerHTML,
-                                                            app_role_id:record.children[2].children[0].innerHTML,
-                                                            active:record.children[4].children[0].innerHTML,
-                                                            user_level:record.children[5].children[0].innerHTML,
-                                                            private:record.children[6].children[0].innerHTML,
-                                                            username:record.children[7].children[0].innerHTML,
-                                                            bio: record.children[8].children[0].innerHTML,
-                                                            email: record.children[9].children[0].innerHTML,
-                                                            email_unverified: record.children[10].children[0].innerHTML,
-                                                            password: record.children[11].children[0].innerHTML,
-                                                            password_reminder: record.children[12].children[0].innerHTML,
-                                                            verification_code: record.children[13].children[0].innerHTML},
+                                        {   user_account:{  id:record.children[1].children[0].textContent,
+                                                            app_role_id:record.children[2].children[0].textContent,
+                                                            active:record.children[4].children[0].textContent,
+                                                            user_level:record.children[5].children[0].textContent,
+                                                            private:record.children[6].children[0].textContent,
+                                                            username:record.children[7].children[0].textContent,
+                                                            bio: record.children[8].children[0].textContent,
+                                                            email: record.children[9].children[0].textContent,
+                                                            email_unverified: record.children[10].children[0].textContent,
+                                                            password: record.children[11].children[0].textContent,
+                                                            password_reminder: record.children[12].children[0].textContent,
+                                                            verification_code: record.children[13].children[0].textContent},
                                             app:{           id: 0,
                                                             app_category_id: 0},
                                             app_parameter: {app_id:0,
@@ -440,13 +440,13 @@ const button_save = async (item) => {
                 CommonAppDocument.querySelectorAll('#list_config .list_config_group').forEach((/**@type{HTMLElement}*/config_group_element) => 
                     {
                         const config_group  = {
-                                                [config_group_element.querySelector('.list_config_group_title div')?.innerHTML ?? '']:
+                                                [config_group_element.querySelector('.list_config_group_title div')?.textContent ?? '']:
                                                         Array.from(config_group_element.querySelectorAll('.list_config_row')).map(config_group_row => 
                                                             {
                                                                 return {
-                                                                    [config_group_row.querySelectorAll('.list_config_col div')[0].innerHTML]:
-                                                                                config_group_row.querySelectorAll('.list_config_col div')[1].innerHTML,
-                                                                    COMMENT:    config_group_row.querySelectorAll('.list_config_col div')[2].innerHTML ?? ''
+                                                                    [config_group_row.querySelectorAll('.list_config_col div')[0].textContent]:
+                                                                                config_group_row.querySelectorAll('.list_config_col div')[1].textContent,
+                                                                    COMMENT:    config_group_row.querySelectorAll('.list_config_col div')[2].textContent ?? ''
                                                                 };
                                                             }
                                                         )
@@ -460,7 +460,7 @@ const button_save = async (item) => {
             //file:'CONFIG_SERVER', 'CONFIG_APPS', 'CONFIG_IAM_BLOCKIP', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_IAM_USER', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
             const json_data = { config:    file=='CONFIG_SERVER'?
                                                 config_server():
-                                                    JSON.parse(CommonAppDocument.querySelector('#list_config_edit').innerHTML)};
+                                                    JSON.parse(CommonAppDocument.querySelector('#list_config_edit').textContent)};
 
             common.FFB({path:`/server-config/config/${file}`, method: 'PUT', authorization_type:'SYSTEMADMIN', body:json_data, spinner_id:item});
             break;
@@ -876,18 +876,18 @@ const show_existing_logfiles = () => {
 
                             //logscope and loglevel
                             CommonAppDocument.querySelector('#select_logscopeu5 .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
-                            CommonAppDocument.querySelector('#select_logscope5 .common_select_dropdown_value').innerText = `${logscope} - ${loglevel}`;
+                            CommonAppDocument.querySelector('#select_logscope5 .common_select_dropdown_value').textContent = `${logscope} - ${loglevel}`;
                             //year
                             CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').setAttribute('data-value', year);
-                            CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').innerText = year;
+                            CommonAppDocument.querySelector('#select_year_menu5 .common_select_dropdown_value').textContent = year;
 
                             //month
                             CommonAppDocument.querySelector('#select_month_menu5 .common_select_dropdown_value').setAttribute('data-value', month);
-                            CommonAppDocument.querySelector('#select_month_menu5 .common_select_dropdown_value').innerText = month;
+                            CommonAppDocument.querySelector('#select_month_menu5 .common_select_dropdown_value').textContent = month;
                             //day if applicable
                             if (APP_GLOBAL.service_log_file_interval=='1D'){
                                 CommonAppDocument.querySelector('#select_day_menu5 .common_select_dropdown_value').setAttribute('data-value', day);
-                                CommonAppDocument.querySelector('#select_day_menu5 .common_select_dropdown_value').innerText = day;
+                                CommonAppDocument.querySelector('#select_day_menu5 .common_select_dropdown_value').textContent = day;
                             }
                                 
 
@@ -950,7 +950,7 @@ const demo_install = () =>{
                         {
                             check_valid_list_elements:[[CommonAppDocument.querySelector('#install_demo_password'),null]]
                         })==true){
-        const json_data = {demo_password: CommonAppDocument.querySelector('#install_demo_password').innerHTML};
+        const json_data = {demo_password: CommonAppDocument.querySelector('#install_demo_password').textContent};
         installation_function(  'install_demo_button_install', null, 
                                 '/server-db_admin/database-demo', 
                                 `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
@@ -1157,22 +1157,21 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
         case 'input':{
             if (event.target.classList.contains('list_edit')){
                 common.element_row(event.target).setAttribute('data-changed-record','1');
-                event.target.innerText = event.target.innerText.replace('\n', '');
                 //app category LOV
                 if (common.element_row(event.target).classList.contains('list_apps_row') && event.target.classList.contains('common_input_lov'))
-                    if (event.target.innerText=='')
-                        event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').innerText = '';
+                    if (event.target.textContent=='')
+                        event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').textContent = '';
                     else
-                        common.lov_action(event, 'APP_CATEGORY', null, '/server-db_admin/app_category', `id=${event.target.innerText}`, 'GET', 'APP_ACCESS', null);
+                        common.lov_action(event, 'APP_CATEGORY', null, '/server-db_admin/app_category', `id=${event.target.textContent}`, 'GET', 'APP_ACCESS', null);
                 //app role LOV
                 if (common.element_row(event.target).classList.contains('list_user_account_row') && event.target.classList.contains('common_input_lov')){
                     let app_role_id_lookup='';
-                    const old_value =event.target.innerText;
+                    const old_value =event.target.textContent;
                     //if empty then lookup default
-                    if (event.target.innerText=='')
+                    if (event.target.textContent=='')
                         app_role_id_lookup='2';
                     else
-                        app_role_id_lookup=event.target.innerText;
+                        app_role_id_lookup=event.target.textContent;
                     common.lov_action(event, 'APP_ROLE', old_value, '/server-db_admin/app_role', `id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null);
                 }
             }

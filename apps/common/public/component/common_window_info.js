@@ -124,7 +124,7 @@ const component = async props => {
             //await delay to avoid browser render error
             await new Promise ((resolve)=>{props.methods.common_setTimeout(()=> {props.methods.common_document.querySelector('#common_window_info_content').contentWindow.print();
                                                             resolve(null);}, 100);})
-            .then(()=>props.methods.common_document.querySelector('#common_window_info').innerHTML='');
+            .then(()=>props.methods.common_document.querySelector('#common_window_info').textContent='');
         }
         else{
             props.methods.common_document.querySelector('#common_window_info').style.visibility='visible';

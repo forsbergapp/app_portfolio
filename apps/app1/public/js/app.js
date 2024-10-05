@@ -135,8 +135,8 @@ const app_event_click = event => {
                 case 'common_user_start_identity_provider_login':{
                     const target_row = common.element_row(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
-                    if (provider_element && provider_element.innerHTML)
-                        user_login_app(null, null, null, parseInt(provider_element.innerHTML));
+                    if (provider_element && provider_element.textContent)
+                        user_login_app(null, null, null, parseInt(provider_element.textContent));
                     break;
                 }
             }

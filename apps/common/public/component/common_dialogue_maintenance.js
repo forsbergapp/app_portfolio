@@ -31,7 +31,7 @@ const component = async props => {
         if(remaining && remaining <= 0)
             props.methods.WindowLocationReload();
         else{
-            props.methods.common_document.querySelector('#common_maintenance_countdown').innerHTML = remaining;
+            props.methods.common_document.querySelector('#common_maintenance_countdown').textContent = remaining;
             props.methods.common_setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
         }
     };    

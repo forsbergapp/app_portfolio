@@ -96,8 +96,8 @@ const method = async props => {
         props.methods.common_document.querySelector('#profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
         props.methods.common_document.querySelector('#profile_user_settings_like').children[1].style.display = `${liked == 1?'block':'none'}`;
 
-        props.methods.common_document.querySelector('#profile_user_settings_info_likes_count').innerHTML = count_likes;
-        props.methods.common_document.querySelector('#profile_user_settings_info_views_count').innerHTML = count_views;
+        props.methods.common_document.querySelector('#profile_user_settings_info_likes_count').textContent = count_likes;
+        props.methods.common_document.querySelector('#profile_user_settings_info_views_count').textContent = count_views;
     };
 
     /**
@@ -108,8 +108,8 @@ const method = async props => {
     const profile_user_setting_stat = id => {
         props.methods.FFB({path:`/server-db/user_account_app_data_post-profile-stat-like/${id}`, method:'GET', authorization_type:'APP_DATA'})
         .then((/**@type{string}*/result)=>{
-            props.methods.common_document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
-            props.methods.common_document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
+            props.methods.common_document.querySelector('#profile_info_user_setting_likes_count').textContent = JSON.parse(result)[0].count_user_post_likes;
+            props.methods.common_document.querySelector('#profile_info_user_setting_liked_count').textContent = JSON.parse(result)[0].count_user_post_liked;
         })
         .catch(()=>null);
     };

@@ -234,8 +234,8 @@ const app_event_click = event => {
                 case 'common_user_start_identity_provider_login':{
                     const target_row = common.element_row(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
-                    if (provider_element && provider_element.innerHTML)
-                        common.user_login(null, null, null, parseInt(provider_element.innerHTML))
+                    if (provider_element && provider_element.textContent)
+                        common.user_login(null, null, null, parseInt(provider_element.textContent))
                             .then(()=>common.ComponentRemove('app_main_page'))
                             .then(()=>init_secure())
                             .catch(()=>null);             
@@ -327,11 +327,11 @@ const customer_create = async () => {
                         body:{
                             user_account_id :common.COMMON_GLOBAL.user_account_id,
                             data_app_id     :common.COMMON_GLOBAL.app_id,
-                            customer_type   :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').innerHTML,
-                            name            :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'name\']').innerHTML,
-                            address         :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'address\']').innerHTML,
-                            city            :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'city\']').innerHTML,
-                            country         :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'country\']').innerHTML
+                            customer_type   :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').textContent,
+                            name            :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'name\']').textContent,
+                            address         :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'address\']').textContent,
+                            city            :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'city\']').textContent,
+                            country         :CommonAppDocument.querySelector('#app_page_secure_tab_content [data-value=\'country\']').textContent
                         },
                         spinner_id:CommonAppDocument.querySelector('.common_app_data_display_button_post').id
                     });
@@ -409,9 +409,9 @@ const show_payment_request = async message =>{
                             },
                 path:       '/common/component/common_app_data_display.js'})
             .then(()=>{
-                CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText = 
-                CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.innerText + ' ' +
-                CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').innerText;
+                CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent = 
+                CommonAppDocument.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent + ' ' +
+                CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').textContent;
 
                 common.user_session_countdown(  CommonAppDocument.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
                                                 JSON.parse(message).exp);
