@@ -8,7 +8,7 @@ const app_portfolio_title = 'App Portfolio';
 
 /**
  * Config get user
- * @param {import('../types.js').config_user_parameter} parameter
+ * @param {import('./types.js').config_user_parameter} parameter
  * @returns {string}
  */
  const ConfigGetUser = (parameter) => {
@@ -18,11 +18,11 @@ const app_portfolio_title = 'App Portfolio';
  * Config get apps
  * @param {number|null} app_id
  * @param {string|null} key
- * @returns {import('../types.js').server_config_apps_record[]|*}
+ * @returns {import('./types.js').server_config_apps_record[]|*}
  */
  const ConfigGetApps = (app_id=null, key = null) => {
     const result = file_get_cached('CONFIG_APPS').APPS.filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
-                        .reduce((   /**@type{import('../types.js').server_config_apps_record} */app, 
+                        .reduce((   /**@type{import('./types.js').server_config_apps_record} */app, 
                                     /**@type {*}*/current)=> 
                                     key?app.concat({APP_ID:current.APP_ID, [key]:current[key]}):app.concat(current), []);
     return result;
@@ -38,12 +38,12 @@ const app_portfolio_title = 'App Portfolio';
         case 'www':{
             //localhost
             return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
-                (/**@type{import('../types.js').server_config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
+                (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
         }
         default:{
             try {
                 return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
-                    (/**@type{import('../types.js').server_config_apps_record}*/app)=>{return host.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
+                    (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return host.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
             } catch (error) {
                 //request can be called from unkown hosts
                 return null;
@@ -55,13 +55,13 @@ const app_portfolio_title = 'App Portfolio';
  * Config get app
  * @param {number|null} app_id
  * @param {number|null} data_app_id
- * @param {import('../types.js').server_config_apps_keys} parameter
+ * @param {import('./types.js').server_config_apps_keys} parameter
  * @returns {*|null}
  */
  const ConfigGetApp = (app_id, data_app_id, parameter) => {
     if (parameter == 'PARAMETERS')
         return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
-                (/**@type{import('../types.js').server_config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter]
+                (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter]
                 .sort((/**@type{{}}*/a, /**@type{{}}*/b) => {
                     const x = Object.keys(a)[0].toLowerCase();
                     const y = Object.keys(b)[0].toLowerCase();
@@ -75,7 +75,7 @@ const app_portfolio_title = 'App Portfolio';
                 });
     else
         return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
-                (/**@type{import('../types.js').server_config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
+                (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
  };
 /**
  * Config app secret reset db username and passwords for database in use
@@ -85,7 +85,7 @@ const app_portfolio_title = 'App Portfolio';
     /**@type{import('./server.service.js')} */
     const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
     const file = await file_get('CONFIG_APPS', true);
-    /**@type{import('../types.js').server_config_apps_record[]}*/
+    /**@type{import('./types.js').server_config_apps_record[]}*/
     const APPS = file.file_content.APPS;
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
     for (const app of APPS){
@@ -146,7 +146,7 @@ const ConfigAppSecretUpdate = async (app_id, data) => {
  };
 /**
  * Config get
- * @param {import('../types.js').server_config_server_group} config_group
+ * @param {import('./types.js').server_config_server_group} config_group
  * @param {string} parameter
  * @returns {string|null}
  */
@@ -194,20 +194,20 @@ const DefaultConfig = async () => {
     /**@type{import('./security.service.js')} */
     const {createSecret}= await import(`file://${process.cwd()}/server/security.service.js`);
     await create_config_and_logs_dir()
-    .catch((/**@type{import('../types.js').server_server_error}*/err) => {
+    .catch((/**@type{import('./types.js').server_server_error}*/err) => {
         throw err;
     }); 
     const i = 0;
     //read all default files
 
-    /**@type{[  [import('../types.js').server_db_file_db_name, import('../types.js').server_config_server],
-                [import('../types.js').server_db_file_db_name, import('../types.js').server_config_apps],
-                [import('../types.js').server_db_file_db_name, import('../types.js').server_config_iam_blockip],
-                [import('../types.js').server_db_file_db_name, import('../types.js').server_config_iam_policy],
-                [import('../types.js').server_db_file_db_name, import('../types.js').server_config_iam_useragent],
-                [import('../types.js').server_db_file_db_name, import('../types.js').server_config_iam_user],
-                [import('../types.js').server_db_file_db_name, import('../types.js').microservice_config],
-                [import('../types.js').server_db_file_db_name, import('../types.js').microservice_config_service]]} 
+    /**@type{[  [import('./types.js').server_db_file_db_name, import('./types.js').server_config_server],
+                [import('./types.js').server_db_file_db_name, import('./types.js').server_config_apps],
+                [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_blockip],
+                [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_policy],
+                [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_useragent],
+                [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_user],
+                [import('./types.js').server_db_file_db_name, import('./types.js').microservice_config],
+                [import('./types.js').server_db_file_db_name, import('./types.js').microservice_config_service]]} 
     */
     const config_obj = [
                             ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
@@ -220,7 +220,7 @@ const DefaultConfig = async () => {
                             ['CONFIG_MICROSERVICE_SERVICES',    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_microservice_services.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
                         ]; 
     //set server parameters
-    config_obj[0][1].SERVER.map((/**@type{import('../types.js').server_config_server_server}*/row)=>{
+    config_obj[0][1].SERVER.map((/**@type{import('./types.js').server_config_server_server}*/row)=>{
         for (const key of Object.keys(row)){
             if (key=='HTTPS_KEY')
                 row.HTTPS_KEY = `${SLASH}data${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
@@ -229,7 +229,7 @@ const DefaultConfig = async () => {
         } 
     });
     //generate hash
-    config_obj[0][1].SERVICE_IAM.map((/**@type{import('../types.js').server_config_server_service_iam}*/row)=>{
+    config_obj[0][1].SERVICE_IAM.map((/**@type{import('./types.js').server_config_server_service_iam}*/row)=>{
         for (const key of Object.keys(row)){
             if (key== 'ADMIN_TOKEN_SECRET'){
                 row.ADMIN_TOKEN_SECRET = createSecret();
@@ -248,7 +248,7 @@ const DefaultConfig = async () => {
     config_obj[0][1].METADATA.MODIFIED      = '';
 
     //generate hash for apps
-    config_obj[1][1].APPS.map((/**@type{import('../types.js').server_config_apps_record}*/row)=>{
+    config_obj[1][1].APPS.map((/**@type{import('./types.js').server_config_apps_record}*/row)=>{
         row.SECRETS.CLIENT_ID = createSecret();
         row.SECRETS.CLIENT_SECRET = createSecret();
         row.SECRETS.APP_ID_SECRET = createSecret();
@@ -258,11 +258,11 @@ const DefaultConfig = async () => {
     config_obj[5][1].created = new Date().toISOString();
     
     //set paths in microservice config
-    /**@type{import('../types.js').microservice_config} */
+    /**@type{import('./types.js').microservice_config} */
     const microservice_config = config_obj[6][1];
     microservice_config?microservice_config.PATH_DATA             = `${SLASH}data${SLASH}microservice${SLASH}data${SLASH}`:'';
     //set paths in microservice services
-    config_obj[7][1].SERVICES.map((/**@type{import('../types.js').microservice_config_service_record}*/row)=>{
+    config_obj[7][1].SERVICES.map((/**@type{import('./types.js').microservice_config_service_record}*/row)=>{
         row.HTTPS_KEY             = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_KEY}`;
         row.HTTPS_CERT            = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_CERT}`;
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
@@ -284,7 +284,7 @@ const InitConfig = async () => {
                 file_set_cache_all().then(() => {
                     resolve(null);
                 })
-                .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
                     reject (error);
                 });
             else{
@@ -292,7 +292,7 @@ const InitConfig = async () => {
                     file_set_cache_all().then(() => {
                         resolve(null);
                     })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                    .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
                         reject (error);
                     });
                 });
@@ -302,9 +302,9 @@ const InitConfig = async () => {
 };
 /**
  * Config get saved
- * @param {import('../types.js').server_db_file_db_name} file
+ * @param {import('./types.js').server_db_file_db_name} file
  * @param {boolean} saved
- * @param {import('../types.js').server_config_server_group|null} config_group
+ * @param {import('./types.js').server_config_server_group|null} config_group
  * @param {string|null} parameter
  * @returns {Promise.<*>}
  */
@@ -324,14 +324,14 @@ const ConfigFileGet = async (file, saved=false, config_group=null, parameter=nul
 };
 /**
  * Config save
- * @param {import('../types.js').server_db_file_db_name} resource_id
- * @param { import('../types.js').server_config_server|
- *          import('../types.js').server_config_apps|
- *          import('../types.js').server_config_iam_blockip|
- *          import('../types.js').server_config_iam_policy|
- *          import('../types.js').server_config_iam_useragent|
- *          import('../types.js').microservice_config|
- *          import('../types.js').microservice_config_service|null} config
+ * @param {import('./types.js').server_db_file_db_name} resource_id
+ * @param { import('./types.js').server_config_server|
+ *          import('./types.js').server_config_apps|
+ *          import('./types.js').server_config_iam_blockip|
+ *          import('./types.js').server_config_iam_policy|
+ *          import('./types.js').server_config_iam_useragent|
+ *          import('./types.js').microservice_config|
+ *          import('./types.js').microservice_config_service|null} config
  * @param {number|null} maintenance
  * @param {string|null} configuration
  * @param {string|null} comment
@@ -382,7 +382,7 @@ const CreateSystemAdmin = async (admin_name, admin_password) => {
     file.file_content.password = await PasswordCreate(admin_password);
     file.file_content.modified = new Date().toISOString();
     await file_update('CONFIG_IAM_USER', file.transaction_id, file.file_content)
-    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
+    .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
 };
 
 export{ ConfigFileGet, ConfigFileSave, CheckFirstTime,

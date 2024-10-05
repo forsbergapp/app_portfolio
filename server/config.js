@@ -7,13 +7,13 @@ const service = await import(`file://${process.cwd()}/server/config.service.js`)
 
 /**
  * Config file save
- * @param {import('../types.js').server_db_file_db_name} resource_id
+ * @param {import('./types.js').server_db_file_db_name} resource_id
  * @param {*} data
  */
 const ConfigFileSave =  (resource_id, data) => service.ConfigFileSave(resource_id, data.config, getNumberValue(data.maintenance), data.configuration, data.comment);
 /**
  * Config file get
- * @param {import('../types.js').server_db_file_db_name} resource_id
+ * @param {import('./types.js').server_db_file_db_name} resource_id
  * @param {*} query
  */
  const ConfigFileGet = async (resource_id, query) => {

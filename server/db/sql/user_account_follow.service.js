@@ -8,7 +8,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number} app_id 
  * @param {number} id 
  * @param {number|null} id_follow 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_follow_follow>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_follow_follow>}
  */
 const follow = async (app_id, id, id_follow) => {
 		const sql = `INSERT INTO <DB_SCHEMA/>.user_account_follow(
@@ -25,7 +25,7 @@ const follow = async (app_id, id, id_follow) => {
  * @param {number} app_id 
  * @param {number} id 
  * @param {number|null} id_unfollow 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_follow_unfollow>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_follow_unfollow>}
  */
 const unfollow = async (app_id, id, id_unfollow) => {
 		const sql = `DELETE FROM <DB_SCHEMA/>.user_account_follow

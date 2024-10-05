@@ -7,7 +7,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * 
  * @param {number} app_id 
  * @param {string} lang_code 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_locale_getLocales[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_locale_getLocales[]>}
  */
 const getLocales = async (app_id, lang_code) => {
     const sql = `SELECT CONCAT(l2.lang_code, CASE 

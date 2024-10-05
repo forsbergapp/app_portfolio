@@ -10,7 +10,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {number} app_id 
  * @param {number|null} user_account_id 
  * @param {number|null} app_id_select 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_logon_getUserAccountLogon[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_logon_getUserAccountLogon[]>}
  */
 const getUserAccountLogon = async (app_id, user_account_id, app_id_select) => {
 	const sql = `SELECT user_account_id "user_account_id",
@@ -31,7 +31,7 @@ const getUserAccountLogon = async (app_id, user_account_id, app_id_select) => {
  * 
  * @param {number|null} app_id 
  * @param {number|null} user_account_id 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_logon_Checklogin[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_logon_Checklogin[]>}
  */
 const checkLogin = async (app_id, user_account_id) => {
 	const sql = `SELECT ual.json_data "json_data"
@@ -59,8 +59,8 @@ const checkLogin = async (app_id, user_account_id) => {
  * 
  * @param {number} app_id 
  * @param {number|null} user_account_id
- * @param {import('../../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} data 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_logon_insertUserAccountLogon>}
+ * @param {import('../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} data 
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_logon_insertUserAccountLogon>}
  */
 const insertUserAccountLogon = async (app_id, user_account_id, data) => {
 	data.access_token = data.access_token ?? null;

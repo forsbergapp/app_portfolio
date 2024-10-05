@@ -9,7 +9,7 @@ if (process.platform == 'win32')
 else
     SLASH = '/';
 
-/**@type{import('../../types.js').server_db_file_db_record[]} */
+/**@type{import('../types.js').server_db_file_db_record[]} */
 const FILE_DB = [   {NAME:'CONFIG_APPS',                        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_apps.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_SERVER',                      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_server.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_IAM_BLOCKIP',                 LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,             FILENAME:'config_iam_blockip.json', CACHE_CONTENT:null},
@@ -39,14 +39,14 @@ Object.seal(FILE_DB);
 
 /**
  * 
- * @param {import('../../types.js').server_db_file_db_name} filename 
- * @returns {import('../../types.js').server_db_file_db_record}
+ * @param {import('../types.js').server_db_file_db_name} filename 
+ * @returns {import('../types.js').server_db_file_db_record}
  */
 const fileDB = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
 
 /**
  * 
- * @param {import('../../types.js').server_db_file_db_name} file 
+ * @param {import('../types.js').server_db_file_db_name} file 
  * @param {object|string} filecontent
  * @returns {Promise.<number>}
  */
@@ -82,7 +82,7 @@ const transaction_start = async (file, filecontent)=>{
 };
 /**
  * 
- * @param {import('../../types.js').server_db_file_db_name} file 
+ * @param {import('../types.js').server_db_file_db_name} file 
  * @param {number} transaction_id 
  * @returns {boolean}
  */
@@ -99,7 +99,7 @@ const transaction_commit = (file, transaction_id)=>{
 };
 /**
  * 
- * @param {import('../../types.js').server_db_file_db_name} file 
+ * @param {import('../types.js').server_db_file_db_name} file 
  * @param {number} transaction_id 
  * @returns {boolean}
  */
@@ -149,7 +149,7 @@ const transaction_rollback = (file, transaction_id)=>{
 /**
  * Get log file with given suffix or none or use sample to get specific suffix
  * for statistics
- * @param {import('../../types.js').server_db_file_db_name} file 
+ * @param {import('../types.js').server_db_file_db_name} file 
  * @param {string|null} filesuffix 
  * @param {string|null} sample
  * @returns {Promise.<*>}
@@ -163,9 +163,9 @@ const transaction_rollback = (file, transaction_id)=>{
 /**
  * 
  * Returns file content in FILE_DB.PATH for given file
- * @param {import('../../types.js').server_db_file_db_name} file 
+ * @param {import('../types.js').server_db_file_db_name} file 
  * @param {boolean} lock
- * @returns {Promise.<import('../../types.js').server_db_file_result_file_get>}
+ * @returns {Promise.<import('../types.js').server_db_file_result_file_get>}
  */
 const file_get = async (file, lock=false) =>{
     const filepath = fileDB(file).PATH + (fileDB(file).FILENAME?fileDB(file).FILENAME:'');
@@ -184,7 +184,7 @@ const file_get = async (file, lock=false) =>{
 };
 /**
  * Returns file path for given file
- * @param {import('../../types.js').server_db_file_db_name} file 
+ * @param {import('../types.js').server_db_file_db_name} file 
  * @returns {string}
  */
 const file_get_path = file =>(fileDB(file).PATH ?? '') + (fileDB(file).FILENAME?fileDB(file).FILENAME:'');
@@ -195,7 +195,7 @@ const file_get_path = file =>(fileDB(file).PATH ?? '') + (fileDB(file).FILENAME?
 const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH}data${SLASH}logs`);
 /**
  * 
- * @param {import('../../types.js').server_db_file_db_name} file
+ * @param {import('../types.js').server_db_file_db_name} file
  * @returns {*}
  */
  const file_get_cached = file => fileDB(file).CACHE_CONTENT ?? null;
@@ -212,7 +212,7 @@ const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}
             file_db_record.CACHE_CONTENT = file?file:null;
         }
     }
-    /**@type{import('../../types.js').server_config_apps['APPS']}*/
+    /**@type{import('../types.js').server_config_apps['APPS']}*/
     const APPS = fileDB('CONFIG_APPS').CACHE_CONTENT.APPS;
     for (const app of APPS){
         if (app.RENDER_CONFIG?.RENDER_FILES)
@@ -225,7 +225,7 @@ const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}
 /**
  * 
  * Updates config files
- * @param {import('../../types.js').server_db_file_db_name} file 
+ * @param {import('../types.js').server_db_file_db_name} file 
  * @param {number|null} transaction_id 
  * @param {object} file_content 
  * @returns 
@@ -261,8 +261,8 @@ const file_update = async (file, transaction_id, file_content) =>{
 };
 /**
  * 
- * @param {import('../../types.js').server_db_file_db_name} file 
- * @param {import('../../types.js').server_db_file_config_files} file_content 
+ * @param {import('../types.js').server_db_file_db_name} file 
+ * @param {import('../types.js').server_db_file_config_files} file_content 
  */
 const file_create = async (file, file_content) =>{
     const filepath = fileDB(file).PATH + (fileDB(file).FILENAME?fileDB(file).FILENAME:'');
@@ -277,7 +277,7 @@ const file_create = async (file, file_content) =>{
 
 /**
  * 
- * @param {import('../../types.js').server_db_file_db_name} file
+ * @param {import('../types.js').server_db_file_db_name} file
  * @param {object} file_content 
  * @param {string|null} filesuffix
  */

@@ -12,7 +12,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  */
 const getLogs = (app_id, query) => {
     return new Promise((resolve, reject)=>{
-        /**@type{import('../types.js').server_log_data_parameter_getLogs} */
+        /**@type{import('./types.js').server_log_data_parameter_getLogs} */
         const data = {  app_id:			app_id,
             select_app_id:	getNumberValue(query.get('select_app_id')),
             logscope:		query.get('logscope'),
@@ -26,7 +26,7 @@ const getLogs = (app_id, query) => {
         service.getLogs(data).then(result=>{
             resolve(result);
         })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('./types.js').server_server_error}*/error)=>reject(error));
     });  
 };
 /**
@@ -35,7 +35,7 @@ const getLogs = (app_id, query) => {
  */
 const getLogStats = query =>{
     return new Promise((resolve, reject)=>{
-        /**@type{import('../types.js').server_log_data_parameter_getLogStats} */
+        /**@type{import('./types.js').server_log_data_parameter_getLogStats} */
         const data = {	app_id:			getNumberValue(query.get('select_app_id')),
                         statGroup:		query.get('statGroup')==''?null:query.get('statGroup'),
                         unique:		    getNumberValue(query.get('unique')),
@@ -46,7 +46,7 @@ const getLogStats = query =>{
         service.getLogsStats(data).then (result=>{
             resolve(result);
         })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('./types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
