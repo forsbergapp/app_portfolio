@@ -1075,7 +1075,7 @@ const commonLovEvent = (event, lov) => {
         }
         //dispatch event for either common_input lov if used or common_lov_value
         (common_input_lov ?? common_lov_value)?.dispatchEvent(new Event('input'));
-        COMMON_DOCUMENT.querySelector('#common_commonLovClose').click();
+        COMMON_DOCUMENT.querySelector('#common_lov_close').click();
     };
     commonLovShow({lov:lov, function_event:commonLovEvent_function});
 };
@@ -2656,14 +2656,16 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
-                            COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).textContent = event.target.parentNode.textContent;
+                            //select can show HTML, use innerHTML
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
                             COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
                             event.target.parentNode.parentNode.style.display = 'none';
                             await commonSelectEventAction(event_target_id, event.target.parentNode);
                             break;
                         }
                         case event.target.classList.contains('common_select_option')?event_target_id:'':{
-                            COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).textContent = event.target.textContent;
+                            //select can show HTML, use innerHTML
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
                             COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
                             event.target.parentNode.style.display = 'none';
                             await commonSelectEventAction(event_target_id, event.target);
@@ -3043,7 +3045,7 @@ const commonEvent = async (event_type,event=null) =>{
                             commonLovFilter(COMMON_DOCUMENT.querySelector('#common_lov_search_input').textContent);
                             break;
                         }
-                        case 'common_commonLovClose':{
+                        case 'common_lov_close':{
                             commonLovClose();
                             break;
                         }

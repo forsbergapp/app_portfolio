@@ -301,6 +301,7 @@ body.rtl{
 	overflow: hidden;
 	vertical-align: middle;
 	width: 100%;
+	border: 1px solid;
 }
 .common_password_container{
 	font-family: 'Noto Sans Mono';

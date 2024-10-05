@@ -152,7 +152,6 @@ const product_update = async () =>{
                     button_delete:null
                     },
         path:'/common/component/common_app_data_display.js'});
-    COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row[id]')[1].textContent = COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row[id]')[2].textContent;
     
 };
 /**
