@@ -39,7 +39,7 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
                         </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      data_app_id:number,
  *                      user_locale:string,
  *                      locale:string,
@@ -47,12 +47,12 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      latitude:string
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      function_event_doubleclick:function,
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      get_place_from_gps:import('../../../common_types.js').CommonModuleCommon['get_place_from_gps'],
- *                      element_row:import('../../../common_types.js').CommonModuleCommon['element_row'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      commonMicroserviceGeolocationPlace:import('../../../common_types.js').CommonModuleCommon['commonMicroserviceGeolocationPlace'],
+ *                      commonElementRow:import('../../../common_types.js').CommonModuleCommon['commonElementRow'],
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB'],
  *                      moduleLeafletContainer:function,
  *                      moduleLeafletLibrary:function
  *                      }}} props
@@ -72,7 +72,7 @@ const component = async props => {
     
     //get supported layers in database
     /** @type {import('../../../common_types.js').CommonModuleLeafletMapLayer[]}*/
-    const MAP_LAYERS = await props.methods.FFB({path:'/server-db/app_settings_display', query:`data_app_id=${props.data.data_app_id}&setting_type=MAP_STYLE`, method:'GET', authorization_type:'APP_DATA'})
+    const MAP_LAYERS = await props.methods.commonFFB({path:'/server-db/app_settings_display', query:`data_app_id=${props.data.data_app_id}&setting_type=MAP_STYLE`, method:'GET', authorization_type:'APP_DATA'})
                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     
     //format layers to use on Leaflet                                
@@ -100,7 +100,7 @@ const component = async props => {
                 const lng = e.latlng.lng;
                 const lat = e.latlng.lat;
                 //Update GPS position
-                props.methods.get_place_from_gps(lng, lat).then((/**@type{string}*/gps_place) => {
+                props.methods.commonMicroserviceGeolocationPlace(lng, lat).then((/**@type{string}*/gps_place) => {
                     map_update({longitude:lng,
                                 latitude:lat,
                                 zoomvalue:null,//do not change zoom 
@@ -121,9 +121,9 @@ const component = async props => {
      * @param {string} event_target_id
      */
     const eventClickCountry = event_target_id =>{
-        const country_code = props.methods.common_document.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')==''?
+        const country_code = props.methods.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')==''?
                                 null:
-                                JSON.parse(props.methods.common_document.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')).country_code;
+                                JSON.parse(props.methods.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')).country_code;
         if (country_code)
             map_city(country_code);
         else{
@@ -134,7 +134,7 @@ const component = async props => {
      * @param {string} event_target_id
      */
     const eventClickCity = async event_target_id => {
-        const city = props.methods.common_document.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
+        const city = props.methods.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
         await map_update({  longitude:      city==''?'':JSON.parse(city).longitude,
                             latitude:       city==''?'':JSON.parse(city).latitude,
                             zoomvalue:      MODULE_LEAFLET_ZOOM_CITY,
@@ -158,15 +158,15 @@ const component = async props => {
         props.methods.moduleLeafletContainer()?.setZoom?.(props.methods.moduleLeafletContainer()?.getZoom?.() - 1);  
     };
     const eventClickControlSearch = () =>{
-        if (props.methods.common_document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
+        if (props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
             map_control_toggle_expand('layer');
         map_control_toggle_expand('search');
     };
     const eventClickControlFullscreen = () =>{
-        if (props.methods.common_document.fullscreenElement)
-            props.methods.common_document.exitFullscreen();
+        if (props.methods.COMMON_DOCUMENT.fullscreenElement)
+            props.methods.COMMON_DOCUMENT.exitFullscreen();
         else
-            props.methods.common_document.querySelector('.leaflet-container').requestFullscreen();
+            props.methods.COMMON_DOCUMENT.querySelector('.leaflet-container').requestFullscreen();
     };
     /**
      * @param {string} client_latitude
@@ -184,14 +184,14 @@ const component = async props => {
                         timezone_text :null,
                         to_method:MODULE_LEAFLET_FLYTO
                     });
-            props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
-            props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').textContent = '';    
+            props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
+            props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').textContent = '';    
             map_city_empty();
             map_toolbar_reset();
         }
     };
     const eventClickControlLayer = () =>{
-        if (props.methods.common_document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+        if (props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
             map_toolbar_reset();
         map_control_toggle_expand('layer');
     };
@@ -201,7 +201,7 @@ const component = async props => {
     const eventClickSearchList = async target =>{
         //execute function from inparameter or use default when not specified
         if (target.classList.contains('common_module_leaflet_click_city')){
-            const row = props.methods.element_row(target);
+            const row = props.methods.commonElementRow(target);
             const data = {  city:       row.getAttribute('data-city') ?? '',
                             country:    row.getAttribute('data-country') ??'',
                             latitude:   row.getAttribute('data-latitude') ?? '',
@@ -230,7 +230,7 @@ const component = async props => {
      */
     const get_cities = async countrycode => {
         /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
-        const cities = await props.methods.FFB({path:`/worldcities/country/${countrycode}`, method:'GET', authorization_type:'APP_DATA'}).then(result=>JSON.parse(result));
+        const cities = await props.methods.commonFFB({path:`/worldcities/country/${countrycode}`, method:'GET', authorization_type:'APP_DATA'}).then(result=>JSON.parse(result));
         
         //sort admin name + city
         cities.sort((a, b) => {
@@ -252,7 +252,7 @@ const component = async props => {
      * @param {string} lang_code 
      * @returns {Promise.<{value:string, text:string}[]>}
      */
-    const map_country = async lang_code =>  [{value:'', text:'...'}].concat(await props.methods.FFB({path:'/server-db/country', query:`lang_code=${lang_code}`, method:'GET', authorization_type:'APP_DATA'})
+    const map_country = async lang_code =>  [{value:'', text:'...'}].concat(await props.methods.commonFFB({path:'/server-db/country', query:`lang_code=${lang_code}`, method:'GET', authorization_type:'APP_DATA'})
                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                                 .then((/**@type{[{id:number, country_code:string, flag_emoji:string, group_name:string, text:string}]}*/result)=>
                                                     result.map(country=>{
@@ -268,7 +268,7 @@ const component = async props => {
      */
     const map_city = async country_code =>{
         if (country_code!=null){
-            await props.methods.ComponentRender({
+            await props.methods.commonComponentRender({
                 mountDiv:       'common_module_leaflet_select_city',
                 data:           {
                                 default_data_value:'',
@@ -290,7 +290,7 @@ const component = async props => {
                                 column_value:'value',
                                 column_text:'text'
                                 },
-                methods:        {FFB:null},
+                methods:        {commonFFB:null},
                 path:           '/common/component/common_select.js'});
         }
     };
@@ -300,7 +300,7 @@ const component = async props => {
      */
     const map_city_empty = () =>{
         //set city select with first empty city
-        props.methods.ComponentRender({
+        props.methods.commonComponentRender({
             mountDiv:       'common_module_leaflet_select_city',
             data:           {
                             default_data_value:'',
@@ -313,7 +313,7 @@ const component = async props => {
                             column_value:'value',
                             column_text:'text'
                             },
-            methods:        {FFB:null},
+            methods:        {commonFFB:null},
             path:           '/common/component/common_select.js'});
     };
     /**
@@ -321,14 +321,14 @@ const component = async props => {
      * @returns {void}
      */
     const map_toolbar_reset = ()=>{
-        props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
-        props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').textContent = '';    
+        props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
+        props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').textContent = '';    
         map_city_empty();
-        props.methods.common_document.querySelector('#common_module_leaflet_search_input').textContent ='';
-        props.methods.common_document.querySelector('#common_module_leaflet_search_list').textContent ='';
-        if (props.methods.common_document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+        props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').textContent ='';
+        props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_list').textContent ='';
+        if (props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
             map_control_toggle_expand('search');
-        if (props.methods.common_document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
+        if (props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
             map_control_toggle_expand('layer');
     };
     /**
@@ -338,11 +338,11 @@ const component = async props => {
      */
     const map_control_toggle_expand = async item =>{
         let style_display;
-        if (props.methods.common_document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
-        props.methods.common_document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display ==''){
+        if (props.methods.COMMON_DOCUMENT.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
+        props.methods.COMMON_DOCUMENT.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display ==''){
                 style_display = 'block';
                 if (item == 'search')
-                    await props.methods.ComponentRender({
+                    await props.methods.commonComponentRender({
                         mountDiv:   'common_module_leaflet_select_country',
                         data:       {
                                     default_data_value:'',
@@ -355,12 +355,12 @@ const component = async props => {
                                     column_value:'value',
                                     column_text:'text'
                                     },
-                        methods:    {FFB:null},
+                        methods:    {commonFFB:null},
                         path:       '/common/component/common_select.js'});
             }
         else
             style_display = 'none';
-        props.methods.common_document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
+        props.methods.COMMON_DOCUMENT.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
     };
     /**
      * Map resize
@@ -488,7 +488,7 @@ const component = async props => {
             if (parameters.timezone_text == null)
                 parameters.timezone_text = getTimezone(parameters.latitude, parameters.longitude);
 
-            props.methods.ComponentRender({
+            props.methods.commonComponentRender({
                 mountDiv:   null,
                 data:       {  
                             timezone_text:parameters.timezone_text,
@@ -508,7 +508,7 @@ const component = async props => {
     };
     const onMounted = async () =>{
         //mount custom code inside Leaflet container
-        props.methods.common_document.querySelectorAll(`#${props.methods.moduleLeafletContainer()._container.id} .leaflet-control`)[0].innerHTML += 
+        props.methods.COMMON_DOCUMENT.querySelectorAll(`#${props.methods.moduleLeafletContainer()._container.id} .leaflet-control`)[0].innerHTML += 
             template({
                         title_search:'Search',
                         title_fullscreen:'Fullscreen',
@@ -517,7 +517,7 @@ const component = async props => {
                         latitude :props.data.longitude
                     });
         //country
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'common_module_leaflet_select_country', 
             data:       {
                         default_data_value:'',
@@ -530,13 +530,13 @@ const component = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:'/common/component/common_select.js'});
         //cities, caal function that sets empty record
         map_city_empty();
 
         //map layers
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'common_module_leaflet_select_mapstyle', 
             data:       {
                         default_data_value:MAP_LAYERS[0].value,
@@ -549,7 +549,7 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:'/common/component/common_select.js'});
         
         //set default map layer

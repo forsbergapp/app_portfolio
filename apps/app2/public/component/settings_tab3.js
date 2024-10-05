@@ -101,17 +101,17 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      app_id:number,
  *                      user_settings:import('../js//types.js').APP_user_setting_record,
  *                      themes:import('../js//types.js').APP_GLOBAL['themes']
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      update_all_theme_thumbnails:function
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get']}}} props
+ *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet']}}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
@@ -119,7 +119,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
  */
 const method = async props => {
 
-    const settings = await props.methods.app_settings_get();
+    const settings = await props.methods.commonDbAppSettingsGet();
     //update APP_GLOBAL with themes
     /**@type{import('../js//types.js').APP_GLOBAL['themes']} */
     props.data.themes.data = settings.filter(setting=>
@@ -131,7 +131,7 @@ const method = async props => {
 
     const onMounted = async () =>{
         //paper size
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_papersize',
             data:       {
                         default_data_value:settings.filter((/**@type{*}*/setting)=>
@@ -147,10 +147,10 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
         //highlight row
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_highlight_row',
             data:       {
                         default_data_value:settings.filter((/**@type{*}*/setting)=>
@@ -169,35 +169,35 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:'/common/component/common_select.js'});
 
-        props.methods.set_current_value('setting_select_report_papersize', props.data.user_settings.design_paper_size);
+        props.methods.commonSelectCurrentValueSet('setting_select_report_papersize', props.data.user_settings.design_paper_size);
         
-        props.methods.common_document.querySelector('#paper').className=props.data.user_settings.design_paper_size;
+        props.methods.COMMON_DOCUMENT.querySelector('#paper').className=props.data.user_settings.design_paper_size;
 
-        props.methods.set_current_value('setting_select_report_highlight_row', props.data.user_settings.design_row_highlight);
+        props.methods.commonSelectCurrentValueSet('setting_select_report_highlight_row', props.data.user_settings.design_row_highlight);
 
         if (Number(props.data.user_settings.design_column_weekday_checked))
-            props.methods.common_document.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
+            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
         else
-            props.methods.common_document.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
+            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
         if (Number(props.data.user_settings.design_column_calendartype_checked))
-            props.methods.common_document.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
+            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
         else
-            props.methods.common_document.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
+            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
         if (Number(props.data.user_settings.design_column_notes_checked))
-            props.methods.common_document.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
+            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
         else
-            props.methods.common_document.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
+            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
         if (Number(props.data.user_settings.design_column_gps_checked))
-            props.methods.common_document.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
+            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
         else
-            props.methods.common_document.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
+            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
         if (Number(props.data.user_settings.design_column_timezone_checked))
-            props.methods.common_document.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
+            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
         else
-            props.methods.common_document.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
+            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
 
         props.methods.update_all_theme_thumbnails();
     };

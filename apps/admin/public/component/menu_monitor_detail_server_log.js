@@ -314,7 +314,7 @@ const template = props => ` ${  /*
                             
 /**
 * 
-* @param {{ data:{      common_mountdiv:string,
+* @param {{ data:{      commonMountdiv:string,
 *                       system_admin:string,
 *                       path:string,
 *                       query:string,
@@ -322,9 +322,9 @@ const template = props => ` ${  /*
 *                       sort:string,
 *                       logs:[],
 *                       order_by:string},
-*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
-*                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
-*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+*                       commonRoundOff:import('../../../common_types.js').CommonModuleCommon['commonRoundOff'],
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *           lifeycle:   null}} props 
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null,
@@ -332,7 +332,7 @@ const template = props => ` ${  /*
 *                      template:string}>}
 */
 const component = async props => {
-    const logs = await props.methods.FFB({path:props.data.path, query:props.data.query, method:'GET', authorization_type:props.data.token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const logs = await props.methods.commonFFB({path:props.data.path, query:props.data.query, method:'GET', authorization_type:props.data.token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     /**
      * Get order by if column matches
      * @param {string} column
@@ -345,9 +345,9 @@ const component = async props => {
         methods:    null,
         template:   template({system_admin:props.data.system_admin, 
                             function_get_order_by:get_order_by,
-                            function_roundOff:props.methods.roundOff,
+                            function_roundOff:props.methods.commonRoundOff,
                             logs:logs,
-                            logscope:props.methods.common_document.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
+                            logscope:props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
     };
 };
 export default component;

@@ -54,7 +54,7 @@ const template = props => `
 
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      common_app_id:number,
  *                      app_id:number,
  *                      app_copyright:string,
@@ -66,8 +66,8 @@ const template = props => `
  *                      info_link_terms_name:string
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
@@ -75,9 +75,9 @@ const template = props => `
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
 
-    const apps = await props.methods.FFB({path:'/app/apps/', method:'GET', authorization_type:'APP_DATA'})
+    const apps = await props.methods.commonFFB({path:'/app/apps/', method:'GET', authorization_type:'APP_DATA'})
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.APP_ID != props.data.app_id));
 
 

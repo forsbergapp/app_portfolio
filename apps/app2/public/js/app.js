@@ -3,8 +3,8 @@
  * @module apps/app2/app
  */
 
-/**@type{import('../../../common_types.js').CommonAppDocument} */
-const CommonAppDocument = document;
+/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+const COMMON_DOCUMENT = document;
 
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
@@ -168,19 +168,19 @@ const printTimetable = async () => {
     const {default:component} = await import(component_print);
     /**@type{import('../../../common_types.js').CommonComponentResult}*/
     const {template} = await component({ data:  {   
-                                                common_mountdiv:null, 
-                                                html:CommonAppDocument.querySelector('#paper').outerHTML
+                                                commonMountdiv:null, 
+                                                html:COMMON_DOCUMENT.querySelector('#paper').outerHTML
                                                 },
-                                        methods:{common_document:CommonAppDocument}});
-    await common.ComponentRender({  mountDiv:   'common_window_info',
+                                        methods:{COMMON_DOCUMENT:COMMON_DOCUMENT}});
+    await common.commonComponentRender({  mountDiv:   'common_window_info',
                                     data:       {
                                                 info:3,
                                                 url:null, 
                                                 content_type:null, 
-                                                frame:common.DocumentFrame, 
+                                                frame:common.commonWindowDocumentFrame, 
                                                 iframe_content:template
                                                 },
-                                    methods:    {common_setTimeout:common.common_setTimeout},
+                                    methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
                                     path:       '/common/component/common_window_info.js'});
     
 };
@@ -283,17 +283,17 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                 prayer_hijri_date_adjustment : setting.json_data.prayer_hijri_date_adjustment
                 });
             }
-            CommonAppDocument.querySelector('#paper').innerHTML = APP_GLOBAL.lib_timetable.displayDay(APP_GLOBAL.lib_prayTimes, settings, item_id, current_user_settings);
+            COMMON_DOCUMENT.querySelector('#paper').innerHTML = APP_GLOBAL.lib_timetable.displayDay(APP_GLOBAL.lib_prayTimes, settings, item_id, current_user_settings);
             break;
         }
         //1=create timetable month
         case 1:{
-            CommonAppDocument.querySelector('#paper').innerHTML = APP_GLOBAL.lib_timetable.displayMonth(APP_GLOBAL.lib_prayTimes, settings, item_id);
+            COMMON_DOCUMENT.querySelector('#paper').innerHTML = APP_GLOBAL.lib_timetable.displayMonth(APP_GLOBAL.lib_prayTimes, settings, item_id);
             break;
         }
         //2=create timetable year
         case 2:{
-            CommonAppDocument.querySelector('#paper').innerHTML = APP_GLOBAL.lib_timetable.displayYear(APP_GLOBAL.lib_prayTimes, settings, item_id);
+            COMMON_DOCUMENT.querySelector('#paper').innerHTML = APP_GLOBAL.lib_timetable.displayYear(APP_GLOBAL.lib_prayTimes, settings, item_id);
             break;
         }
         default:{
@@ -327,12 +327,12 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
     }
     const language_parameter = `&lang_code=${common.COMMON_GLOBAL.user_locale}`;
     const service_parameter = `&format=${format}&ps=${papersize}&hf=0`; //html, papersize, header/footer
-    const encodedurl = common.toBase64( report_module +
+    const encodedurl = common.commonWindowToBase64( report_module +
                                         module_parameters + 
                                         language_parameter +
                                         service_parameter);
     //url query parameters are decoded in report module and in report service
-    return common.getHostname() + `/app-reports?reportid=${encodedurl}`;
+    return common.commonWindowHostname() + `/app-reports?reportid=${encodedurl}`;
 };
 
 /**
@@ -361,11 +361,11 @@ const update_all_theme_thumbnails = async (theme=null) => {
         });
         
         const timetable = APP_GLOBAL.lib_timetable.displayDay(APP_GLOBAL.lib_prayTimes, getReportSettings(), null, current_user_settings);
-        await common.ComponentRender({
+        await common.commonComponentRender({
             mountDiv:   'setting_design_theme_day',
             data:       { 
                         class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
-                        theme_id:CommonAppDocument.querySelector('#setting_design_theme_day').getAttribute('data-theme_id'),
+                        theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_day').getAttribute('data-theme_id'),
                         type:'day',
                         html:timetable
                         },
@@ -373,19 +373,19 @@ const update_all_theme_thumbnails = async (theme=null) => {
             path:       '/component/settings_tab3_theme_thumbnail.js'});
     }
     if (theme?.type =='month' || theme?.type=='year' || theme==null){
-        await common.ComponentRender({  mountDiv:   'setting_design_theme_month',
+        await common.commonComponentRender({  mountDiv:   'setting_design_theme_month',
                                         data:       { 
                                                     class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
-                                                    theme_id:CommonAppDocument.querySelector('#setting_design_theme_month').getAttribute('data-theme_id'),
+                                                    theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_month').getAttribute('data-theme_id'),
                                                     type:'month',
                                                     html:APP_GLOBAL.lib_timetable.displayMonth(APP_GLOBAL.lib_prayTimes, getReportSettings(), null)
                                                     },
                                         methods:    null,
                                         path:       '/component/settings_tab3_theme_thumbnail.js'});
-        await common.ComponentRender({  mountDiv:   'setting_design_theme_year',
+        await common.commonComponentRender({  mountDiv:   'setting_design_theme_year',
                                         data:       { 
                                                     class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
-                                                    theme_id:CommonAppDocument.querySelector('#setting_design_theme_year').getAttribute('data-theme_id'),
+                                                    theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_year').getAttribute('data-theme_id'),
                                                     type:'year',
                                                     html:APP_GLOBAL.lib_timetable.displayYear(APP_GLOBAL.lib_prayTimes, getReportSettings(), null)
                                                     },
@@ -400,8 +400,8 @@ const update_all_theme_thumbnails = async (theme=null) => {
  * @returns {string}
  */
 const get_theme_id = type => {
-    if (CommonAppDocument.querySelector(`#setting_design_theme_${type}`))
-        return CommonAppDocument.querySelector(`#setting_design_theme_${type}`).getAttribute('data-theme_id');
+    if (COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}`))
+        return COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}`).getAttribute('data-theme_id');
     else{
         /**@ts-ignore */
         return APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id]['design_theme_' + type + '_id'];
@@ -444,8 +444,8 @@ const theme_nav = async (nav, type) => {
     //set user setting theme id since getReportSetting will fetch user settings
     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data[`design_theme_${type}_id`] = 
         APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
-    CommonAppDocument.querySelector(`#setting_design_theme_${type}`).setAttribute('data-theme_id', APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value);
-    CommonAppDocument.querySelector(`#setting_design_theme_${type}_id`).textContent = APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
+    COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}`).setAttribute('data-theme_id', APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value);
+    COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}_id`).textContent = APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
     await update_all_theme_thumbnails({   type: type,
                                     theme_id :APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value});
 };
@@ -471,10 +471,10 @@ const get_align = (al,ac,ar) => {
  * @returns {Promise.<void>}
  */
 const settingsTimesShow = async () => {
-    const setting_select_locale                 = CommonAppDocument.querySelector('#setting_select_locale .common_select_dropdown_value')?.getAttribute('data-value');
-    const element_setting_current_date          = CommonAppDocument.querySelector('#setting_current_date_time_display');
-    const setting_select_report_timezone        = CommonAppDocument.querySelector('#setting_select_report_timezone .common_select_dropdown_value')?.getAttribute('data-value');
-    const element_setting_report_data_time      = CommonAppDocument.querySelector('#setting_report_date_time_display');
+    const setting_select_locale                 = COMMON_DOCUMENT.querySelector('#setting_select_locale .common_select_dropdown_value')?.getAttribute('data-value');
+    const element_setting_current_date          = COMMON_DOCUMENT.querySelector('#setting_current_date_time_display');
+    const setting_select_report_timezone        = COMMON_DOCUMENT.querySelector('#setting_select_report_timezone .common_select_dropdown_value')?.getAttribute('data-value');
+    const element_setting_report_data_time      = COMMON_DOCUMENT.querySelector('#setting_report_date_time_display');
     
     /**@type{Intl.DateTimeFormatOptions} */
     const options = {
@@ -495,7 +495,7 @@ const settingsTimesShow = async () => {
             element_setting_report_data_time.textContent = new Date().toLocaleTimeString(setting_select_locale, options);
         }
         //wait 1 second
-        await common.common_wait(1000);
+        await common.commonWindowWait(1000);
         settingsTimesShow();
     }
     
@@ -506,14 +506,14 @@ const settingsTimesShow = async () => {
  * @returns {Promise.<void>}
  */
 const toolbar_button = async (choice) => {
-    const paper = CommonAppDocument.querySelector('#paper');
-    const settings = CommonAppDocument.querySelector('#settings');
+    const paper = COMMON_DOCUMENT.querySelector('#paper');
+    const settings = COMMON_DOCUMENT.querySelector('#settings');
 
     switch (choice) {
         //print
         case 1:
             {
-                if (common.mobile())
+                if (common.commonMobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 printTimetable();
@@ -523,13 +523,13 @@ const toolbar_button = async (choice) => {
         case 3:
         case 4:
             {
-                if (common.mobile())
+                if (common.commonMobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
-                CommonAppDocument.querySelector('#toolbar_btn_day').classList.remove('toolbar_bottom_selected');
-                CommonAppDocument.querySelector('#toolbar_btn_month').classList.remove('toolbar_bottom_selected');
-                CommonAppDocument.querySelector('#toolbar_btn_year').classList.remove('toolbar_bottom_selected');
-                CommonAppDocument.querySelector(`#toolbar_btn_${choice==2?'day':choice==3?'month':'year'}`).classList.add('toolbar_bottom_selected');
+                COMMON_DOCUMENT.querySelector('#toolbar_btn_day').classList.remove('toolbar_bottom_selected');
+                COMMON_DOCUMENT.querySelector('#toolbar_btn_month').classList.remove('toolbar_bottom_selected');
+                COMMON_DOCUMENT.querySelector('#toolbar_btn_year').classList.remove('toolbar_bottom_selected');
+                COMMON_DOCUMENT.querySelector(`#toolbar_btn_${choice==2?'day':choice==3?'month':'year'}`).classList.add('toolbar_bottom_selected');
 
                 //choice day=0, month=1, year=2
                 await update_timetable_report(choice==2?0:choice==3?1:2, null, getReportSettings());
@@ -539,7 +539,7 @@ const toolbar_button = async (choice) => {
         case 5:
             {
                 //Hide paper on mobile device when showing settings, scrollbug in background
-                if (common.mobile())
+                if (common.commonMobile())
                     paper.style.display = 'none';
                 settings.style.visibility = 'visible';
                 SettingShow(1);
@@ -555,7 +555,7 @@ const toolbar_button = async (choice) => {
         case 7:
             {
                 settings.style.visibility = 'hidden';
-                common.ComponentRender({
+                common.commonComponentRender({
                     mountDiv:   'common_profile_stat_row2',
                     data:       null,
                     methods:    null,
@@ -571,17 +571,17 @@ const toolbar_button = async (choice) => {
  */
 const SettingShow = async (tab_selected) => {
     //remove mark for all tabs
-    CommonAppDocument.querySelectorAll('.settings_tab_nav').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('settings_tab_nav_selected'));
+    COMMON_DOCUMENT.querySelectorAll('.settings_tab_nav').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('settings_tab_nav_selected'));
     //mark active tab
-    CommonAppDocument.querySelector('#settings_tab_nav_' + tab_selected).classList.add('settings_tab_nav_selected');
+    COMMON_DOCUMENT.querySelector('#settings_tab_nav_' + tab_selected).classList.add('settings_tab_nav_selected');
     //empty old content
-    CommonAppDocument.querySelector('#settings_content').textContent = '';
+    COMMON_DOCUMENT.querySelector('#settings_content').textContent = '';
     //update with class to style each settings component
-    CommonAppDocument.querySelector('#settings_content').className = `settings_tab_content settings_tab${tab_selected}`;
+    COMMON_DOCUMENT.querySelector('#settings_content').className = `settings_tab_content settings_tab${tab_selected}`;
     //mount the selected component
     switch (tab_selected){
         case 1:{
-            common.ComponentRender({  
+            common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
@@ -590,16 +590,16 @@ const SettingShow = async (tab_selected) => {
                             user_timezone:common.COMMON_GLOBAL.user_timezone},
                 methods:    {
                             component_setting_update:component_setting_update,
-                            app_settings_get:common.app_settings_get,
-                            set_current_value:common.set_current_value,
-                            ComponentRender:common.ComponentRender,
-                            FFB:common.FFB
+                            commonDbAppSettingsGet:common.commonDbAppSettingsGet,
+                            commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                            commonComponentRender:common.commonComponentRender,
+                            commonFFB:common.commonFFB
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
         }
         case 2:{
-            common.ComponentRender({  
+            common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id,
@@ -609,33 +609,33 @@ const SettingShow = async (tab_selected) => {
                             lib_timetable_REPORT_GLOBAL:APP_GLOBAL.lib_timetable.REPORT_GLOBAL,
                             component_setting_update:component_setting_update,
                             getTimezone:getTimezone,
-                            getTimezoneDate:common.getTimezoneDate,
-                            map_init:common.map_init,
-                            set_current_value:common.set_current_value,
-                            ComponentRender:common.ComponentRender,
-                            app_settings_get:common.app_settings_get
+                            commonTimezoneDate:common.commonTimezoneDate,
+                            commonModuleLeafletInit:common.commonModuleLeafletInit,
+                            commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                            commonComponentRender:common.commonComponentRender,
+                            commonDbAppSettingsGet:common.commonDbAppSettingsGet
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
         }
         case 3:{
-            common.ComponentRender({  
+            common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
                             themes:APP_GLOBAL.themes},
                 methods:    {
-                            set_current_value:common.set_current_value,
                             update_all_theme_thumbnails:update_all_theme_thumbnails,
-                            ComponentRender:common.ComponentRender,
-                            app_settings_get:common.app_settings_get
+                            commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                            commonComponentRender:common.commonComponentRender,
+                            commonDbAppSettingsGet:common.commonDbAppSettingsGet
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
         }
         case 4:{
-            common.ComponentRender({  
+            common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id,
@@ -646,7 +646,7 @@ const SettingShow = async (tab_selected) => {
             break;
         }
         case 5:{
-            common.ComponentRender({  
+            common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id,
@@ -657,26 +657,26 @@ const SettingShow = async (tab_selected) => {
             break;
         }
         case 6:{
-            common.ComponentRender({  
+            common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
                             },
                 methods:    {
-                            set_current_value:common.set_current_value,
                             component_setting_update:component_setting_update,
-                            ComponentRender:common.ComponentRender,
-                            app_settings_get:common.app_settings_get
+                            commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                            commonComponentRender:common.commonComponentRender,
+                            commonDbAppSettingsGet:common.commonDbAppSettingsGet
                             },
                 path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
         case 7:{
-            common.ComponentRender({
+            common.commonComponentRender({
                 mountDiv:   'settings_content',
                 data:       {user_settings:APP_GLOBAL.user_settings},
-                methods:    {ComponentRender:common.ComponentRender},
+                methods:    {commonComponentRender:common.commonComponentRender},
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
         }
@@ -690,11 +690,11 @@ const SettingShow = async (tab_selected) => {
  */
 const align_button_value = (report_align_where) => {
 
-    if (CommonAppDocument.querySelector('#setting_icon_text_' + report_align_where + '_aleft').classList.contains('setting_button_active'))
+    if (COMMON_DOCUMENT.querySelector('#setting_icon_text_' + report_align_where + '_aleft').classList.contains('setting_button_active'))
         return 'left';
-    if (CommonAppDocument.querySelector('#setting_icon_text_' + report_align_where + '_acenter').classList.contains('setting_button_active'))
+    if (COMMON_DOCUMENT.querySelector('#setting_icon_text_' + report_align_where + '_acenter').classList.contains('setting_button_active'))
         return 'center';
-    if (CommonAppDocument.querySelector('#setting_icon_text_' + report_align_where + '_aright').classList.contains('setting_button_active'))
+    if (COMMON_DOCUMENT.querySelector('#setting_icon_text_' + report_align_where + '_aright').classList.contains('setting_button_active'))
         return 'right';
     return '';
 };
@@ -706,16 +706,16 @@ const align_button_value = (report_align_where) => {
 const zoom_paper = (zoomvalue = null) => {
     let old;
     let old_scale;
-    const div = CommonAppDocument.querySelector('#paper');
+    const div = COMMON_DOCUMENT.querySelector('#paper');
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
     if (zoomvalue == null) {
-        if (common.mobile())
+        if (common.commonMobile())
             div.style.transform = 'scale(0.5)';
         else
             div.style.transform = 'scale(0.7)';
     } else {
-        old = CommonAppDocument.querySelector('#paper').style.transform;
+        old = COMMON_DOCUMENT.querySelector('#paper').style.transform;
         old_scale = parseFloat(old.substr(old.indexOf('(') + 1, old.indexOf(')') - 1));
         div.style.transform = 'scale(' + (old_scale + (zoomvalue / 10)) + ')';
     }
@@ -727,12 +727,12 @@ const zoom_paper = (zoomvalue = null) => {
  * @returns {void}
  */
 const show_dialogue = (dialogue) => {
-    if (dialogue == 'SCAN' && common.mobile()==false){
-        common.ComponentRender({mountDiv:   'dialogue_scan_open_mobile',
+    if (dialogue == 'SCAN' && common.commonMobile()==false){
+        common.commonComponentRender({mountDiv:   'dialogue_scan_open_mobile',
                                 data:       null,
                                 methods:    {
-                                            create_qr:common.create_qr,
-                                            getHostname:common.getHostname
+                                            commonModuleEasyQRCODECreate:common.commonModuleEasyQRCODECreate,
+                                            commonWindowHostname:common.commonWindowHostname
                                             },
                                 path:       '/component/dialogue_scan_open_mobile.js'});
     }
@@ -753,11 +753,11 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             }
         case 'GPS_MAP':
             {
-                const gps_lat_input = CommonAppDocument.querySelector('#setting_input_lat');
-                const gps_long_input = CommonAppDocument.querySelector('#setting_input_long');
+                const gps_lat_input = COMMON_DOCUMENT.querySelector('#setting_input_lat');
+                const gps_long_input = COMMON_DOCUMENT.querySelector('#setting_input_long');
                 map_update_app({longitude:gps_long_input.textContent,
                                 latitude:gps_lat_input.textContent,
-                                text_place:CommonAppDocument.querySelector('#setting_input_place').textContent,
+                                text_place:COMMON_DOCUMENT.querySelector('#setting_input_place').textContent,
                                 country:'',
                                 city:'',
                                 timezone_text :null
@@ -768,7 +768,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             {                    
                 //read from Leaflet module and custom code
                 //read from latest popup
-                const popup = CommonAppDocument.querySelectorAll('.common_module_leaflet_popup_sub_title_gps')[CommonAppDocument.querySelectorAll('.common_module_leaflet_popup_sub_title_gps').length - 1 ];
+                const popup = COMMON_DOCUMENT.querySelectorAll('.common_module_leaflet_popup_sub_title_gps')[COMMON_DOCUMENT.querySelectorAll('.common_module_leaflet_popup_sub_title_gps').length - 1 ];
                 const country = popup.getAttribute('data-country');
                 const city = popup.getAttribute('data-city');
                 const timezone = popup.getAttribute('data-timezone');
@@ -778,34 +778,34 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 //update value in app
                 
                 
-                const gps_lat_input = CommonAppDocument.querySelector('#setting_input_lat');
-                const gps_long_input = CommonAppDocument.querySelector('#setting_input_long');
+                const gps_lat_input = COMMON_DOCUMENT.querySelector('#setting_input_lat');
+                const gps_long_input = COMMON_DOCUMENT.querySelector('#setting_input_long');
                 gps_long_input.textContent = longitude;
                 gps_lat_input.textContent = latitude;
 
                 if (city=='' && country==''){
                     //Set place from city + country from popup title
-                    CommonAppDocument.querySelector('#setting_input_place').textContent = 
-                        CommonAppDocument.querySelectorAll('.common_module_leaflet_popup_title')[CommonAppDocument.querySelectorAll('.common_module_leaflet_popup_title').length - 1 ].textContent;
+                    COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = 
+                        COMMON_DOCUMENT.querySelectorAll('.common_module_leaflet_popup_title')[COMMON_DOCUMENT.querySelectorAll('.common_module_leaflet_popup_title').length - 1 ].textContent;
                 }
                 else{
                     //Set place from city + country from data attributes
-                    CommonAppDocument.querySelector('#setting_input_place').textContent = city + ', ' + country;
+                    COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = city + ', ' + country;
                 }
                 //display empty popular place select
-                common.set_current_value('setting_select_popular_place', null, 'id', null);
+                common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
                 map_show_qibbla();
                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone;
-                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
+                APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(timezone);
                 settings_update('GPS');    
                 break;
             }
         case 'GPS_POPULAR_PLACES':
             {
                 
-                const select_place = JSON.parse(CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value'));
-                const gps_lat_input = CommonAppDocument.querySelector('#setting_input_lat');
-                const gps_long_input = CommonAppDocument.querySelector('#setting_input_long');
+                const select_place = JSON.parse(COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value'));
+                const gps_lat_input = COMMON_DOCUMENT.querySelector('#setting_input_lat');
+                const gps_long_input = COMMON_DOCUMENT.querySelector('#setting_input_long');
                 
                 //set GPS and timezone
                 const longitude_selected = select_place.longitude;
@@ -818,7 +818,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                     //Update map
                     map_update_app({longitude:      longitude_selected,
                                     latitude:       latitude_selected,
-                                    text_place:     CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').textContent,
+                                    text_place:     COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').textContent,
                                     country:        '',
                                     city:           '',
                                     timezone_text : timezone_selected
@@ -826,22 +826,22 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                     
                     common.COMMON_GLOBAL.moduleLeaflet.methods.map_toolbar_reset();
                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone_selected;
-                const title = CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').textContent;
-                CommonAppDocument.querySelector('#setting_input_place').textContent = title;
+                const title = COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').textContent;
+                COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = title;
                 settings_update('GPS');
                 break;
             }
         case 'GPS_POSITION':
             {
                 
-                const gps_lat_input = CommonAppDocument.querySelector('#setting_input_lat');
-                const gps_long_input = CommonAppDocument.querySelector('#setting_input_long');
+                const gps_lat_input = COMMON_DOCUMENT.querySelector('#setting_input_lat');
+                const gps_long_input = COMMON_DOCUMENT.querySelector('#setting_input_long');
                 
-                common.set_current_value('setting_select_popular_place', null, 'id', null);
+                common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
 
-                common.get_place_from_gps(gps_long_input.textContent, gps_lat_input.textContent).then((/**@type{string}*/gps_place) => {
+                common.commonMicroserviceGeolocationPlace(gps_long_input.textContent, gps_lat_input.textContent).then((/**@type{string}*/gps_place) => {
                     //Update map
-                    CommonAppDocument.querySelector('#setting_input_place').textContent = gps_place;
+                    COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = gps_place;
                     map_update_app({longitude:gps_long_input.textContent,
                                     latitude:gps_lat_input.textContent,
                                     text_place:gps_place,
@@ -858,8 +858,8 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             }
         case 'DESIGN_PAPER':
             {
-                const paper = CommonAppDocument.querySelector('#paper');
-                const paper_size = CommonAppDocument.querySelector('#setting_select_report_papersize .common_select_dropdown_value').getAttribute('data-value');
+                const paper = COMMON_DOCUMENT.querySelector('#paper');
+                const paper_size = COMMON_DOCUMENT.querySelector('#setting_select_report_papersize .common_select_dropdown_value').getAttribute('data-value');
                  
                 switch (paper_size) {
                     case 'A4':
@@ -880,7 +880,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
         case 'IMAGE_HEADER_LOAD':
         case 'IMAGE_FOOTER_LOAD':
             {
-                await common.show_image( CommonAppDocument.querySelector(`#setting_report${setting_type=='HEADER_LOAD'?'header':'footer'}_img`), 
+                await common.commonImageShow( COMMON_DOCUMENT.querySelector(`#setting_report${setting_type=='HEADER_LOAD'?'header':'footer'}_img`), 
                                         item_id, 
                                         APP_GLOBAL.image_header_footer_width, 
                                         APP_GLOBAL.image_header_footer_height);
@@ -889,8 +889,8 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
         case 'IMAGE_HEADER_CLEAR':
         case 'IMAGE_FOOTER_CLEAR':
             {
-                const preview_item  = CommonAppDocument.querySelector(`#setting_report${setting_type=='HEADER_CLEAR'?'header':'footer'}_img`);
-                const preview_input = CommonAppDocument.querySelector(`#setting_input_report${setting_type=='HEADER_CLEAR'?'header':'footer'}_img`);
+                const preview_item  = COMMON_DOCUMENT.querySelector(`#setting_report${setting_type=='HEADER_CLEAR'?'header':'footer'}_img`);
+                const preview_input = COMMON_DOCUMENT.querySelector(`#setting_input_report${setting_type=='HEADER_CLEAR'?'header':'footer'}_img`);
                 preview_item.style.backgroundImage='url()';
                 preview_input.value = '';
                 break;
@@ -901,45 +901,45 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 const button_active_class  = 'setting_button_active';
                 const header_footer = setting_type=='HEADER_ALIGN'?'header':'footer';
                 //check if clicking on button that is already active then deactivate so no alignment
-                if (CommonAppDocument.querySelector('#' + item_id).classList.contains(button_active_class)){
-                    CommonAppDocument.querySelector('#' + item_id).classList.remove(button_active_class);
+                if (COMMON_DOCUMENT.querySelector('#' + item_id).classList.contains(button_active_class)){
+                    COMMON_DOCUMENT.querySelector('#' + item_id).classList.remove(button_active_class);
                 }
                 else{
-                    CommonAppDocument.querySelector(`#setting_icon_text_${header_footer}_aleft`).classList.remove(button_active_class);
-                    CommonAppDocument.querySelector(`#setting_icon_text_${header_footer}_acenter`).classList.remove(button_active_class);
-                    CommonAppDocument.querySelector(`#setting_icon_text_${header_footer}_aright`).classList.remove(button_active_class);
+                    COMMON_DOCUMENT.querySelector(`#setting_icon_text_${header_footer}_aleft`).classList.remove(button_active_class);
+                    COMMON_DOCUMENT.querySelector(`#setting_icon_text_${header_footer}_acenter`).classList.remove(button_active_class);
+                    COMMON_DOCUMENT.querySelector(`#setting_icon_text_${header_footer}_aright`).classList.remove(button_active_class);
                     
-                    CommonAppDocument.querySelector('#' + item_id).classList.add(button_active_class);
+                    COMMON_DOCUMENT.querySelector('#' + item_id).classList.add(button_active_class);
                 }
-                const align = get_align(CommonAppDocument.querySelector(`#setting_icon_text_${header_footer}_aleft`).classList.contains('setting_button_active'),
-                                        CommonAppDocument.querySelector(`#setting_icon_text_${header_footer}_acenter`).classList.contains('setting_button_active'),
-                                        CommonAppDocument.querySelector(`#setting_icon_text_${header_footer}_aright`).classList.contains('setting_button_active'));
-                CommonAppDocument.querySelector(`#setting_input_report${header_footer}1`).style.textAlign= align;
-                CommonAppDocument.querySelector(`#setting_input_report${header_footer}2`).style.textAlign= align;
-                CommonAppDocument.querySelector(`#setting_input_report${header_footer}3`).style.textAlign= align;
+                const align = get_align(COMMON_DOCUMENT.querySelector(`#setting_icon_text_${header_footer}_aleft`).classList.contains('setting_button_active'),
+                                        COMMON_DOCUMENT.querySelector(`#setting_icon_text_${header_footer}_acenter`).classList.contains('setting_button_active'),
+                                        COMMON_DOCUMENT.querySelector(`#setting_icon_text_${header_footer}_aright`).classList.contains('setting_button_active'));
+                COMMON_DOCUMENT.querySelector(`#setting_input_report${header_footer}1`).style.textAlign= align;
+                COMMON_DOCUMENT.querySelector(`#setting_input_report${header_footer}2`).style.textAlign= align;
+                COMMON_DOCUMENT.querySelector(`#setting_input_report${header_footer}3`).style.textAlign= align;
                 break;
             }
         case 'PRAYER_METHOD':
             {
-                const method = CommonAppDocument.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value');
+                const method = COMMON_DOCUMENT.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value');
                 let suffix;
 
-                CommonAppDocument.querySelector('#setting_method_param_fajr').textContent = '';
-                CommonAppDocument.querySelector('#setting_method_param_isha').textContent = '';
+                COMMON_DOCUMENT.querySelector('#setting_method_param_fajr').textContent = '';
+                COMMON_DOCUMENT.querySelector('#setting_method_param_isha').textContent = '';
                 if (typeof APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                CommonAppDocument.querySelector('#setting_method_param_fajr').textContent = 'Fajr:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr + suffix;
+                COMMON_DOCUMENT.querySelector('#setting_method_param_fajr').textContent = 'Fajr:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr + suffix;
                 if (typeof APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                CommonAppDocument.querySelector('#setting_method_param_isha').textContent = 'Isha:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
+                COMMON_DOCUMENT.querySelector('#setting_method_param_isha').textContent = 'Isha:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
                 break;
             }
         case 'USER_SETTING':{
-            APP_GLOBAL.user_settings.current_id = CommonAppDocument.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value');
+            APP_GLOBAL.user_settings.current_id = COMMON_DOCUMENT.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value');
         }
     }
 };
@@ -952,7 +952,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
  * @returns {Promise.<void>}
  */
 const user_login_app = async (system_admin=false, username_verify=null, password_verify=null) => {
-    await common.user_login(system_admin, username_verify, password_verify)
+    await common.commonUserLogin(system_admin, username_verify, password_verify)
     .then(result=>{
         //create intitial user setting if not exist, send initial=true
         login_common(result.avatar);
@@ -966,8 +966,8 @@ const user_login_app = async (system_admin=false, username_verify=null, password
  * @returns {Promise.<void>}
  */
 const user_function_app = async (function_name) => {
-    await common.user_function(function_name)
-    .then(()=>profile_update_stat_app())
+    await common.commonUserFunction(function_name)
+    .then(()=>commonProfileUpdateStat_app())
     .catch(()=>null);
 };
 
@@ -977,9 +977,9 @@ const user_function_app = async (function_name) => {
  */
 const user_logout_app = () => {
     
-    common.user_logout().then(() => {
-        common.ComponentRemove('settings_tab_nav_7');
-        common.ComponentRemove('common_dialogue_profile', true);
+    common.commonUserLogout().then(() => {
+        common.commonComponentRemove('settings_tab_nav_7');
+        common.commonComponentRemove('common_dialogue_profile', true);
         //set default settings
         set_default_settings().then(() => {
             //show default startup
@@ -995,17 +995,17 @@ const login_common = (avatar) => {
     //create intitial user setting if not exist, send initial=true
     user_settings_function('ADD_LOGIN', true)
     .then(()=>{
-        common.ComponentRender({
+        common.commonComponentRender({
             mountDiv:   'settings_tab_nav_7',
             data:       {avatar:avatar},
             methods:    null,
             path:       '/component/settings_tab_nav_7.js'});
 
         //Hide settings
-        CommonAppDocument.querySelector('#settings').style.visibility = 'hidden';
-        common.ComponentRemove('common_dialogue_profile');
+        COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
+        common.commonComponentRemove('common_dialogue_profile');
         
-        CommonAppDocument.querySelector('#paper').textContent='';
+        COMMON_DOCUMENT.querySelector('#paper').textContent='';
         user_settings_get().then(() => {
             //show default startup
             toolbar_button(APP_GLOBAL.app_default_startup_page);
@@ -1018,7 +1018,7 @@ const login_common = (avatar) => {
  * @returns {Promise.<void>}
  */
 const ProviderSignIn_app = async (provider_id) => {
-    common.user_login(null, null, null, provider_id)
+    common.commonUserLogin(null, null, null, provider_id)
     .then(result=>{
         login_common(result.avatar);
     })
@@ -1028,8 +1028,8 @@ const ProviderSignIn_app = async (provider_id) => {
  * Profile update stat
  * @returns {Promise.<void>}
  */
-const profile_update_stat_app = async () => {
-    const result = await common.profile_update_stat();
+const commonProfileUpdateStat_app = async () => {
+    const result = await common.commonProfileUpdateStat();
     APP_GLOBAL.function_profile_user_setting_stat(result.id);
 };
 /**
@@ -1039,9 +1039,9 @@ const profile_update_stat_app = async () => {
  * @returns {Promise.<void>}
  */
  const profile_stat_app = async (statchoice, app_rest_url) => {
-    await common.profile_stat(statchoice, app_rest_url)
+    await common.commonProfileStat(statchoice, app_rest_url)
     .then(()=>{
-        common.ComponentRender({
+        common.commonComponentRender({
             mountDiv:   'common_profile_stat_row2',
             data:      null,
             methods:    null,
@@ -1057,19 +1057,19 @@ const profile_detail_app = (detailchoice) => {
     if (common.COMMON_GLOBAL.user_account_id || 0 !== 0) {
         if (detailchoice == 0){
             //user settings
-            CommonAppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
+            COMMON_DOCUMENT.querySelector('#profile_user_settings_row').style.display = 'block';
         }
         else{
             //common 1 -4
             //app
             //7 Like user setting
             //8 Liked user setting
-            CommonAppDocument.querySelector('#profile_user_settings_row').style.display = 'none';
+            COMMON_DOCUMENT.querySelector('#profile_user_settings_row').style.display = 'none';
         }
-        common.profile_detail(detailchoice);
+        common.commonProfileDetail(detailchoice);
     } 
     else
-        common.show_common_dialogue('LOGIN');
+        common.commonDialogueShow('LOGIN');
 };
 /**
  * User settings get
@@ -1077,7 +1077,7 @@ const profile_detail_app = (detailchoice) => {
  */
 const user_settings_get = async () => {
     return new Promise(resolve=>{
-        common.FFB({path:`/server-db/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, method:'GET', authorization_type:'APP_DATA'})
+        common.commonFFB({path:`/server-db/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, method:'GET', authorization_type:'APP_DATA'})
         .then((/**@type{string}*/result)=>{
             APP_GLOBAL.user_settings = {current_id:0,
                                         data:[]};
@@ -1160,7 +1160,7 @@ const user_setting_link = (item) => {
                                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
                                         item.id,
                                         'HTML');
-            common.ComponentRender({
+            common.commonComponentRender({
                     mountDiv:   'common_window_info',
                     data:       {
                                 info:2,
@@ -1169,7 +1169,7 @@ const user_setting_link = (item) => {
                                 iframe_content:url,
                                 iframe_class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size
                                 },
-                    methods:    {common_setTimeout:common.common_setTimeout},
+                    methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
                     path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1184,7 +1184,7 @@ const user_setting_link = (item) => {
  */
 const user_settings_function = async (function_name, initial_user_setting, add_settings=true) => {
    
-    if (common.input_control(null,{
+    if (common.commonInputControl(null,{
                                     check_valid_list_values:[
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,null],
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text?.toString()??'',null],
@@ -1224,7 +1224,7 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                 break;
             }
         }
-        await common.FFB({path:path, query:query, method:method, authorization_type:'APP_ACCESS', body:json_data, spinner_id:spinner_id?spinner_id:null})
+        await common.commonFFB({path:path, query:query, method:method, authorization_type:'APP_ACCESS', body:json_data, spinner_id:spinner_id?spinner_id:null})
         .then((/**@type{string}*/result)=>{
             switch (function_name){
                 case 'ADD':{
@@ -1239,7 +1239,7 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id = JSON.parse(result).insertId;
 
                     //Update select
-                    common.ComponentRender({
+                    common.commonComponentRender({
                         mountDiv:   'setting_select_user_setting',
                         data:       {
                                     default_data_value:APP_GLOBAL.user_settings.current_id,
@@ -1252,7 +1252,7 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                                     column_value:'value',
                                     column_text:'text'
                                     },
-                        methods:    {FFB:null},
+                        methods:    {commonFFB:null},
                         path:       '/common/component/common_select.js'});
                     break;
                 }
@@ -1273,29 +1273,29 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
  * @returns {void}
  */
 const user_settings_delete = (choice=null) => {
-    const user_setting_id = APP_GLOBAL.user_settings.data[CommonAppDocument.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value')].id;
+    const user_setting_id = APP_GLOBAL.user_settings.data[COMMON_DOCUMENT.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value')].id;
     const function_delete_user_setting = () => { user_settings_delete(1); };
     
     switch (choice){
         case null:{
-            common.show_message('CONFIRM',null,function_delete_user_setting, null, null, common.COMMON_GLOBAL.app_id);
+            common.commonMessageShow('CONFIRM',null,function_delete_user_setting, null, null, common.COMMON_GLOBAL.app_id);
             break;
         }
         case 1:{
-            common.FFB({path:`/server-db/user_account_app_data_post/${user_setting_id}`, method:'DELETE', authorization_type:'APP_ACCESS', body:{user_account_id:common.COMMON_GLOBAL.user_account_id}, spinner_id:'setting_btn_user_delete'})
+            common.commonFFB({path:`/server-db/user_account_app_data_post/${user_setting_id}`, method:'DELETE', authorization_type:'APP_ACCESS', body:{user_account_id:common.COMMON_GLOBAL.user_account_id}, spinner_id:'setting_btn_user_delete'})
             .then(()=>{
-                common.ComponentRemove('common_dialogue_message', true);
+                common.commonComponentRemove('common_dialogue_message', true);
                 //check if last setting
                 if (APP_GLOBAL.user_settings.data.length == 1)
                     user_settings_function('ADD', false, false);
                 else{
                     //remove current element from array
-                    APP_GLOBAL.user_settings.data.splice(CommonAppDocument.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value'),1);
+                    APP_GLOBAL.user_settings.data.splice(COMMON_DOCUMENT.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value'),1);
                     //show next or last setting
-                    APP_GLOBAL.user_settings.current_id = Math.min(CommonAppDocument.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value') +1, APP_GLOBAL.user_settings.data.length - 1);
+                    APP_GLOBAL.user_settings.current_id = Math.min(COMMON_DOCUMENT.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value') +1, APP_GLOBAL.user_settings.data.length - 1);
 
                     //Update select
-                    common.ComponentRender({
+                    common.commonComponentRender({
                         mountDiv:   'setting_select_user_setting',
                         data:       {
                                     default_data_value:APP_GLOBAL.user_settings.current_id,
@@ -1310,12 +1310,12 @@ const user_settings_delete = (choice=null) => {
                                     column_value:'value',
                                     column_text:'text'
                                     },
-                        methods:    {FFB:null},
+                        methods:    {commonFFB:null},
                         path:       '/common/component/common_select.js'});
                 }
                 
             })
-            .catch(()=>common.ComponentRemove('common_dialogue_message', true));
+            .catch(()=>common.commonComponentRemove('common_dialogue_message', true));
         }
     }
 };
@@ -1385,7 +1385,7 @@ const set_default_settings = async () => {
                                         json_data:json_data}]
                                 };
     //Design
-    CommonAppDocument.querySelector('#paper').className=APP_GLOBAL.design_default_papersize;
+    COMMON_DOCUMENT.querySelector('#paper').className=APP_GLOBAL.design_default_papersize;
 };
  /**
   * 
@@ -1400,96 +1400,96 @@ const fixFloat = value =>  (value==''||value==null)?null:parseFloat(value);
  */
 const settings_update = setting_tab => {
 
-    const json_data = { description:                        setting_tab=='GPS'?CommonAppDocument.querySelector('#setting_input_place').textContent:
+    const json_data = { description:                        setting_tab=='GPS'?COMMON_DOCUMENT.querySelector('#setting_input_place').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
-                        regional_language_locale:           setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_locale .common_select_dropdown_value').getAttribute('data-value'):
+                        regional_language_locale:           setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_locale .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_language_locale,
-                        regional_timezone:                  setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_timezone .common_select_dropdown_value').getAttribute('data-value'):
+                        regional_timezone:                  setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_timezone .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone,
-                        regional_number_system:             setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_numbersystem .common_select_dropdown_value').getAttribute('data-value'):
+                        regional_number_system:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_numbersystem .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_number_system,
-                        regional_layout_direction:          setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_direction .common_select_dropdown_value').getAttribute('data-value'):
+                        regional_layout_direction:          setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_direction .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_layout_direction,
-                        regional_second_language_locale:    setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_locale_second .common_select_dropdown_value').getAttribute('data-value'):
+                        regional_second_language_locale:    setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_locale_second .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_second_language_locale,
-                        regional_column_title:              setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_coltitle .common_select_dropdown_value').getAttribute('data-value'):
+                        regional_column_title:              setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_coltitle .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_column_title,
-                        regional_arabic_script:             setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_report_arabic_script .common_select_dropdown_value').getAttribute('data-value'):
+                        regional_arabic_script:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_arabic_script .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script,
-                        regional_calendar_type:             setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_calendartype .common_select_dropdown_value').getAttribute('data-value'):
+                        regional_calendar_type:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_calendartype .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_type,
-                        regional_calendar_hijri_type:       setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_calendar_hijri_type .common_select_dropdown_value').getAttribute('data-value'):
+                        regional_calendar_hijri_type:       setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_calendar_hijri_type .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_hijri_type,
-                        gps_popular_place_id:               setting_tab=='GPS'?JSON.parse(CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value')).id:
+                        gps_popular_place_id:               setting_tab=='GPS'?JSON.parse(COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value')).id:
                                                                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_popular_place_id,
-                        gps_lat_text:                       setting_tab=='GPS'?fixFloat(CommonAppDocument.querySelector('#setting_input_lat').textContent):
+                        gps_lat_text:                       setting_tab=='GPS'?fixFloat(COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text,
-                        gps_long_text:                      setting_tab=='GPS'?fixFloat(CommonAppDocument.querySelector('#setting_input_long').textContent):
+                        gps_long_text:                      setting_tab=='GPS'?fixFloat(COMMON_DOCUMENT.querySelector('#setting_input_long').textContent):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text,
                         design_theme_day_id:                setting_tab=='DESIGN'?get_theme_id('day'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_day_id,
                         design_theme_month_id:              setting_tab=='DESIGN'?get_theme_id('month'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_month_id,
                         design_theme_year_id:               setting_tab=='DESIGN'?get_theme_id('year'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_year_id,
-                        design_paper_size:                  setting_tab=='DESIGN'?CommonAppDocument.querySelector('#setting_select_report_papersize .common_select_dropdown_value').getAttribute('data-value'):
+                        design_paper_size:                  setting_tab=='DESIGN'?COMMON_DOCUMENT.querySelector('#setting_select_report_papersize .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
-                        design_row_highlight:               setting_tab=='DESIGN'?CommonAppDocument.querySelector('#setting_select_report_highlight_row .common_select_dropdown_value').getAttribute('data-value'):
+                        design_row_highlight:               setting_tab=='DESIGN'?COMMON_DOCUMENT.querySelector('#setting_select_report_highlight_row .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_row_highlight,
-                        design_column_weekday_checked:      setting_tab=='DESIGN'?Number(CommonAppDocument.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')):
+                        design_column_weekday_checked:      setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_weekday_checked,
-                        design_column_calendartype_checked: setting_tab=='DESIGN'?Number(CommonAppDocument.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')):
+                        design_column_calendartype_checked: setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_calendartype_checked,
-                        design_column_notes_checked:        setting_tab=='DESIGN'?Number(CommonAppDocument.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')):
+                        design_column_notes_checked:        setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_notes_checked,
-                        design_column_gps_checked:          setting_tab=='DESIGN'?Number(CommonAppDocument.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')):
+                        design_column_gps_checked:          setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_gps_checked,
-                        design_column_timezone_checked:     setting_tab=='DESIGN'?Number(CommonAppDocument.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')):
+                        design_column_timezone_checked:     setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_timezone_checked,
-                        image_header_image_img:             setting_tab=='IMAGE'?CommonAppDocument.querySelector('#setting_reportheader_img').getAttribute('data-image'):
+                        image_header_image_img:             setting_tab=='IMAGE'?COMMON_DOCUMENT.querySelector('#setting_reportheader_img').getAttribute('data-image'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.image_header_image_img,
-                        image_footer_image_img:             setting_tab=='IMAGE'?CommonAppDocument.querySelector('#setting_reportfooter_img').getAttribute('data-image'):
+                        image_footer_image_img:             setting_tab=='IMAGE'?COMMON_DOCUMENT.querySelector('#setting_reportfooter_img').getAttribute('data-image'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.image_footer_image_img,
-                        text_header_1_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportheader1').textContent:  
+                        text_header_1_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader1').textContent:  
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_1_text,
-                        text_header_2_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportheader2').textContent:
+                        text_header_2_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader2').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_2_text,
-                        text_header_3_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportheader3').textContent:
+                        text_header_3_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader3').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_3_text,
                         text_header_align:                  setting_tab=='TEXT'? (align_button_value('header')==''?null:align_button_value('header')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_align,
-                        text_footer_1_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportfooter1').textContent:
+                        text_footer_1_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter1').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_1_text,
-                        text_footer_2_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportfooter2').textContent:
+                        text_footer_2_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter2').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_2_text,
-                        text_footer_3_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportfooter3').textContent:
+                        text_footer_3_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter3').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_3_text,
                         text_footer_align:                  setting_tab=='TEXT'? (align_button_value('footer')==''?null:align_button_value('footer')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_align,
-                        prayer_method:                      setting_tab=='PRAYER'?CommonAppDocument.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value'):
+                        prayer_method:                      setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_method,
-                        prayer_asr_method:                  setting_tab=='PRAYER'?CommonAppDocument.querySelector('#setting_select_asr .common_select_dropdown_value').getAttribute('data-value'):
+                        prayer_asr_method:                  setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_asr .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_asr_method,
-                        prayer_high_latitude_adjustment:    setting_tab=='PRAYER'?CommonAppDocument.querySelector('#setting_select_highlatitude .common_select_dropdown_value').getAttribute('data-value'):
+                        prayer_high_latitude_adjustment:    setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_highlatitude .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_high_latitude_adjustment,
-                        prayer_time_format:                 setting_tab=='PRAYER'?CommonAppDocument.querySelector('#setting_select_timeformat .common_select_dropdown_value').getAttribute('data-value'):
+                        prayer_time_format:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_timeformat .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_time_format,
-                        prayer_hijri_date_adjustment:       setting_tab=='PRAYER'?Number(CommonAppDocument.querySelector('#setting_select_hijri_adjustment .common_select_dropdown_value').getAttribute('data-value')):
+                        prayer_hijri_date_adjustment:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_select_hijri_adjustment .common_select_dropdown_value').getAttribute('data-value')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_hijri_date_adjustment,
-                        prayer_fajr_iqamat:                 setting_tab=='PRAYER'?CommonAppDocument.querySelector('#setting_select_report_iqamat_title_fajr .common_select_dropdown_value').getAttribute('data-value'):
+                        prayer_fajr_iqamat:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_fajr .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_fajr_iqamat,
-                        prayer_dhuhr_iqamat:                setting_tab=='PRAYER'?CommonAppDocument.querySelector('#setting_select_report_iqamat_title_dhuhr .common_select_dropdown_value').getAttribute('data-value'):
+                        prayer_dhuhr_iqamat:                setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_dhuhr .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_dhuhr_iqamat,
-                        prayer_asr_iqamat:                  setting_tab=='PRAYER'?CommonAppDocument.querySelector('#setting_select_report_iqamat_title_asr .common_select_dropdown_value').getAttribute('data-value'):
+                        prayer_asr_iqamat:                  setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_asr .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_asr_iqamat,
-                        prayer_maghrib_iqamat:              setting_tab=='PRAYER'?CommonAppDocument.querySelector('#setting_select_report_iqamat_title_maghrib .common_select_dropdown_value').getAttribute('data-value'):
+                        prayer_maghrib_iqamat:              setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_maghrib .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_maghrib_iqamat,
-                        prayer_isha_iqamat:                 setting_tab=='PRAYER'?CommonAppDocument.querySelector('#setting_select_report_iqamat_title_isha .common_select_dropdown_value').getAttribute('data-value'):
+                        prayer_isha_iqamat:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_isha .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_isha_iqamat,
-                        prayer_column_imsak_checked:        setting_tab=='PRAYER'?Number(CommonAppDocument.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')):
+                        prayer_column_imsak_checked:        setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_column_imsak_checked,
-                        prayer_column_sunset_checked:       setting_tab=='PRAYER'?Number(CommonAppDocument.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')):
+                        prayer_column_sunset_checked:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_column_sunset_checked,
-                        prayer_column_midnight_checked:     setting_tab=='PRAYER'?Number(CommonAppDocument.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')):
+                        prayer_column_midnight_checked:     setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_column_midnight_checked,
-                        prayer_column_fast_start_end:       setting_tab=='PRAYER'?Number(CommonAppDocument.querySelector('#setting_select_report_show_fast_start_end .common_select_dropdown_value').getAttribute('data-value')):
+                        prayer_column_fast_start_end:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_select_report_show_fast_start_end .common_select_dropdown_value').getAttribute('data-value')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_column_fast_start_end
                     };
     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data = json_data;
@@ -1501,7 +1501,7 @@ const settings_update = setting_tab => {
  * @returns {void}
  */
 const profile_user_setting_link = item => {
-    const select_user_setting = CommonAppDocument.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
+    const select_user_setting = COMMON_DOCUMENT.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
     const user_account_id = JSON.parse(select_user_setting).user_account_id;
     const sid = JSON.parse(select_user_setting).sid;
     const paper_size = JSON.parse(select_user_setting).paper_size;
@@ -1515,7 +1515,7 @@ const profile_user_setting_link = item => {
                                      item.id,
                                      'HTML',
                                      false);
-            common.ComponentRender({
+            common.commonComponentRender({
                     mountDiv:   'common_window_info',
                     data:       {
                                 info:2,
@@ -1524,7 +1524,7 @@ const profile_user_setting_link = item => {
                                 iframe_content:url,
                                 iframe_class:paper_size
                                 },
-                    methods:    {common_setTimeout:common.common_setTimeout},
+                    methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
                     path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1545,15 +1545,15 @@ const user_settings_like = user_account_app_data_post_id => {
     let method;
     const json_data = {user_account_app_data_post_id: user_account_app_data_post_id};
     if (common.COMMON_GLOBAL.user_account_id == null)
-        common.show_common_dialogue('LOGIN');
+        common.commonDialogueShow('LOGIN');
     else {
-        if (CommonAppDocument.querySelector('#profile_user_settings_like').children[0].style.display == 'block')
+        if (COMMON_DOCUMENT.querySelector('#profile_user_settings_like').children[0].style.display == 'block')
             method = 'POST';
         else
             method = 'DELETE';
-        common.FFB({path:`/server-db/user_account_app_data_post_like/${common.COMMON_GLOBAL.user_account_id??''}`, method:method, authorization_type:'APP_ACCESS', body:json_data})
-        .then(()=>APP_GLOBAL.function_profile_user_setting_update(  CommonAppDocument.querySelector('#common_profile_id').textContent,
-                                                                    JSON.parse(CommonAppDocument.querySelector('#profile_select_user_settings .common_select_dropdown_value')
+        common.commonFFB({path:`/server-db/user_account_app_data_post_like/${common.COMMON_GLOBAL.user_account_id??''}`, method:method, authorization_type:'APP_ACCESS', body:json_data})
+        .then(()=>APP_GLOBAL.function_profile_user_setting_update(  COMMON_DOCUMENT.querySelector('#common_profile_id').textContent,
+                                                                    JSON.parse(COMMON_DOCUMENT.querySelector('#profile_select_user_settings .common_select_dropdown_value')
                                                                                 .getAttribute('data-value')).sid))
         .catch(()=>null);
     }
@@ -1564,13 +1564,13 @@ const user_settings_like = user_account_app_data_post_id => {
  */
 const app_event_click = event => {
     if (event==null){
-        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
     else{
-        const event_target_id = common.element_id(event.target);
-        common.common_event('click',event)
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
                 case event.target?.classList.contains('common_select_option')?event_target_id:'':
@@ -1649,11 +1649,11 @@ const app_event_click = event => {
                 //info dialogue
                 case 'app_link':{
                     if (common.COMMON_GLOBAL.app_link_url)
-                        common.WindowOpen(common.COMMON_GLOBAL.app_link_url);
+                        common.commonWindowOpen(common.COMMON_GLOBAL.app_link_url);
                     break;
                 }
                 case 'info_link1':{
-                    common.ComponentRender({
+                    common.commonComponentRender({
                         mountDiv:   'common_window_info',
                         data:       {
                                     info:1,
@@ -1661,36 +1661,36 @@ const app_event_click = event => {
                                     content_type:null, 
                                     iframe_content:null
                                     },
-                        methods:    {common_setTimeout:common.common_setTimeout},
+                        methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
                 case 'info_link2':{
-                    common.ComponentRender({
+                    common.commonComponentRender({
                         mountDiv:   'common_window_info',
                         data:       {
                                     info:1,
                                     url:common.COMMON_GLOBAL.info_link_disclaimer_url,
                                     content_type:null, 
                                     iframe_content:null},
-                        methods:    {common_setTimeout:common.common_setTimeout},
+                        methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
                 case 'info_link3':{
-                    common.ComponentRender({
+                    common.commonComponentRender({
                         mountDiv:   'common_window_info',
                         data:       {
                                     info:1,
                                     url:common.COMMON_GLOBAL.info_link_terms_url,
                                     content_type:null, 
                                     iframe_content:null},
-                        methods:    {common_setTimeout:common.common_setTimeout},
+                        methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
                 case 'info_link4':{
-                    common.ComponentRender({
+                    common.commonComponentRender({
                         mountDiv:   'common_window_info',
                         data:       {
                                     info:1,
@@ -1698,12 +1698,12 @@ const app_event_click = event => {
                                     content_type:null, 
                                     iframe_content:null
                                     },
-                        methods:    {common_setTimeout:common.common_setTimeout},
+                        methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
                 case 'info_close':{
-                    common.ComponentRemove('dialogue_info', true);
+                    common.commonComponentRemove('dialogue_info', true);
                     break;
                 }
                 //toolbar top
@@ -1724,8 +1724,8 @@ const app_event_click = event => {
                     break;
                 }
                 case 'toolbar_btn_search':{
-                    const input_row = CommonAppDocument.querySelector('#common_profile_search_input');
-                    const searchlist = CommonAppDocument.querySelector('#common_profile_search_list_wrap');
+                    const input_row = COMMON_DOCUMENT.querySelector('#common_profile_search_input');
+                    const searchlist = COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap');
                     if (input_row.style.visibility == 'visible'){
                         input_row.style.visibility='hidden';
                         input_row.textContent = '';
@@ -1738,12 +1738,12 @@ const app_event_click = event => {
                         searchlist.style.visibility = 'visible';
                         searchlist.style.display  = 'none';
                     }                   
-                    CommonAppDocument.querySelector('#common_profile_search_input').focus();
+                    COMMON_DOCUMENT.querySelector('#common_profile_search_input').focus();
                     break;
                 }
                 //toolbar bottom
                 case 'toolbar_btn_about':{
-                    common.ComponentRender({
+                    common.commonComponentRender({
                         mountDiv:   'dialogue_info',
                         data:       {   
                                     about_logo:common.COMMON_GLOBAL.app_logo,
@@ -1795,16 +1795,16 @@ const app_event_click = event => {
                     break;
                 }
                 case 'scan_open_mobile_close':{
-                    common.ComponentRemove('dialogue_scan_open_mobile', true);
+                    common.commonComponentRemove('dialogue_scan_open_mobile', true);
                     break;
                 }
                 //settings
                 case 'settings_close':{
-                    common.ComponentRemove('settings_content');
-                    if (common.mobile())
-                        CommonAppDocument.querySelector('#paper').style.display = 'block';
-                    CommonAppDocument.querySelector('#settings').style.visibility = 'hidden';
-                    const timetable_type = CommonAppDocument.querySelector('#toolbar_bottom .toolbar_bottom_selected').id
+                    common.commonComponentRemove('settings_content');
+                    if (common.commonMobile())
+                        COMMON_DOCUMENT.querySelector('#paper').style.display = 'block';
+                    COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
+                    const timetable_type = COMMON_DOCUMENT.querySelector('#toolbar_bottom .toolbar_bottom_selected').id
                                                 .toLowerCase()
                                                 .substring('toolbar_btn_'.length);
                     update_timetable_report(timetable_type=='day'?0:timetable_type=='month'?1:2, null, getReportSettings());
@@ -1834,7 +1834,7 @@ const app_event_click = event => {
                 }    
                 //settings image
                 case 'setting_icon_image_header_img':{
-                    CommonAppDocument.querySelector('#setting_input_reportheader_img').click();
+                    COMMON_DOCUMENT.querySelector('#setting_input_reportheader_img').click();
                     break;
                 }
                 case 'setting_icon_image_header_clear':{
@@ -1843,7 +1843,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'setting_icon_image_footer_img':{
-                    CommonAppDocument.querySelector('#setting_input_reportfooter_img').click();
+                    COMMON_DOCUMENT.querySelector('#setting_input_reportfooter_img').click();
                     break;
                 }
                 case 'setting_icon_image_footer_clear':{
@@ -1855,13 +1855,13 @@ const app_event_click = event => {
                 case 'setting_icon_text_theme_day':
                 case 'setting_icon_text_theme_month':
                 case 'setting_icon_text_theme_year':{
-                    CommonAppDocument.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
-                    CommonAppDocument.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
-                    CommonAppDocument.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
+                    COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
+                    COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
+                    COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
                     const  theme_type = event_target_id.substring(24);
                     //mark active icon
-                    CommonAppDocument.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
-                    CommonAppDocument.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
+                    COMMON_DOCUMENT.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
+                    COMMON_DOCUMENT.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
                                                                                         `theme_${theme_type}_${get_theme_id(theme_type)} ` + 
                                                                                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script;
                     break;
@@ -1903,27 +1903,27 @@ const app_event_click = event => {
                 case 'user_day_html':        
                 case 'user_month_html':
                 case 'user_year_html':{
-                    user_setting_link(CommonAppDocument.querySelector('#' + event_target_id));
+                    user_setting_link(COMMON_DOCUMENT.querySelector('#' + event_target_id));
                     break;
                 }
                 //app profile
                 case 'profile_main_btn_user_settings':{
-                    CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                    CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                    COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                     profile_detail_app(0);
                     break;
                 }
                 case 'profile_main_btn_user_setting_likes':
                 case 'profile_main_btn_user_setting_likes_user_setting':{
-                    CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                    CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                    COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                     profile_detail_app(6);
                     break;
                 }
                 case 'profile_main_btn_user_setting_liked':
                 case 'profile_main_btn_user_setting_liked_user_setting':{
-                    CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                    CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                    COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                     profile_detail_app(7);
                     break;
                 }
@@ -1939,7 +1939,7 @@ const app_event_click = event => {
                 case 'profile_user_settings_month':
                 case 'profile_user_settings_year':
                 case 'profile_user_settings_like':{
-                    profile_user_setting_link(CommonAppDocument.querySelector(`#${event_target_id}`));
+                    profile_user_setting_link(COMMON_DOCUMENT.querySelector(`#${event_target_id}`));
                     break;
                 }
                 //common
@@ -1962,7 +1962,7 @@ const app_event_click = event => {
                     case 'common_user_menu_avatar_img':
                     case 'common_user_menu_logged_out':
                     case 'common_user_menu_default_avatar':{
-                        common.ComponentRender({
+                        common.commonComponentRender({
                             mountDiv:   'common_dialogue_user_menu',
                             data:       {
                                         app_id:common.COMMON_GLOBAL.app_id,
@@ -1980,21 +1980,21 @@ const app_event_click = event => {
                                         user_arabic_script:common.COMMON_GLOBAL.user_arabic_script
                                         },
                             methods:    {
-                                        set_current_value:common.set_current_value,
-                                        FFB:common.FFB,
-                                        ComponentRender:common.ComponentRender,
-                                        user_session_countdown:common.user_session_countdown,
-                                        show_message:common.show_message
+                                        commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                                       commonFFB:common.commonFFB,
+                                        commonComponentRender:common.commonComponentRender,
+                                        commonUserSessionCountdown:common.commonUserSessionCountdown,
+                                        commonMessageShow:common.commonMessageShow
                                         },
                             path:       '/common/component/common_dialogue_user_menu.js'})
                         .then(()=>
-                            common.ComponentRender({
+                            common.commonComponentRender({
                                 mountDiv:   'common_dialogue_user_menu_app_theme',
                                 data:       null,
                                 methods:    {
-                                            theme_default_list:common.theme_default_list,
-                                            ComponentRender:common.ComponentRender, 
-                                            app_theme_update:common.common_preferences_post_mount
+                                            commonThemeDefaultList:common.commonThemeDefaultList,
+                                            commonComponentRender:common.commonComponentRender, 
+                                            app_theme_update:common.commonPreferencesPostMount
                                             },
                                 path:       '/common/component/common_dialogue_user_menu_app_theme.js'}));
                         break;
@@ -2017,12 +2017,8 @@ const app_event_click = event => {
                     user_login_app();
                     break;
                 }
-                case 'common_user_start_signup_button':{
-                    common.user_signup();
-                    break;
-                }
                 case 'common_user_start_identity_provider_login':{
-                    const target_row = common.element_row(event.target);
+                    const target_row = common.commonElementRow(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
                     if (provider_element && provider_element.textContent)
                         ProviderSignIn_app(parseInt(provider_element.textContent));
@@ -2045,24 +2041,24 @@ const app_event_click = event => {
                 case 'common_profile_search_list':
                 case 'common_profile_detail_list':
                 case 'common_profile_stat_list':{
-                    if (CommonAppDocument.querySelector('#common_profile_main_stat_row2'))
-                        common.ComponentRender({
+                    if (COMMON_DOCUMENT.querySelector('#common_profile_main_stat_row2'))
+                        common.commonComponentRender({
                             mountDiv:   'common_profile_main_stat_row2',
                             data:       {   
                                         user_account_id:common.COMMON_GLOBAL.user_account_id,
-                                        profile_id:common.element_row(event.target).getAttribute('data-user_account_id')},
+                                        profile_id:common.commonElementRow(event.target).getAttribute('data-user_account_id')},
                             methods:    {
-                                        ComponentRender:common.ComponentRender,
-                                        FFB:common.FFB
+                                        commonComponentRender:common.commonComponentRender,
+                                       commonFFB:common.commonFFB
                                         },
                             path:       '/component/profile_info.js'})
                         .then((/**@type{{data:       null, 
                                         methods:    {
                                                     profile_user_setting_update:function,
-                                                    profile_show_user_setting_detail:function, 
+                                                    commonProfileShow_user_setting_detail:function, 
                                                     profile_user_setting_stat:function}}}*/component)=>{
                             APP_GLOBAL.function_profile_user_setting_update = component.methods.profile_user_setting_update;
-                            APP_GLOBAL.function_profile_show_user_setting_detail= component.methods.profile_show_user_setting_detail;
+                            APP_GLOBAL.function_profile_show_user_setting_detail= component.methods.commonProfileShow_user_setting_detail;
                             APP_GLOBAL.function_profile_user_setting_stat = component.methods.profile_user_setting_stat;
                         });
                     break;
@@ -2074,15 +2070,15 @@ const app_event_click = event => {
                     break;
                 }
                 case 'common_module_leaflet_control_my_location_id':{
-                    common.set_current_value('setting_select_popular_place', null, 'id', null);
-                    CommonAppDocument.querySelector('#setting_input_place').textContent = common.COMMON_GLOBAL.client_place;
-                    CommonAppDocument.querySelector('#setting_input_long').textContent = common.COMMON_GLOBAL.client_longitude;
-                    CommonAppDocument.querySelector('#setting_input_lat').textContent = common.COMMON_GLOBAL.client_latitude;
+                    common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
+                    COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = common.COMMON_GLOBAL.client_place;
+                    COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = common.COMMON_GLOBAL.client_longitude;
+                    COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = common.COMMON_GLOBAL.client_latitude;
                     //update timezone
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
                     //set qibbla
                     map_show_qibbla();
-                    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
+                    APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
                     settings_update('GPS');
                     break;
                 }       
@@ -2097,13 +2093,13 @@ const app_event_click = event => {
  */
 const app_event_change = event => {
     if (event==null){
-        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_change(event);
         }, true);
     }
     else{
-        const event_target_id = common.element_id(event.target);
-        common.common_event('change',event)
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('change',event)
         .then(()=>{
             switch (event_target_id){
                 //settings image
@@ -2128,25 +2124,25 @@ const app_event_change = event => {
  */
 const app_event_keyup = event => {
     if (event==null){
-        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_keyup(event);
         }, true);
     }
     else{
-        const event_target_id = common.element_id(event.target);
-        common.common_event('keyup',event)
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('keyup',event)
         .then(()=>{
             switch(event_target_id){
                 //settings gps
                 case 'setting_input_place':{
-                    common.set_current_value('setting_select_popular_place', null, 'id', null);
+                    common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
                     settings_update('GPS');
                     break;
                 }
                 case 'setting_input_long':
                 case 'setting_input_lat':{
                     settings_update('GPS');
-                    common.typewatch(component_setting_update, 'GPS', 'POSITION');
+                    common.commonTypewatch(component_setting_update, 'GPS', 'POSITION');
                     break;
                 }
                 //settings text
@@ -2174,12 +2170,12 @@ const app_event_keyup = event => {
                 case 'common_user_verify_verification_char3':
                 case 'common_user_verify_verification_char4':
                 case 'common_user_verify_verification_char5':{
-                    common.user_verify_check_input( CommonAppDocument.querySelector(`#${event_target_id}`), 
+                    common.commonUserVerifyCheckInput( COMMON_DOCUMENT.querySelector(`#${event_target_id}`), 
                                                     'common_user_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), user_login_app);
                     break;
                 }
                 case 'common_user_verify_verification_char6':{
-                    common.user_verify_check_input(CommonAppDocument.querySelector(`#${event_target_id}`), '', user_login_app);
+                    common.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event_target_id}`), '', user_login_app);
                     break;
                 }
             }
@@ -2198,8 +2194,8 @@ const map_show_qibbla = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_text_size,
                     APP_GLOBAL.gps_module_leaflet_qibbla_long,
                     APP_GLOBAL.gps_module_leaflet_qibbla_lat,
-                    CommonAppDocument.querySelector('#setting_input_long').textContent,
-                    CommonAppDocument.querySelector('#setting_input_lat').textContent,
+                    COMMON_DOCUMENT.querySelector('#setting_input_long').textContent,
+                    COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent,
                     APP_GLOBAL.gps_module_leaflet_qibbla_color,
                     APP_GLOBAL.gps_module_leaflet_qibbla_width,
                     APP_GLOBAL.gps_module_leaflet_qibbla_opacity);
@@ -2208,8 +2204,8 @@ const map_show_qibbla = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_long,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_lat,
-                    CommonAppDocument.querySelector('#setting_input_long').textContent,
-                    CommonAppDocument.querySelector('#setting_input_lat').textContent,
+                    COMMON_DOCUMENT.querySelector('#setting_input_long').textContent,
+                    COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_color,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_width,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity);
@@ -2247,7 +2243,7 @@ const map_update_app = async (parameters) => {
  * @returns {void}
  */
 const app_exception = (error) => {
-    common.show_message('EXCEPTION', null, null, null, error);
+    common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
  * Sets framework
@@ -2255,7 +2251,7 @@ const app_exception = (error) => {
  * @returns {Promise.<void>}
  */
 const framework_set = async (framework=null) => {
-    await common.framework_set(framework,
+    await common.commonFrameworkSet(framework,
         {   Click: app_event_click,
             Change: app_event_change,
             KeyDown: null,
@@ -2268,7 +2264,7 @@ const framework_set = async (framework=null) => {
  * @returns {Promise.<void>}
  */
  const settings_method = async () => {
-    return await common.FFB({path:'/server-db/app_settings_display', query:`data_app_id=${common.COMMON_GLOBAL.app_id}&setting_type=METHOD`, method:'GET', authorization_type:'APP_DATA'})
+    return await common.commonFFB({path:'/server-db/app_settings_display', query:`data_app_id=${common.COMMON_GLOBAL.app_id}&setting_type=METHOD`, method:'GET', authorization_type:'APP_DATA'})
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                         .catch((/**@type{Error}*/error)=>error);
  }; 
@@ -2280,25 +2276,25 @@ const framework_set = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const init_app = async parameters => {
-    await common.ComponentRender({
+    await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
         methods:    null,
         path:       '/component/app.js'})
     .then(()=>
-        common.ComponentRender({
+        common.commonComponentRender({
             mountDiv:   'app_profile_search',
             data:       null,
             methods:    null,
             path:       '/common/component/common_profile_search.js'}))
     .then(()=>
-        common.ComponentRender({
+        common.commonComponentRender({
             mountDiv:   'app_profile_toolbar',
             data:       null,
             methods:    null,
             path:       '/common/component/common_profile_toolbar.js'}))
     .then(()=>
-        common.ComponentRender({
+        common.commonComponentRender({
             mountDiv:   'app_user_account',
             data:       null,
             methods:    null,
@@ -2451,7 +2447,7 @@ const init_app = async parameters => {
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone
     if (common.COMMON_GLOBAL.client_timezone)
-        APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(common.COMMON_GLOBAL.client_timezone);
+        APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(common.COMMON_GLOBAL.client_timezone);
     else
         APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentDate = new Date();
     APP_GLOBAL.lib_timetable.REPORT_GLOBAL.session_currentHijriDate = [0,0];
@@ -2466,19 +2462,19 @@ const init_app = async parameters => {
 	const methods = await settings_method();
     APP_GLOBAL.lib_timetable.set_prayer_method(methods).then(() => {
         //show dialogue about using mobile and scan QR code after 5 seconds
-        common.common_setTimeout(() => {show_dialogue('SCAN');}, 5000);
+        common.commonWindowSetTimeout(() => {show_dialogue('SCAN');}, 5000);
         set_default_settings().then(() => {
             const show_start = async () => {
                 //show default startup
                 await toolbar_button(APP_GLOBAL.app_default_startup_page);
-                const user = common.WindowLocationPathname(1);
+                const user = common.commonWndowLocationPathname(1);
                 if (user !='') {
                     //show profile for user entered in url
-                    common.profile_show(null, user);
+                    common.commonProfileShow(null, user);
                 }
             };
             show_start().then(() => {
-                common.serviceworker();
+                common.commonWindowServiceWorker();
                 framework_set();
             });
         });
@@ -2490,10 +2486,10 @@ const init_app = async parameters => {
  * @returns {void}
  */
 const init = parameters => {
-    CommonAppDocument.body.className = 'app_theme1';
+    COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
     common.COMMON_GLOBAL.app_function_session_expired = user_logout_app;
-    common.init_common(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
+    common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
         init_app(decodedparameters);
     });
 };

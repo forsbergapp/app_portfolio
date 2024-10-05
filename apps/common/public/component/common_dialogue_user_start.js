@@ -83,15 +83,15 @@ const template = props =>`  <div id='common_user_start_logo' class='common_image
                             <div id='common_user_start_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      user_click:string,
  *                      app_id:number,
  *                      common_app_id:number,
  *                      system_admin_first_time:number,
  *                      system_admin_only:number},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -99,16 +99,16 @@ const template = props =>`  <div id='common_user_start_logo' class='common_image
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show1');
-    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
+    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     //fetch providers if not admin app
     const providers = props.data.app_id == props.data.common_app_id?[]:
-                        await props.methods.FFB({path:'/server-db/identity_provider', method:'GET', authorization_type:'APP_DATA'})
+                        await props.methods.commonFFB({path:'/server-db/identity_provider', method:'GET', authorization_type:'APP_DATA'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{
-        props.methods.common_document.querySelector(`#${props.data.user_click}`).click();
+        props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.user_click}`).click();
     };
     return {
         lifecycle:  {onMounted:onMounted},

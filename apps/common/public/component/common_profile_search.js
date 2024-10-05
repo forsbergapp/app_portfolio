@@ -9,8 +9,8 @@ const template = () =>` <div id='common_profile_input_row'>
                         <div id='common_profile_search_list_wrap'></div>`;
 /**
  * 
- * @param {{data:       {common_mountdiv:string},
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props  
+ * @param {{data:       {commonMountdiv:string},
+ *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props  
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,

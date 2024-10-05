@@ -8,14 +8,14 @@ const template = () =>` <div id='common_dialogue_profile_home' class='common_dia
 
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      stat_list_app_rest_url:string,
  *                      statchoice:number
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -23,22 +23,22 @@ const template = () =>` <div id='common_dialogue_profile_home' class='common_dia
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
-    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     
     const onMounted = async () =>{
         if (props.data.statchoice){
             //show default stat list
-            await props.methods.ComponentRender( 
+            await props.methods.commonComponentRender( 
                 {   mountDiv:   'common_dialogue_profile_content',
                     data:       {
                                 stat_list_app_rest_url:props.data.stat_list_app_rest_url,
                                 statchoice:props.data.statchoice
                                 },
                     methods:    {
-                                FFB:props.methods.FFB,
-                                ComponentRender:props.methods.ComponentRender,
+                               commonFFB:props.methods.commonFFB,
+                                commonComponentRender:props.methods.commonComponentRender,
                                 },
                     path:       '/common/component/common_dialogue_profile_stat.js'});
                     }

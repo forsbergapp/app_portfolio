@@ -122,32 +122,32 @@ const template = props => ` <div class='setting_horizontal_row'>
                             </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      app_id:number,
  *                      user_settings:import('../js//types.js').APP_user_setting_record,
  *                      user_locale:string,
  *                      user_timezone:string
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument,
+ *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      component_setting_update:import('../js/app.js')['component_setting_update'],
- *                      app_settings_get:import('../../../common_types.js').CommonModuleCommon['app_settings_get'],
- *                      set_current_value:import('../../../common_types.js').CommonModuleCommon['set_current_value'],
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props
+ *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet'],
+ *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']}}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
-    const settings = await props.methods.app_settings_get();
+    const settings = await props.methods.commonDbAppSettingsGet();
     //get locales using user locale
     /**@type{{locale:string, text:string}[]} */
-    const locales = await props.methods.FFB({path:'/server-db/locale', query:`lang_code=${props.data.user_locale}`, method:'GET', authorization_type:'APP_DATA'})
+    const locales = await props.methods.commonFFB({path:'/server-db/locale', query:`lang_code=${props.data.user_locale}`, method:'GET', authorization_type:'APP_DATA'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const onMounted = async () =>{
         //Locale using setting locale
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_locale',
             data:       {
                         default_data_value:props.data.user_settings.regional_language_locale,
@@ -160,10 +160,10 @@ const method = async props => {
                         column_value:'locale',
                         column_text:'text'
                         },
-            methods:    {FFB:props.methods.FFB},
+            methods:    {commonFFB:props.methods.commonFFB},
             path:       '/common/component/common_select.js'});
         //Locale second using setting locale with first one empty
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_locale_second',
             data:       {
                         default_data_value:'',
@@ -176,11 +176,11 @@ const method = async props => {
                         column_value:'locale',
                         column_text:'text'
                         },
-            methods:    {FFB:props.methods.FFB},
+            methods:    {commonFFB:props.methods.commonFFB},
             path:       '/common/component/common_select.js'});
         //app
         //Column title
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_coltitle',
             data:       {
                         default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.data.app_id && setting.app_setting_type_name == 'COLUMN_TITLE')[0].value,
@@ -193,11 +193,11 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
         //commmon
         //Timezone
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_timezone',
             data:       {
                         default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'TIMEZONE')[0].value,
@@ -210,10 +210,10 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
         //number system
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_numbersystem',
             data:       {
                         default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'NUMBER_SYSTEM')[0].value,
@@ -226,10 +226,10 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
         //direction with first one empty
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_direction',
             data:       {
                         default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'DIRECTION')[0].value,
@@ -242,10 +242,10 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
         //arabic script with first one empty
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_arabic_script',
             data:       {
                         default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'ARABIC_SCRIPT')[0].value,
@@ -258,10 +258,10 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
         //calendar type
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_calendartype',
             data:       {
                         default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_TYPE')[0].value,
@@ -274,10 +274,10 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
         //calendar hijri type
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_calendar_hijri_type',
             data:       {
                         default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_HIJRI_TYPE')[0].value,
@@ -290,21 +290,21 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:'/common/component/common_select.js'});
       
         //update select with settings values
-        props.methods.set_current_value('setting_select_locale', props.data.user_settings.regional_language_locale);
-        props.methods.set_current_value('setting_select_report_locale_second', props.data.user_settings.regional_second_language_locale);
+        props.methods.commonSelectCurrentValueSet('setting_select_locale', props.data.user_settings.regional_language_locale);
+        props.methods.commonSelectCurrentValueSet('setting_select_report_locale_second', props.data.user_settings.regional_second_language_locale);
 
-        props.methods.set_current_value('setting_select_report_coltitle', props.data.user_settings.regional_column_title);
+        props.methods.commonSelectCurrentValueSet('setting_select_report_coltitle', props.data.user_settings.regional_column_title);
 
-        props.methods.set_current_value('setting_select_report_timezone', props.data.user_settings.regional_timezone);
-        props.methods.set_current_value('setting_select_report_numbersystem', props.data.user_settings.regional_number_system);
-        props.methods.set_current_value('setting_select_report_direction', props.data.user_settings.regional_layout_direction);
-        props.methods.set_current_value('setting_select_report_arabic_script', props.data.user_settings.regional_arabic_script);
-        props.methods.set_current_value('setting_select_calendartype', props.data.user_settings.regional_calendar_type);
-        props.methods.set_current_value('setting_select_calendar_hijri_type', props.data.user_settings.regional_calendar_hijri_type);
+        props.methods.commonSelectCurrentValueSet('setting_select_report_timezone', props.data.user_settings.regional_timezone);
+        props.methods.commonSelectCurrentValueSet('setting_select_report_numbersystem', props.data.user_settings.regional_number_system);
+        props.methods.commonSelectCurrentValueSet('setting_select_report_direction', props.data.user_settings.regional_layout_direction);
+        props.methods.commonSelectCurrentValueSet('setting_select_report_arabic_script', props.data.user_settings.regional_arabic_script);
+        props.methods.commonSelectCurrentValueSet('setting_select_calendartype', props.data.user_settings.regional_calendar_type);
+        props.methods.commonSelectCurrentValueSet('setting_select_calendar_hijri_type', props.data.user_settings.regional_calendar_hijri_type);
 
         //display live timezone time
         props.methods.component_setting_update('REGIONAL', 'TIMEZONE');

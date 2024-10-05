@@ -64,10 +64,10 @@ const template = props => ` <div id='menu_8_content_widget1' class='widget'>
                             </div>`;
 /**
 * 
-* @param {{ data:{      common_mountdiv:string},
-*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
-*                       roundOff:import('../../../common_types.js').CommonModuleCommon['roundOff'],
-*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+* @param {{ data:{      commonMountdiv:string},
+*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+*                       commonRoundOff:import('../../../common_types.js').CommonModuleCommon['commonRoundOff'],
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *           lifecycle:  null}} props 
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null, 
@@ -85,9 +85,9 @@ const component = async props => {
      *          connections:string,
      *          started:string}}
      */
-    const db = await props.methods.FFB({path:'/server-db_admin/database', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
-    const db_detail = await props.methods.FFB({path:'/server-db_admin/database-space', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-    const db_detail_sum = await props.methods.FFB({path:'/server-db_admin/database-spacesum', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
+    const db = await props.methods.commonFFB({path:'/server-db_admin/database', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
+    const db_detail = await props.methods.commonFFB({path:'/server-db_admin/database-space', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const db_detail_sum = await props.methods.commonFFB({path:'/server-db_admin/database-spacesum', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result)[0]);
 
   return {
       lifecycle:    null,
@@ -97,7 +97,7 @@ const component = async props => {
                                 db:db,
                                 db_detail:db_detail,
                                 db_detail_sum:db_detail_sum,
-                                function_roundOff:props.methods.roundOff
+                                function_roundOff:props.methods.commonRoundOff
       })
   };
 };

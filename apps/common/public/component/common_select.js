@@ -21,7 +21,7 @@ const template = props => ` <div class='common_select_dropdown'>
                             </div>` ;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      default_data_value:string,
  *                      default_value:string,
  *                      options:[{value:string, text:string}],
@@ -33,8 +33,8 @@ const template = props => ` <div class='common_select_dropdown'>
  *                      column_text:string
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
@@ -43,13 +43,13 @@ const template = props => ` <div class='common_select_dropdown'>
  */
 const component = async props => {
     // add first static option first if any then add fetched options
-    const ffb_options = props.data.path?await props.methods.FFB({path:props.data.path, query:props.data.query, method:props.data.method, authorization_type:props.data.authorization_type})
+    const commonFFB_options = props.data.path?await props.methods.commonFFB({path:props.data.path, query:props.data.query, method:props.data.method, authorization_type:props.data.authorization_type})
                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows):[];
     /**@type{[{value:string, text:string}]|[]} */
-    const options = props.data.options?props.data.options.concat(ffb_options):ffb_options;
+    const options = props.data.options?props.data.options.concat(commonFFB_options):commonFFB_options;
 
     const onMounted = async () =>{
-        props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_select');
+        props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_select');
    };
    
    return {

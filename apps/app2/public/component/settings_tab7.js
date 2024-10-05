@@ -62,12 +62,12 @@ const template = () =>`  <div id='user_settings'>
                             </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      user_settings:import('../js/types.js').APP_user_setting,
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender']
  *                       }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *                      data:null, 
@@ -77,7 +77,7 @@ const template = () =>`  <div id='user_settings'>
 const method = async props => {
     const onMounted = async () =>{
         
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'setting_select_user_setting',
             data:       {
                         default_data_value:props.data.user_settings.current_id,
@@ -90,7 +90,7 @@ const method = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:'/common/component/common_select.js'});
     };
     return {

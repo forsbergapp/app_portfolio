@@ -16,13 +16,13 @@ const template = props => ` <div class='paper ${props.class}'>
                             </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      class:string,
  *                      theme_id:string,
  *                      type:'day'|'month'|'year',
  *                      html:string
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props
+ *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,

@@ -145,15 +145,15 @@ const template = props => ` <div class='list_user_account_row'>
                             }`;
 /**
 * 
-* @param {{ data:{      common_mountdiv:string,
+* @param {{ data:{      commonMountdiv:string,
 *                       user_account_id:number,
 *                       user_app_role_id:number,
 *                       sort:string,
 *                       order_by:string,
 *                       focus:boolean},
-*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
-*                       ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
-*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+*                       commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *           lifecycle:  null}} props
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null, 
@@ -170,30 +170,30 @@ const component = async props => {
 
     let search_user='*';
     //show all records if no search criteria
-    if (props.methods.common_document.querySelector('#list_user_account_search_input').textContent.replaceAll('\n','')!='')
-        search_user = encodeURI(props.methods.common_document.querySelector('#list_user_account_search_input').textContent.replaceAll('\n',''));
-    const users = await props.methods.FFB({path:'/server-db_admin/user_account', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'APP_ACCESS'})
+    if (props.methods.COMMON_DOCUMENT.querySelector('#list_user_account_search_input').textContent.replaceAll('\n','')!='')
+        search_user = encodeURI(props.methods.COMMON_DOCUMENT.querySelector('#list_user_account_search_input').textContent.replaceAll('\n',''));
+    const users = await props.methods.commonFFB({path:'/server-db_admin/user_account', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'APP_ACCESS'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{
-        if (props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0])
+        if (props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0])
             if (props.data.focus==true){
                 //set focus at start
                 //set focus first column in first row
                 //this will trigger to show detail records
-                if (props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].getAttribute('readonly')==true){
-                    props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', false);
-                    props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                    props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', true);
+                if (props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].getAttribute('readonly')==true){
+                    props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', false);
+                    props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].focus();
+                    props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', true);
                 }
                 else
-                    props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].focus();
+                    props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].focus();
                     
             }
             else{
                 //trigger focus event on first row set focus back again to search field
-                props.methods.common_document.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                props.methods.common_document.querySelector('#list_user_account_search_input').focus();
+                props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].focus();
+                props.methods.COMMON_DOCUMENT.querySelector('#list_user_account_search_input').focus();
             }
   };
   return {

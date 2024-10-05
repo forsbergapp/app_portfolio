@@ -4,11 +4,11 @@
 
 const template = () => '';
 /**
- * @param {{data:       {common_mountdiv:string},
+ * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      theme_default_list:import('../../../common_types.js').CommonModuleCommon['theme_default_list'],
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonThemeDefaultList:import('../../../common_types.js').CommonModuleCommon['commonThemeDefaultList'],
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
  *                      app_theme_update:function}}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -16,11 +16,11 @@ const template = () => '';
  *                      template:string}>}
  */
 const component = async props => {
-    const themes = props.methods.theme_default_list();
+    const themes = props.methods.commonThemeDefaultList();
 
     const onMounted = async () =>{
-        await props.methods.ComponentRender({
-            mountDiv:   props.data.common_mountdiv, 
+        await props.methods.commonComponentRender({
+            mountDiv:   props.data.commonMountdiv, 
             data:       {
                         default_data_value:themes[0].VALUE,
                         default_value:themes[0].TEXT,
@@ -32,7 +32,7 @@ const component = async props => {
                         column_value:'VALUE',
                         column_text:'TEXT'
                         },
-            methods:    {FFB:null},
+            methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
         //set app theme
         props.methods.app_theme_update();

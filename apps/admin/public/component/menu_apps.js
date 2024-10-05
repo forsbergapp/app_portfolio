@@ -65,9 +65,9 @@ const template = props => ` <div id='menu_4_content_widget1' class='widget'>
                             </div>` ;
 /**
 * 
-* @param {{data:{       common_mountdiv:string},
-*          methods:{    common_document:import('../../../common_types.js').CommonAppDocument,
-*                       FFB: import('../../../common_types.js').CommonModuleCommon['FFB']},
+* @param {{data:{       commonMountdiv:string},
+*          methods:{    COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonFFB: import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *          lifecycle:   null}} props 
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null, 
@@ -75,12 +75,12 @@ const template = props => ` <div id='menu_4_content_widget1' class='widget'>
 *                      template:string}>}
 */
 const component = async props => {
-    const apps = await props.methods.FFB({path:'/app_admin/apps', method:'GET', authorization_type:'APP_ACCESS'})
+    const apps = await props.methods.commonFFB({path:'/app_admin/apps', method:'GET', authorization_type:'APP_ACCESS'})
                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{
         if (apps.length>0)
-            props.methods.common_document.querySelectorAll('#list_apps .list_edit')[0].focus();
+            props.methods.COMMON_DOCUMENT.querySelectorAll('#list_apps .list_edit')[0].focus();
     };
     return {
         lifecycle:  {onMounted:onMounted},

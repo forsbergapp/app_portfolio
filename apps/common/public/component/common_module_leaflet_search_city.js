@@ -31,12 +31,12 @@ const template = props =>`  <div id='common_module_leaflet_search_list'>
                             </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      search:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      click_function:function,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -44,11 +44,11 @@ const template = props =>`  <div id='common_module_leaflet_search_list'>
  *                      template:string}>}
  */
 const component = async props => {
-    const records = props.data.search==''?[]:await props.methods.FFB({path:'/worldcities/city', query:`search=${encodeURI(props.data.search)}`, method:'GET', authorization_type:'APP_DATA'})
+    const records = props.data.search==''?[]:await props.methods.commonFFB({path:'/worldcities/city', query:`search=${encodeURI(props.data.search)}`, method:'GET', authorization_type:'APP_DATA'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const onMounted = async () =>{
         if (props.data.search.length>0)
-            props.methods.common_document.querySelector('#common_module_leaflet_search_list')['data-function'] = props.methods.click_function;
+            props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_list')['data-function'] = props.methods.click_function;
     };
     return {
         lifecycle:  {onMounted:onMounted},
