@@ -53,9 +53,9 @@ const template = () =>` <div class='setting_horizontal_row'>
 const method = async props => {
     const onMounted = async () =>{
         //Text
-        props.methods.common_document.querySelector('#setting_input_reportheader1').innerHTML = props.data.user_settings.text_header_1_text;
-        props.methods.common_document.querySelector('#setting_input_reportheader2').innerHTML = props.data.user_settings.text_header_2_text;
-        props.methods.common_document.querySelector('#setting_input_reportheader3').innerHTML = props.data.user_settings.text_header_3_text;
+        props.methods.common_document.querySelector('#setting_input_reportheader1').textContent = props.data.user_settings.text_header_1_text;
+        props.methods.common_document.querySelector('#setting_input_reportheader2').textContent = props.data.user_settings.text_header_2_text;
+        props.methods.common_document.querySelector('#setting_input_reportheader3').textContent = props.data.user_settings.text_header_3_text;
         if (props.data.user_settings.text_header_align == null) {
             props.methods.common_document.querySelector('#setting_icon_text_header_aleft').classList.remove('setting_button_active');
             props.methods.common_document.querySelector('#setting_icon_text_header_acenter').classList.remove('setting_button_active');
@@ -66,9 +66,9 @@ const method = async props => {
                                         props.data.user_settings.text_header_align).classList.remove('setting_button_active');
             props.methods.component_setting_update('TEXT', 'HEADER_ALIGN', 'setting_icon_text_header_a' + props.data.user_settings.text_header_align);
         }
-        props.methods.common_document.querySelector('#setting_input_reportfooter1').innerHTML = props.data.user_settings.text_footer_1_text;
-        props.methods.common_document.querySelector('#setting_input_reportfooter2').innerHTML = props.data.user_settings.text_footer_2_text;
-        props.methods.common_document.querySelector('#setting_input_reportfooter3').innerHTML = props.data.user_settings.text_footer_3_text;
+        props.methods.common_document.querySelector('#setting_input_reportfooter1').textContent = props.data.user_settings.text_footer_1_text;
+        props.methods.common_document.querySelector('#setting_input_reportfooter2').textContent = props.data.user_settings.text_footer_2_text;
+        props.methods.common_document.querySelector('#setting_input_reportfooter3').textContent = props.data.user_settings.text_footer_3_text;
         if (props.data.user_settings.text_footer_align == null) {
             props.methods.common_document.querySelector('#setting_icon_text_footer_aleft').classList.remove('setting_button_active');
             props.methods.common_document.querySelector('#setting_icon_text_footer_acenter').classList.remove('setting_button_active');

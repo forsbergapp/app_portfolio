@@ -46,9 +46,9 @@ const component = async props => {
     props.methods.common_document.querySelector('#common_profile_search_input').classList.remove('common_input_error');
 
     //check search text
-    const searched_username = props.methods.common_document.querySelector('#common_profile_search_input').innerText;
+    const searched_username = props.methods.common_document.querySelector('#common_profile_search_input').textContent;
     const input_control =   props.methods.input_control(null,{check_valid_list_elements:[[props.methods.common_document.querySelector('#common_profile_search_input'),null]]}) &&
-                            props.methods.common_document.querySelector('#common_profile_search_input').innerText!='' &&
+                            props.methods.common_document.querySelector('#common_profile_search_input').textContent!='' &&
                             searched_username.length>1;
     if (!input_control){
         props.methods.common_document.querySelector('#common_profile_search_list_wrap').style.display = 'none';

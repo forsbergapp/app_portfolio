@@ -517,7 +517,7 @@ const component = async props => {
      * @param {string} order_by
      */
     const monitor_detail_server_log = (sort, order_by) =>{
-        let search = props.methods.common_document.querySelector('#list_server_log_search_input').innerText;
+        let search = props.methods.common_document.querySelector('#list_server_log_search_input').textContent;
         if (search != null){
             if (props.methods.input_control(null,{check_valid_list_elements:[[props.methods.common_document.querySelector('#list_server_log_search_input'),100]]})==false)
                 return;

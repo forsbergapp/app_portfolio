@@ -60,7 +60,7 @@ RubiksCubeControls.prototype.updateStepButton = function() {
 		document.querySelector('#button_controls #button_step_info').style.backgroundColor = color;
 		const bgImg = move.length == 1 ? clock90 : move[1] == '2' ? clock180 : counter90;
 		/**@ts-ignore */
-		document.querySelector('#button_controls #button_step_move').innerText = bgImg;
+		document.querySelector('#button_controls #button_step_move').textContent = bgImg;
 		
 		if(document.querySelector('#button_controls #button_step')?.firstChild){
 			/**@ts-ignore */

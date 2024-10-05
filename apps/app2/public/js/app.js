@@ -445,7 +445,7 @@ const theme_nav = async (nav, type) => {
     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data[`design_theme_${type}_id`] = 
         APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
     CommonAppDocument.querySelector(`#setting_design_theme_${type}`).setAttribute('data-theme_id', APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value);
-    CommonAppDocument.querySelector(`#setting_design_theme_${type}_id`).innerText = APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
+    CommonAppDocument.querySelector(`#setting_design_theme_${type}_id`).textContent = APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
     await update_all_theme_thumbnails({   type: type,
                                     theme_id :APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value});
 };
@@ -489,10 +489,10 @@ const settingsTimesShow = async () => {
         timeZoneName: 'long'
     };
     if (element_setting_current_date){     
-        element_setting_current_date.innerHTML = new Date().toLocaleTimeString(common.COMMON_GLOBAL.user_locale, options);    
+        element_setting_current_date.textContent = new Date().toLocaleTimeString(common.COMMON_GLOBAL.user_locale, options);    
         if (setting_select_report_timezone){
             options.timeZone = setting_select_report_timezone;
-            element_setting_report_data_time.innerHTML = new Date().toLocaleTimeString(setting_select_locale, options);
+            element_setting_report_data_time.textContent = new Date().toLocaleTimeString(setting_select_locale, options);
         }
         //wait 1 second
         await common.common_wait(1000);
@@ -575,7 +575,7 @@ const SettingShow = async (tab_selected) => {
     //mark active tab
     CommonAppDocument.querySelector('#settings_tab_nav_' + tab_selected).classList.add('settings_tab_nav_selected');
     //empty old content
-    CommonAppDocument.querySelector('#settings_content').innerHTML = '';
+    CommonAppDocument.querySelector('#settings_content').textContent = '';
     //update with class to style each settings component
     CommonAppDocument.querySelector('#settings_content').className = `settings_tab_content settings_tab${tab_selected}`;
     //mount the selected component
@@ -755,9 +755,9 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             {
                 const gps_lat_input = CommonAppDocument.querySelector('#setting_input_lat');
                 const gps_long_input = CommonAppDocument.querySelector('#setting_input_long');
-                map_update_app({longitude:gps_long_input.innerHTML,
-                                latitude:gps_lat_input.innerHTML,
-                                text_place:CommonAppDocument.querySelector('#setting_input_place').innerHTML,
+                map_update_app({longitude:gps_long_input.textContent,
+                                latitude:gps_lat_input.textContent,
+                                text_place:CommonAppDocument.querySelector('#setting_input_place').textContent,
                                 country:'',
                                 city:'',
                                 timezone_text :null
@@ -780,17 +780,17 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 
                 const gps_lat_input = CommonAppDocument.querySelector('#setting_input_lat');
                 const gps_long_input = CommonAppDocument.querySelector('#setting_input_long');
-                gps_long_input.innerHTML = longitude;
-                gps_lat_input.innerHTML = latitude;
+                gps_long_input.textContent = longitude;
+                gps_lat_input.textContent = latitude;
 
                 if (city=='' && country==''){
                     //Set place from city + country from popup title
-                    CommonAppDocument.querySelector('#setting_input_place').innerHTML = 
-                        CommonAppDocument.querySelectorAll('.common_module_leaflet_popup_title')[CommonAppDocument.querySelectorAll('.common_module_leaflet_popup_title').length - 1 ].innerHTML;
+                    CommonAppDocument.querySelector('#setting_input_place').textContent = 
+                        CommonAppDocument.querySelectorAll('.common_module_leaflet_popup_title')[CommonAppDocument.querySelectorAll('.common_module_leaflet_popup_title').length - 1 ].textContent;
                 }
                 else{
                     //Set place from city + country from data attributes
-                    CommonAppDocument.querySelector('#setting_input_place').innerHTML = city + ', ' + country;
+                    CommonAppDocument.querySelector('#setting_input_place').textContent = city + ', ' + country;
                 }
                 //display empty popular place select
                 common.set_current_value('setting_select_popular_place', null, 'id', null);
@@ -812,13 +812,13 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 const latitude_selected = select_place.latitude;
                 const timezone_selected = select_place.timezone;
 
-                gps_long_input.innerHTML = longitude_selected;
-                gps_lat_input.innerHTML = latitude_selected;
+                gps_long_input.textContent = longitude_selected;
+                gps_lat_input.textContent = latitude_selected;
 
                     //Update map
                     map_update_app({longitude:      longitude_selected,
                                     latitude:       latitude_selected,
-                                    text_place:     CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').innerText,
+                                    text_place:     CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').textContent,
                                     country:        '',
                                     city:           '',
                                     timezone_text : timezone_selected
@@ -826,8 +826,8 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                     
                     common.COMMON_GLOBAL.moduleLeaflet.methods.map_toolbar_reset();
                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone_selected;
-                const title = CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').innerText;
-                CommonAppDocument.querySelector('#setting_input_place').innerHTML = title;
+                const title = CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').textContent;
+                CommonAppDocument.querySelector('#setting_input_place').textContent = title;
                 settings_update('GPS');
                 break;
             }
@@ -839,11 +839,11 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 
                 common.set_current_value('setting_select_popular_place', null, 'id', null);
 
-                common.get_place_from_gps(gps_long_input.innerHTML, gps_lat_input.innerHTML).then((/**@type{string}*/gps_place) => {
+                common.get_place_from_gps(gps_long_input.textContent, gps_lat_input.textContent).then((/**@type{string}*/gps_place) => {
                     //Update map
-                    CommonAppDocument.querySelector('#setting_input_place').innerHTML = gps_place;
-                    map_update_app({longitude:gps_long_input.innerHTML,
-                                    latitude:gps_lat_input.innerHTML,
+                    CommonAppDocument.querySelector('#setting_input_place').textContent = gps_place;
+                    map_update_app({longitude:gps_long_input.textContent,
+                                    latitude:gps_lat_input.textContent,
                                     text_place:gps_place,
                                     country:'',
                                     city:'',
@@ -924,18 +924,18 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 const method = CommonAppDocument.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value');
                 let suffix;
 
-                CommonAppDocument.querySelector('#setting_method_param_fajr').innerHTML = '';
-                CommonAppDocument.querySelector('#setting_method_param_isha').innerHTML = '';
+                CommonAppDocument.querySelector('#setting_method_param_fajr').textContent = '';
+                CommonAppDocument.querySelector('#setting_method_param_isha').textContent = '';
                 if (typeof APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                CommonAppDocument.querySelector('#setting_method_param_fajr').innerHTML = 'Fajr:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr + suffix;
+                CommonAppDocument.querySelector('#setting_method_param_fajr').textContent = 'Fajr:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr + suffix;
                 if (typeof APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                CommonAppDocument.querySelector('#setting_method_param_isha').innerHTML = 'Isha:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
+                CommonAppDocument.querySelector('#setting_method_param_isha').textContent = 'Isha:' + APP_GLOBAL.lib_timetable.REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
                 break;
             }
         case 'USER_SETTING':{
@@ -1005,7 +1005,7 @@ const login_common = (avatar) => {
         CommonAppDocument.querySelector('#settings').style.visibility = 'hidden';
         common.ComponentRemove('common_dialogue_profile');
         
-        CommonAppDocument.querySelector('#paper').innerHTML='';
+        CommonAppDocument.querySelector('#paper').textContent='';
         user_settings_get().then(() => {
             //show default startup
             toolbar_button(APP_GLOBAL.app_default_startup_page);
@@ -1400,7 +1400,7 @@ const fixFloat = value =>  (value==''||value==null)?null:parseFloat(value);
  */
 const settings_update = setting_tab => {
 
-    const json_data = { description:                        setting_tab=='GPS'?CommonAppDocument.querySelector('#setting_input_place').innerHTML:
+    const json_data = { description:                        setting_tab=='GPS'?CommonAppDocument.querySelector('#setting_input_place').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
                         regional_language_locale:           setting_tab=='REGIONAL'?CommonAppDocument.querySelector('#setting_select_locale .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_language_locale,
@@ -1422,9 +1422,9 @@ const settings_update = setting_tab => {
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_hijri_type,
                         gps_popular_place_id:               setting_tab=='GPS'?JSON.parse(CommonAppDocument.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value')).id:
                                                                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_popular_place_id,
-                        gps_lat_text:                       setting_tab=='GPS'?fixFloat(CommonAppDocument.querySelector('#setting_input_lat').innerHTML):
+                        gps_lat_text:                       setting_tab=='GPS'?fixFloat(CommonAppDocument.querySelector('#setting_input_lat').textContent):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text,
-                        gps_long_text:                      setting_tab=='GPS'?fixFloat(CommonAppDocument.querySelector('#setting_input_long').innerHTML):
+                        gps_long_text:                      setting_tab=='GPS'?fixFloat(CommonAppDocument.querySelector('#setting_input_long').textContent):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text,
                         design_theme_day_id:                setting_tab=='DESIGN'?get_theme_id('day'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_day_id,
                         design_theme_month_id:              setting_tab=='DESIGN'?get_theme_id('month'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_month_id,
@@ -1447,19 +1447,19 @@ const settings_update = setting_tab => {
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.image_header_image_img,
                         image_footer_image_img:             setting_tab=='IMAGE'?CommonAppDocument.querySelector('#setting_reportfooter_img').getAttribute('data-image'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.image_footer_image_img,
-                        text_header_1_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportheader1').innerHTML:  
+                        text_header_1_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportheader1').textContent:  
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_1_text,
-                        text_header_2_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportheader2').innerHTML:
+                        text_header_2_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportheader2').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_2_text,
-                        text_header_3_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportheader3').innerHTML:
+                        text_header_3_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportheader3').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_3_text,
                         text_header_align:                  setting_tab=='TEXT'? (align_button_value('header')==''?null:align_button_value('header')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_align,
-                        text_footer_1_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportfooter1').innerHTML:
+                        text_footer_1_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportfooter1').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_1_text,
-                        text_footer_2_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportfooter2').innerHTML:
+                        text_footer_2_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportfooter2').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_2_text,
-                        text_footer_3_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportfooter3').innerHTML:
+                        text_footer_3_text:                 setting_tab=='TEXT'?CommonAppDocument.querySelector('#setting_input_reportfooter3').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_3_text,
                         text_footer_align:                  setting_tab=='TEXT'? (align_button_value('footer')==''?null:align_button_value('footer')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_align,
@@ -1552,7 +1552,7 @@ const user_settings_like = user_account_app_data_post_id => {
         else
             method = 'DELETE';
         common.FFB({path:`/server-db/user_account_app_data_post_like/${common.COMMON_GLOBAL.user_account_id??''}`, method:method, authorization_type:'APP_ACCESS', body:json_data})
-        .then(()=>APP_GLOBAL.function_profile_user_setting_update(  CommonAppDocument.querySelector('#common_profile_id').innerHTML,
+        .then(()=>APP_GLOBAL.function_profile_user_setting_update(  CommonAppDocument.querySelector('#common_profile_id').textContent,
                                                                     JSON.parse(CommonAppDocument.querySelector('#profile_select_user_settings .common_select_dropdown_value')
                                                                                 .getAttribute('data-value')).sid))
         .catch(()=>null);
@@ -1728,10 +1728,10 @@ const app_event_click = event => {
                     const searchlist = CommonAppDocument.querySelector('#common_profile_search_list_wrap');
                     if (input_row.style.visibility == 'visible'){
                         input_row.style.visibility='hidden';
-                        input_row.innerHTML = '';
+                        input_row.textContent = '';
                         searchlist.style.visibility = 'hidden';
                         searchlist.style.display  = 'flex';
-                        searchlist.innerHTML = '';
+                        searchlist.textContent = '';
                     }
                     else{
                         input_row.style.visibility='visible';
@@ -2024,8 +2024,8 @@ const app_event_click = event => {
                 case 'common_user_start_identity_provider_login':{
                     const target_row = common.element_row(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
-                    if (provider_element && provider_element.innerHTML)
-                        ProviderSignIn_app(parseInt(provider_element.innerHTML));
+                    if (provider_element && provider_element.textContent)
+                        ProviderSignIn_app(parseInt(provider_element.textContent));
                     break;
                 }
                 //dialogue profile 
@@ -2075,9 +2075,9 @@ const app_event_click = event => {
                 }
                 case 'common_module_leaflet_control_my_location_id':{
                     common.set_current_value('setting_select_popular_place', null, 'id', null);
-                    CommonAppDocument.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
-                    CommonAppDocument.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
-                    CommonAppDocument.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
+                    CommonAppDocument.querySelector('#setting_input_place').textContent = common.COMMON_GLOBAL.client_place;
+                    CommonAppDocument.querySelector('#setting_input_long').textContent = common.COMMON_GLOBAL.client_longitude;
+                    CommonAppDocument.querySelector('#setting_input_lat').textContent = common.COMMON_GLOBAL.client_latitude;
                     //update timezone
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
                     //set qibbla
@@ -2198,8 +2198,8 @@ const map_show_qibbla = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_text_size,
                     APP_GLOBAL.gps_module_leaflet_qibbla_long,
                     APP_GLOBAL.gps_module_leaflet_qibbla_lat,
-                    CommonAppDocument.querySelector('#setting_input_long').innerHTML,
-                    CommonAppDocument.querySelector('#setting_input_lat').innerHTML,
+                    CommonAppDocument.querySelector('#setting_input_long').textContent,
+                    CommonAppDocument.querySelector('#setting_input_lat').textContent,
                     APP_GLOBAL.gps_module_leaflet_qibbla_color,
                     APP_GLOBAL.gps_module_leaflet_qibbla_width,
                     APP_GLOBAL.gps_module_leaflet_qibbla_opacity);
@@ -2208,8 +2208,8 @@ const map_show_qibbla = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_long,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_lat,
-                    CommonAppDocument.querySelector('#setting_input_long').innerHTML,
-                    CommonAppDocument.querySelector('#setting_input_lat').innerHTML,
+                    CommonAppDocument.querySelector('#setting_input_long').textContent,
+                    CommonAppDocument.querySelector('#setting_input_lat').textContent,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_color,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_width,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity);

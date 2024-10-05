@@ -185,7 +185,7 @@ const component = async props => {
                         to_method:MODULE_LEAFLET_FLYTO
                     });
             props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
-            props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
+            props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').textContent = '';    
             map_city_empty();
             map_toolbar_reset();
         }
@@ -322,10 +322,10 @@ const component = async props => {
      */
     const map_toolbar_reset = ()=>{
         props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').setAttribute('data-value', '');
-        props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').innerText = '';    
+        props.methods.common_document.querySelector('#common_module_leaflet_select_country .common_select_dropdown_value').textContent = '';    
         map_city_empty();
-        props.methods.common_document.querySelector('#common_module_leaflet_search_input').innerHTML ='';
-        props.methods.common_document.querySelector('#common_module_leaflet_search_list').innerHTML ='';
+        props.methods.common_document.querySelector('#common_module_leaflet_search_input').textContent ='';
+        props.methods.common_document.querySelector('#common_module_leaflet_search_list').textContent ='';
         if (props.methods.common_document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
             map_control_toggle_expand('search');
         if (props.methods.common_document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
