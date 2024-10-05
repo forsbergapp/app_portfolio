@@ -15,7 +15,7 @@ const get = (app_id, query) => service.get( app_id,
                                             getNumberValue(query.get('id')),
                                             getNumberValue(query.get('data_app_id')), 
                                             query.get('resource_name_entity'))
-                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
@@ -48,7 +48,7 @@ const getLogs = (app_id, query) => service.getLogs( app_id, getNumberValue(query
                                                         
                                                         return result;
                                                 })
-                                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 /**
  * 
  * @param {number} app_id 
@@ -107,7 +107,7 @@ const getStatUniqueVisitor = (app_id, query) =>{
                 resolve([]);
             }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };  
 export{get, getLogs, getStatUniqueVisitor};

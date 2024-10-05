@@ -17,7 +17,7 @@ const {file_get_log, file_get_log_dir, file_append_log} = await import(`file://$
         const config_file_interval = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
         file_append_log(`LOG_${logscope}_${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
         .then(()=>resolve(null))
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+        .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
             console.log(error);
             console.log(log);
             resolve(null);});
@@ -30,11 +30,11 @@ const {file_get_log, file_get_log_dir, file_append_log} = await import(`file://$
 const logdate = () => new Date().toISOString();
 /**
  * Log request error
- * @param {import('../types.js').server_server_req} req 
+ * @param {import('./types.js').server_server_req} req 
  * @param {number} statusCode 
  * @param {string|number|object|Error|null} statusMessage 
  * @param {number} responsetime 
- * @param {import('../types.js').server_server_error} err 
+ * @param {import('./types.js').server_server_error} err 
  * @returns 
  */
 const LogRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
@@ -62,7 +62,7 @@ const LogRequestE = async (req, statusCode, statusMessage, responsetime, err) =>
 };
 /**
  * Log request Info
- * @param {import('../types.js').server_server_req} req 
+ * @param {import('./types.js').server_server_req} req 
  * @param {number} statusCode 
  * @param {string} statusMessage 
  * @param {number} responsetime 
@@ -97,7 +97,7 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
             }
             case '2':{
                 log_level = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
-                /**@type{import('../types.js').server_server_req_verbose} */
+                /**@type{import('./types.js').server_server_req_verbose} */
                 const logtext_req = Object.assign({}, req);
                 const getCircularReplacer = () => {
                     const seen = new WeakSet();
@@ -192,7 +192,7 @@ const LogServerE = async (logtext)=>{
  * @param {number|null} db 
  * @param {string} sql 
  * @param {object} parameters 
- * @param {import('../types.js').server_db_common_result} result 
+ * @param {import('./types.js').server_db_common_result} result 
  * @returns {Promise.<null>}
  */
 const LogDBI = async (app_id, db, sql, parameters, result) => {
@@ -239,7 +239,7 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
  * @param {number|null} db 
  * @param {string} sql 
  * @param {object} parameters 
- * @param {import('../types.js').server_db_common_result_error} result 
+ * @param {import('./types.js').server_db_common_result_error} result 
  * @returns {Promise.<null>}
  */
 const LogDBE = async (app_id, db, sql, parameters, result) => {
@@ -380,7 +380,7 @@ const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtex
 
 /**
  * Get logs
- * @param {import('../types.js').server_log_data_parameter_getLogs} data
+ * @param {import('./types.js').server_log_data_parameter_getLogs} data
  * @returns{Promise.<[]>}
  */
 const getLogs = async (data) => {
@@ -498,13 +498,13 @@ const getStatusCodes = async () =>{
 };
 /**
  * Get log stat
- * @param {import('../types.js').server_log_data_parameter_getLogStats} data 
- * @returns{Promise.<import('../types.js').server_log_result_getLogsStats[]|[]>}
+ * @param {import('./types.js').server_log_data_parameter_getLogStats} data 
+ * @returns{Promise.<import('./types.js').server_log_result_getLogsStats[]|[]>}
  */
 const getLogsStats = async (data) => {
-    /**@type{import('../types.js').server_log_result_getLogsStats[]|[]} */
+    /**@type{import('./types.js').server_log_result_getLogsStats[]|[]} */
     const logfiles = [];
-    /**@type{import('../types.js').server_log_result_getLogsStats[]|[]} */
+    /**@type{import('./types.js').server_log_result_getLogsStats[]|[]} */
     const logstat = [];
     
     const files = await file_get_log_dir();
@@ -529,7 +529,7 @@ const getLogsStats = async (data) => {
             const {ConfigGetAppHost} = await import(`file://${process.cwd()}/server/config.service.js`);
             await file_get_log(file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, sample)
             .then((logs)=>{
-                logs.forEach((/**@type{import('../types.js').server_log_request_record|''}*/record) => {
+                logs.forEach((/**@type{import('./types.js').server_log_request_record|''}*/record) => {
                     if (record != ''){
                         if (data.statGroup != null){
                             const domain_app_id = record.host?ConfigGetAppHost(record.host):null;
@@ -613,10 +613,10 @@ const getLogsStats = async (data) => {
 /**
  * Get log files
  * 
- * @returns{Promise.<[import('../types.js').server_log_result_getFiles]|[]>}
+ * @returns{Promise.<[import('./types.js').server_log_result_getFiles]|[]>}
  */
 const getFiles = async () => {
-    /**@type{[import('../types.js').server_log_result_getFiles]|[]} */
+    /**@type{[import('./types.js').server_log_result_getFiles]|[]} */
     const logfiles =[];
     const files = await file_get_log_dir();
     let i =1;

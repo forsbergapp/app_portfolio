@@ -14,7 +14,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number|null} entity_id
  * @param {string|null} locale
  * @param {boolean|null} user_null
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_data_resource_master_get[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_resource_master_get[]>}
  */
 const get = async (app_id, resource_id, user_account_id, data_app_id, resource_name, entity_id, locale, user_null) => {
 		const sql = `SELECT adrm.id                                                 "id",
@@ -64,7 +64,7 @@ const get = async (app_id, resource_id, user_account_id, data_app_id, resource_n
  * 
  * @param {number}      app_id
  * @param {*}           data
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_data_resource_master_post>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_resource_master_post>}
  */
 const post = async (app_id, data) => {
     const sql = `INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, 
@@ -94,7 +94,7 @@ const post = async (app_id, data) => {
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*}      data
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_data_resource_master_update>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_resource_master_update>}
  */
  const update = async (app_id, resource_id, data) => {
     const sql = `UPDATE <DB_SCHEMA/>.app_data_resource_master 
@@ -124,7 +124,7 @@ const post = async (app_id, data) => {
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} data
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_data_resource_master_delete>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_resource_master_delete>}
  */
  const deleteRecord = async (app_id, resource_id, data) => {
     const sql = `DELETE FROM <DB_SCHEMA/>.app_data_resource_master 

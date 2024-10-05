@@ -12,7 +12,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {string|null} resource_name
  * @param {number|null} entity_id
  * @param {string|null} locale
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_data_entity_resource_get[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_entity_resource_get[]>}
  */
 const get = async (app_id, resource_id, data_app_id, resource_name, entity_id, locale) => {
 		const sql = `SELECT ader.id 										"id",

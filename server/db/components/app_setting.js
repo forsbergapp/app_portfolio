@@ -13,7 +13,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {*} query 
  */
 const getSettings = (app_id, query) => service.getSettings(app_id, query.get('lang_code'), query.get('setting_type') ?? (query.get('setting_type')==''?null:query.get('setting_type')))
-                                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * Get setting display data
@@ -21,6 +21,6 @@ const getSettings = (app_id, query) => service.getSettings(app_id, query.get('la
  * @param {*} query 
  */
 const getSettingDisplayData = (app_id, query) => service.getSettingDisplayData(app_id, getNumberValue(query.get('data_app_id')), query.get('setting_type'), query.get('value'))
-                                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
                                         
 export{getSettings, getSettingDisplayData};

@@ -2,7 +2,7 @@
 
 /**
  * Sends ISO 20022 error format
- * @param {import('../types.js').server_server_res} res 
+ * @param {import('./types.js').server_server_res} res 
  * @param {number} http 
  * @param {string|null} code 
  * @param {string|number|object|null} text 
@@ -26,7 +26,7 @@
  * Get number value from request key
  * returns number or null for numbers
  * so undefined and '' are avoided sending argument to service functions
- * @param {import('../types.js').server_server_req_id_number} param
+ * @param {import('./types.js').server_server_req_id_number} param
  * @returns {number|null}
  */
  const getNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
@@ -34,7 +34,7 @@
 
 /**
  * Calculate responsetime
- * @param {import('../types.js').server_server_res} res
+ * @param {import('./types.js').server_server_res} res
  * @returns {number}
  */
 const responsetime = (res) => {
@@ -50,7 +50,7 @@ const COMMON = {
         const from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
         return module.substring(from_app_root);
     },
-    app_function(/**@type{import('../types.js').server_server_error_stack}*/stack){
+    app_function(/**@type{import('./types.js').server_server_error_stack}*/stack){
         const e = stack.split('at ');
         let functionName;
         //loop from last to first
@@ -69,7 +69,7 @@ const COMMON = {
         return functionName;
     },
     app_line(){
-        /**@type {import('../types.js').server_server_error} */
+        /**@type {import('./types.js').server_server_error} */
         const e = new Error() || '';
         const frame = e.stack.split('\n')[2];
         const lineNumber = frame.split(':').reverse()[1];
@@ -112,7 +112,7 @@ const COMMON = {
  * 3.Middleware error logging
  * 
  * @async
- * @returns {Promise<import('../types.js').server_server_express>} app
+ * @returns {Promise<import('./types.js').server_server_express>} app
  */
  const serverExpress = async () => {
     /**@type{import('./config.service.js')} */
@@ -123,13 +123,13 @@ const COMMON = {
     const {default:express} = await import('express');
     const {default:compression} = await import('compression');
     
-    /**@type{import('../types.js').server_server_express} */
+    /**@type{import('./types.js').server_server_express} */
     const app = express();
     //
     //MIDDLEWARES
     //
     //use compression for better performance
-    const shouldCompress = (/**@type{import('../types.js').server_server_req}*/req) => {
+    const shouldCompress = (/**@type{import('./types.js').server_server_req}*/req) => {
         //exclude broadcast messages using socket
         if (req.headers.accept == 'text/event-stream')
             return false;
@@ -180,7 +180,7 @@ const COMMON = {
     app.route('*').get                          (BFF_app);
     
     //ERROR LOGGING
-    app.use((/**@type{import('../types.js').server_server_error}*/err,/**@type{import('../types.js').server_server_req}*/req,/**@type{import('../types.js').server_server_res}*/res, /**@type{function}*/next) => {
+    app.use((/**@type{import('./types.js').server_server_error}*/err,/**@type{import('./types.js').server_server_req}*/req,/**@type{import('./types.js').server_server_res}*/res, /**@type{function}*/next) => {
         LogRequestE(req, res.statusCode, res.statusMessage, responsetime(res), err).then(() => {
             next();
         });
@@ -189,7 +189,7 @@ const COMMON = {
 };
 /**
  * server routes
- * @param {import('../types.js').server_server_routesparameters} routesparameters
+ * @param {import('./types.js').server_server_routesparameters} routesparameters
  * @async
  */
  const serverRoutes = async (routesparameters) =>{
@@ -388,7 +388,7 @@ const COMMON = {
                                                 routesparameters.accept_language, 
                                                 routesparameters.body?routesparameters.body:null,
                                                 routesparameters.endpoint == 'SERVER_APP')
-                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
+                            .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
                 };
 
                 
@@ -1061,7 +1061,7 @@ const serverStart = async () =>{
         await InitConfig();
         await database.Start();
         //Get express app with all configurations
-        /**@type{import('../types.js').server_server_express}*/
+        /**@type{import('./types.js').server_server_express}*/
         const app = await serverExpress();
         SocketCheckInterval();
         //START HTTP SERVER
@@ -1087,7 +1087,7 @@ const serverStart = async () =>{
                 });
             });            
         }
-    } catch (/**@type{import('../types.js').server_server_error}*/error) {
+    } catch (/**@type{import('./types.js').server_server_error}*/error) {
         LogServerE('serverStart: ' + error.stack);
     }
     

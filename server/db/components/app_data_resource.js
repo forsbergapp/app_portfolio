@@ -25,21 +25,21 @@ const MasterGet = (app_id, resource_id, query, user_null=false) => app_data_reso
                                                                   getNumberValue(query.get('entity_id')),
                                                                   query.get('lang_code'),
                                                                   user_null)
-                                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
  * @param {number} app_id 
  * @param {*} data
  */
- const MasterPost = (app_id, data) => app_data_resource_master.post(app_id, data).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+ const MasterPost = (app_id, data) => app_data_resource_master.post(app_id, data).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 /**
  * 
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} data
  */
- const MasterUpdate = (app_id, resource_id, data) => app_data_resource_master.update(app_id, resource_id, data).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+ const MasterUpdate = (app_id, resource_id, data) => app_data_resource_master.update(app_id, resource_id, data).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
  /**
  * 
@@ -47,7 +47,7 @@ const MasterGet = (app_id, resource_id, query, user_null=false) => app_data_reso
  * @param {number} resource_id
  * @param {*}      data
  */
-  const MasterDelete = (app_id, resource_id, data) => app_data_resource_master.deleteRecord(app_id, resource_id, data).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+  const MasterDelete = (app_id, resource_id, data) => app_data_resource_master.deleteRecord(app_id, resource_id, data).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
  
 /**
  * 
@@ -65,22 +65,14 @@ const MasterGet = (app_id, resource_id, query, user_null=false) => app_data_reso
                                                                                                   getNumberValue(query.get('entity_id')),
                                                                                                   query.get('lang_code'),
                                                                                                   user_null)
-                                                                      .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                                                      .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
  * @param {number} app_id 
  * @param {*} data
  */
- const DetailPost = (app_id, data) => app_data_resource_detail.post(app_id, data).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
-
-/**
- * 
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*} data
- */
- const DetailUpdate = (app_id, resource_id, data) => app_data_resource_detail.update(app_id, resource_id, data).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+ const DetailPost = (app_id, data) => app_data_resource_detail.post(app_id, data).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
@@ -88,7 +80,15 @@ const MasterGet = (app_id, resource_id, query, user_null=false) => app_data_reso
  * @param {number} resource_id
  * @param {*} data
  */
- const DetailDelete = (app_id, resource_id, data) => app_data_resource_detail.deleteRecord(app_id, resource_id, data).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+ const DetailUpdate = (app_id, resource_id, data) => app_data_resource_detail.update(app_id, resource_id, data).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {*} data
+ */
+ const DetailDelete = (app_id, resource_id, data) => app_data_resource_detail.deleteRecord(app_id, resource_id, data).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
  /**
  * 
@@ -111,22 +111,14 @@ const DataGet = (app_id, resource_id, query, user_null=false) => app_data_resour
                                                                                                     getNumberValue(query.get('entity_id')),
                                                                                                     query.get('lang_code'),
                                                                                                     user_null)
-                                                                  .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                                                  .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
  * @param {number} app_id 
  * @param {*}      data
  */
-const DataPost = (app_id, data) => app_data_resource_detail_data.post(app_id, data).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
-
-/**
- * 
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*}      data
- */
- const DataUpdate = (app_id, resource_id, data) => app_data_resource_detail_data.update(app_id, resource_id, data).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+const DataPost = (app_id, data) => app_data_resource_detail_data.post(app_id, data).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
@@ -134,7 +126,15 @@ const DataPost = (app_id, data) => app_data_resource_detail_data.post(app_id, da
  * @param {number} resource_id
  * @param {*}      data
  */
-const DataDelete = (app_id, resource_id, data) => app_data_resource_detail_data.deleteRecord(app_id, resource_id, data).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+ const DataUpdate = (app_id, resource_id, data) => app_data_resource_detail_data.update(app_id, resource_id, data).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {*}      data
+ */
+const DataDelete = (app_id, resource_id, data) => app_data_resource_detail_data.deleteRecord(app_id, resource_id, data).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 export{ MasterGet,  MasterPost, MasterUpdate,   MasterDelete,
         DetailGet,  DetailPost, DetailUpdate,   DetailDelete,

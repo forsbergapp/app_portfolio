@@ -55,9 +55,9 @@ const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.s
                                         verificationCode: verification_code,
                                         to:               email,
                                     })
-                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
         
-    /**@type{import('../../../types.js').server_bff_parameters}*/
+    /**@type{import('../../types.js').server_bff_parameters}*/
     const parameters = {endpoint:'SERVER_MAIL',
                         host:null,
                         url:'/mail/sendemail',
@@ -83,7 +83,7 @@ const login_error = async (app_id) =>{
                                     'MESSAGE',
                                     '20300')
     .then(result_message=>result_message[0].display_data)
-    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 };
 /**
  * 
@@ -93,23 +93,23 @@ const login_error = async (app_id) =>{
  * @param {string} user_agent
  * @param {string} accept_language
  * @param {*} data
- * @param {import('../../../types.js').server_server_res} res
+ * @param {import('../../types.js').server_server_res} res
  * @return {Promise.<{
  *                  accessToken:string|null,
  *                  exp:number,
  *                  iat:number,
  *                  tokentimestamp:number,
- *                  login:import('../../../types.js').server_db_sql_result_user_account_userLogin[]}>}
+ *                  login:import('../../types.js').server_db_sql_result_user_account_userLogin[]}>}
  */
 const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
     return new Promise((resolve, reject)=>{        
         
-        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_userLogin} */
+        /**@type{import('../../types.js').server_db_sql_parameter_user_account_userLogin} */
         const data_login =    {   username: data.username};
         service.userLogin(app_id, data_login)
         .then(result_login=>{
             const user_account_id = result_login[0]?getNumberValue(result_login[0].id):null;
-            /**@type{import('../../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
+            /**@type{import('../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
             const data_body = { result:             0,
                                 client_ip:          ip,
                                 client_user_agent:  user_agent,
@@ -153,9 +153,9 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                                         login: Array(result_login[0])
                                                     });
                                                 })
-                                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                                             })
-                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                                         });
                                     }
                                     else{
@@ -169,12 +169,12 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                                 login: Array(result_login[0])
                                             });
                                         })
-                                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                                     }
                                 })
-                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                             })
-                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                         }
                         else{
                             //Unauthorized, only admin allowed to log in to admin
@@ -193,7 +193,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                             login_error(app_id)
                             .then((/**@type{string}*/text)=>reject(text));
                         })
-                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                     }
                 });
             } else{
@@ -204,10 +204,10 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                     login_error(app_id)
                     .then((/**@type{string}*/text)=>reject(text));
                 })
-                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
             }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -220,20 +220,20 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
  * @param {string} accept_language
  * @param {*} query 
  * @param {*} data 
- * @param {import('../../../types.js').server_server_res} res
+ * @param {import('../../types.js').server_server_res} res
  * @return {Promise.<{
  *                  accessToken:string|null,
  *                  exp:number,
  *                  iat:number,
  *                  tokentimestamp:number,
- *                  items:import('../../../types.js').server_db_sql_result_user_account_providerSignIn[],
+ *                  items:import('../../types.js').server_db_sql_result_user_account_providerSignIn[],
  *                  userCreated:0|1}>}
  */
 const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_language, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
         .then(result_signin=>{
-            /** @type{import('../../../types.js').server_db_sql_parameter_user_account_create} */
+            /** @type{import('../../types.js').server_db_sql_parameter_user_account_create} */
             const data_user = { bio:                    null,
                                 private:                null,
                                 user_level:             null,
@@ -255,7 +255,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                 provider_email:         data.provider_email,
                                 admin:                  0};
             const user_account_id = result_signin[0]?result_signin[0].id:null;
-            /**@type{import('../../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
+            /**@type{import('../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
             const data_login = {result:                 0,
                                 client_ip:              ip,
                                 client_user_agent:      user_agent,
@@ -285,15 +285,15 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                         userCreated: 0
                                     });
                                 })
-                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                             })
-                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                         })
-                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
                             checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
                         });    
                     })
-                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                 }
                 else{
                     //if provider user not found then create user and one user setting
@@ -326,15 +326,15 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                             userCreated: 1
                                         });
                                     })
-                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                                 })
-                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                             })
-                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                         })
-                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                     })
-                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                 }
             }
             else{
@@ -348,7 +348,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                 });
             }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -359,18 +359,18 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
  * @param {string} accept_language
  * @param {*} query 
  * @param {*} data 
- * @param {import('../../../types.js').server_server_res} res 
+ * @param {import('../../types.js').server_server_res} res 
  * @return {Promise.<{
  *              accessToken:string|null,
  *              exp:number,
  *              iat:number,
  *              tokentimestamp:number,
  *              id:number,
- *              data:import('../../../types.js').server_db_sql_result_user_account_create}>}
+ *              data:import('../../types.js').server_db_sql_result_user_account_create}>}
  */
 const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
     return new Promise((resolve, reject)=>{
-        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_create} */
+        /**@type{import('../../types.js').server_db_sql_parameter_user_account_create} */
         const data_body = { bio:                    data.bio,
                             private:                data.private,
                             user_level:             data.user_level,
@@ -416,7 +416,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                         data: result_create
                     });
                 })
-                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
             }
             else{
                 const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
@@ -431,7 +431,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
             }
                 
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
             checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
         });
     });
@@ -446,7 +446,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
  * @param {string} host 
  * @param {*} query 
  * @param {*} data 
- * @param {import('../../../types.js').server_server_res} res
+ * @param {import('../../types.js').server_server_res} res
  * @return {Promise.<{
  *              count: number,
  *              auth: string|null,
@@ -454,7 +454,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
  *              exp:number|null,
  *              iat:number|null,
  *              tokentimestamp:number|null,
- *              items: import('../../../types.js').server_db_sql_result_user_account_activateUser[]}>}
+ *              items: import('../../types.js').server_db_sql_result_user_account_activateUser[]}>}
  */
 const activate = (app_id, resource_id, ip, user_agent, accept_language, host, query, data, res) =>{
     return new Promise((resolve, reject)=>{
@@ -469,7 +469,7 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
             if (auth_password_new == null){
                 if (result_activate.affectedRows==1 && getNumberValue(data.verification_type)==4){
                     //new email verified
-                    /**@type{import('../../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
+                    /**@type{import('../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
                     const eventData = {
                         user_account_id: resource_id,
                         event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
@@ -497,7 +497,7 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
                             items: Array(result_insert)
                         });
                     })
-                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                 }
                 else
                     resolve({
@@ -515,7 +515,7 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
                 //return accessToken since PASSWORD_RESET is in progress
                 //email was verified and activated with id token, but now the password will be updated
                 //using accessToken and authentication code
-                /**@type{import('../../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
+                /**@type{import('../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
                 const data_body = { 
                     result:             1,
                     client_ip:          ip,
@@ -535,10 +535,10 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
                         items: Array(result_activate)
                     });
                 })
-                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
             }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
             checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
         });
     });
@@ -567,7 +567,7 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
                             (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) < 1)
                             resolve({sent: 0});
                         else{
-                            /**@type{import('../../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
+                            /**@type{import('../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
                             const eventData = {
                                                 user_account_id: result_emailuser[0].id,
                                                 event: 'PASSWORD_RESET',
@@ -603,21 +603,21 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
                                             id: result_emailuser[0].id
                                         });  
                                     })
-                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                                 })
-                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                             })
                             .catch(()=> {
                                 resolve({sent: 0});
                             });
                         }
                     })
-                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));         
+                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));         
                 }
                 else
                     resolve({sent: 0});
             })
-            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
         else
             resolve({sent: 0});
     });
@@ -631,15 +631,15 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
  * @param {string} user_agent 
  * @param {*} query 
  * @param {*} data
- * @param {import('../../../types.js').server_server_res} res
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_getProfileUser[]>}
+ * @param {import('../../types.js').server_server_res} res
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_getProfileUser[]>}
  */
 const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         /**
          * Clear private data if private
-         * @param {import('../../../types.js').server_db_sql_result_user_account_getProfileUser[]} result_getProfileUser 
-         * @returns {import('../../../types.js').server_db_sql_result_user_account_getProfileUser[]}
+         * @param {import('../../types.js').server_db_sql_result_user_account_getProfileUser[]} result_getProfileUser 
+         * @returns {import('../../types.js').server_db_sql_result_user_account_getProfileUser[]}
          */
         const clear_private = result_getProfileUser =>
             result_getProfileUser.map(row=>{
@@ -669,7 +669,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                 //searching, return result
                 import(`file://${process.cwd()}/server/db/sql/app_data_stat.service.js`)
                 .then((/**@type{import('../sql/app_data_stat.service.js')} */{ post }) => {
-                    /**@type{import('../../../types.js').server_db_sql_parameter_app_data_stat_post} */
+                    /**@type{import('../../types.js').server_db_sql_parameter_app_data_stat_post} */
                     const data_insert = {json_data:                                         {   search:             query.get('search') ?? resource_id_number ?? resource_id_name,
                                                                                                 client_ip:          ip,
                                                                                                 client_user_agent:  user_agent,
@@ -690,7 +690,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                     .then(()=>{
                         resolve(clear_private(result_getProfileUser));
                     })
-                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                 });
             }
             else
@@ -708,7 +708,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                         .then(()=>{
                             resolve(clear_private(result_getProfileUser));
                         })
-                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                     });
                 }
                 else{
@@ -718,7 +718,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                     });
                 }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -727,7 +727,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
  * @param {*} query
  */
 const getProfileStat = (app_id, query) => service.getProfileStat(app_id, getNumberValue(query.get('statchoice')))
-                                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
@@ -735,8 +735,8 @@ const getProfileStat = (app_id, query) => service.getProfileStat(app_id, getNumb
  * @param {number} resource_id
  * @param {*} query 
  * @param {*} data
- * @param {import('../../../types.js').server_server_res} res
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_updateUserSuperAdmin>}
+ * @param {import('../../types.js').server_server_res} res
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_updateUserSuperAdmin>}
  */
 const updateAdmin =(app_id, resource_id, query, data, res) =>{
     return new Promise((resolve, reject)=>{
@@ -744,7 +744,7 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
         service.getUserByUserId(app_id, resource_id)
         .then(result_user=>{
             if (result_user[0]) {
-                /**@type{import('../../../types.js').server_db_sql_parameter_user_account_updateUserSuperAdmin} */
+                /**@type{import('../../types.js').server_db_sql_parameter_user_account_updateUserSuperAdmin} */
                 const body = {  app_role_id:        getNumberValue(data.app_role_id),
                                 active:             getNumberValue(data.active),
                                 user_level:         getNumberValue(data.user_level),
@@ -775,7 +775,7 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
                     else
                         resolve(result_update);
                 })
-                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
                     checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
@@ -786,7 +786,7 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
                 });
             }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -795,13 +795,13 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
  * @param {*} query 
  */
 const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get('search'), query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
-                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
  * @param {number} app_id 
  */
-const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
@@ -811,7 +811,7 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
 const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id, 
                                                                 getNumberValue(query.get('data_user_account_id')), 
                                                                 getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
-                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
     
 /**
  * 
@@ -823,18 +823,18 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
  * @param {string} accept_language 
  * @param {*} query 
  * @param {*} data 
- * @param {import('../../../types.js').server_server_res} res
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_updatePassword|{sent: number}>}
+ * @param {import('../../types.js').server_server_res} res
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_updatePassword|{sent: number}>}
  */
  const updatePassword = (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
     return new Promise((resolve, reject)=>{
-        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_updatePassword} */
+        /**@type{import('../../types.js').server_db_sql_parameter_user_account_updatePassword} */
         const data_update = {   password_new:   data.password_new,
                                 auth:           data.auth};
         service.updatePassword(app_id, resource_id, data_update)
         .then(result_update=>{
             if (result_update) {
-                /**@type{import('../../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
+                /**@type{import('../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
                 const eventData = {
                     user_account_id: resource_id,
                     event: 'PASSWORD_RESET',
@@ -865,7 +865,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
                 });
             }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
             checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
         });
     });
@@ -880,13 +880,13 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
  * @param {string} accept_language
  * @param {*} query 
  * @param {*} data 
- * @param {import('../../../types.js').server_server_res} res 
+ * @param {import('../../types.js').server_server_res} res 
  * @returns {Promise.<{sent_change_email: number}>}
  */
  const updateUserLocal = async (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
-    /**@type{import('../../../types.js').server_db_sql_result_user_account_getUserByUserId[]}*/
+    /**@type{import('../../types.js').server_db_sql_result_user_account_getUserByUserId[]}*/
     const result_user = await service.getUserByUserId(app_id, resource_id);
-    /**@type{import('../../../types.js').server_db_sql_result_user_account_event_getLastUserEvent[]}*/
+    /**@type{import('../../types.js').server_db_sql_result_user_account_event_getLastUserEvent[]}*/
     const result_user_event = await getLastUserEvent(app_id, resource_id, 'EMAIL_VERIFIED_CHANGE_EMAIL');
     return new Promise((resolve, reject)=>{
         if (result_user[0]) {
@@ -899,7 +899,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
                                 result_user_event.length == 0)
                             send_email=true;
                     }
-                    /**@type{import('../../../types.js').server_db_sql_parameter_user_account_updateUserLocal} */
+                    /**@type{import('../../types.js').server_db_sql_parameter_user_account_updateUserLocal} */
                     const data_update = {   bio:                data.bio,
                                             private:            data.private,
                                             username:           data.username,
@@ -918,7 +918,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
                         if (result_update){
                             if (send_email){
                                 //no change email in progress or older than at least 1 day
-                                /**@type{import('../../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
+                                /**@type{import('../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
                                 const eventData = {
                                     user_account_id: resource_id,
                                     event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
@@ -948,9 +948,9 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
                                     .then(()=>{
                                         resolve({sent_change_email: 1});
                                     })
-                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                                 })
-                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                             }
                             else
                                 resolve({sent_change_email: 0});
@@ -962,7 +962,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
                             });
                         }
                     })
-                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
                         checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
                     });
                 } 
@@ -977,7 +977,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
                     .then(result_message=>{
                         reject(result_message[0].display_data);
                     })
-                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                 }
             });
         } 
@@ -991,7 +991,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
             .then(result_message=>{
                 reject(result_message[0].display_data);
             })
-            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
         }
     });
 };
@@ -1001,12 +1001,12 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
  * @param {number} resource_id
  * @param {*} query
  * @param {*} data
- * @param {import('../../../types.js').server_server_res} res
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_updateUserCommon>}
+ * @param {import('../../types.js').server_server_res} res
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_updateUserCommon>}
  */
  const updateUserCommon = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
-        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_updateUserCommon} */
+        /**@type{import('../../types.js').server_db_sql_parameter_user_account_updateUserCommon} */
         const data_update = {   username:   data.username,
                                 bio:        data.bio,
                                 private:    data.private};
@@ -1021,7 +1021,7 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
                 });
             }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
             checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
         });
     });
@@ -1031,8 +1031,8 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id,
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query 
- * @param {import('../../../types.js').server_server_res} res 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_getUserByUserId[]|{last_logontime:string|null}>}
+ * @param {import('../../types.js').server_server_res} res 
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_getUserByUserId[]|{last_logontime:string|null}>}
  */
 const getUserByUserId = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
@@ -1046,7 +1046,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                     const last_logontime = user_account_logons.filter(row=>JSON.parse(row.json_data).result==1)[0];
                     resolve({...result[0], ...{last_logontime:last_logontime?last_logontime.date_created:null}});
                 })
-                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
             }
                 
             else{
@@ -1056,7 +1056,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                 });
             }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -1065,8 +1065,8 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
  * @param {number} resource_id
  * @param {*} query
  * @param {*} data
- * @param {import('../../../types.js').server_server_res} res 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_deleteUser>}
+ * @param {import('../../types.js').server_server_res} res 
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_deleteUser>}
  */
  const deleteUser = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
@@ -1085,7 +1085,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                             });
                         }
                     })
-                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                 }
                 else{
                     service.checkPassword(app_id, resource_id)
@@ -1104,7 +1104,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                                             });
                                         }
                                     })
-                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                                 }
                                 else{
                                     res.statusMessage = 'invalid password attempt for user id:' + resource_id;
@@ -1117,7 +1117,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                                     .then(result_message=>{
                                         reject(result_message[0].display_data);
                                     })
-                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                                 } 
                             });
                             
@@ -1132,10 +1132,10 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                             .then(result_message=>{
                                 reject(result_message[0].display_data);
                             })
-                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                         }
                     })
-                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                 }
             }
             else{
@@ -1150,7 +1150,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                 });
             }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -1158,7 +1158,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} query
- * @param {import('../../../types.js').server_server_res} res 
+ * @param {import('../../types.js').server_server_res} res 
  */
  const getProfileDetail = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
@@ -1173,7 +1173,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                 });
             }
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
     
 };
@@ -1183,14 +1183,14 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
  * @param {*} data
  */
 const follow = (app_id, resource_id, data) => user_account_follow_service.follow(app_id, resource_id, getNumberValue(data.user_account_id))
-                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 /**
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} data
  */
 const unfollow = (app_id, resource_id, data) => user_account_follow_service.unfollow(app_id, resource_id, getNumberValue(data.user_account_id))
-                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
@@ -1199,7 +1199,7 @@ const unfollow = (app_id, resource_id, data) => user_account_follow_service.unfo
  * @param {*} data
  */
 const like = (app_id, resource_id, data) => user_account_like_service.like(app_id, resource_id, getNumberValue(data.user_account_id))
-                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
@@ -1208,7 +1208,7 @@ const like = (app_id, resource_id, data) => user_account_like_service.like(app_i
  * @param {*} data
  */
 const unlike = (app_id, resource_id, data) => user_account_like_service.unlike(app_id, resource_id, getNumberValue(data.user_account_id))
-                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 export {/*DATA_LOGIN*/
         login, login_provider, 

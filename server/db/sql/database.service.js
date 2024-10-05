@@ -4,7 +4,7 @@
  * 
  * @param {number} app_id 
  * @param {number} DBA
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_admin_DBInfo[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_admin_DBInfo[]>}
  */
  const Info = async (app_id, DBA) => {
    /**@type{import('../../server.service.js')} */
@@ -140,7 +140,7 @@
  * 
  * @param {number} app_id
  * @param {number} DBA
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_admin_DBInfoSpace[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_admin_DBInfoSpace[]>}
  */
 const InfoSpace = async (app_id, DBA) => {
    /**@type{import('../../server.service.js')} */
@@ -217,7 +217,7 @@ const InfoSpace = async (app_id, DBA) => {
  * 
  * @param {number} app_id
  * @param {number} DBA
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_admin_DBInfoSpaceSum[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_admin_DBInfoSpaceSum[]>}
  */
 const InfoSpaceSum = async (app_id, DBA) => {
    /**@type{import('../../server.service.js')} */
@@ -283,7 +283,7 @@ const InfoSpaceSum = async (app_id, DBA) => {
   * Check if database is installed.
   * @param {number|null} app_id 
   * @param {number} DBA 
-  * @returns Promise.<{import('../../../types.js').server_db_database_install_db_check[]}>
+  * @returns Promise.<{import('../../types.js').server_db_database_install_db_check[]}>
   */
  const InstalledCheck = async (app_id, DBA) =>{
    /**@type{import('../../db/common.service.js')} */

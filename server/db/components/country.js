@@ -9,6 +9,6 @@ const service = await import(`file://${process.cwd()}/server/db/sql/country.serv
  * @param {*} query
  */
 const getCountries = (app_id, query) => service.getCountries(app_id, query.get('lang_code') ?? 'en')
-                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
     
 export{getCountries};

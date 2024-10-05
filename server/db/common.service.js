@@ -23,7 +23,7 @@ const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js
  *	Oracle message:
  *	'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
  *
- * @param {import('../../types.js').server_db_common_result_error} error
+ * @param {import('../types.js').server_db_common_result_error} error
  * @returns (string|null)
  * 
  */
@@ -58,8 +58,8 @@ const get_app_code = error => {
  * 
  * @param {number} app_id 
  * @param {string} lang_code 
- * @param {import('../../types.js').server_server_error} err 
- * @param {import('../../types.js').server_server_res} res
+ * @param {import('../types.js').server_server_error} err 
+ * @param {import('../types.js').server_server_res} res
  */
  const checked_error = async (app_id, lang_code, err, res) =>{
 	/**@type{import('./sql/app_setting.service.js')} */
@@ -91,7 +91,7 @@ const get_app_code = error => {
  * Get message for record not found
  * @param {number} app_id 
  * @param {string} lang_code
- * @param {import('../../types.js').server_server_res} res
+ * @param {import('../types.js').server_server_res} res
  */
 const record_not_found = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
@@ -100,7 +100,7 @@ const record_not_found = async (app_id, lang_code, res) => {
 									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
 									'MESSAGE',
 									'20400')
-			.then((/**@type{import('../../types.js').server_db_sql_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+			.then((/**@type{import('../types.js').server_db_sql_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
 				res.statusCode = 404;
 				res.statusMessage = result_message[0].display_data;
 				resolve(result_message[0].display_data);
@@ -229,7 +229,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 		}
 
 		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
-		.then((/**@type{import('../../types.js').server_db_common_result}*/result)=> {
+		.then((/**@type{import('../types.js').server_db_common_result}*/result)=> {
 			LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
 			.then(()=>{
 				//parse json_data in SELECT rows, return also the json_data column as reference
@@ -258,7 +258,7 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 						
 			});
 		})
-		.catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
+		.catch((/**@type{import('../types.js').server_server_error}*/error)=>{
 			const database_error = 'DATABASE ERROR';
 			//add db_message key since message is not saved for SQLite
 			if (error.message)

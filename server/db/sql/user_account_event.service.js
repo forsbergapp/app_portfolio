@@ -6,8 +6,8 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
 /**
  * 
  * @param {number} app_id 
- * @param {import('../../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent} data 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_event_insertUserEvent>}
+ * @param {import('../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent} data 
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_event_insertUserEvent>}
  */
 const insertUserEvent = async (app_id, data) => {
 		const sql = `INSERT INTO <DB_SCHEMA/>.user_account_event(
@@ -47,7 +47,7 @@ const insertUserEvent = async (app_id, data) => {
  * @param {number} app_id 
  * @param {number|null} user_account_id 
  * @param {string} event 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_event_getLastUserEvent[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_event_getLastUserEvent[]>}
  */
 const getLastUserEvent = async (app_id, user_account_id, event) => {
 		const sql = `SELECT uae.user_account_id "user_account_id",
