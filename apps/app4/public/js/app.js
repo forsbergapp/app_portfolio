@@ -115,31 +115,6 @@ const app_event_click = event =>{
     }
 };
 /**
- * App event change
- * @param {import('../../../common_types.js').CommonAppEvent} event 
- * @returns {void}
- */
- const app_event_change = event =>{
-    if (event==null){
-        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_change(event);
-        });
-    }
-    else{
-        const event_target_id = common.element_id(event.target);
-        common.common_event('change',event)
-        .then(()=>{
-            switch (event_target_id){
-                case 'common_dialogue_user_menu_app_theme':{
-                    CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').getAttribute('data-value');
-                    common.common_preferences_update_body_class_from_preferences();
-                    break;
-                }
-            }
-        });
-    }
-};
-/**
  * Sets framework
  * @param {number|null} framework 
  * @returns {Promise.<void>}
@@ -147,7 +122,7 @@ const app_event_click = event =>{
  const framework_set = async (framework=null) => {
     await common.framework_set(framework,
         {   Click: app_event_click,
-            Change: app_event_change,
+            Change: null,
             KeyDown: null,
             KeyUp: null,
             Focus: null,
