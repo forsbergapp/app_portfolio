@@ -11,14 +11,14 @@ const template = () =>  `   <div id='common_profile_stat_row1'>
                             <div id='common_profile_stat_list'></div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      stat_list_app_rest_url:string,
  *                      statchoice:number
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -28,14 +28,14 @@ const template = () =>  `   <div id='common_profile_stat_row1'>
 const component = async props => {
 
     const onMounted = async () =>{
-        await props.methods.ComponentRender( 
+        await props.methods.commonComponentRender( 
             {   mountDiv:   'common_profile_stat_list',
                 data:       {
                             stat_choice:props.data.statchoice,
                             stat_list_app_rest_url:props.data.stat_list_app_rest_url
                             },
                 methods:    {
-                            FFB:props.methods.FFB
+                           commonFFB:props.methods.commonFFB
                             },
                 path:       '/common/component/common_dialogue_profile_stat_list.js'});
     };

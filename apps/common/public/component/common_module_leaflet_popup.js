@@ -24,7 +24,7 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
                         `;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      timezone_text:string,
  *                      latitude:string,
  *                      longitude:string,
@@ -32,7 +32,7 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
  *                      city:string,
  *                      text_place:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      moduleLeafletLibrary:function,
  *                      moduleLeafletContainer:function
  *                      }}} props

@@ -11,11 +11,11 @@ const template = () =>` <div id='common_dialogue_maintenance_content' class='com
                             <div id='common_maintenance_footer'></div>
                         </div>`;
 /**
- * @param {{data:       {common_mountdiv:string},
+ * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      common_setTimeout:import('../../../common_types.js').CommonModuleCommon['common_setTimeout'],
- *                      WindowLocationReload:import('../../../common_types.js').CommonModuleCommon['WindowLocationReload']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonWindowSetTimeout:import('../../../common_types.js').CommonModuleCommon['commonWindowSetTimeout'],
+ *                      commonWindowLocationReload:import('../../../common_types.js').CommonModuleCommon['commonWindowLocationReload']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
@@ -29,10 +29,10 @@ const component = async props => {
      */
     const maintenance_countdown = (remaining = null) => {
         if(remaining && remaining <= 0)
-            props.methods.WindowLocationReload();
+            props.methods.commonWindowLocationReload();
         else{
-            props.methods.common_document.querySelector('#common_maintenance_countdown').textContent = remaining;
-            props.methods.common_setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
+            props.methods.COMMON_DOCUMENT.querySelector('#common_maintenance_countdown').textContent = remaining;
+            props.methods.commonWindowSetTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
         }
     };    
     return {

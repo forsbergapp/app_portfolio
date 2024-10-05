@@ -3,8 +3,8 @@
  * @module apps/app4/app
  */
 
-/**@type{import('../../../common_types.js').CommonAppDocument} */
-const CommonAppDocument = document;
+/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+const COMMON_DOCUMENT = document;
 
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
@@ -16,7 +16,7 @@ const common = await import(path_common);
  * @returns {void}
  */
 const app_exception = (error) => {
-    common.show_message('EXCEPTION', null, null, null, error);
+    common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
  * App event click
@@ -25,13 +25,13 @@ const app_exception = (error) => {
  */
 const app_event_click = event =>{
     if (event==null){
-        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_click(event);
         });
     }
     else{
-        const event_target_id = common.element_id(event.target);
-        common.common_event('click',event)
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
                 case 'common_toolbar_framework_js':{
@@ -53,7 +53,7 @@ const app_event_click = event =>{
                 case 'common_user_menu_avatar_img':
                 case 'common_user_menu_logged_out':
                 case 'common_user_menu_default_avatar':{
-                    common.ComponentRender({
+                    common.commonComponentRender({
                         mountDiv:   'common_dialogue_user_menu',
                         data:       {
                                     app_id:common.COMMON_GLOBAL.app_id,
@@ -70,43 +70,39 @@ const app_event_click = event =>{
                                     user_direction:common.COMMON_GLOBAL.user_direction,
                                     user_arabic_script:common.COMMON_GLOBAL.user_arabic_script},
                         methods:    {
-                                    set_current_value:common.set_current_value,
-                                    FFB:common.FFB,
-                                    ComponentRender:common.ComponentRender,
-                                    user_session_countdown:common.user_session_countdown,
-                                    show_message:common.show_message
+                                    commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                                   commonFFB:common.commonFFB,
+                                    commonComponentRender:common.commonComponentRender,
+                                    commonUserSessionCountdown:common.commonUserSessionCountdown,
+                                    commonMessageShow:common.commonMessageShow
                                     },
                         path:       '/common/component/common_dialogue_user_menu.js'})
                     .then(()=>
-                        common.ComponentRender({
+                        common.commonComponentRender({
                             mountDiv:   'common_dialogue_user_menu_app_theme',
                             data:       null,
                             methods:    {
-                                        theme_default_list:common.theme_default_list,
-                                        ComponentRender:common.ComponentRender, 
-                                        app_theme_update:common.common_preferences_post_mount
+                                        commonThemeDefaultList:common.commonThemeDefaultList,
+                                        commonComponentRender:common.commonComponentRender, 
+                                        app_theme_update:common.commonPreferencesPostMount
                                         },
                             path:       '/common/component/common_dialogue_user_menu_app_theme.js'}));
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
-                    common.user_logout();
+                    common.commonUserLogout();
                     break;
                 }
                 /*Dialogue user start */
                 case 'common_user_start_login_button':{
-                    common.user_login().catch(()=>null);
-                    break;
-                }
-                case 'common_user_start_signup_button':{
-                    common.user_signup();
+                    common.commonUserLogin().catch(()=>null);
                     break;
                 }
                 case 'common_user_start_identity_provider_login':{
-                    const target_row = common.element_row(event.target);
+                    const target_row = common.commonElementRow(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
                     if (provider_element && provider_element.textContent)
-                        common.user_login(null, null, null, parseInt(provider_element.textContent));
+                        common.commonUserLogin(null, null, null, parseInt(provider_element.textContent));
                     break;
                 }
                 
@@ -120,7 +116,7 @@ const app_event_click = event =>{
  * @returns {Promise.<void>}
  */
  const framework_set = async (framework=null) => {
-    await common.framework_set(framework,
+    await common.commonFrameworkSet(framework,
         {   Click: app_event_click,
             Change: null,
             KeyDown: null,
@@ -134,12 +130,12 @@ const app_event_click = event =>{
  * @returns {Promise.<void>}
  */
 const init_map = async ()=>{
-    await common.ComponentRender({
+    await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
         methods:    null,
         path:       '/component/app.js'});
-    common.map_init('mapid',
+    common.commonModuleLeafletInit('mapid',
                     common.COMMON_GLOBAL.client_longitude,
                     common.COMMON_GLOBAL.client_latitude,
                     null)
@@ -161,7 +157,7 @@ const init_map = async ()=>{
  * @returns {Promise.<void>}
  */
 const init_app = async () =>{
-    await common.ComponentRender({
+    await common.commonComponentRender({
         mountDiv:   'common_user_account',
         data:       null,
         methods:    null,
@@ -174,10 +170,10 @@ const init_app = async () =>{
  * @returns {void}
  */
 const init = parameters => {
-    CommonAppDocument.body.className = 'app_theme1';
+    COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
-    common.COMMON_GLOBAL.app_function_session_expired = common.user_logout;
-    common.init_common(parameters).then(()=>{
+    common.COMMON_GLOBAL.app_function_session_expired = common.commonUserLogout;
+    common.commonInit(parameters).then(()=>{
         init_app();
     });
 };

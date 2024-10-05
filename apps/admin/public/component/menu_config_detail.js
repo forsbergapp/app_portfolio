@@ -46,10 +46,10 @@ const template = props => ` ${props.file=='CONFIG_SERVER'?
                             }`;
 /**
 * 
-* @param {{data:{       common_mountdiv:string,
+* @param {{data:{       commonMountdiv:string,
 *                       file:'CONFIG_SERVER'|'CONFIG_IAM_BLOCKIP'|'CONFIG_IAM_POLICY'|'CONFIG_IAM_USERAGENT'},
-*          methods:{    common_document:import('../../../common_types.js').CommonAppDocument,
-*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*          methods:{    COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *          lifecycle:   null}} props 
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null, 
@@ -58,13 +58,13 @@ const template = props => ` ${props.file=='CONFIG_SERVER'?
 */
 const component = async props => {
     const server_groups = [0,1,2,3,4];
-    const config_server = await props.methods.FFB({path:`/server-config/config/${props.data.file}`, query:'saved=1', method:'GET', authorization_type:'SYSTEMADMIN'})
+    const config_server = await props.methods.commonFFB({path:`/server-config/config/${props.data.file}`, query:'saved=1', method:'GET', authorization_type:'SYSTEMADMIN'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).data);
 
    const onMounted = async () =>{        
         if (props.data.file=='CONFIG_SERVER'){
             //set focus first column in first row
-            props.methods.common_document.querySelectorAll('#list_config .common_input')[0].focus();
+            props.methods.COMMON_DOCUMENT.querySelectorAll('#list_config .common_input')[0].focus();
         }
  };
  

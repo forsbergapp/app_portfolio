@@ -8,12 +8,10 @@ const template = props => `<div id='user_setting_avatar_img' class='common_image
 /**
  * 
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      avatar:string|null
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props
- * @param {{common_document:import('../../../common_types.js').CommonAppDocument,
- *          common_mountdiv:string}} props 
+ *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null,
  *                      methods:null, 

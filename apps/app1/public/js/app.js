@@ -3,8 +3,8 @@
  * @module apps/app1/app
  */
 
-/**@type{import('../../../common_types.js').CommonAppDocument} */
-const CommonAppDocument = document;
+/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+const COMMON_DOCUMENT = document;
 
 const path_common ='common';
  /**@type {import('../../../common_types.js').CommonModuleCommon} */
@@ -15,14 +15,14 @@ const common = await import(path_common);
  * @returns {void}
  */
 const show_hide_apps_dialogue = () => {
-    if (CommonAppDocument.querySelector('#common_dialogue_apps').style.visibility=='visible' ||
-        CommonAppDocument.querySelector('#common_dialogue_apps').style.visibility==''){
-        CommonAppDocument.querySelector('#common_dialogue_apps').style.visibility='hidden';
-        CommonAppDocument.querySelector('#common_profile_btn_top').style.visibility='hidden';
+    if (COMMON_DOCUMENT.querySelector('#common_dialogue_apps').style.visibility=='visible' ||
+        COMMON_DOCUMENT.querySelector('#common_dialogue_apps').style.visibility==''){
+        COMMON_DOCUMENT.querySelector('#common_dialogue_apps').style.visibility='hidden';
+        COMMON_DOCUMENT.querySelector('#common_profile_btn_top').style.visibility='hidden';
     }
     else{
-        CommonAppDocument.querySelector('#common_dialogue_apps').style.visibility='visible';
-        CommonAppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
+        COMMON_DOCUMENT.querySelector('#common_dialogue_apps').style.visibility='visible';
+        COMMON_DOCUMENT.querySelector('#common_profile_btn_top').style.visibility='visible';
     }
 };
 /**
@@ -32,13 +32,13 @@ const show_hide_apps_dialogue = () => {
  */
 const app_event_click = event => {
     if (event==null){
-        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
     else{
-        const event_target_id = common.element_id(event.target);
-        common.common_event('click',event)
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
                 case event.target.classList.contains('common_select_option')?event_target_id:'':
@@ -78,7 +78,7 @@ const app_event_click = event => {
                     case 'common_user_menu_avatar_img':
                     case 'common_user_menu_logged_out':
                     case 'common_user_menu_default_avatar':{
-                        common.ComponentRender({
+                        common.commonComponentRender({
                             mountDiv:   'common_dialogue_user_menu',
                             data:       {
                                         app_id:common.COMMON_GLOBAL.app_id,
@@ -96,15 +96,15 @@ const app_event_click = event => {
                                         user_arabic_script:common.COMMON_GLOBAL.user_arabic_script
                                         },
                             methods:    {
-                                        set_current_value:common.set_current_value,
-                                        FFB:common.FFB,
-                                        ComponentRender:common.ComponentRender,
-                                        user_session_countdown:common.user_session_countdown,
-                                        show_message:common.show_message
+                                        commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                                       commonFFB:common.commonFFB,
+                                        commonComponentRender:common.commonComponentRender,
+                                        commonUserSessionCountdown:common.commonUserSessionCountdown,
+                                        commonMessageShow:common.commonMessageShow
                                         },
                             path:       '/common/component/common_dialogue_user_menu.js'})
                         .then(()=>
-                            common.ComponentRender({
+                            common.commonComponentRender({
                                 mountDiv:   'common_dialogue_user_menu_app_theme',
                                 data:       null,
                                 methods:    {app_theme_update:app_preferences_post_mount},
@@ -117,23 +117,19 @@ const app_event_click = event => {
                 }
                 //dialogue profile info
                 case 'common_profile_follow':{
-                    common.profile_follow_like('FOLLOW');
+                    common.commonProfileFollowLike('FOLLOW');
                     break;
                 }
                 case 'common_profile_like':{
-                    common.profile_follow_like('LIKE');
+                    common.commonProfileFollowLike('LIKE');
                     break;
                 }
                 case 'common_user_start_login_button':{
                     user_login_app().catch(()=>null);
                     break;
                 }
-                case 'common_user_start_signup_button':{
-                    common.user_signup();
-                    break;
-                }
                 case 'common_user_start_identity_provider_login':{
-                    const target_row = common.element_row(event.target);
+                    const target_row = common.commonElementRow(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
                     if (provider_element && provider_element.textContent)
                         user_login_app(null, null, null, parseInt(provider_element.textContent));
@@ -150,12 +146,12 @@ const app_event_click = event => {
  */
 const app_event_change = event => {
     if (event==null){
-        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_change(event);
         }, true);
     }
     else
-        common.common_event('change',event);
+        common.commonEvent('change',event);
 };
 /**
  * App event keyup
@@ -164,13 +160,13 @@ const app_event_change = event => {
  */
 const app_event_keyup = event => {
     if (event==null){
-        CommonAppDocument.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
             app_event_keyup(event);
         });
     }
     else{
-        const event_target_id = common.element_id(event.target);
-        common.common_event('keyup',event)
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('keyup',event)
         .then(()=>{
             switch (event_target_id){
                 case 'common_user_start_login_username':
@@ -187,12 +183,12 @@ const app_event_keyup = event => {
                 case 'common_user_verify_verification_char3':
                 case 'common_user_verify_verification_char4':
                 case 'common_user_verify_verification_char5':{
-                    common.user_verify_check_input( CommonAppDocument.querySelector(`#${event_target_id}`), 
+                    common.commonUserVerifyCheckInput( COMMON_DOCUMENT.querySelector(`#${event_target_id}`), 
                                                     'common_user_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), user_login_app);
                     break;
                 }
                 case 'common_user_verify_verification_char6':{
-                    common.user_verify_check_input(CommonAppDocument.querySelector(`#${event_target_id}`), '', user_login_app);
+                    common.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event_target_id}`), '', user_login_app);
                     break;
                 }
             }
@@ -206,44 +202,44 @@ const app_event_keyup = event => {
  */
 const app_theme_update = (toggle_theme=false) => {
     let theme = '';
-    if(CommonAppDocument.querySelector('#app_theme_checkbox').classList.contains('checked')){
+    if(COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.contains('checked')){
         theme = 'app_theme_sun';
         if (toggle_theme){
-            CommonAppDocument.querySelector('#app_theme_checkbox').classList.remove('checked');
+            COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.remove('checked');
             theme = 'app_theme_moon';
         }
     }
     else{
         theme = 'app_theme_moon';
         if (toggle_theme){
-            CommonAppDocument.querySelector('#app_theme_checkbox').classList.add('checked');
+            COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.add('checked');
             theme = 'app_theme_sun';
         }
     }    
-    CommonAppDocument.body.className = theme;
-    common.common_preferences_update_body_class_from_preferences();
+    COMMON_DOCUMENT.body.className = theme;
+    common.commonPreferencesUpdateBodyClassFromPreferences();
 };
 /**
  * App theme get
  * @returns {void}
  */
  const app_theme_update_from_body = () => {
-    if (CommonAppDocument.body.className.split(' ')[0] == 'app_theme_sun')
-        CommonAppDocument.querySelector('#app_theme_checkbox').classList.add('checked');
+    if (COMMON_DOCUMENT.body.className.split(' ')[0] == 'app_theme_sun')
+        COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.add('checked');
     else
-        CommonAppDocument.querySelector('#app_theme_checkbox').classList.remove('checked');
+        COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.remove('checked');
 };
 /**
  * App preference post mount
  * @returns {void}
  */
  const app_preferences_post_mount = () => {
-    CommonAppDocument.body.className ='';
-    if (CommonAppDocument.querySelector('#app_theme_checkbox').classList.contains('checked'))
-        CommonAppDocument.body.className = 'app_theme_sun';
+    COMMON_DOCUMENT.body.className ='';
+    if (COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.contains('checked'))
+        COMMON_DOCUMENT.body.className = 'app_theme_sun';
     else
-        CommonAppDocument.body.className = 'app_theme_moon';
-    common.common_preferences_update_body_class_from_preferences();
+        COMMON_DOCUMENT.body.className = 'app_theme_moon';
+    common.commonPreferencesUpdateBodyClassFromPreferences();
     app_theme_update_from_body();
 };
 
@@ -256,7 +252,7 @@ const app_theme_update = (toggle_theme=false) => {
  * @returns {Promise.<void>}
  */
 const user_login_app = async (system_admin=false, username_verify=null, password_verify=null, provider_id=null) =>{
-    common.user_login(system_admin, username_verify, password_verify, provider_id)
+    common.commonUserLogin(system_admin, username_verify, password_verify, provider_id)
     .then(()=>get_apps());
 };
 /**
@@ -264,7 +260,7 @@ const user_login_app = async (system_admin=false, username_verify=null, password
  * @returns {Promise.<void>}
  */
  const user_logout_app = async () =>{
-    common.user_logout()
+    common.commonUserLogout()
     .then(()=>get_apps());
 };
 
@@ -273,7 +269,7 @@ const user_login_app = async (system_admin=false, username_verify=null, password
  * @returns {void}
  */
 const get_apps = () => {
-    common.ComponentRender({
+    common.commonComponentRender({
         mountDiv:   'common_dialogue_apps',
         data:       {
                     common_app_id:common.COMMON_GLOBAL.common_app_id,
@@ -286,7 +282,7 @@ const get_apps = () => {
                     info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
                     info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name
                     },
-        methods:    {FFB:common.FFB},
+        methods:    {commonFFB:common.commonFFB},
         path:       '/common/component/common_dialogue_apps.js'});
 };
 /**
@@ -295,7 +291,7 @@ const get_apps = () => {
  * @returns {void}
  */
 const app_exception = (error) => {
-    common.show_message('EXCEPTION', null, null, null, error);
+    common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
  * Sets framework
@@ -303,7 +299,7 @@ const app_exception = (error) => {
  * @returns {Promise.<void>}
  */
 const framework_set = async (framework=null) => {
-    await common.framework_set(framework,
+    await common.commonFrameworkSet(framework,
         {   Click: app_event_click,
             Change: app_event_change,
             KeyDown: null,
@@ -318,25 +314,25 @@ const framework_set = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const init_app = async (parameters) => {
-    await common.ComponentRender({
+    await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
         methods:    null,
         path:       '/component/app.js'})
     .then(()=>
-        common.ComponentRender({
+        common.commonComponentRender({
             mountDiv:   'common_profile_search',
             data:       null,
             methods:    null,
             path:       '/common/component/common_profile_search.js'}))
     .then(()=>
-        common.ComponentRender({
+        common.commonComponentRender({
             mountDiv:   'app_profile_toolbar',
             data:       null,
             methods:    null,
             path:       '/common/component/common_profile_toolbar.js'}))
     .then(()=>
-        common.ComponentRender({
+        common.commonComponentRender({
             mountDiv:   'common_user_account',
             data:       null,
             methods:    null,
@@ -354,10 +350,10 @@ const init_app = async (parameters) => {
     }
     get_apps();
     
-    const user = common.WindowLocationPathname(1);
+    const user = common.commonWndowLocationPathname(1);
     if (user !='') {
         //show profile for user entered in url
-        common.profile_show(null, user);
+        common.commonProfileShow(null, user);
     }
    framework_set();
 };
@@ -367,10 +363,10 @@ const init_app = async (parameters) => {
  * @returns {void}
  */
 const init = parameters => {
-    CommonAppDocument.body.className = 'app_theme_sun';
+    COMMON_DOCUMENT.body.className = 'app_theme_sun';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
     common.COMMON_GLOBAL.app_function_session_expired = user_logout_app;
-    common.init_common(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
+    common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
         init_app(decodedparameters);
     });
 };

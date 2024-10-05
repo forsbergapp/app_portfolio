@@ -42,16 +42,16 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
 ;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      info:number, 
  *                      url:string,
  *                      content_type:string,
- *                      frame:import('../../../common_types.js').CommonAppDocument|null,
+ *                      frame:import('../../../common_types.js').COMMON_DOCUMENT|null,
  *                      iframe_content:string,
  *                      iframe_class:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      common_setTimeout:import('../../../common_types.js').CommonModuleCommon['common_setTimeout']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonWindowSetTimeout:import('../../../common_types.js').CommonModuleCommon['commonWindowSetTimeout']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -118,17 +118,17 @@ const component = async props => {
     const onMounted = async () =>{
         if (props.data.info==3){
             //print content only
-            props.methods.common_document.querySelector('#common_window_info_content').contentWindow.document.open();
-            props.methods.common_document.querySelector('#common_window_info_content').contentWindow.document.write(props.data.iframe_content);
-            props.data.frame?props.methods.common_document.querySelector('#common_window_info_content').focus():null;
+            props.methods.COMMON_DOCUMENT.querySelector('#common_window_info_content').contentWindow.document.open();
+            props.methods.COMMON_DOCUMENT.querySelector('#common_window_info_content').contentWindow.document.write(props.data.iframe_content);
+            props.data.frame?props.methods.COMMON_DOCUMENT.querySelector('#common_window_info_content').focus():null;
             //await delay to avoid browser render error
-            await new Promise ((resolve)=>{props.methods.common_setTimeout(()=> {props.methods.common_document.querySelector('#common_window_info_content').contentWindow.print();
+            await new Promise ((resolve)=>{props.methods.commonWindowSetTimeout(()=> {props.methods.COMMON_DOCUMENT.querySelector('#common_window_info_content').contentWindow.print();
                                                             resolve(null);}, 100);})
-            .then(()=>props.methods.common_document.querySelector('#common_window_info').textContent='');
+            .then(()=>props.methods.COMMON_DOCUMENT.querySelector('#common_window_info').textContent='');
         }
         else{
-            props.methods.common_document.querySelector('#common_window_info').style.visibility='visible';
-            props.methods.common_document.querySelector('#common_window_info').style.overflowY= variables.STYLE_INFO_OVERFLOWY;
+            props.methods.COMMON_DOCUMENT.querySelector('#common_window_info').style.visibility='visible';
+            props.methods.COMMON_DOCUMENT.querySelector('#common_window_info').style.overflowY= variables.STYLE_INFO_OVERFLOWY;
         }
     };
     
@@ -138,7 +138,7 @@ const component = async props => {
         methods:    null,
         template:   template({  info_type:      props.data.info,
                                 info:           props.data.info==3?'':variables.INFO,
-                                iframe_class:   props.data.info==3?props.methods.common_document.querySelector('#paper').className:variables.IFRAME_CLASS,
+                                iframe_class:   props.data.info==3?props.methods.COMMON_DOCUMENT.querySelector('#paper').className:variables.IFRAME_CLASS,
                                 content:        props.data.info==3?'':variables.CONTENT
         })
     };

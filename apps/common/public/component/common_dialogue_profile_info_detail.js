@@ -61,15 +61,15 @@ const template = props => `     ${props.list.map(row=>
                                 }`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      user_account_id:number,
  *                      user_account_id_profile:number,
  *                      detailchoice:number
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      show_common_dialogue:import('../../../common_types.js').CommonModuleCommon['show_common_dialogue'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonDialogueShow:import('../../../common_types.js').CommonModuleCommon['commonDialogueShow'],
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *                      data:null, 
@@ -100,7 +100,7 @@ const component = async props => {
         }    
     }
     if (!props.data.user_account_id)
-        props.methods.show_common_dialogue('LOGIN');
+        props.methods.commonDialogueShow('LOGIN');
 
     return {
       lifecycle:    null,
@@ -110,7 +110,7 @@ const component = async props => {
                                 user_account_id_profile:props.data.user_account_id_profile,
                                 detailchoice:props.data.detailchoice,
                                 list:props.data.user_account_id?
-                                        await props.methods.FFB({path:`${path}/${props.data.user_account_id_profile}`, query:`detailchoice=${props.data.detailchoice}`, method:'GET', authorization_type:'APP_ACCESS'})
+                                        await props.methods.commonFFB({path:`${path}/${props.data.user_account_id_profile}`, query:`detailchoice=${props.data.detailchoice}`, method:'GET', authorization_type:'APP_ACCESS'})
                                                 .then((/**@type{string}*/result)=>JSON.parse(result)):
                                         []
                             })

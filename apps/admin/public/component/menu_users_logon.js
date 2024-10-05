@@ -59,10 +59,10 @@ const template = props => ` <div id='list_user_account_logon_row_title' class='l
                             }`;
 /**
 * 
-* @param {{ data:{      common_mountdiv:string,
+* @param {{ data:{      commonMountdiv:string,
 *                       user_account_id:number},
-*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
-*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *           lifecycle:  null}} props
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null, 
@@ -70,7 +70,7 @@ const template = props => ` <div id='list_user_account_logon_row_title' class='l
 *                      template:string}>}
 */
 const component = async props => {
-    const user_logon = await props.methods.FFB({path:'/server-db_admin/user_account_logon', query:`data_user_account_id=${props.data.user_account_id}&data_app_id=''`, method:'GET', authorization_type:'APP_ACCESS'})
+    const user_logon = await props.methods.commonFFB({path:'/server-db_admin/user_account_logon', query:`data_user_account_id=${props.data.user_account_id}&data_app_id=''`, method:'GET', authorization_type:'APP_ACCESS'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result));
  
     return {

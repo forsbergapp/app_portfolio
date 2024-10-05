@@ -38,11 +38,11 @@ const template = props => ` <div id='menu_1_content_widget1' class='widget'>
                             </div>`;
 /**
 * 
-* @param {{ data:{      common_mountdiv:string,
+* @param {{ data:{      commonMountdiv:string,
 *                       system_admin:string},
-*           methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
-*                       ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
-*                       FFB:import('../../../common_types.js').CommonModuleCommon['FFB']},
+*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+*                       commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *           lifecycle:  null}} props
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null,
@@ -52,7 +52,7 @@ const template = props => ` <div id='menu_1_content_widget1' class='widget'>
 const component = async props => {
     //system admin
     /**@type{{status_codes:[number, string][]}} */
-    const result_obj = props.data.system_admin!=null?await props.methods.FFB({path:'/server/info-statuscode', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result)):[];
+    const result_obj = props.data.system_admin!=null?await props.methods.commonFFB({path:'/server/info-statuscode', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result)):[];
 
     //system admin
     // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]', TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']}
@@ -73,13 +73,13 @@ const component = async props => {
     ]:[];
     //system admin
     /**@type{0|1|null} */
-    const maintenance = props.data.system_admin!=null?await props.methods.FFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=METADATA&parameter=MAINTENANCE', method:'GET', authorization_type:'SYSTEMADMIN'})
+    const maintenance = props.data.system_admin!=null?await props.methods.commonFFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=METADATA&parameter=MAINTENANCE', method:'GET', authorization_type:'SYSTEMADMIN'})
                                 .then((/**@type{string}*/result)=>JSON.parse(result).data):null;
 
    const onMounted = async () =>{
         //mount select
         if (props.data.system_admin)
-            await props.methods.ComponentRender({mountDiv:'select_system_admin_stat',
+            await props.methods.commonComponentRender({mountDiv:'select_system_admin_stat',
                 data:{
                     default_value:'REQUEST - IP TOTAL',
                     default_data_value:'request#ip_total#0#ip',
@@ -91,10 +91,10 @@ const component = async props => {
                     column_value:'VALUE',
                     column_text:'TEXT'
                     },
-                methods:{FFB:props.methods.FFB},
+                methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
 
-        await props.methods.ComponentRender({mountDiv:'select_year_menu1',
+        await props.methods.commonComponentRender({mountDiv:'select_year_menu1',
                 data:{
                     default_value:new Date().getFullYear(),
                     default_data_value:new Date().getFullYear(),
@@ -111,10 +111,10 @@ const component = async props => {
                     column_value:'VALUE',
                     column_text:'TEXT'
                     },
-                methods:{FFB:props.methods.FFB},
+                methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
 
-        await props.methods.ComponentRender({mountDiv:'select_month_menu1',
+        await props.methods.commonComponentRender({mountDiv:'select_month_menu1',
                 data:{
                     default_value:new Date().getMonth()+1,
                     default_data_value:new Date().getMonth()+1,
@@ -126,9 +126,9 @@ const component = async props => {
                     column_value:'VALUE',
                     column_text:'TEXT'
                  },
-                methods:{FFB:props.methods.FFB},
+                methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
-        await props.methods.ComponentRender({mountDiv:'select_app_menu1',
+        await props.methods.commonComponentRender({mountDiv:'select_app_menu1',
                 data:{
                     default_value:'∞',
                     options:[{APP_ID:'', NAME:'∞'}],
@@ -139,7 +139,7 @@ const component = async props => {
                     column_value:'APP_ID',
                     column_text:'NAME'
                    },
-                methods:{FFB:props.methods.FFB},
+                methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
    };
     return {

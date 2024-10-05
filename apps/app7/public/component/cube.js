@@ -99,17 +99,17 @@ const template = props =>`  <div id='cube'>
 /**
  * Cube component
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      cube_width:number,
  *                      common_app_id:number},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      element_row:import('../../../common_types.js').CommonModuleCommon['element_row'],
- *                      lov_show:import('../../../common_types.js').CommonModuleCommon['lov_show'],
- *                      lov_close:import('../../../common_types.js').CommonModuleCommon['lov_close'],
- *                      show_message:import('../../../common_types.js').CommonModuleCommon['show_message'],
- *                      ComponentRemove:import('../../../common_types.js').CommonModuleCommon['ComponentRemove'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonElementRow:import('../../../common_types.js').CommonModuleCommon['commonElementRow'],
+ *                      commonLovShow:import('../../../common_types.js').CommonModuleCommon['commonLovShow'],
+ *                      commonLovClose:import('../../../common_types.js').CommonModuleCommon['commonLovClose'],
+ *                      commonMessageShow:import('../../../common_types.js').CommonModuleCommon['commonMessageShow'],
+ *                      commonComponentRemove:import('../../../common_types.js').CommonModuleCommon['commonComponentRemove'],
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']}}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null
  *                      methods:{
@@ -171,18 +171,18 @@ const component = async props => {
             * @returns {void}
             */
             const function_event = event => {
-                const solution = atob(props.methods.element_row(event.target).getAttribute('data-id') ?? '');
+                const solution = atob(props.methods.commonElementRow(event.target).getAttribute('data-id') ?? '');
                 if (button_id=='button_solve' || button_id=='button_solve_cubestate')
                     cube.makeMoves(solution);
                 else
                     cube_controls.setSolution(solution);
-                props.methods.lov_close();
+                props.methods.commonLovClose();
             };
-            props.methods.lov_show({lov:'CUSTOM', lov_custom_list:cube_result_lov, lov_custom_value:'cube_solution', function_event:function_event});
+            props.methods.commonLovShow({lov:'CUSTOM', lov_custom_list:cube_result_lov, lov_custom_value:'cube_solution', function_event:function_event});
         }
         else
             if (button_id=='button_solve_cubestate' || button_id=='button_solved_step_cubestate')
-                props.methods.show_message('INFO', null, null, 'message_text','!', props.data.common_app_id);
+                props.methods.commonMessageShow('INFO', null, null, 'message_text','!', props.data.common_app_id);
     };
     /**
      * Solve the cube state using server function CUBE_SOLVE that uses generative AI pattern
@@ -203,19 +203,19 @@ const component = async props => {
              *  cube current state  string of cube state
              *  cube goalstate      empty to solve or to given cube state
              */
-            props.methods.FFB({ path:'/app-function/CUBE_SOLVE', method:'POST', authorization_type:'APP_DATA',
-                                body:{  model:              Number(props.methods.common_document.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
+            props.methods.commonFFB({ path:'/app-function/CUBE_SOLVE', method:'POST', authorization_type:'APP_DATA',
+                                body:{  model:              Number(props.methods.COMMON_DOCUMENT.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
                                         preamble:           0,
-                                        temperature:        Number(props.methods.common_document.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
+                                        temperature:        Number(props.methods.COMMON_DOCUMENT.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
                                         cube_currentstate: 	cube.getState(),
                                         cube_goalstate: 	cube_goalstate}, 
                                 spinner_id:button_id})
                     .then((/**@type{string}*/result)=>{
-                        props.methods.ComponentRemove('common_dialogue_message', true);
+                        props.methods.commonComponentRemove('common_dialogue_message', true);
                         cube_show_solution(cube, cube_controls, result, button_id);
                     })
                     .catch(()=>{
-                        props.methods.ComponentRemove('common_dialogue_message', true);
+                        props.methods.commonComponentRemove('common_dialogue_message', true);
                     });
         }
     };

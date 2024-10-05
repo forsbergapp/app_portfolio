@@ -28,20 +28,20 @@ const template = props =>`  <div id='common_lov_form'>
                                     `).join('')
                                 }
                             </div>
-                            <div id='common_lov_close' class='common_dialogue_button common_icon'></div>
+                            <div id='common_commonLovClose' class='common_dialogue_button common_icon'></div>
                         </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      common_app_id:number,
  *                      lov:string,
  *                      lov_custom_list?:{}[],
  *                      lov_custom_value?:string
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      function_event:function,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -49,12 +49,13 @@ const template = props =>`  <div id='common_lov_form'>
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show2');
-    props.methods.common_document.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show2');
+    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     let path = '';
     let query = null;
-    let token_type = '';
+    /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
+    let token_type;
     let lov_column = '';
     switch (props.data.lov){
         case 'SERVER_LOG_FILES':{
@@ -92,15 +93,15 @@ const component = async props => {
             token_type = 'APP_DATA';
         }
     }
-    const lov_rows          = props.data.lov=='CUSTOM'?props.data.lov_custom_list:await props.methods.FFB({path:path, query:query, method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const lov_rows          = props.data.lov=='CUSTOM'?props.data.lov_custom_list:await props.methods.commonFFB({path:path, query:query, method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const lov_column_value  = props.data.lov=='CUSTOM'?(props.data.lov_custom_value ??''):lov_column;
 
     /**
      * @returns {void}
      */
      const onMounted = () =>{
-        props.methods.common_document.querySelector('#common_lov_list')['data-function'] = props.methods.function_event;
-        props.methods.common_document.querySelector('#common_lov_search_input').focus();
+        props.methods.COMMON_DOCUMENT.querySelector('#common_lov_list')['data-function'] = props.methods.function_event;
+        props.methods.COMMON_DOCUMENT.querySelector('#common_lov_search_input').focus();
     };
     return {
         lifecycle:  {onMounted:onMounted},

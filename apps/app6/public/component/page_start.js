@@ -9,16 +9,16 @@ const template = () => `<div id='app_page_start_shop' class='app_page_start_shop
                         </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      app_id:number,
  *                      timezone:string,
  *                      locale:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      pay:function,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB'],
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      show_message:function}}} props
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB'],
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      commonMessageShow:function}}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
@@ -27,7 +27,7 @@ const template = () => `<div id='app_page_start_shop' class='app_page_start_shop
 const component = async props => {
       
     const onMounted = async () =>{
-        await props.methods.ComponentRender({
+        await props.methods.commonComponentRender({
             mountDiv:   'app_page_start_shop', 
             data:       {
                         app_id:props.data.app_id,
@@ -54,7 +54,7 @@ const component = async props => {
                         button_delete: false
                         },
             methods:    {
-                        FFB:props.methods.FFB,
+                       commonFFB:props.methods.commonFFB,
                         button_print:null,
                         button_update:null,
                         button_post:props.methods.pay,

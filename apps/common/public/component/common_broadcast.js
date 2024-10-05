@@ -21,10 +21,10 @@ const template = props =>` <div id='common_broadcast_info'>
 /**
  * 
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      message:string
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props
+ *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,

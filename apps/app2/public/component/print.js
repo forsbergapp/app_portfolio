@@ -21,10 +21,10 @@ const template = props =>`  <!DOCTYPE html>
                             </html> `;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      html:string
  *                      },
- *          methods:    {common_document:import('../../../common_types.js').CommonAppDocument}}} props
+ *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
  * 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
@@ -37,8 +37,8 @@ const method = async props => {
         lifecycle:  null,
         data:       null,
         methods:    null,
-        template:   template({  app_link_app_report_css:props.methods.common_document.querySelector('#app_link_app_report_css').attributes['href'].nodeValue,
-                                common_link_common_css:props.methods.common_document.querySelector('#common_link_common_css').attributes['href'].nodeValue,
+        template:   template({  app_link_app_report_css:props.methods.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].nodeValue,
+                                common_link_common_css:props.methods.COMMON_DOCUMENT.querySelector('#common_link_common_css').attributes['href'].nodeValue,
                                 html: props.data.html})
     };
 };

@@ -16,13 +16,13 @@ const template = props => ` <div id='send_broadcast_form'>
 /**
  * 
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      system_admin:boolean
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *                      data:null, 
@@ -30,12 +30,12 @@ const template = props => ` <div id='send_broadcast_form'>
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
-    props.methods.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.COMMON_DOCUMENT.querySelector('#dialogues').classList.add('common_dialogues_modal');
 
     const onMounted = async () =>{
         // select broadcast type
-        await props.methods.ComponentRender(
+        await props.methods.commonComponentRender(
             {   mountDiv:'select_broadcast_type',
                 data:{
                     default_data_value:'ALERT',
@@ -47,10 +47,10 @@ const component = async props => {
                     column_value:'VALUE',
                     column_text:'TEXT'
                 },
-                methods:{FFB:props.methods.FFB},
+                methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
         // select apps
-        await props.methods.ComponentRender( 
+        await props.methods.commonComponentRender( 
             {   mountDiv:'select_app_broadcast',
                 data:{
                     default_value:'∞',
@@ -62,7 +62,7 @@ const component = async props => {
                     column_value:'APP_ID',
                     column_text:'NAME'
                   },
-                methods:{FFB:props.methods.FFB},
+                methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
     };
     return {

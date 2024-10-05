@@ -27,13 +27,13 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
                             </div>`;
 /**
  * 
- * @param {{data:{      common_mountdiv:string,
+ * @param {{data:{      commonMountdiv:string,
  *                      app_id:number,
  *                      system_admin:string},
- *          methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
+ *          methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      map_mount:import('../js/secure.js')['map_mount'],
- *                      ComponentRender:import('../../../common_types.js').CommonModuleCommon['ComponentRender'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props 
+ *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']}}} props 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:{limit:number},
  *                      methods:null,
@@ -42,7 +42,7 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
 const component = async props => {
     const onMounted = async () =>{
         //mount select
-        await props.methods.ComponentRender({mountDiv:'select_year_menu5',
+        await props.methods.commonComponentRender({mountDiv:'select_year_menu5',
             data:{
                 default_value:new Date().getFullYear(),
                 default_data_value:new Date().getFullYear(),
@@ -59,9 +59,9 @@ const component = async props => {
                 column_value:'VALUE',
                 column_text:'TEXT'
               },
-            methods:{FFB:props.methods.FFB},
+            methods:{commonFFB:props.methods.commonFFB},
             path:'/common/component/common_select.js'});
-        await props.methods.ComponentRender({mountDiv:'select_month_menu5',
+        await props.methods.commonComponentRender({mountDiv:'select_month_menu5',
                 data:{
                     default_value:new Date().getMonth()+1,
                     default_data_value:new Date().getMonth()+1,
@@ -73,10 +73,10 @@ const component = async props => {
                     column_value:'VALUE',
                     column_text:'TEXT'
                 },
-                methods:{FFB:props.methods.FFB},
+                methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
 
-        await props.methods.ComponentRender({mountDiv:'select_day_menu5',
+        await props.methods.commonComponentRender({mountDiv:'select_day_menu5',
                 data:{
                     default_value:new Date().getDate(),
                     default_data_value:new Date().getDate(),
@@ -88,10 +88,10 @@ const component = async props => {
                     column_value:'VALUE',
                     column_text:'TEXT'
                 },
-                methods:{FFB:props.methods.FFB},
+                methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
 
-        await props.methods.ComponentRender({mountDiv:'select_app_menu5',
+        await props.methods.commonComponentRender({mountDiv:'select_app_menu5',
                 data:{
                     default_value:'∞',
                     options:[{APP_ID:'', NAME:'∞'}],
@@ -102,7 +102,7 @@ const component = async props => {
                     column_value:'APP_ID',
                     column_text:'NAME'
                   },
-                methods:{FFB:props.methods.FFB},
+                methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
 
         //mount the map
@@ -113,7 +113,7 @@ const component = async props => {
     return {
         lifecycle:  {onMounted:onMounted},
         data:       {
-                    limit:await props.methods.FFB({path:`/server-config/config-apps/${props.data.app_id}`, query:'key=PARAMETERS', method:'GET', authorization_type:props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS'})
+                    limit:await props.methods.commonFFB({path:`/server-config/config-apps/${props.data.app_id}`, query:'key=PARAMETERS', method:'GET', authorization_type:props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS'})
                             .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS))
                     },
         methods:    null,

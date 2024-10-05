@@ -28,33 +28,33 @@ const template = props =>`  ${props.records.length>0?
                             }`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      user_account_id:number,
  *                      client_latitude:string,
  *                      client_longitude:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      input_control:import('../../../common_types.js').CommonModuleCommon['input_control'],
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonInputControl:import('../../../common_types.js').CommonModuleCommon['commonInputControl'],
  *                      function_click_function:function,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']}}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.common_document.querySelector('#common_profile_search_input').classList.remove('common_input_error');
+    props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').classList.remove('common_input_error');
 
     //check search text
-    const searched_username = props.methods.common_document.querySelector('#common_profile_search_input').textContent;
-    const input_control =   props.methods.input_control(null,{check_valid_list_elements:[[props.methods.common_document.querySelector('#common_profile_search_input'),null]]}) &&
-                            props.methods.common_document.querySelector('#common_profile_search_input').textContent!='' &&
+    const searched_username = props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').textContent;
+    const commonInputControl =   props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input'),null]]}) &&
+                            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').textContent!='' &&
                             searched_username.length>1;
-    if (!input_control){
-        props.methods.common_document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-        props.methods.common_document.querySelector('#common_profile_search_input').classList.add('common_input_error');
+    if (!commonInputControl){
+        props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+        props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
-    const records = input_control?await props.methods.FFB(
+    const records = commonInputControl?await props.methods.commonFFB(
                                                 {
                                                     path:   '/server-db/user_account-profile/', 
                                                     query:  `id=${props.data.user_account_id ?? ''}&search=${encodeURI(searched_username)}` +
@@ -66,12 +66,12 @@ const component = async props => {
 
     const onMounted = async () =>{           
         if (records.length>0){
-            props.methods.common_document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
-            props.methods.common_document.querySelector('#common_profile_search_list')['data-function'] = props.methods.function_click_function;
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function'] = props.methods.function_click_function;
         }
     };
     return {
-        lifecycle:  {onMounted:input_control?onMounted:null},
+        lifecycle:  {onMounted:commonInputControl?onMounted:null},
         data:       null,
         methods:    null,
         template:   template({records:records})

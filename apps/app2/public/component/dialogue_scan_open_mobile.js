@@ -6,21 +6,21 @@ const template = () => `<div id='scan_open_mobile_qrcode'></div>
                         <div id='scan_open_mobile_title1' class='common_icon'></div>
                         <div id='scan_open_mobile_close' class='common_dialogue_button common_icon' ></div>`;
 /**
- * @param {{data:       {common_mountdiv:string},
+ * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      create_qr:import('../../../common_types.js').CommonModuleCommon['create_qr'],
- *                      getHostname:import('../../../common_types.js').CommonModuleCommon['getHostname']}}} props
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonModuleEasyQRCODECreate:import('../../../common_types.js').CommonModuleCommon['commonModuleEasyQRCODECreate'],
+ *                      commonWindowHostname:import('../../../common_types.js').CommonModuleCommon['commonWindowHostname']}}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const method = async props => {
-    props.methods.common_document.querySelector(`#${props.data.common_mountdiv}`).classList.add('common_dialogue_show0');
-    props.methods.common_document.querySelector('#dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.COMMON_DOCUMENT.querySelector('#dialogues').classList.add('common_dialogues_modal');
     const onMounted = async () =>{
-        props.methods.create_qr('scan_open_mobile_qrcode', props.methods.getHostname());
+        props.methods.commonModuleEasyQRCODECreate('scan_open_mobile_qrcode', props.methods.commonWindowHostname());
     };
     return {
         lifecycle:  {onMounted:onMounted},

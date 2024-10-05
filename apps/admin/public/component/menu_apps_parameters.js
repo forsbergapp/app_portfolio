@@ -33,17 +33,17 @@ const template = props => ` <div id='list_app_parameter_row_title' class='list_a
                             }`;
 /**
  * 
- * @param {{data:{      common_mountdiv:string,
+ * @param {{data:{      commonMountdiv:string,
  *                      app_id_data:number},
- *          methods:{   common_document:import('../../../common_types.js').CommonAppDocument,
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']}}} props 
+ *          methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']}}} props 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    const app_parameters = await props.methods.FFB({path:`/server-config/config-apps/${props.data.app_id_data}`, query:'key=PARAMETERS', method:'GET', authorization_type:'APP_ACCESS'})
+    const app_parameters = await props.methods.commonFFB({path:`/server-config/config-apps/${props.data.app_id_data}`, query:'key=PARAMETERS', method:'GET', authorization_type:'APP_ACCESS'})
                             .then((/**@type{string}*/result)=>JSON.parse(result)[0].PARAMETERS);
 
     return {

@@ -5,7 +5,7 @@
 /**
  * 
  * @param {{profile:import('../../../common_types.js').CommonProfileUser,
- *          function_format_json_date:import('../../../common_types.js').CommonModuleCommon['format_json_date']}} props 
+ *          function_commonFormatJsonDate:import('../../../common_types.js').CommonModuleCommon['commonFormatJsonDate']}} props 
  * @returns 
  */
 const template = props =>`  <div id='common_profile_main'>
@@ -29,7 +29,7 @@ const template = props =>`  <div id='common_profile_main'>
                                     <div class='common_profile_main_col'>
                                         <div id='common_profile_joined'>
                                             <div id='common_profile_joined_date_icon' class='common_icon'></div>
-                                            <div id='common_profile_joined_date'>${props.function_format_json_date(props.profile.date_created ?? '', true)}</div>
+                                            <div id='common_profile_joined_date'>${props.function_commonFormatJsonDate(props.profile.date_created ?? '', true)}</div>
                                         </div>
                                     </div>    
                                     <div class='common_profile_main_col'>
@@ -83,7 +83,7 @@ const template = props =>`  <div id='common_profile_main'>
                             </div>`;
 /**
  * @param {{data:       {
- *                      common_mountdiv:string,
+ *                      commonMountdiv:string,
  *                      user_account_id:number,
  *                      client_latitude:string,
  *                      client_longitude:string,
@@ -91,14 +91,14 @@ const template = props =>`  <div id='common_profile_main'>
  *                      username:string
  *                      },
  *          methods:    {
- *                      common_document:import('../../../common_types.js').CommonAppDocument,
- *                      format_json_date:import('../../../common_types.js').CommonModuleCommon['format_json_date'],
- *                      create_qr:import('../../../common_types.js').CommonModuleCommon['create_qr'],
- *                      getHostname:import('../../../common_types.js').CommonModuleCommon['getHostname'],
- *                      show_common_dialogue:import('../../../common_types.js').CommonModuleCommon['show_common_dialogue'],
- *                      checkOnline:import('../../../common_types.js').CommonModuleCommon['checkOnline'],
- *                      common_setTimeout:import('../../../common_types.js').CommonModuleCommon['common_setTimeout'],
- *                      FFB:import('../../../common_types.js').CommonModuleCommon['FFB']
+ *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonFormatJsonDate:import('../../../common_types.js').CommonModuleCommon['commonFormatJsonDate'],
+ *                      commonModuleEasyQRCODECreate:import('../../../common_types.js').CommonModuleCommon['commonModuleEasyQRCODECreate'],
+ *                      commonWindowHostname:import('../../../common_types.js').CommonModuleCommon['commonWindowHostname'],
+ *                      commonDialogueShow:import('../../../common_types.js').CommonModuleCommon['commonDialogueShow'],
+ *                      commonSocketConnectOnlineCheck:import('../../../common_types.js').CommonModuleCommon['commonSocketConnectOnlineCheck'],
+ *                      commonWindowSetTimeout:import('../../../common_types.js').CommonModuleCommon['commonWindowSetTimeout'],
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
@@ -115,7 +115,7 @@ const component = async props => {
             else
                 return `/server-db/user_account-profile/${props.data.user_account_id ?? ''}`;
     };
-    const profile = await props.methods.FFB(
+    const profile = await props.methods.commonFFB(
                             {
                                 path:pathInfoGet(), 
                                 query:`id=${props.data.user_account_id ?? ''}&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
@@ -129,33 +129,33 @@ const component = async props => {
         if (props.data.user_account_id_other == null && props.data.user_account_id == null && props.data.username == null) {
             null;
         } else {
-            props.methods.common_document.querySelector('#common_profile_avatar').style.backgroundImage= (profile.avatar ?? profile.provider_image)?
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_avatar').style.backgroundImage= (profile.avatar ?? profile.provider_image)?
                                                                                                     `url('${profile.avatar ?? profile.provider_image}')`:
                                                                                                     'url()'; 
-            props.methods.create_qr('common_profile_qr', props.methods.getHostname() + '/' + profile.username);
+            props.methods.commonModuleEasyQRCODECreate('common_profile_qr', props.methods.commonWindowHostname() + '/' + profile.username);
             //User account followed and liked
             if (profile.followed == 1) {
                 //followed
-                props.methods.common_document.querySelector('#common_profile_follow .common_user_follow').style.display = 'none';
-                props.methods.common_document.querySelector('#common_profile_follow .common_user_followed').style.display = 'block';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'none';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'block';
             } else {
                 //not followed
-                props.methods.common_document.querySelector('#common_profile_follow .common_user_follow').style.display = 'block';
-                props.methods.common_document.querySelector('#common_profile_follow .common_user_followed').style.display = 'none';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'block';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'none';
             }
             if (profile.liked == 1) {
                 //liked
-                props.methods.common_document.querySelector('#common_profile_like .common_unlike').style.display = 'none';
-                props.methods.common_document.querySelector('#common_profile_like .common_like').style.display = 'block';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'none';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'block';
             } else {
                 //not liked
-                props.methods.common_document.querySelector('#common_profile_like .common_unlike').style.display = 'block';
-                props.methods.common_document.querySelector('#common_profile_like .common_like').style.display = 'none';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'block';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'none';
             } 
             if (props.data.user_account_id ==null)
-                props.methods.common_setTimeout(()=> {props.methods.show_common_dialogue('LOGIN');}, 2000);
+                props.methods.commonWindowSetTimeout(()=> {props.methods.commonDialogueShow('LOGIN');}, 2000);
             else
-                props.methods.checkOnline('common_profile_avatar_online_status', profile.id);
+                props.methods.commonSocketConnectOnlineCheck('common_profile_avatar_online_status', profile.id);
         }
     };
 
@@ -165,7 +165,7 @@ const component = async props => {
         methods:    null,
         template:   template({
                             profile:profile,
-                            function_format_json_date:props.methods.format_json_date
+                            function_commonFormatJsonDate:props.methods.commonFormatJsonDate
                         })
     };
 };

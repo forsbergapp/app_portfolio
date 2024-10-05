@@ -2,11 +2,11 @@
  * @module apps/common/common
  */
 
-/**@type{import('../../../common_types.js').CommonAppWindow} */
-const CommonAppWindow = window;
+/**@type{import('../../../common_types.js').COMMON_WINDOW} */
+const COMMON_WINDOW = window;
 
-/**@type{import('../../../common_types.js').CommonAppDocument} */
- const CommonAppDocument = document;
+/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+const COMMON_DOCUMENT = document;
 
 /**@type{import('../../../common_types.js').CommonGlobal} */
 const COMMON_GLOBAL = {
@@ -23,7 +23,7 @@ const COMMON_GLOBAL = {
     app_rest_api_version:null,
     app_root:'app_root',
     app_div:'app',
-    app_console:{warn:CommonAppWindow.console.warn, info:CommonAppWindow.console.info, error:CommonAppWindow.console.error},
+    app_console:{warn:COMMON_WINDOW.console.warn, info:COMMON_WINDOW.console.info, error:COMMON_WINDOW.console.error},
     app_eventListeners:{original: HTMLElement.prototype.addEventListener, LEAFLET:[], REACT:[], VUE:[], OTHER:[]},
     app_function_exception:null,
     app_function_session_expired:null,
@@ -104,37 +104,37 @@ const COMMON_GLOBAL = {
 Object.seal(COMMON_GLOBAL);
 
 /**@type{import('../../../common_types.js').CommonIcons} */
-const ICONS = {
+const COMMON_ICONS = {
     app_maintenance:          '⚒',
     app_alert:                '🚨',
     infinite:                 '∞',
 };
-Object.seal(ICONS);
+Object.seal(COMMON_ICONS);
 
 /**
  * Finds recursive parent id. Use when current element can be an image or svg attached to an event element
  * @param {*} element 
  * @returns {string} 
  */
-const element_id = element => element.id==''?element_id(element.parentNode):element.id;
+const commonElementId = element => element.id==''?commonElementId(element.parentNode):element.id;
 /**
  * Finds recursive parent row with class common_row. Use when clicking in a list of records
  * @param {*} element 
  * @returns {HTMLElement} 
  */
-const element_row = element => element.classList.contains('common_row')?element:element_row(element.parentNode);
+const commonElementRow = element => element.classList.contains('common_row')?element:commonElementRow(element.parentNode);
 /**
  * Returns current target or parent with class list_title or returns empty. Use when clicking in a list title
  * @param {*} element 
  * @returns {HTMLElement} 
  */
-const element_list_title = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
+const commonElementListTitle = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
 /**
  * Length without diacrites
  * @param {string} str 
  * @returns {number}
  */
-const LengthWithoutDiacrites = (str) =>{
+const commonLengthWithoutDiacrites = (str) =>{
     return str.normalize('NFD').replace(/\p{Diacritic}/gu, '').length;
 };
 /**
@@ -142,7 +142,7 @@ const LengthWithoutDiacrites = (str) =>{
  * @param {string} local_timezone 
  * @returns {number}
  */
-const getTimezoneOffset = (local_timezone) =>{
+const commonTimezoneOffset = (local_timezone) =>{
     const utc = new Date(	Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
                             Number(Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'}))),
@@ -160,13 +160,13 @@ const getTimezoneOffset = (local_timezone) =>{
  * @param {string} timezone 
  * @returns {Date}
  */
-const getTimezoneDate = timezone =>{
+const commonTimezoneDate = timezone =>{
     const utc = new Date(	Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'})),
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})));
-    return new Date(utc.setHours(  utc.getHours() + getTimezoneOffset(timezone)));
+    return new Date(utc.setHours(  utc.getHours() + commonTimezoneOffset(timezone)));
 };
 
 /**
@@ -175,7 +175,7 @@ const getTimezoneDate = timezone =>{
  * @param {*} function_name 
  * @param  {...any} parameter 
  */
-const typewatch = (function_name, ...parameter) =>{
+const commonTypewatch = (function_name, ...parameter) =>{
     let type_delay=250;
     if (parameter.length>0 && parameter[0] !=null)
         switch (parameter[0].code){
@@ -188,7 +188,7 @@ const typewatch = (function_name, ...parameter) =>{
                 break;
             }
         }
-    common_setTimeout(() => {
+    commonWindowSetTimeout(() => {
         function_name(...parameter);
     }, type_delay);
 };
@@ -197,34 +197,18 @@ const typewatch = (function_name, ...parameter) =>{
  * @param {number} num 
  * @returns number
  */
-const roundOff = num => {
+const commonRoundOff = num => {
     const x = Math.pow(10,2);
     return Math.round(num * x) / x;
   };
 
-/**
- * Convert string to Base64
- * @param {string} str 
- * @returns {string}
- */
-const toBase64 = str => {
-    return CommonAppWindow.btoa(unescape(encodeURIComponent(str)));
-};	
-/**
- * Convert base64 to string
- * @param {string} str 
- * @returns {string}
- */
-const fromBase64 = (str) => {
-    return decodeURIComponent(escape(CommonAppWindow.atob(str)));
-};
 /**
  * Format JSON date with user timezone
  * @param {string} db_date 
  * @param {boolean|null} short 
  * @returns {string|null}
  */
-const format_json_date = (db_date, short) => {
+const commonFormatJsonDate = (db_date, short) => {
     if (db_date == null)
         return null;
     else {
@@ -232,7 +216,7 @@ const format_json_date = (db_date, short) => {
         //in ISO 8601 format
         //JSON returns format 2020-08-08T05:15:28Z
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-        /**@type{import('../../../common_types.js').CommonAppWindow['Intl']['DateTimeFormatOptions']} */ 
+        /**@type{import('../../../common_types.js').COMMON_WINDOW['Intl']['DateTimeFormatOptions']} */ 
         let options;
         if (short)
             options = {
@@ -269,8 +253,8 @@ const format_json_date = (db_date, short) => {
  * Check if mobile
  * @returns {boolean}
  */
-const mobile = () =>{
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(CommonAppWindow.navigator.userAgent));
+const commonMobile = () =>{
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(COMMON_WINDOW.navigator.userAgent));
 };
 
 /**
@@ -280,7 +264,7 @@ const mobile = () =>{
  * @param {number} image_height 
  * @returns {Promise.<string>}
  */
-const convert_image = async (image_url, image_width, image_height) => {
+const commonImageConvert = async (image_url, image_width, image_height) => {
     //function to convert images to specified size and mime type according to parameters
     return new Promise((resolve) => {
         if (image_url=='')
@@ -292,7 +276,7 @@ const convert_image = async (image_url, image_width, image_height) => {
             //to allow any image url source, uncomment:
             //img.crossOrigin = 'Anonymous';
             img.onload = (el) => {
-                const elem = CommonAppDocument.createElement('canvas');
+                const elem = COMMON_DOCUMENT.createElement('canvas');
                 elem.width = image_width;
                 elem.height = image_height;
                 const ctx = elem.getContext('2d');
@@ -310,9 +294,9 @@ const convert_image = async (image_url, image_width, image_height) => {
  * @param {number} image_height 
  * @returns {Promise.<null>}
  */
-const show_image = async (item_img, item_input, image_width, image_height) => {
+const commonImageShow = async (item_img, item_input, image_width, image_height) => {
     return new Promise((resolve)=>{
-        const file = CommonAppDocument.querySelector('#' + item_input).files[0];
+        const file = COMMON_DOCUMENT.querySelector('#' + item_input).files[0];
         const reader = new FileReader();
     
         const allowedExtensions = [COMMON_GLOBAL.image_file_allowed_type1,
@@ -325,19 +309,19 @@ const show_image = async (item_img, item_input, image_width, image_height) => {
         const fileExtension = fileName.split('.').pop();
         if (!allowedExtensions.includes(fileExtension)){
             //File type not allowed
-            show_message('ERROR', '20307', null,null, null, COMMON_GLOBAL.common_app_id);
+            commonMessageShow('ERROR', '20307', null,null, null, COMMON_GLOBAL.common_app_id);
             resolve(null);
         }
         else
             if (fileSize > COMMON_GLOBAL.image_file_max_size){
                 //File size too large
-                show_message('ERROR', '20308', null, null, null, COMMON_GLOBAL.common_app_id);
+                commonMessageShow('ERROR', '20308', null, null, null, COMMON_GLOBAL.common_app_id);
                 resolve(null);
             }
             else {
                 reader.onloadend = /**@type{import('../../../common_types.js').CommonAppEvent}*/event => {
                     if (event.target)
-                        convert_image(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
+                        commonImageConvert(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
                             item_img.style.backgroundImage= srcEncoded?`url('${srcEncoded}')`:'url()';
                             item_img.setAttribute('data-image', srcEncoded);
                             resolve(null);
@@ -355,11 +339,163 @@ const show_image = async (item_img, item_input, image_width, image_height) => {
     
 };
 /**
- * Get hostname with protocol and port
- * @returns {string}
+ * Default app themes 
  */
-const getHostname = () =>{
-    return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
+const commonThemeDefaultList = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}, {VALUE:3, TEXT:'Caffè Latte'}];
+
+/**
+ * Common theme get
+ * @returns {void}
+ */
+ const commonThemeUpdateFromBody = () => {    
+    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').textContent = 
+        commonThemeDefaultList().filter(theme=>theme.VALUE.toString()==COMMON_DOCUMENT.body.className[9])[0].TEXT;
+    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').setAttribute('data-value', COMMON_DOCUMENT.body.className[9]);
+};
+/**
+ * Common theme update body class from preferences
+ * @returns {void}
+ */
+ const commonPreferencesUpdateBodyClassFromPreferences = () => {
+    const class_app_theme = COMMON_DOCUMENT.body.className.split(' ')[0] ?? '';
+    const class_direction = COMMON_GLOBAL.user_direction;
+    const class_arabic_script = COMMON_GLOBAL.user_arabic_script;
+    COMMON_DOCUMENT.body.className = '';
+    COMMON_DOCUMENT.body.classList.add(class_app_theme);
+    if (class_direction)
+        COMMON_DOCUMENT.body.classList.add(class_direction);
+    if (class_arabic_script)
+        COMMON_DOCUMENT.body.classList.add(class_arabic_script);
+};
+/**
+ * @returns {Promise<{  id:number,
+ *                      app_id:number,
+ *                      value:string,
+ *                      text:string,
+ *                      app_setting_type_name:string,
+ *                      data2:string,
+ *                      data3:string,
+ *                      data4:string,
+ *                      data5:string}[]>}
+ */
+const commonDbAppSettingsGet = async () =>await commonFFB({path:'/server-db/app_settings', method:'GET', authorization_type:'APP_DATA'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+/**
+ * Sets current value for select div
+ * Get json data for given key and value is found or matches value if not json
+ * @param {string} div
+ * @param {string|number|null} value
+ * @param {string|null} json_key
+ * @param {string|number|null} json_value
+ */
+const commonSelectCurrentValueSet= (div, value, json_key=null, json_value=null) =>{
+    COMMON_DOCUMENT.querySelector(`#${div} .common_select_dropdown_value`).textContent = Array.from(COMMON_DOCUMENT.querySelectorAll(`#${div} .common_select_option`))
+                                                                                            .filter(option=>(json_key?JSON.parse(option.getAttribute('data-value'))[json_key]:
+                                                                                                                option.getAttribute('data-value'))==(json_value ?? value))[0].textContent;
+    if (json_key)
+        Array.from(COMMON_DOCUMENT.querySelectorAll(`#${div} .common_select_option`))
+            .filter(option=>JSON.parse(option.getAttribute('data-value'))[json_key])[0].getAttribute('data-value');
+    else
+        COMMON_DOCUMENT.querySelector(`#${div} .common_select_dropdown_value`).setAttribute('data-value', value);
+      
+};
+/**
+ * Get user variables
+ * @returns {{  user_language:string,
+*              user_timezone:string,
+*              user_number_system:string,
+*              user_platform:string,
+*              client_latitude:string,
+*              client_longitude:string,
+*              client_place:string}}
+*/
+const commonUservariables = () => {
+   return {    user_language:      commonWindowNavigatorLocale(),
+               user_timezone:      COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone,
+               user_number_system: COMMON_WINDOW.Intl.NumberFormat().resolvedOptions().numberingSystem,
+               user_platform:      commonWindowUserAgentPlatform(COMMON_WINDOW.navigator.userAgent),
+               client_latitude:    COMMON_GLOBAL.client_latitude,
+               client_longitude:   COMMON_GLOBAL.client_longitude,
+               client_place:       COMMON_GLOBAL.client_place
+           };
+};
+
+
+/**
+* @param {string} event_target_id
+* @param { import('../../../common_types.js').CommonAppEvent['target']|
+*          import('../../../common_types.js').CommonAppEvent['target']['parentNode']|null} target
+*/
+const commonSelectEventAction = async (event_target_id, target) =>{
+   //module leaflet events
+   if(event_target_id== 'common_module_leaflet_select_country')
+       COMMON_GLOBAL.moduleLeaflet.methods.eventClickCountry(event_target_id);
+   if (event_target_id== 'common_module_leaflet_select_city')
+       await COMMON_GLOBAL.moduleLeaflet.methods.eventClickCity(event_target_id);
+   if(event_target_id == 'common_module_leaflet_select_mapstyle')
+       COMMON_GLOBAL.moduleLeaflet.methods.eventClickMapLayer(target);
+
+   //dialogue user menu events
+   if (event_target_id == 'common_dialogue_user_menu_app_theme'){
+       COMMON_DOCUMENT.body.className = 'app_theme' + COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
+       commonPreferencesUpdateBodyClassFromPreferences();
+   }
+   if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
+       COMMON_GLOBAL.user_locale = target?.getAttribute('data-value') ?? '';
+       /**
+        * @todo change COMMON_WINDOW.navigator.language, however when logging out default COMMON_WINDOW.navigator.language will be set
+        *       commented at the moment
+        *       Object.defineProperties(COMMON_WINDOW.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+        */
+       await commonUserPreferenceSave();
+   }
+   if (event_target_id == 'common_dialogue_user_menu_user_timezone_select'){
+       COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
+       await commonUserPreferenceSave().then(()=>{
+           if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit').textContent !='') {
+               commonComponentRender({
+                   mountDiv:   'common_dialogue_user_edit',
+                   data:       {
+                               user_account_id:COMMON_GLOBAL.user_account_id,
+                               common_app_id:COMMON_GLOBAL.common_app_id
+                               },
+                   methods:    {
+                              commonFFB:commonFFB,
+                               commonMessageShow:commonMessageShow,
+                               commonFormatJsonDate:commonFormatJsonDate
+                               },
+                   path:       '/common/component/common_dialogue_user_edit.js'})
+               .then(()=>{
+                   commonComponentRemove('common_dialogue_user_menu');
+               });
+           }
+       });
+   }
+   if(event_target_id =='common_dialogue_user_menu_user_direction_select'){
+       if(target?.getAttribute('data-value')=='rtl')
+           COMMON_DOCUMENT.body.classList.add('rtl');
+       else
+           COMMON_DOCUMENT.body.classList.remove('rtl');
+       COMMON_GLOBAL.user_direction = target?.getAttribute('data-value') ?? '';
+       await commonUserPreferenceSave();
+   }
+   if(event_target_id == 'common_dialogue_user_menu_user_arabic_script_select'){
+       COMMON_GLOBAL.user_arabic_script = target?.getAttribute('data-value') ?? '';
+       //check if app theme div is using default theme with common select div
+       if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme').className?
+           COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme').className.toLowerCase().indexOf('common_select')>-1:false){
+           COMMON_DOCUMENT.body.className = 'app_theme' + COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').getAttribute('data-value');
+           commonPreferencesUpdateBodyClassFromPreferences();
+       }
+       await commonUserPreferenceSave();
+   }
+};
+/**
+ * Common preference post mount
+ * @returns {void}
+ */
+const commonPreferencesPostMount = () => {
+   commonPreferencesUpdateBodyClassFromPreferences();
+   commonThemeUpdateFromBody();
 };
 /**
  * Input control
@@ -379,149 +515,168 @@ const getHostname = () =>{
  *		}} validate_items 
  * @returns {boolean}
  */
-const input_control = (dialogue, validate_items) =>{
-    let result = true;
-    /**
-     * Valid text element or value
-     * @param {HTMLElement|string} validate
-     * @returns {boolean}
-     */
-    const valid_text = validate =>{
-        let div;
-        if (typeof validate=='object')
-            div = validate;
-        else{
-            div = CommonAppDocument.createElement('div');
-            div.textContent = validate;
-        }
-        if (div.textContent.indexOf(':') > -1 || div.textContent.includes('"') || div.textContent.includes('\\') )
-            return false;
-        else
-            try {
-                JSON.parse(JSON.stringify(div.textContent));
-                return true;
-                
-            } catch (error) {
-                return false;
-            }
-    };
-    /**
-     * Set error
-     * @param {HTMLElement} element 
-     * @param {HTMLElement|null} element2 
-     */
-    const set_error = (element, element2=null) => {
-        element.classList.add('common_input_error');
-        element2?element.classList.add('common_input_error'):null;
-        result = false;
-    };
-    if (dialogue)
-        dialogue.querySelectorAll('.common_input_error')
-            .forEach(element=>element.classList.remove('common_input_error'));
+const commonInputControl = (dialogue, validate_items) =>{
+   let result = true;
+   /**
+    * Valid text element or value
+    * @param {HTMLElement|string} validate
+    * @returns {boolean}
+    */
+   const valid_text = validate =>{
+       let div;
+       if (typeof validate=='object')
+           div = validate;
+       else{
+           div = COMMON_DOCUMENT.createElement('div');
+           div.textContent = validate;
+       }
+       if (div.textContent.indexOf(':') > -1 || div.textContent.includes('"') || div.textContent.includes('\\') )
+           return false;
+       else
+           try {
+               JSON.parse(JSON.stringify(div.textContent));
+               return true;
+               
+           } catch (error) {
+               return false;
+           }
+   };
+   /**
+    * Set error
+    * @param {HTMLElement} element 
+    * @param {HTMLElement|null} element2 
+    */
+   const set_error = (element, element2=null) => {
+       element.classList.add('common_input_error');
+       element2?element.classList.add('common_input_error'):null;
+       result = false;
+   };
+   if (dialogue)
+       dialogue.querySelectorAll('.common_input_error')
+           .forEach(element=>element.classList.remove('common_input_error'));
 
-    if (validate_items.check_valid_list_elements)
-        for (const element of validate_items.check_valid_list_elements){
-            element[0].classList.remove('common_input_error');
-        }
-        
-    //validate text content
-    if (validate_items.username && valid_text(validate_items.username) == false){
-        set_error(validate_items.username);
+   if (validate_items.check_valid_list_elements)
+       for (const element of validate_items.check_valid_list_elements){
+           element[0].classList.remove('common_input_error');
+       }
+       
+   //validate text content
+   if (validate_items.username && valid_text(validate_items.username) == false){
+       set_error(validate_items.username);
+   }
+   if (validate_items.password && valid_text(validate_items.password)== false){
+       set_error(validate_items.password);
+   }
+   if (validate_items.password_reminder && valid_text(validate_items.password_reminder)== false){
+       set_error(validate_items.password);
+   }
+   if (validate_items.password_new && valid_text(validate_items.password_new)== false){
+       set_error(validate_items.password);
+   }
+   if (validate_items.password_new_confirm && valid_text(validate_items.password_new_confirm)== false){
+       set_error(validate_items.password);
+   }
+   if (validate_items.email && valid_text(validate_items.email)== false){
+       set_error(validate_items.email);
+   }
+   if (validate_items.bio && valid_text(validate_items.bio)== false){
+       set_error(validate_items.bio);
+   }
+   if (validate_items.check_valid_list_elements){
+       for (const element of validate_items.check_valid_list_elements){
+           if (valid_text(element[0])==false)
+               set_error(element[0]);
+       }
+   }
+   if (validate_items.check_valid_list_values){
+       for (const element of validate_items.check_valid_list_values){
+           if (valid_text(element[0])==false){
+               result = false;
+               break;
+           }
+       }
+   }
+   //validate text length
+   if (validate_items.username && validate_items.username.textContent && validate_items.username.textContent.length > 100){
+       set_error(validate_items.username);
+   }
+   if (validate_items.password && validate_items.password.textContent.length > 100){
+       set_error(validate_items.password);
+   }
+   if (validate_items.password_reminder && validate_items.password_reminder.textContent && validate_items.password_reminder.textContent.length > 100){
+       set_error(validate_items.password_reminder);
+   }
+   if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 100){
+       set_error(validate_items.password_new);
+   }
+   if (validate_items.bio && validate_items.bio.textContent && validate_items.bio.textContent.length > 150){
+       set_error(validate_items.bio);
+   }
+   if (validate_items.check_valid_list_elements){
+       for (const element of validate_items.check_valid_list_elements){
+           if (element[0] && element[1] && element[0].textContent && element[0].textContent.length > element[1])
+               set_error(element[0]);
+       }
+   }
+   if (validate_items.check_valid_list_values){
+       for (const element of validate_items.check_valid_list_values){
+           if (element[0] && element[1] && element[0].length > element[1]){
+               result = false;
+               break;
+           }
+       }
+   }
+   //validate not empty
+   if (validate_items.username && validate_items.username.textContent == '') {
+       set_error(validate_items.username);
+   }
+   if (validate_items.password && validate_items.password.textContent == '') {
+       set_error(validate_items.password);
+   }
+   if (validate_items.email && validate_items.email.textContent == '') {
+       set_error(validate_items.email);
+   }
+   if (validate_items.password && validate_items.password_confirm && validate_items.password_confirm.textContent ==''){
+       set_error(validate_items.password_confirm);
+   }
+   //validate same password
+   if (validate_items.password && validate_items.password_confirm && (validate_items.password.textContent != validate_items.password_confirm.textContent)){
+       set_error(validate_items.password, validate_items.password_confirm);
+   }
+   if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 0 && (validate_items.password_new.textContent != validate_items.password_new_confirm.textContent)){
+       set_error(validate_items.password_new, validate_items.password_new_confirm);
+   }
+   if (result==false){
+       commonMessageShow('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
+       return false;
+   }
+   else
+       return true;
+};
+/**
+ * Get hostname with protocol and port
+ * @returns {string}
+ */
+const commonWindowHostname = () =>{
+    return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
+};
+/**
+ * Serviceworker
+ * @returns {void}
+ */
+const commonWindowServiceWorker = () => {
+    if (!COMMON_WINDOW.Promise) {
+        COMMON_WINDOW.Promise = Promise;
     }
-    if (validate_items.password && valid_text(validate_items.password)== false){
-        set_error(validate_items.password);
+    if('serviceWorker' in COMMON_WINDOW.navigator) {
+        COMMON_WINDOW.navigator.serviceWorker.register('/sw.js', {scope: '/'});
     }
-    if (validate_items.password_reminder && valid_text(validate_items.password_reminder)== false){
-        set_error(validate_items.password);
-    }
-    if (validate_items.password_new && valid_text(validate_items.password_new)== false){
-        set_error(validate_items.password);
-    }
-    if (validate_items.password_new_confirm && valid_text(validate_items.password_new_confirm)== false){
-        set_error(validate_items.password);
-    }
-    if (validate_items.email && valid_text(validate_items.email)== false){
-        set_error(validate_items.email);
-    }
-    if (validate_items.bio && valid_text(validate_items.bio)== false){
-        set_error(validate_items.bio);
-    }
-    if (validate_items.check_valid_list_elements){
-        for (const element of validate_items.check_valid_list_elements){
-            if (valid_text(element[0])==false)
-                set_error(element[0]);
-        }
-    }
-    if (validate_items.check_valid_list_values){
-        for (const element of validate_items.check_valid_list_values){
-            if (valid_text(element[0])==false){
-                result = false;
-                break;
-            }
-        }
-    }
-    //validate text length
-    if (validate_items.username && validate_items.username.textContent && validate_items.username.textContent.length > 100){
-        set_error(validate_items.username);
-    }
-    if (validate_items.password && validate_items.password.textContent.length > 100){
-        set_error(validate_items.password);
-    }
-    if (validate_items.password_reminder && validate_items.password_reminder.textContent && validate_items.password_reminder.textContent.length > 100){
-        set_error(validate_items.password_reminder);
-    }
-    if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 100){
-        set_error(validate_items.password_new);
-    }
-    if (validate_items.bio && validate_items.bio.textContent && validate_items.bio.textContent.length > 150){
-        set_error(validate_items.bio);
-    }
-    if (validate_items.check_valid_list_elements){
-        for (const element of validate_items.check_valid_list_elements){
-            if (element[0] && element[1] && element[0].textContent && element[0].textContent.length > element[1])
-                set_error(element[0]);
-        }
-    }
-    if (validate_items.check_valid_list_values){
-        for (const element of validate_items.check_valid_list_values){
-            if (element[0] && element[1] && element[0].length > element[1]){
-                result = false;
-                break;
-            }
-        }
-    }
-    //validate not empty
-    if (validate_items.username && validate_items.username.textContent == '') {
-        set_error(validate_items.username);
-    }
-    if (validate_items.password && validate_items.password.textContent == '') {
-        set_error(validate_items.password);
-    }
-    if (validate_items.email && validate_items.email.textContent == '') {
-        set_error(validate_items.email);
-    }
-    if (validate_items.password && validate_items.password_confirm && validate_items.password_confirm.textContent ==''){
-        set_error(validate_items.password_confirm);
-    }
-    //validate same password
-    if (validate_items.password && validate_items.password_confirm && (validate_items.password.textContent != validate_items.password_confirm.textContent)){
-        set_error(validate_items.password, validate_items.password_confirm);
-    }
-    if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 0 && (validate_items.password_new.textContent != validate_items.password_new_confirm.textContent)){
-        set_error(validate_items.password_new, validate_items.password_new_confirm);
-    }
-    if (result==false){
-        show_message('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
-        return false;
-    }
-    else
-        return true;
 };
 /**
  * 
  * @param {string} useragent 
  */
-const getUserAgentPlatform = useragent =>{
+const commonWindowUserAgentPlatform = useragent =>{
     if (useragent.toLowerCase().indexOf('windows'))
         return 'Windows';
     else
@@ -533,213 +688,72 @@ const getUserAgentPlatform = useragent =>{
             else
                 return 'Other';
 };
-/**
- * Get user variables
- * @returns {{  user_language:string,
- *              user_timezone:string,
- *              user_number_system:string,
- *              user_platform:string,
- *              client_latitude:string,
- *              client_longitude:string,
- *              client_place:string}}
- */
-const get_uservariables = () => {
-    return {    user_language:      NavigatorLocale(),
-                user_timezone:      CommonAppWindow.Intl.DateTimeFormat().resolvedOptions().timeZone,
-                user_number_system: CommonAppWindow.Intl.NumberFormat().resolvedOptions().numberingSystem,
-                user_platform:      getUserAgentPlatform(CommonAppWindow.navigator.userAgent),
-                client_latitude:    COMMON_GLOBAL.client_latitude,
-                client_longitude:   COMMON_GLOBAL.client_longitude,
-                client_place:       COMMON_GLOBAL.client_place
-            };
-};
-/**
- * Default app themes 
- */
-const theme_default_list = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}, {VALUE:3, TEXT:'Caffè Latte'}];
 
-/**
- * Common theme get
- * @returns {void}
- */
- const common_theme_update_from_body = () => {    
-    CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').textContent = 
-        theme_default_list().filter(theme=>theme.VALUE.toString()==CommonAppDocument.body.className[9])[0].TEXT;
-    CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').setAttribute('data-value', CommonAppDocument.body.className[9]);
-};
-/**
- * Common theme update body class from preferences
- * @returns {void}
- */
- const common_preferences_update_body_class_from_preferences = () => {
-    const class_app_theme = CommonAppDocument.body.className.split(' ')[0] ?? '';
-    const class_direction = COMMON_GLOBAL.user_direction;
-    const class_arabic_script = COMMON_GLOBAL.user_arabic_script;
-    CommonAppDocument.body.className = '';
-    CommonAppDocument.body.classList.add(class_app_theme);
-    if (class_direction)
-        CommonAppDocument.body.classList.add(class_direction);
-    if (class_arabic_script)
-        CommonAppDocument.body.classList.add(class_arabic_script);
-};
-/**
- * @returns {Promise<{  id:number,
- *                      app_id:number,
- *                      value:string,
- *                      text:string,
- *                      app_setting_type_name:string,
- *                      data2:string,
- *                      data3:string,
- *                      data4:string,
- *                      data5:string}[]>}
- */
-const app_settings_get = async () =>await FFB({path:'/server-db/app_settings', method:'GET', authorization_type:'APP_DATA'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-/**
- * Sets current value for select div
- * Get json data for given key and value is found or matches value if not json
- * @param {string} div
- * @param {string|number|null} value
- * @param {string|null} json_key
- * @param {string|number|null} json_value
- */
-const set_current_value= (div, value, json_key=null, json_value=null) =>{
-    CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).textContent = Array.from(CommonAppDocument.querySelectorAll(`#${div} .common_select_option`))
-                                                                                            .filter(option=>(json_key?JSON.parse(option.getAttribute('data-value'))[json_key]:
-                                                                                                                option.getAttribute('data-value'))==(json_value ?? value))[0].textContent;
-    if (json_key)
-        Array.from(CommonAppDocument.querySelectorAll(`#${div} .common_select_option`))
-            .filter(option=>JSON.parse(option.getAttribute('data-value'))[json_key])[0].getAttribute('data-value');
-    else
-        CommonAppDocument.querySelector(`#${div} .common_select_dropdown_value`).setAttribute('data-value', value);
-      
-};
-
-
-/**
- * @param {string} event_target_id
- * @param { import('../../../common_types.js').CommonAppEvent['target']|
- *          import('../../../common_types.js').CommonAppEvent['target']['parentNode']|null} target
- */
-const select_event_action = async (event_target_id, target) =>{
-    //module leaflet events
-    if(event_target_id== 'common_module_leaflet_select_country')
-        COMMON_GLOBAL.moduleLeaflet.methods.eventClickCountry(event_target_id);
-    if (event_target_id== 'common_module_leaflet_select_city')
-        await COMMON_GLOBAL.moduleLeaflet.methods.eventClickCity(event_target_id);
-    if(event_target_id == 'common_module_leaflet_select_mapstyle')
-        COMMON_GLOBAL.moduleLeaflet.methods.eventClickMapLayer(target);
-
-    //dialogue user menu events
-    if (event_target_id == 'common_dialogue_user_menu_app_theme'){
-        CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
-        common_preferences_update_body_class_from_preferences();
-    }
-    if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
-        COMMON_GLOBAL.user_locale = target?.getAttribute('data-value') ?? '';
-        /**
-         * @todo change CommonAppWindow.navigator.language, however when logging out default CommonAppWindow.navigator.language will be set
-         *       commented at the moment
-         *       Object.defineProperties(CommonAppWindow.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
-         */
-        await user_preference_save();
-    }
-    if (event_target_id == 'common_dialogue_user_menu_user_timezone_select'){
-        COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
-        await user_preference_save().then(()=>{
-            if (CommonAppDocument.querySelector('#common_dialogue_user_edit').textContent !='') {
-                ComponentRender({
-                    mountDiv:   'common_dialogue_user_edit',
-                    data:       {
-                                user_account_id:COMMON_GLOBAL.user_account_id,
-                                common_app_id:COMMON_GLOBAL.common_app_id
-                                },
-                    methods:    {
-                                FFB:FFB,
-                                show_message:show_message,
-                                format_json_date:format_json_date
-                                },
-                    path:       '/common/component/common_dialogue_user_edit.js'})
-                .then(()=>{
-                    ComponentRemove('common_dialogue_user_menu');
-                });
-            }
-        });
-    }
-    if(event_target_id =='common_dialogue_user_menu_user_direction_select'){
-        if(target?.getAttribute('data-value')=='rtl')
-            CommonAppDocument.body.classList.add('rtl');
-        else
-            CommonAppDocument.body.classList.remove('rtl');
-        COMMON_GLOBAL.user_direction = target?.getAttribute('data-value') ?? '';
-        await user_preference_save();
-    }
-    if(event_target_id == 'common_dialogue_user_menu_user_arabic_script_select'){
-        COMMON_GLOBAL.user_arabic_script = target?.getAttribute('data-value') ?? '';
-        //check if app theme div is using default theme with common select div
-        if (CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme').className?
-            CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme').className.toLowerCase().indexOf('common_select')>-1:false){
-            CommonAppDocument.body.className = 'app_theme' + CommonAppDocument.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').getAttribute('data-value');
-            common_preferences_update_body_class_from_preferences();
-        }
-        await user_preference_save();
-    }
-};
-/**
- * Common preference post mount
- * @returns {void}
- */
- const common_preferences_post_mount = () => {
-    common_preferences_update_body_class_from_preferences();
-    common_theme_update_from_body();
-};
 /**
  * Use SetTimout for given function and millseconds
  * @param {function}    function_timeout
  * @param {number}      milliseconds
  * @returns {void}
  */
-const common_setTimeout = (function_timeout, milliseconds) => CommonAppWindow.setTimeout(function_timeout, milliseconds);
+const commonWindowSetTimeout = (function_timeout, milliseconds) => COMMON_WINDOW.setTimeout(function_timeout, milliseconds);
 
 /**
  * Waits given amount of milliseconds
  * @param {number} milliseconds
  * @returns {Promise<null>}
  */
-const common_wait = async milliseconds => new Promise ((resolve)=>{common_setTimeout(()=> resolve(null),milliseconds);});
+const commonWindowWait = async milliseconds => new Promise ((resolve)=>{commonWindowSetTimeout(()=> resolve(null),milliseconds);});
+
+/**
+ * Convert string to Base64
+ * @param {string} str 
+ * @returns {string}
+ */
+const commonWindowToBase64 = str => {
+    return COMMON_WINDOW.btoa(unescape(encodeURIComponent(str)));
+};	
+/**
+ * Convert base64 to string
+ * @param {string} str 
+ * @returns {string}
+ */
+const commonWindowFromBase64 = (str) => {
+    return decodeURIComponent(escape(COMMON_WINDOW.atob(str)));
+};
 
 /**
  * Read Navigator language
  * @returns {string}
  */
-const NavigatorLocale = () => CommonAppWindow.navigator.language.toLowerCase();
+const commonWindowNavigatorLocale = () => COMMON_WINDOW.navigator.language.toLowerCase();
 
 /**
  * Returns frames document element
  */
-const DocumentFrame = () => CommonAppWindow.frames.document;
+const commonWindowDocumentFrame = () => COMMON_WINDOW.frames.document;
 
 /**
  * Returns info about location pathname for given argument number
  * @param {number} argumentNumber
  */
-const WindowLocationPathname = argumentNumber => CommonAppWindow.location.pathname.substring(argumentNumber);
+const commonWndowLocationPathname = argumentNumber => COMMON_WINDOW.location.pathname.substring(argumentNumber);
 
 /**
  * Reloads window
  */
-const WindowLocationReload = () => CommonAppWindow.location.reload();
+const commonWindowLocationReload = () => COMMON_WINDOW.location.reload();
 
 /**
  * Opens an url in a new window
  * @param {string} url
  */
-const WindowOpen = url => CommonAppWindow.open(url, '_blank');
+const commonWindowOpen = url => COMMON_WINDOW.open(url, '_blank');
 
 /**
  * Opens an window prompt with given text
  * @param {string} text
  */
-const WindowPrompt = text => CommonAppWindow.prompt(text);
+const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
 
 /**
  * Convert HTML to React component
@@ -747,7 +761,7 @@ const WindowPrompt = text => CommonAppWindow.prompt(text);
  * @param {*} element 
  * @returns {*}
  */
- const html2reactcomponent = (React_create_element, element) =>{
+ const commonFrameworkHtml2ReactComponent = (React_create_element, element) =>{
     const result_component_current = [];
     if(element.length>0 ){
         for (const subelement of element){
@@ -807,7 +821,7 @@ const WindowPrompt = text => CommonAppWindow.prompt(text);
             }
             const reactobj = subelement.childElementCount>0?React_create_element(subelement.nodeName.toLowerCase(), 
                                                 props,
-                                                html2reactcomponent(React_create_element, subelement.children)):
+                                                commonFrameworkHtml2ReactComponent(React_create_element, subelement.children)):
                                                 React_create_element(subelement.nodeName.toLowerCase(), 
                                                 props);
             result_component_current.push(reactobj);
@@ -830,20 +844,20 @@ const WindowPrompt = text => CommonAppWindow.prompt(text);
  * @param {{mountDiv:string|null,
  *          data:{}|null,
  *          methods:{}|null,
- *          path:string}} componentRender
+ *          path:string}} commonComponentRender
  * @returns {Promise.<{data:*, methods:*}>}
  */
-const ComponentRender = async componentRender => {
-    const {default:ComponentCreate} = await import(componentRender.path);
-    if (componentRender.mountDiv)
-        CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
+const commonComponentRender = async commonComponentRender => {
+    const {default:ComponentCreate} = await import(commonComponentRender.path);
+    if (commonComponentRender.mountDiv)
+        COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
 
     /**@type{import('../../../common_types.js').CommonComponentResult}*/
-    const component = await ComponentCreate({   data:       {...componentRender.data,       ...{common_mountdiv:componentRender.mountDiv}},
-                                                methods:    {...componentRender.methods,    ...{common_document:CommonAppDocument}}})
+    const component = await ComponentCreate({   data:       {...commonComponentRender.data,       ...{commonMountdiv:commonComponentRender.mountDiv}},
+                                                methods:    {...commonComponentRender.methods,    ...{COMMON_DOCUMENT:COMMON_DOCUMENT}}})
                                                 .catch((/**@type{Error}*/error)=>{
-                                                    componentRender.mountDiv?ComponentRemove(componentRender.mountDiv, true):null;
-                                                    exception(COMMON_GLOBAL.app_function_exception, error);
+                                                    commonComponentRender.mountDiv?commonComponentRemove(commonComponentRender.mountDiv, true):null;
+                                                    commonException(COMMON_GLOBAL.app_function_exception, error);
                                                     return null;
                                                 });
     if (component){
@@ -853,27 +867,27 @@ const ComponentRender = async componentRender => {
         
         //component can be mounted inside a third party component
         //and div and template can be empty in this case    
-        if (componentRender.mountDiv && component.template)
+        if (commonComponentRender.mountDiv && component.template)
             switch (COMMON_GLOBAL.app_framework){
                 case 2:{
                     //Vue
-                    await framework_mount(2, component.template, {}, componentRender.mountDiv, true);
+                    await commonFrameworkMount(2, component.template, {}, commonComponentRender.mountDiv, true);
                     break;
                 }
                 case 3:{
-                    await framework_mount(3, component.template, {}, componentRender.mountDiv, true);
+                    await commonFrameworkMount(3, component.template, {}, commonComponentRender.mountDiv, true);
                     break;
                 }
                 case 1:
                 default:{
                     //Default Javascript
-                    CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).innerHTML = component.template;
+                    COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).innerHTML = component.template;
                 }
             }
         if (component.lifecycle?.onUnmounted){
             const Unmounted = () =>{
-                                    if (!CommonAppDocument.querySelector(`#${componentRender.mountDiv}`) || 
-                                        CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).textContent==''){
+                                    if (!COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`) || 
+                                        COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).textContent==''){
                                             if (component.lifecycle?.onUnmounted){
                                                 ComponentHook.disconnect();
                                                 component.lifecycle.onUnmounted();
@@ -881,7 +895,7 @@ const ComponentRender = async componentRender => {
                                         }
                                     };
             const ComponentHook = new MutationObserver(Unmounted);
-            ComponentHook.observe(CommonAppDocument.querySelector(`#${componentRender.mountDiv}`).parentNode, {attributes:true, subtree:true});
+            ComponentHook.observe(COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).parentNode, {attributes:true, subtree:true});
         }
 
         //run onMounted function after component is mounted
@@ -897,8 +911,8 @@ const ComponentRender = async componentRender => {
  * @param {string} div 
  * @param {boolean} remove_modal
  */
-const ComponentRemove = (div, remove_modal=false) => {
-    const APPDIV = CommonAppDocument.querySelector(`#${div}`);
+const commonComponentRemove = (div, remove_modal=false) => {
+    const APPDIV = COMMON_DOCUMENT.querySelector(`#${div}`);
     APPDIV.textContent = '';
     if (div.indexOf('dialogue')>-1){
         APPDIV.classList.remove('common_dialogue_show0');
@@ -906,9 +920,9 @@ const ComponentRemove = (div, remove_modal=false) => {
         APPDIV.classList.remove('common_dialogue_show2');
         APPDIV.classList.remove('common_dialogue_show3');
         if (remove_modal){
-            if (CommonAppDocument.querySelector('#app .common_dialogues_modal'))
-                CommonAppDocument.querySelector('#app .common_dialogues_modal').classList.remove('common_dialogues_modal');
-            CommonAppDocument.querySelector('#common_app #common_dialogues').classList.remove('common_dialogues_modal');
+            if (COMMON_DOCUMENT.querySelector('#app .common_dialogues_modal'))
+                COMMON_DOCUMENT.querySelector('#app .common_dialogues_modal').classList.remove('common_dialogues_modal');
+            COMMON_DOCUMENT.querySelector('#common_app #common_dialogues').classList.remove('common_dialogues_modal');
         }
     }
 };
@@ -921,44 +935,44 @@ const ComponentRemove = (div, remove_modal=false) => {
  * @param {function|null} click_cancel_event 
  * @returns {Promise.<void>}
  */
-const show_common_dialogue = async (dialogue, user_verification_type=null, title=null, click_cancel_event=null) => {
+const commonDialogueShow = async (dialogue, user_verification_type=null, title=null, click_cancel_event=null) => {
     switch (dialogue) {
         case 'PASSWORD_NEW':
             {    
-                ComponentRender({
+                commonComponentRender({
                     mountDiv:   'common_dialogue_user_password_new',
                     data:       {
                                 user_account_id:COMMON_GLOBAL.user_account_id,
                                 common_app_id:COMMON_GLOBAL.common_app_id
                                 },
                     methods:    {
-                                FFB:FFB,
-                                show_message:show_message,
-                                format_json_date:format_json_date
+                               commonFFB:commonFFB,
+                                commonMessageShow:commonMessageShow,
+                                commonFormatJsonDate:commonFormatJsonDate
                                 },
                     path:'/common/component/common_dialogue_user_password_new.js'});
                 break;
             }
         case 'VERIFY':
             {    
-                ComponentRender({
+                commonComponentRender({
                     mountDiv:   'common_dialogue_user_verify',
                     data:       {
                                 user_verification_type:user_verification_type,
-                                username_login:CommonAppDocument.querySelector('#common_user_start_login_username').textContent,
-                                password_login:CommonAppDocument.querySelector('#common_user_start_login_password').textContent,
-                                username_signup:CommonAppDocument.querySelector('#common_user_start_signup_username').textContent,
-                                password_signup:CommonAppDocument.querySelector('#common_user_start_signup_password').textContent,
+                                username_login:COMMON_DOCUMENT.querySelector('#common_user_start_login_username').textContent,
+                                password_login:COMMON_DOCUMENT.querySelector('#common_user_start_login_password').textContent,
+                                username_signup:COMMON_DOCUMENT.querySelector('#common_user_start_signup_username').textContent,
+                                password_signup:COMMON_DOCUMENT.querySelector('#common_user_start_signup_password').textContent,
                                 title: title
                                 },
                     methods:    {data_function:click_cancel_event},
                     path:       '/common/component/common_dialogue_user_verify.js'});
-                ComponentRemove('common_dialogue_user_start');
+                commonComponentRemove('common_dialogue_user_start');
                 break;
             }
         case 'LOGIN_ADMIN':{
             //show admin login as default
-            await ComponentRender({
+            await commonComponentRender({
                 mountDiv:       'common_dialogue_user_start',
                 data:           {
                                 user_click:                     COMMON_GLOBAL.system_admin_only==1?'common_user_start_login_system_admin':'common_user_start_login',
@@ -967,14 +981,14 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
                                 system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time
                                 },
-                methods:        {FFB: FFB},
+                methods:        {commonFFB:commonFFB},
                 path:           '/common/component/common_dialogue_user_start.js'});
             break;
         }
         case 'LOGIN':
         case 'SIGNUP':
         case 'FORGOT':{
-            await ComponentRender({
+            await commonComponentRender({
                 mountDiv:       'common_dialogue_user_start',
                 data:           {
                                 user_click:                     `common_user_start_${dialogue.toLowerCase()}`,
@@ -983,7 +997,7 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
                                 system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
                                 system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time
                                 },
-                methods:        {FFB: FFB},
+                methods:        {commonFFB:commonFFB},
                 path:           '/common/component/common_dialogue_user_start.js'});
             break;
         }
@@ -998,8 +1012,8 @@ const show_common_dialogue = async (dialogue, user_verification_type=null, title
  * @param {*} message 
  * @param {number|null} data_app_id 
  */
-const show_message = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
-    ComponentRender({
+const commonMessageShow = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
+    commonComponentRender({
         mountDiv:       'common_dialogue_message',
         data:           {
                         message_type:message_type,
@@ -1009,8 +1023,8 @@ const show_message = async (message_type, code, function_event, text_class=null,
                         message:message
                         },
         methods:        {
-                        componentRemove:ComponentRemove,
-                        FFB:FFB, 
+                        commonComponentRemove:commonComponentRemove,
+                       commonFFB:commonFFB, 
                         function_event:function_event
                         },
         path:           '/common/component/common_dialogue_message.js'});
@@ -1019,8 +1033,8 @@ const show_message = async (message_type, code, function_event, text_class=null,
  * Dialogue password new clear
  * @returns {void}
  */
-const dialogue_password_new_clear = () => {
-    ComponentRemove('common_dialogue_user_password_new');
+const commonDialoguePasswordNewClear = () => {
+    commonComponentRemove('common_dialogue_user_password_new');
     COMMON_GLOBAL.user_account_id = null;
     COMMON_GLOBAL.token_at = '';
 };
@@ -1029,7 +1043,7 @@ const dialogue_password_new_clear = () => {
  * @param {import('../../../common_types.js').CommonAppEvent} event
  * @param {'APP_CATEGORY'|'APP_ROLE'} lov
  */
-const lov_event = (event, lov) => {
+const commonLovEvent = (event, lov) => {
     /**
      * LOV event function
      * calling row event decides to have common_input_lov and common_input_value
@@ -1040,10 +1054,10 @@ const lov_event = (event, lov) => {
      *  common_input_value = data-value
      * @param {import('../../../common_types.js').CommonAppEvent} event_lov 
      */
-    const lov_event_function = event_lov => {
+    const commonLovEvent_function = event_lov => {
         //setting values from LOV
-        const row = element_row(event.target);
-        const row_lov = element_row(event_lov.target);
+        const row = commonElementRow(event.target);
+        const row_lov = commonElementRow(event_lov.target);
         /**@type{HTMLElement|null} */
         const common_input_lov = row.querySelector('.common_input_lov');
         /**@type{HTMLElement|null} */
@@ -1061,9 +1075,9 @@ const lov_event = (event, lov) => {
         }
         //dispatch event for either common_input lov if used or common_lov_value
         (common_input_lov ?? common_lov_value)?.dispatchEvent(new Event('input'));
-        CommonAppDocument.querySelector('#common_lov_close').click();
+        COMMON_DOCUMENT.querySelector('#common_commonLovClose').click();
     };
-    lov_show({lov:lov, function_event:lov_event_function});
+    commonLovShow({lov:lov, function_event:commonLovEvent_function});
 };
 /**
  * Lov action fetches id and value, updates values and manages data-defaultValue
@@ -1076,8 +1090,8 @@ const lov_event = (event, lov) => {
  * @param {import('../../../common_types.js').CommonRESTAPIAuthorizationType} authorization_type 
  * @param {{}|null} json_data 
  */
-const lov_action = (event, lov, old_value, path, query, method, authorization_type, json_data) => {
-    FFB({path:path, query:query, method:method, authorization_type:authorization_type, body:json_data})
+const commonLovAction = (event, lov, old_value, path, query, method, authorization_type, json_data) => {
+   commonFFB({path:path, query:query, method:method, authorization_type:authorization_type, body:json_data})
     .then((/**@type{string}*/result)=>{
         const list_result = result?JSON.parse(result).rows:{};
         if (list_result.length == 1){
@@ -1116,8 +1130,8 @@ const lov_action = (event, lov, old_value, path, query, method, authorization_ty
  * Lov close
  * @returns {void}
  */
-const lov_close = () => {
-    ComponentRemove('common_dialogue_lov', true);
+const commonLovClose = () => {
+    commonComponentRemove('common_dialogue_lov', true);
 };
 /**
  * Lov show
@@ -1127,8 +1141,8 @@ const lov_close = () => {
  *          function_event:function|null}} parameters
  * @returns {void} 
  */
-const lov_show = parameters => {
-    ComponentRender({
+const commonLovShow = parameters => {
+    commonComponentRender({
         mountDiv:   'common_dialogue_lov',
         data:       {
                     lov:parameters.lov,
@@ -1136,7 +1150,7 @@ const lov_show = parameters => {
                     lov_custom_value:parameters.lov_custom_value
                     },
         methods:    {
-                    FFB:FFB, 
+                   commonFFB:commonFFB, 
                     function_event:parameters.function_event
                     },
         path:       '/common/component/common_dialogue_lov.js'});        
@@ -1145,8 +1159,8 @@ const lov_show = parameters => {
  * Lov filter
  * @param {string} text_filter 
  */
-const lov_filter = text_filter => {
-    const rows = CommonAppDocument.querySelectorAll('.common_list_lov_row');
+const commonLovFilter = text_filter => {
+    const rows = COMMON_DOCUMENT.querySelectorAll('.common_list_lov_row');
     for (const row of rows) {
         row.classList.remove ('common_list_lov_row_hide');
         row.classList.remove ('common_list_row_selected');
@@ -1168,10 +1182,10 @@ const lov_filter = text_filter => {
  * @param {number|null} zoomvalue 
  * @returns {void}
  */
-const zoom_info = (zoomvalue = null) => {
+const commonZoomInfo = (zoomvalue = null) => {
     let old;
     let old_scale;
-    const div = CommonAppDocument.querySelector('#common_window_info_info_img');
+    const div = COMMON_DOCUMENT.querySelector('#common_window_info_info_img');
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
     if (zoomvalue == null) {
@@ -1188,9 +1202,9 @@ const zoom_info = (zoomvalue = null) => {
  * @param {number|null} move2 
  * @returns {void}
  */
-const move_info = (move1=null, move2=null) => {
+const commonMoveInfo = (move1=null, move2=null) => {
     let old;
-    const div = CommonAppDocument.querySelector('#common_window_info_info_img');
+    const div = COMMON_DOCUMENT.querySelector('#common_window_info_info_img');
     if (move1==null || move2==null) {
         div.style.transformOrigin = '50% 50%';
     } else {
@@ -1204,30 +1218,30 @@ const move_info = (move1=null, move2=null) => {
  * Show or hide window info toolbar
  * @returns {void}
  */
-const show_hide_window_info_toolbar = () => {
-    if (CommonAppDocument.querySelector('#common_window_info_toolbar').style.display=='inline-block' ||
-        CommonAppDocument.querySelector('#common_window_info_toolbar').style.display=='')
-        CommonAppDocument.querySelector('#common_window_info_toolbar').style.display='none';
+const commonWindoInfoToolbarShowHide = () => {
+    if (COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display=='inline-block' ||
+        COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display=='')
+        COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display='none';
     else
-        CommonAppDocument.querySelector('#common_window_info_toolbar').style.display='inline-block';
+        COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display='inline-block';
 };
 /**
  * Close window info
  */
-const close_window = () =>{
-    ComponentRemove('common_window_info');
-    CommonAppDocument.querySelector('#common_window_info').style.visibility = 'hidden'; 
-    if (CommonAppDocument.fullscreenElement)
-        CommonAppDocument.exitFullscreen();
+const commonWindoInfoClose = () =>{
+    commonComponentRemove('common_window_info');
+    COMMON_DOCUMENT.querySelector('#common_window_info').style.visibility = 'hidden'; 
+    if (COMMON_DOCUMENT.fullscreenElement)
+        COMMON_DOCUMENT.exitFullscreen();
 };
 
 /**
  * Profile follow or like and then update stat
  * @param {'FOLLOW'|'LIKE'} function_name 
  */
-const profile_follow_like = async (function_name) => {
-    await user_function(function_name)
-    .then(()=>profile_update_stat())
+const commonProfileFollowLike = async (function_name) => {
+    await commonUserFunction(function_name)
+    .then(()=>commonProfileUpdateStat())
     .catch(()=>null);
 };
 /**
@@ -1236,16 +1250,16 @@ const profile_follow_like = async (function_name) => {
  * @param {string|null} app_rest_url
  * @returns {Promise.<void>}
  */
-const profile_stat = async (statchoice, app_rest_url = null) => {
-    await ComponentRender({
+const commonProfileStat = async (statchoice, app_rest_url = null) => {
+    await commonComponentRender({
         mountDiv:   'common_dialogue_profile',
         data:       {   
                     stat_list_app_rest_url:app_rest_url,
                     statchoice:statchoice ?? 1
                     },
         methods:    {
-                    ComponentRender:ComponentRender,
-                    FFB:FFB
+                    commonComponentRender:commonComponentRender,
+                   commonFFB:commonFFB
                     },
         path:       '/common/component/common_dialogue_profile.js'});
 };
@@ -1254,22 +1268,22 @@ const profile_stat = async (statchoice, app_rest_url = null) => {
  * @param {number} detailchoice  
  * @returns {void}
  */
-const profile_detail = (detailchoice) => {
+const commonProfileDetail = (detailchoice) => {
     if (detailchoice==0){
         //show only other app specific hide common
-        CommonAppDocument.querySelector('#common_profile_detail_list').textContent = '';
+        COMMON_DOCUMENT.querySelector('#common_profile_detail_list').textContent = '';
     }
     else{
-        ComponentRender({
+        commonComponentRender({
             mountDiv:   'common_profile_detail_list',
             data:       {
                         user_account_id:COMMON_GLOBAL.user_account_id,
-                        user_account_id_profile:CommonAppDocument.querySelector('#common_profile_id').textContent,
+                        user_account_id_profile:COMMON_DOCUMENT.querySelector('#common_profile_id').textContent,
                         detailchoice:detailchoice
                         },
             methods:    {
-                        show_common_dialogue:show_common_dialogue,
-                        FFB:FFB
+                        commonDialogueShow:commonDialogueShow,
+                       commonFFB:commonFFB
                         },
             path:       '/common/component/common_dialogue_profile_info_detail.js'});
     }
@@ -1279,8 +1293,8 @@ const profile_detail = (detailchoice) => {
  * @param {function} click_function 
  * @returns {void}
  */
-const search_profile = click_function => {
-    ComponentRender({
+const commonProfileSearch = click_function => {
+    commonComponentRender({
         mountDiv:   'common_profile_search_list_wrap',
         data:       {
                     user_account_id:COMMON_GLOBAL.user_account_id,
@@ -1288,39 +1302,39 @@ const search_profile = click_function => {
                     client_longitude:COMMON_GLOBAL.client_longitude
                     },
         methods:    {
-                    input_control:input_control,
+                    commonInputControl:commonInputControl,
                     function_click_function:click_function,
-                    FFB:FFB
+                   commonFFB:commonFFB
                     },
         path:       '/common/component/common_profile_search_list.js'})
     .catch(()=>{
-        CommonAppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-        CommonAppDocument.querySelector('#common_profile_search_list_wrap').textContent = '';
+        COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+        COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').textContent = '';
     });
 };
 /**
  * Profile show
- * profile_show(null, null)     from dropdown menu in apps or choosing logged in users profile
- * profile_show(userid, null) 	from choosing profile in profile_stat, profile_detail and search_profile
- * profile_show(null, username) from init startup when user enters url
+ * commonProfileShow(null, null)     from dropdown menu in apps or choosing logged in users profile
+ * commonProfileShow(userid, null) 	from choosing profile in commonProfileStat, profile_detail and commonProfileSearch
+ * commonProfileShow(null, username) from init startup when user enters url
  * 
  * @param {number|null} user_account_id_other 
  * @param {string|null} username 
  * @returns {Promise.<void>}
  */
-const profile_show = async (user_account_id_other = null, username = null) => {
-    await ComponentRender({
+const commonProfileShow = async (user_account_id_other = null, username = null) => {
+    await commonComponentRender({
         mountDiv:   'common_dialogue_profile',
         data:       {   
                     stat_list_app_rest_url:null,
                     statchoice:null
                     },
         methods:    {
-                    common_setTimeout:null,
-                    FFB:null,
+                    commonWindowSetTimeout:null,
+                   commonFFB:null,
                     },
         path:       '/common/component/common_dialogue_profile.js'});
-    await ComponentRender({
+    await commonComponentRender({
         mountDiv:   'common_dialogue_profile_content',
         data:       {   
                     user_account_id:COMMON_GLOBAL.user_account_id,
@@ -1330,13 +1344,13 @@ const profile_show = async (user_account_id_other = null, username = null) => {
                     username:username
                     },
         methods:    {
-                    common_setTimeout:common_setTimeout,
-                    FFB:FFB,
-                    create_qr:create_qr,
-                    getHostname:getHostname,
-                    format_json_date:format_json_date,
-                    show_common_dialogue:show_common_dialogue,
-                    checkOnline:checkOnline
+                    commonWindowSetTimeout:commonWindowSetTimeout,
+                   commonFFB:commonFFB,
+                    commonModuleEasyQRCODECreate:commonModuleEasyQRCODECreate,
+                    commonWindowHostname:commonWindowHostname,
+                    commonFormatJsonDate:commonFormatJsonDate,
+                    commonDialogueShow:commonDialogueShow,
+                    commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck
                     },
         path:       '/common/component/common_dialogue_profile_info.js'});
 };
@@ -1344,21 +1358,21 @@ const profile_show = async (user_account_id_other = null, username = null) => {
  * Profile update stat
  * @returns {Promise.<{id:number}>}
  */
-const profile_update_stat = async () => {
+const commonProfileUpdateStat = async () => {
     return new Promise((resolve, reject) => {
-        const profile_id = CommonAppDocument.querySelector('#common_profile_id');
+        const profile_id = COMMON_DOCUMENT.querySelector('#common_profile_id');
         //get updated stat for given user
-        FFB({path:`/server-db/user_account-profile/${profile_id.textContent}`, 
+       commonFFB({path:`/server-db/user_account-profile/${profile_id.textContent}`, 
             query:`id=${profile_id.textContent}&client_latitude=${COMMON_GLOBAL.client_latitude}&client_longitude=${COMMON_GLOBAL.client_longitude}`, 
             method:'GET', 
             authorization_type:'APP_DATA'})
         .then(result=>{
             const user_stat = JSON.parse(result)[0];
-            CommonAppDocument.querySelector('#common_profile_info_view_count').textContent = user_stat.count_views;
-            CommonAppDocument.querySelector('#common_profile_info_following_count').textContent = user_stat.count_following;
-            CommonAppDocument.querySelector('#common_profile_info_followers_count').textContent = user_stat.count_followed;
-            CommonAppDocument.querySelector('#common_profile_info_likes_count').textContent = user_stat.count_likes;
-            CommonAppDocument.querySelector('#common_profile_info_liked_count').textContent = user_stat.count_liked;
+            COMMON_DOCUMENT.querySelector('#common_profile_info_view_count').textContent = user_stat.count_views;
+            COMMON_DOCUMENT.querySelector('#common_profile_info_following_count').textContent = user_stat.count_following;
+            COMMON_DOCUMENT.querySelector('#common_profile_info_followers_count').textContent = user_stat.count_followed;
+            COMMON_DOCUMENT.querySelector('#common_profile_info_likes_count').textContent = user_stat.count_likes;
+            COMMON_DOCUMENT.querySelector('#common_profile_info_liked_count').textContent = user_stat.count_liked;
             resolve({id : user_stat.id});
         })
         .catch(err=>reject(err));
@@ -1371,7 +1385,7 @@ const profile_update_stat = async () => {
  * @param {function|null} event_function 
  * @returns {void}
  */
-const list_key_event = (event, module, event_function=null) => {
+const commonListKeyEvent = (event, module, event_function=null) => {
     const list_name = module=='lov'?'list_' + 'lov':module + '_search';
     const search_input = module + '_search';
     switch (event.code){
@@ -1381,15 +1395,15 @@ const list_key_event = (event, module, event_function=null) => {
         }
         case 'ArrowUp':
         case 'ArrowDown':{
-            const rows = module=='lov'? CommonAppDocument.querySelectorAll(`.common_${list_name}_row:not(.common_${list_name}_row_hide)`):
-                                        CommonAppDocument.querySelectorAll(`.common_${list_name}_list_row`);
+            const rows = module=='lov'? COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_row:not(.common_${list_name}_row_hide)`):
+                                        COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_list_row`);
             /**
              * Focus item
              * @param {HTMLElement} element 
              */
             const focus_item = (element) =>{
                 element.focus();
-                CommonAppDocument.querySelector(`#common_${search_input}_input`).focus();
+                COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).focus();
             };
             if (Object.entries(rows).filter(row=>row[1].classList.contains('common_list_row_selected')).length>0){
                 let i=0;
@@ -1443,7 +1457,7 @@ const list_key_event = (event, module, event_function=null) => {
         case 'Enter':{
             //enter
             if (module == 'lov'){
-                const rows = CommonAppDocument.querySelectorAll(`.common_${list_name}_row`);
+                const rows = COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_row`);
                 for (const row of rows) {
                     if (row.classList.contains('common_list_row_selected')){
                         //event on row is set in app when calling lov, dispatch it!
@@ -1453,7 +1467,7 @@ const list_key_event = (event, module, event_function=null) => {
                 }   
             }
             else{
-                const rows = CommonAppDocument.querySelectorAll(`.common_${list_name}_list_row`);
+                const rows = COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_list_row`);
                 for (let i = 0; i <= rows.length -1; i++) {
                     if (rows[i].classList.contains('common_list_row_selected')){
                         if (module=='profile'){
@@ -1472,14 +1486,14 @@ const list_key_event = (event, module, event_function=null) => {
         default:{
             if (module=='lov'){
                 //if db call will be implemented, add delay
-                //typewatch(lov_filter, CommonAppDocument.querySelector(`#common_${search_input}_input`).textContent); 
-                lov_filter(CommonAppDocument.querySelector(`#common_${search_input}_input`).textContent); 
+                //commonTypewatch(commonLovFilter, COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).textContent); 
+                commonLovFilter(COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).textContent); 
             }
             else
                 if (module=='profile')
-                    typewatch(search_profile, event_function==null?null:event_function); 
+                    commonTypewatch(commonProfileSearch, event_function==null?null:event_function); 
                 else{
-                    typewatch(worldcities_search, event_function==null?null:event_function); 
+                    commonTypewatch(commonMicroserviceWorldcitiesSearch, event_function==null?null:event_function); 
                 }
             break;
         }            
@@ -1493,7 +1507,7 @@ const list_key_event = (event, module, event_function=null) => {
  * @param {number|null} provider_id 
  * @returns {Promise. <{    avatar: string|null}>}
  */
-const user_login = async (system_admin=false, username_verify=null, password_verify=null, provider_id=null) => {
+const commonUserLogin = async (system_admin=false, username_verify=null, password_verify=null, provider_id=null) => {
     /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
     let authorization_type;
     let path = '';
@@ -1504,18 +1518,18 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         spinner_item = 'common_user_start_login_system_admin_button';
         current_dialogue = 'common_dialogue_user_start';
         // ES6 object spread operator for user variables
-        json_data = {   username:  encodeURI(CommonAppDocument.querySelector('#common_user_start_login_system_admin_username').textContent),
-                        password:  encodeURI(CommonAppDocument.querySelector('#common_user_start_login_system_admin_password').textContent),
-                        ...get_uservariables()
+        json_data = {   username:  encodeURI(COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_username').textContent),
+                        password:  encodeURI(COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_password').textContent),
+                        ...commonUservariables()
         };
         path = '/server-iam/login';
         authorization_type = 'IAM_SYSTEMADMIN';
-        if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_start'),
+        if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_start'),
                         {
-                        username: CommonAppDocument.querySelector('#common_user_start_login_system_admin_username'),
-                        password: CommonAppDocument.querySelector('#common_user_start_login_system_admin_password'),
-                        password_confirm: CommonAppDocument.querySelector('#common_user_start_login_system_admin_password_confirm')?
-                                            CommonAppDocument.querySelector('#common_user_start_login_system_admin_password_confirm'):
+                        username: COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_username'),
+                        password: COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_password'),
+                        password_confirm: COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_password_confirm')?
+                                            COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_password_confirm'):
                                                 null
                         })==false)
             throw 'ERROR';
@@ -1537,7 +1551,7 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                                     profile_last_name:      `PROVIDER LAST_NAME${provider_id}`,
                                     profile_image_url:      '',
                                     profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`};
-            const profile_image = provider_data.profile_image_url==''?null:await convert_image(  provider_data.profile_image_url, 
+            const profile_image = provider_data.profile_image_url==''?null:await commonImageConvert(  provider_data.profile_image_url, 
                                                         COMMON_GLOBAL.image_avatar_width,
                                                         COMMON_GLOBAL.image_avatar_height);
             json_data ={    username:               null,
@@ -1547,10 +1561,10 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
                             provider_id:            provider_data.profile_id,
                             provider_first_name:    provider_data.profile_first_name,
                             provider_last_name:     provider_data.profile_last_name,
-                            provider_image:         profile_image?CommonAppWindow.btoa(profile_image):null,
+                            provider_image:         profile_image?COMMON_WINDOW.btoa(profile_image):null,
                             provider_image_url:     provider_data.profile_image_url,
                             provider_email:         provider_data.profile_email,
-                            ...get_uservariables()
+                            ...commonUservariables()
                         };
             path = `/server-iam/login/${provider_data.profile_id}`;
             authorization_type = 'IAM_PROVIDER';
@@ -1558,36 +1572,36 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         else{
             // ES6 object spread operator for user variables
             json_data = {   username:  encodeURI(username_verify?
-                                            CommonAppDocument.querySelector(`#${username_verify}`).textContent:
-                                                CommonAppDocument.querySelector('#common_user_start_login_username').textContent),
+                                            COMMON_DOCUMENT.querySelector(`#${username_verify}`).textContent:
+                                                COMMON_DOCUMENT.querySelector('#common_user_start_login_username').textContent),
                             password:  encodeURI(password_verify?
-                                            CommonAppDocument.querySelector(`#${password_verify}`).textContent:
-                                                CommonAppDocument.querySelector('#common_user_start_login_password').textContent),
-                            ...get_uservariables()
+                                            COMMON_DOCUMENT.querySelector(`#${password_verify}`).textContent:
+                                                COMMON_DOCUMENT.querySelector('#common_user_start_login_password').textContent),
+                            ...commonUservariables()
             };
             path = '/server-iam/login';
             authorization_type = 'IAM_USER';
-            if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_start'),
+            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_start'),
                             {
                             username: username_verify?
-                                            CommonAppDocument.querySelector(`#${username_verify}`):
-                                                CommonAppDocument.querySelector('#common_user_start_login_username'),
+                                            COMMON_DOCUMENT.querySelector(`#${username_verify}`):
+                                                COMMON_DOCUMENT.querySelector('#common_user_start_login_username'),
                             password: password_verify?
-                                            CommonAppDocument.querySelector(`#${password_verify}`):
-                                                CommonAppDocument.querySelector('#common_user_start_login_password')
+                                            COMMON_DOCUMENT.querySelector(`#${password_verify}`):
+                                                COMMON_DOCUMENT.querySelector('#common_user_start_login_password')
                             })==false)
                 throw 'ERROR';
             
         }            
     }
-    const result_iam = await FFB({path:path, method:'POST', authorization_type:authorization_type, body:json_data, spinner_id:spinner_item});
+    const result_iam = await commonFFB({path:path, method:'POST', authorization_type:authorization_type, body:json_data, spinner_id:spinner_item});
     if (system_admin){
         COMMON_GLOBAL.system_admin = JSON.parse(result_iam).username==''?null:JSON.parse(result_iam).username;
         COMMON_GLOBAL.token_admin_at = JSON.parse(result_iam).token_at;
         COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
         COMMON_GLOBAL.token_timestamp = JSON.parse(result_iam).tokentimestamp;
-        ComponentRemove(current_dialogue, true);
+        commonComponentRemove(current_dialogue, true);
         
         return {avatar: null};
     }
@@ -1605,24 +1619,24 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
 
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
             //set avatar or empty if not in admin app
-            CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= (provider_id?login_data.provider_image:login_data.avatar ?? null)?
+            COMMON_DOCUMENT.querySelector('#common_user_menu_avatar_img').style.backgroundImage= (provider_id?login_data.provider_image:login_data.avatar ?? null)?
                                                                                                         `url('${provider_id?login_data.provider_image:login_data.avatar ?? null}')`:
                                                                                                         'url()';
-            CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-            CommonAppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
+            COMMON_DOCUMENT.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+            COMMON_DOCUMENT.querySelector('#common_user_menu_logged_out').style.display = 'none';
         }
 
-        const result = await FFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item});
+        const result = await commonFFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item});
         const user_account_app = JSON.parse(result)[0];
 
         //locale
         if (user_account_app.preference_locale==null)
-            user_preferences_set_default_globals('LOCALE');
+            commonUserPreferencesGlobalSetDefault('LOCALE');
         else
             COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
         //timezone
         if (user_account_app.app_setting_preference_timezone_id==null)
-            user_preferences_set_default_globals('TIMEZONE');
+            commonUserPreferencesGlobalSetDefault('TIMEZONE');
         else
             COMMON_GLOBAL.user_timezone = user_account_app.app_setting_preference_timezone_value;
 
@@ -1631,14 +1645,14 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
         //arabic script
         COMMON_GLOBAL.user_arabic_script = user_account_app.app_setting_preference_arabic_script_value;
         //update body class with app theme, direction and arabic script usage classes
-        common_preferences_update_body_class_from_preferences();
+        commonPreferencesUpdateBodyClassFromPreferences();
         if (login_data.active==0){
-            show_common_dialogue('VERIFY', 'LOGIN', login_data.email, null);
+            commonDialogueShow('VERIFY', 'LOGIN', login_data.email, null);
             throw 'ERROR';
         }
         else{
-            ComponentRemove(current_dialogue, true);
-            ComponentRemove('common_dialogue_profile', true);
+            commonComponentRemove(current_dialogue, true);
+            commonComponentRemove('common_dialogue_profile', true);
             return {avatar: provider_id?login_data.provider_image:login_data.avatar};
         }
     }
@@ -1652,12 +1666,12 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
  * @param {function|null} app_function
  * @returns {Promise.<void>}
  */
- const user_session_countdown = async (element, token_exp, app_function=null) => {
+ const commonUserSessionCountdown = async (element, token_exp, app_function=null) => {
 
     if (element.id)
-        element = CommonAppDocument.querySelector(`#${element.id}`);
+        element = COMMON_DOCUMENT.querySelector(`#${element.id}`);
     else
-        element = CommonAppDocument.querySelector(`.${element.className.replaceAll(' ','.')}`);
+        element = COMMON_DOCUMENT.querySelector(`.${element.className.replaceAll(' ','.')}`);
     if (element){
         const time_left = ((token_exp ?? 0) * 1000) - (Date.now());
         if (time_left < 0){
@@ -1673,8 +1687,8 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
             //run app function if any
             app_function?app_function():null;
             //wait 1 second
-            await common_wait(1000);            
-            user_session_countdown(element, token_exp, app_function);
+            await commonWindowWait(1000);            
+            commonUserSessionCountdown(element, token_exp, app_function);
         }
     }
 };
@@ -1682,30 +1696,30 @@ const user_login = async (system_admin=false, username_verify=null, password_ver
  * User logout
  * @returns {Promise.<void>}
  */
-const user_logout = async () => {
-    ComponentRemove('common_dialogue_user_menu');
-    FFB({path:'/server-iam/user/logout', method:'POST', authorization_type:'APP_DATA'})
+const commonUserLogout = async () => {
+    commonComponentRemove('common_dialogue_user_menu');
+   commonFFB({path:'/server-iam/user/logout', method:'POST', authorization_type:'APP_DATA'})
     .then(()=>{
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
-            CommonAppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
-            CommonAppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-            CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= 'url()';
-            close_window();
-            ComponentRemove('common_dialogue_user_edit');
-            dialogue_password_new_clear();
-            ComponentRemove('common_dialogue_user_start');
-            ComponentRemove('common_dialogue_profile', true);
+            COMMON_DOCUMENT.querySelector('#common_user_menu_logged_in').style.display = 'none';
+            COMMON_DOCUMENT.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+            COMMON_DOCUMENT.querySelector('#common_user_menu_avatar_img').style.backgroundImage= 'url()';
+            commonWindoInfoClose();
+            commonComponentRemove('common_dialogue_user_edit');
+            commonDialoguePasswordNewClear();
+            commonComponentRemove('common_dialogue_user_start');
+            commonComponentRemove('common_dialogue_profile', true);
         }
-        user_preferences_set_default_globals('LOCALE');
-        user_preferences_set_default_globals('TIMEZONE');
-        user_preferences_set_default_globals('DIRECTION');
-        user_preferences_set_default_globals('ARABIC_SCRIPT');
+        commonUserPreferencesGlobalSetDefault('LOCALE');
+        commonUserPreferencesGlobalSetDefault('TIMEZONE');
+        commonUserPreferencesGlobalSetDefault('DIRECTION');
+        commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
         //update body class with app theme, direction and arabic script usage classes
-        common_preferences_update_body_class_from_preferences();
+        commonPreferencesUpdateBodyClassFromPreferences();
     })
     .catch((error)=>{
         COMMON_GLOBAL.service_socket_eventsource?COMMON_GLOBAL.service_socket_eventsource.close():null;
-        reconnect();
+        socketReconnect();
         throw error;
     })
     .finally(()=>{
@@ -1726,71 +1740,70 @@ const user_logout = async () => {
  * User update
  * @returns {Promise.<null>}
  */
-const user_update = async () => {
+const commonUserUpdate = async () => {
     return new Promise(resolve=>{
-        const username = CommonAppDocument.querySelector('#common_user_edit_input_username').textContent;
-        const bio = CommonAppDocument.querySelector('#common_user_edit_input_bio').textContent;
-        const avatar = CommonAppDocument.querySelector('#common_user_edit_avatar_img').style.backgroundImage;
-        const new_email = CommonAppDocument.querySelector('#common_user_edit_input_new_email').textContent;
+        const username = COMMON_DOCUMENT.querySelector('#common_user_edit_input_username').textContent;
+        const bio = COMMON_DOCUMENT.querySelector('#common_user_edit_input_bio').textContent;
+        const avatar = COMMON_DOCUMENT.querySelector('#common_user_edit_avatar_img').style.backgroundImage;
+        const new_email = COMMON_DOCUMENT.querySelector('#common_user_edit_input_new_email').textContent;
     
         let path;
         let json_data;
             
         
-        if (CommonAppDocument.querySelector('#common_user_edit_local').style.display == 'block') {
-            if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_edit'),
+        if (COMMON_DOCUMENT.querySelector('#common_user_edit_local').style.display == 'block') {
+            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit'),
                             {
-                            username: CommonAppDocument.querySelector('#common_user_edit_input_username'),
-                            password: CommonAppDocument.querySelector('#common_user_edit_input_password'),
-                            password_confirm: CommonAppDocument.querySelector('#common_user_edit_input_password_confirm'),
-                            password_confirm_reminder: CommonAppDocument.querySelector('#common_user_edit_input_password_reminder'),
-                            password_new: CommonAppDocument.querySelector('#common_user_edit_input_password_new'),
-                            password_new_confirm: CommonAppDocument.querySelector('#common_user_edit_input_password_new_confirm'),
-                            bio: CommonAppDocument.querySelector('#common_user_edit_input_bio'),
-                            email: CommonAppDocument.querySelector('#common_user_edit_input_email')
+                            username: COMMON_DOCUMENT.querySelector('#common_user_edit_input_username'),
+                            password: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password'),
+                            password_confirm: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_confirm'),
+                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_reminder'),
+                            password_new: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_new'),
+                            password_new_confirm: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_new_confirm'),
+                            bio: COMMON_DOCUMENT.querySelector('#common_user_edit_input_bio'),
+                            email: COMMON_DOCUMENT.querySelector('#common_user_edit_input_email')
                             })==false)
                 return null;
 
-            const email = CommonAppDocument.querySelector('#common_user_edit_input_email').textContent;    
-            const password = CommonAppDocument.querySelector('#common_user_edit_input_password').textContent;
-            const password_new = CommonAppDocument.querySelector('#common_user_edit_input_password_new').textContent;
-            const password_reminder = CommonAppDocument.querySelector('#common_user_edit_input_password_reminder').textContent;
+            const email = COMMON_DOCUMENT.querySelector('#common_user_edit_input_email').textContent;    
+            const password = COMMON_DOCUMENT.querySelector('#common_user_edit_input_password').textContent;
+            const password_new = COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_new').textContent;
+            const password_reminder = COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_reminder').textContent;
         
             json_data = {   username:           username,
                             bio:                bio,
-                            private:            Number(CommonAppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
+                            private:            Number(COMMON_DOCUMENT.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
                             password:           password,
                             password_new:       password_new,
                             password_reminder:  password_reminder,
                             email:              email,
                             new_email:          new_email==''?null:new_email,
                             avatar:             avatar,
-                            ...get_uservariables()
+                            ...commonUservariables()
                         };
             path = `/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
         } else {
-            if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_edit'),
+            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit'),
                             {
-                            bio: CommonAppDocument.querySelector('#common_user_edit_input_bio')
+                            bio: COMMON_DOCUMENT.querySelector('#common_user_edit_input_bio')
                             })==false)
                 return null;
-            json_data = {   provider_id:    CommonAppDocument.querySelector('#common_user_edit_provider_id').textContent,
+            json_data = {   provider_id:    COMMON_DOCUMENT.querySelector('#common_user_edit_provider_id').textContent,
                             username:       username,
                             bio:            bio,
-                            private:        Number(CommonAppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
+                            private:        Number(COMMON_DOCUMENT.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
                         };
             path = `/server-db/user_account-common/${COMMON_GLOBAL.user_account_id ?? ''}`;
         }
         //update user using REST API
-        FFB({path:path, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_user_edit_btn_user_update'})
+       commonFFB({path:path, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_user_edit_btn_user_update'})
         .then(result=>{
-            const user_update = JSON.parse(result);
-            CommonAppDocument.querySelector('#common_user_menu_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
-            if (user_update.sent_change_email == 1){
-                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, null);
+            COMMON_DOCUMENT.querySelector('#common_user_menu_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
+            if (JSON.parse(result).sent_change_email == 1){
+                commonDialogueShow('VERIFY', 'NEW_EMAIL', new_email, null);
             }
             else
-                ComponentRemove('common_dialogue_user_edit', true);
+                commonComponentRemove('common_dialogue_user_edit', true);
             resolve(null);
         });
     });
@@ -1799,25 +1812,25 @@ const user_update = async () => {
  * User signup
  * @returns {void}
  */
-const user_signup = () => {
-    const email = CommonAppDocument.querySelector('#common_user_start_signup_email').textContent;
-    if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_start'),
+const commonUserSignup = () => {
+    const email = COMMON_DOCUMENT.querySelector('#common_user_start_signup_email').textContent;
+    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_start'),
                             {
-                            username: CommonAppDocument.querySelector('#common_user_start_signup_username'),
-                            password: CommonAppDocument.querySelector('#common_user_start_signup_password'),
-                            password_confirm: CommonAppDocument.querySelector('#common_user_start_signup_password_confirm'),
-                            password_confirm_reminder: CommonAppDocument.querySelector('#common_user_start_signup_password_reminder'),
-                            email: CommonAppDocument.querySelector('#common_user_start_signup_email')
+                            username: COMMON_DOCUMENT.querySelector('#common_user_start_signup_username'),
+                            password: COMMON_DOCUMENT.querySelector('#common_user_start_signup_password'),
+                            password_confirm: COMMON_DOCUMENT.querySelector('#common_user_start_signup_password_confirm'),
+                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_user_start_signup_password_reminder'),
+                            email: COMMON_DOCUMENT.querySelector('#common_user_start_signup_email')
                             })==true){
-        const json_data = { username:           CommonAppDocument.querySelector('#common_user_start_signup_username').textContent,
-                            password:           CommonAppDocument.querySelector('#common_user_start_signup_password').textContent,
-                            password_reminder:  CommonAppDocument.querySelector('#common_user_start_signup_password_reminder').textContent,
+        const json_data = { username:           COMMON_DOCUMENT.querySelector('#common_user_start_signup_username').textContent,
+                            password:           COMMON_DOCUMENT.querySelector('#common_user_start_signup_password').textContent,
+                            password_reminder:  COMMON_DOCUMENT.querySelector('#common_user_start_signup_password_reminder').textContent,
                             email:              email,
                             active:             0,
-                            ...get_uservariables()
+                            ...commonUservariables()
                             };
            
-        FFB({path:'/server-db/user_account-signup', method:'POST', authorization_type:'APP_SIGNUP', body:json_data, spinner_id:'common_user_start_signup_button'})
+       commonFFB({path:'/server-db/user_account-signup', method:'POST', authorization_type:'APP_SIGNUP', body:json_data, spinner_id:'common_user_start_signup_button'})
         .then(result=>{
             const signup = JSON.parse(result);
             COMMON_GLOBAL.token_at = signup.accessToken;
@@ -1825,7 +1838,7 @@ const user_signup = () => {
             COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
             COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
             COMMON_GLOBAL.user_account_id = parseInt(signup.id);
-            show_common_dialogue('VERIFY', 'SIGNUP', email, null);
+            commonDialogueShow('VERIFY', 'SIGNUP', email, null);
         });
     }
 };
@@ -1837,44 +1850,44 @@ const user_signup = () => {
  * @returns {Promise.<{ actived: number, 
  *                      verification_type : number}|null>}
  */
-const user_verify_check_input = async (item, nextField, login_function) => {
+const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
     return new Promise((resolve, reject)=>{
         let json_data;
-        const verification_type = parseInt(CommonAppDocument.querySelector('#common_user_verify_data_verification_type').textContent);
+        const verification_type = parseInt(COMMON_DOCUMENT.querySelector('#common_user_verify_data_verification_type').textContent);
         //only accept 0-9
         if (item.textContent && item.textContent.length==1 && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(item.textContent) > -1)
-            if (nextField == '' || (CommonAppDocument.querySelector('#common_user_verify_verification_char1').textContent != '' &&
-                    CommonAppDocument.querySelector('#common_user_verify_verification_char2').textContent != '' &&
-                    CommonAppDocument.querySelector('#common_user_verify_verification_char3').textContent != '' &&
-                    CommonAppDocument.querySelector('#common_user_verify_verification_char4').textContent != '' &&
-                    CommonAppDocument.querySelector('#common_user_verify_verification_char5').textContent != '' &&
-                    CommonAppDocument.querySelector('#common_user_verify_verification_char6').textContent != '')) {
+            if (nextField == '' || (COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char1').textContent != '' &&
+                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char2').textContent != '' &&
+                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char3').textContent != '' &&
+                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char4').textContent != '' &&
+                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char5').textContent != '' &&
+                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char6').textContent != '')) {
                 //last field, validate entered code
-                const verification_code = parseInt(CommonAppDocument.querySelector('#common_user_verify_verification_char1').textContent +
-                    CommonAppDocument.querySelector('#common_user_verify_verification_char2').textContent +
-                    CommonAppDocument.querySelector('#common_user_verify_verification_char3').textContent +
-                    CommonAppDocument.querySelector('#common_user_verify_verification_char4').textContent +
-                    CommonAppDocument.querySelector('#common_user_verify_verification_char5').textContent +
-                    CommonAppDocument.querySelector('#common_user_verify_verification_char6').textContent);
-                CommonAppDocument.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
-                CommonAppDocument.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
-                CommonAppDocument.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
-                CommonAppDocument.querySelector('#common_user_verify_verification_char4').classList.remove('common_input_error');
-                CommonAppDocument.querySelector('#common_user_verify_verification_char5').classList.remove('common_input_error');
-                CommonAppDocument.querySelector('#common_user_verify_verification_char6').classList.remove('common_input_error');
+                const verification_code = parseInt(COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char1').textContent +
+                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char2').textContent +
+                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char3').textContent +
+                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char4').textContent +
+                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char5').textContent +
+                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char6').textContent);
+                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
+                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
+                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
+                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char4').classList.remove('common_input_error');
+                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char5').classList.remove('common_input_error');
+                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char6').classList.remove('common_input_error');
     
                 //activate user
                 json_data = {   verification_code:  verification_code,
                                 verification_type:  verification_type,
-                                ...get_uservariables()
+                                ...commonUservariables()
                             };
-                FFB({path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PUT', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_user_verify_email_icon'})
+               commonFFB({path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PUT', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_user_verify_email_icon'})
                 .then(result=>{
                     const user_activate = JSON.parse(result).items[0];
                     if (user_activate.affectedRows == 1) {
                         const resolve_function = () => {
-                            ComponentRemove('common_dialogue_user_verify');
-                            ComponentRemove('common_dialogue_user_edit', true);
+                            commonComponentRemove('common_dialogue_user_verify');
+                            commonComponentRemove('common_dialogue_user_edit', true);
                             resolve({   actived: 1, 
                                         verification_type : verification_type});
                         };
@@ -1896,7 +1909,7 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                                 COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
                                 COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
                                 //show dialogue new password
-                                show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth);
+                                commonDialogueShow('PASSWORD_NEW', null, JSON.parse(result).auth);
                                 resolve_function();
                                 break;
                             }
@@ -1909,26 +1922,26 @@ const user_verify_check_input = async (item, nextField, login_function) => {
                         
                     } 
                     else{
-                        CommonAppDocument.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
-                        CommonAppDocument.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
-                        CommonAppDocument.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
-                        CommonAppDocument.querySelector('#common_user_verify_verification_char4').classList.add('common_input_error');
-                        CommonAppDocument.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
-                        CommonAppDocument.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char4').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
                         //code not valid
-                        show_message('ERROR', '20306', null, null, null, COMMON_GLOBAL.common_app_id);
+                        commonMessageShow('ERROR', '20306', null, null, null, COMMON_GLOBAL.common_app_id);
                         reject('ERROR');
                     }
                 })
                 .catch(err=>reject(err));
             } else{
                 //not last, next!
-                CommonAppDocument.querySelector('#' + nextField).focus();
+                COMMON_DOCUMENT.querySelector('#' + nextField).focus();
                 resolve(null);
             }
         else{
             //remove anything else than 0-9
-            CommonAppDocument.querySelector('#' + item.id).textContent = '';
+            COMMON_DOCUMENT.querySelector('#' + item.id).textContent = '';
             resolve(null);
         }
     });
@@ -1940,29 +1953,29 @@ const user_verify_check_input = async (item, nextField, login_function) => {
  * @param {function|null} function_delete_event 
  * @returns {Promise.<{deleted:number}|null>}
  */
-const user_delete = async (choice=null, function_delete_event ) => {
+const commonUserDelete = async (choice=null, function_delete_event ) => {
     return new Promise((resolve, reject)=>{
-        const password = CommonAppDocument.querySelector('#common_user_edit_input_password').textContent;
+        const password = COMMON_DOCUMENT.querySelector('#common_user_edit_input_password').textContent;
         switch (choice){
             case null:{
-                if (CommonAppDocument.querySelector('#common_user_edit_local').style.display == 'block' &&
-                    input_control(CommonAppDocument.querySelector('#common_dialogue_user_edit'),
+                if (COMMON_DOCUMENT.querySelector('#common_user_edit_local').style.display == 'block' &&
+                    commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit'),
                                     {
-                                        password: CommonAppDocument.querySelector('#common_user_edit_input_password')
+                                        password: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password')
                                     })==false)
                     resolve(null);
                 else{
-                    show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
+                    commonMessageShow('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
                     resolve(null);
                 }
                 break;
             }
             case 1:{
-                ComponentRemove('common_dialogue_message');
+                commonComponentRemove('common_dialogue_message');
                 
                 const json_data = { password: password};
     
-                FFB({path:`/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'DELETE', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_user_edit_btn_user_delete_account'})
+               commonFFB({path:`/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'DELETE', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_user_edit_btn_user_delete_account'})
                 .then(()=>  resolve({deleted: 1}))
                 .catch(err=>reject(err));
                 break;
@@ -1978,14 +1991,14 @@ const user_delete = async (choice=null, function_delete_event ) => {
  * @param {'FOLLOW'|'LIKE'} function_name 
  * @returns {Promise.<null>}
  */
-const user_function = function_name => {
+const commonUserFunction = function_name => {
     return new Promise((resolve, reject)=>{
-        const user_id_profile = CommonAppDocument.querySelector('#common_profile_id').textContent;
+        const user_id_profile = COMMON_DOCUMENT.querySelector('#common_profile_id').textContent;
         /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
         let method;
         let path;
         const json_data = { user_account_id: user_id_profile};
-        const check_div = CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`);
+        const check_div = COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`);
         if (check_div.children[0].style.display == 'block') {
             path = `/server-db/user_account_${function_name.toLowerCase()}/${COMMON_GLOBAL.user_account_id ?? ''}`;
             method = 'POST';
@@ -1994,19 +2007,19 @@ const user_function = function_name => {
             method = 'DELETE';
         }
         if (COMMON_GLOBAL.user_account_id == null)
-            show_common_dialogue('LOGIN');
+            commonDialogueShow('LOGIN');
         else {
-            FFB({path:path, method:method, authorization_type:'APP_ACCESS', body:json_data})
+           commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:json_data})
             .then(()=> {
-                if (CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
+                if (COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
                     //follow/like
-                    CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
-                    CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
+                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
+                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
                 }
                 else{
                     //unfollow/unlike
-                    CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
-                    CommonAppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
+                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
+                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
                 }
                 resolve(null);
             })
@@ -2021,18 +2034,18 @@ const user_function = function_name => {
  * @param {number} app_id 
  * @param {function|null} function_delete_event 
  */
-const user_account_app_delete = (choice=null, user_account_id, app_id, function_delete_event=null) => {
+const commonUserAccountAppDelete = (choice=null, user_account_id, app_id, function_delete_event=null) => {
     switch (choice){
         case null:{
-            show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
+            commonMessageShow('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
             break;
         }
         case 1:{
-            ComponentRemove('common_dialogue_message');
-            FFB({path:`/server-db/user_account_app/${user_account_id}`, query:`delete_app_id=${app_id}`, method:'DELETE', authorization_type:'APP_ACCESS'})
+            commonComponentRemove('common_dialogue_message');
+            commonFFB({path:`/server-db/user_account_app/${user_account_id}`, query:`delete_app_id=${app_id}`, method:'DELETE', authorization_type:'APP_ACCESS'})
             .then(()=>{
                 //execute event and refresh app list
-                CommonAppDocument.querySelector('#common_profile_info_main_btn_cloud').click();
+                COMMON_DOCUMENT.querySelector('#common_profile_info_main_btn_cloud').click();
             })
             .catch(()=>null);
             break;
@@ -2045,22 +2058,22 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
  * User forgot
  * @returns {Promise.<void>}
  */
-const user_forgot = async () => {
-    const email = CommonAppDocument.querySelector('#common_user_start_forgot_email').textContent;
+const commonUserForgot = async () => {
+    const email = COMMON_DOCUMENT.querySelector('#common_user_start_forgot_email').textContent;
     const json_data = { email: email,
-                        ...get_uservariables()
+                        ...commonUservariables()
                     };
-    if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_edit'),
+    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit'),
                     {
-                    email: CommonAppDocument.querySelector('#common_user_start_forgot_email')
+                    email: COMMON_DOCUMENT.querySelector('#common_user_start_forgot_email')
                     })==true){
         
-        FFB({path:'/server-db/user_account-forgot', method:'POST', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_user_start_forgot_button'})
+       commonFFB({path:'/server-db/user_account-forgot', method:'POST', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_user_start_forgot_button'})
         .then(result=>{
             const forgot = JSON.parse(result);
             if (forgot.sent == 1){
                 COMMON_GLOBAL.user_account_id = parseInt(forgot.id);
-                show_common_dialogue('VERIFY', 'FORGOT', email, null);
+                commonDialogueShow('VERIFY', 'FORGOT', email, null);
             }
         });
     }
@@ -2069,23 +2082,23 @@ const user_forgot = async () => {
  * Update password
  * @returns {void}
  */
-const updatePassword = () => {
-    const password_new = CommonAppDocument.querySelector('#common_user_password_new').textContent;
-    const user_password_new_auth = CommonAppDocument.querySelector('#common_user_password_new_auth').textContent;
+const commonUserUpdatePassword = () => {
+    const password_new = COMMON_DOCUMENT.querySelector('#common_user_password_new').textContent;
+    const user_password_new_auth = COMMON_DOCUMENT.querySelector('#common_user_password_new_auth').textContent;
     const json_data = { password_new:   password_new,
                         auth:           user_password_new_auth,
-                        ...get_uservariables()
+                        ...commonUservariables()
                      };
-    if (input_control(CommonAppDocument.querySelector('#common_dialogue_user_edit'),
+    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit'),
                      {
-                     password: CommonAppDocument.querySelector('#common_user_password_new'),
-                     password_confirm: CommonAppDocument.querySelector('#common_user_password_new_confirm'),
+                     password: COMMON_DOCUMENT.querySelector('#common_user_password_new'),
+                     password_confirm: COMMON_DOCUMENT.querySelector('#common_user_password_new_confirm'),
                      
                      })==true){
-        FFB({path:`/server-db/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_user_password_new_icon'})
+       commonFFB({path:`/server-db/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_user_password_new_icon'})
         .then(()=>{
-            dialogue_password_new_clear();
-            show_common_dialogue('LOGIN');
+            commonDialoguePasswordNewClear();
+            commonDialogueShow('LOGIN');
         });
     }    
 };
@@ -2093,20 +2106,20 @@ const updatePassword = () => {
  * User preference save
  * @returns {Promise.<void>}
  */
-const user_preference_save = async () => {
+const commonUserPreferenceSave = async () => {
     if (COMMON_GLOBAL.user_account_id != null){
         const json_data =
             {  
-                preference_locale:                      CommonAppDocument.querySelector('#common_dialogue_user_menu_user_locale_select .common_select_dropdown_value')
+                preference_locale:                      COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_locale_select .common_select_dropdown_value')
                                                             .getAttribute('data-value'),
-                app_setting_preference_timezone_id:     CommonAppDocument.querySelector('#common_dialogue_user_menu_user_timezone_select .common_select_dropdown_value')
+                app_setting_preference_timezone_id:     COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_timezone_select .common_select_dropdown_value')
                                                             .getAttribute('data-value'),
-                app_setting_preference_direction_id:    CommonAppDocument.querySelector('#common_dialogue_user_menu_user_direction_select .common_select_dropdown_value')
+                app_setting_preference_direction_id:    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_direction_select .common_select_dropdown_value')
                                                             .getAttribute('data-value'),
-                app_setting_preference_arabic_script_id:CommonAppDocument.querySelector('#common_dialogue_user_menu_user_arabic_script_select .common_select_dropdown_value')
+                app_setting_preference_arabic_script_id:COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_arabic_script_select .common_select_dropdown_value')
                                                             .getAttribute('data-value'),
             };
-        await FFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data});
+        await commonFFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data});
     }
 };
 /**
@@ -2114,14 +2127,14 @@ const user_preference_save = async () => {
  * @param {*} preference 
  * @returns {void}
  */
-const user_preferences_set_default_globals = (preference) => {
+const commonUserPreferencesGlobalSetDefault = (preference) => {
     switch (preference){
         case 'LOCALE':{
-            COMMON_GLOBAL.user_locale         = NavigatorLocale();
+            COMMON_GLOBAL.user_locale         = commonWindowNavigatorLocale();
             break;
         }
         case 'TIMEZONE':{
-            COMMON_GLOBAL.user_timezone       = COMMON_GLOBAL.client_timezone ?? CommonAppWindow.Intl.DateTimeFormat().resolvedOptions().timeZone;
+            COMMON_GLOBAL.user_timezone       = COMMON_GLOBAL.client_timezone ?? COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone;
             break;
         }
         case 'DIRECTION':{
@@ -2141,12 +2154,12 @@ const user_preferences_set_default_globals = (preference) => {
  * @param {string} url 
  * @returns {Promise.<void>}
  */
-const create_qr = async (div, url) => {
+const commonModuleEasyQRCODECreate = async (div, url) => {
     const path_easy_qrcode = 'easy.qrcode';
     /**@type {import('../../../common_types.js').CommonModuleEasyQRCode} */
     const {QRCode} = await import(path_easy_qrcode);
-    CommonAppDocument.querySelector('#' + div).textContent='';
-    new QRCode(CommonAppDocument.querySelector('#' + div), {
+    COMMON_DOCUMENT.querySelector('#' + div).textContent='';
+    new QRCode(COMMON_DOCUMENT.querySelector('#' + div), {
         text: url,
         width: COMMON_GLOBAL['module_easy.qrcode_width'],
         height: COMMON_GLOBAL['module_easy.qrcode_height'],
@@ -2155,7 +2168,7 @@ const create_qr = async (div, url) => {
         drawer: 'svg'
     });
     //executing await promise 1 ms results in QRCode rendered
-    common_wait(1);
+    commonWindowWait(1);
 };
 /**
  * Map init
@@ -2165,13 +2178,13 @@ const create_qr = async (div, url) => {
  * @param {function|null} doubleclick_event
  * @returns {Promise.<void>}
  */
-const map_init = async (mount_div, longitude, latitude, doubleclick_event) => {  
+const commonModuleLeafletInit = async (mount_div, longitude, latitude, doubleclick_event) => {  
     /**
      * 
      * @type {{ data:null,
      *          methods:import('../../../common_types.js').CommonModuleLeafletMethods}}
      */
-    const module_leaflet = await ComponentRender({
+    const module_leaflet = await commonComponentRender({
                             mountDiv:   mount_div,
                             data:       {   
                                         longitude:longitude,
@@ -2182,7 +2195,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event) => {
                             path:       '/common/component/common_module_leaflet.js'})
     .catch(error=>{throw error;});
 
-    const module_leaflet_control = await ComponentRender({
+    const module_leaflet_control = await commonComponentRender({
         mountDiv:   null, 
         data:       {   
                     data_app_id:COMMON_GLOBAL.common_app_id,
@@ -2193,10 +2206,10 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event) => {
                     },
         methods:    {
                     function_event_doubleclick: doubleclick_event,
-                    ComponentRender:ComponentRender,
-                    get_place_from_gps:get_place_from_gps,
-                    element_row:element_row,
-                    FFB:FFB,
+                    commonComponentRender:commonComponentRender,
+                    commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
+                    commonElementRow:commonElementRow,
+                   commonFFB:commonFFB,
                     moduleLeafletContainer:module_leaflet.methods.leafletContainer,
                     moduleLeafletLibrary:module_leaflet.methods.leafletLibrary
                     },
@@ -2216,7 +2229,7 @@ const map_init = async (mount_div, longitude, latitude, doubleclick_event) => {
  *          spinner_id?:string|null}} parameter
  * @returns {Promise.<*>} 
  */
-const FFB = async parameter => {
+const commonFFB = async parameter => {
     /**@type{number} */
     let status;
     let authorization_bearer = null;
@@ -2271,7 +2284,7 @@ const FFB = async parameter => {
         case 'IAM_USER':{
             //user,admin or system admin login
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            authorization_basic = `Basic ${CommonAppWindow.btoa(parameter.body.username + ':' + parameter.body.password)}`;
+            authorization_basic = `Basic ${COMMON_WINDOW.btoa(parameter.body.username + ':' + parameter.body.password)}`;
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && parameter.authorization_type == 'IAM_USER')
                 service_path = `${COMMON_GLOBAL.rest_resource_bff}/iam_admin`;
             else
@@ -2283,17 +2296,17 @@ const FFB = async parameter => {
     //add common query parameter
     parameter.query += `&lang_code=${COMMON_GLOBAL.user_locale}`;
     //encode query parameters
-    const encodedparameters = parameter.query?toBase64(parameter.query):'';
+    const encodedparameters = parameter.query?commonWindowToBase64(parameter.query):'';
     //add and encode IAM parameters, always use Bearer id token in iam to validate EventSource connections
     const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
-    const iam =  toBase64(  `&authorization_bearer=${authorization_iam}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
-                            `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
-                            `&app_id=${COMMON_GLOBAL.app_id??''}`);
+    const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
+                                    `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
+                                    `&app_id=${COMMON_GLOBAL.app_id??''}`);
 
     const url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${parameter.path}?parameters=${encodedparameters}&iam=${iam}`;
 
     if (parameter.authorization_type=='SOCKET'){
-        return new CommonAppWindow.EventSource(url);
+        return new COMMON_WINDOW.EventSource(url);
     }
     else{
         //add options to fetch
@@ -2315,16 +2328,16 @@ const FFB = async parameter => {
                             },
                     body: JSON.stringify(parameter.body)
                 };
-        if (parameter.spinner_id && CommonAppDocument.querySelector(`#${parameter.spinner_id}`))
-            CommonAppDocument.querySelector(`#${parameter.spinner_id}`).classList.add('css_spinner');
+        if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
+            COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.add('css_spinner');
         return await fetch(url, options)
                 .then((response) => {
                     status = response.status;
                     return response.text();
                 })
                 .then((result) => {
-                    if (parameter.spinner_id && CommonAppDocument.querySelector(`#${parameter.spinner_id}`))
-                        CommonAppDocument.querySelector(`#${parameter.spinner_id}`).classList.remove('css_spinner');
+                    if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
+                        COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.remove('css_spinner');
                     switch (status){
                         case 200:
                         case 201:{
@@ -2333,39 +2346,39 @@ const FFB = async parameter => {
                         }
                         case 400:{
                             //Bad request
-                            show_message('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
                             throw result;
                         }
                         case 404:{
                             //Not found
-                            show_message('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
                             throw result;
                         }
                         case 401:{
                             //Unauthorized, token expired
-                            show_message('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
                             throw result;
                         }
                         case 403:{
                             //Forbidden, not allowed to login or register new user
-                            show_message('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
                             throw result;
                         }
                         case 500:{
                             //Unknown error
-                            exception(COMMON_GLOBAL.app_function_exception, result);
+                            commonException(COMMON_GLOBAL.app_function_exception, result);
                             throw result;
                         }
                         case 503:{
                             //Service unavailable or other error in microservice
-                            show_message('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
                             throw result;
                         }
                     }
                 })
                 .catch(error=>{
-                    if (parameter.spinner_id && CommonAppDocument.querySelector(`#${parameter.spinner_id}`))
-                        CommonAppDocument.querySelector(`#${parameter.spinner_id}`).classList.remove('css_spinner');
+                    if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
+                        COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.remove('css_spinner');
                     throw error;
                 });
     }        
@@ -2375,17 +2388,17 @@ const FFB = async parameter => {
  * @param {string} broadcast_message 
  * @returns {void}
  */
-const show_broadcast = (broadcast_message) => {
-    broadcast_message = CommonAppWindow.atob(broadcast_message);
+const commonSocketBroadcastShow = (broadcast_message) => {
+    broadcast_message = COMMON_WINDOW.atob(broadcast_message);
     const broadcast_type = JSON.parse(broadcast_message).broadcast_type;
     const message = JSON.parse(broadcast_message).broadcast_message;
     switch (broadcast_type){
         case 'MAINTENANCE':{
-            if (CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`))
+            if (COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`))
                 location.href = '/';
             else
                 if (message)
-                    show_maintenance(CommonAppWindow.atob(message));
+                    commonSocketMaintenanceShow(COMMON_WINDOW.atob(message));
             break;
         }
         case 'SESSION_EXPIRED':{
@@ -2393,29 +2406,29 @@ const show_broadcast = (broadcast_message) => {
             break;
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL.service_socket_client_ID =    JSON.parse(CommonAppWindow.atob(message)).client_id;
-            COMMON_GLOBAL.client_latitude =             JSON.parse(CommonAppWindow.atob(message)).latitude==''?COMMON_GLOBAL.client_latitude:JSON.parse(CommonAppWindow.atob(message)).latitude;
-            COMMON_GLOBAL.client_longitude =            JSON.parse(CommonAppWindow.atob(message)).longitude==''?COMMON_GLOBAL.client_longitude:JSON.parse(CommonAppWindow.atob(message)).longitude;
-            COMMON_GLOBAL.client_place =                JSON.parse(CommonAppWindow.atob(message)).place==''?COMMON_GLOBAL.client_place:JSON.parse(CommonAppWindow.atob(message)).place;
-            COMMON_GLOBAL.client_timezone =             JSON.parse(CommonAppWindow.atob(message)).timezone==''?COMMON_GLOBAL.client_timezone:JSON.parse(CommonAppWindow.atob(message)).timezone;
+            COMMON_GLOBAL.service_socket_client_ID =    JSON.parse(COMMON_WINDOW.atob(message)).client_id;
+            COMMON_GLOBAL.client_latitude =             JSON.parse(COMMON_WINDOW.atob(message)).latitude==''?COMMON_GLOBAL.client_latitude:JSON.parse(COMMON_WINDOW.atob(message)).latitude;
+            COMMON_GLOBAL.client_longitude =            JSON.parse(COMMON_WINDOW.atob(message)).longitude==''?COMMON_GLOBAL.client_longitude:JSON.parse(COMMON_WINDOW.atob(message)).longitude;
+            COMMON_GLOBAL.client_place =                JSON.parse(COMMON_WINDOW.atob(message)).place==''?COMMON_GLOBAL.client_place:JSON.parse(COMMON_WINDOW.atob(message)).place;
+            COMMON_GLOBAL.client_timezone =             JSON.parse(COMMON_WINDOW.atob(message)).timezone==''?COMMON_GLOBAL.client_timezone:JSON.parse(COMMON_WINDOW.atob(message)).timezone;
             break;
         }
         case 'CHAT':
         case 'ALERT':{
-            ComponentRender({
+            commonComponentRender({
                 mountDiv:   'common_broadcast',
-                data:       {message:CommonAppWindow.atob(message)},
+                data:       {message:COMMON_WINDOW.atob(message)},
                 methods:    null,
-                path:       CommonAppDocument.querySelector('#common_dialogue_maintenance')?'/maintenance/component/broadcast.js':'/common/component/common_broadcast.js'});
+                path:       COMMON_DOCUMENT.querySelector('#common_dialogue_maintenance')?'/maintenance/component/broadcast.js':'/common/component/common_broadcast.js'});
             break;
         }
 		case 'PROGRESS':{
-			show_message('PROGRESS', null, null, null, JSON.parse(CommonAppWindow.atob(message)));
+			commonMessageShow('PROGRESS', null, null, null, JSON.parse(COMMON_WINDOW.atob(message)));
             break;
         }
         case 'APP_FUNCTION':{
             if (COMMON_GLOBAL.app_function_sse)
-                COMMON_GLOBAL.app_function_sse(CommonAppWindow.atob(message));
+                COMMON_GLOBAL.app_function_sse(COMMON_WINDOW.atob(message));
         }
     }
 };
@@ -2425,45 +2438,45 @@ const show_broadcast = (broadcast_message) => {
  * @param {number|null} init 
  * @returns {void}
  */
-const show_maintenance = (message, init=null) => {
+const commonSocketMaintenanceShow = (message, init=null) => {
     
     if (init==1){
-        ComponentRender({
+        commonComponentRender({
             mountDiv:   'common_dialogue_maintenance',
             data:       null,
-            methods:    {common_setTimeout:common_setTimeout, WindowLocationReload:WindowLocationReload},
+            methods:    {commonWindowSetTimeout:commonWindowSetTimeout, commonWindowLocationReload:commonWindowLocationReload},
             path:       '/maintenance/component/common_dialogue_maintenance.js'});
     }
     else
-        CommonAppDocument.querySelector('#common_maintenance_footer').textContent = message ?? '';
+        COMMON_DOCUMENT.querySelector('#common_maintenance_footer').textContent = message ?? '';
 };
 /**
  * Socket reconnect
  * @returns {void}
  */
-const reconnect = () => {
-    common_setTimeout(()=>{connectOnline();}, 5000);
+const socketReconnect = () => {
+    commonWindowSetTimeout(()=>{commonSocketConnectOnline();}, 5000);
 };
 /**
  * Socket connect online
  * @returns {Promise.<void>}
  */
-const connectOnline = async () => {
-    FFB({path:'/server-socket/socket', method:'GET', authorization_type:'SOCKET'})
+const commonSocketConnectOnline = async () => {
+   commonFFB({path:'/server-socket/socket', method:'GET', authorization_type:'SOCKET'})
     .then((result_eventsource)=>{
         COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
         if (COMMON_GLOBAL.service_socket_eventsource){
             COMMON_GLOBAL.service_socket_eventsource.onmessage = (/**@type{import('../../../common_types.js').CommonAppEventEventSource}*/event) => {
-                show_broadcast(event.data);
+                 commonSocketBroadcastShow(event.data);
             };
             COMMON_GLOBAL.service_socket_eventsource.onerror = () => {
                 if (COMMON_GLOBAL.service_socket_eventsource)
                     COMMON_GLOBAL.service_socket_eventsource.close();
-                reconnect();
+                socketReconnect();
             };
         }
     })
-    .catch(()=>reconnect());
+    .catch(()=>socketReconnect());
 };
 /**
  * Socket check online
@@ -2471,9 +2484,9 @@ const connectOnline = async () => {
  * @param {number} user_account_id 
  * @returns {void}
  */
-const checkOnline = (div_icon_online, user_account_id) => {
-    FFB({path:`/server-socket/socket-status/${user_account_id}`, method:'GET', authorization_type:'APP_DATA'})
-    .then(result=>CommonAppDocument.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
+const commonSocketConnectOnlineCheck = (div_icon_online, user_account_id) => {
+   commonFFB({path:`/server-socket/socket-status/${user_account_id}`, method:'GET', authorization_type:'APP_DATA'})
+    .then(result=>COMMON_DOCUMENT.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
 };
 /**
  * Get place from GPS
@@ -2481,9 +2494,9 @@ const checkOnline = (div_icon_online, user_account_id) => {
  * @param {string} latitude 
  * @returns {Promise.<string>}
  */
-const get_place_from_gps = async (longitude, latitude) => {
+const commonMicroserviceGeolocationPlace = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
-        FFB({path:'/geolocation/place', query:`longitude=${longitude}&latitude=${latitude}`, method:'GET', authorization_type:'APP_DATA'})
+       commonFFB({path:'/geolocation/place', query:`longitude=${longitude}&latitude=${latitude}`, method:'GET', authorization_type:'APP_DATA'})
         .then(result=>{
             const json = JSON.parse(result);
             if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
@@ -2500,9 +2513,9 @@ const get_place_from_gps = async (longitude, latitude) => {
  * Get GPS from IP
  * @returns {Promise.<null>}
  */
-const get_gps_from_ip = async () => {
+const commonMicroserviceGeolocationIp = async () => {
     return new Promise((resolve)=>{
-        FFB({path:'/geolocation/ip', method:'GET', authorization_type:'APP_DATA'})
+       commonFFB({path:'/geolocation/ip', method:'GET', authorization_type:'APP_DATA'})
         .then(result=>{
             const geodata = JSON.parse(result);
             COMMON_GLOBAL.client_latitude  = geodata.geoplugin_latitude;
@@ -2524,13 +2537,13 @@ const get_gps_from_ip = async () => {
  * @param {function} event_function 
  * @returns {Promise.<void>}
  */
-const worldcities_search = async (event_function) =>{
-    ComponentRender({
+const commonMicroserviceWorldcitiesSearch = async (event_function) =>{
+    commonComponentRender({
         mountDiv:   'common_module_leaflet_search_list_wrap',
-        data:       {search:CommonAppDocument.querySelector('#common_module_leaflet_search_input').textContent},
+        data:       {search:COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').textContent},
         methods:    {
                     click_function:event_function,
-                    FFB:FFB
+                   commonFFB:commonFFB
                     },
         path:       '/common/component/common_module_leaflet_search_city.js'});
 };
@@ -2540,7 +2553,7 @@ const worldcities_search = async (event_function) =>{
  * @param {Error|string} error 
  * @returns {void}
  */
-const exception = (app_exception_function, error) => {
+const commonException = (app_exception_function, error) => {
     if (app_exception_function)
         app_exception_function(error);
 };
@@ -2549,7 +2562,7 @@ const exception = (app_exception_function, error) => {
  * @param {*} parameters 
  * @returns {Promise.<void>}
  */
-const set_app_service_parameters = async parameters => {
+const commonParametersAppServiceSet = async parameters => {
     //app info
     COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
     COMMON_GLOBAL.app_id = parameters.app_id;
@@ -2587,14 +2600,14 @@ const set_app_service_parameters = async parameters => {
     COMMON_GLOBAL.client_timezone  = parameters.client_timezone==''?null:parameters.client_timezone;
     
     if (COMMON_GLOBAL.system_admin_only==0){
-        user_preferences_set_default_globals('LOCALE');
-        user_preferences_set_default_globals('TIMEZONE');
-        user_preferences_set_default_globals('DIRECTION');
-        user_preferences_set_default_globals('ARABIC_SCRIPT');
+        commonUserPreferencesGlobalSetDefault('LOCALE');
+        commonUserPreferencesGlobalSetDefault('TIMEZONE');
+        commonUserPreferencesGlobalSetDefault('DIRECTION');
+        commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
     }
 
     COMMON_GLOBAL.user_locale                = parameters.locale;
-    COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? CommonAppWindow.Intl.DateTimeFormat().resolvedOptions().timeZone;
+    COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone;
     COMMON_GLOBAL.user_direction             = '';
     COMMON_GLOBAL.user_arabic_script         = '';  
 };
@@ -2602,29 +2615,17 @@ const set_app_service_parameters = async parameters => {
  * Disable textediting
  * @returns {boolean}
  */
-const disable_textediting = () =>COMMON_GLOBAL.app_text_edit=='0';
-/**
- * Serviceworker
- * @returns {void}
- */
-const serviceworker = () => {
-    if (!CommonAppWindow.Promise) {
-        CommonAppWindow.Promise = Promise;
-    }
-    if('serviceWorker' in CommonAppWindow.navigator) {
-        CommonAppWindow.navigator.serviceWorker.register('/sw.js', {scope: '/'});
-    }
-};
+const commonTextEditingDisabled = () =>COMMON_GLOBAL.app_text_edit=='0';
 /**
  * Common events
  * @param {string} event_type 
  * @param {import('../../../common_types.js').CommonAppEvent|null} event 
  * @returns {Promise.<void>}
  */
-const common_event = async (event_type,event=null) =>{
+const commonEvent = async (event_type,event=null) =>{
     if (event==null){
-        CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            common_event(event_type, event);
+        COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+            commonEvent(event_type, event);
         });
     }
     else{
@@ -2632,8 +2633,8 @@ const common_event = async (event_type,event=null) =>{
             case 'click':{
                 //close all open div selects except current target
                 if (typeof event.target.className=='string' && event.target.className.indexOf('common_select')>-1){
-                    Array.from(CommonAppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`))
-                        .filter((/**@type{HTMLElement}*/element)=>element_id(element) != element_id(event.target))
+                    Array.from(COMMON_DOCUMENT.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`))
+                        .filter((/**@type{HTMLElement}*/element)=>commonElementId(element) != commonElementId(event.target))
                         .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
                 }
 
@@ -2644,28 +2645,28 @@ const common_event = async (event_type,event=null) =>{
                         event.target.classList.add('checked');
                 }
                 else{
-                    const event_target_id = element_id(event.target);
+                    const event_target_id = commonElementId(event.target);
                     switch(event_target_id){
                         case event.target.parentNode.classList.contains('common_select_dropdown_value')?event_target_id:'':
                         case event.target.parentNode.classList.contains('common_select_dropdown_icon')?event_target_id:'':
                         case event.target.classList.contains('common_select_dropdown_value')?event_target_id:'':
                         case event.target.classList.contains('common_select_dropdown_icon')?event_target_id:'':{
-                            CommonAppDocument.querySelector(`#${event_target_id} .common_select_options`).style.display = 
-                                CommonAppDocument.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display = 
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
                             break;
                         }
                         case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
-                            CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).textContent = event.target.parentNode.textContent;
-                            CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).textContent = event.target.parentNode.textContent;
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
                             event.target.parentNode.parentNode.style.display = 'none';
-                            await select_event_action(event_target_id, event.target.parentNode);
+                            await commonSelectEventAction(event_target_id, event.target.parentNode);
                             break;
                         }
                         case event.target.classList.contains('common_select_option')?event_target_id:'':{
-                            CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).textContent = event.target.textContent;
-                            CommonAppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).textContent = event.target.textContent;
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
                             event.target.parentNode.style.display = 'none';
-                            await select_event_action(event_target_id, event.target);
+                            await commonSelectEventAction(event_target_id, event.target);
                             break;
                         }
                         // dialogue login/signup/forgot
@@ -2673,45 +2674,49 @@ const common_event = async (event_type,event=null) =>{
                         case 'common_user_start_login_system_admin':
                         case 'common_user_start_signup':
                         case 'common_user_start_forgot':{
-                            CommonAppDocument.querySelectorAll('#common_user_start_nav > div').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('common_user_start_selected'));
-                            CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
+                            COMMON_DOCUMENT.querySelectorAll('#common_user_start_nav > div').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('common_user_start_selected'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
                             
-                            CommonAppDocument.querySelectorAll('#common_dialogue_user_start .common_user_start_form').forEach((/**@type{HTMLElement}*/form)=>form.style.display='none');
-                            CommonAppDocument.querySelector(`#${event_target_id}_form`).style.display='inline-block';
+                            COMMON_DOCUMENT.querySelectorAll('#common_dialogue_user_start .common_user_start_form').forEach((/**@type{HTMLElement}*/form)=>form.style.display='none');
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}_form`).style.display='inline-block';
     
                             break;
                         }
                         case 'common_user_start_close':{
-                            ComponentRemove('common_dialogue_user_start', true);
+                            commonComponentRemove('common_dialogue_user_start', true);
                             break;
                         }
                         case 'common_user_start_forgot_button':{
-                            await user_forgot();
+                            await commonUserForgot();
+                            break;
+                        }
+                        case 'common_user_start_signup_button':{
+                            commonUserSignup();
                             break;
                         }
                         //dialogue message
                         case 'common_message_close':{
-                            if (CommonAppDocument.querySelector('#common_message_close')['data-function'])
-                                CommonAppDocument.querySelector('#common_message_close')['data-function']();
-                            ComponentRemove('common_dialogue_message',true);
+                            if (COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'])
+                                COMMON_DOCUMENT.querySelector('#common_message_close')['data-function']();
+                            commonComponentRemove('common_dialogue_message',true);
                             break;
                         }
                         case 'common_message_cancel':{
-                            ComponentRemove('common_dialogue_message',true);
+                            commonComponentRemove('common_dialogue_message',true);
                             break;
                         }
                         //dialogue password
                         case 'common_user_password_new_cancel':{
-                            dialogue_password_new_clear();
+                            commonDialoguePasswordNewClear();
                             break;
                         }
                         case 'common_user_password_new_ok':{
-                            updatePassword();
+                            commonUserUpdatePassword();
                             break;
                         }
                         case 'common_profile_search_icon':{
-                            CommonAppDocument.querySelector('#common_profile_search_input').focus();
-                            CommonAppDocument.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                            COMMON_DOCUMENT.querySelector('#common_profile_search_input').focus();
+                            COMMON_DOCUMENT.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                             break;
                         }
                         //Dialogue apps
@@ -2719,20 +2724,20 @@ const common_event = async (event_type,event=null) =>{
                             if (event.target.classList.contains('common_dialogue_apps_app_logo')){
                                 const app_url = event.target.getAttribute('data-url');
                                 if (app_url)
-                                    CommonAppWindow.open(app_url);
+                                    COMMON_WINDOW.open(app_url);
                             }
                             break;
                         case 'common_dialogue_info_app_link':{
                             if (COMMON_GLOBAL.app_link_url)
-                                CommonAppWindow.open(COMMON_GLOBAL.app_link_url,'_blank','');
+                                COMMON_WINDOW.open(COMMON_GLOBAL.app_link_url,'_blank','');
                             break;
                         }
                         case 'common_dialogue_info_app_email':{
-                            CommonAppWindow.open(`mailto:${COMMON_GLOBAL.app_email}`,'_blank','');
+                            COMMON_WINDOW.open(`mailto:${COMMON_GLOBAL.app_email}`,'_blank','');
                             break;
                         }
                         case 'common_dialogue_info_info_link1':{
-                            ComponentRender({
+                            commonComponentRender({
                                 mountDiv:   'common_window_info',
                                 data:       {
                                             info:1,
@@ -2740,12 +2745,12 @@ const common_event = async (event_type,event=null) =>{
                                             content_type:null, 
                                             iframe_content:null
                                             },
-                                methods:    {common_setTimeout:common_setTimeout},
+                                methods:    {commonWindowSetTimeout:commonWindowSetTimeout},
                                 path:       '/common/component/common_window_info.js'});
                             break;
                         }
                         case 'common_dialogue_info_info_link2':{
-                            ComponentRender({
+                            commonComponentRender({
                                 mountDiv:   'common_window_info',
                                 data:       {
                                             info:1,
@@ -2753,12 +2758,12 @@ const common_event = async (event_type,event=null) =>{
                                             content_type:null, 
                                             iframe_content:null
                                             },
-                                methods:    {common_setTimeout:common_setTimeout},
+                                methods:    {commonWindowSetTimeout:commonWindowSetTimeout},
                                 path:       '/common/component/common_window_info.js'});
                             break;
                         }
                         case 'common_dialogue_info_info_link3':{
-                            ComponentRender({
+                            commonComponentRender({
                                 mountDiv:   'common_window_info',
                                 data:       {
                                             info:1,
@@ -2766,7 +2771,7 @@ const common_event = async (event_type,event=null) =>{
                                             content_type:null, 
                                             iframe_content:null
                                             },
-                                methods:    {common_setTimeout:common_setTimeout},
+                                methods:    {commonWindowSetTimeout:commonWindowSetTimeout},
                                 path:       '/common/component/common_window_info.js'});
                             break;
                         }
@@ -2775,214 +2780,215 @@ const common_event = async (event_type,event=null) =>{
                         case event.target.classList.contains('common_app_data_display_button_update')?event_target_id:'':
                         case event.target.classList.contains('common_app_data_display_button_post')?event_target_id:'':
                         case event.target.classList.contains('common_app_data_display_button_delete')?event_target_id:'':{
-                            if (CommonAppDocument.querySelector(`#${event_target_id}`)['data-function'])
-                                    CommonAppDocument.querySelector(`#${event_target_id}`)['data-function']();
+                            if (COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function'])
+                                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function']();
                             break;
                         }
                         //window info
                         case 'common_window_info_btn_close':{
-                            close_window();
+                            commonWindoInfoClose();
                             break;
                         }
                         case 'common_window_info_info_img':{
-                            show_hide_window_info_toolbar();
+                            commonWindoInfoToolbarShowHide();
                             break;
                         }
                         case 'common_window_info_toolbar_btn_zoomout':{
-                            zoom_info(-1);
+                            commonZoomInfo(-1);
                             break;
                         }
                         case 'common_window_info_toolbar_btn_zoomin':{
-                            zoom_info(1);
+                            commonZoomInfo(1);
                             break;
                         }
                         case 'common_window_info_toolbar_btn_left':{
-                            move_info(-1,0);
+                            commonMoveInfo(-1,0);
                             break;
                         }
                         case 'common_window_info_toolbar_btn_right':{
-                            move_info(1,0);
+                            commonMoveInfo(1,0);
                             break;
                         }
                         case 'common_window_info_toolbar_btn_up':{
-                            move_info(0,-1);
+                            commonMoveInfo(0,-1);
                             break;
                         }
                         case 'common_window_info_toolbar_btn_down':{
-                            move_info(0,1);
+                            commonMoveInfo(0,1);
                             break;
                         }
                         case 'common_window_info_toolbar_btn_fullscreen':{
-                            if (CommonAppDocument.fullscreenElement)
-                                CommonAppDocument.exitFullscreen();
+                            if (COMMON_DOCUMENT.fullscreenElement)
+                                COMMON_DOCUMENT.exitFullscreen();
                             else
-                                CommonAppDocument.body.requestFullscreen();
+                                COMMON_DOCUMENT.body.requestFullscreen();
                             break;
                         }
                         /* Dialogue user menu*/
                         case 'common_dialogue_user_menu_username':{
-                            ComponentRemove('common_dialogue_user_menu');
-                            await profile_show();
+                            commonComponentRemove('common_dialogue_user_menu');
+                            await commonProfileShow();
                             break;
                         }        
                         case 'common_dialogue_user_menu_close':{
-                            ComponentRemove('common_dialogue_user_menu', true);
+                            commonComponentRemove('common_dialogue_user_menu', true);
                             break;
                         }
                         case 'common_dialogue_user_menu_log_in':{
-                            ComponentRemove('common_dialogue_user_menu');
-                            show_common_dialogue('LOGIN');
+                            commonComponentRemove('common_dialogue_user_menu');
+                            commonDialogueShow('LOGIN');
                             break;
                         }
                         case 'common_dialogue_user_menu_edit':{
-                            ComponentRender({
+                            commonComponentRender({
                                 mountDiv:   'common_dialogue_user_edit',
                                 data:       {
                                             user_account_id:COMMON_GLOBAL.user_account_id,
                                             common_app_id:COMMON_GLOBAL.common_app_id
                                             },
                                 methods:    {
-                                            FFB:FFB,
-                                            show_message:show_message,
-                                            format_json_date:format_json_date
+                                           commonFFB:commonFFB,
+                                            commonMessageShow:commonMessageShow,
+                                            commonFormatJsonDate:commonFormatJsonDate
                                             },
                                 path:       '/common/component/common_dialogue_user_edit.js'})
                             .then(()=>{
-                                ComponentRemove('common_dialogue_user_menu');
+                                commonComponentRemove('common_dialogue_user_menu');
                             });
                             break;
                         }
+      
                         case 'common_dialogue_user_menu_signup':{
-                            ComponentRemove('common_dialogue_user_menu');
-                            show_common_dialogue('SIGNUP');
+                            commonComponentRemove('common_dialogue_user_menu');
+                            commonDialogueShow('SIGNUP');
                             break;
                         }
                         //dialogue user edit
                         case 'common_user_edit_close':{
-                            ComponentRemove('common_dialogue_user_edit', true);
+                            commonComponentRemove('common_dialogue_user_edit', true);
                             break;
                         }
                         case 'common_user_edit_btn_avatar_img':{
-                            CommonAppDocument.querySelector('#common_user_edit_input_avatar_img').click();
+                            COMMON_DOCUMENT.querySelector('#common_user_edit_input_avatar_img').click();
                             break;
                         }
                         case 'common_user_edit_input_avatar_img':{
-                            show_image(CommonAppDocument.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
+                            commonImageShow(COMMON_DOCUMENT.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
                             break;
                         }
                         case 'common_user_edit_btn_user_update':{
-                            await user_update();
+                            await commonUserUpdate();
                             break;
                         }
                         case 'common_user_edit_btn_user_delete_account':{
                             const function_delete_user_account = () => { 
-                                user_delete(1, null)
+                                commonUserDelete(1, null)
                                 .then(()=>COMMON_GLOBAL.app_function_session_expired?COMMON_GLOBAL.app_function_session_expired():null)
                                 .catch(()=>null);
                             };
-                            await user_delete(null, function_delete_user_account);
+                            await commonUserDelete(null, function_delete_user_account);
                             
                             break;
                         }        
                         //dialogue verify
                         case 'common_user_verify_cancel':{
-                            ComponentRemove('common_dialogue_user_verify');
+                            commonComponentRemove('common_dialogue_user_verify');
                             break;
                         }
                         //search list
                         case 'common_profile_search_list':{
                             if (event.target.classList.contains('common_profile_search_list_username')){
-                                if (CommonAppDocument.querySelector('#common_profile_search_list')['data-function']){
-                                    await CommonAppDocument.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                                if (COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function']){
+                                    await COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function'](commonElementRow(event.target).getAttribute('data-user_account_id'));
                                 }
                                 else
-                                    await profile_show(Number(element_row(event.target).getAttribute('data-user_account_id')),null);
+                                    await commonProfileShow(Number(commonElementRow(event.target).getAttribute('data-user_account_id')),null);
                             }
                             break;
                         }
                         //dialogue button stat
                         case 'common_profile_btn_top':{
-                            await profile_stat(1, null);
+                            await commonProfileStat(1, null);
                             break;
                         }
                         //dialogue profile
                         case 'common_dialogue_profile_home':{
-                            ComponentRemove('common_dialogue_user_menu');
-                            await profile_stat(1, null);
+                            commonComponentRemove('common_dialogue_user_menu');
+                            await commonProfileStat(1, null);
                             break;
                         }
                         case 'common_dialogue_profile_close':{
-                            ComponentRemove('common_dialogue_profile', true);
+                            commonComponentRemove('common_dialogue_profile', true);
                             break;
                         }
                         //dialogue profile stat
                         case 'common_profile_stat_row1_1':{
-                            await profile_stat(1, null);
+                            await commonProfileStat(1, null);
                             break;
                         }
                         case 'common_profile_stat_row1_2':{
-                            await profile_stat(2, null);
+                            await commonProfileStat(2, null);
                             break;
                         }
                         case 'common_profile_stat_row1_3':{
-                            await profile_stat(3, null);
+                            await commonProfileStat(3, null);
                             break;
                         }
                         //dialogue profile info
                         case 'common_profile_main_btn_following':{
-                            CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                            CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                            profile_detail(1);
+                            COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            commonProfileDetail(1);
                             break;
                         }
                         case 'common_profile_main_btn_followed':{
-                            CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                            CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                            profile_detail(2);
+                            COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            commonProfileDetail(2);
                             break;
                         }
                         case 'common_profile_main_btn_likes':{
-                            CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                            CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                            profile_detail(3);
+                            COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            commonProfileDetail(3);
                             break;
                         }
                         case 'common_profile_main_btn_liked':
                         case 'common_profile_main_btn_liked_heart':
                         case 'common_profile_main_btn_liked_users':{
-                            profile_detail(4);
-                            CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                            CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            commonProfileDetail(4);
+                            COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                             break;
                         }
                         case 'common_profile_info_main_btn_cloud':{
-                            CommonAppDocument.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                            CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                            profile_detail(5);
+                            COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            commonProfileDetail(5);
                             break;
                         }
                         case 'common_profile_stat_list':{
-                            await profile_show(Number(element_row(event.target).getAttribute('data-user_account_id')),null);
+                            await commonProfileShow(Number(commonElementRow(event.target).getAttribute('data-user_account_id')),null);
                             break;
                         }
                         case 'common_profile_detail_list':{
                             if (event.target.classList.contains('common_profile_detail_list_username'))
-                                await profile_show(Number(element_row(event.target).getAttribute('data-user_account_id')),null);
+                                await commonProfileShow(Number(commonElementRow(event.target).getAttribute('data-user_account_id')),null);
                             else{
                                 //app list
                                 if (event.target.classList.contains('common_profile_detail_list_app_name'))
-                                    CommonAppWindow.open(element_row(event.target).getAttribute('data-url') ?? '', '_blank');
+                                    COMMON_WINDOW.open(commonElementRow(event.target).getAttribute('data-url') ?? '', '_blank');
                                 else
-                                    if (CommonAppDocument.querySelector('#common_profile_id').textContent==COMMON_GLOBAL.user_account_id &&
+                                    if (COMMON_DOCUMENT.querySelector('#common_profile_id').textContent==COMMON_GLOBAL.user_account_id &&
                                         event.target.parentNode.classList.contains('common_profile_detail_list_app_delete')){
-                                            await user_account_app_delete(null, 
-                                                                    CommonAppDocument.querySelector('#common_profile_id').textContent,
-                                                                    Number(element_row(event.target).getAttribute('data-app_id')),
+                                            await commonUserAccountAppDelete(null, 
+                                                                    COMMON_DOCUMENT.querySelector('#common_profile_id').textContent,
+                                                                    Number(commonElementRow(event.target).getAttribute('data-app_id')),
                                                                     () => { 
-                                                                        ComponentRemove('common_dialogue_message');
-                                                                        user_account_app_delete(1, 
-                                                                                                CommonAppDocument.querySelector('#common_profile_id').textContent, 
-                                                                                                Number(element_row(event.target).getAttribute('data-app_id')), 
+                                                                        commonComponentRemove('common_dialogue_message');
+                                                                        commonUserAccountAppDelete(1, 
+                                                                                                COMMON_DOCUMENT.querySelector('#common_profile_id').textContent, 
+                                                                                                Number(commonElementRow(event.target).getAttribute('data-app_id')), 
                                                                                                 null);
                                                                     });
                                     }
@@ -2991,13 +2997,13 @@ const common_event = async (event_type,event=null) =>{
                         }
                         //broadcast
                         case 'common_broadcast_close':{
-                            ComponentRemove('common_broadcast');
+                            commonComponentRemove('common_broadcast');
                             break;
                         }
                         //module leaflet
                         case 'common_module_leaflet_search_icon':{
-                            CommonAppDocument.querySelector('#common_module_leaflet_search_input').focus();
-                            CommonAppDocument.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                            COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').focus();
+                            COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                             break;
                         }
                         case 'common_module_leaflet_control_search_button':{
@@ -3024,25 +3030,25 @@ const common_event = async (event_type,event=null) =>{
                         case 'common_toolbar_framework_js':
                         case 'common_toolbar_framework_vue':
                         case 'common_toolbar_framework_react':{
-                            CommonAppDocument.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
-                            CommonAppDocument.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
+                            COMMON_DOCUMENT.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
                             break;
                         }    
                         //dialogue lov
                         case event.target.classList.contains('common_list_lov_click') && event.target.getAttribute('data-lov')?event_target_id:'':{
-                            lov_event(event, event.target.getAttribute('data-lov'));
+                            commonLovEvent(event, event.target.getAttribute('data-lov'));
                             break;
                         }
                         case 'common_lov_search_icon':{
-                            lov_filter(CommonAppDocument.querySelector('#common_lov_search_input').textContent);
+                            commonLovFilter(COMMON_DOCUMENT.querySelector('#common_lov_search_input').textContent);
                             break;
                         }
-                        case 'common_lov_close':{
-                            lov_close();
+                        case 'common_commonLovClose':{
+                            commonLovClose();
                             break;
                         }
                         case 'common_lov_list':{
-                            CommonAppDocument.querySelector('#common_lov_list')['data-function'](event);
+                            COMMON_DOCUMENT.querySelector('#common_lov_list')['data-function'](event);
                             break;
                         }        
                         default:{
@@ -3060,32 +3066,32 @@ const common_event = async (event_type,event=null) =>{
             }
             case 'keyup':{
                 if (event.target.classList.contains('common_password')){   
-                    CommonAppDocument.querySelector(`#${event.target.id}_mask`).textContent = 
-                        event.target.textContent.replace(event.target.textContent, '*'.repeat(LengthWithoutDiacrites(event.target.textContent)));
+                    COMMON_DOCUMENT.querySelector(`#${event.target.id}_mask`).textContent = 
+                        event.target.textContent.replace(event.target.textContent, '*'.repeat(commonLengthWithoutDiacrites(event.target.textContent)));
                 }
                 else
                     switch (event.target.id){
                         case 'common_user_start_forgot_email':{
                             if (event.code === 'Enter') {
                                 event.preventDefault();
-                                await user_forgot().then(()=>{
+                                await commonUserForgot().then(()=>{
                                     //unfocus
-                                    CommonAppDocument.querySelector('#common_user_start_forgot_email').blur();
+                                    COMMON_DOCUMENT.querySelector('#common_user_start_forgot_email').blur();
                                 });
                             }
                             break;
                         }
                         case 'common_profile_search_input':{
-                            list_key_event(event, 'profile', profile_show);
+                            commonListKeyEvent(event, 'profile', commonProfileShow);
                             break;
                         }        
                         case 'common_lov_search_input':{
-                            list_key_event(event, 'lov');
+                            commonListKeyEvent(event, 'lov');
                             break;
                         }
                         //module leaflet
                         case 'common_module_leaflet_search_input':{
-                            typewatch(list_key_event, event, 'module_leaflet', event.target['data-function']); 
+                            commonTypewatch(commonListKeyEvent, event, 'module_leaflet', event.target['data-function']); 
                             break;
                         }
                         default:{
@@ -3097,7 +3103,7 @@ const common_event = async (event_type,event=null) =>{
             case 'keydown':{
                 if (event.code=='Enter')
                     event.preventDefault();
-                if (disable_textediting() &&
+                if (commonTextEditingDisabled() &&
                     event.target.classList.contains('common_input') && 
                         (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
                         (event.shiftKey ==true && (event.code=='ArrowLeft' || 
@@ -3124,8 +3130,8 @@ const common_event = async (event_type,event=null) =>{
  * Disable copy cut paste
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  */
- const disable_copy_paste_cut = event => {
-    if (disable_textediting()){
+ const commonEventCopyPasteCutDisable = event => {
+    if (commonTextEditingDisabled()){
         if(event.target.nodeName !='SELECT'){
             event.preventDefault();
             event.target.focus();
@@ -3142,8 +3148,8 @@ const common_event = async (event_type,event=null) =>{
  * Disable common input textediting
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  */
-const disable_common_input = event => {
-    if (disable_textediting())
+const commonEventInputDisable = event => {
+    if (commonTextEditingDisabled())
         if (event.target.classList.contains('common_input')){
             event.preventDefault();
             event.target.focus();
@@ -3153,26 +3159,26 @@ const disable_common_input = event => {
  * Adds common events for all apps
  * @returns {void}
  */
-const common_events_add = () => {
+const commonEventCommonAdd = () => {
 
-    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('copy', disable_copy_paste_cut, false);
-    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('paste', disable_copy_paste_cut, false);
-    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('cut', disable_copy_paste_cut, false);
-    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('mousedown', disable_copy_paste_cut, false);
-    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('touchstart', disable_common_input, false);
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('copy', commonEventCopyPasteCutDisable, false);
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('paste', commonEventCopyPasteCutDisable, false);
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('cut', commonEventCopyPasteCutDisable, false);
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('mousedown', commonEventCopyPasteCutDisable, false);
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('touchstart', commonEventInputDisable, false);
 
 };
 /**
  * Remove common events for all apps
  * @returns {void}
  */
-const common_events_remove = () => {
+const commonEventCommonRemove = () => {
 
-    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('copy', disable_copy_paste_cut);
-    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('paste', disable_copy_paste_cut);
-    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('cut', disable_copy_paste_cut);
-    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('mousedown', disable_copy_paste_cut);
-    CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('touchstart', disable_common_input);
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('copy', commonEventCopyPasteCutDisable);
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('paste', commonEventCopyPasteCutDisable);
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('cut', commonEventCopyPasteCutDisable);
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('mousedown', commonEventCopyPasteCutDisable);
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('touchstart', commonEventInputDisable);
 
 };
 
@@ -3181,7 +3187,7 @@ const common_events_remove = () => {
  * @param {*[]} common_parameters 
  * @returns {void}
  */
-const set_app_parameters = (common_parameters) => {
+const commonParametersAppSet = (common_parameters) => {
     //set parameters for common_app_id, each app set its own parameters in the app
     for (const parameter of common_parameters.filter(parameter=>parameter.app_id == COMMON_GLOBAL.common_app_id)){
         switch (true){
@@ -3219,7 +3225,7 @@ const set_app_parameters = (common_parameters) => {
  * @param {string} mount_div
  * @param {boolean} component
  */
-const framework_mount = async (framework, template, methods,mount_div, component) =>{
+const commonFrameworkMount = async (framework, template, methods,mount_div, component) =>{
     switch (framework){
         case 2:{
             //Vue
@@ -3229,7 +3235,7 @@ const framework_mount = async (framework, template, methods,mount_div, component
 
             //Use tempmount div to be able to return pure HTML without extra events
             //since event delegation is used
-            CommonAppDocument.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
+            COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
 
             //mount the app or component
             Vue.createApp({
@@ -3240,11 +3246,11 @@ const framework_mount = async (framework, template, methods,mount_div, component
 
             if (component){
                 //replace mount div with tempmount div without events
-                CommonAppDocument.querySelector(`#${mount_div}`).innerHTML = CommonAppDocument.querySelector('#tempmount').innerHTML;
+                COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = COMMON_DOCUMENT.querySelector('#tempmount').innerHTML;
             }
             else{
                 //replace mount div with tempmount element with events
-                CommonAppDocument.querySelector(`#${mount_div}`).replaceWith(CommonAppDocument.querySelector('#tempmount >div'));
+                COMMON_DOCUMENT.querySelector(`#${mount_div}`).replaceWith(COMMON_DOCUMENT.querySelector('#tempmount >div'));
             }
             break;
         }
@@ -3258,46 +3264,46 @@ const framework_mount = async (framework, template, methods,mount_div, component
             const ReactDOM = await import(path_reactDOM).then(module=>module.ReactDOM);
 
             //convert HTML template to React component
-            const div_template = CommonAppDocument.createElement('div');
+            const div_template = COMMON_DOCUMENT.createElement('div');
             div_template.innerHTML = template;
             const component = React.createElement(div_template.nodeName.toLowerCase(), 
                                                 { id: div_template.id, className: div_template.className}, 
-                                                html2reactcomponent(React.createElement, div_template.children));
+                                                commonFrameworkHtml2ReactComponent(React.createElement, div_template.children));
 
-            CommonAppDocument.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
-            const application = ReactDOM.createRoot(CommonAppDocument.querySelector(`#${mount_div} #tempmount`));
+            COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
+            const application = ReactDOM.createRoot(COMMON_DOCUMENT.querySelector(`#${mount_div} #tempmount`));
             application.render( component);
-            await new Promise ((resolve)=>{common_setTimeout(()=> resolve(null), 200);});
+            await new Promise ((resolve)=>{commonWindowSetTimeout(()=> resolve(null), 200);});
             //React is only used as a parser of HTML and all Reacts events are removed by removing tempmount div
             //Mount template HTML
-            CommonAppDocument.querySelector(`#${mount_div}`).innerHTML = template;
+            COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = template;
 
             break;
         }
     }
 };
-const framework_clean = () =>{
+const commonFrameworkClean = () =>{
     //remove Reacts objects
-    delete CommonAppWindow.ReactDOM;
-    delete CommonAppWindow.React;
+    delete COMMON_WINDOW.ReactDOM;
+    delete COMMON_WINDOW.React;
 
     //remove react key
-    for (const key of Object.keys(CommonAppDocument)){
+    for (const key of Object.keys(COMMON_DOCUMENT)){
         if (key.startsWith('_react')){
             /**@ts-ignore */
-            delete CommonAppDocument[key];
+            delete COMMON_DOCUMENT[key];
         }
     }
     //React events are not created, just reset variable when switching framework
     COMMON_GLOBAL.app_eventListeners.REACT = [];
     //remove Vue objects
     COMMON_GLOBAL.app_eventListeners.VUE = [];
-    delete CommonAppWindow.__VUE_DEVTOOLS_HOOK_REPLAY__;
-    delete CommonAppWindow.__VUE_HMR_RUNTIME__;
-    delete CommonAppWindow.__VUE__;
-    const app_root_element = CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
-    if (CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`))
-        app_root_element.textContent = CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}_vue`).textContent;
+    delete COMMON_WINDOW.__VUE_DEVTOOLS_HOOK_REPLAY__;
+    delete COMMON_WINDOW.__VUE_HMR_RUNTIME__;
+    delete COMMON_WINDOW.__VUE__;
+    const app_root_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`);
+    if (COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}_vue`))
+        app_root_element.textContent = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}_vue`).textContent;
     app_root_element.removeAttribute('data-v-app');
     delete app_root_element.__vue_app_;
     delete app_root_element.__vue_node;
@@ -3317,15 +3323,15 @@ const framework_clean = () =>{
  *          Other?:function|null}} events 
  * @returns {Promise.<void>}
  */
-const framework_set = async (framework, events) => {
-    const app_root_element = CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_root}`);
-    const app_element = CommonAppDocument.querySelector(`#${COMMON_GLOBAL.app_div}`);
-    const common_app_element = CommonAppDocument.querySelector('#common_app');
+const commonFrameworkSet = async (framework, events) => {
+    const app_root_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`);
+    const app_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_div}`);
+    const common_app_element = COMMON_DOCUMENT.querySelector('#common_app');
 
     //get all ellements with data-function
     /**@type{{id:string,element_function:function}[]} */
     const data_function = [];
-    CommonAppDocument.querySelectorAll(`#${COMMON_GLOBAL.app_root} div`).forEach((/**@type{HTMLElement}*/element) =>{
+    COMMON_DOCUMENT.querySelectorAll(`#${COMMON_GLOBAL.app_root} div`).forEach((/**@type{HTMLElement}*/element) =>{
         /**@ts-ignore */
         if (element['data-function']){
             /**@ts-ignore */
@@ -3333,25 +3339,25 @@ const framework_set = async (framework, events) => {
         }
     });
     //save Leaflet containers with special event management and saved objects on elements if any Leaflet container used
-    const leaflet_containers = CommonAppDocument.querySelectorAll('.leaflet-container');
+    const leaflet_containers = COMMON_DOCUMENT.querySelectorAll('.leaflet-container');
 
     //remove common listeners
-    common_events_remove();
+    commonEventCommonRemove();
     COMMON_GLOBAL.app_eventListeners.OTHER = [];
 
     //remove all listeners in app and app root divs including all objects saved on elements
     app_element.replaceWith(app_element.cloneNode(true));
     app_root_element.replaceWith(app_root_element.cloneNode(true));
     
-    framework_clean();
+    commonFrameworkClean();
 
     //set default function if anyone missing
-    events.Change?null:events.Change = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('change', event));
-    events.Click?null:events.Click = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('click', event));
-    events.Focus?null:events.Focus = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('focus', event));
-    events.Input?null:events.Input = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('input', event));
-    events.KeyDown?null:events.KeyDown = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('keydown', event));
-    events.KeyUp?null:events.KeyUp = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>common_event('keyup', event));
+    events.Change?null:events.Change = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('change', event));
+    events.Click?null:events.Click = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('click', event));
+    events.Focus?null:events.Focus = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('focus', event));
+    events.Input?null:events.Input = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('input', event));
+    events.KeyDown?null:events.KeyDown = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('keydown', event));
+    events.KeyUp?null:events.KeyUp = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('keyup', event));
 
     events.Other?null:null;
 
@@ -3388,7 +3394,7 @@ const framework_set = async (framework, events) => {
                                 }
                             };
             //App events are used on Vue events using event delegation on app root
-            await framework_mount(2, template, methods, COMMON_GLOBAL.app_root, false);
+            await commonFrameworkMount(2, template, methods, COMMON_GLOBAL.app_root, false);
             //Does not work in Vue
             events.Focus();
             break;
@@ -3399,7 +3405,7 @@ const framework_set = async (framework, events) => {
                                 ${common_app_element.outerHTML}`;
             const methods = {};
             //App events are not supported and not used on app root and are managed in event delegation
-            await framework_mount(3, template, methods, COMMON_GLOBAL.app_root, false);
+            await commonFrameworkMount(3, template, methods, COMMON_GLOBAL.app_root, false);
             events.Click();
             events.Change();
             events.Focus();
@@ -3427,28 +3433,28 @@ const framework_set = async (framework, events) => {
     //replace Leaflet containers with the saved ones containing Leaflet objects and events if any Leaflet container used
     let index= 0;
     for (const leaflet_container of leaflet_containers){
-        CommonAppDocument.querySelectorAll('.leaflet-container')[index].replaceWith(leaflet_container);
+        COMMON_DOCUMENT.querySelectorAll('.leaflet-container')[index].replaceWith(leaflet_container);
         index++;
     }
     //update all elements with data-function since copying outerHTML does not include data-function
-    data_function.forEach(element =>CommonAppDocument.querySelector(`#${element.id}`)['data-function'] = element.element_function);
+    data_function.forEach(element =>COMMON_DOCUMENT.querySelector(`#${element.id}`)['data-function'] = element.element_function);
     //add common events for all apps
-    common_events_add();
+    commonEventCommonAdd();
 };
 /**
  * Set useragent attributes
  * @returns {void}
  */
  const setUserAgentAttributes = () => {
-    if (CommonAppWindow.navigator.userAgent.toLowerCase().indexOf('firefox')>-1)
-        CommonAppDocument.querySelector(':root').style.setProperty('--common_app_useragent_fix_margin_top', '-5px');
+    if (COMMON_WINDOW.navigator.userAgent.toLowerCase().indexOf('firefox')>-1)
+        COMMON_DOCUMENT.querySelector(':root').style.setProperty('--common_app_useragent_fix_margin_top', '-5px');
  };
 /**
  * Set custom framework functionality overriding console messages and save info about events created
  * @returns {void}
  */
 const custom_framework = () => {
-    COMMON_GLOBAL.app_eventListeners.original = CommonAppDocument.addEventListener;
+    COMMON_GLOBAL.app_eventListeners.original = COMMON_DOCUMENT.addEventListener;
     /**
      * 
      * @param {*} stack 
@@ -3485,21 +3491,21 @@ const custom_framework = () => {
     };
     /**
      * Custom function used to replace default addEventListener function for Window
-     * Window events are created on CommonAppDocument
+     * Window events are created on COMMON_DOCUMENT
      * Using funtion declaration here to support arguments
      * @param  {...any} eventParameters 
      */
     function customEventWindow (...eventParameters){
-        customEventCommon('WINDOW', CommonAppDocument, eventParameters);
+        customEventCommon('WINDOW', COMMON_DOCUMENT, eventParameters);
     }
     /**
      * Custom function used to replace default addEventListener function for Document
-     * Document events are created on CommonAppDocument
+     * Document events are created on COMMON_DOCUMENT
      * Using funtion declaration here to support arguments
      * @param  {...any} eventParameters 
      */
     function customEventDocument (...eventParameters) {
-        customEventCommon('DOCUMENT', CommonAppDocument, eventParameters);
+        customEventCommon('DOCUMENT', COMMON_DOCUMENT, eventParameters);
     }
     /**
      * Custom function used to replace default addEventListener function for HTMLElement
@@ -3514,8 +3520,8 @@ const custom_framework = () => {
     }
 
     //set custom functions on both window, document and HTMLElement level
-    CommonAppWindow.addEventListener = customEventWindow;
-    CommonAppDocument.addEventListener = customEventDocument;
+    COMMON_WINDOW.addEventListener = customEventWindow;
+    COMMON_DOCUMENT.addEventListener = customEventDocument;
     HTMLElement.prototype.addEventListener = customEventHTMLElement;
 
     /**
@@ -3535,10 +3541,10 @@ const custom_framework = () => {
      const console_info = (...parameters) => COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.info(...parameters):null;
 
     //Vue uses console.warn, show or hide from any framework 
-    CommonAppWindow.console.warn = console_warn;
+    COMMON_WINDOW.console.warn = console_warn;
     //React uses console.info and error, show or hide from any framework
-    CommonAppWindow.console.info = console_info;
-    CommonAppWindow.console.error = console_error;
+    COMMON_WINDOW.console.info = console_info;
+    COMMON_WINDOW.console.error = console_error;
 };
 /**
  * Init common
@@ -3546,16 +3552,16 @@ const custom_framework = () => {
  * @returns {Promise.<{ app:{}[],
  *                      app_service:{system_admin_only:number, first_time:number}}>}
  */
-const init_common = async (parameters) => {
+const commonInit = async (parameters) => {
     /**
      * Encoded parameters
      * @type {{ app:{}[],
      *          app_service:{system_admin_only:number, first_time:number}}}
      */
-    const decoded_parameters = JSON.parse(fromBase64(parameters));
+    const decoded_parameters = JSON.parse(commonWindowFromBase64(parameters));
     setUserAgentAttributes();
     custom_framework();
-    await ComponentRender({ mountDiv:   'common_app',
+    await commonComponentRender({ mountDiv:   'common_app',
                             data:       {
                                         font_default:   true,
                                         font_arabic:    true,
@@ -3568,67 +3574,100 @@ const init_common = async (parameters) => {
                             path:       '/common/component/common_app.js'});
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL.app_id ==null)
-            set_app_service_parameters(decoded_parameters.app_service);
+            commonParametersAppServiceSet(decoded_parameters.app_service);
         if (COMMON_GLOBAL.app_framework==0){
-            CommonAppDocument.querySelector('#common_toolbar_framework').classList.add('show');
-            CommonAppDocument.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
+            COMMON_DOCUMENT.querySelector('#common_toolbar_framework').classList.add('show');
+            COMMON_DOCUMENT.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
         }
             
-        connectOnline();
+        commonSocketConnectOnline();
         if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.system_admin_only==1){
             resolve(decoded_parameters);
         }
         else{
-            set_app_parameters(decoded_parameters.app);
-            common_events_add();
+            commonParametersAppSet(decoded_parameters.app);
+            commonEventCommonAdd();
             resolve(decoded_parameters);
         }
     });
 };
 export{/* GLOBALS*/
-       COMMON_GLOBAL, ICONS,
+       COMMON_GLOBAL, 
+       COMMON_ICONS,
        /* MISC */
-       element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, typewatch, roundOff, toBase64, fromBase64, format_json_date,
-       mobile,
-       convert_image,
-       show_image, getHostname, input_control, getUserAgentPlatform,
-       theme_default_list, common_theme_update_from_body,
-       common_preferences_update_body_class_from_preferences,
-       app_settings_get,
-       set_current_value,
-       common_preferences_post_mount,
-       common_setTimeout,
-       common_wait,
-       NavigatorLocale,
-       DocumentFrame,
-       WindowLocationPathname,
-       WindowLocationReload,
-       WindowOpen,
-       WindowPrompt,
+       commonElementId, 
+       commonElementRow, 
+       commonElementListTitle, 
+       commonTimezoneDate, 
+       commonTypewatch, 
+       commonRoundOff, 
+       commonFormatJsonDate,
+       commonMobile,
+       commonImageConvert,
+       commonImageShow, 
+       commonInputControl,
+       commonThemeDefaultList, 
+       commonThemeUpdateFromBody,
+       commonPreferencesUpdateBodyClassFromPreferences,
+       commonDbAppSettingsGet,
+       commonSelectCurrentValueSet,
+       commonPreferencesPostMount,
+       /**window object functions */
+       commonWindowToBase64, 
+       commonWindowFromBase64, 
+       commonWindowSetTimeout,
+       commonWindowWait,
+       commonWindowNavigatorLocale,
+       commonWindowUserAgentPlatform,
+       commonWindowHostname,
+       commonWndowLocationPathname,
+       commonWindowLocationReload,
+       commonWindowOpen,
+       commonWindowPrompt,
+       commonWindowDocumentFrame,
+       commonWindowServiceWorker,
        /* COMPONENTS */
-       ComponentRender,ComponentRemove,
+       commonComponentRender,
+       commonComponentRemove,
+       commonFrameworkSet,
        /* MESSAGE & DIALOGUE */
-       show_common_dialogue, show_message,
-       lov_event, lov_action,
-       lov_close, lov_show,
+       commonDialogueShow, 
+       commonMessageShow,
+       commonLovEvent, 
+       commonLovAction,
+       commonLovClose, 
+       commonLovShow,
        /* PROFILE */
-       profile_follow_like, profile_stat, profile_detail, profile_show,
-       profile_update_stat, list_key_event,
+       commonProfileFollowLike,
+       commonProfileStat, 
+       commonProfileDetail, 
+       commonProfileShow,
+       commonProfileUpdateStat, 
+       commonListKeyEvent,
        /* USER  */
-       user_login, user_session_countdown, user_logout, user_update, user_signup, user_verify_check_input, user_delete, user_function,
-       updatePassword,
+       commonUserLogin, 
+       commonUserSessionCountdown, 
+       commonUserLogout, 
+       commonUserUpdate, 
+       commonUserSignup, 
+       commonUserVerifyCheckInput, 
+       commonUserDelete, 
+       commonUserFunction,
+       commonUserUpdatePassword,
        /* MODULE LEAFLET  */
-       map_init, 
+       commonModuleLeafletInit, 
        /* MODULE EASY.QRCODE */
-       create_qr,
+       commonModuleEasyQRCODECreate,
        /*FFB */
-       FFB,
-       /* SERVICE BROADCAST */
-       show_broadcast, show_maintenance, connectOnline,checkOnline,
+       commonFFB,
+       /* SERVICE SOCKET */
+       commonSocketBroadcastShow, 
+       commonSocketMaintenanceShow, 
+       commonSocketConnectOnline,
+       commonSocketConnectOnlineCheck,
        /* SERVICE GEOLOCATION */
-       get_place_from_gps, get_gps_from_ip,
+       commonMicroserviceGeolocationPlace,
+       commonMicroserviceGeolocationIp,
        /* INIT */
-       serviceworker,
-       common_event,
-       framework_set,
-       init_common};
+       commonEvent,
+       commonInit};
