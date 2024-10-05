@@ -122,13 +122,15 @@
  *              nextElementSibling: {dispatchEvent:function},
  *              nodeName:           string,
  *              options:            HTMLOptionsCollection,
- *              parentNode:         {id: string,
- *                                   classList:{contains:function},
- *                                   nextElementSibling:{querySelector:function},
- *                                   textContent:string,
- *                                   getAttribute:function,
- *                                   parentNode:{style:{display:string}},
- *                                   style:{display:string}},
+ *              parentNode:         {
+ *                                      id: string,
+ *                                      classList:{contains:function},
+ *                                      nextElementSibling:{querySelector:function},
+ *                                      innerHTML:string,
+ *                                      getAttribute:function,
+ *                                      parentNode:{style:{display:string}},
+ *                                      style:{display:string}
+ *                                  },
  *              setAttribute:       function,
  *              value:              string
  *            }}  target

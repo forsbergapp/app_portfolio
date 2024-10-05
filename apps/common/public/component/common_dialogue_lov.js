@@ -28,7 +28,7 @@ const template = props =>`  <div id='common_lov_form'>
                                     `).join('')
                                 }
                             </div>
-                            <div id='common_commonLovClose' class='common_dialogue_button common_icon'></div>
+                            <div id='common_lov_close' class='common_dialogue_button common_icon'></div>
                         </div>`;
 /**
  * @param {{data:       {
