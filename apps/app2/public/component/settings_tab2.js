@@ -93,9 +93,9 @@ const method = async props => {
             methods:    {FFB:null},
             path:       '/common/component/common_select.js'});
         props.methods.set_current_value(   'setting_select_popular_place', null, 'id', props.data.user_settings.gps_popular_place_id);
-        props.methods.common_document.querySelector('#setting_input_place').innerHTML = props.data.user_settings.description;
-        props.methods.common_document.querySelector('#setting_input_lat').innerHTML = props.data.user_settings.gps_lat_text;
-        props.methods.common_document.querySelector('#setting_input_long').innerHTML = props.data.user_settings.gps_long_text;
+        props.methods.common_document.querySelector('#setting_input_place').textContent = props.data.user_settings.description;
+        props.methods.common_document.querySelector('#setting_input_lat').textContent = props.data.user_settings.gps_lat_text;
+        props.methods.common_document.querySelector('#setting_input_long').textContent = props.data.user_settings.gps_long_text;
 
         //init map thirdparty module
         /**
@@ -103,8 +103,8 @@ const method = async props => {
          */
         const dbl_click_event = event => {
             if (event.originalEvent.target.parentNode.id == 'mapid'){
-                props.methods.common_document.querySelector('#setting_input_lat').innerHTML = event.latlng.lat;
-                props.methods.common_document.querySelector('#setting_input_long').innerHTML = event.latlng.lng;
+                props.methods.common_document.querySelector('#setting_input_lat').textContent = event.latlng.lat;
+                props.methods.common_document.querySelector('#setting_input_long').textContent = event.latlng.lng;
                 //Update GPS position
                 props.methods.component_setting_update('GPS', 'POSITION');
                 const timezone = props.methods.getTimezone(   event.latlng.lat, event.latlng.lng);
@@ -112,8 +112,8 @@ const method = async props => {
             }   
         };
         await props.methods.map_init('mapid',
-                        props.methods.common_document.querySelector('#setting_input_long').innerHTML, 
-                        props.methods.common_document.querySelector('#setting_input_lat').innerHTML,
+                        props.methods.common_document.querySelector('#setting_input_long').textContent, 
+                        props.methods.common_document.querySelector('#setting_input_lat').textContent,
                         dbl_click_event).then(() => {
             props.methods.component_setting_update('GPS', 'MAP');
         });

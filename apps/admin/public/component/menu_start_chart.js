@@ -137,9 +137,9 @@ const component = async props => {
             if (system_admin_statGroup=='REQUEST')
                 return stat_value;
             else
-                return Array.from(props.methods.common_document.querySelectorAll('#select_system_admin_stat .common_select_option')).filter(value=>value.getAttribute('data-value').split('#')[1]==stat_value)[0].innerText;
+                return Array.from(props.methods.common_document.querySelectorAll('#select_system_admin_stat .common_select_option')).filter(value=>value.getAttribute('data-value').split('#')[1]==stat_value)[0].textContent;
         else{
-            return Array.from(props.methods.common_document.querySelectorAll('#select_app_menu1 .common_select_option')).filter(app=>parseInt(app.getAttribute('data-value'))==stat_app_id)[0].innerText;
+            return Array.from(props.methods.common_document.querySelectorAll('#select_app_menu1 .common_select_option')).filter(app=>parseInt(app.getAttribute('data-value'))==stat_app_id)[0].textContent;
         }
 
     };
@@ -181,10 +181,10 @@ const component = async props => {
                                 chart2_color_app:'rgb(197 227 255)',
                                 chart2_stat:charts.filter(row=> row.chart==2),
                                 chart2_legend_text:props.data.system_admin!=null?
-                                                        props.methods.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').innerText:
-                                                        props.methods.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerText,
+                                                        props.methods.common_document.querySelector('#select_system_admin_stat .common_select_dropdown_value').textContent:
+                                                        props.methods.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').textContent,
                                 chart2_legend_text_apps:props.data.system_admin!=null?
-                                                            props.methods.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerText:
+                                                            props.methods.common_document.querySelector('#select_app_menu1 .common_select_dropdown_value').textContent:
                                                             ''})
         };
 };
