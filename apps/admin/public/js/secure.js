@@ -444,7 +444,7 @@ const button_save = async (item) => {
                                                         Array.from(config_group_element.querySelectorAll('.list_config_row')).map(config_group_row => 
                                                             {
                                                                 return {
-                                                                    [config_group_row.querySelectorAll('.list_config_col div')[0].textContent]:
+                                                                    [config_group_row.querySelectorAll('.list_config_col div')[0].textContent ?? '']:
                                                                                 config_group_row.querySelectorAll('.list_config_col div')[1].textContent,
                                                                     COMMENT:    config_group_row.querySelectorAll('.list_config_col div')[2].textContent ?? ''
                                                                 };
