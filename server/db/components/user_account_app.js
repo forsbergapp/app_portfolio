@@ -15,7 +15,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  */
 const update = (app_id, resource_id, query, data) => {
     return new Promise((resolve, reject)=> {
-        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_app_updateUserAccountApp} */
+        /**@type{import('../../types.js').server_db_sql_parameter_user_account_app_updateUserAccountApp} */
         const data_update = {	app_setting_preference_direction_id: 	getNumberValue(data.app_setting_preference_direction_id),
                                 app_setting_preference_arabic_script_id:getNumberValue(data.app_setting_preference_arabic_script_id),
                                 app_setting_preference_timezone_id: 	getNumberValue(data.app_setting_preference_timezone_id),
@@ -25,7 +25,7 @@ const update = (app_id, resource_id, query, data) => {
         .then(result=>{
             resolve(result);
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -34,7 +34,7 @@ const update = (app_id, resource_id, query, data) => {
  * @param {number} resource_id
  */
 const getUserAccountApp = (app_id, resource_id) => service.getUserAccountApp(app_id, resource_id)
-                                                .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 /**
  * 
  * @param {number} app_id 
@@ -49,18 +49,18 @@ const getUserAccountApps = async (app_id, resource_id) => {
 
     const apps_db = await service.getUserAccountApps(app_id, resource_id);
     const apps_registry = ConfigGetApps();
-    /**@type{import('../../../types.js').server_config_apps_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{import('../../../types.js').server_config_apps_record} */app, /**@type {import('../../../types.js').server_config_apps_record}*/current)=> 
+    /**@type{import('../../types.js').server_config_apps_with_db_columns[]}*/
+    const apps = apps_registry.reduce(( /**@type{import('../../types.js').server_config_apps_record} */app, /**@type {import('../../types.js').server_config_apps_record}*/current)=> 
                                         app.concat({APP_ID:current.APP_ID,
                                                     NAME:current.NAME,
                                                     LOGO:current.PATH + current.LOGO,
                                                     SUBDOMAIN:current.SUBDOMAIN
                                                     }) , []);
     
-    /**@type{import('../../../types.js').server_db_sql_result_user_account_app_getUserAccountApps_with_app_registry[]}*/
+    /**@type{import('../../types.js').server_db_sql_result_user_account_app_getUserAccountApps_with_app_registry[]}*/
     const user_account_apps = [];
     for (const app_db of apps_db){
-        /**@type{import('../../../types.js').server_db_sql_result_user_account_app_getUserAccountApps_with_app_registry}*/
+        /**@type{import('../../types.js').server_db_sql_result_user_account_app_getUserAccountApps_with_app_registry}*/
         const app = {};
         app.NAME = apps.filter(app_registry=>app_registry.APP_ID == app_db.app_id)[0].NAME;
         app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
@@ -84,7 +84,7 @@ const getUserAccountApps = async (app_id, resource_id) => {
  * @param {*} query
  */
 const deleteUserAccountApp = (app_id, resource_id, query) => service.deleteUserAccountApp(app_id, resource_id, getNumberValue(query.get('delete_app_id')))
-                                                    .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 export {/*ADMIN + ACCESS*/
         update, getUserAccountApp,

@@ -10,7 +10,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @param {number|null} resource_id 
  * @param {number|null} data_app_id 
  * @param {string|null} resource_name_entity
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_data_stat_get[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_stat_get[]>}
  */
 const get = async (app_id, resource_id, data_app_id, resource_name_entity) => {
 		const sql = `SELECT ads.app_id                                              "app_id",
@@ -56,7 +56,7 @@ const get = async (app_id, resource_id, data_app_id, resource_name_entity) => {
  * 
  * @param {number}      app_id
  * @param {*}           data
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_data_stat_post[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_stat_post[]>}
  */
 const post = async (app_id, data) => {
     const sql = `INSERT INTO <DB_SCHEMA/>.app_data_stat (   json_data, 
@@ -103,7 +103,7 @@ const post = async (app_id, data) => {
  * @param {string} order_by 
  * @param {number|null} offset 
  * @param {number|null} limit 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_app_data_stat_getLogs[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_stat_getLogs[]>}
  */
 const getLogs = async (app_id, data_app_id, year, month, day, sort, order_by, offset, limit) => {
     /**@type{import('../../../server/server.service.js')} */
@@ -141,7 +141,7 @@ const getLogs = async (app_id, data_app_id, year, month, day, sort, order_by, of
 * @param {number|null} data_app_id 
 * @param {number|null} year 
 * @param {number|null} month 
-* @returns {Promise.<import('../../../types.js').server_db_sql_result_app_data_stat_getStatUniqueVisitor[]>}
+* @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_stat_getStatUniqueVisitor[]>}
 */
 const getStatUniqueVisitor = async (app_id, data_app_id, year, month) => {
     /**@type{import('../../../server/server.service.js')} */

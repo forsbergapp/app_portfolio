@@ -7,7 +7,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * 
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_createUserAccountApp>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_app_createUserAccountApp>}
  */
 const createUserAccountApp = async (app_id, user_account_id) => {
 		const sql = `INSERT INTO <DB_SCHEMA/>.user_account_app(
@@ -29,7 +29,7 @@ const createUserAccountApp = async (app_id, user_account_id) => {
  * 
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_getUserAccountApps[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_app_getUserAccountApps[]>}
  */
 const getUserAccountApps = async (app_id, user_account_id) => {
 		const sql = `SELECT uap.app_id "app_id",
@@ -47,7 +47,7 @@ const getUserAccountApps = async (app_id, user_account_id) => {
  * 
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_getUserAccountApp[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_app_getUserAccountApp[]>}
  */
 const getUserAccountApp = async (app_id, user_account_id) => {
 		const sql = `SELECT uaa.preference_locale "preference_locale",
@@ -77,8 +77,8 @@ const getUserAccountApp = async (app_id, user_account_id) => {
  * 
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @param {import('../../../types.js').server_db_sql_parameter_user_account_app_updateUserAccountApp} data 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_updateUserAccountApp>}
+ * @param {import('../../types.js').server_db_sql_parameter_user_account_app_updateUserAccountApp} data 
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_app_updateUserAccountApp>}
  */
 const updateUserAccountApp = async (app_id, user_account_id, data) => {
 		const sql = `UPDATE <DB_SCHEMA/>.user_account_app
@@ -104,7 +104,7 @@ const updateUserAccountApp = async (app_id, user_account_id, data) => {
  * @param {number} app_id 
  * @param {number|null} user_account_id 
  * @param {number|null} data_app_id 
- * @returns {Promise.<import('../../../types.js').server_db_sql_result_user_account_app_deleteUserAccountApp>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_app_deleteUserAccountApp>}
  */
 const deleteUserAccountApp = async (app_id, user_account_id, data_app_id) => {
 		const sql = `DELETE FROM <DB_SCHEMA/>.user_account_app

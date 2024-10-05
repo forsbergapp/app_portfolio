@@ -13,7 +13,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query 
- * @param {import('../../../types.js').server_server_error} res
+ * @param {import('../../types.js').server_server_error} res
  */
 const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
@@ -34,7 +34,7 @@ const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query
- * @param {import('../../../types.js').server_server_res} res
+ * @param {import('../../types.js').server_server_res} res
  */
 const getProfileUserPosts =(app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
@@ -48,7 +48,7 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -56,7 +56,7 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query
- * @param {import('../../../types.js').server_server_res} res
+ * @param {import('../../types.js').server_server_res} res
  */
  const getProfileStatLike = (app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
@@ -76,7 +76,7 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
  * 
  * @param {number} app_id 
  * @param {*} query
- * @param {import('../../../types.js').server_server_res} res
+ * @param {import('../../types.js').server_server_res} res
  */
 const getProfileStatPost = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
@@ -90,7 +90,7 @@ const getProfileStatPost = (app_id, query, res) =>{
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -112,7 +112,7 @@ const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -123,7 +123,7 @@ const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
  */
 const createUserPost = (app_id, query, data) => {
     return new Promise((resolve, reject)=>{
-        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_app_data_post_createUserPost} */
+        /**@type{import('../../types.js').server_db_sql_parameter_user_account_app_data_post_createUserPost} */
         const data_create = {	description:		data.description,
                                 json_data: 		    data.json_data,
                                 user_account_id:	getNumberValue(data.user_account_id)
@@ -136,7 +136,7 @@ const createUserPost = (app_id, query, data) => {
                     data: result
                 });
             })
-            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
         };
         //Check if first time
         if (getNumberValue(query.get('initial'))==1){
@@ -152,7 +152,7 @@ const createUserPost = (app_id, query, data) => {
                         data: null
                     });
             })
-            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
         }
         else
             call_service();
@@ -165,11 +165,11 @@ const createUserPost = (app_id, query, data) => {
  * @param {*} resource_id
  * @param {*} query 
  * @param {*} data 
- * @param {import('../../../types.js').server_server_res} res
+ * @param {import('../../types.js').server_server_res} res
  */
 const updateUserPost = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
-        /**@type{import('../../../types.js').server_db_sql_parameter_user_account_app_data_post_updateUserPost} */
+        /**@type{import('../../types.js').server_db_sql_parameter_user_account_app_data_post_updateUserPost} */
         const data_update = {	description:		data.description,
                                 json_data: 		    data.json_data,
                                 user_account_id:	getNumberValue(data.user_account_id)};
@@ -183,7 +183,7 @@ const updateUserPost = (app_id, resource_id, query, data, res) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -192,7 +192,7 @@ const updateUserPost = (app_id, resource_id, query, data, res) => {
  * @param {number} resource_id
  * @param {*} data
  * @param {*} query 
- * @param {import('../../../types.js').server_server_res} res
+ * @param {import('../../types.js').server_server_res} res
  */
 const deleteUserPost = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
@@ -206,7 +206,7 @@ const deleteUserPost = (app_id, resource_id, query, data, res) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         })
-        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -216,7 +216,7 @@ const deleteUserPost = (app_id, resource_id, query, data, res) => {
  * @param {*} data
  */
 const like = (app_id, resource_id, data) => user_account_app_data_post_like_service.like(app_id, resource_id, getNumberValue(data.user_account_app_data_post_id))
-                                        .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
  * 
@@ -225,7 +225,7 @@ const like = (app_id, resource_id, data) => user_account_app_data_post_like_serv
  * @param {*} data
  */
 const unlike = (app_id, resource_id, data) => user_account_app_data_post_like_service.unlike(app_id, resource_id, getNumberValue(data.user_account_app_data_post_id))
-                                            .catch((/**@type{import('../../../types.js').server_server_error}*/error)=>{throw error;});
+                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 export{ getUserPostsByUserId, getProfileUserPosts, getProfileStatLike, getProfileStatPost,
         /*ACCESS */
