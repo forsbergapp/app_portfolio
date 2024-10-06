@@ -8,7 +8,7 @@
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
- * @param {import('../../../../types.js').server_server_res} res
+ * @param {import('../../../../server/types.js').server_server_res} res
  * @returns {Promise.<string>}
  */
 const module_timetable_lib = async (app_id, data, user_agent, ip, locale, res) =>{
