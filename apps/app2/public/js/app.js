@@ -585,6 +585,7 @@ const SettingShow = async (tab_selected) => {
                 mountDiv:   'settings_content',
                 data:       {
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                            common_app_id:common.COMMON_GLOBAL.common_app_id,
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_locale:common.COMMON_GLOBAL.user_locale,
                             user_timezone:common.COMMON_GLOBAL.user_timezone},

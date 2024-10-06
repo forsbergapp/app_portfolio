@@ -85,7 +85,14 @@ const component = async props => {
     const user = (props.data.username || props.data.user_account_id!=null)?await props.methods.commonFFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
                                                                 .then((/**@type{string}*/result)=>JSON.parse(result))
                                                                 .catch((/**@type{Error}*/error)=>{throw error;}):null;
-                                    
+    /**@type{{locale:string, text:string}[]} */
+    const locales = await props.methods.commonFFB({
+                                                    path:'/app-function/COMMON_LOCALE', 
+                                                    query:`lang_code=${props.data.user_locale}`, 
+                                                    method:'POST', authorization_type:'APP_DATA',
+                                                    body:{data_app_id : props.data.common_app_id}
+                                                })
+                                                .then((/**@type{string}*/result)=>JSON.parse(result).rows);                                    
     const is_provider_user = () =>{
         if (props.data.user_account_id == parseInt(user.id))
             return user.identity_provider_id!=null;
@@ -126,11 +133,11 @@ const component = async props => {
                 data:       {
                             default_data_value:props.data.user_locale,
                             default_value:'',
-                            options: null,
-                            path:'/server-db/locale',
-                            query:`lang_code=${props.data.user_locale}`,
-                            method:'GET',
-                            authorization_type:'APP_DATA',
+                            options: locales,
+                            path:null,
+                            query:null,
+                            method:null,
+                            authorization_type:null,
                             column_value:'locale',
                             column_text:'text'
                             },

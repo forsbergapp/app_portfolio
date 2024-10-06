@@ -34,6 +34,7 @@ const template = props =>`  <div id='common_lov_form'>
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      common_app_id:number,
+ *                      user_locale:string,
  *                      lov:string,
  *                      lov_custom_list?:{}[],
  *                      lov_custom_value?:string
@@ -56,9 +57,12 @@ const component = async props => {
     let query = null;
     /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
     let token_type;
+    /**@type{import('../../../common_types.js').CommonRESTAPIMethod}*/
+    let method;
     let lov_column = '';
     switch (props.data.lov){
         case 'SERVER_LOG_FILES':{
+            method = 'GET';
             lov_column = 'filename';
             path = '/server-log/log-files';
             query= null;
@@ -66,6 +70,7 @@ const component = async props => {
             break;
         }
         case 'APP_CATEGORY':{
+            method = 'GET';
             lov_column = 'app_category_text';
             path = '/server-db_admin/app_category';
             query= null;
@@ -73,6 +78,7 @@ const component = async props => {
             break;
         }
         case 'APP_ROLE':{
+            method = 'GET';
             lov_column = 'icon';
             path = '/server-db_admin/app_role';
             query= null;
@@ -80,20 +86,22 @@ const component = async props => {
             break;
         }
         case 'COUNTRY':{
+            method = 'POST', 
             lov_column = 'text_lov';
-            path = '/server-db/country';
-            query= null;
+            path = '/app-function/COMMON_COUNTRY';
+            query= `lang_code=${props.data.user_locale}`;
             token_type = 'APP_DATA';
             break;
         }
         default:{
+            method = 'GET';
             lov_column = 'text';
             path = '/server-db/app_settings';
             query= `setting_type=${props.data.lov}`;
             token_type = 'APP_DATA';
         }
     }
-    const lov_rows          = props.data.lov=='CUSTOM'?props.data.lov_custom_list:await props.methods.commonFFB({path:path, query:query, method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const lov_rows          = props.data.lov=='CUSTOM'?props.data.lov_custom_list:await props.methods.commonFFB({path:path, query:query, method:method, authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const lov_column_value  = props.data.lov=='CUSTOM'?(props.data.lov_custom_value ??''):lov_column;
 
     /**

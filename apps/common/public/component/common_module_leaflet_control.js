@@ -157,10 +157,13 @@ const component = async props => {
     const eventClickControlZoomOut = () =>{
         props.methods.moduleLeafletContainer()?.setZoom?.(props.methods.moduleLeafletContainer()?.getZoom?.() - 1);  
     };
-    const eventClickControlSearch = () =>{
+    /**
+     * @param {string} locale
+     */
+    const eventClickControlSearch = locale =>{
         if (props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
             map_control_toggle_expand('layer');
-        map_control_toggle_expand('search');
+        map_control_toggle_expand('search', locale);
     };
     const eventClickControlFullscreen = () =>{
         if (props.methods.COMMON_DOCUMENT.fullscreenElement)
@@ -252,7 +255,13 @@ const component = async props => {
      * @param {string} lang_code 
      * @returns {Promise.<{value:string, text:string}[]>}
      */
-    const map_country = async lang_code =>  [{value:'', text:'...'}].concat(await props.methods.commonFFB({path:'/server-db/country', query:`lang_code=${lang_code}`, method:'GET', authorization_type:'APP_DATA'})
+    const map_country = async lang_code =>  [{value:'', text:'...'}].concat(await props.methods.commonFFB({
+                                                                                                            path:'/app-function/COMMON_COUNTRY', 
+                                                                                                            query:`lang_code=${lang_code}`, 
+                                                                                                            method:'POST', 
+                                                                                                            authorization_type:'APP_DATA', 
+                                                                                                            body:{data_app_id:props.data.data_app_id}
+                                                                                                        })
                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                                 .then((/**@type{[{id:number, country_code:string, flag_emoji:string, group_name:string, text:string}]}*/result)=>
                                                     result.map(country=>{
@@ -334,9 +343,10 @@ const component = async props => {
     /**
      * Map control toogle expand
      * @param {string} item 
+     * @param {string|null} locale
      * @returns {Promise.<void>}
      */
-    const map_control_toggle_expand = async item =>{
+    const map_control_toggle_expand = async (item, locale = null) =>{
         let style_display;
         if (props.methods.COMMON_DOCUMENT.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
         props.methods.COMMON_DOCUMENT.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display ==''){
@@ -347,7 +357,7 @@ const component = async props => {
                         data:       {
                                     default_data_value:'',
                                     default_value:'...',
-                                    options: await map_country(props.data.user_locale),
+                                    options: await map_country(locale ?? props.data.user_locale),
                                     path:null,
                                     query:null,
                                     method:null,

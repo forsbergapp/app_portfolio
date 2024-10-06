@@ -123,6 +123,7 @@ const template = props => ` <div class='setting_horizontal_row'>
 /**
  * @param {{data:       {
  *                      commonMountdiv:string,
+ *                      common_app_id:number,
  *                      app_id:number,
  *                      user_settings:import('../js//types.js').APP_user_setting_record,
  *                      user_locale:string,
@@ -143,7 +144,12 @@ const method = async props => {
     const settings = await props.methods.commonDbAppSettingsGet();
     //get locales using user locale
     /**@type{{locale:string, text:string}[]} */
-    const locales = await props.methods.commonFFB({path:'/server-db/locale', query:`lang_code=${props.data.user_locale}`, method:'GET', authorization_type:'APP_DATA'})
+    const locales = await props.methods.commonFFB({
+                                                    path:'/app-function/COMMON_LOCALE', 
+                                                    query:`lang_code=${props.data.user_locale}`, 
+                                                    method:'POST', authorization_type:'APP_DATA',
+                                                    body:{data_app_id : props.data.common_app_id}
+                                                })
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const onMounted = async () =>{
         //Locale using setting locale

@@ -249,15 +249,9 @@ const COMMON = {
     /**@type{import('./db/components/app_setting.js')} */
     const db_app_setting = await import(`file://${process.cwd()}/server/db/components/app_setting.js`);
 
-    /**@type{import('./db/components/country.js')} */
-    const db_country = await import(`file://${process.cwd()}/server/db/components/country.js`);
-
     /**@type{import('./db/components/identity_provider.js')} */
     const db_identity_provider = await import(`file://${process.cwd()}/server/db/components/identity_provider.js`);
-
-    /**@type{import('./db/components/locale.js')} */
-    const db_locale = await import(`file://${process.cwd()}/server/db/components/locale.js`);
-    
+   
     /**@type{import('./db/components/user_account.js')} */
     const db_user_account = await import(`file://${process.cwd()}/server/db/components/user_account.js`);
 
@@ -284,6 +278,8 @@ const COMMON = {
                 const URI_query = routesparameters.parameters;
                 const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
                 const app_query = URI_query?new URLSearchParams(URI_query):null;
+
+                const COMMON_APP_ID = getNumberValue(config_service.ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
                 let resource_id_not_authorized = false;
                 /**
                  * Returns resource id number from URI path
@@ -334,7 +330,7 @@ const COMMON = {
                     params.block_user_app_data_search = params.block_user_app_data_search ?? false;
                     params.validate_app_function = params.validate_app_function ?? null;
                     params.validate_app_function_role = params.validate_app_function_role ?? null;
-
+                    const APP_ID_VALIDATE = (params.resource_validate_app_data_app_id == COMMON_APP_ID)?COMMON_APP_ID:routesparameters.app_id;
                     //match route path using resource id parameter
                     if ((params.url.endsWith('/' + resource_id_string)?params.url.replace('/' + resource_id_string, URI_path.substring(URI_path.lastIndexOf('/'))):params.url) == URI_path && 
                         //match method
@@ -342,16 +338,15 @@ const COMMON = {
                         //match required resource id
                         (params.required && URI_path.substring(URI_path.lastIndexOf('/') + 1) == '')==false &&
                         //match app data app id
-                        ((params.resource_validate_app_data_app_id && routesparameters.app_id ==params.resource_validate_app_data_app_id) ||params.resource_validate_app_data_app_id==null) &&
+                        ((params.resource_validate_app_data_app_id !=null && params.resource_validate_app_data_app_id == APP_ID_VALIDATE) ||params.resource_validate_app_data_app_id==null) &&
                         //match block app data search
                         ((params.block_user_app_data_search && getNumberValue(app_query?.get('user_account_id'))==null && getNumberValue(app_query?.get('app_id'))==null) ||params.block_user_app_data_search==false) && 
                         //match app function and app function role
-                        ((params.validate_app_function && config_service.ConfigGetApp(routesparameters.app_id, routesparameters.app_id, 'MODULES')
+                        ((params.validate_app_function && config_service.ConfigGetApp(routesparameters.app_id, APP_ID_VALIDATE, 'MODULES')
                             .filter((/**@type{*}*/module)=> module[0]=='FUNCTION' && 
                                                             module[1].toUpperCase() == params.validate_app_function?.toUpperCase() && 
-                                                            module[2].toUpperCase() == params.validate_app_function_role?.toUpperCase()).length>0) || params.validate_app_function == null))
-                        
-                        if (params.resource_validate_type)
+                                                            module[2].toUpperCase() == params.validate_app_function_role?.toUpperCase()).length>0) || params.validate_app_function == null)){
+                        if (params.resource_validate_type){
                             if (iam_service.AuthenticateResource({  app_id:routesparameters.app_id, 
                                                                     ip:routesparameters.ip, 
                                                                     authorization:routesparameters.authorization, 
@@ -363,8 +358,10 @@ const COMMON = {
                                 resource_id_not_authorized = true;
                                 return false;
                             }
+                        }
                         else
                             return true;
+                        }
                     else
                         return false;
                 };
@@ -407,18 +404,8 @@ const COMMON = {
                                                     true));
                         break;
                     }
-                    case route({url:'/bff/app_data/v1/server-db/country', method:'GET'}):{
-                        resolve(db_country.getCountries(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, false)));
-                        break;
-                    }
                     case route({url:'/bff/app_data/v1/server-db/identity_provider', method:'GET'}):{
                         resolve(db_identity_provider.getIdentityProviders(routesparameters.app_id)
-                                    .then(result=>iso_return_message(result, false)));
-                        break;
-                    }
-                    case route({url:'/bff/app_data/v1/server-db/locale', method:'GET'}):{
-                        resolve(db_locale.getLocales(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
@@ -496,7 +483,8 @@ const COMMON = {
                                 validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_EXTERNAL'}):
                     case route({url:`/bff/app_access/v1/app-function/${resource_id_string}`, method:'POST', 
                         resource_validate_app_data_app_id: routesparameters.body.data_app_id, resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_ACCESS'}):{
-                        resolve(app.getFunction(routesparameters.app_id, 
+                        //call COMMON_APP_ID function if requested or call the function registered on the app
+                        resolve(app.getFunction((routesparameters.body.data_app_id == COMMON_APP_ID)?COMMON_APP_ID ?? routesparameters.app_id:routesparameters.app_id, 
                                                 /**@ts-ignore */
                                                 resource_id_get_string(), 
                                                 routesparameters.body, 
