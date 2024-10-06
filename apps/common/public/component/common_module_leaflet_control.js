@@ -269,7 +269,7 @@ const component = async props => {
                                                                                                 country_code:country.country_code, 
                                                                                                 flag_emoji:country.flag_emoji,
                                                                                                 group_name:country.group_name}), 
-                                                                        text:`${country.group_name} - ${country.flag_emoji} ${country.text}`};})));
+                                                                        text:country.text};})));
     /**
      * Map city
      * @param {*} country_code 
