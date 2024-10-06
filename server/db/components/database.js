@@ -91,7 +91,6 @@ const install_db_get_files = async (install_type) =>{
     const fs = await import('node:fs');
 
     let count_statements = 0;
-    let count_statements_optional = 0;
     /**@type{import('../../types.js').server_db_database_install_result} */
     const install_result = [];
     const password_tag = '<APP_PASSWORD/>';
@@ -137,92 +136,60 @@ const install_db_get_files = async (install_type) =>{
         install_count++;
         const install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
         const install_obj = JSON.parse(install_json);
-        //filter for current database or for all databases and optional rows
+        //filter for current database or for all databases
         install_obj.install = install_obj.install.filter((/**@type{import('../../types.js').server_db_database_install_database_script|import('../../types.js').server_db_database_install_database_app_script}*/row) =>  
             row.db == db_use || row.db == null);
         
         for (const install_row of install_obj.install){
-            if (install_row.optional && install_row.optional != getNumberValue(query.get('optional')))
-                null;
-            else{
-                let install_sql;
-                switch (file[0]){
-                    case 0:{
-                        //main script
-                        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + install_row.script}`, 'utf8');
-                        break;
-                    }
-                    case 1:{
-                        //admin script
-                        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_ADMIN_INSTALL_PATH + install_row.script}`, 'utf8');
-                        break;
-                    }
-                    default:{
-                        //app scripts
-                        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_APP_PATH + file[2]}${DB_APP_INSTALL_PATH + install_row.script}`, 'utf8');
-                    }
+            let install_sql;
+            switch (file[0]){
+                case 0:{
+                    //main script
+                    install_sql = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + install_row.script}`, 'utf8');
+                    break;
                 }
-                //remove comments
-                //rows starting with '--' and ends width '\r\n' or '\n'
-                const sql_split = process.platform == 'win32'?'\r\n':'\n';
-                //remove rows starting with '--' and contains only '\r\n' or '\n'
-                install_sql = install_sql.split(sql_split).filter(row=>!row.startsWith('--') && (row != sql_split)).join(sql_split);
-                //split script file into separate sql statements
-                for (let sql of install_sql.split(';')){
-                    if (sql.startsWith(sql_split))
-                        sql = sql.substring(sql_split.length);
-                    if (sql.length>0){
-                        if (file[0] == 0 && sql.includes(password_tag)){
-                            let sql_and_pw;
-                            if (sql.toUpperCase().includes('INSERT INTO'))
-                                sql_and_pw = await sql_with_password('superadmin', sql);
-                            else
-                                sql_and_pw = await sql_with_password('app_portfolio', sql);
-                            sql = sql_and_pw[0];
-                        }
-                        sql = sql.replaceAll('<APP_ID/>', file[2]?file[2].toString():'0');
-                        sql = sql.replaceAll('<DB_SCHEMA/>', DB_SCHEMA);
-                            
-                        //if ; must be in wrong place then set tag in import script and convert it
-                        if (sql.includes('<SEMICOLON/>'))
-                            sql = sql.replace('<SEMICOLON/>', ';');
-                        //close and start pool when creating database, some modules dont like database name when creating database
-                        //exclude db 4 and db 5
-                        if (db_use != 4 && db_use != 5)
-                            if (sql.toUpperCase().includes('CREATE DATABASE')){
-                                //remove database name in dba pool
-                                await pool_close(null, db_use, DBA);
-                                /**@type{import('../../types.js').server_db_db_pool_parameters} */
-                                const json_data = {
-                                        use:                       db_use,
-                                        pool_id:                   null,
-                                        port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
-                                        host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
-                                        dba:                       DBA,
-                                        user:                      ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
-                                        password:                  ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
-                                        database:                  null,
-                                        //db 1 + 2 parameters
-                                        charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                        connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
-                                        // db 3 parameters
-                                        connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                        idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                        max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
-                                        // db 4 parameters not used here
-                                        connectString:             null,
-                                        poolMin:                   null,
-                                        poolMax:                   null,
-                                        poolIncrement:             null
-                                    };
-                                await pool_start(json_data);
-                            }
-                            else{
-                                if (change_system_admin_pool == true){
-                                //add database name in dba pool
-                                await pool_close(null, db_use, DBA);
-                                /**@type{import('../../types.js').server_db_db_pool_parameters} */
-                                const json_data = {
+                case 1:{
+                    //admin script
+                    install_sql = await fs.promises.readFile(`${process.cwd()}${DB_ADMIN_INSTALL_PATH + install_row.script}`, 'utf8');
+                    break;
+                }
+                default:{
+                    //app scripts
+                    install_sql = await fs.promises.readFile(`${process.cwd()}${DB_APP_PATH + file[2]}${DB_APP_INSTALL_PATH + install_row.script}`, 'utf8');
+                }
+            }
+            //remove comments
+            //rows starting with '--' and ends width '\r\n' or '\n'
+            const sql_split = process.platform == 'win32'?'\r\n':'\n';
+            //remove rows starting with '--' and contains only '\r\n' or '\n'
+            install_sql = install_sql.split(sql_split).filter(row=>!row.startsWith('--') && (row != sql_split)).join(sql_split);
+            //split script file into separate sql statements
+            for (let sql of install_sql.split(';')){
+                if (sql.startsWith(sql_split))
+                    sql = sql.substring(sql_split.length);
+                if (sql.length>0){
+                    if (file[0] == 0 && sql.includes(password_tag)){
+                        let sql_and_pw;
+                        if (sql.toUpperCase().includes('INSERT INTO'))
+                            sql_and_pw = await sql_with_password('superadmin', sql);
+                        else
+                            sql_and_pw = await sql_with_password('app_portfolio', sql);
+                        sql = sql_and_pw[0];
+                    }
+                    sql = sql.replaceAll('<APP_ID/>', file[2]?file[2].toString():'0');
+                    sql = sql.replaceAll('<DB_SCHEMA/>', DB_SCHEMA);
+                        
+                    //if ; must be in wrong place then set tag in import script and convert it
+                    if (sql.includes('<SEMICOLON/>'))
+                        sql = sql.replace('<SEMICOLON/>', ';');
+                    //close and start pool when creating database, some modules dont like database name when creating database
+                    //exclude db 4 and db 5
+                    if (db_use != 4 && db_use != 5)
+                        if (sql.toUpperCase().includes('CREATE DATABASE')){
+                            //remove database name in dba pool
+                            await pool_close(null, db_use, DBA);
+                            /**@type{import('../../types.js').server_db_db_pool_parameters} */
+                            const json_data = {
                                     use:                       db_use,
                                     pool_id:                   null,
                                     port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
@@ -230,7 +197,7 @@ const install_db_get_files = async (install_type) =>{
                                     dba:                       DBA,
                                     user:                      ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
                                     password:                  ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
-                                    database:                  ConfigGet('SERVICE_DB', `DB${db_use}_NAME`),
+                                    database:                  null,
                                     //db 1 + 2 parameters
                                     charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
                                     connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
@@ -244,18 +211,43 @@ const install_db_get_files = async (install_type) =>{
                                     poolMax:                   null,
                                     poolIncrement:             null
                                 };
-                                await pool_start(json_data);
-                                //change to database value for the rest of the function
-                                change_system_admin_pool = false;
-                                }
+                            await pool_start(json_data);
+                        }
+                        else{
+                            if (change_system_admin_pool == true){
+                            //add database name in dba pool
+                            await pool_close(null, db_use, DBA);
+                            /**@type{import('../../types.js').server_db_db_pool_parameters} */
+                            const json_data = {
+                                use:                       db_use,
+                                pool_id:                   null,
+                                port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                                host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                                dba:                       DBA,
+                                user:                      ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
+                                password:                  ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
+                                database:                  ConfigGet('SERVICE_DB', `DB${db_use}_NAME`),
+                                //db 1 + 2 parameters
+                                charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                // db 3 parameters
+                                connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+                                // db 4 parameters not used here
+                                connectString:             null,
+                                poolMin:                   null,
+                                poolMax:                   null,
+                                poolIncrement:             null
+                            };
+                            await pool_start(json_data);
+                            //change to database value for the rest of the function
+                            change_system_admin_pool = false;
                             }
-                        await db_execute(app_id, sql, {}, DBA);
-                        if (('optional' in install_row)==true && install_row.optional==getNumberValue(query.get('optional')))
-                            count_statements_optional += 1;
-                        else
-                            count_statements += 1;
-                    }
-                }  
+                        }
+                    await db_execute(app_id, sql, {}, DBA);
+                    count_statements += 1;
+                }
             }
         }
         if (install_obj.users){
@@ -303,7 +295,6 @@ const install_db_get_files = async (install_type) =>{
         }   
     }
     install_result.push({'SQL': count_statements});
-    install_result.push({'SQL optional': count_statements_optional});
     install_result.push({'finished': new Date().toISOString()});
     LogServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {info: install_result};
