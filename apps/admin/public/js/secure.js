@@ -928,10 +928,9 @@ const installation_function = (id, db_icon, path, query, method, tokentype, data
  */
 const db_install = () =>{
     common.commonComponentRemove('common_dialogue_message');
-    const optional = Number(COMMON_DOCUMENT.querySelector('#install_db_country_language_translations').classList.contains('checked'));
     installation_function(  'install_db_button_install', true, 
                             '/server-db_admin/database', 
-                            `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}&optional=${optional}`, 
+                            `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 
                             'POST', 'SYSTEMADMIN', null);
 };
 /**
