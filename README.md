@@ -244,10 +244,12 @@
     www.github.com/ushelp/EasyQRCodeJS
 	Country Translations
 	www.github.com/umpirsky/country-list
-	Language Translations
-	www.github.com/umpirsky/language-list
+	Locale Translations
+	www.github.com/umpirsky/locale-list
 	JSDoc
 	www.jsdoc.app
+	ESLint
+	www.eslint.org
 	Typescript
 	www.typescriptlang.org
 
