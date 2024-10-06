@@ -1145,6 +1145,7 @@ const commonLovShow = parameters => {
     commonComponentRender({
         mountDiv:   'common_dialogue_lov',
         data:       {
+                    user_locale:COMMON_GLOBAL.user_locale,
                     lov:parameters.lov,
                     lov_custom_list:parameters.lov_custom_list,
                     lov_custom_value:parameters.lov_custom_value
@@ -3009,7 +3010,7 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_module_leaflet_control_search_button':{
-                            COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlSearch();
+                            COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlSearch(COMMON_GLOBAL.user_locale);
                             break;
                         }
                         case 'common_module_leaflet_control_fullscreen_id':{
