@@ -11,7 +11,8 @@
  * @param {string} ip
  * @param {string} locale
  * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.<{ group_name:string, 
+ * @returns {Promise.<{ value:String,
+ *                      group_name:string, 
  *                      country_code:string, 
  *                      flag_emoji:string, 
  *                      text:string}[]>}
@@ -311,10 +312,14 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
     //format result and order by group name, country code
      const countries_map = Object.entries(countries)
                                  .map(country => {
-                                     return {   country_code:country[0].toLowerCase(), 
-                                                flag_emoji:countryData(country[0].toLowerCase()).flag_emoji, 
-                                                group_name:countryGroup(countryData(country[0].toLowerCase()).country_group), 
-                                                text:country[1]};
+                                    const data = {  value:country[0].toLowerCase(), 
+                                                    country_code:country[0].toLowerCase(), 
+                                                    flag_emoji:countryData(country[0].toLowerCase()).flag_emoji, 
+                                                    group_name:countryGroup(countryData(country[0].toLowerCase()).country_group),
+                                                    text: ''
+                                                };
+                                    data.text = `${data.group_name} - ${data.flag_emoji} ${country[1]}`;
+                                    return data;
                                  })
                                  .sort((first, second)=>{
                                     const first_sort = first.group_name.toLowerCase() +  first.country_code.toLowerCase();

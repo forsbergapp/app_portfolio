@@ -59,6 +59,7 @@ const component = async props => {
     let token_type;
     /**@type{import('../../../common_types.js').CommonRESTAPIMethod}*/
     let method;
+    let body = null;
     let lov_column = '';
     switch (props.data.lov){
         case 'SERVER_LOG_FILES':{
@@ -87,10 +88,11 @@ const component = async props => {
         }
         case 'COUNTRY':{
             method = 'POST', 
-            lov_column = 'text_lov';
+            lov_column = 'text';
             path = '/app-function/COMMON_COUNTRY';
             query= `lang_code=${props.data.user_locale}`;
             token_type = 'APP_DATA';
+            body = {data_app_id : props.data.common_app_id};
             break;
         }
         default:{
@@ -101,7 +103,13 @@ const component = async props => {
             token_type = 'APP_DATA';
         }
     }
-    const lov_rows          = props.data.lov=='CUSTOM'?props.data.lov_custom_list:await props.methods.commonFFB({path:path, query:query, method:method, authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const lov_rows          = props.data.lov=='CUSTOM'?props.data.lov_custom_list:await props.methods.commonFFB({
+                                                                                                                    path:path, 
+                                                                                                                    query:query, 
+                                                                                                                    method:method, 
+                                                                                                                    authorization_type:token_type,
+                                                                                                                    body:body
+                                                                                                                }).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const lov_column_value  = props.data.lov=='CUSTOM'?(props.data.lov_custom_value ??''):lov_column;
 
     /**

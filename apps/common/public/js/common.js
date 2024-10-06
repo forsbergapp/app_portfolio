@@ -1145,6 +1145,7 @@ const commonLovShow = parameters => {
     commonComponentRender({
         mountDiv:   'common_dialogue_lov',
         data:       {
+                    common_app_id:COMMON_GLOBAL.common_app_id,  
                     user_locale:COMMON_GLOBAL.user_locale,
                     lov:parameters.lov,
                     lov_custom_list:parameters.lov_custom_list,
