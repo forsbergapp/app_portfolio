@@ -18,7 +18,7 @@ const prayTimes_source = await fs.promises.readFile(`${path}/lib_PrayTimes.js`)
 /**@type {{default:{adjust:function, getTimes:function, setMethod:function}}} */
 const {default:prayTimes} = await import('data:text/javascript;base64,' + btoa(prayTimes_source));
 
-const timetable_lib = await import('./lib_timetable.js');
+const {REPORT_GLOBAL, component} = await import('./lib_timetable.js');
 
 /**
  * Timetable get user settings
@@ -159,19 +159,19 @@ const timetable = async (timetable_parameters) => {
 	return await new Promise((resolve) => {
 		for (const parameter of result_parameters) {
 			if (parameter['COPYRIGHT'])
-				timetable_lib.REPORT_GLOBAL.app_copyright = parameter['COPYRIGHT'];
+				REPORT_GLOBAL.app_copyright = parameter['COPYRIGHT'];
 			if (parameter['REGIONAL_DEFAULT_CALENDAR_LANG'])
-				timetable_lib.REPORT_GLOBAL.regional_def_calendar_lang = parameter['REGIONAL_DEFAULT_CALENDAR_LANG'];
+				REPORT_GLOBAL.regional_def_calendar_lang = parameter['REGIONAL_DEFAULT_CALENDAR_LANG'];
 			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'])
-				timetable_lib.REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'];
+				REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'];
 			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'])
-				timetable_lib.REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'];
+				REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'];
 			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'])
-				timetable_lib.REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'];
+				REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'];
 			if (parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'])
-				timetable_lib.REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
+				REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
 			if (parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'])
-				timetable_lib.REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
+				REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
 		}
 		/**@type{import('../../../../server/types.js').server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} */
 		const data_ViewStat = { client_ip:          			timetable_parameters.ip,
@@ -186,42 +186,81 @@ const timetable = async (timetable_parameters) => {
 			timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
 			.then((user_account_app_data_post)=>{
 				//set current date for report month
-				timetable_lib.REPORT_GLOBAL.session_currentDate = new Date();
-				timetable_lib.REPORT_GLOBAL.session_currentHijriDate = [0,0];
+				REPORT_GLOBAL.session_currentDate = new Date();
+				REPORT_GLOBAL.session_currentHijriDate = [0,0];
 				//get Hijri date from initial Gregorian date
-				timetable_lib.REPORT_GLOBAL.session_currentHijriDate[0] = 
-					parseInt(new Date(	timetable_lib.REPORT_GLOBAL.session_currentDate.getFullYear(),
-										timetable_lib.REPORT_GLOBAL.session_currentDate.getMonth(),
-										timetable_lib.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-				timetable_lib.REPORT_GLOBAL.session_currentHijriDate[1] = 
+				REPORT_GLOBAL.session_currentHijriDate[0] = 
+					parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+										REPORT_GLOBAL.session_currentDate.getMonth(),
+										REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+				REPORT_GLOBAL.session_currentHijriDate[1] = 
 					//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
-					parseInt(new Date(	timetable_lib.REPORT_GLOBAL.session_currentDate.getFullYear(),
-										timetable_lib.REPORT_GLOBAL.session_currentDate.getMonth(),
-										timetable_lib.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+					parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+										REPORT_GLOBAL.session_currentDate.getMonth(),
+										REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
 				getSettingDisplayData(timetable_parameters.app_id, timetable_parameters.app_id, 'METHOD')
 					.then(methods=>{
-						timetable_lib.set_prayer_method(methods).then(() => {
-							if (reporttype==0){
-								timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
-								.then((user_account_app_data_posts_parameters)=>{
-									
-									resolve({	report:timetable_lib.displayDay(prayTimes, user_account_app_data_post, null, user_account_app_data_posts_parameters),
+						if (reporttype==0){
+							timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
+							.then(user_account_app_data_posts_parameters=>{
+								const result = component({	data:		{
+																		commonMountdiv:null,
+																		button_id:null,
+																		timetable:'DAY',
+																		methods:methods,
+																		user_account_app_data_post:user_account_app_data_post,
+																		user_account_app_data_posts_parameters:user_account_app_data_posts_parameters
+																		},
+															methods:	{
+																		COMMON_DOCUMENT:null,
+																		prayTimes: prayTimes
+																		}
+															});
+								resolve({
+											report:result.template,
+											papersize:user_account_app_data_post.papersize
+										});
+							})
+							.catch(()=>resolve({report:'', papersize:''}));
+						}
+						else
+							if (reporttype==1){
+								const result = component({	data:		{
+																		commonMountdiv:null,
+																		button_id:null,
+																		timetable:'MONTH',
+																		methods:methods,
+																		user_account_app_data_post:user_account_app_data_post,
+																		user_account_app_data_posts_parameters:null
+																		},
+															methods:	{
+																		COMMON_DOCUMENT:null,
+																		prayTimes: prayTimes
+																		}
+															});
+								resolve({	report:result.template,
+											papersize:user_account_app_data_post.papersize
+										});
+							}
+							else 
+								if (reporttype==2){
+									const result = component({	data:		{
+																			commonMountdiv:null,
+																			button_id:null,
+																			timetable:'YEAR',
+																			methods:methods,
+																			user_account_app_data_post:user_account_app_data_post,
+																			user_account_app_data_posts_parameters:null
+																			},
+																methods:	{
+																			COMMON_DOCUMENT:null,
+																			prayTimes: prayTimes
+																			}
+																});
+									resolve({	report:result.template,
 												papersize:user_account_app_data_post.papersize
 											});
-								})
-								.catch(()=>resolve({report:'', papersize:''}));
-							}
-							else
-								if (reporttype==1){
-									resolve({	report:timetable_lib.displayMonth(prayTimes, user_account_app_data_post, null),
-												papersize:user_account_app_data_post.papersize});
 								}
-								else 
-									if (reporttype==2){
-										resolve({	report:timetable_lib.displayYear(prayTimes, user_account_app_data_post, null),
-													papersize:user_account_app_data_post.papersize});
-									}
-						});
 					});
 			}) 
 			.catch(()=>resolve({report:'', papersize:''}));

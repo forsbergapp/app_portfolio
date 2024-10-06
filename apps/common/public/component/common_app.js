@@ -235,9 +235,6 @@ const template = props =>`  <div id='common_toolbar_framework'>
  *                      font_prio2:boolean|null,
  *                      font_prio3:boolean|null},
  *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
- * @param {{COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *          commonMountdiv:string,
- *          }} props 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
