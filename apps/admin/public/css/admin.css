@@ -114,7 +114,6 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 #install_db_icon::before{								content:var(--common_app_icon_database)}
 #install_db_button_install::before{						content:var(--common_app_icon_add)}
 #install_db_button_uninstall::before{					content:var(--common_app_icon_delete)}
-#install_db_country_language_translations_icon::before{	content:var(--common_app_icon_gps_country) ' ' var(--common_app_icon_regional_locale)}
 
 #install_demo_demo_users_icon::before{					content:var(--common_app_icon_users)}
 #install_demo_button_install::before{					content:var(--common_app_icon_add)}
@@ -1029,6 +1028,9 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 }
 #install_demo_password{
 	height: 100%;
+}
+#install_demo_password_mask{
+	border: unset !important;
 }
 /* MENU DATABASE*/
 #menu_8_content_widget1{

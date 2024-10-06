@@ -13,10 +13,6 @@ const template = props => props.system_admin?`  <div id='menu_7_content_widget1'
                                                             <div id='install_db_button_install' class='common_dialogue_button common_icon'></div>
                                                             <div id='install_db_button_uninstall' class='common_dialogue_button common_icon'></div>
                                                         </div>
-                                                        <div id='install_db_input'>
-                                                            <div id='install_db_country_language_translations_icon' class='common_icon'></div>
-                                                            <div id='install_db_country_language_translations' class='common_switch'></div>
-                                                        </div>
                                                     </div>
                                                 </div>`:
                                                 `<div id='menu_7_content_widget2' class='widget'>

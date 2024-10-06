@@ -225,8 +225,6 @@ CREATE TABLE <DB_SCHEMA/>.app_translation (
     app_id                                 INTEGER,
     app_category_id                        INTEGER,
     app_setting_id                         INTEGER,
-    country_id                             INTEGER,
-    language_id_translation                INTEGER,
     text                                   VARCHAR(2000),
     json_data                              TEXT
 );
@@ -234,33 +232,20 @@ CREATE TABLE <DB_SCHEMA/>.app_translation (
 ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT arc_3 CHECK ( ( ( app_setting_id IS NOT NULL )
                                    AND ( app_id IS NULL )
-                                   AND ( app_category_id IS NULL )
-                                   AND ( country_id IS NULL )
-                                   AND ( language_id_translation IS NULL ) )
+                                   AND ( app_category_id IS NULL ) )
                                  OR ( ( app_id IS NOT NULL )
                                       AND ( app_setting_id IS NULL )
-                                      AND ( app_category_id IS NULL )
-                                      AND ( country_id IS NULL )
-                                      AND ( language_id_translation IS NULL ) )
+                                      AND ( app_category_id IS NULL ) )
                                  OR ( ( app_category_id IS NOT NULL )
                                       AND ( app_setting_id IS NULL )
-                                      AND ( app_id IS NULL )
-                                      AND ( country_id IS NULL )
-                                      AND ( language_id_translation IS NULL ) )
-                                 OR ( ( country_id IS NOT NULL )
-                                      AND ( app_setting_id IS NULL )
-                                      AND ( app_id IS NULL )
-                                      AND ( app_category_id IS NULL )
-                                      AND ( language_id_translation IS NULL ) )
-                                 OR ( ( language_id_translation IS NOT NULL )
-                                      AND ( app_setting_id IS NULL )
-                                      AND ( app_id IS NULL )
-                                      AND ( app_category_id IS NULL )
-                                      AND ( country_id IS NULL ) ) );
+                                      AND ( app_id IS NULL ) ) );
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_admin;
 
 GRANT SELECT ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_common;
+
+ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
+                                                                                         language_id );
 
 ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
@@ -270,36 +255,6 @@ ALTER TABLE <DB_SCHEMA/>.app_translation
 ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
                                                                                                  language_id );
 
-ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
-                                                                                         language_id );
-
-
-ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_country_un UNIQUE ( country_id,
-                                                                                             language_id );
-
-ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_language_translation_un UNIQUE ( language_id_translation,
-                                                                                                          language_id );
-
-CREATE TABLE <DB_SCHEMA/>.country (
-    id            INT NOT NULL AUTO_INCREMENT,
-    country_code  VARCHAR(10) NOT NULL,
-    flag_emoji    VARCHAR(10),
-    flag_url      VARCHAR(100),
-    country_group_id  INTEGER NOT NULL,
-	CONSTRAINT country_pk PRIMARY KEY ( id )
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.country TO app_portfolio_role_app_admin;
-
-GRANT SELECT ON <DB_SCHEMA/>.country TO app_portfolio_role_app_common;
-
-CREATE TABLE <DB_SCHEMA/>.country_group (
-    id          INT NOT NULL AUTO_INCREMENT,
-    group_name  VARCHAR(100) NOT NULL,
-	CONSTRAINT country_group_pk PRIMARY KEY ( id )
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.country_group TO app_portfolio_role_app_admin;
-
-GRANT SELECT ON <DB_SCHEMA/>.country_group TO app_portfolio_role_app_common;
 
 CREATE TABLE <DB_SCHEMA/>.event (
     id            INT NOT NULL AUTO_INCREMENT,
@@ -365,17 +320,6 @@ CREATE INDEX lang_code_index ON
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.language TO app_portfolio_role_app_admin;
 
 GRANT SELECT ON <DB_SCHEMA/>.language TO app_portfolio_role_app_common;
-
-CREATE TABLE <DB_SCHEMA/>.locale (
-    language_id  INTEGER NOT NULL,
-    country_id   INTEGER NOT NULL
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.locale TO app_portfolio_role_app_admin;
-
-GRANT SELECT ON <DB_SCHEMA/>.locale TO app_portfolio_role_app_common;
-
-ALTER TABLE <DB_SCHEMA/>.locale ADD CONSTRAINT locale_language_id_country_id_un UNIQUE ( language_id,
-                                                     country_id );
 
 CREATE TABLE <DB_SCHEMA/>.user_account (
     id                    INT NOT NULL AUTO_INCREMENT,
@@ -676,32 +620,12 @@ ALTER TABLE <DB_SCHEMA/>.app_translation
             ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_country_fk FOREIGN KEY ( country_id )
-        REFERENCES <DB_SCHEMA/>.country ( id );
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_language_fk FOREIGN KEY ( language_id_translation )
+    ADD CONSTRAINT app_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES <DB_SCHEMA/>.language ( id );
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_language_translation_fk FOREIGN KEY ( language_id )
-        REFERENCES <DB_SCHEMA/>.language ( id );
-
-ALTER TABLE <DB_SCHEMA/>.country
-    ADD CONSTRAINT country_country_group_fk FOREIGN KEY ( country_group_id )
-        REFERENCES <DB_SCHEMA/>.country_group ( id );
 
 ALTER TABLE <DB_SCHEMA/>.event
     ADD CONSTRAINT event_event_type_fk FOREIGN KEY ( event_type_id )
         REFERENCES <DB_SCHEMA/>.event_type ( id );
-
-ALTER TABLE <DB_SCHEMA/>.locale
-    ADD CONSTRAINT locale_country_fk FOREIGN KEY ( country_id )
-        REFERENCES <DB_SCHEMA/>.country ( id );
-
-ALTER TABLE <DB_SCHEMA/>.locale
-    ADD CONSTRAINT locale_language_fk FOREIGN KEY ( language_id )
-        REFERENCES <DB_SCHEMA/>.language ( id );
 
 ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
