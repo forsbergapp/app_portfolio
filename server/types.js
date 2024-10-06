@@ -147,7 +147,6 @@
  * @property {string} query.order_by                                - Admin parameter
  * @property {server_socket_connected_list_sort} query.sort                               - Admin parameter
  * @property {string} query.count_logged_in                         - Admin parameter
- * @property {number} query.optional                                - Admin parameter
  * @property {string} query.logscope                                - Admin log parameter
  * @property {string} query.loglevel                                - Admin log parameter
  * @property {string} query.offset                                  - Admin log parameter
@@ -1039,7 +1038,6 @@
  * @typedef {object}        server_db_database_install_database_script
  * @property {number|null}  db                  -if null then execute in all databases
  * @property {string}       script
- * @property {number}       [optional]          -installs if optional=1
  */
 
 /**
