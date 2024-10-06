@@ -24,7 +24,7 @@ const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
- * @param {import('../../../../types.js').server_server_res} res
+ * @param {import('../../../../server/types.js').server_server_res} res
  * @returns {Promise.<import('./types.js').APP_FUNCTION_cube_solve_return[]>}
  */
 const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{

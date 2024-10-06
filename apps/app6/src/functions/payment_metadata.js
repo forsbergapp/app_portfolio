@@ -7,8 +7,8 @@
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
- * @param {import('../../../../types.js').server_server_res} res
- * @returns {Promise.<import('../../../../types.js').server_db_sql_result_app_data_resource_master_get[]>}
+ * @param {import('../../../../server/types.js').server_server_res} res
+ * @returns {Promise.<import('../../../../server/types.js').server_db_sql_result_app_data_resource_master_get[]>}
  */
 const payment_metadata = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
