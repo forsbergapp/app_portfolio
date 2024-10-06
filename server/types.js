@@ -1504,23 +1504,9 @@
  */
 
 /**
- * COUNTRY
- * @typedef {{  id:string, 
- *              group_name:string, 
- *              country_code:string, 
- *              flag_emoji:string, 
- *              text:string}} server_db_sql_result_country_getCountries
- */
-
-/**
  * IDENTITY PROVIDER
  * @typedef {{  id:string, 
  *              provider_name:string}} server_db_sql_result_identity_provider_getIdentityProviders
- */
-
-/**
- * LOCALE
- * @typedef {{  locale: string, text:string}} server_db_sql_result_locale_getLocales
  */
 
 /** 

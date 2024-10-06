@@ -94,7 +94,10 @@
                         ["MAIL",            null,   "MailBody",                 "/apps/common/src/mail_body_verification.html"]
                     ]
         },
-        "MODULES":[],
+        "MODULES":[
+            ["FUNCTION","COMMON_COUNTRY",   "APP_DATA",     "Get countries for given locale",   "/apps/common/src/functions/common_country.js"],
+            ["FUNCTION","COMMON_LOCALE",    "APP_DATA",     "Get locales for given locale",     "/apps/common/src/functions/common_locale.js"]
+        ],
         "STATUS":"ONLINE"
     },
     {
