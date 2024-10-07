@@ -431,7 +431,7 @@
 	font-size:8pt;
 	line-height: 0.33em !important;
 }
-.timetable_month_class #timetable_month_data_footer{
+#timetable_month_data_footer{
 	font-size:8pt;
 	font-weight: bold;
 }
@@ -444,7 +444,7 @@
 #timetable_header,
 .timetable_month_class #timetable_header_date,
 .timetable_month_class #timetable_month_data .timetable_month_data_col,
-.timetable_month_class #timetable_month_data_footer,
+#timetable_month_data_footer,
 #timetable_footer {
 	unicode-bidi: plaintext;
 }
@@ -497,20 +497,20 @@
 	border: 0px;
 }
 /*Timetable footer*/
-.timetable_month_class #timetable_month_data_footer {
+#timetable_month_data_footer {
 	width: 100%;
 	display: table;
 	text-align: center;
 }
-.timetable_month_class #timetable_month_data_footer_row {
+#timetable_month_data_footer_row {
 	display: table-row;
 }
-.timetable_month_class #timetable_footer_col {
+#timetable_footer_col {
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
 }
-.timetable_month_class #timetable_footer_col div{
+#timetable_footer_col div{
 	display: inline-block;
 	padding-top: 2px;
 	padding-left: 5px;
@@ -552,29 +552,6 @@
 #timetable_year .timetable_month_data_header_row {
 	font-size: 6pt;
 	line-height: 6pt;
-}
-/*Footer timetable info*/
-#timetable_year #timetable_year_timetables_footer {
-	width: 100%;
-	display: table;
-}
-#timetable_year #timetable_year_timetables_footer_row {
-	display: table-row;
-	font-size: 7pt;
-}
-#timetable_year #timetable_year_timetables_footer_col {
-	display: table-cell;
-	vertical-align: middle;
-	text-align: center;
-}
-#timetable_year #timetable_year_timetables_footer_col div {
-	display: inline-block;
-	padding-top: 2px;
-	padding-left: 5px;
-	padding-right: 5px;
-}
-#timetable_year #timetable_year_timetables_footer_col div.hidden {
-	display: none;
 }
 /* YEAR month fixes*/
 #timetable_year .timetable_year_month {
@@ -1161,7 +1138,6 @@
 
 /*
 .theme_year_30001{
-	
 }
 */
 
@@ -1296,7 +1272,7 @@
 	color: var(--report_theme_timetable_data_column_even_color);
 	background-color: var(--report_theme_timetable_data_column_even_background_color);
 }
-.timetable_month_class #timetable_month_data_footer {
+#timetable_month_data_footer {
 	color: var(--report_theme_timetable_footer_color);
 	background-color: var(--report_theme_timetable_footer_background_color);
 }
