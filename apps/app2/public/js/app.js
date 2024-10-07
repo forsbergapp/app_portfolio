@@ -14,10 +14,8 @@ const path_regional ='regional';
 /**@type {import('../../../common_types.js').CommonModuleRegional} */
 const {getTimezone} = await import(path_regional);
 
-const path_praytimes = '/app-module/MODULE_LIB_PRAYTIMES';
-const {default:prayTimes}= await import(path_praytimes);
-
 const path_lib_timetable = '/app-module/MODULE_LIB_TIMETABLE';
+/**@type {import('./types.js').CommonModuleLibTimetable} */
 const {REPORT_GLOBAL, component} = await import(path_lib_timetable);
 
 
@@ -252,7 +250,7 @@ const getReportSettings = () => {
 /**
  * Timetable update
  * @param {number} timetable_type 
- * @param {string|null} item_id 
+ * @param {'toolbar_btn_left' | 'toolbar_btn_right' | null} item_id 
  * @param {import('./types.js').APP_REPORT_settings} settings 
  * @returns {Promise.<void>}
  */
@@ -280,56 +278,47 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                 prayer_hijri_date_adjustment : setting.json_data.prayer_hijri_date_adjustment
                 });
             }
-            const result = component({	data:		{
-                                                    commonMountdiv:null,
-                                                    button_id:item_id,
-                                                    timetable:'DAY',
-                                                    methods:await settings_method(),
-                                                    user_account_app_data_post:settings,
-                                                    user_account_app_data_posts_parameters:current_user_settings
-                                                    },
-                                        methods:	{
-                                                    COMMON_DOCUMENT:null,
-                                                    prayTimes: prayTimes
-                                                    }
-                                        });
-            COMMON_DOCUMENT.querySelector('#paper').innerHTML = result.template;
+            COMMON_DOCUMENT.querySelector('#paper').innerHTML = component({	data:		{
+                                                                                        commonMountdiv:null,
+                                                                                        button_id:item_id,
+                                                                                        timetable:'DAY',
+                                                                                        user_account_app_data_post:settings,
+                                                                                        user_account_app_data_posts_parameters:current_user_settings
+                                                                                        },
+                                                                            methods:	{
+                                                                                        COMMON_DOCUMENT:null
+                                                                                        }
+                                                                            }).template;
             break;
         }
         //1=create timetable month
         case 1:{
-            const result = component({	data:		{
-                                                    commonMountdiv:null,
-                                                    button_id:item_id,
-                                                    timetable:'MONTH',
-                                                    methods:await settings_method(),
-                                                    user_account_app_data_post:settings,
-                                                    user_account_app_data_posts_parameters:null
-                                                    },
-                                        methods:	{
-                                                    COMMON_DOCUMENT:null,
-                                                    prayTimes: prayTimes
-                                                    }
-                                        });
-            COMMON_DOCUMENT.querySelector('#paper').innerHTML = result.template;
+            COMMON_DOCUMENT.querySelector('#paper').innerHTML = component({	data:		{
+                                                                                        commonMountdiv:null,
+                                                                                        button_id:item_id,
+                                                                                        timetable:'MONTH',
+                                                                                        user_account_app_data_post:settings,
+                                                                                        user_account_app_data_posts_parameters:null
+                                                                                        },
+                                                                            methods:	{
+                                                                                        COMMON_DOCUMENT:null
+                                                                                        }
+                                                                            }).template;
             break;
         }
         //2=create timetable year
         case 2:{
-            const result = component({	data:		{
-                                                    commonMountdiv:null,
-                                                    button_id:item_id,
-                                                    timetable:'YEAR',
-                                                    methods:await settings_method(),
-                                                    user_account_app_data_post:settings,
-                                                    user_account_app_data_posts_parameters:null
-                                                    },
-                                        methods:	{
-                                                    COMMON_DOCUMENT:null,
-                                                    prayTimes: prayTimes
-                                                    }
-                                        });
-            COMMON_DOCUMENT.querySelector('#paper').innerHTML = result.template;
+            COMMON_DOCUMENT.querySelector('#paper').innerHTML = component({	data:		{
+                                                                                        commonMountdiv:null,
+                                                                                        button_id:item_id,
+                                                                                        timetable:'YEAR',
+                                                                                        user_account_app_data_post:settings,
+                                                                                        user_account_app_data_posts_parameters:null
+                                                                                        },
+                                                                            methods:	{
+                                                                                        COMMON_DOCUMENT:null
+                                                                                        }
+                                                                            }).template;
             break;
         }
         default:{
@@ -400,13 +389,11 @@ const update_all_theme_thumbnails = async (theme=null) => {
                                                 commonMountdiv:null,
                                                 button_id:null,
                                                 timetable:'DAY',
-                                                methods:await settings_method(),
                                                 user_account_app_data_post:getReportSettings(),
                                                 user_account_app_data_posts_parameters:current_user_settings
                                                 },
                                     methods:	{
-                                                COMMON_DOCUMENT:null,
-                                                prayTimes: prayTimes
+                                                COMMON_DOCUMENT:null
                                                 }
                                     });
 
@@ -426,26 +413,22 @@ const update_all_theme_thumbnails = async (theme=null) => {
                                                         commonMountdiv:null,
                                                         button_id:null,
                                                         timetable:'MONTH',
-                                                        methods:await settings_method(),
                                                         user_account_app_data_post:getReportSettings(),
                                                         user_account_app_data_posts_parameters:null
                                                         },
                                             methods:	{
-                                                        COMMON_DOCUMENT:null,
-                                                        prayTimes: prayTimes
+                                                        COMMON_DOCUMENT:null
                                                         }
                                             });
         const result_year = component({	data:		{
                                                     commonMountdiv:null,
                                                     button_id:null,
                                                     timetable:'YEAR',
-                                                    methods:await settings_method(),
                                                     user_account_app_data_post:getReportSettings(),
                                                     user_account_app_data_posts_parameters:null
                                                     },
                                         methods:	{
-                                                    COMMON_DOCUMENT:null,
-                                                    prayTimes: prayTimes
+                                                    COMMON_DOCUMENT:null
                                                     }
                                         });
         await common.commonComponentRender({  mountDiv:   'setting_design_theme_month',
@@ -737,7 +720,8 @@ const SettingShow = async (tab_selected) => {
                 mountDiv:   'settings_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id,
-                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
+                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                            methods:REPORT_GLOBAL.CommonModulePrayTimes_methods
                             },
                 methods:    {
                             component_setting_update:component_setting_update,
@@ -1155,66 +1139,61 @@ const user_settings_get = async () => {
     return new Promise(resolve=>{
         common.commonFFB({path:`/server-db/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, method:'GET', authorization_type:'APP_DATA'})
         .then((/**@type{string}*/result)=>{
-            APP_GLOBAL.user_settings = {current_id:0,
-                                        data:[]};
-            
-            for (const user_account_app_data_post of JSON.parse(result)) {
-                /** @type{import('./types.js').APP_user_setting_record}*/
-                const setting = JSON.parse(user_account_app_data_post.json_data);
+            const settings = JSON.parse(result).map((/** @type{import('./types.js').APP_user_setting_record}*/setting)=>{
                 const json_data = {description:setting.description,
-                                    regional_language_locale:setting.regional_language_locale,
-                                    regional_timezone:setting.regional_timezone,
-                                    regional_number_system:setting.regional_number_system,
-                                    regional_layout_direction:setting.regional_layout_direction,
-                                    regional_second_language_locale:setting.regional_second_language_locale,
-                                    regional_column_title:setting.regional_column_title,
-                                    regional_arabic_script:setting.regional_arabic_script,
-                                    regional_calendar_type:setting.regional_calendar_type,
-                                    regional_calendar_hijri_type:setting.regional_calendar_hijri_type,
-                                    gps_popular_place_id: setting.gps_popular_place_id,
-                                    gps_lat_text:fixFloat(setting.gps_lat_text),
-                                    gps_long_text:fixFloat(setting.gps_long_text),
-                                    design_theme_day_id:setting.design_theme_day_id,
-                                    design_theme_month_id:setting.design_theme_month_id,
-                                    design_theme_year_id:setting.design_theme_year_id,
-                                    design_paper_size:setting.design_paper_size,
-                                    design_row_highlight:setting.design_row_highlight,
-                                    design_column_weekday_checked:Number(setting.design_column_weekday_checked),
-                                    design_column_calendartype_checked:Number(setting.design_column_calendartype_checked),
-                                    design_column_notes_checked:Number(setting.design_column_notes_checked),
-                                    design_column_gps_checked:Number(setting.design_column_gps_checked),
-                                    design_column_timezone_checked:Number(setting.design_column_timezone_checked),
-                                    image_header_image_img:setting.image_header_image_img,
-                                    image_footer_image_img:setting.image_footer_image_img,
-                                    text_header_1_text:setting.text_header_1_text,
-                                    text_header_2_text:setting.text_header_2_text,
-                                    text_header_3_text:setting.text_header_3_text,
-                                    text_header_align:setting.text_header_align==''?null:setting.text_header_align,
-                                    text_footer_1_text:setting.text_footer_1_text,
-                                    text_footer_2_text:setting.text_footer_2_text,
-                                    text_footer_3_text:setting.text_footer_3_text,
-                                    text_footer_align:setting.text_footer_align==''?null:setting.text_footer_align,
-                                    prayer_method:setting.prayer_method,
-                                    prayer_asr_method:setting.prayer_asr_method,
-                                    prayer_high_latitude_adjustment:setting.prayer_high_latitude_adjustment,
-                                    prayer_time_format:setting.prayer_time_format,
-                                    prayer_hijri_date_adjustment:Number(setting.prayer_hijri_date_adjustment),
-                                    prayer_fajr_iqamat:setting.prayer_fajr_iqamat,
-                                    prayer_dhuhr_iqamat:setting.prayer_dhuhr_iqamat,
-                                    prayer_asr_iqamat:setting.prayer_asr_iqamat,
-                                    prayer_maghrib_iqamat:setting.prayer_maghrib_iqamat,
-                                    prayer_isha_iqamat:setting.prayer_isha_iqamat,
-                                    prayer_column_imsak_checked:Number(setting.prayer_column_imsak_checked),
-                                    prayer_column_sunset_checked:Number(setting.prayer_column_sunset_checked),
-                                    prayer_column_midnight_checked:Number(setting.prayer_column_midnight_checked),
-                                    prayer_column_fast_start_end:Number(setting.prayer_column_fast_start_end) 
-                                };
-                APP_GLOBAL.user_settings.data.push({
-                                                    id:user_account_app_data_post.id,
-                                                    json_data:json_data
-                                                    });
-                
-            }
+                    regional_language_locale:setting.regional_language_locale,
+                    regional_timezone:setting.regional_timezone,
+                    regional_number_system:setting.regional_number_system,
+                    regional_layout_direction:setting.regional_layout_direction,
+                    regional_second_language_locale:setting.regional_second_language_locale,
+                    regional_column_title:setting.regional_column_title,
+                    regional_arabic_script:setting.regional_arabic_script,
+                    regional_calendar_type:setting.regional_calendar_type,
+                    regional_calendar_hijri_type:setting.regional_calendar_hijri_type,
+                    gps_popular_place_id: setting.gps_popular_place_id,
+                    gps_lat_text:typeof setting.gps_lat_text== 'string'?fixFloat(setting.gps_lat_text):setting.gps_lat_text,
+                    gps_long_text:typeof setting.gps_long_text=='string'?fixFloat(setting.gps_long_text):setting.gps_long_text,
+                    design_theme_day_id:setting.design_theme_day_id,
+                    design_theme_month_id:setting.design_theme_month_id,
+                    design_theme_year_id:setting.design_theme_year_id,
+                    design_paper_size:setting.design_paper_size,
+                    design_row_highlight:setting.design_row_highlight,
+                    design_column_weekday_checked:Number(setting.design_column_weekday_checked),
+                    design_column_calendartype_checked:Number(setting.design_column_calendartype_checked),
+                    design_column_notes_checked:Number(setting.design_column_notes_checked),
+                    design_column_gps_checked:Number(setting.design_column_gps_checked),
+                    design_column_timezone_checked:Number(setting.design_column_timezone_checked),
+                    image_header_image_img:setting.image_header_image_img,
+                    image_footer_image_img:setting.image_footer_image_img,
+                    text_header_1_text:setting.text_header_1_text,
+                    text_header_2_text:setting.text_header_2_text,
+                    text_header_3_text:setting.text_header_3_text,
+                    text_header_align:setting.text_header_align==''?null:setting.text_header_align,
+                    text_footer_1_text:setting.text_footer_1_text,
+                    text_footer_2_text:setting.text_footer_2_text,
+                    text_footer_3_text:setting.text_footer_3_text,
+                    text_footer_align:setting.text_footer_align==''?null:setting.text_footer_align,
+                    prayer_method:setting.prayer_method,
+                    prayer_asr_method:setting.prayer_asr_method,
+                    prayer_high_latitude_adjustment:setting.prayer_high_latitude_adjustment,
+                    prayer_time_format:setting.prayer_time_format,
+                    prayer_hijri_date_adjustment:Number(setting.prayer_hijri_date_adjustment),
+                    prayer_fajr_iqamat:setting.prayer_fajr_iqamat,
+                    prayer_dhuhr_iqamat:setting.prayer_dhuhr_iqamat,
+                    prayer_asr_iqamat:setting.prayer_asr_iqamat,
+                    prayer_maghrib_iqamat:setting.prayer_maghrib_iqamat,
+                    prayer_isha_iqamat:setting.prayer_isha_iqamat,
+                    prayer_column_imsak_checked:Number(setting.prayer_column_imsak_checked),
+                    prayer_column_sunset_checked:Number(setting.prayer_column_sunset_checked),
+                    prayer_column_midnight_checked:Number(setting.prayer_column_midnight_checked),
+                    prayer_column_fast_start_end:Number(setting.prayer_column_fast_start_end) 
+                };
+                return {
+                        id:setting.id,
+                        json_data:json_data
+                        };
+            });
+            APP_GLOBAL.user_settings = {current_id:0,   data:settings};
             resolve(null);
         });
     });
@@ -1306,10 +1285,10 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
                 case 'ADD':{
                     if (add_settings==true){
                         //update user settings
-                        /** @type{import('./types.js').APP_user_setting['data'][0]}*/
+                        /** @type{import('./types.js').APP_user_setting_data}*/
                         const data = {  id:         JSON.parse(result).id, 
                                         json_data:  JSON.parse(JSON.stringify(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data))};
-                        APP_GLOBAL.user_settings.data.push(data);
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.data.length+0] = data;
                         APP_GLOBAL.user_settings.current_id = APP_GLOBAL.user_settings.data.length -1;
                     }
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id = JSON.parse(result).insertId;
@@ -2335,15 +2314,6 @@ const framework_set = async (framework=null) => {
             Focus: null,
             Input:null});
 };
-
-/**
- * @returns {Promise.<void>}
- */
- const settings_method = async () => {
-    return await common.commonFFB({path:'/server-db/app_settings_display', query:`data_app_id=${common.COMMON_GLOBAL.app_id}&setting_type=METHOD`, method:'GET', authorization_type:'APP_DATA'})
-                        .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                        .catch((/**@type{Error}*/error)=>error);
- }; 
 
 /**
  * 
