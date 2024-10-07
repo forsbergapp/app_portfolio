@@ -403,12 +403,6 @@
 	#setting_design_theme_year .timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col {
 		border-bottom: unset;
 	}
-	#setting_design_theme_year #timetable_year #timetable_year_timetables_footer.three_columntitles{
-		margin-top:unset;
-	}
-	#setting_design_theme_year #timetable_year #timetable_year_timetables_footer.three_columntitles ~ #timetable_footer{
-		margin-top:35px;
-	}
 	#setting_design_theme_year #timetable_footer{
 		position:absolute;
 	}
@@ -432,13 +426,6 @@
 	#setting_design_theme_year #timetable_year {
 		transform: scale(0.13) translate(-335%,-333%);
 		width: 740px;
-	}
-	#setting_design_theme_year #timetable_year #timetable_year_timetables.two_columntitles {
-		margin-top: -40px;
-		transform: scale(0.9);
-	}
-	#setting_design_theme_year #timetable_year #timetable_year_timetables_footer.two_columntitles {
-		margin-top: -40px;
 	}
 	#setting_design_theme_year #timetable_footer{
 		bottom: -908px;
