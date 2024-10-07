@@ -115,10 +115,10 @@
  * 			session_currentDate:Date,
  * 			session_currentHijriDate:[number, number],
  * 			CommonModulePrayTimes_methods:{[index:string]:{	name:string,
- *														params:{fajr:string, 
- *																isha:string|null, 
- *																maghrib:string|null, 
- *																midnight:string|null
+ *														params:{fajr:string|number, 
+ *																isha:string|number|null, 
+ *																maghrib?:number, 
+ *																midnight?:string
  *															}
  *													}
  *									},

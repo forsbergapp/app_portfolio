@@ -49,7 +49,7 @@ const template = () => `<div id='mapid'></div>
  *                      },
  *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
  *                      component_setting_update:import('../js/app.js')['component_setting_update'],
- *                      lib_timetable_REPORT_GLOBAL:import('../js/types.js').APP_GLOBAL['lib_timetable']['REPORT_GLOBAL'],
+ *                      REPORT_GLOBAL:import('../js/types.js').APP_REPORT_GLOBAL,
  *                      getTimezone:import('../../../common_types.js').CommonModuleRegional['getTimezone'],
  *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet'],
  *                      commonTimezoneDate:import('../../../common_types.js').CommonModuleCommon['commonTimezoneDate'],
@@ -108,7 +108,7 @@ const method = async props => {
                 //Update GPS position
                 props.methods.component_setting_update('GPS', 'POSITION');
                 const timezone = props.methods.getTimezone(   event.latlng.lat, event.latlng.lng);
-                props.methods.lib_timetable_REPORT_GLOBAL.session_currentDate = props.methods.commonTimezoneDate(timezone);
+                props.methods.REPORT_GLOBAL.session_currentDate = props.methods.commonTimezoneDate(timezone);
             }   
         };
         await props.methods.commonModuleLeafletInit('mapid',

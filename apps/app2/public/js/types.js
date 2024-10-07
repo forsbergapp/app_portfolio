@@ -2,22 +2,38 @@
  * @module apps/app2/app/types
  */
 /**
- * Type CommonModulePrayTimes
- * @typedef {{default:{adjust:function, getTimes:function, setMethod:function}}} CommonModulePrayTimes
+ * @typedef {{
+ *              data:       {
+ * 						    commonMountdiv:null,
+ * 						    timetable:'DAY'|'MONTH'|'YEAR',
+ * 						    user_account_app_data_post:APP_REPORT_settings, 
+ * 						    button_id:'toolbar_btn_left'|'toolbar_btn_right'|null,
+ * 						    user_account_app_data_posts_parameters:APP_REPORT_day_user_account_app_data_posts[]|null
+ * 						    },
+ *              methods:    {COMMON_DOCUMENT:null}}} CommonModuleLibTimetableParam
  */
-
 /**
  * Type CommonModuleLibTimetable
- * @typedef {{ REPORT_GLOBAL:APP_REPORT_GLOBAL, 
- *             timetable_translate_settings:function, 
- *             set_prayer_method:function,
- *             displayDay:function, 
- *             displayMonth:function, 
- *                          displayYear:function}} CommonModuleLibTimetable
+ * @typedef {{  REPORT_GLOBAL:APP_REPORT_GLOBAL,
+ *              component:{(arg0:CommonModuleLibTimetableParam) : 
+ *                                  {   
+ *                                      lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *                                      data:   	null,
+ *                                      methods:	null,
+ *                                      template:   string
+ *                                  }
+ *                      }
+ *          }} CommonModuleLibTimetable
  */
-
 /**
- * @typedef {{  description: string,
+ * Type CommonModuleLibTimetable
+ * @typedef {{  () : number}} test
+ *
+ */
+/**
+ * Type APP_user_setting_record
+ * @typedef {{  id?:number,
+ *              description: string,
  *              regional_language_locale: string,
  *              regional_timezone: string,
  *              regional_number_system: string,
@@ -64,10 +80,16 @@
  *              prayer_column_sunset_checked: number,
  *              prayer_column_midnight_checked: number,
  *              prayer_column_fast_start_end: number}} APP_user_setting_record
+ */
+/**
+ * Type report APP_user_setting_data
+ * @typedef {{   id:number|null, 
+ *                      json_data:APP_user_setting_record}} APP_user_setting_data
+ */
+/** 
  * Type report APP_user_setting
  * @typedef {{current_id:number,
- *            data: [{   id:number|null, 
- *                      json_data:APP_user_setting_record}]|[]
+ *            data: [APP_user_setting_data]|[]
  *          }} APP_user_setting
  */
 /** 
@@ -258,10 +280,10 @@
  * 			session_currentDate:Date,
  * 			session_currentHijriDate:[number, number],
  * 			CommonModulePrayTimes_methods:{[index:string]:{	name:string,
- *														    params:{fajr:string, 
- *															isha:string|null, 
- *															maghrib:string|null, 
- *															midnight:string|null
+ *														    params:{fajr:string|number, 
+    *																isha:string|number|null, 
+    *																maghrib?:number, 
+    *																midnight?:string
  *														    }
  *													}
  *									},

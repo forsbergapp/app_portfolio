@@ -157,7 +157,8 @@ const template = () =>`   <div class='setting_horizontal_row'>
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,
- *                      user_settings:import('../js//types.js').APP_user_setting_record
+ *                      user_settings:import('../js//types.js').APP_user_setting_record,
+ *                      methods:import('../js//types.js').APP_REPORT_GLOBAL['CommonModulePrayTimes_methods']
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
@@ -175,12 +176,12 @@ const method = async props => {
     const settings = await props.methods.commonDbAppSettingsGet();
     const onMounted = async () =>{
         //Method
-        await props.methods.commonComponentRender({
+        await props.methods.commonComponentRender({ 
             mountDiv:   'setting_select_method',
             data:       {
-                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.data.app_id && setting.app_setting_type_name == 'METHOD')[0].value,
-                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.data.app_id && setting.app_setting_type_name == 'METHOD')[0].text,
-                        options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.data.app_id && setting.app_setting_type_name == 'METHOD'),
+                        default_data_value: Object.entries(props.data.methods).map(method=>{return {value:method[0], text:method[1].name};})[0].value,
+                        default_value:      Object.entries(props.data.methods).map(method=>{return {value:method[0], text:method[1].name};})[0].text,
+                        options:            Object.entries(props.data.methods).map(method=>{return {value:method[0], text:method[1].name};}),
                         path:null,
                         query:null,
                         method:null,
