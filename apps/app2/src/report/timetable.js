@@ -4,19 +4,6 @@
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../../../../server/db/sql/user_account_app_data_post_view.service.js')} */
 const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
-/**@type{import('../../../../server/db/sql/app_setting.service.js')} */
-const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`);
-
-const fs = await import('node:fs');
-
-/**@ts-ignore */
-const path = import.meta.dirname.replaceAll('\\', '/');
-//Import module with ECMA Script module syntax using fs and Base 64
-const prayTimes_source = await fs.promises.readFile(`${path}/lib_PrayTimes.js`)
-									.then(result=>result.toString().replace('var prayTimes = new PrayTimes();','export default new PrayTimes();'))
-									.catch(error=>{throw error;});
-/**@type {{default:{adjust:function, getTimes:function, setMethod:function}}} */
-const {default:prayTimes} = await import('data:text/javascript;base64,' + btoa(prayTimes_source));
 
 const {REPORT_GLOBAL, component} = await import('./lib_timetable.js');
 
@@ -198,70 +185,61 @@ const timetable = async (timetable_parameters) => {
 					parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
 										REPORT_GLOBAL.session_currentDate.getMonth(),
 										REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
-				getSettingDisplayData(timetable_parameters.app_id, timetable_parameters.app_id, 'METHOD')
-					.then(methods=>{
-						if (reporttype==0){
-							timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
-							.then(user_account_app_data_posts_parameters=>{
-								const result = component({	data:		{
-																		commonMountdiv:null,
-																		button_id:null,
-																		timetable:'DAY',
-																		methods:methods,
-																		user_account_app_data_post:user_account_app_data_post,
-																		user_account_app_data_posts_parameters:user_account_app_data_posts_parameters
-																		},
-															methods:	{
-																		COMMON_DOCUMENT:null,
-																		prayTimes: prayTimes
-																		}
-															});
-								resolve({
-											report:result.template,
-											papersize:user_account_app_data_post.papersize
-										});
-							})
-							.catch(()=>resolve({report:'', papersize:''}));
+					if (reporttype==0){
+						timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
+						.then(user_account_app_data_posts_parameters=>{
+							const result = component({	data:		{
+																	commonMountdiv:null,
+																	button_id:null,
+																	timetable:'DAY',
+																	user_account_app_data_post:user_account_app_data_post,
+																	user_account_app_data_posts_parameters:user_account_app_data_posts_parameters
+																	},
+														methods:	{
+																	COMMON_DOCUMENT:null
+																	}
+														});
+							resolve({
+										report:result.template,
+										papersize:user_account_app_data_post.papersize
+									});
+						})
+						.catch(()=>resolve({report:'', papersize:''}));
+					}
+					else
+						if (reporttype==1){
+							const result = component({	data:		{
+																	commonMountdiv:null,
+																	button_id:null,
+																	timetable:'MONTH',
+																	user_account_app_data_post:user_account_app_data_post,
+																	user_account_app_data_posts_parameters:null
+																	},
+														methods:	{
+																	COMMON_DOCUMENT:null
+																	}
+														});
+							resolve({	report:result.template,
+										papersize:user_account_app_data_post.papersize
+									});
 						}
-						else
-							if (reporttype==1){
+						else 
+							if (reporttype==2){
 								const result = component({	data:		{
 																		commonMountdiv:null,
 																		button_id:null,
-																		timetable:'MONTH',
-																		methods:methods,
+																		timetable:'YEAR',
 																		user_account_app_data_post:user_account_app_data_post,
 																		user_account_app_data_posts_parameters:null
 																		},
 															methods:	{
-																		COMMON_DOCUMENT:null,
-																		prayTimes: prayTimes
+																		COMMON_DOCUMENT:null
 																		}
 															});
 								resolve({	report:result.template,
 											papersize:user_account_app_data_post.papersize
 										});
 							}
-							else 
-								if (reporttype==2){
-									const result = component({	data:		{
-																			commonMountdiv:null,
-																			button_id:null,
-																			timetable:'YEAR',
-																			methods:methods,
-																			user_account_app_data_post:user_account_app_data_post,
-																			user_account_app_data_posts_parameters:null
-																			},
-																methods:	{
-																			COMMON_DOCUMENT:null,
-																			prayTimes: prayTimes
-																			}
-																});
-									resolve({	report:result.template,
-												papersize:user_account_app_data_post.papersize
-											});
-								}
-					});
 			}) 
 			.catch(()=>resolve({report:'', papersize:''}));
 		})

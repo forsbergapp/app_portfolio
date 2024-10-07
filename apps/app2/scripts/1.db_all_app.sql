@@ -15,7 +15,6 @@ INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('PLACE', <APP_ID/>);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('COLUMN_TITLE', <APP_ID/>);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('HIGHLIGHT_ROW', <APP_ID/>);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('METHOD', <APP_ID/>);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('METHOD_ASR', <APP_ID/>);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('HIGH_LATITUDE_ADJUSTMENT', <APP_ID/>);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('TIMEFORMAT', <APP_ID/>);
@@ -71,25 +70,6 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'PLACE','40002','Kaaba, Masjid al-Haram, Makkah','+21.4225','+39.8262','Asia/Riyadh','🕌');
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'PLACE','40003','Al-Masjid an-Nabawi, Medina','+24.469','+39.611','Asia/Riyadh','🕌');
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'PLACE','40004','Al-Aqsa, Jerusalem','+31.7765','+35.2356','Asia/Jerusalem','🕌');
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','ALGERIAN','Algerian Ministry of Religious Affairs and Wakfs','18','17',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','DIYANET','Diyanet İşleri Başkanlığı','18','17',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','EGYPT','Egyptian General Authority of Survey','19.5','17.5',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','EGYPTBIS','Egyptian General Authority of Survey Bis','20','18',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','FRANCE15','French15','15','15',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','FRANCE18','French18','18','18',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','GULF','Gulf region','19.5','90 min',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','KARACHI','University of Islamic Sciences, Karachi','18','18',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','KEMENAG','Kementerian Agama Republik Indonesia','20','18',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','ISNA','Islamic Society of North America (ISNA)','15','15',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','JAFARI','Shia Ithna-Ashari, Leva Institute, Qum','16','14','4','Jafari');
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','JAKIM','Jabatan Kemajuan Islam Malaysia','20','18',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','MAKKAH','Umm Al-Qura University, Makkah','18.5','90 min',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','MUIS','Majlis Ugama Islam Singapura','20','18',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','MWL','Muslim World League','18','17',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','TUNISIA','Tunisian Ministry of Religious Affairs','18','18',NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','TEHRAN','Institute of Geophysics, University of Tehran','17.7','4','4.5','Jafari');
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','UOIF','Union des Organisations Islamiques de France','12','12',NULL,NULL);
 
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'HIJRI_DATE_ADJUSTMENT','2','2+',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'HIJRI_DATE_ADJUSTMENT','1','1+',NULL,NULL,NULL,NULL);

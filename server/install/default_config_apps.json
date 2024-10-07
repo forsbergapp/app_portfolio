@@ -258,7 +258,6 @@
         },
         "MODULES":[
             ["REPORT",  "TIMETABLE",            null,                               "/apps/app2/src/report/timetable.js"],
-            ["MODULE",  "MODULE_LIB_PRAYTIMES", "APP_DATA", "Module praytimes",     "/apps/app2/src/modules/module_lib_praytimes.js"],
             ["MODULE",  "MODULE_LIB_TIMETABLE", "APP_DATA", "Module timetable",     "/apps/app2/src/modules/module_lib_timetable.js"]
 
         ],
