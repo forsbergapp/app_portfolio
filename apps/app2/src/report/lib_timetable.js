@@ -76,9 +76,166 @@ const REPORT_GLOBAL = {
 Object.seal(REPORT_GLOBAL);
 
 /**
- * @param {{}} props
+ * @param {{TIMETABLE:'DAY'|'MONTH'|'YEAR', 
+ * 			TIMETABLE_YEAR_MONTH:boolean,
+ * 			TIMETABLE_ID: string, 
+ * 			TIMETABLE_CLASS:string, 
+ * 			TIMETABLE_STYLE:function|null,
+ * 			TIMETABLE_TITLE1: string,
+ * 			TIMETABLE_TITLE2: string,
+ * 			TIMETABLE_FUNCTION_DATA: function,
+ * 			TIMETABLE_YEAR_MONTH_DATA: string[]|[],
+ * 			TIMETABLE_COPYRIGHT:string,
+ * 			settings:import('../types.js').APP_REPORT_settings, 
+ * 			function_StyleGet:function}} props
  */
-const template = props =>'  ';
+const template = props => `<div id='${props.TIMETABLE_ID}' 
+								class='${props.TIMETABLE_CLASS}' ${props.TIMETABLE_YEAR_MONTH==false?`style='direction:'${props.settings.direction};${props.TIMETABLE_STYLE?props.TIMETABLE_STYLE():''}'`:''}>
+							${props.TIMETABLE_YEAR_MONTH ==false?
+								`<div id='timetable_header' class='display_font' style='${props.function_StyleGet(props.settings.header_img_src, props.settings.header_align)}'>
+									<div >${props.settings.header_txt1}</div>
+									<div >${props.settings.header_txt2}</div>
+									<div >${props.settings.header_txt3}</div>
+								</div>`:
+								''
+							}
+							${props.TIMETABLE_YEAR_MONTH==false?
+								`<div id='timetable_header_date' class='display_font'>
+									<div>${props.TIMETABLE_TITLE1}</div>
+									<div>${props.TIMETABLE_TITLE2}</div>
+								</div>`:
+								''
+							}
+							
+							${props.TIMETABLE=='DAY'?
+								`<div id='timetable_day_timetable' class='default_font'>
+									<div class='timetable_day_timetable_header_row'>
+										${props.settings.show_imsak==1?'<div class=\'timetable_icon timetable_header_col_imsak\'></div>':''}
+										<div class='timetable_icon timetable_header_col_fajr'></div>
+										<div class='timetable_icon timetable_header_col_sunrise'></div>
+										<div class='timetable_icon timetable_header_col_dhuhr'></div>
+										<div class='timetable_icon timetable_header_col_asr'></div>
+										${props.settings.show_sunset==1?'<div class=\'timetable_icon timetable_header_col_sunset\'></div>':''}
+										<div class='timetable_icon timetable_header_col_maghrib'></div>
+										<div class='timetable_icon timetable_header_col_isha'></div>
+										${props.settings.show_midnight==1?'<div class=\'timetable_icon timetable_header_col_midnight\'></div>':''}
+									</div>
+									${props.TIMETABLE_FUNCTION_DATA()}
+								</div>
+								<div class='copyright'>${props.TIMETABLE_COPYRIGHT}</div>`:
+								''
+							}
+							${props.TIMETABLE =='MONTH'?
+								`<div id='timetable_month_data' class='${props.settings.number_system=='hanidec'?'default_font bignumbers':'default_font'}'>
+									<div class='timetable_month_data_row timetable_month_data_header_row'>
+										<div class='timetable_month_data_col timetable_icon timetable_header_col_day'></div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_weekday==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.second_locale !='' 
+																					&& props.settings.show_weekday==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_calendartype==1?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_caltype\'></div>':''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_imsak==1?			'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_imsak\'></div>':''}
+										<div class='timetable_month_data_col timetable_icon timetable_header_col_fajr'></div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_fajr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
+										${props.TIMETABLE_YEAR_MONTH==false?										'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_sunrise\'></div>':''}
+										<div class='timetable_month_data_col timetable_icon timetable_header_col_dhuhr'></div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_dhuhr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
+										<div class='timetable_month_data_col timetable_icon timetable_header_col_asr'></div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_asr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_sunset==1?			'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_sunset\'></div>':''}
+										<div class='timetable_month_data_col timetable_icon timetable_header_col_maghrib'></div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_maghrib!='0'?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
+										<div class='timetable_month_data_col timetable_icon timetable_header_col_isha'></div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_isha!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_midnight==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_midnight\'></div>':''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_notes==1 ?			'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_notes\'></div>':''}
+									</div>
+									${props.TIMETABLE_FUNCTION_DATA()}
+								</div>`:
+								''
+							}
+							${(props.TIMETABLE =='MONTH' && props.TIMETABLE_YEAR_MONTH==false)?
+								`<div id='timetable_month_data_footer' class='default_font'>
+									<div id='timetable_month_data_footer_row'>
+										<div id='timetable_footer_col'>
+											<div >${props.settings.place}</div>
+											${props.settings.show_gps == 1?
+												`
+												<div >${REPORT_GLOBAL.gps_lat_text}</div>
+												<div >${Number(props.settings.gps_lat).toLocaleString(
+																						props.settings.locale + 
+																						REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																						REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																						props.settings.number_system)}</div>
+												<div >${REPORT_GLOBAL.gps_long_text}</div>
+												<div >${Number(props.settings.gps_long).toLocaleString(
+																						props.settings.locale + 
+																						REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																						REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																						props.settings.number_system)}</div>`
+												:''}
+											${props.settings.show_timezone == 1?
+												`<div >${REPORT_GLOBAL.timezone_text}</div>
+												<div >${props.settings.timezone}</div>`
+												:''}
+											<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
+										</div>
+									</div>
+								</div>`:
+								''
+							}
+							${props.TIMETABLE=='YEAR'?
+								`<div id='timetable_year_timetables' class='default_font'>
+									<div class='timetable_year_timetables_row'>
+										${[0,1,2,3].map(month=>
+											props.TIMETABLE_YEAR_MONTH_DATA[month]
+											).join('')
+										}
+									</div>
+									<div class='timetable_year_timetables_row'>
+										${[4,5,6,7].map(month=>
+											props.TIMETABLE_YEAR_MONTH_DATA[month]
+											).join('')
+										}
+									</div>
+									<div class='timetable_year_timetables_row'>
+										${[8,9,10,11].map(month=>
+											props.TIMETABLE_YEAR_MONTH_DATA[month]
+											).join('')
+										}
+									</div>
+								</div>
+								<div id='timetable_year_timetables_footer' class='default_font'>
+									<div id='timetable_year_timetables_footer_row'>
+										<div id='timetable_year_timetables_footer_col'>
+											<div ${props.settings.show_gps == 1?'class=""':'class="hidden"'}>${props.settings.place}</div>
+											<div ${props.settings.show_gps == 1?'class=""':'class="hidden"'}>${props.settings.show_gps == 1?REPORT_GLOBAL.gps_lat_text:''}</div>
+											<div ${props.settings.show_gps == 1?'class=""':'class="hidden"'}>${props.settings.show_gps == 1?Number(props.settings.gps_lat).toLocaleString(props.settings.locale + 
+																																REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																																REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																																props.settings.number_system):''}</div>
+											<div ${props.settings.show_gps == 1?'class=""':'class="hidden"'}>${props.settings.show_gps == 1?REPORT_GLOBAL.gps_long_text:''}</div>
+											<div ${props.settings.show_gps == 1?'class=""':'class="hidden"'}>${props.settings.show_gps == 1?Number(props.settings.gps_long).toLocaleString(props.settings.locale + 
+																																REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																																REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																																props.settings.number_system):''}</div>
+											<div ${props.settings.show_timezone == 1?'class=""':'class="hidden"'}>${props.settings.show_timezone == 1?REPORT_GLOBAL.timezone_text:''}</div>
+											<div ${props.settings.show_timezone == 1?'class=""':'class="hidden"'}>${props.settings.show_timezone == 1?props.settings.timezone:''}</div>
+											<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
+										</div>
+									</div>
+								</div>`:
+								''
+							}
+							${props.TIMETABLE_YEAR_MONTH==false?
+								`<div id='timetable_footer' class='display_font' style='${props.function_StyleGet(props.settings.footer_img_src, props.settings.footer_align)}'>
+									<div>${props.settings.footer_txt1}</div>
+									<div>${props.settings.footer_txt2}</div>
+									<div>${props.settings.footer_txt3}</div>
+									<div></div>
+								</div>`:
+								''
+							}
+						</div>`;
 
 /**
  * @param {{data:       {
@@ -1073,7 +1230,7 @@ const component = props => {
 	 * @param {string|null} align 
 	 * @returns {string}
 	 */
-	const getstyle = (img_src, align) => {
+	const StyleGet = (img_src, align) => {
 		const img_style = img_src==null?'':`background-image:url(${img_src});`;
 		const align_style = `${align==null?'':'text-align:' + align}`;
 		return img_style + align_style;
@@ -1343,7 +1500,7 @@ const component = props => {
 				}
 				case 'weekday':
 				case 'weekday_tr':{
-					return 'timetable_month_data_date;';
+					return 'timetable_month_data_date';
 				}
 				case 'notes':{
 					return 'timetable_month_data_notes';
@@ -1684,38 +1841,18 @@ const component = props => {
 		};
 
 		//TIMETABLE
-		return `<div id='timetable_day' class='${settings.timetable_class} ${settings.theme_day} ${settings.arabic_script}' style='direction: ${settings.direction};${style_day_column()}'>
-					<div id='timetable_header' class='display_font' style='${getstyle(settings.header_img_src, settings.header_align)}'>
-						<div >${settings.header_txt1}</div>
-						<div >${settings.header_txt2}</div>
-						<div >${settings.header_txt3}</div>
-					</div>
-					<div id='timetable_header_date' class='display_font'>
-						<div>${title_gregorian}</div>
-						<div>${title_hijri}</div>
-					</div>
-					<div id='timetable_day_timetable' class='default_font'>
-						<div class='timetable_day_timetable_header_row'>
-							${settings.show_imsak==1?'<div class=\'timetable_icon timetable_header_col_imsak\'></div>':''}
-							<div class='timetable_icon timetable_header_col_fajr'></div>
-							<div class='timetable_icon timetable_header_col_sunrise'></div>
-							<div class='timetable_icon timetable_header_col_dhuhr'></div>
-							<div class='timetable_icon timetable_header_col_asr'></div>
-							${settings.show_sunset==1?'<div class=\'timetable_icon timetable_header_col_sunset\'></div>':''}
-							<div class='timetable_icon timetable_header_col_maghrib'></div>
-							<div class='timetable_icon timetable_header_col_isha'></div>
-							${settings.show_midnight==1?'<div class=\'timetable_icon timetable_header_col_midnight\'></div>':''}
-						</div>
-						${timetable_data()}
-					</div>
-					<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
-					<div id='timetable_footer' class='display_font' style='${getstyle(settings.footer_img_src, settings.footer_align)}'>
-						<div>${settings.footer_txt1}</div>
-						<div>${settings.footer_txt2}</div>
-						<div>${settings.footer_txt3}</div>
-						<div></div>
-					</div>
-				</div>`;
+		return template({	TIMETABLE:'DAY', 
+							TIMETABLE_YEAR_MONTH:false,
+							TIMETABLE_ID: 'timetable_day', 
+							TIMETABLE_STYLE:style_day_column,
+							TIMETABLE_CLASS:`${settings.timetable_class} ${settings.theme_day} ${settings.arabic_script}`, 
+							TIMETABLE_TITLE1: title_gregorian,
+							TIMETABLE_TITLE2: title_hijri,
+							TIMETABLE_FUNCTION_DATA: timetable_data,
+							TIMETABLE_YEAR_MONTH_DATA: [],
+							TIMETABLE_COPYRIGHT:REPORT_GLOBAL.app_copyright,
+							settings:settings, 
+							function_StyleGet:StyleGet});
 	};
 
 	/**
@@ -1730,11 +1867,7 @@ const component = props => {
 		if (button_id)
 			setCurrent('MONTH', settings.ui_navigation_left, settings.ui_navigation_right, settings.calendartype, button_id);
 		const items = getColumnTitles();
-		let month_data_class='';
-		if (settings.number_system=='hanidec')
-			month_data_class = 'default_font bignumbers';
-		else
-			month_data_class = 'default_font';
+
 		/**
 		 * Gets dates and titles
 		 * Only one title of gregorian and hijri date can be displayed
@@ -1885,81 +2018,21 @@ const component = props => {
 			return month_html;
 		};
 		//TIMETABLE
-		//add default class, theme class and font class		
 		//set only id for month timetable, not year
 		//set LTR or RTL on table layout if MONTH, on YEAR direction is set on the whole year layout
-		return  `<div id='${settings.reporttype_year_month =='MONTH'?'timetable_month':''}'
-					class='${settings.timetable_class} ${settings.timetable_month} ${settings.theme_month} ${settings.arabic_script} ${year_class}'
-					${settings.reporttype_year_month =='MONTH'?'style=direction:' + settings.direction + ';':''}>
-					${settings.reporttype_year_month =='MONTH'?
-					`<div id='timetable_header' class='display_font' style='${getstyle(settings.header_img_src, settings.header_align)}'>
-						<div >${settings.header_txt1}</div>
-						<div >${settings.header_txt2}</div>
-						<div >${settings.header_txt3}</div>
-					</div>`:''}
-					<div id='timetable_header_date' class='display_font'>
-						<div>${data.title_gregorian}</div>
-						<div>${data.title_hijri}</div>
-					</div>
-					<div id='timetable_month_data' class='${month_data_class}'>
-						<div class='timetable_month_data_row timetable_month_data_header_row'>
-							<div class='timetable_month_data_col timetable_icon timetable_header_col_day'></div>
-							${settings.reporttype_year_month=='MONTH' 	&& settings.show_weekday==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
-							${settings.reporttype_year_month=='MONTH' 	&& settings.second_locale !='' 
-																		&& settings.show_weekday==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
-							${settings.reporttype_year_month=='MONTH' 	&& settings.show_calendartype==1?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_caltype\'></div>':''}
-							${settings.reporttype_year_month=='MONTH' 	&& settings.show_imsak==1?			'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_imsak\'></div>':''}
-							<div class='timetable_month_data_col timetable_icon timetable_header_col_fajr'></div>
-							${settings.reporttype_year_month=='MONTH' 	&& settings.iqamat_fajr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-							${settings.reporttype_year_month=='MONTH'?										'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_sunrise\'></div>':''}
-							<div class='timetable_month_data_col timetable_icon timetable_header_col_dhuhr'></div>
-							${settings.reporttype_year_month=='MONTH' 	&& settings.iqamat_dhuhr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-							<div class='timetable_month_data_col timetable_icon timetable_header_col_asr'></div>
-							${settings.reporttype_year_month=='MONTH' 	&& settings.iqamat_asr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-							${settings.reporttype_year_month=='MONTH' 	&& settings.show_sunset==1?			'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_sunset\'></div>':''}
-							<div class='timetable_month_data_col timetable_icon timetable_header_col_maghrib'></div>
-							${settings.reporttype_year_month=='MONTH' 	&& settings.iqamat_maghrib!='0'?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-							<div class='timetable_month_data_col timetable_icon timetable_header_col_isha'></div>
-							${settings.reporttype_year_month=='MONTH' 	&& settings.iqamat_isha!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-							${settings.reporttype_year_month=='MONTH' 	&& settings.show_midnight==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_midnight\'></div>':''}
-							${settings.reporttype_year_month=='MONTH' 	&& settings.show_notes==1 ?			'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_notes\'></div>':''}
-						</div>
-						${timetable_data()}
-					</div>
-					${settings.reporttype_year_month =='MONTH'?
-					`<div id='timetable_month_data_footer' class='default_font'>
-						<div id='timetable_month_data_footer_row'>
-							<div id='timetable_footer_col'>
-								<div >${settings.place}</div>
-								${settings.show_gps == 1?
-									`
-									<div >${REPORT_GLOBAL.gps_lat_text}</div>
-									<div >${Number(settings.gps_lat).toLocaleString(
-																			settings.locale + 
-																			REPORT_GLOBAL.regional_def_locale_ext_prefix + 
-																			REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																			settings.number_system)}</div>
-									<div >${REPORT_GLOBAL.gps_long_text}</div>
-									<div >${Number(settings.gps_long).toLocaleString(
-																			settings.locale + 
-																			REPORT_GLOBAL.regional_def_locale_ext_prefix + 
-																			REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																			settings.number_system)}</div>`
-									:''}
-								${settings.show_timezone == 1?
-									`<div >${REPORT_GLOBAL.timezone_text}</div>
-									<div >${settings.timezone}</div>`
-									:''}
-								<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
-							</div>
-						</div>
-					</div>
-					<div id='timetable_footer' class='display_font' style='${getstyle(settings.footer_img_src, settings.footer_align)}'>
-						<div>${settings.footer_txt1}</div>
-						<div>${settings.footer_txt2}</div>
-						<div>${settings.footer_txt3}</div>
-					</div>`:''}
-				</div>`;
+
+		return template({	TIMETABLE:'MONTH', 
+							TIMETABLE_YEAR_MONTH:year_class?true:false,
+							TIMETABLE_ID: settings.reporttype_year_month =='MONTH'?'timetable_month':'', 
+							TIMETABLE_STYLE:null,
+							TIMETABLE_CLASS:`${settings.timetable_class} ${settings.timetable_month} ${settings.theme_month} ${settings.arabic_script} ${year_class}`, 
+							TIMETABLE_TITLE1: data.title_gregorian,
+							TIMETABLE_TITLE2: data.title_hijri,
+							TIMETABLE_FUNCTION_DATA: timetable_data,
+							TIMETABLE_YEAR_MONTH_DATA: [],
+							TIMETABLE_COPYRIGHT:REPORT_GLOBAL.app_copyright,
+							settings:settings, 
+							function_StyleGet:StyleGet});
 	};
 
 	/**
@@ -1974,28 +2047,6 @@ const component = props => {
 		
 		settings.reporttype_year_month        = 'YEAR';
 		
-		//if both second language and both transliteration and translation columntitles will be shown
-		//add class to fix size
-		let timetable_class ='';
-		let timetable_footer_class ='';
-		if (settings.second_locale!='') {
-			//transliteration OR translation
-			if (settings.coltitle=='0' || settings.coltitle=='3'){
-				timetable_class = 'class="two_columntitles"';
-				timetable_footer_class = 'class="default_font two_columntitles"';
-			}
-			else{
-				timetable_class = 'class="three_columntitles"';
-				timetable_footer_class = 'class="default_font three_columntitles"';
-			}
-		}
-		else{
-			//transliteration and translation are in the column titles
-			if (settings.coltitle=='1' || settings.coltitle=='2'){
-				timetable_class = 'class="two_columntitles"';
-				timetable_footer_class = 'class="default_font two_columntitles"';
-			}
-		}
 		if (button_id)
 			setCurrent('YEAR', settings.ui_navigation_left, settings.ui_navigation_right, settings.calendartype, button_id);
 		
@@ -2020,70 +2071,9 @@ const component = props => {
 																								(settings.number_system=='hanidec'?'latn':settings.number_system), 
 																								options_year);
 		}
+		/**@type{string[]|[]} */
 		const months = new Array(12);
 		
-		//TIMETABLE
-		const year_timetable = ()=>{
-			return `<div id='timetable_year'
-						class='${settings.timetable_class} ${settings.theme_year} ${settings.arabic_script}'
-						style='direction: ${settings.direction}'>
-						<div id='timetable_header' class='display_font' style='${getstyle(settings.header_img_src, settings.header_align)}'>
-							<div >${settings.header_txt1}</div>
-							<div >${settings.header_txt2}</div>
-							<div >${settings.header_txt3}</div>
-						</div>
-						<div id='timetable_year_timetables_header' class='display_font'>
-							<div>${timetable_title}</div>
-							<div></div>
-						</div>
-						<div id='timetable_year_timetables' ${timetable_class}>
-							<div class='timetable_year_timetables_row'>
-								${months[0]}
-								${months[1]}
-								${months[2]}
-								${months[3]}
-							</div>
-							<div class='timetable_year_timetables_row'>
-								${months[4]}
-								${months[5]}
-								${months[6]}
-								${months[7]}
-							</div>
-							<div class='timetable_year_timetables_row'>
-								${months[8]}
-								${months[9]}
-								${months[10]}
-								${months[11]}
-							</div>
-						</div>
-						<div id='timetable_year_timetables_footer' ${timetable_footer_class}>
-							<div id='timetable_year_timetables_footer_row'>
-								<div id='timetable_year_timetables_footer_col'>
-									<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.place}</div>
-									<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?REPORT_GLOBAL.gps_lat_text:''}</div>
-									<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?Number(settings.gps_lat).toLocaleString(settings.locale + 
-																														REPORT_GLOBAL.regional_def_locale_ext_prefix + 
-																														REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																														settings.number_system):''}</div>
-									<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?REPORT_GLOBAL.gps_long_text:''}</div>
-									<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?Number(settings.gps_long).toLocaleString(settings.locale + 
-																														REPORT_GLOBAL.regional_def_locale_ext_prefix + 
-																														REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																														settings.number_system):''}</div>
-									<div ${settings.show_timezone == 1?'class=""':'class="hidden"'}>${settings.show_timezone == 1?REPORT_GLOBAL.timezone_text:''}</div>
-									<div ${settings.show_timezone == 1?'class=""':'class="hidden"'}>${settings.show_timezone == 1?settings.timezone:''}</div>
-									<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
-								</div>
-							</div>
-						</div>
-						<div id='timetable_footer' class='display_font' style='${getstyle(settings.footer_img_src, settings.footer_align)}'>
-							<div >${settings.footer_txt1}</div>
-							<div >${settings.footer_txt2}</div>
-							<div >${settings.footer_txt3}</div>
-							<div></div>
-						</div>
-					</div>`;
-		};
 		for (let monthindex = 1; monthindex <= 12; monthindex++) { 
 			if (settings.calendartype=='GREGORIAN')
 				REPORT_GLOBAL.session_currentDate.setMonth(monthindex -1);
@@ -2093,7 +2083,18 @@ const component = props => {
 		}
 		REPORT_GLOBAL.session_currentDate.setMonth(startmonth);
 		REPORT_GLOBAL.session_currentHijriDate[0] = starthijrimonth;
-		return year_timetable();
+		return template({	TIMETABLE:'YEAR', 
+							TIMETABLE_YEAR_MONTH:false,
+							TIMETABLE_ID: 'timetable_year', 
+							TIMETABLE_STYLE:null,
+							TIMETABLE_CLASS:`${settings.timetable_class} ${settings.theme_year} ${settings.arabic_script}`, 
+							TIMETABLE_TITLE1: timetable_title,
+							TIMETABLE_TITLE2: '',
+							TIMETABLE_FUNCTION_DATA: ()=>null,
+							TIMETABLE_YEAR_MONTH_DATA: months,
+							TIMETABLE_COPYRIGHT:REPORT_GLOBAL.app_copyright,
+							settings:settings, 
+							function_StyleGet:StyleGet});
 	};
 	let html = '';
 	switch (props.data.timetable){

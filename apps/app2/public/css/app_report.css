@@ -227,21 +227,7 @@
 #paper.Letter #timetable_month #timetable_month_data {
 	height:650px;
 }
-#paper.Letter #timetable_year #timetable_year_timetables.two_columntitles{
-	margin-top:-40px !important;
-	transform:scale(0.88) !important;
-}
-#paper.Letter #timetable_year #timetable_year_timetables_footer.two_columntitles{
-	margin-top:-40px !important;
-}
-/* Three columntitles fixes*/
-#paper.Letter #timetable_year #timetable_year_timetables.three_columntitles{
-	margin-top:-55px;
-	transform:scale(0.85);
-}
-#paper.Letter #timetable_year #timetable_year_timetables_footer.three_columntitles{
-	margin-top:-55px;
-}
+
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
 	#paper {
@@ -415,11 +401,7 @@
 .timetable_month_class.font_arabic_nastaliq .display_font{
 	line-height: initial;
 }
-.timetable_month_class.font_arabic_nastaliq #timetable_header_date{
-	font-size:0.71em !important;
-	line-height: initial;
-}
-.timetable_month_class.font_arabic_nastaliq #timetable_month_data .timetable_month_data_date{
+.timetable_month_class.font_arabic_nastaliq .timetable_month_data_date{
 	font-size:0.71em !important;
 	line-height: initial;
 }
@@ -443,7 +425,7 @@
 	font-weight: bold;
 }
 .timetable_month_data_header_row{
-	font-size: 14pt;
+	font-size: initial;
 }
 .timetable_month_class #timetable_month_data{
 	font-size:8pt;
@@ -564,42 +546,12 @@
 #timetable_year.font_arabic_nastaliq .display_font{
 	line-height: initial;
 }
-#timetable_year.font_arabic_nastaliq #timetable_year_timetables_header{
-	font-size: 0.51em !important;
-}
 #timetable_year.font_arabic_nastaliq .timetable_year_month #timetable_month_data_header #timetable_month_data_header_title1{
 	font-size: 0.71em !important;
-}
-/*Header timetable info*/
-#timetable_year #timetable_year_timetables_header {
-	text-align: center;
-	font-size: 9pt;
-	display: inline-block;
-	position:relative;
-}
-#timetable_year #timetable_year_timetables {
-	position:relative;
-	margin:0px;
 }
 #timetable_year .timetable_month_data_header_row {
 	font-size: 6pt;
 	line-height: 6pt;
-}
-/* Two columntitles fixes*/
-#timetable_year #timetable_year_timetables.two_columntitles{
-	margin-top:-10px;
-	transform:scale(0.98);
-}
-#timetable_year #timetable_year_timetables_footer.two_columntitles{
-	margin-top:-10px;
-}
-/* Three columntitles fixes*/
-#timetable_year #timetable_year_timetables.three_columntitles{
-	margin-top:-40px;
-	transform:scale(0.9);
-}
-#timetable_year #timetable_year_timetables_footer.three_columntitles{
-	margin-top:-40px;
 }
 /*Footer timetable info*/
 #timetable_year #timetable_year_timetables_footer {
@@ -628,6 +580,8 @@
 #timetable_year .timetable_year_month {
 	display: inline-block;
 	width:calc(25% - 5px) !important;
+	vertical-align: top;
+  	margin-bottom: 0.25em;
 }
 #timetable_year .timetable_year_month #timetable_header_date {
 	height: 5px;
@@ -640,8 +594,8 @@
 	line-height: 0.33em !important;
 }
 #timetable_year .timetable_year_month #timetable_month_data {
-	line-height: 0.65em !important;
-	font-size: 5pt !important;
+	line-height: 0.7em !important;
+	font-size: 6pt !important;
 	height: inherit;
 }
 #timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_header_row .timetable_month_data_col {
