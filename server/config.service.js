@@ -206,8 +206,8 @@ const DefaultConfig = async () => {
                 [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_policy],
                 [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_useragent],
                 [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_user],
-                [import('./types.js').server_db_file_db_name, import('./types.js').microservice_config],
-                [import('./types.js').server_db_file_db_name, import('./types.js').microservice_config_service]]} 
+                [import('./types.js').server_db_file_db_name, import('../microservice/types.js').microservice_config],
+                [import('./types.js').server_db_file_db_name, import('../microservice/types.js').microservice_config_service]]} 
     */
     const config_obj = [
                             ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
@@ -258,11 +258,11 @@ const DefaultConfig = async () => {
     config_obj[5][1].created = new Date().toISOString();
     
     //set paths in microservice config
-    /**@type{import('./types.js').microservice_config} */
+    /**@type{import('../microservice/types.js').microservice_config} */
     const microservice_config = config_obj[6][1];
     microservice_config?microservice_config.PATH_DATA             = `${SLASH}data${SLASH}microservice${SLASH}data${SLASH}`:'';
     //set paths in microservice services
-    config_obj[7][1].SERVICES.map((/**@type{import('./types.js').microservice_config_service_record}*/row)=>{
+    config_obj[7][1].SERVICES.map((/**@type{import('../microservice/types.js').microservice_config_service_record}*/row)=>{
         row.HTTPS_KEY             = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_KEY}`;
         row.HTTPS_CERT            = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_CERT}`;
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
@@ -330,8 +330,8 @@ const ConfigFileGet = async (file, saved=false, config_group=null, parameter=nul
  *          import('./types.js').server_config_iam_blockip|
  *          import('./types.js').server_config_iam_policy|
  *          import('./types.js').server_config_iam_useragent|
- *          import('./types.js').microservice_config|
- *          import('./types.js').microservice_config_service|null} config
+ *          import('../microservice/types.js').microservice_config|
+ *          import('../microservice/types.js').microservice_config_service|null} config
  * @param {number|null} maintenance
  * @param {string|null} configuration
  * @param {string|null} comment
