@@ -359,7 +359,7 @@ const method = async props => {
         props.methods.commonSelectCurrentValueSet('setting_select_report_iqamat_title_asr', props.data.user_settings.prayer_asr_iqamat);
         props.methods.commonSelectCurrentValueSet('setting_select_report_iqamat_title_maghrib', props.data.user_settings.prayer_maghrib_iqamat);
         props.methods.commonSelectCurrentValueSet('setting_select_report_iqamat_title_isha', props.data.user_settings.prayer_isha_iqamat);
-
+        
         if (Number(props.data.user_settings.prayer_column_imsak_checked))
             props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
         else
@@ -372,7 +372,7 @@ const method = async props => {
             props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
         else
             props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
-        props.methods.COMMON_DOCUMENT.querySelector('#setting_select_report_show_fast_start_end').value = props.data.user_settings.prayer_column_fast_start_end;
+        props.methods.commonSelectCurrentValueSet('setting_select_report_show_fast_start_end', props.data.user_settings.prayer_column_fast_start_end);
     };
     return {
         lifecycle:  {onMounted:onMounted},
