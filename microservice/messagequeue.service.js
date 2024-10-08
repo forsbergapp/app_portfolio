@@ -23,22 +23,22 @@ const MessageQueue = async (service, message_type, message, message_id) => {
          * @returns {Promise.<void>}
          */
         const write_file = async (file, message, result) =>{
-            file_append_log(file==0?'MESSAGE_QUEUE_ERROR':file==1?'MESSAGE_QUEUE_PUBLISH':file==2?'MESSAGE_QUEUE_CONSUME':'MESSAGE_QUEUE_ERROR', 
+            file_append_log(file==0?'MICROSERVICE_MESSAGE_QUEUE_ERROR':file==1?'MICROSERVICE_MESSAGE_QUEUE_PUBLISH':file==2?'MICROSERVICE_MESSAGE_QUEUE_CONSUME':'MICROSERVICE_MESSAGE_QUEUE_ERROR', 
                             file==0?{message_id: new Date().toISOString(), message:   message, result:result}:message??{})
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
+            .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{throw error;});
         };
         try {
             switch (message_type) {
                 case 'PUBLISH': {
                     //message PUBLISH message in message_queue_publish.json
                     const new_message_id = new Date().toISOString();
-                    /**@type{import('../types.js').microservice_message_queue_publish} */
+                    /**@type{import('./types.js').microservice_message_queue_publish} */
                     const message_queue = {message_id: new_message_id, service: service, message:   message};
                     write_file(1, message_queue, null)
                     .then(()=>{
                         resolve (MessageQueue(service, 'CONSUME', null, new_message_id));
                     })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                    .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
                         reject(error);
                     });
                     break;
@@ -46,9 +46,9 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 case 'CONSUME': {
                     //message CONSUME
                     //direct microservice call
-                    file_get_log('MESSAGE_QUEUE_PUBLISH')
-                    .then((/**@type{import('../types.js').microservice_message_queue_publish[]}*/message_queue)=>{
-                        /**@type{import('../types.js').microservice_message_queue_consume} */
+                    file_get_log('MICROSERVICE_MESSAGE_QUEUE_PUBLISH')
+                    .then((/**@type{import('./types.js').microservice_message_queue_publish[]}*/message_queue)=>{
+                        /**@type{import('./types.js').microservice_message_queue_consume} */
                         let message_consume = { message_id: null,
                                                 service:    null,
                                                 message:    null,
@@ -78,7 +78,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                     .then(()=>{
                                         resolve (null);
                                     })
-                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                                    .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
                                         write_file(0, message_consume, error)
                                         .then(()=>{
                                             reject (error);
@@ -88,12 +88,12 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                         });
                                     });
                                 })
-                                .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                                .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
                                     write_file(0, message_consume, error)
                                     .then(()=>{
                                         reject (error);
                                     })
-                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                                    .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
                                         reject(error);
                                     });
                                 });
@@ -101,7 +101,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                             }
                         }
                     })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                    .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
                         write_file(0, message, error).then(()=>{
                             reject(message);
                         });
@@ -115,7 +115,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                     });
                 }
             }
-        } catch (/**@type{import('../types.js').server_server_error}*/error){
+        } catch (/**@type{import('../server/types.js').server_server_error}*/error){
             write_file(0, message, error).then(()=>{
                 reject(message);
             });
