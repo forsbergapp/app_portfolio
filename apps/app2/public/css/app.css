@@ -373,6 +373,9 @@
 	transform-origin: unset !important;
 	margin-top: unset !important;
 }
+.setting_design_thumbnail .timetable_month_data_header_row{
+	font-size: unset;
+}
 .paper.A4 > div{
 	width : 210mm !important;
 	height : 297mm !important;
