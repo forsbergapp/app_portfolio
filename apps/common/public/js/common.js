@@ -1746,7 +1746,7 @@ const commonUserUpdate = async () => {
     return new Promise(resolve=>{
         const username = COMMON_DOCUMENT.querySelector('#common_user_edit_input_username').textContent;
         const bio = COMMON_DOCUMENT.querySelector('#common_user_edit_input_bio').textContent;
-        const avatar = COMMON_DOCUMENT.querySelector('#common_user_edit_avatar_img').style.backgroundImage;
+        const avatar = COMMON_DOCUMENT.querySelector('#common_user_edit_avatar_img').getAttribute('data-image');
         const new_email = COMMON_DOCUMENT.querySelector('#common_user_edit_input_new_email').textContent;
     
         let path;
@@ -1801,6 +1801,7 @@ const commonUserUpdate = async () => {
        commonFFB({path:path, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_user_edit_btn_user_update'})
         .then(result=>{
             COMMON_DOCUMENT.querySelector('#common_user_menu_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
+            COMMON_DOCUMENT.querySelector('#common_user_menu_avatar_img').setAttribute('data-image',avatar);
             if (JSON.parse(result).sent_change_email == 1){
                 commonDialogueShow('VERIFY', 'NEW_EMAIL', new_email, null);
             }
