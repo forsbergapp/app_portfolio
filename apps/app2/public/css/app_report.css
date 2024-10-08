@@ -487,8 +487,8 @@
 	font-weight:bold;
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_notes {
-	margin: 0px;
 	padding: 0px;
+	line-height: 0.33em !important;
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_notes .common_input {
 	width: 85%;
