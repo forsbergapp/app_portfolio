@@ -84,29 +84,30 @@ Object.seal(REPORT_GLOBAL);
  * 			TIMETABLE_TITLE1: string,
  * 			TIMETABLE_TITLE2: string,
  * 			TIMETABLE_DAY_DATA:{	row_class:string, 
- * 									col_imsak:string, 
- * 									col_fajr:string, 
- * 									col_sunrise:string, 
- * 									col_dhuhr:string, 
- * 									col_asr:string, 
- * 									col_sunset:string, 
- * 									col_maghrib:string, 
- * 									col_isha:string, 
- * 									col_midnight:string,
+ * 									col_imsak:{class:string, value:string}|null,
+ * 									col_fajr:{class:string, value:string},
+ * 									col_sunrise:{class:string, value:string},
+ * 									col_dhuhr:{class:string, value:string},
+ * 									col_asr:{class:string, value:string},
+ * 									col_sunset:{class:string, value:string}|null,
+ * 									col_maghrib:{class:string, value:string},
+ * 									col_isha:{class:string, value:string},
+ * 									col_midnight:{class:string, value:string}|null,
  *									footer1:string,
  *									footer2:string,
  *									footer3:string,
  *									footer4:string,
  *									footer5:string,
  *									user_timezone:string}[]|[],
- * 			TIMETABLE_MONTH_DATA:{class:string, html:string}[]|[],
+ * 			TIMETABLE_MONTH_DATA:{class:string, columns:{class:string, attribute?:string, value:string}[]}[],
  * 			TIMETABLE_YEAR_MONTH_DATA: string[]|[],
  * 			TIMETABLE_COPYRIGHT:string,
  * 			settings:import('../types.js').APP_REPORT_settings, 
  * 			function_StyleGet:function}} props
  */
 const template = props => `<div id='${props.TIMETABLE_ID}' 
-								class='${props.TIMETABLE_CLASS}' ${props.TIMETABLE_YEAR_MONTH==false?`style='direction:'${props.settings.direction};${props.TIMETABLE_STYLE?props.TIMETABLE_STYLE():''}'`:''}>
+								class='${props.TIMETABLE_CLASS}' 
+								${props.TIMETABLE_YEAR_MONTH==false?`style='direction:${props.settings.direction};${props.TIMETABLE_STYLE?props.TIMETABLE_STYLE():''}'`:''}>
 							${props.TIMETABLE_YEAR_MONTH ==false?
 								`<div id='timetable_header' class='display_font' style='${props.function_StyleGet(props.settings.header_img_src, props.settings.header_align)}'>
 									<div >${props.settings.header_txt1}</div>
@@ -138,7 +139,15 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
 									</div>
 									${props.TIMETABLE_DAY_DATA.map(setting=>
 										`<div class='${setting.row_class}'>
-											${setting.col_imsak}${setting.col_fajr}${setting.col_sunrise}${setting.col_dhuhr}${setting.col_asr}${setting.col_sunset}${setting.col_maghrib}${setting.col_isha}${setting.col_midnight}
+											${setting.col_imsak?`<div class='${setting.col_imsak.class}'>${setting.col_imsak.value}</div>`:''}
+											<div class='${setting.col_fajr.class}'>${setting.col_fajr.value}</div>
+											<div class='${setting.col_sunrise.class}'>${setting.col_sunrise.value}</div>
+											<div class='${setting.col_dhuhr.class}'>${setting.col_dhuhr.value}</div>
+											<div class='${setting.col_asr.class}'>${setting.col_asr.value}</div>
+											${setting.col_sunset?`<div class='${setting.col_sunset.class}'>${setting.col_sunset.value}</div>`:''}
+											<div class='${setting.col_maghrib.class}'>${setting.col_maghrib.value}</div>
+											<div class='${setting.col_isha.class}'>${setting.col_isha.value}</div>
+											${setting.col_midnight?`<div class='${setting.col_midnight.class}'>${setting.col_midnight.value}</div>`:''}
 										</div>
 										<div class='timetable_day_timetable_footer'>
 											<div class='timetable_day_timetable_footer_row'>
@@ -160,31 +169,34 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
 							}
 							${props.TIMETABLE =='MONTH'?
 								`<div id='timetable_month_data' class='${props.settings.number_system=='hanidec'?'default_font bignumbers':'default_font'}'>
-									<div class='timetable_month_data_row timetable_month_data_header_row'>
-										<div class='timetable_month_data_col timetable_icon timetable_header_col_day'></div>
+																														 <div class='timetable_month_data_row timetable_month_data_header_row'>
+																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_day'></div>
 										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_weekday==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
 										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.second_locale !='' 
-																					&& props.settings.show_weekday==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
+																					&& props.settings.show_weekday==1?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
 										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_calendartype==1?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_caltype\'></div>':''}
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_imsak==1?			'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_imsak\'></div>':''}
-										<div class='timetable_month_data_col timetable_icon timetable_header_col_fajr'></div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_imsak==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_imsak\'></div>':''}
+																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_fajr'></div>
 										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_fajr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-										${props.TIMETABLE_YEAR_MONTH==false?										'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_sunrise\'></div>':''}
-										<div class='timetable_month_data_col timetable_icon timetable_header_col_dhuhr'></div>
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_dhuhr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-										<div class='timetable_month_data_col timetable_icon timetable_header_col_asr'></div>
+										${props.TIMETABLE_YEAR_MONTH==false?											'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_sunrise\'></div>':''}
+																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_dhuhr'></div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_dhuhr!='0'?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
+																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_asr'></div>
 										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_asr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_sunset==1?			'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_sunset\'></div>':''}
-										<div class='timetable_month_data_col timetable_icon timetable_header_col_maghrib'></div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_sunset==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_sunset\'></div>':''}
+																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_maghrib'></div>
 										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_maghrib!='0'?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-										<div class='timetable_month_data_col timetable_icon timetable_header_col_isha'></div>
+																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_isha'></div>
 										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_isha!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
 										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_midnight==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_midnight\'></div>':''}
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_notes==1 ?			'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_notes\'></div>':''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_notes==1 ?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_notes\'></div>':''}
 									</div>
 									${props.TIMETABLE_MONTH_DATA.map(row=>
 										`<div class='${row.class}'>
-											${row.html}
+											${row.columns.map(column=>
+												`<div class='${column.class}' ${column.attribute?column.attribute:''}>${column.value}</div>`
+												).join('')
+											}
 										</div>
 										`
 									).join('')
@@ -1136,31 +1148,7 @@ const component = props => {
 		}
 	};
 
-	/**
-	 * Get column titles
-	 * @returns {import('../types.js').APP_REPORT_column_titles}
-	 */
-	const getColumnTitles = () => {
-		return {day: '',
-						weekday: '',
-						weekday_tr: '',
-						caltype: '',
-						imsak: '',
-						fajr: '',
-						iqamat_fajr: '',
-						sunrise: '',
-						dhuhr: '',
-						iqamat_dhuhr: '',
-						asr: '',
-						iqamat_asr: '',
-						sunset: '',
-						maghrib: '',
-						iqamat_maghrib: '',
-						isha: '',
-						iqamat_isha: '',
-						midnight: '',
-						notes: ''};
-	};
+
 	/**
 	 * Checks if today
 	 * compares the current date in the timetable with current date of the client using the timetable timezone
@@ -1257,7 +1245,7 @@ const component = props => {
 	/**
 	 * Show column with correct class and correct format 
 	 * for both day and month timetable
-	 * @param {number} timetable 
+	 * @param {'DAY'|'MONTH'} timetable
 	 * @param {string} col 
 	 * @param {string|number} value 
 	 * @param {{year: 					number,
@@ -1271,7 +1259,7 @@ const component = props => {
 	*			locale:					string,
 	*			number_system:			string,
 	*			format:					string}} col_data
-	* @returns 
+	* @returns {{class:string, value:string}}
 	*/
 	const show_col = (timetable, col, value, col_data) => {
 		let display_value ='';
@@ -1294,10 +1282,12 @@ const component = props => {
 				col_data.calendartype, 
 				col_data.calendar_hijri_type, 
 				col_data.hijri_adjustment)){
-			if (timetable==0)
-				return `<div class='timetable_month_data_col timetable_data_fast_start'>${display_value}</div>`;
-			if (timetable==1)
-				return `<div class="timetable_data_fast_start">${display_value}</div>`;
+			if (timetable=='MONTH')
+				return {class:'timetable_month_data_col timetable_data_fast_start',
+						value:display_value};
+			if (timetable=='DAY')
+				return {class:'timetable_data_fast_start',
+						value:display_value};
 			}
 		else
 			if (((col_data.show_fast_start_end==1 && col=='maghrib') ||
@@ -1311,25 +1301,33 @@ const component = props => {
 								col_data.calendartype, 
 								col_data.calendar_hijri_type, 
 								col_data.hijri_adjustment)){
-				if (timetable==0)
-					return `<div class='timetable_month_data_col timetable_data_fast_end'>${display_value}</div>`;
-				if (timetable==1)
-					return `<div class="timetable_data_fast_end">${display_value}</div>`;
+				if (timetable=='MONTH')
+					return {class:'timetable_month_data_col timetable_data_fast_end',
+							value:display_value};
+				if (timetable=='DAY')
+					return {class:'timetable_data_fast_end',
+							value:display_value};
 				}
 			else{
 				if (col=='sunrise'){
-					if (timetable==0)
-						return `<div class='timetable_month_data_col timetable_month_data_sunrise'>${display_value}</div>`;
-					if (timetable==1)
-						return `<div>${display_value}</div>`;
+					if (timetable=='MONTH')
+						return {class:'timetable_month_data_col timetable_month_data_sunrise',
+								value:display_value};
+					if (timetable=='DAY')
+						return {class:'',
+								value:display_value};
 					}
 				else{
-					if (timetable==0)
-						return `<div class='timetable_month_data_col'>${display_value}</div>`;
-					if (timetable==1)
-						return `<div>${display_value}</div>`;
+					if (timetable=='MONTH')
+						return {class:'timetable_month_data_col',
+								value:display_value};
+					if (timetable=='DAY')
+						return {class:'',
+								value:display_value};
 					}
 				}
+		return {class:'',
+				value:display_value};
 	};
 	/**
 	 * Converts float to hour and minutes
@@ -1613,15 +1611,15 @@ const component = props => {
 			 * @param {number|null} user_hijri_adjustment 
 			 * @param {string} user_place 
 			 * @returns {{	row_class:string, 
-             * 				col_imsak:string, 
-			 * 				col_fajr:string, 
-			 * 				col_sunrise:string, 
-			 * 				col_dhuhr:string, 
-			 * 				col_asr:string, 
-			 * 				col_sunset:string, 
-			 * 				col_maghrib:string, 
-			 * 				col_isha:string, 
-			 * 				col_midnight:string,
+             * 				col_imsak:{class:string, value:string}|null,
+			 * 				col_fajr:{class:string, value:string},
+			 * 				col_sunrise:{class:string, value:string},
+			 * 				col_dhuhr:{class:string, value:string},
+			 * 				col_asr:{class:string, value:string},
+			 * 				col_sunset:{class:string, value:string}|null,
+			 * 				col_maghrib:{class:string, value:string},
+			 * 				col_isha:{class:string, value:string},
+			 * 				col_midnight:{class:string, value:string}|null,
 			 *				footer1:string,
 			 *				footer2:string,
 			 *				footer3:string,
@@ -1652,15 +1650,15 @@ const component = props => {
 
 				return	{
 					row_class:		`timetable_day_timetable_row_data ${isToday(date_current, settings.timezone)==true?'timetable_day_today_row':''}`,
-					col_imsak:		settings.show_imsak == 1?show_col(1, 'imsak', times.imsak, show_col_data ) ?? '':'',
-					col_fajr:		show_col(1, 'fajr', times.fajr, show_col_data) ?? '',
-					col_sunrise:	show_col(1, 'sunrise', times.sunrise, show_col_data) ?? '',
-					col_dhuhr:		show_col(1, 'dhuhr', times.dhuhr, show_col_data) ?? '',
-					col_asr:		show_col(1, 'asr', times.asr, show_col_data) ?? '',
-					col_sunset : 	settings.show_sunset == 1?show_col(1, 'sunset', times.sunset, show_col_data) ?? '':'',
-					col_maghrib : 	show_col(1, 'maghrib', times.maghrib, show_col_data) ?? '',
-					col_isha : 		show_col(1, 'isha', times.isha, show_col_data) ?? ' ',
-					col_midnight : 	settings.show_midnight == 1? show_col(1, 'midnight', times.midnight ?? 0, show_col_data) ?? '':'',
+					col_imsak:		settings.show_imsak == 1?show_col('DAY', 'imsak', times.imsak, show_col_data ):null,
+					col_fajr:		show_col('DAY', 'fajr', times.fajr, show_col_data),
+					col_sunrise:	show_col('DAY', 'sunrise', times.sunrise, show_col_data),
+					col_dhuhr:		show_col('DAY', 'dhuhr', times.dhuhr, show_col_data),
+					col_asr:		show_col('DAY', 'asr', times.asr, show_col_data),
+					col_sunset : 	settings.show_sunset == 1?show_col('DAY', 'sunset', times.sunset, show_col_data):null,
+					col_maghrib : 	show_col('DAY', 'maghrib', times.maghrib, show_col_data),
+					col_isha : 		show_col('DAY', 'isha', times.isha, show_col_data),
+					col_midnight : 	settings.show_midnight == 1? show_col('DAY', 'midnight', times.midnight ?? 0, show_col_data):null,
 					footer1:		user_place,
 					footer2:		settings.show_gps == 1 ? REPORT_GLOBAL.gps_lat_text:'',
 					footer3:		settings.show_gps == 1 ? user_gps_latitude?.toLocaleString(user_locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system) ?? '':'',
@@ -1719,23 +1717,42 @@ const component = props => {
 /**
 	 * Make a timetable month row
 	 * @param {import('../types.js').APP_REPORT_times} data 
-	 * @param {import('../types.js').APP_REPORT_column_titles} columns 
 	 * @param {number} year 
 	 * @param {number} month 
 	 * @param {import('../types.js').APP_REPORT_settings} settings 
 	 * @param {[number, number, number]|null} date 
-	 * @returns {string}
+	 * @returns {{class:string, attribute?:string, value:string}[]}
 	 */
-	const makeTableRow = (data, columns, year, month, settings, date = null) => {
+	const makeTableRow = (data, year, month, settings, date = null) => {
+
+		/**@type{import('../types.js').APP_REPORT_column_titles} */
+		const columns = {
+							day: '',
+							weekday: '',
+							weekday_tr: '',
+							caltype: '',
+							imsak: '',
+							fajr: '',
+							iqamat_fajr: '',
+							sunrise: '',
+							dhuhr: '',
+							iqamat_dhuhr: '',
+							asr: '',
+							iqamat_asr: '',
+							sunset: '',
+							maghrib: '',
+							iqamat_maghrib: '',
+							isha: '',
+							iqamat_isha: '',
+							midnight: '',
+							notes: ''
+						};
 
 		/**@type{Intl.DateTimeFormatOptions} */
 		const options_weekday = {weekday:'long'};
 		/**@type{Intl.DateTimeFormatOptions} */
 		const options_calendartype = {timeZone: settings.timezone, 
 									dateStyle: 'short'};
-		let iqamat;
-		let html='';
-
 		/**
 		 * @param {string} column
 		 */
@@ -1749,7 +1766,7 @@ const component = props => {
 					return 'timetable_month_data_date';
 				}
 				case 'notes':{
-					return 'timetable_month_data_notes';
+					return 'timetable_month_data_notes common_input';
 				}
 				default:{
 					return '';
@@ -1765,7 +1782,7 @@ const component = props => {
 			switch (column){
 				case 'day':{
 					return number_system=='hanidec'?
-						getNumberString(settings.number_system, data[column]):
+						getNumberString(settings.number_system, data[column]).toString():
 							data[column].toLocaleString(settings.locale + 
 														REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 														REPORT_GLOBAL.regional_def_locale_ext_number_system + 
@@ -1808,7 +1825,7 @@ const component = props => {
 				case 'iqamat_asr':
 				case 'iqamat_maghrib':
 				case 'iqamat_isha':{
-					iqamat = calculateIqamat(settings[column], data[column.split('_')[1]]);
+					const iqamat = calculateIqamat(settings[column], data[column.split('_')[1]]);
 					return localTime(null, settings.locale + 		REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 									REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 									settings.number_system, 
@@ -1816,34 +1833,38 @@ const component = props => {
 									iqamat.hours, 
 									iqamat.minutes);	
 				}
-				case 'notes':{
-					return `${''}<div contentEditable='true' class='common_input'/>`;
-				}
 				default:{
 					return '';
 				}
 			}
 		};
-		for (const column in columns) {
-			iqamat = '';
-			//Check if column should be displayed
-			if ( (column=='weekday' && (settings.show_weekday ==0 || settings.reporttype_year_month =='YEAR'))||
-					(column=='weekday_tr' && ((settings.second_locale =='' ||
-										settings.show_weekday ==0) || settings.reporttype_year_month =='YEAR'))||
-					(column=='caltype' && (settings.show_calendartype ==0 || settings.reporttype_year_month =='YEAR'))||
-					(column=='imsak' && (settings.show_imsak ==0 || settings.reporttype_year_month =='YEAR'))||
-					(column=='sunrise' && settings.reporttype_year_month =='YEAR')||
-					(column=='iqamat_fajr' && (settings.iqamat_fajr =='0' || settings.reporttype_year_month =='YEAR'))||
-					(column=='iqamat_dhuhr' && (settings.iqamat_dhuhr=='0' || settings.reporttype_year_month =='YEAR'))||
-					(column=='iqamat_asr' && (settings.iqamat_asr=='0' || settings.reporttype_year_month =='YEAR'))||
-					(column=='iqamat_maghrib' && (settings.iqamat_maghrib=='0' || settings.reporttype_year_month =='YEAR'))||
-					(column=='iqamat_isha' && (settings.iqamat_isha=='0' || settings.reporttype_year_month =='YEAR'))||
-					(column=='sunset' && (settings.show_sunset ==0 || settings.reporttype_year_month =='YEAR'))||
-					(column=='midnight' && (settings.show_midnight ==0 || settings.reporttype_year_month =='YEAR'))||
-					(column=='notes' && (settings.show_notes ==0 || settings.reporttype_year_month =='YEAR')))
-				null;
-			else{
+		/**
+		 * Check if column should be displayed
+		 * @param {string} column
+		 */
+		const columnShow = column =>	(column=='weekday' 			&& (settings.show_weekday ==1 		&& settings.reporttype_year_month =='MONTH'))||
+										(column=='weekday_tr' 		&& (settings.show_weekday ==1		&& settings.second_locale !=''
+																										&& settings.reporttype_year_month =='MONTH'))||
+										(column=='caltype' 			&& (settings.show_calendartype ==1 	&& settings.reporttype_year_month =='MONTH'))||
+										(column=='imsak' 			&& (settings.show_imsak ==1 		&& settings.reporttype_year_month =='MONTH'))||
+										(column=='sunrise' 			&& settings.reporttype_year_month =='MONTH')||
+										(column=='iqamat_fajr' 		&& (settings.iqamat_fajr !='0' 		&& settings.reporttype_year_month =='MONTH'))||
+										(column=='iqamat_dhuhr' 	&& (settings.iqamat_dhuhr!='0' 		&& settings.reporttype_year_month =='MONTH'))||
+										(column=='iqamat_asr' 		&& (settings.iqamat_asr!='0' 		&& settings.reporttype_year_month =='MONTH'))||
+										(column=='iqamat_maghrib' 	&& (settings.iqamat_maghrib!='0' 	&& settings.reporttype_year_month =='MONTH'))||
+										(column=='iqamat_isha' 		&& (settings.iqamat_isha!='0' 		&& settings.reporttype_year_month =='MONTH'))||
+										(column=='sunset' 			&& (settings.show_sunset ==1 		&& settings.reporttype_year_month =='MONTH'))||
+										(column=='midnight' 		&& (settings.show_midnight ==1 		&& settings.reporttype_year_month =='MONTH'))||
+										(column=='notes' 			&& (settings.show_notes ==1 		&& settings.reporttype_year_month =='MONTH')||
+										column=='day'||
+										column=='fajr'||
+										column=='dhuhr'||
+										column=='asr'||
+										column=='maghrib'||
+										column=='isha');
 
+		return Object.keys(columns).map(column=>{
+			if (columnShow(column))
 				switch(column){
 					case 'day':
 					case 'caltype':
@@ -1853,11 +1874,15 @@ const component = props => {
 					case 'iqamat_dhuhr':
 					case 'iqamat_asr':
 					case 'iqamat_maghrib':
-					case 'iqamat_isha':
-					case 'notes':{
-						html += `<div class='timetable_month_data_col ${get_class(column)}'>${get_data(column, settings.calendartype, settings.number_system)}</div>`;
-						break;
+					case 'iqamat_isha':{
+						return {class: `timetable_month_data_col ${get_class(column)}`,
+								value: get_data(column, settings.calendartype, settings.number_system)};
 						}
+					case 'notes':{
+						return {class: `timetable_month_data_col ${get_class(column)}`,
+								attribute: 'contentEditable = \'true\'',
+								value: get_data(column, settings.calendartype, settings.number_system)};
+					}
 					default:{
 						//time columns imsak, fajr, dhuhr, asr, maghrib, isha, midnight
 						const show_col_data = {	year: 					year,
@@ -1871,13 +1896,11 @@ const component = props => {
 												locale:					settings.locale,
 												number_system:			settings.number_system,
 												format:					settings.format};
-						html += show_col(0, column, data[column], show_col_data);
-						break;
+						return show_col('MONTH', column, data[column], show_col_data);
 					}
 				}
-			}
-		}
-		return html;
+		//show columns that got content
+		}).filter(column=>column != null);
 	};
 	/**
 	 * Timetable month
@@ -1890,7 +1913,6 @@ const component = props => {
 		const timezone_offset = getTimezoneOffset(settings.timezone);
 		if (button_id)
 			setCurrent('MONTH', settings.ui_navigation_left, settings.ui_navigation_right, settings.calendartype, button_id);
-		const items = getColumnTitles();
 
 		/**
 		 * Gets dates and titles
@@ -2034,7 +2056,7 @@ const component = props => {
 				
 								return {
 										class:	`${'timetable_month_data_row'} ${isToday(data.date, settings.timezone)?'timetable_month_data_today_row':''} ${highlight_row(settings.highlight, data.date.getDay(), times.day)}`,
-										html:	makeTableRow(times, items, data.year, data.month, settings, settings.calendartype=='HIJRI'?getGregorian([data.year,data.month,times.day], settings.hijri_adj):null)
+										columns: makeTableRow(times, data.year, data.month, settings, settings.calendartype=='HIJRI'?getGregorian([data.year,data.month,times.day], settings.hijri_adj):null)
 										};
 
 							});
