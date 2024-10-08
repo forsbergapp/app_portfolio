@@ -1264,6 +1264,7 @@
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col {
 	border-bottom: 0.5px solid var(--report_theme_timetable_data_border_color);
+	height: calc(100% - 0.5px);
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col:nth-child(odd) {
 	color: var(--report_theme_timetable_data_column_odd_color);
