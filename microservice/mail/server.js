@@ -12,7 +12,7 @@ const { MicroServiceServer } = await import(`file://${process.cwd()}/microservic
  */
 const startserver = async () =>{
 	const request = await MicroServiceServer('MAIL');
-	request.server.createServer(request.options, (/**@type{import('../../types.js').microservice_req}*/req, /**@type{import('../../types.js').microservice_res}*/res) => {
+	request.server.createServer(request.options, (/**@type{import('../types.js').microservice_req}*/req, /**@type{import('../types.js').microservice_res}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'POST');
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		const URI_query = Buffer.from(req.url.substring(req.url.indexOf('?')), 'base64').toString('utf-8');

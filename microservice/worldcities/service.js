@@ -9,7 +9,7 @@ const {ConfigServices} = await import(`file://${process.cwd()}/microservice/regi
  */
 const getService = async () => {
     const fs = await import('node:fs');
-    /**@type{import('../../types.js').microservice_config_service_record}*/
+    /**@type{import('../types.js').microservice_config_service_record}*/
     const config = ConfigServices('WORLDCITIES');
     const fileBuffer = await fs.promises.readFile(`${process.cwd()}${config.PATH}worldcities.json`, 'utf8')
     .catch(error=>{throw error;});

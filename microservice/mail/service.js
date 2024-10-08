@@ -22,7 +22,7 @@ const nodemailer = await import('nodemailer');
  * @returns {Promise.<object>}
  */
 const sendEmail = async (data) => {
-    /**@type{import('../../types.js').microservice_config_service_record}*/
+    /**@type{import('../types.js').microservice_config_service_record}*/
 
     if (getNumberValue(ConfigServices('MAIL').CONFIG.filter((/**@type{*}*/row)=>'MAIL_TEST' in row)[0].MAIL_TEST) == 1)
         return {test: 'ok'};

@@ -526,7 +526,12 @@
  * Server - db config files
  * @typedef {   server_config_apps|
  *              server_config_server|
- *              server_config_iam_blockip|server_config_iam_policy|server_config_iam_user|server_config_iam_useragent|microservice_config|microservice_config_service} server_db_file_config_files
+ *              server_config_iam_blockip|
+ *              server_config_iam_policy|
+ *              server_config_iam_user|
+ *              server_config_iam_useragent|
+ *              import('../microservice/types.js').microservice_config|
+ *              import('../microservice/types.js').microservice_config_service} server_db_file_config_files
  */
 
 /**
@@ -887,11 +892,12 @@
 /** 
  * Server - db file db record
  * @typedef {{  NAME:server_db_file_db_name, 
+ *              TYPE:'JSON'|'JSON_LOG'|'JSON_LOG_DATE'|'BINARY',
  *              LOCK:number, 
  *              TRANSACTION_ID:number|null, 
  *              TRANSACTION_CONTENT: object|string|null, 
  *              PATH:string, 
- *              FILENAME?:string,
+ *              FILENAME:string,
  *              CACHE_CONTENT?:* }} server_db_file_db_record
  */
 
@@ -2022,87 +2028,5 @@
  * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_view_insertUserAccountView
  */
 
-/**
- * MicroService - Request
- * @typedef {object}        microservice_req
- * @property {string}       url
- * @property {string}       method
- * 
- * @property {{ authorization:string,
- *              'accept-language':string}}       headers
- * 
- * @property {object}       query
- * @property {number|null}  query.app_id
- * @property {*}    query.data
- */
-
-/** 
- * MicroService Config
- * @typedef {{  PATH_DATA                                   : string,
- *              CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
- *              CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
- *              CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
- *              CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}|null} microservice_config
- */
-
-/** 
- * Microservice config service record
- * @typedef {{NAME:string, 
- *            HOST:number, 
- *            PORT:number,
- *            HTTPS_ENABLE:number,
- *            HTTPS_KEY:string,
- *            HTTPS_CERT:string,
- *            HTTPS_SSL_VERIFICATION:number,
- *            HTTPS_SSL_VERIFICATION_PATH:string,
- *            HTTPS_PORT:number,
- *            STATUS: string,
- *            PATH:string,
- *            CONFIG:[*]}} microservice_config_service_record
- */
-
-/** 
- * Microservice config service
- * @typedef {{['SERVICES']:microservice_config_service_record[]}} microservice_config_service
- */
-
-/** 
- * MicroService - Response
- * @typedef {object}    microservice_res
- * @property {function} setHeader
- * @property {function} setEncoding
- * @property {number}   statusCode
- * @property {function} write
- * @property {function} end
- * @property {function} send
- * @property {object}   headers
- * @property {string}   headers.location
- */
-
-/**
- * MicroService - message queue publish
- * @typedef {{  message_id:string,
- *              service:string,
- *              message:object|null}}  microservice_message_queue_publish
- */
-
-/**
- * MicroService - message queue consume
- * @typedef {{  message_id:string|null,
- *              service:string|null,
- *              message:*|null,
- *              start:string|null,
- *              finished:string|null,
- *              result:*}}  microservice_message_queue_consume
- */
-
-/**
- * MicroService - message queue error
- * @typedef {{  message_id:string,
- *              service:string,
- *              message:object,
- *              start:string,
- *              result:*}}  microservice_message_queue_error
- */
 
 export {};

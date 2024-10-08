@@ -4,17 +4,17 @@
 /**@type{import('../server/db/file.service.js')} */
 const {file_get} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
-const CONFIG = await file_get('CONFIG_MICROSERVICE').then((/**@type{import('../types.js').server_db_file_result_file_get}*/file)=>file.file_content);
+const CONFIG = await file_get('CONFIG_MICROSERVICE').then((/**@type{import('../server/types.js').server_db_file_result_file_get}*/file)=>file.file_content);
 
-const CONFIG_SERVICES = await file_get('CONFIG_MICROSERVICE_SERVICES').then((/**@type{import('../types.js').server_db_file_result_file_get}*/file)=>file.file_content?file.file_content.SERVICES:null);
+const CONFIG_SERVICES = await file_get('CONFIG_MICROSERVICE_SERVICES').then((/**@type{import('../server/types.js').server_db_file_result_file_get}*/file)=>file.file_content?file.file_content.SERVICES:null);
 
 /**
  * Reads config services
  * @param {string} servicename
- * @returns {import('../types.js').microservice_config_service_record}
+ * @returns {import('./types.js').microservice_config_service_record}
  */
 const ConfigServices = (servicename) =>{
-    return CONFIG_SERVICES.filter((/**@type{import('../types.js').microservice_config_service_record}*/service)=>service.NAME == servicename)[0];        
+    return CONFIG_SERVICES.filter((/**@type{import('./types.js').microservice_config_service_record}*/service)=>service.NAME == servicename)[0];        
 };
 
 /**
@@ -54,7 +54,7 @@ const MicroServiceServer = async (service) =>{
  * @returns {number}
  */
 const microservice_api_version = service =>{
-    /**@type{import('../types.js').microservice_config_service_record} */
+    /**@type{import('./types.js').microservice_config_service_record} */
     const config_service = ConfigServices(service);
     return config_service.CONFIG.filter((/**@type{*}*/row)=>'APP_REST_API_VERSION' in row)[0].APP_REST_API_VERSION;
 }; 

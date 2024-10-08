@@ -70,7 +70,7 @@ const getGeodataEmpty = (geotype) => {
  * @returns {Promise.<*>}
  */
 const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
-    /**@type{import('../../types.js').microservice_config_service_record}*/
+    /**@type{import('../types.js').microservice_config_service_record}*/
     const config_service = ConfigServices('GEOLOCATION');
     let geodata_cache;
     try {
@@ -140,7 +140,7 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
  * @param {*} geodata 
  */
 const writeCacheGeodata = async (cachetype, geodata) =>{
-    /**@type{import('../../types.js').microservice_config_service_record}*/
+    /**@type{import('../types.js').microservice_config_service_record}*/
     const config_service = ConfigServices('GEOLOCATION');
     switch (cachetype){
         case 'IP':{
