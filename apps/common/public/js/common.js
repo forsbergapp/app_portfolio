@@ -1700,7 +1700,7 @@ const commonUserLogin = async (system_admin=false, username_verify=null, passwor
  */
 const commonUserLogout = async () => {
     commonComponentRemove('common_dialogue_user_menu');
-   commonFFB({path:'/server-iam/user/logout', method:'POST', authorization_type:'APP_DATA'})
+    await commonFFB({path:'/server-iam/user/logout', method:'POST', authorization_type:'APP_DATA'})
     .then(()=>{
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
             COMMON_DOCUMENT.querySelector('#common_user_menu_logged_in').style.display = 'none';
