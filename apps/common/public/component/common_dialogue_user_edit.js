@@ -233,6 +233,7 @@ const component = async props => {
                 //display fetched avatar editable
                 props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_avatar').style.display = 'block';
                 props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_avatar_img').style.backgroundImage= user.avatar?`url('${user.avatar}')`:'url()';
+                props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_avatar_img').setAttribute('data-image',user.avatar);
                 props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_input_email').textContent = user.email;
                 props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_input_new_email').textContent = user.email_unverified;
                 props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_input_password').textContent = '',
@@ -251,6 +252,7 @@ const component = async props => {
                     props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_label_provider_image_url_data').textContent = user.provider_image_url;
                     props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_avatar').style.display = 'none';
                     props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_avatar_img').style.backgroundImage= user.provider_image?`url('${user.provider_image}')`:'url()';
+                    props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_avatar_img').setAttribute('data-image',user.provider_image);
                 } 
             props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_label_data_last_logontime').textContent = props.methods.commonFormatJsonDate(user.last_logontime, null);
             props.methods.COMMON_DOCUMENT.querySelector('#common_user_edit_label_data_account_created').textContent = props.methods.commonFormatJsonDate(user.date_created, null);
