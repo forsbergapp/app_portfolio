@@ -88,10 +88,7 @@
                         ["REPORT_COMMON",   null,   "CommonReportHead",         "/apps/common/src/report/head.html"],
                         ["REPORT_COMMON",   null,   "CommonReportHeadFonts",    "/apps/common/src/report/fonts.html"],
                         ["MAINTENANCE",     null,   null,                       "/apps/common/src/index_maintenance.html"],
-                        ["MAINTENANCE",     null,   "CommonHeadMaintenance",    "/apps/common/src/head_maintenance.html"],
-                        ["MAIL",            null,   null,                       "/apps/common/src/mail.html"],
-                        ["MAIL",            null,   "MailHeader",               "/apps/common/src/mail_header_verification.html"],
-                        ["MAIL",            null,   "MailBody",                 "/apps/common/src/mail_body_verification.html"]
+                        ["MAINTENANCE",     null,   "CommonHeadMaintenance",    "/apps/common/src/head_maintenance.html"]
                     ]
         },
         "MODULES":[
