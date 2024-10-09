@@ -288,10 +288,6 @@
 #timetable_month .timetable_month_data_header_row div {
 	text-transform: uppercase;
 }
-.timetable_class.font_arabic_nastaliq #timetable_header_date{
-	font-size: 0.61em !important;
-}
-
 /*DAY*/
 #timetable_day {
 	width: 100%;
@@ -305,12 +301,15 @@
 	font-size: 26pt;
 	font-weight: bold;
 }
-/*fix too big height of nastaliq font in timetable header*/
+/*fix too big height of nastaliq font*/
 #timetable_day.font_arabic_nastaliq .display_font{
 	line-height: initial;
 }
+#timetable_day.font_arabic_nastaliq #timetable_header_date{
+	font-size: 21pt !important;
+}
 #timetable_day.font_arabic_nastaliq #timetable_day_timetable .timetable_day_timetable_header_row{
-	font-size:0.71em !important;
+	font-size:0.7em !important;
 	line-height: initial;
 }
 
@@ -398,12 +397,15 @@
 .timetable_month_class.font_arabic_nastaliq .display_font{
 	line-height: initial;
 }
+.timetable_month_class.font_arabic_nastaliq #timetable_header_date{
+	font-size: 0.6em !important;
+}
 .timetable_month_class.font_arabic_nastaliq .timetable_month_data_date{
-	font-size:0.71em !important;
+	font-size:0.7em !important;
 	line-height: initial;
 }
 .timetable_month_class.font_arabic_nastaliq #timetable_month_data .timetable_month_data_col{
-	font-size: 0.71em !important;
+	font-size: 0.7em !important;
 }
 #timetable_header{
 	display: flex;
@@ -504,6 +506,8 @@
 	display: table;
 	text-align: center;
 	height: 20px;
+	position: absolute;
+	bottom: 160px;
 }
 #timetable_month_data_footer_row {
 	display: table-row;
@@ -564,6 +568,9 @@
 	width:calc(25% - 5px) !important;
 	vertical-align: top;
   	margin-bottom: 0.25em;
+}
+#timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_col{
+	line-height: unset !important;
 }
 #timetable_year .timetable_year_month #timetable_header_date {
 	height: 5px;
