@@ -1,5 +1,7 @@
 /** @module server/server/service */
 
+const {default:ServerError} = await import('../apps/common/src/component/common_server_error.js');
+
 /**
  * Sends ISO 20022 error format
  * @param {import('./types.js').server_server_res} res 
@@ -268,10 +270,7 @@ const COMMON = {
                 const URI_query = routesparameters.route_path.startsWith('/app-reports')?routesparameters.url.substring(routesparameters.url.indexOf('?')):null;
                 const app_query = URI_query?new URLSearchParams(URI_query):null;
                 resolve(app.getAppMain(routesparameters.ip, routesparameters.host, routesparameters.user_agent, routesparameters.accept_language, routesparameters.url, app_query, routesparameters.res)
-                        .catch(()=>{
-                            //send minimal HTML with server error
-                            routesparameters.res?.sendFile(`${process.cwd()}/server/servererror.html`);
-                        }));
+                        .catch(()=>ServerError({data:null, methods:null})));
             }
             else{
                 const resource_id_string = ':RESOURCE_ID';
