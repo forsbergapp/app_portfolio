@@ -42,7 +42,7 @@ Object.seal(FILE_DB);
  * @param {import('../types.js').server_db_file_db_name} filename 
  * @returns {import('../types.js').server_db_file_db_record}
  */
-const fileDB = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
+const fileRecord = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
 
 /**
  * 
@@ -50,15 +50,15 @@ const fileDB = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
  * @param {object|string} filecontent
  * @returns {Promise.<number>}
  */
-const transaction_start = async (file, filecontent)=>{
+const fileTransactionStart = async (file, filecontent)=>{
     return new Promise((resolve, reject)=>{
-        if  (fileDB(file).LOCK==0){
-            fileDB(file).LOCK = 1;
+        if  (fileRecord(file).LOCK==0){
+            fileRecord(file).LOCK = 1;
             //add 1ms wait so transaction_id will be guaranteed unique on a fast server
             setTimeout(()=>{
                 const transaction_id = Date.now();
-                fileDB(file).TRANSACTION_ID = transaction_id;
-                fileDB(file).TRANSACTION_CONTENT = filecontent;
+                fileRecord(file).TRANSACTION_ID = transaction_id;
+                fileRecord(file).TRANSACTION_CONTENT = filecontent;
                 resolve(transaction_id);}, 1);
         }
         else{
@@ -67,11 +67,11 @@ const transaction_start = async (file, filecontent)=>{
                 if (tries > 10000)
                     reject ('timeout');
                 else
-                    if (fileDB(file).LOCK==0){
-                        fileDB(file).LOCK = 1;
+                    if (fileRecord(file).LOCK==0){
+                        fileRecord(file).LOCK = 1;
                         const transaction_id = Date.now();
-                        fileDB(file).TRANSACTION_ID = transaction_id;
-                        fileDB(file).TRANSACTION_CONTENT = filecontent;
+                        fileRecord(file).TRANSACTION_ID = transaction_id;
+                        fileRecord(file).TRANSACTION_CONTENT = filecontent;
                         clearInterval(timer);
                         resolve(transaction_id);
                     }
@@ -86,11 +86,11 @@ const transaction_start = async (file, filecontent)=>{
  * @param {number} transaction_id 
  * @returns {boolean}
  */
-const transaction_commit = (file, transaction_id)=>{
-    if (fileDB(file).TRANSACTION_ID==transaction_id){
-        fileDB(file).LOCK = 0;
-        fileDB(file).TRANSACTION_ID = null;
-        fileDB(file).TRANSACTION_CONTENT = null;
+const fileTransactionCommit = (file, transaction_id)=>{
+    if (fileRecord(file).TRANSACTION_ID==transaction_id){
+        fileRecord(file).LOCK = 0;
+        fileRecord(file).TRANSACTION_ID = null;
+        fileRecord(file).TRANSACTION_CONTENT = null;
         return true;
     }
     else{
@@ -103,12 +103,12 @@ const transaction_commit = (file, transaction_id)=>{
  * @param {number} transaction_id 
  * @returns {boolean}
  */
-const transaction_rollback = (file, transaction_id)=>{
+const fileTransactionRollback = (file, transaction_id)=>{
 
-    if (fileDB(file).TRANSACTION_ID==transaction_id){
-        fileDB(file).LOCK = 0;
-        fileDB(file).TRANSACTION_ID = null;
-        fileDB(file).TRANSACTION_CONTENT = null;
+    if (fileRecord(file).TRANSACTION_ID==transaction_id){
+        fileRecord(file).LOCK = 0;
+        fileRecord(file).TRANSACTION_ID = null;
+        fileRecord(file).TRANSACTION_CONTENT = null;
         
         return true;
     }
@@ -122,7 +122,7 @@ const transaction_rollback = (file, transaction_id)=>{
  * @param {string|null} sample 
  * @returns 
  */
- const getFilesuffix = (filesuffix=null, sample=null) =>{
+ const fileSuffix = (filesuffix=null, sample=null) =>{
     const year = new Date().toLocaleString('en-US', { timeZone: 'UTC', year: 'numeric'});
     const month = new Date().toLocaleString('en-US', { timeZone: 'UTC', month: '2-digit'});
     const day   = new Date().toLocaleString('en-US', { timeZone: 'UTC', day: '2-digit'});
@@ -146,7 +146,21 @@ const transaction_rollback = (file, transaction_id)=>{
     return file_filesuffix;
 };
 
+
 /**
+ * Returns file path for given file
+ * @param {import('../types.js').server_db_file_db_name} file 
+ * @returns {string}
+ */
+const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
+
+/**
+ * 
+ * @param {import('../types.js').server_db_file_db_name} file
+ * @returns {*}
+ */
+ const fileCache = file => fileRecord(file).CACHE_CONTENT ?? null;
+ /**
  * Get log file with given suffix or none or use sample to get specific suffix
  * for statistics
  * @param {import('../types.js').server_db_file_db_name} file 
@@ -154,24 +168,29 @@ const transaction_rollback = (file, transaction_id)=>{
  * @param {string|null} sample
  * @returns {Promise.<*>}
  */
- const file_get_log = async (file, filesuffix=null, sample=null) =>{
+ const fileFsReadLog = async (file, filesuffix=null, sample=null) =>{
     
-    const filepath = `${fileDB(file).PATH}${fileDB(file).FILENAME}${getFilesuffix(filesuffix, sample)}`;
+    const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, sample)}`;
     const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');
     return fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row));
 };
 /**
  * 
+ * @returns {Promise.<string[]>}
+ */
+const fileFsDir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH}data${SLASH}logs`);
+/**
+ * 
  * Returns file content in FILE_DB.PATH + FILE_DB.FILENAME for given file
  * @param {import('../types.js').server_db_file_db_name} file 
  * @param {boolean} lock
- * @returns {Promise.<import('../types.js').server_db_file_result_file_get>}
+ * @returns {Promise.<import('../types.js').server_db_file_result_fileFsRead>}
  */
-const file_get = async (file, lock=false) =>{
-    const filepath = fileDB(file).PATH + fileDB(file).FILENAME;
+const fileFsRead = async (file, lock=false) =>{
+    const filepath = fileRecord(file).PATH + fileRecord(file).FILENAME;
     const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');    
     if (lock){
-        const transaction_id = await transaction_start(file, JSON.parse(fileBuffer.toString()));
+        const transaction_id = await fileTransactionStart(file, JSON.parse(fileBuffer.toString()));
         return {   file_content:    JSON.parse(fileBuffer.toString()),
                     lock:           lock,
                     transaction_id: transaction_id};
@@ -183,27 +202,10 @@ const file_get = async (file, lock=false) =>{
     }
 };
 /**
- * Returns file path for given file
- * @param {import('../types.js').server_db_file_db_name} file 
- * @returns {string}
- */
-const file_get_path = file =>fileDB(file).PATH + fileDB(file).FILENAME;
-/**
- * 
- * @returns {Promise.<string[]>}
- */
-const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH}data${SLASH}logs`);
-/**
- * 
- * @param {import('../types.js').server_db_file_db_name} file
- * @returns {*}
- */
- const file_get_cached = file => fileDB(file).CACHE_CONTENT ?? null;
-/**
  * 
  * @returns {Promise.<void>}
  */
- const file_set_cache_all = async () => {
+ const fileFsCacheSet = async () => {
     for (const file_db_record of FILE_DB){
         if ('CACHE_CONTENT' in file_db_record){
             const file = await fs.promises.readFile(process.cwd() + file_db_record.PATH + file_db_record.FILENAME, 'utf8')
@@ -213,7 +215,7 @@ const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}
         }
     }
     /**@type{import('../types.js').server_config_apps['APPS']}*/
-    const APPS = fileDB('CONFIG_APPS').CACHE_CONTENT.APPS;
+    const APPS = fileRecord('CONFIG_APPS').CACHE_CONTENT.APPS;
     for (const app of APPS){
         if (app.RENDER_CONFIG?.RENDER_FILES)
             for (const renderfile of app.RENDER_CONFIG.RENDER_FILES){
@@ -230,29 +232,29 @@ const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}
  * @param {object} file_content 
  * @returns 
  */
-const file_update = async (file, transaction_id, file_content) =>{
-    if (!transaction_id || fileDB(file).TRANSACTION_ID != transaction_id)
+const fileFsWrite = async (file, transaction_id, file_content) =>{
+    if (!transaction_id || fileRecord(file).TRANSACTION_ID != transaction_id)
         return ('⛔');
     else{
-        const filepath = fileDB(file).PATH + fileDB(file).FILENAME;
-        const filepath_backup = fileDB(file).PATH + 'backup/' + fileDB(file).FILENAME;
+        const filepath = fileRecord(file).PATH + fileRecord(file).FILENAME;
+        const filepath_backup = fileRecord(file).PATH + 'backup/' + fileRecord(file).FILENAME;
         //write backup of old config file
         await fs.promises.writeFile(process.cwd() + `${filepath_backup}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
-                                    JSON.stringify(fileDB(file).TRANSACTION_CONTENT, undefined, 2),  
+                                    JSON.stringify(fileRecord(file).TRANSACTION_CONTENT, undefined, 2),  
                                     'utf8');
         //write new file content
         await fs.promises.writeFile(process.cwd() + filepath, 
                                     JSON.stringify(file_content, undefined, 2),  
                                     'utf8')
         .then(()=>{
-            fileDB(file).CACHE_CONTENT = file_content;
-            if (transaction_commit(file, transaction_id))
+            fileRecord(file).CACHE_CONTENT = file_content;
+            if (fileTransactionCommit(file, transaction_id))
                 return null;
             else
                 throw ('⛔');
         })
         .catch((error)=>{
-            if (transaction_rollback(file, transaction_id))
+            if (fileTransactionRollback(file, transaction_id))
                 throw(error);
             else
                 throw('⛔ ' + error);
@@ -264,8 +266,8 @@ const file_update = async (file, transaction_id, file_content) =>{
  * @param {import('../types.js').server_db_file_db_name} file 
  * @param {import('../types.js').server_db_file_config_files} file_content 
  */
-const file_create = async (file, file_content) =>{
-    const filepath = fileDB(file).PATH + (fileDB(file).FILENAME?fileDB(file).FILENAME:'');
+const fileFsWriteAdmin = async (file, file_content) =>{
+    const filepath = fileRecord(file).PATH + (fileRecord(file).FILENAME?fileRecord(file).FILENAME:'');
     await fs.promises.writeFile(process.cwd() + filepath, JSON.stringify(file_content, undefined, 2),  'utf8')
     .then(() => {
         return null;
@@ -281,28 +283,28 @@ const file_create = async (file, file_content) =>{
  * @param {object} file_content 
  * @param {string|null} filesuffix
  */
-const file_append_log = async (file, file_content, filesuffix = null) =>{
-    const filepath = `${fileDB(file).PATH}${fileDB(file).FILENAME}${getFilesuffix(filesuffix, null)}`;
+const fileFsAppend = async (file, file_content, filesuffix = null) =>{
+    const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, null)}`;
     const old_file = await fs.promises.readFile(`${process.cwd()}${filepath}`, 'utf8')
     .catch(()=>null);
-    const transaction_id = await transaction_start(file, old_file ?? '');
+    const transaction_id = await fileTransactionStart(file, old_file ?? '');
     
     await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
     .then(()=>{
-        if (transaction_commit(file, transaction_id))
+        if (fileTransactionCommit(file, transaction_id))
             return null;
         else
             throw ('⛔');
     })
     .catch((error)=>{
-        if (transaction_rollback(file, transaction_id))
+        if (fileTransactionRollback(file, transaction_id))
             throw(error);
         else
             throw('⛔ ' + error);
     });
 };
 
-const create_config_and_logs_dir = async () => {
+const fileFsAccessMkdir = async () => {
     const mkdir = async (/**@type{string} */dir) =>{
         await fs.promises.mkdir(process.cwd() + dir)
         .catch((error)=>{
@@ -325,4 +327,4 @@ const create_config_and_logs_dir = async () => {
     }
 };
 
-export {SLASH, file_get, file_get_path, file_get_log_dir, file_get_log, file_get_cached, file_set_cache_all, file_update, file_create, file_append_log, create_config_and_logs_dir};
+export {SLASH, filePath, fileCache, fileFsRead, fileFsDir, fileFsReadLog, fileFsCacheSet, fileFsWrite, fileFsWriteAdmin, fileFsAppend, fileFsAccessMkdir};

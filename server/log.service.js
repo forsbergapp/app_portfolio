@@ -3,7 +3,7 @@
 /**@type{import('./config.service.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('./db/file.service.js')} */
-const {file_get_log, file_get_log_dir, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {fileFsReadLog, fileFsDir, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 /**
  * Send log
@@ -15,7 +15,7 @@ const {file_get_log, file_get_log_dir, file_append_log} = await import(`file://$
  const sendLog = async (logscope, loglevel, log) => {
     return await new Promise((resolve) => {
         const config_file_interval = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
-        file_append_log(`LOG_${logscope}_${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
+        fileFsAppend(`LOG_${logscope}_${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
         .then(()=>resolve(null))
         .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
             console.log(error);
@@ -406,7 +406,7 @@ const getLogs = async (data) => {
         const file = `LOG_${data.logscope}_${data.loglevel}`;
         const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
         /**@ts-ignore*/
-        file_get_log(file, null, sample)
+        fileFsReadLog(file, null, sample)
         .then(log_rows_array_obj=>{
             data.search = data.search=='null'?'':data.search;
             data.search = data.search==null?'':data.search;
@@ -507,7 +507,7 @@ const getLogsStats = async (data) => {
     /**@type{import('./types.js').server_log_result_getLogsStats[]|[]} */
     const logstat = [];
     
-    const files = await file_get_log_dir();
+    const files = await fileFsDir();
     /**@type{string} */
     let sample;
     let day = '';
@@ -527,7 +527,7 @@ const getLogsStats = async (data) => {
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
             /**@type{import('./config.service.js')} */
             const {ConfigGetAppHost} = await import(`file://${process.cwd()}/server/config.service.js`);
-            await file_get_log(file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, sample)
+            await fileFsReadLog(file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, sample)
             .then((logs)=>{
                 logs.forEach((/**@type{import('./types.js').server_log_request_record|''}*/record) => {
                     if (record != ''){
@@ -618,7 +618,7 @@ const getLogsStats = async (data) => {
 const getFiles = async () => {
     /**@type{[import('./types.js').server_log_result_getFiles]|[]} */
     const logfiles =[];
-    const files = await file_get_log_dir();
+    const files = await fileFsDir();
     let i =1;
     files.forEach((/**@type{string}*/file) => {
         if (file.startsWith('REQUEST_INFO_')||

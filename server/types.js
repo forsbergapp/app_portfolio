@@ -905,7 +905,7 @@
  * Server - db file result file get
  * @typedef {{  file_content:   *, 
  *              lock:           boolean, 
- *              transaction_id: number|null}} server_db_file_result_file_get
+ *              transaction_id: number|null}} server_db_file_result_fileFsRead
  */
 
 /** 
