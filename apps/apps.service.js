@@ -9,7 +9,7 @@ const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/se
 /**@type{import('../server/db/sql/database.service.js')} */
 const {InstalledCheck} = await await import(`file://${process.cwd()}/server/db/sql/database.service.js`);
 /**@type{import('../server/db/file.service.js')} */
-const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const fs = await import('node:fs');
 /**
@@ -20,7 +20,7 @@ const fs = await import('node:fs');
  const app_start = async (app_id=null)=>{
     const common_app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
-    if (file_get_cached('CONFIG_SERVER').METADATA.MAINTENANCE==0 && ConfigGet('SERVICE_DB', 'START')=='1' && 
+    if (fileCache('CONFIG_SERVER').METADATA.MAINTENANCE==0 && ConfigGet('SERVICE_DB', 'START')=='1' && 
         ConfigGetApp(app_id, common_app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START=='1' &&
         ((db_use==5 && await InstalledCheck(app_id, 1)
                                 .then((/**@type{{installed:boolean}[]}*/result)=>app_id?result[0].installed:true)

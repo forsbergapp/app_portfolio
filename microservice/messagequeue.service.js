@@ -1,7 +1,7 @@
 /** @module microservice/messagequeue */
 
 /**@type{import('../server/db/file.service.js')} */
-const {file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {fileFsReadLog, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 /**
  * 
@@ -23,7 +23,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
          * @returns {Promise.<void>}
          */
         const write_file = async (file, message, result) =>{
-            file_append_log(file==0?'MICROSERVICE_MESSAGE_QUEUE_ERROR':file==1?'MICROSERVICE_MESSAGE_QUEUE_PUBLISH':file==2?'MICROSERVICE_MESSAGE_QUEUE_CONSUME':'MICROSERVICE_MESSAGE_QUEUE_ERROR', 
+            fileFsAppend(file==0?'MICROSERVICE_MESSAGE_QUEUE_ERROR':file==1?'MICROSERVICE_MESSAGE_QUEUE_PUBLISH':file==2?'MICROSERVICE_MESSAGE_QUEUE_CONSUME':'MICROSERVICE_MESSAGE_QUEUE_ERROR', 
                             file==0?{message_id: new Date().toISOString(), message:   message, result:result}:message??{})
             .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{throw error;});
         };
@@ -46,7 +46,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 case 'CONSUME': {
                     //message CONSUME
                     //direct microservice call
-                    file_get_log('MICROSERVICE_MESSAGE_QUEUE_PUBLISH')
+                    fileFsReadLog('MICROSERVICE_MESSAGE_QUEUE_PUBLISH')
                     .then((/**@type{import('./types.js').microservice_message_queue_publish[]}*/message_queue)=>{
                         /**@type{import('./types.js').microservice_message_queue_consume} */
                         let message_consume = { message_id: null,
