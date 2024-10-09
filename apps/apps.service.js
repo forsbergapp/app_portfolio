@@ -67,7 +67,7 @@ const client_locale = (accept_language) =>{
  * @param {number|null} app_id
  * @param { 'APP'|'APP_COMMON'|
  *          'REPORT'|'REPORT_COMMON'|
- *          'MAINTENANCE'|'MAIL'} type
+ *          'MAINTENANCE'} type
  * @param {string|null} component
  */ 
 const render_files = (app_id, type, component=null) => {
@@ -253,6 +253,8 @@ const get_module_with_initBFF = async (app_info) => {
  * @returns {Promise<import('../server/types.js').server_apps_email_return_createMail>}  - Email return data
  */
 const createMail = async (app_id, data) =>{
+    const {default:ComponentCreate} = await import('./common/src/component/common_mail.js');
+    const email_html = await ComponentCreate({data:{host:data.host ?? '', verification_code:data.verificationCode ?? ''}, methods:null});
     return new Promise((resolve, reject) => {
         //email type 1-4 implemented are emails with verification code
         if (parseInt(data.emailtype)==1 || 
@@ -280,12 +282,8 @@ const createMail = async (app_id, data) =>{
                     break;
                 }
             }
-            /** @type {[string, string][]} */
-            const render_variables = [];
-            render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
-            render_variables.push(['Verification_code',data.verificationCode ?? '']);
-            render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
-
+            
+            
             resolve ({
                 'email_host':         ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_HOST,
                 'email_port':         ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'SECRETS').SERVICE_MAIL_PORT,
@@ -295,7 +293,7 @@ const createMail = async (app_id, data) =>{
                 'from':               email_from,
                 'to':                 data.to,
                 'subject':            '❂❂❂❂❂❂',
-                'html':               render_app_with_data( render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'MAIL'), render_variables)
+                'html':               email_html
             });
         }
         else
