@@ -5,7 +5,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**@type{import('./config.service.js')} */
 const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('./db/file.service.js')} */
-const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 /**@type{import('./iam.service.js')} */
 const {expired_token} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
@@ -458,7 +458,7 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
     const app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
     if (ConfigGetApp(app_id, app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START =='1'){
         setInterval(() => {
-            if (getNumberValue(file_get_cached('CONFIG_SERVER').METADATA.MAINTENANCE)==1){
+            if (getNumberValue(fileCache('CONFIG_SERVER').METADATA.MAINTENANCE)==1){
                 SocketSendSystemAdmin(null, null, null, 'MAINTENANCE', '');
             }
             SocketUpdateExpiredTokens();

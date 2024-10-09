@@ -1,7 +1,7 @@
 /** @module server/config/service */
 
 /**@type{import('./db/file.service.js')} */
-const {SLASH, file_get, file_update, file_get_cached, file_set_cache_all, file_create, create_config_and_logs_dir} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {SLASH, fileFsRead, fileFsWrite, fileCache, fileFsCacheSet, fileFsWriteAdmin, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const app_portfolio_title = 'App Portfolio';
 
@@ -12,7 +12,7 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {string}
  */
  const ConfigGetUser = (parameter) => {
-    return file_get_cached('CONFIG_IAM_USER')[parameter];
+    return fileCache('CONFIG_IAM_USER')[parameter];
  };
 /**
  * Config get apps
@@ -21,7 +21,7 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {import('./types.js').server_config_apps_record[]|*}
  */
  const ConfigGetApps = (app_id=null, key = null) => {
-    const result = file_get_cached('CONFIG_APPS').APPS.filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
+    const result = fileCache('CONFIG_APPS').APPS.filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
                         .reduce((   /**@type{import('./types.js').server_config_apps_record} */app, 
                                     /**@type {*}*/current)=> 
                                     key?app.concat({APP_ID:current.APP_ID, [key]:current[key]}):app.concat(current), []);
@@ -37,12 +37,12 @@ const app_portfolio_title = 'App Portfolio';
         case 'localhost':
         case 'www':{
             //localhost
-            return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
+            return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
                 (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
         }
         default:{
             try {
-                return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
+                return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
                     (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return host.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
             } catch (error) {
                 //request can be called from unkown hosts
@@ -60,7 +60,7 @@ const app_portfolio_title = 'App Portfolio';
  */
  const ConfigGetApp = (app_id, data_app_id, parameter) => {
     if (parameter == 'PARAMETERS')
-        return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
+        return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
                 (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter]
                 .sort((/**@type{{}}*/a, /**@type{{}}*/b) => {
                     const x = Object.keys(a)[0].toLowerCase();
@@ -74,7 +74,7 @@ const app_portfolio_title = 'App Portfolio';
                     return 0;
                 });
     else
-        return Object.entries(file_get_cached('CONFIG_APPS'))[0][1].filter(
+        return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
                 (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter];
  };
 /**
@@ -84,7 +84,7 @@ const app_portfolio_title = 'App Portfolio';
   const ConfigAppSecretDBReset = async () => {
     /**@type{import('./server.service.js')} */
     const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-    const file = await file_get('CONFIG_APPS', true);
+    const file = await fileFsRead('CONFIG_APPS', true);
     /**@type{import('./types.js').server_config_apps_record[]}*/
     const APPS = file.file_content.APPS;
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
@@ -100,8 +100,8 @@ const app_portfolio_title = 'App Portfolio';
             app.SECRETS[`SERVICE_DB_DB${db_use}_APP_PASSWORD`] = '';
         }   
     }
-    await file_update('CONFIG_APPS', file.transaction_id, file.file_content);
-    await file_set_cache_all();
+    await fileFsWrite('CONFIG_APPS', file.transaction_id, file.file_content);
+    await fileFsCacheSet();
  };
 
  /**
@@ -113,10 +113,10 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {Promise.<void>}
  */
 const ConfigAppSecretUpdate = async (app_id, data) => {
-    const file = await file_get('CONFIG_APPS', true);
+    const file = await fileFsRead('CONFIG_APPS', true);
     file.file_content.APPS.filter((/**@type{*}*/row)=> row.APP_ID==data.app_id)[0].SECRETS[data.parameter_name] = data.parameter_value;
-    await file_update('CONFIG_APPS', file.transaction_id, file.file_content);
-    await file_set_cache_all();
+    await fileFsWrite('CONFIG_APPS', file.transaction_id, file.file_content);
+    await fileFsCacheSet();
 };
  /**
  * Config app parameter update
@@ -128,7 +128,7 @@ const ConfigAppSecretUpdate = async (app_id, data) => {
  * @returns {Promise.<void>}
  */
   const ConfigAppParameterUpdate = async (app_id, resource_id, data) => {
-    const file = await file_get('CONFIG_APPS', true);
+    const file = await fileFsRead('CONFIG_APPS', true);
     
     for (const app of file.file_content.APPS){
         if (app.APP_ID == resource_id)
@@ -141,8 +141,8 @@ const ConfigAppSecretUpdate = async (app_id, data) => {
                 }           
             }
     }
-    await file_update('CONFIG_APPS', file.transaction_id, file.file_content);
-    await file_set_cache_all();
+    await fileFsWrite('CONFIG_APPS', file.transaction_id, file.file_content);
+    await fileFsCacheSet();
  };
 /**
  * Config get
@@ -152,9 +152,9 @@ const ConfigAppSecretUpdate = async (app_id, data) => {
  */
 const ConfigGet = (config_group, parameter) => {
     if (config_group=='METADATA')
-        return parameter?file_get_cached('CONFIG_SERVER')[config_group][parameter]:file_get_cached('CONFIG_SERVER')[config_group];
+        return parameter?fileCache('CONFIG_SERVER')[config_group][parameter]:fileCache('CONFIG_SERVER')[config_group];
     else{
-        for (const config_parameter_row of file_get_cached('CONFIG_SERVER')[config_group]){
+        for (const config_parameter_row of fileCache('CONFIG_SERVER')[config_group]){
             for (const key of Object.keys(config_parameter_row)){
                 if (key==parameter){
                     return config_parameter_row[key];
@@ -171,14 +171,14 @@ const ConfigGet = (config_group, parameter) => {
  */
 const ConfigExists = async () => {
     try {
-        await file_get('CONFIG_APPS');
-        await file_get('CONFIG_SERVER');
-        await file_get('CONFIG_IAM_BLOCKIP');
-        await file_get('CONFIG_IAM_POLICY');
-        await file_get('CONFIG_IAM_USER');
-        await file_get('CONFIG_IAM_USERAGENT');
-        await file_get('CONFIG_MICROSERVICE');
-        await file_get('CONFIG_MICROSERVICE_SERVICES');
+        await fileFsRead('CONFIG_APPS');
+        await fileFsRead('CONFIG_SERVER');
+        await fileFsRead('CONFIG_IAM_BLOCKIP');
+        await fileFsRead('CONFIG_IAM_POLICY');
+        await fileFsRead('CONFIG_IAM_USER');
+        await fileFsRead('CONFIG_IAM_USERAGENT');
+        await fileFsRead('CONFIG_MICROSERVICE');
+        await fileFsRead('CONFIG_MICROSERVICE_SERVICES');
         return true;
     } catch (error) {
         return false;
@@ -193,7 +193,7 @@ const DefaultConfig = async () => {
     const fs = await import('node:fs');
     /**@type{import('./security.service.js')} */
     const {createSecret}= await import(`file://${process.cwd()}/server/security.service.js`);
-    await create_config_and_logs_dir()
+    await fileFsAccessMkdir()
     .catch((/**@type{import('./types.js').server_server_error}*/err) => {
         throw err;
     }); 
@@ -268,7 +268,7 @@ const DefaultConfig = async () => {
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
     });
     for (const config_row of config_obj){
-        await file_create(config_row[0], config_row[1]);
+        await fileFsWriteAdmin(config_row[0], config_row[1]);
     }
     return null;
 };
@@ -281,7 +281,7 @@ const InitConfig = async () => {
     return await new Promise((resolve, reject) => {
         ConfigExists().then((result) => {
             if (result==true)
-                file_set_cache_all().then(() => {
+                fileFsCacheSet().then(() => {
                     resolve(null);
                 })
                 .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
@@ -289,7 +289,7 @@ const InitConfig = async () => {
                 });
             else{
                 DefaultConfig().then(() => {
-                    file_set_cache_all().then(() => {
+                    fileFsCacheSet().then(() => {
                         resolve(null);
                     })
                     .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
@@ -309,7 +309,7 @@ const InitConfig = async () => {
  * @returns {Promise.<*>}
  */
 const ConfigFileGet = async (file, saved=false, config_group=null, parameter=null) => {
-    const config = saved?await file_get(file).then((/**@type{*}*/config)=>config.file_content):file_get_cached(file);
+    const config = saved?await fileFsRead(file).then((/**@type{*}*/config)=>config.file_content):fileCache(file);
     return await new Promise((resolve) => {
         if (config_group)
             if (config_group =='METADATA')
@@ -338,7 +338,7 @@ const ConfigFileGet = async (file, saved=false, config_group=null, parameter=nul
  */
 const ConfigFileSave = async (resource_id, config, maintenance, configuration, comment) => {
 
-    const file_config = await file_get(resource_id, true);
+    const file_config = await fileFsRead(resource_id, true);
     if (config){
         //file updated
         if (resource_id=='CONFIG_SERVER'){
@@ -355,14 +355,14 @@ const ConfigFileSave = async (resource_id, config, maintenance, configuration, c
         file_config.file_content.METADATA.COMMENT = comment ?? file_config.file_content.METADATA.COMMENT;
         file_config.file_content.METADATA.MODIFIED = new Date().toISOString();
     }
-    await file_update(resource_id, file_config.transaction_id, file_config.file_content);
+    await fileFsWrite(resource_id, file_config.transaction_id, file_config.file_content);
 };
 /**
  * Check first time
  * @returns {boolean}
  */
 const CheckFirstTime = () => {
-    if (file_get_cached('CONFIG_IAM_USER').username=='')
+    if (fileCache('CONFIG_IAM_USER').username=='')
         return true;
     else
         return false;
@@ -377,11 +377,11 @@ const CheckFirstTime = () => {
 const CreateSystemAdmin = async (admin_name, admin_password) => {
     /**@type{import('./security.service.js')} */
     const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.service.js`);
-    const file = await file_get('CONFIG_IAM_USER', true);
+    const file = await fileFsRead('CONFIG_IAM_USER', true);
     file.file_content.username = admin_name;
     file.file_content.password = await PasswordCreate(admin_password);
     file.file_content.modified = new Date().toISOString();
-    await file_update('CONFIG_IAM_USER', file.transaction_id, file.file_content)
+    await fileFsWrite('CONFIG_IAM_USER', file.transaction_id, file.file_content)
     .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
 };
 

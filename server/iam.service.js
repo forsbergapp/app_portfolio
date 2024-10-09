@@ -5,7 +5,7 @@ const {response_send_error, getNumberValue} = await import(`file://${process.cwd
 /**@type{import('./config.service.js')} */
 const {ConfigGet, ConfigFileGet, ConfigGetApp, ConfigGetAppHost, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('./db/file.service.js')} */
-const {file_get, file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {fileFsRead, fileFsReadLog, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const {default:jwt} = await import('jsonwebtoken');
 
@@ -106,7 +106,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
                                     client_longitude:   null,
                                     client_latitude:    null,
                                     date_created:       new Date().toISOString()};
-            await file_append_log('IAM_SYSTEMADMIN_LOGIN', file_content, 'YYYYMMDD')
+            await fileFsAppend('IAM_SYSTEMADMIN_LOGIN', file_content, 'YYYYMMDD')
             .then(()=>{
                 if (result == 1){
                     ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), null, username, iam_decode(iam).get('authorization_bearer'), null, jwt_data.token, ip, user_agent, accept_language, res)
@@ -120,7 +120,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
                     .catch((/**@type{import('./types.js').server_server_error}*/error)=>reject(error));
                 }
                 else
-                    reject (not_authorized(res, 401, 'AuthenticateSystemadmin, file_append_log', true));
+                    reject (not_authorized(res, 401, 'AuthenticateSystemadmin, fileFsAppend', true));
             });
         };
         if(authorization){       
@@ -179,7 +179,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
             const id_token_decoded = jwt.verify(id_token, ConfigGetApp(app_id_host, app_id_host, 'SECRETS').APP_ID_SECRET);
             /**@type{import('./types.js').server_iam_app_token_record[]}*/
-            const log_id_token = await file_get_log('IAM_APP_TOKEN', 'YYYYMMDD');
+            const log_id_token = await fileFsReadLog('IAM_APP_TOKEN', 'YYYYMMDD');
             if (id_token_decoded.app_id == app_id_host && 
                 id_token_decoded.scope == 'APP' && 
                 id_token_decoded.ip == ip &&
@@ -228,7 +228,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
                             const access_token_decoded = jwt.verify(access_token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '');
                             /**@type{import('./types.js').server_iam_systemadmin_login_record[]}*/
-                            const log_access_token = await file_get_log('IAM_SYSTEMADMIN_LOGIN', 'YYYYMMDD');
+                            const log_access_token = await fileFsReadLog('IAM_SYSTEMADMIN_LOGIN', 'YYYYMMDD');
 
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
@@ -484,7 +484,7 @@ const AuthenticateExternal = (endpoint, host, user_agent, accept_language, ip, b
  * @returns {Promise.<boolean>}
  */
  const AuthenticateApp = async (app_id, authorization) =>{
-    const file = await file_get('CONFIG_APPS');
+    const file = await fileFsRead('CONFIG_APPS');
     if (app_id != null){
         const CLIENT_ID = file.file_content.APPS.filter((/**@type{import('./types.js').server_config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_ID;
         const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{import('./types.js').server_config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_SECRET;
@@ -545,7 +545,7 @@ const AuthenticateResource = parameters =>  {
                             client_longitude:   null,
                             client_latitude:    null,
                             date_created:       new Date().toISOString()};
-    return await file_append_log('IAM_APP_TOKEN', file_content, 'YYYYMMDD').then(()=>jwt_data.token);
+    return await fileFsAppend('IAM_APP_TOKEN', file_content, 'YYYYMMDD').then(()=>jwt_data.token);
  };
 /**
  * Authorize token
