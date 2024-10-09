@@ -185,7 +185,6 @@
                     {"REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM": "latn", "COMMENT":"ex '-nu-latn'"},
                     {"REGIONAL_DEFAULT_CALENDAR_TYPE_GREG": "gregory", "COMMENT":"ex '-u-ca-gregory'"},
                     {"REGIONAL_DEFAULT_CALENDARTYPE": "GREGORIAN", "COMMENT":"Calendar type: Gregorian"},
-                    {"REGIONAL_DEFAULT_COLTITLE": "1", "COMMENT":"Column title: transliterated, translation"},
                     {"REGIONAL_DEFAULT_DIRECTION": "ltr", "COMMENT":"Direction:Left to right"},
                     {"REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR": "-ca-", "COMMENT":""},
                     {"REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM": "-nu-", "COMMENT":""},

@@ -402,6 +402,9 @@
 	font-size:0.71em !important;
 	line-height: initial;
 }
+.timetable_month_class.font_arabic_nastaliq #timetable_month_data .timetable_month_data_col{
+	font-size: 0.71em !important;
+}
 #timetable_header{
 	display: flex;
 	width: 100%;
@@ -473,6 +476,7 @@
 	text-align: center;
 	padding: 1px;
 	vertical-align: middle;
+	line-height: 1;
 }
 .timetable_month_data_date,
 .timetable_month_data_calendartype{

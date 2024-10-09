@@ -28,7 +28,6 @@ const user_settings_empty = {current_id:0,
                                                 regional_number_system: '',
                                                 regional_layout_direction: '',
                                                 regional_second_language_locale: '',
-                                                regional_column_title: '0',
                                                 regional_arabic_script: '',
                                                 regional_calendar_type: '',
                                                 regional_calendar_hijri_type: '',
@@ -83,7 +82,6 @@ const APP_GLOBAL = {
 
     regional_default_direction:'',
     regional_default_locale_second:'',
-    regional_default_coltitle:'0',
     regional_default_arabic_script:'',
     regional_default_calendartype:'',
     regional_default_calendar_hijri_type:'',
@@ -191,7 +189,6 @@ const getReportSettings = () => {
                 number_system       	: setting_global.regional_number_system,
                 direction           	: setting_global.regional_layout_direction,
                 second_locale       	: setting_global.regional_second_language_locale,
-                coltitle            	: setting_global.regional_column_title,
                 arabic_script       	: setting_global.regional_arabic_script,
                 calendartype        	: setting_global.regional_calendar_type,
                 calendar_hijri_type 	: setting_global.regional_calendar_hijri_type,
@@ -1146,7 +1143,6 @@ const user_settings_get = async () => {
                     regional_number_system:setting.regional_number_system,
                     regional_layout_direction:setting.regional_layout_direction,
                     regional_second_language_locale:setting.regional_second_language_locale,
-                    regional_column_title:setting.regional_column_title,
                     regional_arabic_script:setting.regional_arabic_script,
                     regional_calendar_type:setting.regional_calendar_type,
                     regional_calendar_hijri_type:setting.regional_calendar_hijri_type,
@@ -1390,7 +1386,6 @@ const set_default_settings = async () => {
         regional_number_system:             Intl.NumberFormat().resolvedOptions().numberingSystem,
         regional_layout_direction:          APP_GLOBAL.regional_default_direction,
         regional_second_language_locale:    APP_GLOBAL.regional_default_locale_second,
-        regional_column_title:              APP_GLOBAL.regional_default_coltitle,
         regional_arabic_script:             APP_GLOBAL.regional_default_arabic_script,
         regional_calendar_type:             APP_GLOBAL.regional_default_calendartype,
         regional_calendar_hijri_type:       APP_GLOBAL.regional_default_calendar_hijri_type,
@@ -1467,8 +1462,6 @@ const settings_update = setting_tab => {
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_layout_direction,
                         regional_second_language_locale:    setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_locale_second .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_second_language_locale,
-                        regional_column_title:              setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_coltitle .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_column_title,
                         regional_arabic_script:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_arabic_script .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script,
                         regional_calendar_type:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_calendartype .common_select_dropdown_value').getAttribute('data-value'):
@@ -1644,8 +1637,7 @@ const app_event_click = event => {
                     if(event_target_id == 'setting_select_report_locale_second'){
                         settings_update('REGIONAL');
                     }
-                    if( event_target_id == 'setting_select_report_coltitle' ||
-                        event_target_id == 'setting_select_report_arabic_script' ||
+                    if( event_target_id == 'setting_select_report_arabic_script' ||
                         event_target_id == 'setting_select_calendartype' ||
                         event_target_id == 'setting_select_calendar_hijri_type'){
                         settings_update('REGIONAL');
@@ -2370,8 +2362,6 @@ const init_app = async parameters => {
             APP_GLOBAL.regional_default_direction = parameter['REGIONAL_DEFAULT_DIRECTION'];
         if (parameter['REGIONAL_DEFAULT_LOCALE_SECOND'])
             APP_GLOBAL.regional_default_locale_second = parameter['REGIONAL_DEFAULT_LOCALE_SECOND'];
-        if (parameter['REGIONAL_DEFAULT_COLTITLE'])
-            APP_GLOBAL.regional_default_coltitle = parameter['REGIONAL_DEFAULT_COLTITLE'];
         if (parameter['REGIONAL_DEFAULT_ARABIC_SCRIPT'])
             APP_GLOBAL.regional_default_arabic_script = parameter['REGIONAL_DEFAULT_ARABIC_SCRIPT'];
         if (parameter['REGIONAL_DEFAULT_CALENDARTYPE'])
