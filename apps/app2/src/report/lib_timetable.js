@@ -287,7 +287,7 @@ const component = props => {
 	/**
 	 * Praytimes third party code
 	 * placed here to simplify app and server share of same component
-	 * converted function to class to simpålfiy type declarations
+	 * converted function to class to simplify type declarations
 	 */
 	/**
 	 * Type timesType
