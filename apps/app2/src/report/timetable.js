@@ -17,20 +17,20 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
     const { getUserPost} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post.service.js`);
 	return getUserPost(app_id, user_account_app_data_post_id)
 	.then((/**@type{import('../../../../server/types.js').server_db_sql_result_user_account_app_data_post_getUserPost[]}*/result_user_account_app_data_post)=>{
+		/**@type{import('../types.js').APP_user_setting_record}*/
 		const user_account_app_data_post = JSON.parse(result_user_account_app_data_post[0].json_data);
 		return  {  	locale              	: user_account_app_data_post.regional_language_locale,  
 					timezone            	: user_account_app_data_post.regional_timezone,
 					number_system       	: user_account_app_data_post.regional_number_system,
 					direction           	: user_account_app_data_post.regional_layout_direction,
 					second_locale       	: user_account_app_data_post.regional_second_language_locale,
-					coltitle            	: user_account_app_data_post.regional_column_title,
 					arabic_script       	: user_account_app_data_post.regional_arabic_script,
 					calendartype        	: user_account_app_data_post.regional_calendar_type,
 					calendar_hijri_type 	: user_account_app_data_post.regional_calendar_hijri_type,
 
 					place               	: user_account_app_data_post.description,
-					gps_lat             	: parseFloat(user_account_app_data_post.gps_lat_text),
-					gps_long            	: parseFloat(user_account_app_data_post.gps_long_text),
+					gps_lat					: typeof user_account_app_data_post.gps_lat_text== 'string'?parseFloat(user_account_app_data_post.gps_lat_text):user_account_app_data_post.gps_lat_text,
+                    gps_long				: typeof user_account_app_data_post.gps_long_text=='string'?parseFloat(user_account_app_data_post.gps_long_text):user_account_app_data_post.gps_long_text,
 					
 					theme_day           	: 'theme_day_' + user_account_app_data_post.design_theme_day_id,
 					theme_month         	: 'theme_month_' + user_account_app_data_post.design_theme_month_id,

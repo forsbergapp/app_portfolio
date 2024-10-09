@@ -965,7 +965,6 @@
  *              regional_number_system:             string,
  *              regional_layout_direction:          string,
  *              regional_second_language_locale:    string,
- *              regional_column_title:              string,
  *              regional_arabic_script:             string,
  *              regional_calendar_type:             string,
  *              regional_calendar_hijri_type:       string,
