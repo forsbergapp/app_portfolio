@@ -5,10 +5,6 @@ INSERT INTO <DB_SCHEMA/>.app_translation (app_id, language_id, json_data) VALUES
 --
 -- app_translation app_setting
 --
-INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'COLUMN_TITLE' and app_setting_type_app_id = 2 AND value='0'),224,'音訳');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'COLUMN_TITLE' and app_setting_type_app_id = 2 AND value='1'),224,'音訳、翻訳');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'COLUMN_TITLE' and app_setting_type_app_id = 2 AND value='2'),224,'翻訳・音訳');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'COLUMN_TITLE' and app_setting_type_app_id = 2 AND value='3'),224,'翻訳');
 INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'HIGHLIGHT_ROW' and app_setting_type_app_id = 2 AND value='0'),224,'なし');
 INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'HIGHLIGHT_ROW' and app_setting_type_app_id = 2 AND value='1'),224,'金曜日');
 INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'HIGHLIGHT_ROW' and app_setting_type_app_id = 2 AND value='2'),224,'土曜日');

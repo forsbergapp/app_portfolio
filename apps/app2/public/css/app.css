@@ -30,7 +30,6 @@
 #setting_icon_regional_numbersystem::before{				content:var(--common_app_icon_regional_numbersystem)}
 #setting_icon_regional_direction::before{					content:var(--common_app_icon_regional_direction)}
 #setting_icon_regional_locale_second::before{				content:var(--common_app_icon_regional_locale) ' ' var(--common_app_icon_misc_second)}
-#setting_icon_regional_coltitle::before{					content:var(--common_app_icon_misc_title)}
 #setting_icon_regional_arabic_script::before{				content:var(--common_app_icon_regional_script)}
 #setting_icon_regional_calendartype::before{				content:var(--common_app_icon_regional_calendar)}
 #setting_icon_regional_calendar_hijri_type::before{			content:var(--common_app_icon_regional_calendar_hijri_type)}

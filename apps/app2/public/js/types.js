@@ -39,7 +39,6 @@
  *              regional_number_system: string,
  *              regional_layout_direction: string,
  *              regional_second_language_locale: string,
- *              regional_column_title: string,
  *              regional_arabic_script: string,
  *              regional_calendar_type: string,
  *              regional_calendar_hijri_type: string,
@@ -103,7 +102,6 @@
  *          app_report_timetable:string,
  *          regional_default_direction:string,
  *          regional_default_locale_second:string,
- *          regional_default_coltitle:string,
  *          regional_default_arabic_script:string,
  *          regional_default_calendartype:string,
  *          regional_default_calendar_hijri_type:string,
@@ -174,7 +172,6 @@
  * @property {string}	number_system
  * @property {string}	direction
  * @property {string}	second_locale
- * @property {string}	coltitle
  * @property {string}	arabic_script
  * @property {string}	calendartype
  * @property {string}	calendar_hijri_type

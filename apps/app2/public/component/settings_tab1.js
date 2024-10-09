@@ -82,16 +82,6 @@ const template = props => ` <div class='setting_horizontal_row'>
                             </div>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>      
-                                    <div id='setting_icon_regional_coltitle' class='common_icon'></div>
-                                </div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_coltitle'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
-                            </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_icon_regional_arabic_script' class='common_icon'></div>
                                 </div>
@@ -183,23 +173,6 @@ const method = async props => {
                         column_text:'text'
                         },
             methods:    {commonFFB:props.methods.commonFFB},
-            path:       '/common/component/common_select.js'});
-        //app
-        //Column title
-        await props.methods.commonComponentRender({
-            mountDiv:   'setting_select_report_coltitle',
-            data:       {
-                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.data.app_id && setting.app_setting_type_name == 'COLUMN_TITLE')[0].value,
-                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_id == props.data.app_id && setting.app_setting_type_name == 'COLUMN_TITLE')[0].text,
-                        options: settings.filter((/**@type{*}*/setting)=>setting.app_id == props.data.app_id && setting.app_setting_type_name == 'COLUMN_TITLE'),
-                        path:null,
-                        query:null,
-                        method:null,
-                        authorization_type:null,
-                        column_value:'value',
-                        column_text:'text'
-                        },
-            methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
         //commmon
         //Timezone
@@ -302,8 +275,6 @@ const method = async props => {
         //update select with settings values
         props.methods.commonSelectCurrentValueSet('setting_select_locale', props.data.user_settings.regional_language_locale);
         props.methods.commonSelectCurrentValueSet('setting_select_report_locale_second', props.data.user_settings.regional_second_language_locale);
-
-        props.methods.commonSelectCurrentValueSet('setting_select_report_coltitle', props.data.user_settings.regional_column_title);
 
         props.methods.commonSelectCurrentValueSet('setting_select_report_timezone', props.data.user_settings.regional_timezone);
         props.methods.commonSelectCurrentValueSet('setting_select_report_numbersystem', props.data.user_settings.regional_number_system);
