@@ -149,8 +149,7 @@ const template = props => ` <div class='list_user_account_row'>
 *                       user_account_id:number,
 *                       user_app_role_id:number,
 *                       sort:string,
-*                       order_by:string,
-*                       focus:boolean},
+*                       order_by:string},
 *           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
 *                       commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
 *                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
@@ -177,24 +176,17 @@ const component = async props => {
 
     const onMounted = async () =>{
         if (props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0])
-            if (props.data.focus==true){
-                //set focus at start
-                //set focus first column in first row
-                //this will trigger to show detail records
-                if (props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].getAttribute('readonly')==true){
-                    props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', false);
-                    props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                    props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', true);
-                }
-                else
-                    props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                    
-            }
-            else{
-                //trigger focus event on first row set focus back again to search field
+            //set focus first column in first row
+            //this will trigger to show detail records
+            if (props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].getAttribute('readonly')==true){
+                props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', false);
                 props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                props.methods.COMMON_DOCUMENT.querySelector('#list_user_account_search_input').focus();
+                props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', true);
             }
+            else
+                props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].focus();
+            //set focus back again to search field
+            props.methods.COMMON_DOCUMENT.querySelector('#list_user_account_search_input').focus();    
   };
   return {
       lifecycle:    {onMounted:onMounted},

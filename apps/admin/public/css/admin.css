@@ -40,7 +40,7 @@
 #list_user_stat_col_title4::before{													content:var(--common_app_icon_user_connections)}
 
 #list_user_account_title::before{													content:var(--common_app_icon_users)}
-#list_user_search_icon::before{														content:var(--common_app_icon_search)}
+#list_user_search_icon::before{														content:var(--common_app_icon_reload)}
 #list_user_account_logon_title::before{												content:var(--common_app_icon_login)}
 #users_save::before{																content:var(--common_app_icon_save)}
 #list_user_account .list_title[data-column='avatar']::before{						content:var(--common_app_icon_user_avatar)}
@@ -77,7 +77,7 @@
 #list_monitor_nav_connected::before{					content:var(--common_app_icon_user_connections)  ' '  var(--common_app_icon_log)}
 #list_monitor_nav_app_log::before{						content:var(--common_app_icon_apps) ' ' var(--common_app_icon_log)}
 #list_monitor_nav_server_log::before{					content:var(--common_app_icon_server) ' ' var(--common_app_icon_log)}
-#filesearch_menu5::before{								content:var(--common_app_icon_search)}
+#filesearch_menu5::before{								content:var(--common_app_icon_lov)}
 
 .chat_click::before{									content:var(--common_app_icon_chat)}
 
@@ -104,7 +104,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 #menu5_row_parameters_col3_1::before{					content:var(--common_app_icon_checkbox_checked)}
 #menu5_row_parameters_col3_0::before{					content:var(--common_app_icon_checkbox_empty)}
 
-#list_server_log_search_icon::before{					content:var(--common_app_icon_search)}
+#list_server_log_search_icon::before{					content:var(--common_app_icon_reload)}
 
 #list_config_nav_config_server::before{					content:var(--common_app_icon_server)}
 #list_config_nav_config_iam_blockip::before{			content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_regional_numbersystem)}

@@ -325,18 +325,16 @@ const set_maintenance = () => {
  * 
  * @param {string} sort 
  * @param {string} order_by 
- * @param {boolean} focus 
  * @returns 
  */
-const search_users = (sort='username', order_by='asc', focus=true) => {
+const search_users = (sort='username', order_by='asc') => {
     common.commonComponentRender({
         mountDiv:   'list_user_account',
         data:       {
                     user_account_id:common.COMMON_GLOBAL.user_account_id,
                     user_app_role_id:common.COMMON_GLOBAL.user_app_role_id,
                     sort:sort,
-                    order_by:order_by,
-                    focus:focus
+                    order_by:order_by
                     },
         methods:    {commonFFB:common.commonFFB},
         path:       '/component/menu_users_list.js'});
@@ -878,7 +876,7 @@ const show_existing_logfiles = () => {
                             const day      = parseInt(filename.substring(6, 8));
 
                             //logscope and loglevel
-                            COMMON_DOCUMENT.querySelector('#select_logscopeu5 .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
+                            COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
                             COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').textContent = `${logscope} - ${loglevel}`;
                             //year
                             COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').setAttribute('data-value', year);
@@ -982,36 +980,33 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
     switch (event_type){
         case 'click':{
             switch (event_target_id){
-                case (event_target_id=='select_app_menu1' && event.target.classList.contains('common_select_option'))?event_target_id:'':
-                case (event_target_id=='select_year_menu1' && event.target.classList.contains('common_select_option'))?event_target_id:'':
-                case (event_target_id=='select_month_menu1' && event.target.classList.contains('common_select_option'))?event_target_id:'':
-                case (event_target_id=='select_system_admin_stat' && event.target.classList.contains('common_select_option'))?event_target_id:'':{
-                    show_charts();
-                    break;
-                }
-                case (event_target_id=='select_app_menu5' && event.target.classList.contains('common_select_option'))?event_target_id:'':{
-                    nav_click(COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id);
-                    break;
-                }
-                case 'select_year_menu5':
-                case 'select_month_menu5':
-                case 'select_day_menu5':{
-                    const current_tab = COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id;
-                    if (current_tab=='list_monitor_nav_server_log')
+                case event.target?.classList.contains('common_select_option')?event_target_id:'':
+                case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
+                    //menu start
+                    if( event_target_id == 'select_app_menu1' ||
+                        event_target_id == 'select_year_menu1'||
+                        event_target_id == 'select_month_menu1' ||
+                        event_target_id == 'select_system_admin_stat'){
+                        show_charts();    
+                    }
+                    if( event_target_id == 'select_broadcast_type')
+                        set_broadcast_type();
+                    //menu monitor
+                    if( event_target_id == 'select_app_menu5')
+                        nav_click(COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id);
+                    if( event_target_id == 'select_year_menu5'||
+                        event_target_id == 'select_month_menu5'||
+                        event_target_id == 'select_day_menu5'){
+                            const current_tab = COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id;
+                            if (current_tab=='list_monitor_nav_server_log')
+                                APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
+                            else
+                                nav_click(current_tab);
+                        }
+                    if( event_target_id == 'select_logscope5')
                         APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
-                    else
-                        nav_click(current_tab);
                     break;
                 }
-                case 'select_logscope5':{
-                    APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
-                    break;
-                }
-
-                case 'select_broadcast_type':{
-                    set_broadcast_type();
-                    break;
-                }    
                 case 'menu_1_broadcast_button':{
                     show_broadcast_dialogue('ALL');
                     break;
@@ -1022,7 +1017,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 }
                 case 'list_user_search_icon':{
                     COMMON_DOCUMENT.querySelector('#list_user_account_search_input').focus();
-                    COMMON_DOCUMENT.querySelector('#list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                    search_users('username', 'asc');
                     break;
                 }
                 case 'users_save':{
@@ -1033,9 +1028,13 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     button_save('apps_save');
                     break;
                 }
+                case 'filesearch_menu5':{
+                    show_existing_logfiles();
+                    break;
+                }
                 case 'list_server_log_search_icon':{
                     COMMON_DOCUMENT.querySelector('#list_server_log_search_input').focus();
-                    COMMON_DOCUMENT.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                    APP_GLOBAL.monitor_detail_server_log('logdate','desc');
                     break;
                 }
                 case 'list_monitor_nav_connected':
@@ -1049,10 +1048,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 case 'list_app_log_next':
                 case 'list_app_log_last':{
                     APP_GLOBAL.page_navigation(event_target_id);
-                    break;
-                }
-                case 'filesearch_menu5':{
-                    show_existing_logfiles();
                     break;
                 }
                 case 'config_save':{
@@ -1187,7 +1182,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.commonTypewatch(search_users, 'username', 'asc', false);
+                        common.commonTypewatch(search_users, 'username', 'asc');
                     break;
                 }
                 case 'list_server_log_search_input':{
