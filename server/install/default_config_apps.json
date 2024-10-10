@@ -73,23 +73,14 @@
                     {"MODULE_EASY.QRCODE_WIDTH": "128"}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":false,
+                    "MANIFEST":"",
                     "JS":"/js/admin.js",
                     "JS_SECURE":"/js/secure.js",
                     "JS_REPORT":"",
                     "CSS": "/css/admin.css",
                     "CSS_REPORT": "",
                     "FAVICON_32x32":"/images/favicon-32x32.png",
-                    "FAVICON_192x192":"/images/favicon-192x192.png",
-                    "RENDER_FILES":[
-                        ["APP_COMMON",      null,   null,                       "/apps/common/src/index.html"],
-                        ["APP_COMMON",      null,   "CommonHead",               "/apps/common/src/head.html"],
-                        ["REPORT_COMMON",   null,   "CommonReport",             "/apps/common/src/report/index.html"],
-                        ["REPORT_COMMON",   null,   "CommonReportHead",         "/apps/common/src/report/head.html"],
-                        ["REPORT_COMMON",   null,   "CommonReportHeadFonts",    "/apps/common/src/report/fonts.html"],
-                        ["MAINTENANCE",     null,   null,                       "/apps/common/src/index_maintenance.html"],
-                        ["MAINTENANCE",     null,   "CommonHeadMaintenance",    "/apps/common/src/head_maintenance.html"]
-                    ]
+                    "FAVICON_192x192":"/images/favicon-192x192.png"
         },
         "MODULES":[
             ["FUNCTION","COMMON_COUNTRY",   "APP_DATA",     "Get countries for given locale",   "/apps/common/src/functions/common_country.js"],
@@ -132,15 +123,14 @@
                     {"MODULE_EASY.QRCODE_WIDTH": "128"}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":false,
+                    "MANIFEST":"",
                     "JS":"/js/app.js",     
                     "JS_SECURE":"",                     
                     "JS_REPORT":"",                         
                     "CSS": "/css/app.css",   
                     "CSS_REPORT": "",                         
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
-                    "FAVICON_192x192":"/images/favicon-192x192.png",
-                    "RENDER_FILES":[]
+                    "FAVICON_192x192":"/images/favicon-192x192.png"
         },
         "MODULES":[],
         "STATUS":"ONLINE"
@@ -242,15 +232,14 @@
                     {"MODULE_EASY.QRCODE_WIDTH": "128"}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":true,
+                    "MANIFEST":"/manifest.json",
                     "JS":"/js/app.js",     
                     "JS_SECURE":"",                     
                     "JS_REPORT":"",
                     "CSS": "/css/app.css",   
                     "CSS_REPORT": "/css/app_report.css", 
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
-                    "FAVICON_192x192":"/images/favicon-192x192.png",
-                    "RENDER_FILES":[]
+                    "FAVICON_192x192":"/images/favicon-192x192.png"
         },
         "MODULES":[
             ["REPORT",  "TIMETABLE",            null,                               "/apps/app2/src/report/timetable.js"],
@@ -290,15 +279,14 @@
                     {"LINK_URL": ""}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":false,
+                    "MANIFEST":"",
                     "JS":"/js/app.js",     
                     "JS_SECURE":"",                     
                     "JS_REPORT":"",                         
                     "CSS": "/css/app.css",   
                     "CSS_REPORT": "",                         
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
-                    "FAVICON_192x192":"/images/favicon-192x192.png",
-                    "RENDER_FILES":[]
+                    "FAVICON_192x192":"/images/favicon-192x192.png"
         },
         "MODULES":[],
         "STATUS":"ONLINE"
@@ -334,15 +322,14 @@
                     {"LINK_URL": ""}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":false,
+                    "MANIFEST":"",
                     "JS":"/js/app.js",     
                     "JS_SECURE":"",                     
                     "JS_REPORT":"",                         
                     "CSS": "/css/app.css",   
                     "CSS_REPORT": "",                         
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
-                    "FAVICON_192x192":"/images/favicon-192x192.png",
-                    "RENDER_FILES":[]
+                    "FAVICON_192x192":"/images/favicon-192x192.png"
         },
         "MODULES":[],
         "STATUS":"ONLINE"
@@ -380,15 +367,14 @@
                     {"LINK_URL": ""}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":false,
+                    "MANIFEST":"",
                     "JS":"/js/app.js",     
                     "JS_SECURE":"",                     
                     "JS_REPORT":"",                         
                     "CSS": "/css/app.css",   
                     "CSS_REPORT": "",                         
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
-                    "FAVICON_192x192":"/images/favicon-192x192.png",
-                    "RENDER_FILES":[]
+                    "FAVICON_192x192":"/images/favicon-192x192.png"
         },
         "MODULES":[
             ["FUNCTION","ACCOUNT_METADATA",     	    "APP_DATA",     "ACCOUNT metadata",             "/apps/app5/src/functions/account_metadata.js"],
@@ -447,15 +433,14 @@
                     {"LINK_URL": ""}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":false,
+                    "MANIFEST":"",
                     "JS":"/js/app.js",     
                     "JS_SECURE":"",                     
                     "JS_REPORT":"",                         
                     "CSS": "/css/app.css",   
                     "CSS_REPORT": "",                         
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
-                    "FAVICON_192x192":"/images/favicon-192x192.png",
-                    "RENDER_FILES":[]
+                    "FAVICON_192x192":"/images/favicon-192x192.png"
         },
         "MODULES":[
             ["FUNCTION","PRODUCT_GET",     		                "APP_DATA",   	"PRODUCT get",                      "/apps/app6/src/functions/product_get.js"],
@@ -500,15 +485,14 @@
                     {"LINK_URL": ""}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":false,
+                    "MANIFEST":"",
                     "JS":"/js/app.js",
                     "JS_SECURE":"",
                     "JS_REPORT":"",
                     "CSS": "/css/app.css",
                     "CSS_REPORT": "",
                     "FAVICON_32x32":"/images/favicon-32x32.png",
-                    "FAVICON_192x192":"/images/favicon-192x192.png",
-                    "RENDER_FILES":[]
+                    "FAVICON_192x192":"/images/favicon-192x192.png"
         },
         "MODULES":[
             ["FUNCTION","CUBE_SOLVE",     		                "APP_DATA",   	"Cube Solve",                       "/apps/app7/src/functions/solve.js"]

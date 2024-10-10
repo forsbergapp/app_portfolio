@@ -506,6 +506,9 @@ const getLogsStats = async (data) => {
     const logfiles = [];
     /**@type{import('./types.js').server_log_result_getLogsStats[]|[]} */
     const logstat = [];
+
+    /**@type{import('../apps/common/src/common.service.js')} */
+    const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
     
     const files = await fileFsDir();
     /**@type{string} */
@@ -525,14 +528,12 @@ const getLogsStats = async (data) => {
             }
             else
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
-            /**@type{import('./config.service.js')} */
-            const {ConfigGetAppHost} = await import(`file://${process.cwd()}/server/config.service.js`);
             await fileFsReadLog(file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, sample)
             .then((logs)=>{
                 logs.forEach((/**@type{import('./types.js').server_log_request_record|''}*/record) => {
                     if (record != ''){
                         if (data.statGroup != null){
-                            const domain_app_id = record.host?ConfigGetAppHost(record.host):null;
+                            const domain_app_id = record.host?commonAppHost(record.host):null;
                             if (data.app_id == null || data.app_id == domain_app_id){
                                 const statGroupvalue = (data.statGroup=='url' && record[data.statGroup].indexOf('?')>0)?record[data.statGroup].substring(0,record[data.statGroup].indexOf('?')):record[data.statGroup];
                                 //add unique statGroup to a set
@@ -554,7 +555,7 @@ const getLogsStats = async (data) => {
                             //add for given status code or all status codes if all should be returned
                             //save this as chart 2 with days
                             if (data.statValue == null || data.statValue == record.statusCode){
-                                const domain_app_id = record.host?ConfigGetAppHost(record.host):null;
+                                const domain_app_id = record.host?commonAppHost(record.host):null;
                                 if (data.app_id == null || data.app_id == domain_app_id){
                                     //add unique status codes to a set
                                     log_stat_value.add(record.statusCode);

@@ -3,7 +3,7 @@
 /**@type{import('./server.service.js')} */
 const {responsetime, response_send_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('./config.service.js')} */
-const {CheckFirstTime, ConfigGet, ConfigGetAppHost, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 
 /**@type{import('./log.service.js')} */
 const {LogRequestI, LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/log.service.js`);
@@ -11,6 +11,11 @@ const {LogRequestI, LogServiceI, LogServiceE} = await import(`file://${process.c
 const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**@type{import('./security.service.js')} */
 const {createUUID, createRequestId, createCorrelationId}= await import(`file://${process.cwd()}/server/security.service.js`);
+
+/**@type{import('../apps/common/src/common.service.js')} */
+const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
+
+
 const fs = await import('node:fs');
 
 /**
@@ -178,7 +183,7 @@ const BFF_start = async (req, res) =>{
  */
  const BFF = (bff_parameters) =>{
     const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
-    const app_id = ConfigGetAppHost(bff_parameters.host ?? '');
+    const app_id = commonAppHost(bff_parameters.host ?? '');
     
     if (app_id !=null){
         let decodedquery = '';
