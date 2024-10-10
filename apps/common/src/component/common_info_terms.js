@@ -1,5 +1,5 @@
 /**
- * @module apps/common/src/component/common_info_disclaimer
+ * @module apps/common/src/component/common_info_terms
  */
 
 /**

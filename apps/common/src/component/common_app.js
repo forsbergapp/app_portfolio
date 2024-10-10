@@ -1,5 +1,5 @@
 /**
- * @module apps/app2/component/app
+ * @module apps/common/src/component/common_app
  */
 
 /**
