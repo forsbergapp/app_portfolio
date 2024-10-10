@@ -28,7 +28,7 @@ const template = props =>`  <!DOCTYPE html>
                                 </script>
 
                                 <script type='module'>
-                                    import('app').then((app) => app.init('${props.ITEM_COMMON_PARAMETERS}'))
+                                    import('app').then((app) => app.init('${props.ITEM_COMMON_PARAMETERS}'));
                                 </script>
                                 <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.RENDER_CONFIG?.CSS}'/>
                                 <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.RENDER_CONFIG?.CSS_REPORT}'/>
