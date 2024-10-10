@@ -62,8 +62,9 @@ const fileTransactionStart = async (file, filecontent)=>{
                 resolve(transaction_id);}, 1);
         }
         else{
-            const tries = 0;
-            const timer = setInterval(() => {
+            let tries = 0;
+            const lock = () =>{
+                tries++;
                 if (tries > 10000)
                     reject ('timeout');
                 else
@@ -72,12 +73,13 @@ const fileTransactionStart = async (file, filecontent)=>{
                         const transaction_id = Date.now();
                         fileRecord(file).TRANSACTION_ID = transaction_id;
                         fileRecord(file).TRANSACTION_CONTENT = filecontent;
-                        clearInterval(timer);
                         resolve(transaction_id);
                     }
-            }, 1);
+                    else
+                        setTimeout(()=>{lock(), 1;});
+            };
+            lock();
         }
-            
     });
 };
 /**
