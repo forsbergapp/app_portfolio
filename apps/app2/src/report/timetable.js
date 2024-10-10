@@ -125,7 +125,7 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
 /**
  * Create timetable day, month or year
  * @param {import('../../../../server/types.js').server_apps_report_create_parameters} timetable_parameters
- * @returns {Promise.<{report:string, papersize:string}>}
+ * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
 	const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
@@ -199,12 +199,9 @@ const timetable = async (timetable_parameters) => {
 																	COMMON_DOCUMENT:null
 																	}
 														});
-							resolve({
-										report:result.template,
-										papersize:user_account_app_data_post.papersize
-									});
+							resolve(result.template);
 						})
-						.catch(()=>resolve({report:'', papersize:''}));
+						.catch(()=>resolve(''));
 					}
 					else
 						if (reporttype==1){
@@ -219,9 +216,7 @@ const timetable = async (timetable_parameters) => {
 																	COMMON_DOCUMENT:null
 																	}
 														});
-							resolve({	report:result.template,
-										papersize:user_account_app_data_post.papersize
-									});
+							resolve(result.template);
 						}
 						else 
 							if (reporttype==2){
@@ -236,12 +231,10 @@ const timetable = async (timetable_parameters) => {
 																		COMMON_DOCUMENT:null
 																		}
 															});
-								resolve({	report:result.template,
-											papersize:user_account_app_data_post.papersize
-										});
+								resolve(result.template);
 							}
 			}) 
-			.catch(()=>resolve({report:'', papersize:''}));
+			.catch(()=>resolve(''));
 		})
 		.catch((/**@type{import('../../../../server/types.js').server_server_error}*/error)=>{
 			resolve(error);

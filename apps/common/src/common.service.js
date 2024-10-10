@@ -499,6 +499,7 @@ const commonComponentCreate = async parameters =>{
             
             const decodedReportparameters = Buffer.from(parameters.componentParameters.reportid ?? '', 'base64').toString('utf-8');
             const module = new URLSearchParams(decodedReportparameters).get('module');
+            const papersize = new URLSearchParams(decodedReportparameters).get('ps');
             const report_path = fileCache('CONFIG_APPS').APPS[parameters.app_id].MODULES.filter((/**@type{*}*/file)=>file[0]=='REPORT' && file[1]==module)[0][3];
             const {default:RunReport} = await import(`file://${process.cwd()}${report_path}`);
 
@@ -513,7 +514,9 @@ const commonComponentCreate = async parameters =>{
                             };
             return ComponentCreate({data:   {
                                             CONFIG_APP:{...fileCache('CONFIG_APPS').APPS[parameters.app_id]},
-                                            data:data
+                                            data:data,
+                                            /**@ts-ignore */
+                                            papersize:papersize
                                             },
                                     methods:{function_report:RunReport}});
         }

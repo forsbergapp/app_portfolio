@@ -348,7 +348,7 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
         module_parameters += `&uid_view=${uid_view}`;
     }
     const language_parameter = `&lang_code=${common.COMMON_GLOBAL.user_locale}`;
-    const service_parameter = `&format=${format}&ps=${papersize}&hf=0`; //html, papersize, header/footer
+    const service_parameter = `&format=${format}&ps=${papersize}`;
     const encodedurl = common.commonWindowToBase64( report_module +
                                         module_parameters + 
                                         language_parameter +
