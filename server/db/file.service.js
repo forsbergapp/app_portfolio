@@ -214,15 +214,6 @@ const fileFsRead = async (file, lock=false) =>{
             file_db_record.CACHE_CONTENT = file?file:null;
         }
     }
-    /**@type{import('../types.js').server_config_apps['APPS']}*/
-    const APPS = fileRecord('CONFIG_APPS').CACHE_CONTENT.APPS;
-    for (const app of APPS){
-        if (app.RENDER_CONFIG?.RENDER_FILES)
-            for (const renderfile of app.RENDER_CONFIG.RENDER_FILES){
-                //save file content (html) in new arrayindex so apps can read files faster
-                renderfile.push(await fs.promises.readFile(process.cwd() + renderfile[3], 'utf8').then(filebuffer=>filebuffer.toString()));
-            }
-    }
  };
 /**
  * 
