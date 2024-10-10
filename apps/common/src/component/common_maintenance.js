@@ -26,8 +26,8 @@ const template = props =>`  <!DOCTYPE html>
                                 </script>
                                 <link rel='stylesheet' type='text/css' href='/maintenance/css/common.css' />
                                 <link rel='stylesheet' type='text/css' href='/maintenance/css/maintenance.css' />
-                                <script type='text/javascript' type='module' >
-                                    import('maintenance').then((maintenance)=>maintenance.init(${props.ITEM_COMMON_PARAMETERS})
+                                <script type='module' >
+                                    import('maintenance').then((maintenance)=>maintenance.init('${props.ITEM_COMMON_PARAMETERS}'));
                                 </script>
                                 <meta name="HandheldFriendly" content="true"/>
                                 <meta name='mobile-web-app-capable' content='yes'>
