@@ -4,10 +4,12 @@
 
 /**
  * @param {{config:import('../../../../server/types.js').server_config_apps_record, 
- *          report:string, 
- *          papersize:string}} props
+ *          papersize:'A4'|'Letter',
+ *          function_report:function,
+ *          data:*
+ *          }} props
  */
-const template = props =>`  <!DOCTYPE html>
+const template = async props =>`  <!DOCTYPE html>
                             <html>
                             <head>
                                 <meta charset='UTF-8'>
@@ -188,7 +190,7 @@ const template = props =>`  <!DOCTYPE html>
                             </head>	
                             <body id='printbody'>
                                 <div id='paper' class='${props.papersize}'>
-                                    ${props.report}
+                                    ${await props.function_report(props.data)}
                                 </div>
                             </body>
                             </html>`;
@@ -196,15 +198,13 @@ const template = props =>`  <!DOCTYPE html>
  * 
  * @param {{data:       {
  *                      CONFIG_APP:import('../../../../server/types.js').server_config_apps_record, 
- *                      data:import('../../../../server/types.js').server_apps_report_create_parameters
+ *                      data:import('../../../../server/types.js').server_apps_report_create_parameters,
+ *                      papersize:'A4'|'Letter'
  *                      },
  *          methods:    {function_report:function}}} props 
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    /**@type{{report:string,
-    *        papersize:string}} */
-    const report = await props.methods.function_report(props.data.data);
-    return template({config:props.data.CONFIG_APP, report:report.report, papersize:report.papersize});
+    return template({config:props.data.CONFIG_APP, papersize:props.data.papersize, function_report:props.methods.function_report, data:props.data.data});
 };
 export default component;
