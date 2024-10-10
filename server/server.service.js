@@ -204,6 +204,10 @@ const COMMON = {
     /**@type{import('../apps/apps.js')} */
     const app = await import(`file://${process.cwd()}/apps/apps.js`);
 
+    //server app common
+    /**@type{import('../apps/common/src/common.js')} */
+    const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+
     //server iam service
     /**@type{import('./iam.service.js')} */
     const iam_service = await import(`file://${process.cwd()}/server/iam.service.js`);
@@ -269,7 +273,14 @@ const COMMON = {
                 //App route for app asset, common asset, app info page, app report (using query) and app
                 const URI_query = routesparameters.route_path.startsWith('/app-reports')?routesparameters.url.substring(routesparameters.url.indexOf('?')):null;
                 const app_query = URI_query?new URLSearchParams(URI_query):null;
-                resolve(app.getAppMain(routesparameters.ip, routesparameters.host, routesparameters.user_agent, routesparameters.accept_language, routesparameters.url, app_query, routesparameters.res)
+                resolve(app_common.commonApp({  
+                                                ip:routesparameters.ip, 
+                                                host:routesparameters.host, 
+                                                user_agent:routesparameters.user_agent, 
+                                                accept_language:routesparameters.accept_language, 
+                                                url:routesparameters.url, 
+                                                query:app_query, 
+                                                res:routesparameters.res})
                         .catch(()=>ServerError({data:null, methods:null})));
             }
             else{
@@ -483,14 +494,14 @@ const COMMON = {
                     case route({url:`/bff/app_access/v1/app-function/${resource_id_string}`, method:'POST', 
                         resource_validate_app_data_app_id: routesparameters.body.data_app_id, resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_ACCESS'}):{
                         //call COMMON_APP_ID function if requested or call the function registered on the app
-                        resolve(app.getFunction((routesparameters.body.data_app_id == COMMON_APP_ID)?COMMON_APP_ID ?? routesparameters.app_id:routesparameters.app_id, 
-                                                /**@ts-ignore */
-                                                resource_id_get_string(), 
-                                                routesparameters.body, 
-                                                routesparameters.user_agent,
-                                                routesparameters.ip,
-                                                app_query?.get('lang_code'),
-                                                routesparameters.res).then(result=>iso_return_message(result, false)));
+                        resolve(app_common.commonFunctionRun({
+                                                app_id:(routesparameters.body.data_app_id == COMMON_APP_ID)?COMMON_APP_ID ?? routesparameters.app_id:routesparameters.app_id, 
+                                                resource_id:resource_id_get_string() ?? '', 
+                                                data:routesparameters.body, 
+                                                user_agent:routesparameters.user_agent,
+                                                ip:routesparameters.ip,
+                                                locale:app_query?.get('lang_code') ??'',
+                                                res:routesparameters.res}).then(result=>iso_return_message(result, false)));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_entity/${resource_id_string}`, method:'GET'}):{

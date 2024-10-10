@@ -35,8 +35,8 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
 
-    /**@type{import('../../../../apps/apps.service.js')} */
-    const {request_external} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+    /**@type{import('../../../../apps/common/src/common.service.js')} */
+    const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
 
     /**@type{import('../../../../server/security.service')} */
     const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`); 
@@ -69,9 +69,9 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
         const body_encrypted = {id:    ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_ID,
                                 message:PublicEncrypt(ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_PUBLIC_KEY, JSON.stringify(body))};
         
-        const result_request_external = await request_external(url, 'POST', body_encrypted, user_agent, ip, null, locale ).then(result=>JSON.parse(result));
-        if (result_request_external.error){
-            res.statusCode = result_request_external.error.http;
+        const result_commonBFE = await commonBFE({host:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
+        if (result_commonBFE.error){
+            res.statusCode = result_commonBFE.error.http;
             throw '⛔';
         }
         else{
@@ -86,7 +86,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
             *          amount:number,
             *          currency_symbol:string}}
             */
-            const body_decrypted = JSON.parse(PrivateDecrypt(ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_PRIVATE_KEY, result_request_external.rows[0].message));
+            const body_decrypted = JSON.parse(PrivateDecrypt(ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_PRIVATE_KEY, result_commonBFE.rows[0].message));
 
             return [{   token:                  body_decrypted.token,
                         exp:                    body_decrypted.exp,

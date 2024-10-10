@@ -3,18 +3,19 @@
  */
 
 /**
- * @param {{CONFIG_APP:*, ITEM_COMMON_PARAMETERS:string}} props
+ * @param {{CONFIG_APP:import('../../../../server/types.js').server_config_apps_record, ITEM_COMMON_PARAMETERS:string}} props
  */
 const template = props =>`  <!DOCTYPE html>
                             <html>
                             <head>
                                 <meta charset='UTF-8'>
-                                <title>${props.CONFIG_APP.app_name}</title>
+                                <title>${props.CONFIG_APP.NAME}</title>
                                 <script type="importmap">
                                     {
                                         "imports": {
-                                            <APP_JS/>
-                                            <APP_JS_SECURE/>
+                                            ${props.CONFIG_APP.RENDER_CONFIG?.JS !=''?          `"app" 			: "${props.CONFIG_APP.RENDER_CONFIG?.JS}",`:''}
+                                            ${props.CONFIG_APP.RENDER_CONFIG?.JS_SECURE !=''?   `"app_secure"   : "${props.CONFIG_APP.RENDER_CONFIG?.JS_SECURE}",`:''}
+                                            ${props.CONFIG_APP.RENDER_CONFIG?.JS_REPORT !=''?   `"app_report" 	: "${props.CONFIG_APP.RENDER_CONFIG?.JS_REPORT}",`:''}
                                             "common"	    : "/common/js/common.js",
                                             "easy.qrcode"   : "/common/modules/easy.qrcode/easy.qrcode.js",
                                             "leaflet"	    : "/common/modules/leaflet/leaflet-src.esm.js",
@@ -27,13 +28,13 @@ const template = props =>`  <!DOCTYPE html>
                                 </script>
 
                                 <script type='module'>
-                                    import('app').then((app) => app.init(${props.ITEM_COMMON_PARAMETERS}))
+                                    import('app').then((app) => app.init('${props.ITEM_COMMON_PARAMETERS}'))
                                 </script>
-                                <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.app_css}'/>
-                                <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.app_css_report}'/>
-                                <link rel='icon'        type='image/png'    href='${props.CONFIG_APP.app_favicon_32x32}' sizes='32x32'/>
-                                <link rel='icon'        type='image/png'    href='${props.CONFIG_APP.app_favicon_192x192}' sizes='192x192'/>
-                                <link rel='manifest'    href='${props.CONFIG_APP.app_manifest}'/>
+                                <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.RENDER_CONFIG?.CSS}'/>
+                                <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.RENDER_CONFIG?.CSS_REPORT}'/>
+                                <link rel='icon'        type='image/png'    href='${props.CONFIG_APP.RENDER_CONFIG?.FAVICON_32x32}' sizes='32x32'/>
+                                <link rel='icon'        type='image/png'    href='${props.CONFIG_APP.RENDER_CONFIG?.FAVICON_192x192}' sizes='192x192'/>
+                                <link rel='manifest'    href='${props.CONFIG_APP.RENDER_CONFIG?.MANIFEST}'/>
                                 <meta name="HandheldFriendly" content="true"/>
                                 <meta name='mobile-web-app-capable' content='yes'>
                                 <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>
@@ -47,7 +48,7 @@ const template = props =>`  <!DOCTYPE html>
                             </html> `;
 /**
  * 
- @param {{data:       {CONFIG_APP:*, ITEM_COMMON_PARAMETERS:string},
+ @param {{data:       {CONFIG_APP:import('../../../../server/types.js').server_config_apps_record, ITEM_COMMON_PARAMETERS:string},
  *        methods:    null}} props 
  * @returns {Promise.<string>}
  */

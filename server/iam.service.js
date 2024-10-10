@@ -3,9 +3,12 @@
 /**@type{import('./server.service.js')} */
 const {response_send_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('./config.service.js')} */
-const {ConfigGet, ConfigFileGet, ConfigGetApp, ConfigGetAppHost, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet, ConfigFileGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{import('./db/file.service.js')} */
 const {fileFsRead, fileFsReadLog, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+
+/**@type{import('../apps/common/src/common.service.js')} */
+const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
 
 const {default:jwt} = await import('jsonwebtoken');
 
@@ -167,7 +170,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
  * @param {function} next
  */
  const AuthenticateUserCommon = async (iam, scope, authorization, host, ip, res, next) =>{
-    const app_id_host = getNumberValue(ConfigGetAppHost(host));
+    const app_id_host = getNumberValue(commonAppHost(host));
     //iam required for SOCKET update using iam.client_id that can be changed any moment and not validated here
     if (iam && scope && authorization && app_id_host !=null){
         const app_id_admin = getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'));

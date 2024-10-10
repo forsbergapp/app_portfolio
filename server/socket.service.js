@@ -214,8 +214,8 @@ const ClientAdd = (newClient) => {
  */
  const ConnectedList = async (app_id, app_id_select, limit, year, month, day, order_by, sort, dba) => {
     
-    /**@type{import('../apps/apps.service.js')} */
-    const { app_start } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+    /**@type{import('../apps/common/src/common.service.js')} */
+    const { commonAppStart } = await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
     //filter    
     /**@type{import('./types.js').server_socket_connected_list_no_res[]} */
     let connected_clients_no_res =[];
@@ -288,7 +288,7 @@ const ClientAdd = (newClient) => {
         const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
         for (const client of connected_clients_no_res){
             if (client.system_admin=='')
-                if (await app_start()==true){    
+                if (await commonAppStart()==true){    
                     await getUserRoleAdmin(app_id, client.user_account_id, dba)
                     .then((/**@type{import('./types.js').server_db_sql_result_user_account_getUserRoleAdmin[]}*/result_app_role)=>{
                         if (result_app_role[0]){

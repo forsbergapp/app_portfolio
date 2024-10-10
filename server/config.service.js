@@ -27,30 +27,7 @@ const app_portfolio_title = 'App Portfolio';
                                     key?app.concat({APP_ID:current.APP_ID, [key]:current[key]}):app.concat(current), []);
     return result;
  };
- /**
-  * 
-  * @param {string} host 
-  * @returns 
-  */
- const ConfigGetAppHost = host =>{
-    switch (host.toString().split('.')[0]){
-        case 'localhost':
-        case 'www':{
-            //localhost
-            return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
-                (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
-        }
-        default:{
-            try {
-                return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
-                    (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return host.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
-            } catch (error) {
-                //request can be called from unkown hosts
-                return null;
-            }
-        }
-    }
- };
+ 
 /**
  * Config get app
  * @param {number|null} app_id
@@ -387,4 +364,4 @@ const CreateSystemAdmin = async (admin_name, admin_password) => {
 
 export{ ConfigFileGet, ConfigFileSave, CheckFirstTime,
         CreateSystemAdmin, 
-        ConfigGet, ConfigGetUser, ConfigGetApps, ConfigGetAppHost, ConfigGetApp, ConfigAppSecretDBReset, ConfigAppSecretUpdate, ConfigAppParameterUpdate, InitConfig};
+        ConfigGet, ConfigGetUser, ConfigGetApps, ConfigGetApp, ConfigAppSecretDBReset, ConfigAppSecretUpdate, ConfigAppParameterUpdate, InitConfig};

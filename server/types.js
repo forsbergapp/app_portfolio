@@ -595,8 +595,7 @@
  *              CSS:string,
  *              CSS_REPORT:string,
  *              FAVICON_32x32:string,
- *              FAVICON_192x192:string,
- *              RENDER_FILES:server_config_apps_render_files[]}} server_config_apps_render_config
+ *              FAVICON_192x192:string}} server_config_apps_render_config
  */
 
 /**
@@ -609,10 +608,6 @@
  * @typedef  {'ONLINE'|'OFFLINE'} server_config_apps_status
  */
 
-/**
- * Server - config apps render files
- * @typedef  {[string,string|null,string|null,string, string|null]} server_config_apps_render_files
- */
 
 /**
  * Server - config apps record
