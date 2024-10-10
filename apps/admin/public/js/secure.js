@@ -108,7 +108,7 @@ const show_menu = menu => {
                 path:       '/component/menu_monitor.js'})
             .then((/**@type{{data:{limit:number}, methods:null}}*/result)=>{
                 APP_GLOBAL.limit = result.data.limit;
-                nav_click('list_monitor_nav_connected');
+                COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').click();
             });
             break;
         }
@@ -568,13 +568,6 @@ const map_mount = () =>{
  * @returns{void}
  */
 const nav_click = (item_id) => {
-    const reset_monitor = () => {
-        COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').classList.remove('list_nav_selected_tab');
-        if (COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log'))
-            COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_selected_tab');
-        if (COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log'))
-            COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_selected_tab');
-    };
     const reset_config = () => {
         COMMON_DOCUMENT.querySelector('#list_config_nav_config_server').classList.remove('list_nav_selected_tab');
         COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_blockip').classList.remove('list_nav_selected_tab');
@@ -583,25 +576,6 @@ const nav_click = (item_id) => {
     };
     
     switch (item_id){
-        //MONITOR
-        case 'list_monitor_nav_connected':{
-            reset_monitor();
-            COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').classList.add('list_nav_selected_tab');
-            show_connected();
-            break;
-        }
-        case 'list_monitor_nav_app_log':{
-            reset_monitor();
-            COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
-            show_app_log();
-            break;
-        }
-        case 'list_monitor_nav_server_log':{
-            reset_monitor();
-            COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
-            show_server_logs('logdate', 'desc');
-            break;
-        }
         //SERVER CONFIG
         case 'list_config_nav_config_server':{
             reset_config();
@@ -652,7 +626,7 @@ const nav_click = (item_id) => {
  * @param {string} sort 
  * @param {string} order_by 
  */
-const show_list = async (list_detail, query, sort, order_by) => {
+const monitorDetailShow = async (list_detail, query, sort, order_by) => {
     common.commonComponentRender({
         mountDiv:   'list_monitor',
         data:       {
@@ -681,17 +655,6 @@ const show_list = async (list_detail, query, sort, order_by) => {
         APP_GLOBAL.monitor_detail_server_log = result.methods.monitor_detail_server_log;
     });
 };
-/**
- * Show connected
- * @param {string} sort 
- * @param {string} order_by
- */
-const show_connected = async (sort='connection_date', order_by='desc') => {
-    show_list('CONNECTED', 
-              '', 
-              sort,
-              order_by);
-};    
 
 /**
  * Show app log
@@ -701,7 +664,7 @@ const show_connected = async (sort='connection_date', order_by='desc') => {
  * @returns{Promise.<void>}
  */
 const show_app_log = async (sort='date_created', order_by='desc', offset=0) => {
-    show_list('APP_LOG', 
+    monitorDetailShow('APP_LOG', 
               `&offset=${offset}`, 
               sort,
               order_by);
@@ -720,7 +683,10 @@ const list_sort_click = (list, sortcolumn, order_by) => {
             break;
         }
         case 'list_connected':{
-            show_connected(sortcolumn, order_by);
+            monitorDetailShow('CONNECTED', 
+                '', 
+                sortcolumn,
+                order_by);
             break;
         }
         case 'list_server_log':{
@@ -839,20 +805,6 @@ const get_log_parameters = async () => {
         });
     })
     .catch(()=>null);
-};
-/**
- * Show server logs
- * @param {string} sort 
- * @param {string} order_by 
- * @returns {void}
- */
-const show_server_logs = (sort='logdate', order_by='desc') => {
-    
-
-    show_list('SERVER_LOG', 
-              '',
-              sort,
-              order_by);
 };
 /**
  * Show existing logfiles
@@ -992,16 +944,29 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     if( event_target_id == 'select_broadcast_type')
                         set_broadcast_type();
                     //menu monitor
-                    if( event_target_id == 'select_app_menu5')
-                        nav_click(COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id);
-                    if( event_target_id == 'select_year_menu5'||
+                    if( event_target_id == 'select_app_menu5'||
+                        event_target_id == 'select_year_menu5'||
                         event_target_id == 'select_month_menu5'||
                         event_target_id == 'select_day_menu5'){
-                            const current_tab = COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id;
-                            if (current_tab=='list_monitor_nav_server_log')
-                                APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
-                            else
-                                nav_click(current_tab);
+                            switch (COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id){
+                                case 'list_monitor_nav_server_log':{
+                                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
+                                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
+                                    APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
+                                    break;
+                                }
+                                case 'list_monitor_nav_connected':{
+                                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').click();
+                                    break;
+                                }
+                                case 'list_monitor_nav_app_log':{
+                                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').click();
+                                    break;
+                                }
+                                default:{
+                                    break;
+                                }
+                            }
                         }
                     if( event_target_id == 'select_logscope5')
                         APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
@@ -1037,10 +1002,22 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     APP_GLOBAL.monitor_detail_server_log('logdate','desc');
                     break;
                 }
-                case 'list_monitor_nav_connected':
-                case 'list_monitor_nav_app_log':
+                case 'list_monitor_nav_connected':{
+                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').classList.add('list_nav_selected_tab');
+                    monitorDetailShow('CONNECTED', '', 'connection_date', 'desc');
+                    break;
+                }
+                case 'list_monitor_nav_app_log':{
+                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
+                    monitorDetailShow('APP_LOG', '&offset=0', 'date_created', 'desc');
+                    break;
+                }
                 case 'list_monitor_nav_server_log':{
-                    nav_click(event_target_id);    
+                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
+                    monitorDetailShow('SERVER_LOG', '', 'logdate', 'desc');
                     break;
                 }
                 case 'list_app_log_first':
