@@ -450,8 +450,12 @@ const component = async props => {
     }
     //fetch logs except for SERVER_LOG
     const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-    if (props.data.monitor_detail=='APP_LOG')
+    if (props.data.monitor_detail=='APP_LOG'){
         page_last = logs.length>0?(Math.floor(logs[0].total_rows/props.data.LIMIT) * props.data.LIMIT):0;
+        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page').textContent = page; 
+        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page_last').textContent = page_last;
+    }
+        
 
     /**
      * Page navigation
@@ -466,18 +470,34 @@ const component = async props => {
          */
         const get_sort = (order_by=0) => {
             const sort = '';
-            for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#list_app_log .list_title')){
-                if (col_title.classList.contains('asc'))
-                    if (order_by==0)
-                        return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
-                    else
-                        return 'asc';
-                if (col_title.classList.contains('desc'))
-                    if (order_by==0)
-                        return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
-                    else
-                        return 'desc';
-            }
+            if (props.data.monitor_detail=='APP_LOG')
+                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#list_app_log .list_title')){
+                    if (col_title.classList.contains('asc'))
+                        if (order_by==0)
+                            return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
+                        else
+                            return 'asc';
+                    if (col_title.classList.contains('desc'))
+                        if (order_by==0)
+                            return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
+                        else
+                            return 'desc';
+                }
+            else
+                if (props.data.monitor_detail=='SERVER_LOG')
+                    for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#list_server_log .list_title')){
+                        if (col_title.classList.contains('asc'))
+                            if (order_by==0)
+                                    return col_title.getAttribute('data-column');
+                            else
+                                return 'asc';
+                        if (col_title.classList.contains('desc'))
+                            if (order_by==0)
+                                    return col_title.getAttribute('data-column');
+                            else
+                                return 'desc';
+                    }
+                    
             return sort;
         };    
         let sort = get_sort();
@@ -525,6 +545,8 @@ const component = async props => {
                 break;
             }
         }
+        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page').textContent = page; 
+        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page_last').textContent = page_last;
     };
     /**
      * List sort click
@@ -673,7 +695,11 @@ const component = async props => {
                     methods:{   commonRoundOff:props.methods.commonRoundOff,
                                 commonFFB:props.methods.commonFFB},
                     path:'/component/menu_monitor_detail_server_log.js'})
-                    .then(result=>page_last=result.data.page_last);
+                    .then(result=>{
+                        page_last=result.data.page_last;
+                        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page').textContent = page; 
+                        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page_last').textContent = page_last;
+                    });
     };
    
     /**
