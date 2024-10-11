@@ -136,8 +136,8 @@ const init_map = async ()=>{
         methods:    null,
         path:       '/component/app.js'});
     common.commonModuleLeafletInit({mount_div:'mapid',
-                    latitude:common.COMMON_GLOBAL.client_longitude,
-                    longitude:common.COMMON_GLOBAL.client_latitude,
+                    latitude:common.COMMON_GLOBAL.client_latitude,
+                    longitude:common.COMMON_GLOBAL.client_longitude,
                     place:common.COMMON_GLOBAL.client_place,
                     doubleclick_event:null, 
                     update_map:true})
