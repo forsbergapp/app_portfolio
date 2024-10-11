@@ -19,8 +19,7 @@ const common = await import(common_path);
  *                                     monitorDetailClickItem:     function
  *                                  }
  *                      },
- *          previous_row:{}, 
- *          service_log_file_interval:string}}
+ *          previous_row:{}}}
  */
 const APP_GLOBAL = {
     component: {MENU_MONITOR : {monitorShow:                ()=>null,
@@ -31,8 +30,7 @@ const APP_GLOBAL = {
                                 monitorDetailClickItem:     ()=>null
                             }
                 },
-    previous_row:{},
-    service_log_file_interval:''
+    previous_row:{}
 };
 Object.seal(APP_GLOBAL);
 /**
@@ -49,7 +47,6 @@ const delete_globals = () => {
                                         }
                             };
     APP_GLOBAL.previous_row = {};
-    APP_GLOBAL.service_log_file_interval = '';
 };
 
 /**
@@ -626,20 +623,6 @@ const nav_click = (item_id) => {
 };
 
 /**
- * Show app log
- * @param {string} sort 
- * @param {string} order_by
- * @param {number} offset 
- * @returns{Promise.<void>}
- */
-const show_app_log = async (sort='date_created', order_by='desc', offset=0) => {
-    APP_GLOBAL.component.MENU_MONITOR.monitorShow('APP_LOG', 
-              `&offset=${offset}`, 
-              sort,
-              order_by);
-};
-
-/**
  * Executes installation rest API and presents the result
  * @param {string} id 
  * @param {boolean|null} db_icon 
@@ -1004,7 +987,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
 const init = () => {
     //SET GLOBALS
     APP_GLOBAL.previous_row= {};
-    APP_GLOBAL.service_log_file_interval= '';
 
     for (let i=1;i<=10;i++){
         COMMON_DOCUMENT.querySelector(`#menu_${i}`).style.display='none';
@@ -1018,4 +1000,4 @@ const init = () => {
         show_menu(1);
     }
 };
-export {delete_globals, show_menu, nav_click, show_app_log, app_events, init,show_broadcast_dialogue};
+export {delete_globals, show_menu, nav_click, app_events, init,show_broadcast_dialogue};
