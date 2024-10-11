@@ -279,12 +279,6 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                             ).join('')
                                         }
                                     </div>
-                                    <div id='list_app_pagination'>
-                                        <div id='list_app_log_first' class='common_icon'></div>
-                                        <div id='list_app_log_previous' class='common_icon'></div>
-                                        <div id='list_app_log_next' class='common_icon'></div>
-                                        <div id='list_app_log_last' class='common_icon'></div>
-                                    </div>
                                 </div>`:
                                 ''
                             }
@@ -319,8 +313,8 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                         <div id='list_server_log_search_input' contentEditable='true' class='common_input list_search_input'/></div>
                                         <div id='list_server_log_search_icon' class='list_search_icon common_icon'></div>
                                     </div>
-                                    <div id='list_server_log' class='common_list_scrollbar'></div>
-                                </div>`:
+                                </div>
+                                <div id='list_server_log' class='common_list_scrollbar'></div>`:
                                 ''
                             }`;
 /**
@@ -331,7 +325,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                       system_admin:string,
 *                       system_admin_only:number,
 *                       monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
-*                       query:string,
+*                       offset:number,
 *                       sort:string,
 *                       order_by:string,
 *                       service_socket_client_ID:number,
@@ -384,12 +378,12 @@ const component = async props => {
     /**
      * Returns query
      * @param {string} list_detail
-     * @param {string} query
+     * @param {number} offset
      * @param {string} sort
      * @param {string} order_by
      * @returns {string}
      */
-    const get_query = (list_detail, query, sort, order_by) =>{
+    const get_query = (list_detail, offset, sort, order_by) =>{
         const app_id = props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5 .common_select_dropdown_value').getAttribute('data-value'); 
         const year = props.methods.COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').getAttribute('data-value');
         const month = props.methods.COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').getAttribute('data-value');
@@ -400,7 +394,7 @@ const component = async props => {
             case 'APP_LOG':{
                 props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'inline-block';
                 //search month + 1 for CONNECTED
-                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}${query}&limit=${props.data.LIMIT}`;
+                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${props.data.LIMIT}`;
             }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
@@ -423,7 +417,7 @@ const component = async props => {
                     url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
                 else
                     url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
-                return `${url_parameters}&sort=${sort}&order_by=${order_by}&limit=${props.data.LIMIT}`;
+                return `${url_parameters}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${props.data.LIMIT}`;
                 
             }
             default:{
@@ -455,7 +449,7 @@ const component = async props => {
         }
     }
     //fetch logs except for SERVER_LOG
-    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.query, props.data.sort, props.data.order_by), method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     if (props.data.monitor_detail=='APP_LOG')
         page_last = logs.length>0?(Math.floor(logs[0].total_rows/props.data.LIMIT) * props.data.LIMIT):0;
 
@@ -491,31 +485,43 @@ const component = async props => {
         if (sort =='')
             sort = 'date_created';
         switch (item){
-            case 'list_app_log_first':{
+            case 'list_monitor_first':{
                 page = 0;
-                props.methods.monitorShow('APP_LOG', `&offset=${0}`, sort, order_by);
+                if (props.data.monitor_detail=='APP_LOG')
+                    props.methods.monitorShow('APP_LOG', 0, sort, order_by);
+                if (props.data.monitor_detail=='SERVER_LOG')
+                    monitorDetailShowServerLog(0,props.data.sort, props.data.order_by);
                 break;
             }
-            case 'list_app_log_previous':{
+            case 'list_monitor_previous':{
                 page = page - props.data.LIMIT;
                 if (page - props.data.LIMIT < 0)
                     page = 0;
                 else
                     page = page - props.data.LIMIT;
-                props.methods.monitorShow('APP_LOG', `&offset=${page}`, sort, order_by);
+                if (props.data.monitor_detail=='APP_LOG')
+                    props.methods.monitorShow('APP_LOG', page, sort, order_by);
+                if (props.data.monitor_detail=='SERVER_LOG')
+                    monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
                 break;
             }
-            case 'list_app_log_next':{
+            case 'list_monitor_next':{
                 if (page + props.data.LIMIT > page_last)
                     page = page_last;
                 else
                     page = page + props.data.LIMIT;
-                props.methods.monitorShow('APP_LOG', `&offset=${page}`, sort, order_by);
+                if (props.data.monitor_detail=='APP_LOG')
+                    props.methods.monitorShow('APP_LOG', page, sort, order_by);
+                if (props.data.monitor_detail=='SERVER_LOG')
+                    monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
                 break;
             }
-            case 'list_app_log_last':{
+            case 'list_monitor_last':{
                 page = page_last;
-                props.methods.monitorShow('APP_LOG', `&offset=${page}`, sort, order_by);
+                if (props.data.monitor_detail=='APP_LOG')
+                    props.methods.monitorShow('APP_LOG', page, sort, order_by);
+                if (props.data.monitor_detail=='SERVER_LOG')
+                    monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
                 break;
             }
         }
@@ -530,7 +536,7 @@ const component = async props => {
     const monitorDetailClickSort = (list, sortcolumn, order_by) => {
         switch (list){
             case 'list_app_log':{
-                props.methods.monitorShow('APP_LOG', `&offset=${0}`, sortcolumn, order_by);
+                props.methods.monitorShow('APP_LOG', 0,  sortcolumn, order_by);
                 break;
             }
             case 'list_connected':{
@@ -541,7 +547,7 @@ const component = async props => {
                 break;
             }
             case 'list_server_log':{
-                monitorDetailShowServerLog(sortcolumn, order_by);
+                monitorDetailShowServerLog( 0, sortcolumn, order_by);
                 break;
             }
         }
@@ -635,17 +641,18 @@ const component = async props => {
                                     props.methods.COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').setAttribute('data-value', day);
                                     props.methods.COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').textContent = day;
                                 }
-                                monitorDetailShowServerLog('logdate', 'desc');
+                                monitorDetailShowServerLog( 0, 'logdate', 'desc');
                                 props.methods.commonLovClose();
                             };
         props.methods.commonLovShow({lov:'SERVER_LOG_FILES', function_event:function_event});
     };
     /**
      * Display server logs
+     * @param {number} offset
      * @param {string} sort
      * @param {string} order_by
      */
-    const monitorDetailShowServerLog = (sort, order_by) =>{
+    const monitorDetailShowServerLog = (offset, sort, order_by) =>{
         let search = props.methods.COMMON_DOCUMENT.querySelector('#list_server_log_search_input').textContent;
         if (search != null){
             if (props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#list_server_log_search_input'),100]]})==false)
@@ -657,14 +664,16 @@ const component = async props => {
                     data:{  
                                 system_admin:props.data.system_admin,
                                 path:'/server-log/log',
-                                query:`${get_query('SERVER_LOG', '', sort, order_by)}&search=${search ?? ''}`,
+                                query:`${get_query('SERVER_LOG', offset, sort, order_by)}&search=${search ?? ''}`,
                                 token_type: 'SYSTEMADMIN',
                                 sort:sort,
                                 order_by:order_by,
+                                LIMIT:props.data.LIMIT
                     },
                     methods:{   commonRoundOff:props.methods.commonRoundOff,
                                 commonFFB:props.methods.commonFFB},
-                    path:'/component/menu_monitor_detail_server_log.js'});
+                    path:'/component/menu_monitor_detail_server_log.js'})
+                    .then(result=>page_last=result.data.page_last);
     };
    
     /**
@@ -717,7 +726,7 @@ const component = async props => {
                 },
                 methods:{  commonFFB:props.methods.commonFFB},
                 path:       '/common/component/common_select.js'});
-            monitorDetailShowServerLog(props.data.sort, props.data.order_by);
+            monitorDetailShowServerLog(0,props.data.sort, props.data.order_by);
         }
     };
     return {

@@ -21,6 +21,12 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
                                     <div id='select_day_menu5'></div>
                                 </div>
                                 <div id='list_monitor'></div>
+                                <div id='list_monitor_pagination'>
+                                <div id='list_monitor_first' class='common_icon'></div>
+                                <div id='list_monitor_previous' class='common_icon'></div>
+                                <div id='list_monitor_next' class='common_icon'></div>
+                                <div id='list_monitor_last' class='common_icon'></div>
+                            </div>
                             </div>
                             <div id='menu_5_content_widget2' class='widget'>
                                 <div id='mapid'></div>
@@ -174,11 +180,11 @@ const component = async props => {
     /**
      * Monitor show
      * @param {'CONNECTED'|'APP_LOG'|'SERVER_LOG'} list_detail
-     * @param {string} query
+     * @param {number} offset
      * @param {string} sort 
      * @param {string} order_by 
      */
-    const monitorShow = async (list_detail, query, sort, order_by) => {
+    const monitorShow = async (list_detail, offset, sort, order_by) => {
         
         props.methods.commonComponentRender({
             mountDiv:   'list_monitor',
@@ -187,7 +193,7 @@ const component = async props => {
                         system_admin:props.data.system_admin,
                         system_admin_only:props.data.system_admin_only,
                         monitor_detail:list_detail,
-                        query:query,
+                        offset:offset,
                         sort:sort,
                         order_by:order_by,
                         service_socket_client_ID:props.data.service_socket_client_ID,
