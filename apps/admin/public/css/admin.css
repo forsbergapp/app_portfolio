@@ -81,15 +81,15 @@
 
 .chat_click::before{									content:var(--common_app_icon_chat)}
 
-#list_app_log_first::before{							content:var(--common_app_icon_first)}
-#list_app_log_previous::before{							content:var(--common_app_icon_previous)}
-#list_app_log_next::before{								content:var(--common_app_icon_next)}
-#list_app_log_last::before{								content:var(--common_app_icon_last)}
+#list_monitor_first::before{							content:var(--common_app_icon_first)}
+#list_monitor_previous::before{							content:var(--common_app_icon_previous)}
+#list_monitor_next::before{								content:var(--common_app_icon_next)}
+#list_monitor_last::before{								content:var(--common_app_icon_last)}
 
-body.rtl #list_app_log_first::before{					content:var(--common_app_icon_last)}
-body.rtl #list_app_log_previous::before{				content:var(--common_app_icon_next)}
-body.rtl #list_app_log_next::before{					content:var(--common_app_icon_previous)}
-body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
+body.rtl #list_monitor_first::before{					content:var(--common_app_icon_last)}
+body.rtl #list_monitor_previous::before{				content:var(--common_app_icon_next)}
+body.rtl #list_monitor_next::before{					content:var(--common_app_icon_previous)}
+body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 
 
 #menu5_row_parameters_col1::before{						content:var(--common_app_icon_server) ' REQUEST'}
@@ -710,7 +710,8 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	height:calc(37% - 10px);
 }
 #list_monitor {
-	height: calc(100% - 20px);
+	height: calc(100% - 100px);
+	min-height: calc(100% - 100px);	
 }
 #list_connected_form{
 	display: flex;
@@ -720,11 +721,11 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 #list_app_log_form{
 	display:flex;
 	flex-direction: column;
-	height: calc(100% - 40px);
+	height: 100%;
 }
 #list_server_log_form{
 	display:block;
-	height: 75%;
+	height: 60px;
 }
 #list_server_log_form.css_spinner{
 	display: inline-block;
@@ -774,10 +775,11 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	margin-inline-end: 10px;
 }
 
-#list_app_pagination{
+#list_monitor_pagination{
 	display: block;
+	height: 40px;
 }
-#list_app_pagination div{
+#list_monitor_pagination div{
 	display: inline-block;
 	margin-left: 10px;
 	margin-right: 10px;
@@ -788,7 +790,6 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	white-space: nowrap;
 	width: 15em;
 }
-
 
 #filesearch_menu5{
 	font-size: 1.4em;
@@ -805,7 +806,9 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	margin-inline-end: 20px;
 }
 #list_server_log{
+	display: block;
 	border-radius: 4px;
+	height: calc(100% - 62px);
 }
 .list_server_log_row{
 	padding-top:4px;
@@ -1209,7 +1212,7 @@ body.rtl #list_app_log_last::before{					content:var(--common_app_icon_first)}
 	.widget{
 		width: 100%;
 	}
-	#list_app_pagination{
+	#list_monitor_pagination{
 		margin-top: unset;
 	}
 }
@@ -1477,7 +1480,7 @@ body{
 .gps_click:hover,                  .gps_click:active,
 .list_button:hover,                .list_button:active,
 .list_lov_row:hover,               .list_lov_row:active,
-#list_app_pagination div:hover,    #list_app_pagination div:active{
+#list_monitor_pagination div:hover,    #list_monitor_pagination div:active{
 	color: var(--app_theme_hover_color) !important;
 }
 .list_button svg:hover, .menuitem svg:hover{
@@ -1560,7 +1563,7 @@ body{
 #list_config_edit{
 	border: var(--app_theme_list_border_color) solid 0.5px;
 }
-#list_app_pagination div{
+#list_monitor_pagination div{
 	color:var(--app_theme_pagination_color);
 	font-size: 24px;
 }

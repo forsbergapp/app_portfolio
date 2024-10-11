@@ -792,10 +792,10 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     APP_GLOBAL.component.MENU_MONITOR.monitorShow('SERVER_LOG', '', 'logdate', 'desc');
                     break;
                 }
-                case 'list_app_log_first':
-                case 'list_app_log_previous':
-                case 'list_app_log_next':
-                case 'list_app_log_last':{
+                case 'list_monitor_first':
+                case 'list_monitor_previous':
+                case 'list_monitor_next':
+                case 'list_monitor_last':{
                     APP_GLOBAL.component.MENU_MONITOR.monitorDetailPage(event_target_id);
                     break;
                 }
