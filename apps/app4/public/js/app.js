@@ -135,20 +135,12 @@ const init_map = async ()=>{
         data:       null,
         methods:    null,
         path:       '/component/app.js'});
-    common.commonModuleLeafletInit('mapid',
-                    common.COMMON_GLOBAL.client_longitude,
-                    common.COMMON_GLOBAL.client_latitude,
-                    null)
-    .then(()=>  
-        common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ 
-                            longitude:common.COMMON_GLOBAL.client_longitude,
-                            latitude:common.COMMON_GLOBAL.client_latitude,
-                            text_place: common.COMMON_GLOBAL.client_place,
-                            country:'',
-                            city:'',
-                            timezone_text :null,
-                            to_method:0
-                        }))
+    common.commonModuleLeafletInit({mount_div:'mapid',
+                    latitude:common.COMMON_GLOBAL.client_longitude,
+                    longitude:common.COMMON_GLOBAL.client_latitude,
+                    place:common.COMMON_GLOBAL.client_place,
+                    doubleclick_event:null, 
+                    update_map:true})
     .then(()=>  
        framework_set());
 };

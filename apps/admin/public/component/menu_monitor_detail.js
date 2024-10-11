@@ -324,60 +324,50 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                             }`;
 /**
 * 
-* @param {{ data:{      commonMountdiv:string,
+* @param {{ data:       {
+*                       commonMountdiv:string,
 *                       app_id:number,
 *                       system_admin:string,
 *                       monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
-*                       query:string,
 *                       sort:string,
 *                       order_by:string,
 *                       service_socket_client_ID:number,
-*                       limit:number},
-*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
-*                       get_log_parameters:import('../js/secure.js')['get_log_parameters'],
-*                       show_app_log:import('../js/secure.js')['show_app_log'],
+*                       limit:number,
+*                       logs:[],
+*                       monitor_log_data:{parameters:{  SCOPE_REQUEST:string,
+*                                                       SCOPE_SERVER:string, 
+*                                                       SCOPE_SERVICE:string,
+*                                                       SCOPE_APP:string,
+*                                                       SCOPE_DB:string,
+*                                                       REQUEST_LEVEL:number,
+*                                                       SERVICE_LEVEL:number,
+*                                                       DB_LEVEL:number,
+*                                                       APP_LEVEL:number,
+*                                                       LEVEL_VERBOSE:string 
+*                                                       LEVEL_ERROR:string
+*                                                       LEVEL_INFO:string,
+*                                                       FILE_INTERVAL:string
+*                                                    },
+*                                       logscope_level_options:{log_scope:string, log_level:string}[]}
+*                       },
+*           methods:    {
+*                       COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+*                       monitorDetailShowServerLog:function,
 *                       commonInputControl:import('../../../common_types.js').CommonModuleCommon['commonInputControl'],
 *                       commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
 *                       commonWindowUserAgentPlatform:import('../../../common_types.js').CommonModuleCommon['commonWindowUserAgentPlatform'],
 *                       commonRoundOff:import('../../../common_types.js').CommonModuleCommon['commonRoundOff'],
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+*                       },
 *           lifecycle:  null}} props 
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:    null,
-*                      methods: {page_navigation:function, monitor_detail_server_log:function},
+*                      methods: null,
 *                      template:string}>}
 */
 const component = async props => {
-    /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
-    let token_type;
-    let path = '';
-    let page = 0;
-    let page_last= 0;
-    let service_log_file_interval = '';
-    switch (props.data.monitor_detail){
-        case 'CONNECTED':{
-            if (props.data.system_admin!=null){
-                path = '/server-socket/socket';
-                token_type = 'SYSTEMADMIN';
-            }
-            else{
-                path = '/server-socket/socket';
-                token_type = 'APP_ACCESS';
-            }
-            break;
-        }
-        case 'APP_LOG':{
-            path = '/server-db_admin/app_data_stat-log';
-            token_type = 'APP_ACCESS';
-            break;
-        }
-        case 'SERVER_LOG':{
-            path = '/server-log/log';
-            token_type = 'SYSTEMADMIN';
-            break;
-        }
-    }
-    
+
+   
     /**
      * @param {string} system_admin
      * @param {number|null} app_role_id
@@ -405,169 +395,12 @@ const component = async props => {
      */
     const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
 
-    /**
-     * Get column sort
-     * @param {number} order_by 
-     * @returns{'asc'|'desc'|string}
-     */
-    const get_sort = (order_by=0) => {
-        const sort = '';
-        for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#list_app_log .list_title')){
-            if (col_title.classList.contains('asc'))
-                if (order_by==0)
-                    return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
-                else
-                    return 'asc';
-            if (col_title.classList.contains('desc'))
-                if (order_by==0)
-                    return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
-                else
-                    return 'desc';
-        }
-        return sort;
-    };
-
-    /**
-     * Page navigation
-     * @param {string} item 
-     * @returns {void}
-     */
-    const page_navigation = (item) => {
-        
-        let sort = get_sort();
-        const order_by = get_sort(1);
-        if (sort =='')
-            sort = 'date_created';
-        switch (item){
-            case 'list_app_log_first':{
-                page = 0;
-                props.methods.show_app_log(sort, order_by, 0);
-                break;
-            }
-            case 'list_app_log_previous':{
-                page = page - props.data.limit;
-                if (page - props.data.limit < 0)
-                    page = 0;
-                else
-                    page = page - props.data.limit;
-                props.methods.show_app_log(sort, order_by, page);
-                break;
-            }
-            case 'list_app_log_next':{
-                if (page + props.data.limit > page_last)
-                    page = page_last;
-                else
-                    page = page + props.data.limit;
-                props.methods.show_app_log(sort, order_by, page);
-                break;
-            }
-            case 'list_app_log_last':{
-                page = page_last;
-                props.methods.show_app_log(sort, order_by, page);
-                break;
-            }
-        }
-    };
-    /**
-     * Returns query
-     * @returns {string}
-     */
-    const get_query = ()=>{
-        const app_id = props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5 .common_select_dropdown_value').getAttribute('data-value'); 
-        const year = props.methods.COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        const month = props.methods.COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        const day  = props.methods.COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        
-        switch (props.data.monitor_detail){
-            case 'CONNECTED':
-            case 'APP_LOG':{
-                props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'inline-block';
-                //search month + 1 for CONNECTED
-                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${props.data.sort}&order_by=${props.data.order_by}${props.data.query}&limit=${props.data.limit}`;
-            }
-            case 'SERVER_LOG':{
-                //search default logscope REQUEST and loglevel INFO
-                const logscope = props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
-                const loglevel = props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
-                let app_id_filter='';
-                if (logscope=='APP' || logscope=='SERVICE' || logscope=='SERVER-DB'){
-                    //show app filter and use it
-                    props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'inline-block';
-                    app_id_filter = `select_app_id=${app_id}&`;
-                }
-                else{
-                    //no app filter for request
-                    props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'none';
-                    app_id_filter = 'select_app_id=&';
-                }
-                let url_parameters;
-
-                if (service_log_file_interval=='1M')
-                    url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
-                else
-                    url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
-                return `${url_parameters}&sort=${props.data.sort}&order_by=${props.data.order_by}&limit=${props.data.limit}`;
-                
-            }
-        }
-    };
-    /**
-     * Display server logs
-     * @param {string} sort
-     * @param {string} order_by
-     */
-    const monitor_detail_server_log = (sort, order_by) =>{
-        let search = props.methods.COMMON_DOCUMENT.querySelector('#list_server_log_search_input').textContent;
-        if (search != null){
-            if (props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#list_server_log_search_input'),100]]})==false)
-                return;
-        }
-        search=search?encodeURI(search):search;
-        props.methods.commonComponentRender(
-                {   mountDiv:'list_server_log',
-                    data:{  
-                                system_admin:props.data.system_admin,
-                                path:path,
-                                query:`${get_query()}&search=${search ?? ''}`,
-                                token_type: token_type,
-                                sort:sort,
-                                order_by:order_by,
-                    },
-                    methods:{   commonRoundOff:props.methods.commonRoundOff,
-                               commonFFB:props.methods.commonFFB},
-                    path:'/component/menu_monitor_detail_server_log.js'});
-    };
-    //fetch log parameter data if SERVER_LOG
-    const monitor_log_data = props.data.monitor_detail=='SERVER_LOG'?
-                                await props.methods.get_log_parameters():{ parameters:{SCOPE_REQUEST:'',
-                                                                                        SCOPE_SERVER:'', 
-                                                                                        SCOPE_SERVICE:'',
-                                                                                        SCOPE_APP:'',
-                                                                                        SCOPE_DB:'',
-                                                                                        REQUEST_LEVEL:0,
-                                                                                        SERVICE_LEVEL:0,
-                                                                                        DB_LEVEL:0,
-                                                                                        LEVEL_VERBOSE:'',
-                                                                                        LEVEL_ERROR:'',
-                                                                                        LEVEL_INFO:'',
-                                                                                        FILE_INTERVAL:''},
-                                                                            logscope_level_options:
-                                []};
-    //save value for query
-    service_log_file_interval = monitor_log_data.parameters.FILE_INTERVAL ?? '';
-    //fetch logs except for SERVER_LOG
-    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(), method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-    const limit = await props.methods.commonFFB({path:`/server-config/config-apps/${props.data.app_id}`, query:'key=PARAMETERS', method:'GET', authorization_type:props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS'})
-                        .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS));
-    if (props.data.monitor_detail=='APP_LOG')
-        page_last = logs.length>0?(Math.floor(logs[0].total_rows/limit) * limit):0;
-
 
     const onMounted = async () =>{
         if (props.data.monitor_detail=='SERVER_LOG'){
             //convert normalized arrary to options in array format
             /**@type{{VALUE:string, TEXT:string}[]} */
-            const options = monitor_log_data.logscope_level_options.map((/**@type{{log_scope:string, log_level: string}}*/row)=>{
+            const options = props.data.monitor_log_data.logscope_level_options.map((/**@type{{log_scope:string, log_level: string}}*/row)=>{
                                 return {VALUE:`${row.log_scope}-${row.log_level}`, TEXT:`${row.log_scope} - ${row.log_level}`};});
 
             await props.methods.commonComponentRender({
@@ -585,16 +418,13 @@ const component = async props => {
                 },
                 methods:{  commonFFB:props.methods.commonFFB},
                 path:       '/common/component/common_select.js'});
-            monitor_detail_server_log(props.data.sort, props.data.order_by);
+            props.methods.monitorDetailShowServerLog(props.data.sort, props.data.order_by);
         }
     };
     return {
         lifecycle:  {onMounted:onMounted},
         data:       null,
-        methods:    {
-                    page_navigation:page_navigation,
-                    monitor_detail_server_log:monitor_detail_server_log
-                    },
+        methods:    null,
         template:   template({  system_admin:props.data.system_admin, 
                                 service_socket_client_ID:props.data.service_socket_client_ID,
                                 monitor_detail:props.data.monitor_detail,
@@ -602,8 +432,8 @@ const component = async props => {
                                 function_role_icon_class:role_icon_class,
                                 function_get_order_by:get_order_by,
                                 function_roundOff: props.methods.commonRoundOff,
-                                logs:logs,
-                                monitor_log_data:monitor_log_data.parameters})
+                                logs:props.data.logs,
+                                monitor_log_data:props.data.monitor_log_data.parameters})
     };
 };
 export default component;
