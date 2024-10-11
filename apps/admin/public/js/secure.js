@@ -102,6 +102,10 @@ const show_menu = menu => {
         }
         //MONITOR
         case 5:{
+            /**
+             * @param {*} parameters
+             */
+            const map_update = (...parameters) =>common.COMMON_GLOBAL.moduleLeaflet.methods.map_update(...parameters);
             common.commonComponentRender({
                 mountDiv:   'menu_content',
                 data:       {
@@ -115,7 +119,7 @@ const show_menu = menu => {
                             },
                 methods:    {
                             show_broadcast_dialogue:show_broadcast_dialogue,
-                            map_update:common.COMMON_GLOBAL.moduleLeaflet.methods.map_update,
+                            map_update:map_update,
                             commonModuleLeafletInit:common.commonModuleLeafletInit,
                             commonElementRow:common.commonElementRow,
                             commonInputControl:common.commonInputControl,
