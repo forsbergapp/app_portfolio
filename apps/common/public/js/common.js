@@ -2175,23 +2175,26 @@ const commonModuleEasyQRCODECreate = async (div, url) => {
 };
 /**
  * Map init
- * @param {string} mount_div
- * @param {string} longitude 
- * @param {string} latitude 
- * @param {function|null} doubleclick_event
+ * @param {{mount_div:string,
+ *          longitude:string,
+ *          latitude:string,
+ *          place:String,
+ *          doubleclick_event:function|null,
+ *          update_map?:boolean|null
+ *          }} parameters
  * @returns {Promise.<void>}
  */
-const commonModuleLeafletInit = async (mount_div, longitude, latitude, doubleclick_event) => {  
+const commonModuleLeafletInit = async parameters => {  
     /**
      * 
      * @type {{ data:null,
      *          methods:import('../../../common_types.js').CommonModuleLeafletMethods}}
      */
     const module_leaflet = await commonComponentRender({
-                            mountDiv:   mount_div,
+                            mountDiv:   parameters.mount_div,
                             data:       {   
-                                        longitude:longitude,
-                                        latitude:latitude,
+                                        longitude:parameters.longitude,
+                                        latitude:parameters.latitude,
                                         app_eventListeners:COMMON_GLOBAL.app_eventListeners
                                         },
                             methods:    null,
@@ -2204,11 +2207,11 @@ const commonModuleLeafletInit = async (mount_div, longitude, latitude, doublecli
                     data_app_id:COMMON_GLOBAL.common_app_id,
                     user_locale:COMMON_GLOBAL.user_locale,
                     locale:COMMON_GLOBAL.user_locale,
-                    longitude:longitude,
-                    latitude:latitude
+                    longitude:parameters.longitude,
+                    latitude:parameters.latitude
                     },
         methods:    {
-                    function_event_doubleclick: doubleclick_event,
+                    function_event_doubleclick: parameters.doubleclick_event,
                     commonComponentRender:commonComponentRender,
                     commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
                     commonElementRow:commonElementRow,
@@ -2219,7 +2222,14 @@ const commonModuleLeafletInit = async (mount_div, longitude, latitude, doublecli
         path:       '/common/component/common_module_leaflet_control.js'});
         
         COMMON_GLOBAL.moduleLeaflet.methods = module_leaflet_control.methods;
-        
+        if (parameters.update_map)
+            COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:parameters.longitude,
+                latitude:parameters.latitude,
+                text_place:parameters.place,
+                country:'',
+                city:'',
+                timezone_text :null
+            });
 };
 
 /**

@@ -2,7 +2,6 @@
  * @module apps/admin/secure
  */
 
-
 /**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
  const COMMON_DOCUMENT = document;
 
@@ -12,19 +11,27 @@ const common = await import(common_path);
 
 /**
  * App globals
- * @type{{  page_navigation:function, 
- *          monitor_detail_server_log:function, 
- *          limit:number, 
+ * @type{{  component: {MENU_MONITOR:{ monitorShow:                function,
+ *                                     monitorDetailShowLogDir:    function,
+ *                                     monitorDetailShowServerLog: function,
+ *                                     monitorDetailPage:          function,
+ *                                     monitorDetailClickSort:     function,
+ *                                     monitorDetailClickItem:     function
+ *                                  }
+ *                      },
  *          previous_row:{}, 
- *          moduleLeafletDiv:*, 
  *          service_log_file_interval:string}}
  */
 const APP_GLOBAL = {
-    page_navigation:()=>null,
-    monitor_detail_server_log:()=>null,
-    limit:0,
+    component: {MENU_MONITOR : {monitorShow:                ()=>null,
+                                monitorDetailShowLogDir:    ()=>null,
+                                monitorDetailShowServerLog: ()=>null,
+                                monitorDetailPage:          ()=>null,
+                                monitorDetailClickSort:     ()=>null,
+                                monitorDetailClickItem:     ()=>null
+                            }
+                },
     previous_row:{},
-    moduleLeafletDiv:'',
     service_log_file_interval:''
 };
 Object.seal(APP_GLOBAL);
@@ -33,11 +40,15 @@ Object.seal(APP_GLOBAL);
  * @returns {void}
  */
 const delete_globals = () => {
-    APP_GLOBAL.page_navigation = ()=>null,
-    APP_GLOBAL.monitor_detail_server_log = ()=>null,
-    APP_GLOBAL.limit = 0;
+    APP_GLOBAL.component = {MENU_MONITOR : {monitorShow:                ()=>null,
+                                            monitorDetailShowLogDir:    ()=>null,
+                                            monitorDetailShowServerLog: ()=>null,
+                                            monitorDetailPage:          ()=>null,
+                                            monitorDetailClickSort:     ()=>null,
+                                            monitorDetailClickItem:     ()=>null
+                                        }
+                            };
     APP_GLOBAL.previous_row = {};
-    APP_GLOBAL.moduleLeafletDiv = '';
     APP_GLOBAL.service_log_file_interval = '';
 };
 
@@ -98,16 +109,29 @@ const show_menu = menu => {
                 mountDiv:   'menu_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id, 
-                            system_admin:common.COMMON_GLOBAL.system_admin
+                            system_admin:common.COMMON_GLOBAL.system_admin,
+                            system_admin_only:common.COMMON_GLOBAL.system_admin_only,
+                            service_socket_client_ID: common.COMMON_GLOBAL.service_socket_client_ID,
+                            client_latitude:common.COMMON_GLOBAL.client_latitude,
+                            client_longitude:common.COMMON_GLOBAL.client_longitude,
+                            client_place:common.COMMON_GLOBAL.client_place
                             },
                 methods:    {
-                            map_mount:map_mount,
+                            show_broadcast_dialogue:show_broadcast_dialogue,
+                            map_update:common.COMMON_GLOBAL.moduleLeaflet.methods.map_update,
+                            commonModuleLeafletInit:common.commonModuleLeafletInit,
+                            commonElementRow:common.commonElementRow,
+                            commonInputControl:common.commonInputControl,
                             commonComponentRender:common.commonComponentRender,
+                            commonWindowUserAgentPlatform:common.commonWindowUserAgentPlatform,
+                            commonRoundOff:common.commonRoundOff,
+                            commonLovClose:common.commonLovClose,
+                            commonLovShow:common.commonLovShow,
                             commonFFB:common.commonFFB
                             },
                 path:       '/component/menu_monitor.js'})
-            .then((/**@type{{data:{limit:number}, methods:null}}*/result)=>{
-                APP_GLOBAL.limit = result.data.limit;
+            .then(result=>{
+                APP_GLOBAL.component.MENU_MONITOR  = result.methods;
                 COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').click();
             });
             break;
@@ -542,25 +566,6 @@ const update_record = async (table,
     await common.commonFFB({path:path, method:method, authorization_type:token_type, body:json_data, spinner_id:button})
             .then(()=>row_element.setAttribute('data-changed-record', '0'));
 };
-/**
- * Mounts map in monitor component
- */
-const map_mount = () =>{
-    //show map only for this condition
-    if (common.COMMON_GLOBAL.system_admin_only != 1)
-        common.commonModuleLeafletInit(APP_GLOBAL.moduleLeafletDiv,
-                        common.COMMON_GLOBAL.client_longitude,
-                        common.COMMON_GLOBAL.client_latitude,
-                        null).then(() => {
-            common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:common.COMMON_GLOBAL.client_longitude,
-                                latitude:common.COMMON_GLOBAL.client_latitude,
-                                text_place:common.COMMON_GLOBAL.client_place,
-                                country:'',
-                                city:'',
-                                timezone_text :null
-                            });
-        });
-};
 
 /**
  * Navigation click
@@ -619,42 +624,6 @@ const nav_click = (item_id) => {
         }
     }
 };
-/**
- * Show list
- * @param {'CONNECTED'|'APP_LOG'|'SERVER_LOG'} list_detail
- * @param {string} query
- * @param {string} sort 
- * @param {string} order_by 
- */
-const monitorDetailShow = async (list_detail, query, sort, order_by) => {
-    common.commonComponentRender({
-        mountDiv:   'list_monitor',
-        data:       {
-                    app_id:common.COMMON_GLOBAL.app_id,
-                    system_admin:common.COMMON_GLOBAL.system_admin,
-                    monitor_detail:list_detail,
-                    query:query,
-                    sort:sort,
-                    order_by:order_by,
-                    service_socket_client_ID:common.COMMON_GLOBAL.service_socket_client_ID,
-                    limit:APP_GLOBAL.limit
-                    },
-        methods:    {
-                    get_log_parameters:get_log_parameters,
-                    show_app_log:show_app_log,
-                    commonInputControl:common.commonInputControl,
-                    commonComponentRender:common.commonComponentRender,
-                    commonWindowUserAgentPlatform:common.commonWindowUserAgentPlatform,
-                    commonRoundOff:common.commonRoundOff,
-                    commonFFB:common.commonFFB
-                    },
-        path:       '/component/menu_monitor_detail.js'})
-    .then((/**@type{{   data:null, 
-                        methods:{page_navigation:function, monitor_detail_server_log:function}}}*/result)=>{
-        APP_GLOBAL.page_navigation = result.methods.page_navigation;
-        APP_GLOBAL.monitor_detail_server_log = result.methods.monitor_detail_server_log;
-    });
-};
 
 /**
  * Show app log
@@ -664,190 +633,10 @@ const monitorDetailShow = async (list_detail, query, sort, order_by) => {
  * @returns{Promise.<void>}
  */
 const show_app_log = async (sort='date_created', order_by='desc', offset=0) => {
-    monitorDetailShow('APP_LOG', 
+    APP_GLOBAL.component.MENU_MONITOR.monitorShow('APP_LOG', 
               `&offset=${offset}`, 
               sort,
               order_by);
-};
-/**
- * List sort click
- * @param {string} list 
- * @param {string} sortcolumn 
- * @param {string} order_by 
- * @returns {void}
- */
-const list_sort_click = (list, sortcolumn, order_by) => {
-    switch (list){
-        case 'list_app_log':{
-            show_app_log(sortcolumn, order_by);    
-            break;
-        }
-        case 'list_connected':{
-            monitorDetailShow('CONNECTED', 
-                '', 
-                sortcolumn,
-                order_by);
-            break;
-        }
-        case 'list_server_log':{
-            APP_GLOBAL.monitor_detail_server_log(sortcolumn, order_by);
-            break;
-        }
-        case 'list_user_account':{
-            search_users(sortcolumn, order_by);
-            break;
-        }
-    }
-};
-/**
- * List item click
- * @param {string} item_type 
- * @param {{ip:string,
- *          latitude:string,
- *          longitude:string,
- *          id:number}} data 
- */
-const list_item_click = (item_type, data) => {
-    //check if gps_click and if not system admin only when map is not loaded
-    if (item_type=='GPS' && common.COMMON_GLOBAL.system_admin_only != 1){
-        if (data['ip']){
-            common.commonFFB({path:'/geolocation/ip', query:data['ip'] != '::1'?`ip=${data['ip']}`:null, method: 'GET', authorization_type:'APP_DATA'})
-            .then((/**@type{string}*/result)=>{
-                const geodata = JSON.parse(result);
-                common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:geodata.geoplugin_longitude,
-                                                                        latitude:geodata.geoplugin_latitude,
-                                                                        text_place: geodata.geoplugin_city + ', ' +
-                                                                                    geodata.geoplugin_regionName + ', ' +
-                                                                                    geodata.geoplugin_countryName,
-                                                                        country:'',
-                                                                        city:'',
-                                                                        timezone_text :null
-                                                                    });
-            })
-            .catch(()=>null);
-        }
-        else{
-            common.commonFFB({path:'/geolocation/place', query:`latitude=${data['latitude']}&longitude=${data['longitude']}`, method:'GET', authorization_type:'APP_DATA'})
-            .then((/**@type{string}*/result)=>{
-                /**@type{{geoplugin_place:string, geoplugin_region:string, geoplugin_countryCode:string}} */
-                const geodata = JSON.parse(result);
-                common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:data['longitude'],
-                                                                        latitude:data['latitude'],
-                                                                        text_place: geodata.geoplugin_place + ', ' + 
-                                                                                    geodata.geoplugin_region + ', ' + 
-                                                                                    geodata.geoplugin_countryCode,
-                                                                        country:'',
-                                                                        city:'',
-                                                                        timezone_text :null
-                                                                    });
-            })
-            .catch(()=>null);
-        }
-    }
-    else
-        if (item_type=='CHAT'){
-            show_broadcast_dialogue('CHAT', data['id']);
-        }
-    
-};
-/**
- * Get log parameters
- * @returns {Promise.<{parameters:{ SCOPE_REQUEST:string,
- *                                  SCOPE_SERVER:string, 
- *                                  SCOPE_SERVICE:string,
- *                                  SCOPE_APP:string,
- *                                  SCOPE_DB:string,
- *                                  REQUEST_LEVEL:number,
- *                                  SERVICE_LEVEL:number,
- *                                  DB_LEVEL:number,
- *                                  APP_LEVEL:number,
- *                                  LEVEL_VERBOSE:string 
- *                                  LEVEL_ERROR:string
- *                                  LEVEL_INFO:string,
- *                                  FILE_INTERVAL:string},
- *                     logscope_level_options:{log_scope:string, log_level:string}[]}>}
- */
-const get_log_parameters = async () => {
-    return new Promise((resolve)=>{
-        common.commonFFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'SYSTEMADMIN'})
-        .then((/**@type{string}*/result)=>{
-            const log_parameters = {
-                SCOPE_REQUEST : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],
-                SCOPE_SERVER :  JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_SERVER' in row)[0]['SCOPE_SERVER'],
-                SCOPE_SERVICE : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_SERVICE' in row)[0]['SCOPE_SERVICE'],
-                SCOPE_APP :     JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_APP' in row)[0]['SCOPE_APP'],
-                SCOPE_DB :      JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_DB' in row)[0]['SCOPE_DB'],
-                REQUEST_LEVEL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
-                SERVICE_LEVEL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SERVICE_LEVEL' in row)[0]['SERVICE_LEVEL'],
-                DB_LEVEL :      JSON.parse(result).data.filter((/**@type{*}*/row)=>'DB_LEVEL' in row)[0]['DB_LEVEL'],
-                APP_LEVEL :     JSON.parse(result).data.filter((/**@type{*}*/row)=>'APP_LEVEL' in row)[0]['APP_LEVEL'],
-                LEVEL_INFO :    JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_INFO' in row)[0]['LEVEL_INFO'],
-                LEVEL_ERROR :   JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_ERROR' in row)[0]['LEVEL_ERROR'],
-                LEVEL_VERBOSE : JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_VERBOSE' in row)[0]['LEVEL_VERBOSE'],
-                FILE_INTERVAL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'FILE_INTERVAL' in row)[0]['FILE_INTERVAL']
-               };
-            const logscope_level_options = [
-                {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_INFO},
-                {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_ERROR},
-                {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_VERBOSE},
-                {log_scope:log_parameters.SCOPE_SERVER,     log_level: log_parameters.LEVEL_INFO},
-                {log_scope:log_parameters.SCOPE_SERVER,     log_level: log_parameters.LEVEL_ERROR},
-                {log_scope:log_parameters.SCOPE_APP,        log_level: log_parameters.LEVEL_INFO},
-                {log_scope:log_parameters.SCOPE_APP,        log_level: log_parameters.LEVEL_ERROR},
-                {log_scope:log_parameters.SCOPE_SERVICE,    log_level: log_parameters.LEVEL_INFO},
-                {log_scope:log_parameters.SCOPE_SERVICE,    log_level: log_parameters.LEVEL_ERROR},
-                {log_scope:log_parameters.SCOPE_DB,         log_level: log_parameters.LEVEL_INFO},
-                {log_scope:log_parameters.SCOPE_DB,         log_level: log_parameters.LEVEL_ERROR}
-            ];
-            APP_GLOBAL.service_log_file_interval = log_parameters.FILE_INTERVAL;
-            resolve({   parameters:log_parameters,
-                        logscope_level_options:logscope_level_options});
-        });
-    })
-    .catch(()=>null);
-};
-/**
- * Show existing logfiles
- * @returns {void}
- */
-const show_existing_logfiles = () => {
-    /**
-     * Event for LOV
-     * @param {import('../../../common_types.js').CommonAppEvent} event 
-     */
-    const function_event = event => {
-                            //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
-                            //logscope and loglevel
-                            let filename = common.commonElementRow(event.target).getAttribute('data-value') ?? '';
-                            const logscope = filename.substring(0,filename.indexOf('_'));
-                            filename = filename.substring(filename.indexOf('_')+1);
-                            const loglevel = filename.substring(0,filename.indexOf('_'));
-                            filename = filename.substring(filename.indexOf('_')+1);
-                            const year     = parseInt(filename.substring(0, 4));
-                            const month    = parseInt(filename.substring(4, 6));
-                            const day      = parseInt(filename.substring(6, 8));
-
-                            //logscope and loglevel
-                            COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
-                            COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').textContent = `${logscope} - ${loglevel}`;
-                            //year
-                            COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').setAttribute('data-value', year);
-                            COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').textContent = year;
-
-                            //month
-                            COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').setAttribute('data-value', month);
-                            COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').textContent = month;
-                            //day if applicable
-                            if (APP_GLOBAL.service_log_file_interval=='1D'){
-                                COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').setAttribute('data-value', day);
-                                COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').textContent = day;
-                            }
-                                
-
-                            APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
-                            common.commonLovClose();
-                        };
-    common.commonLovShow({lov:'SERVER_LOG_FILES', function_event:function_event});
 };
 
 /**
@@ -952,7 +741,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                                 case 'list_monitor_nav_server_log':{
                                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
                                     COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
-                                    APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
+                                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
                                     break;
                                 }
                                 case 'list_monitor_nav_connected':{
@@ -969,7 +758,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                             }
                         }
                     if( event_target_id == 'select_logscope5')
-                        APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
+                        APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
                     break;
                 }
                 case 'menu_1_broadcast_button':{
@@ -994,37 +783,37 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case 'filesearch_menu5':{
-                    show_existing_logfiles();
+                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowLogDir();
                     break;
                 }
                 case 'list_server_log_search_icon':{
                     COMMON_DOCUMENT.querySelector('#list_server_log_search_input').focus();
-                    APP_GLOBAL.monitor_detail_server_log('logdate','desc');
+                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate','desc');
                     break;
                 }
                 case 'list_monitor_nav_connected':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').classList.add('list_nav_selected_tab');
-                    monitorDetailShow('CONNECTED', '', 'connection_date', 'desc');
+                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('CONNECTED', '', 'connection_date', 'desc');
                     break;
                 }
                 case 'list_monitor_nav_app_log':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
-                    monitorDetailShow('APP_LOG', '&offset=0', 'date_created', 'desc');
+                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('APP_LOG', '&offset=0', 'date_created', 'desc');
                     break;
                 }
                 case 'list_monitor_nav_server_log':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
-                    monitorDetailShow('SERVER_LOG', '', 'logdate', 'desc');
+                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('SERVER_LOG', '', 'logdate', 'desc');
                     break;
                 }
                 case 'list_app_log_first':
                 case 'list_app_log_previous':
                 case 'list_app_log_next':
                 case 'list_app_log_last':{
-                    APP_GLOBAL.page_navigation(event_target_id);
+                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailPage(event_target_id);
                     break;
                 }
                 case 'config_save':{
@@ -1055,14 +844,17 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case event_list_title && event_list_title.classList.contains('list_sort_click')?event_target_id:'':{
-                    event_list_title!=null?list_sort_click(event_target_id, 
-                                    event_list_title.getAttribute('data-column') ?? '',
-                                    event_list_title.classList.contains('desc')?'asc':'desc'
-                                    ):null;
+                    if (event_target_id == 'list_user_account')
+                        search_users(event_list_title?.getAttribute('data-column') ?? '', event_list_title?.classList.contains('desc')?'asc':'desc');
+                    else
+                        event_list_title!=null?APP_GLOBAL.component.MENU_MONITOR.monitorDetailClickSort(event_target_id, 
+                                        event_list_title.getAttribute('data-column') ?? '',
+                                        event_list_title.classList.contains('desc')?'asc':'desc'
+                                        ):null;
                     break;
                 }
                 case event.target.classList.contains('gps_click')?event_target_id:'':{
-                    list_item_click('GPS',
+                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailClickItem('GPS',
                                     {
                                         latitude:   event.target.getAttribute('data-latitude') ?? '',
                                         longitude:  event.target.getAttribute('data-longitude') ?? '',
@@ -1072,10 +864,13 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case event.target.classList.contains('chat_click')?event_target_id:'':{
-                    list_item_click('CHAT', {latitude:'',
-                                             longitude:'',
-                                             ip:'',
-                                             id: Number(event.target.getAttribute('data-id'))});
+                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailClickItem('CHAT', 
+                                    {   
+                                        latitude:'',
+                                        longitude:'',
+                                        ip:'',
+                                        id: Number(event.target.getAttribute('data-id'))
+                                    });
                     break;
                 }
                 case 'list_apps':{
@@ -1168,7 +963,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.commonTypewatch(APP_GLOBAL.monitor_detail_server_log, 'logdate', 'desc');
+                        common.commonTypewatch(APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog, 'logdate', 'desc');
                     break;
                 }
             }
@@ -1209,7 +1004,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
 const init = () => {
     //SET GLOBALS
     APP_GLOBAL.previous_row= {};
-    APP_GLOBAL.moduleLeafletDiv      ='mapid';
     APP_GLOBAL.service_log_file_interval= '';
 
     for (let i=1;i<=10;i++){
@@ -1224,4 +1018,4 @@ const init = () => {
         show_menu(1);
     }
 };
-export {delete_globals, show_menu, nav_click, get_log_parameters, show_app_log, map_mount, app_events, init};
+export {delete_globals, show_menu, nav_click, show_app_log, app_events, init,show_broadcast_dialogue};

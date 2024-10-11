@@ -111,10 +111,13 @@ const method = async props => {
                 props.methods.REPORT_GLOBAL.session_currentDate = props.methods.commonTimezoneDate(timezone);
             }   
         };
-        await props.methods.commonModuleLeafletInit('mapid',
-                        props.methods.COMMON_DOCUMENT.querySelector('#setting_input_long').textContent, 
-                        props.methods.COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent,
-                        dbl_click_event).then(() => {
+        await props.methods.commonModuleLeafletInit({
+                                                    mount_div:'mapid',
+                                                    longitude:props.methods.COMMON_DOCUMENT.querySelector('#setting_input_long').textContent, 
+                                                    latitude:props.methods.COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent,
+                                                    place:'',
+                                                    doubleclick_event:dbl_click_event,
+                                                    update_map:false}).then(() => {
             props.methods.component_setting_update('GPS', 'MAP');
         });
     };
