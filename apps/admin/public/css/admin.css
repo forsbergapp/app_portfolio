@@ -1566,8 +1566,11 @@ body{
 #list_monitor_pagination div{
 	color:var(--app_theme_pagination_color);
 	font-size: 24px;
+	width: calc(100%/20);
 }
-
+#list_monitor_page, #list_monitor_page_last{
+	font-size: 14px !important;
+}
 #menu5_row_parameters_col1_1,
 #menu5_row_parameters_col2_1,
 #menu5_row_parameters_col3_1{

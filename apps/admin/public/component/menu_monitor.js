@@ -22,10 +22,15 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
                                 </div>
                                 <div id='list_monitor'></div>
                                 <div id='list_monitor_pagination'>
-                                <div id='list_monitor_first' class='common_icon'></div>
-                                <div id='list_monitor_previous' class='common_icon'></div>
-                                <div id='list_monitor_next' class='common_icon'></div>
-                                <div id='list_monitor_last' class='common_icon'></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div id='list_monitor_first' class='common_icon'></div>
+                                    <div id='list_monitor_previous' class='common_icon'></div>
+                                    <div id='list_monitor_next' class='common_icon'></div>
+                                    <div id='list_monitor_last' class='common_icon'></div>
+                                    <div id='list_monitor_page'></div>
+                                    <div id='list_monitor_page_last'>
+                                </div>
                             </div>
                             </div>
                             <div id='menu_5_content_widget2' class='widget'>

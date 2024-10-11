@@ -783,7 +783,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 case 'list_monitor_nav_app_log':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
-                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('APP_LOG', '&offset=0', 'date_created', 'desc');
+                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('APP_LOG', 0, 'date_created', 'desc');
                     break;
                 }
                 case 'list_monitor_nav_server_log':{
