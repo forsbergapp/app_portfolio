@@ -1082,6 +1082,8 @@
  * @property {string}       year
  * @property {string}       month
  * @property {string}       day
+ * @property {number}       limit
+ * @property {number}       offset
  */
 
 /**

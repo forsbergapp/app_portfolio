@@ -379,9 +379,10 @@ const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtex
 };
 
 /**
- * Get logs
+ * Get logs with page navigation support using limit and offset parameters
+ * and returns in ISO20022 format
  * @param {import('./types.js').server_log_data_parameter_getLogs} data
- * @returns{Promise.<[]>}
+ * @returns{Promise.<{page_header:{total_count:number, offset:number, count:number}, rows:[]}>}
  */
 const getLogs = async (data) => {
     return new Promise ((resolve)=>{
@@ -467,10 +468,28 @@ const getLogs = async (data) => {
                         return 0;
                 }
             });
-            resolve(log_rows_array_obj);
+            //return with page navigation info
+            resolve({ page_header:  {
+                                    total_count:	log_rows_array_obj.length,
+                                    offset: 		data.offset,
+                                    count:			log_rows_array_obj
+                                                        .filter((/**@type{*}*/row, /**@type{number}*/index)=>data.offset>0?index+1>=data.offset:true)
+                                                        .filter((/**@type{*}*/row, /**@type{number}*/index)=>data.limit>0?index+1<=data.limit:true).length
+                                    },
+                    rows:           log_rows_array_obj
+                                        .filter((/**@type{*}*/row, /**@type{number}*/index)=>data.offset>0?index+1>=data.offset:true)
+                                        .filter((/**@type{*}*/row, /**@type{number}*/index)=>data.limit>0?index+1<=data.limit:true)
+                    });
+            
         })
         //return empty and not error
-        .catch(()=> resolve([]));
+        .catch(()=> resolve({   page_header:    {
+                                                total_count:	0,
+                                                offset: 		data.offset,
+                                                count:			0
+                                                },
+                                rows:           []
+                            }));
     });
     
 };

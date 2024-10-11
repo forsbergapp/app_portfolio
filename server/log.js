@@ -14,15 +14,18 @@ const getLogs = (app_id, query) => {
     return new Promise((resolve, reject)=>{
         /**@type{import('./types.js').server_log_data_parameter_getLogs} */
         const data = {  app_id:			app_id,
-            select_app_id:	getNumberValue(query.get('select_app_id')),
-            logscope:		query.get('logscope'),
-            loglevel:		query.get('loglevel'),
-            search:			query.get('search'),
-            sort:			query.get('sort'),
-            order_by:		query.get('order_by'),
-            year: 			query.get('year').toString(),
-            month:			query.get('month').toString(),
-            day:			query.get('day')};
+                        select_app_id:	getNumberValue(query.get('select_app_id')),
+                        logscope:		query.get('logscope'),
+                        loglevel:		query.get('loglevel'),
+                        search:			query.get('search'),
+                        sort:			query.get('sort'),
+                        order_by:		query.get('order_by'),
+                        year: 			query.get('year').toString(),
+                        month:			query.get('month').toString(),
+                        day:			query.get('day'),
+                        limit:			getNumberValue(query.get('limit')) ?? 0,
+                        offset:			getNumberValue(query.get('offset')) ?? 0
+                    };
         service.getLogs(data).then(result=>{
             resolve(result);
         })
