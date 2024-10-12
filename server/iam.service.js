@@ -94,6 +94,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
             const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.service.js`);
             /**@type{import('./types.js').server_iam_user_record}*/
             const user =  fileCache('IAM_USER').USER.filter((/**@type{import('./types.js').server_iam_user_record}*/user)=>user.username == username)[0];
+            /**@type{0|1} */
             let result = 0;
             if (user && user.username == username && await PasswordCompare(password, user.password) && app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID')))
                 result = 1;
@@ -103,7 +104,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
             /**@type{import('./types.js').server_iam_admin_login_record} */
             const file_content = {	id:         app_id,
                                     user:		username,
-                                    res:		1,
+                                    res:		result,
                                     token:      jwt_data.token,
                                     ip:         ip,
                                     ua:         null,
