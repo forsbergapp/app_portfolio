@@ -13,8 +13,8 @@ const template = () => `<div id='menu_3_content_widget1' class='widget'>
                             <div id='list_user_account' class='common_list_scrollbar'></div>
                         </div>
                         <div id='menu_3_content_widget2' class='widget'>
-                            <div id='list_user_account_logon_title' class='common_icon'></div>
-                            <div id='list_user_account_logon' class='common_list_scrollbar'></div>
+                            <div id='list_iam_user_login_title' class='common_icon'></div>
+                            <div id='list_iam_user_login' class='common_list_scrollbar'></div>
                             <div id='users_buttons' class="save_buttons">
                                 <div id='users_save' class='common_dialogue_button button_save common_icon' ></div>
                             </div>

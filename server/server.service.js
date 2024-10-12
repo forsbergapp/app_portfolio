@@ -823,11 +823,6 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:'/bff/admin/v1/server-db_admin/user_account_logon', method:'GET'}):{
-                        resolve(db_user_account.getLogonAdmin(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, true)));
-                        break;
-                    }
                     case route({url:`/bff/superadmin/v1/server-db_admin/user_account/${resource_id_string}`, method:'PATCH', required:true}):{
                         resolve(db_user_account.updateAdmin(routesparameters.app_id, 
                                                             /**@ts-ignore */
@@ -956,6 +951,11 @@ const COMMON = {
                     }
                     case route({url:'/bff/app_data/v1/server-iam/user/logout', method:'POST'}):{
                         resolve(socket.ConnectedUpdate(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip,routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
+                        break;
+                    }
+                    case route({url:'/bff/admin/v1/server-iam/iam_user_login', method:'GET'}):{
+                        resolve(iam_service.userLogin(routesparameters.app_id, app_query)
+                                    .then(result=>iso_return_message(result, true)));
                         break;
                     }
                     //microservice routes

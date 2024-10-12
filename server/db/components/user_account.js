@@ -5,6 +5,10 @@ const service = await import(`file://${process.cwd()}/server/db/sql/user_account
 
 /**@type{import('../../config.service.js')} */
 const { ConfigGet, ConfigGetApp } = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../file.service.js')} */
+const { fileCache, fileFsReadLog, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.service.js`);
+
+
 /**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../../iam.service.js')} */
@@ -19,8 +23,6 @@ const { checked_error } = await import(`file://${process.cwd()}/server/db/common
 const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`);
 /**@type{import('../sql/user_account_app.service.js')} */
 const { createUserAccountApp} = await import(`file://${process.cwd()}/server/db/sql/user_account_app.service.js`);
-/**@type{import('../sql/user_account_logon.service.js')} */
-const { insertUserAccountLogon, getUserAccountLogon } = await import(`file://${process.cwd()}/server/db/sql/user_account_logon.service.js`);
 /**@type{import('../sql/user_account_event.service.js')} */
 const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/db/sql/user_account_event.service.js`);
 /**@type{import('../sql/user_account_follow.service.js')} */
@@ -109,22 +111,28 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
         service.userLogin(app_id, data_login)
         .then(result_login=>{
             const user_account_id = result_login[0]?getNumberValue(result_login[0].id):null;
-            /**@type{import('../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
-            const data_body = { result:             0,
-                                client_ip:          ip,
-                                client_user_agent:  user_agent,
-                                client_longitude:   data.client_longitude ?? null,
-                                client_latitude:    data.client_latitude ?? null,
-                                access_token:       null};
+            /**@type{import('../../types.js').server_iam_user_login_record} */
+            const data_body = { id:     user_account_id,
+                                app_id: app_id,
+                                user:   data.username,
+                                db:     fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
+                                res:    0,
+                                token:  null,
+                                ip:     ip,
+                                ua:     user_agent,
+                                long:   data.client_longitude ?? null,
+                                lat:    data.client_latitude ?? null,
+                                created: new Date().toISOString()
+                            };
             if (result_login[0]) {
                 PasswordCompare(data.password, result_login[0].password).then((result_password)=>{
-                    data_body.result = Number(result_password);
+                    data_body.res = result_password?1:0;
                     if (result_password) {
                         if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
                                 app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
                             const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER'});
-                            data_body.access_token = jwt_data.token;
-                            insertUserAccountLogon(app_id, user_account_id, data_body)
+                            data_body.token = jwt_data.token;
+                            fileFsAppend('IAM_USER_LOGIN', data_body, '')
                             .then(()=>{
                                 createUserAccountApp(app_id, result_login[0].id)
                                 .then(()=>{
@@ -143,10 +151,10 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                                             new_code, 
                                                             result_login[0].email)
                                             .then(()=>{
-                                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.access_token, null, ip, user_agent, accept_language, res)
+                                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.token, null, ip, user_agent, accept_language, res)
                                                 .then(()=>{
                                                     resolve({
-                                                        accessToken: data_body.access_token,
+                                                        accessToken: data_body.token,
                                                         exp:jwt_data.exp,
                                                         iat:jwt_data.iat,
                                                         tokentimestamp:jwt_data.tokentimestamp,
@@ -159,10 +167,10 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                         });
                                     }
                                     else{
-                                        ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.access_token, null, ip, user_agent, accept_language, res)
+                                        ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.token, null, ip, user_agent, accept_language, res)
                                         .then(()=>{
                                             resolve({
-                                                accessToken: data_body.access_token,
+                                                accessToken: data_body.token,
                                                 exp:jwt_data.exp,
                                                 iat:jwt_data.iat,
                                                 tokentimestamp:jwt_data.tokentimestamp,
@@ -178,7 +186,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                         }
                         else{
                             //Unauthorized, only admin allowed to log in to admin
-                            insertUserAccountLogon(app_id, user_account_id, data_body)
+                            fileFsAppend('IAM_USER_LOGIN', data_body, '')
                             .then(()=>{
                                 res.statusCode = 401;
                                 login_error(app_id)
@@ -187,7 +195,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                         }
                     } else {
                         //Username or password not found
-                        insertUserAccountLogon(app_id, user_account_id, data_body)
+                        fileFsAppend('IAM_USER_LOGIN', data_body, '')
                         .then(()=>{
                             res.statusCode = 400;
                             login_error(app_id)
@@ -198,7 +206,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                 });
             } else{
                 //User not found
-                insertUserAccountLogon(app_id, null, data_body)
+                fileFsAppend('IAM_USER_LOGIN', data_body, '')
                 .then(()=>{
                     res.statusCode = 404;
                     login_error(app_id)
@@ -255,29 +263,37 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                 provider_email:         data.provider_email,
                                 admin:                  0};
             const user_account_id = result_signin[0]?result_signin[0].id:null;
-            /**@type{import('../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
-            const data_login = {result:                 0,
-                                client_ip:              ip,
-                                client_user_agent:      user_agent,
-                                client_longitude:       data.client_longitude,
-                                client_latitude:        data.client_latitude,
-                                access_token:           null};
+            /**@type{import('../../types.js').server_iam_user_login_record} */
+            const data_login = {
+                                id:     null,
+                                app_id: app_id,
+                                user:   result_signin[0].username,
+                                db:     fileCache('CONFIG_SERVER').SERVICEDB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
+                                res:    0,
+                                token:  null,
+                                ip:     ip,
+                                ua:     user_agent,
+                                long:   data.client_longitude,
+                                lat:    data.client_latitude,
+                                created: new Date().toISOString()
+                            };
             if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && result_signin[0] && (result_signin[0].app_role_id == 0 || result_signin[0].app_role_id == 1))||
                     app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
                 if (result_signin.length > 0) {        
                     const jwt_data_exists = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER'});
-                    data_login.access_token = jwt_data_exists.token;
-                    data_login.result = 1;
-                    insertUserAccountLogon(app_id, user_account_id, data_login)
+                    data_login.token = jwt_data_exists.token;
+                    data_login.res = 1;
+                    data_login.id = result_signin[0].id;
+                    fileFsAppend('IAM_USER_LOGIN', data_login, '')
                     .then(()=>{
                         service.updateSigninProvider(app_id, result_signin[0].id, data_user)
                         .then(()=>{
                             createUserAccountApp(app_id, result_signin[0].id)
                             .then(()=>{
-                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), data_login.access_token, null, ip, user_agent, accept_language, res)
+                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), data_login.token, null, ip, user_agent, accept_language, res)
                                 .then(()=>{
                                     resolve({
-                                        accessToken: data_login.access_token,
+                                        accessToken: data_login.token,
                                         exp:jwt_data_exists.exp,
                                         iat:jwt_data_exists.iat,
                                         tokentimestamp:jwt_data_exists.tokentimestamp,
@@ -306,19 +322,19 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                     service.create(app_id, data_user)
                     .then(result_create=>{
                         const jwt_data_new = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data_user.username ?? '', ip:ip, scope:'USER'});
-                        data_login.access_token = jwt_data_new.token;
-                        data_login.result = 1;
-    
-                        insertUserAccountLogon(app_id, result_create.insertId, data_login)
+                        data_login.token = jwt_data_new.token;
+                        data_login.res = 1;
+                        data_login.id = result_create.insertId;
+                        fileFsAppend('IAM_USER_LOGIN', data_login, '')
                         .then(()=>{
                             createUserAccountApp(app_id, result_create.insertId)
                             .then(()=>{
                                 service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
                                 .then(result_signin2=>{
-                                    ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), data_login.access_token, null, ip, user_agent, accept_language, res)
+                                    ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), data_login.token, null, ip, user_agent, accept_language, res)
                                     .then(()=>{
                                         resolve({
-                                            accessToken: data_login.access_token,
+                                            accessToken: data_login.token,
                                             exp:jwt_data_new.exp,
                                             iat:jwt_data_new.iat,
                                             tokentimestamp:jwt_data_new.tokentimestamp,
@@ -340,7 +356,8 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
             else{
                 //Unauthorized, only admin allowed to log in to admin
                 //if data_login.user_account_id is empty then user has not logged in before
-                insertUserAccountLogon(app_id, user_account_id, data_login)
+                data_login.id = user_account_id;
+                fileFsAppend('IAM_USER_LOGIN', data_login, '')
                 .then(()=>{
                     res.statusCode = 401;
                     login_error(app_id)
@@ -515,20 +532,25 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
                 //return accessToken since PASSWORD_RESET is in progress
                 //email was verified and activated with id token, but now the password will be updated
                 //using accessToken and authentication code
-                /**@type{import('../../types.js').server_db_sql_parameter_user_account_logon_insertUserAccountLogon} */
+                /**@type{import('../../types.js').server_iam_user_login_record} */
                 const data_body = { 
-                    result:             1,
-                    client_ip:          ip,
-                    client_user_agent:  user_agent,
-                    client_longitude:   data.client_longitude ?? null,
-                    client_latitude:    data.client_latitude ?? null,
-                    access_token:       jwt_data.token};
-                insertUserAccountLogon(app_id, resource_id, data_body)
+                    id:         resource_id,
+                    app_id:     app_id,
+                    user:       '',
+                    db:         fileCache('CONFIG_SERVER').SERVICEDB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
+                    res:        1,
+                    token:      jwt_data.token,
+                    ip:         ip,
+                    ua:         user_agent,
+                    long:       data.client_longitude ?? null,
+                    lat:        data.client_latitude ?? null,
+                    created:    new Date().toISOString()};
+                fileFsAppend('IAM_USER_LOGIN', data_body, '')
                 .then(()=>{
                     resolve({
                         count: result_activate.affectedRows,
                         auth: auth_password_new,
-                        accessToken: data_body.access_token,
+                        accessToken: data_body.token,
                         exp:jwt_data.exp,
                         iat:jwt_data.iat,
                         tokentimestamp:jwt_data.tokentimestamp,
@@ -802,17 +824,7 @@ const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get
  * @param {number} app_id 
  */
 const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
-
-/**
- * 
- * @param {number} app_id 
- * @param {*} query 
- */
-const getLogonAdmin =(app_id, query) => getUserAccountLogon(    app_id, 
-                                                                getNumberValue(query.get('data_user_account_id')), 
-                                                                getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
-                                            .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
-    
+ 
 /**
  * 
  * @param {number} app_id 
@@ -1039,12 +1051,13 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
         service.getUserByUserId(app_id, resource_id)
         .then(result=>{
             if (result[0]){
-                getUserAccountLogon(    app_id, 
-                                        resource_id, 
-                                        app_id)
-                .then(user_account_logons=>{
-                    const last_logontime = user_account_logons.filter(row=>JSON.parse(row.json_data).result==1)[0];
-                    resolve({...result[0], ...{last_logontime:last_logontime?last_logontime.date_created:null}});
+                fileFsReadLog('IAM_USER_LOGIN', null, '')
+                    .then(result=>result
+                    .filter((/**@type{import('../../types.js').server_iam_user_login_record}*/row)=>
+                        row.id==resource_id &&  row.id==app_id && row.res==1)[0])
+                .then((/**@type{import('../../types.js').server_iam_user_login_record}*/iam_user_login)=>{
+                    //concat db result with IAM last logon time
+                    resolve({...result[0], ...{last_logontime:iam_user_login?iam_user_login.created:null}});
                 })
                 .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
             }
@@ -1217,7 +1230,7 @@ export {/*DATA_LOGIN*/
         /*DATA*/
         activate, forgot, getProfile, getProfileStat,
         /*ADMIN*/
-        updateAdmin, getUsersAdmin, getStatCountAdmin, getLogonAdmin,
+        updateAdmin, getUsersAdmin, getStatCountAdmin,
         /*ACCESS*/
         updatePassword, updateUserLocal, updateUserCommon, getUserByUserId, deleteUser, getProfileDetail,
         follow, unfollow,

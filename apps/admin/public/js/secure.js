@@ -849,7 +849,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     if (APP_GLOBAL.previous_row != common.commonElementRow(event.target)){
                         APP_GLOBAL.previous_row = common.commonElementRow(event.target);
                         common.commonComponentRender({
-                            mountDiv:   'list_user_account_logon',
+                            mountDiv:   'list_iam_user_login',
                             data:       {user_account_id:parseInt(common.commonElementRow(event.target).getAttribute('data-user_account_id') ?? '')},
                             methods:    {commonFFB:common.commonFFB},
                             path:       '/component/menu_users_logon.js'});
