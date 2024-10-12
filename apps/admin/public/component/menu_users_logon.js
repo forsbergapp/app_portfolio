@@ -3,56 +3,55 @@
  */
 /**
  * Displays stat of users
- * @param {{user_logons:[{  user_account_id:number,
+ * @param {{user_logons:[{  id:number,
  *                          app_id:number,
- *                          result:string,
- *                          client_ip:string,
- *                          client_longitude:string|null,
- *                          client_latitude:string|null,
- *                          client_user_agent:string,
- *                          access_token:string|null,
- *                          date_created:string
- *                          date_modified:string}]|[]}} props
+ *                          res:string,
+ *                          ip:string,
+ *                          long:string|null,
+ *                          lat:string|null,
+ *                          ua:string,
+ *                          token:string|null,
+ *                          created:string}]|[]}} props
  */
-const template = props => ` <div id='list_user_account_logon_row_title' class='list_user_account_logon_row'>
-                                <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>USER ACCOUNT ID</div>
-                                <div id='list_user_account_logon_col_title2' class='list_user_account_logon_col list_title'>DATE CREATED</div>
-                                <div id='list_user_account_logon_col_title3' class='list_user_account_logon_col list_title'>APP ID</div>
-                                <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>RESULT</div>
-                                <div id='list_user_account_logon_col_title5' class='list_user_account_logon_col list_title'>IP</div>
-                                <div id='list_user_account_logon_col_title6' class='list_user_account_logon_col list_title'>GPS LONG</div>
-                                <div id='list_user_account_logon_col_title7' class='list_user_account_logon_col list_title'>GPS LAT</div>
-                                <div id='list_user_account_logon_col_title8' class='list_user_account_logon_col list_title'>USER AGENT</div>
-                                <div id='list_user_account_logon_col_title9' class='list_user_account_logon_col list_title'>ACCESS TOKEN</div>
+const template = props => ` <div id='list_iam_user_login_row_title' class='list_iam_user_login_row'>
+                                <div id='list_iam_user_login_col_title1' class='list_iam_user_login_col list_title'>USER ACCOUNT ID</div>
+                                <div id='list_iam_user_login_col_title2' class='list_iam_user_login_col list_title'>DATE CREATED</div>
+                                <div id='list_iam_user_login_col_title3' class='list_iam_user_login_col list_title'>APP ID</div>
+                                <div id='list_iam_user_login_col_title4' class='list_iam_user_login_col list_title'>RESULT</div>
+                                <div id='list_iam_user_login_col_title5' class='list_iam_user_login_col list_title'>IP</div>
+                                <div id='list_iam_user_login_col_title6' class='list_iam_user_login_col list_title'>GPS LONG</div>
+                                <div id='list_iam_user_login_col_title7' class='list_iam_user_login_col list_title'>GPS LAT</div>
+                                <div id='list_iam_user_login_col_title8' class='list_iam_user_login_col list_title'>USER AGENT</div>
+                                <div id='list_iam_user_login_col_title9' class='list_iam_user_login_col list_title'>ACCESS TOKEN</div>
                             </div>
                             ${props.user_logons.map(user_logon=>
-                                `<div data-changed-record='0' class='list_user_account_logon_row'>
-                                    <div class='list_user_account_logon_col'>
-                                        <div class='list_readonly'>${user_logon.user_account_id}</div>
+                                `<div data-changed-record='0' class='list_iam_user_login_row'>
+                                    <div class='list_iam_user_login_col'>
+                                        <div class='list_readonly'>${user_logon.id}</div>
                                     </div>
-                                    <div class='list_user_account_logon_col'>
-                                        <div class='list_readonly'>${user_logon.date_created ?? ''}</div>
+                                    <div class='list_iam_user_login_col'>
+                                        <div class='list_readonly'>${user_logon.created ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_logon_col'>
+                                    <div class='list_iam_user_login_col'>
                                         <div class='list_readonly'>${user_logon.app_id}</div>
                                     </div>
-                                    <div class='list_user_account_logon_col'>
-                                        <div class='list_readonly'>${user_logon.result}</div>
+                                    <div class='list_iam_user_login_col'>
+                                        <div class='list_readonly'>${user_logon.res}</div>
                                     </div>
-                                    <div class='list_user_account_logon_col'>
-                                        <div class='list_readonly'>${user_logon.client_ip}</div>
+                                    <div class='list_iam_user_login_col'>
+                                        <div class='list_readonly'>${user_logon.ip}</div>
                                     </div>
-                                    <div class='list_user_account_logon_col'>
-                                        <div class='list_readonly'>${user_logon.client_longitude ?? ''}</div>
+                                    <div class='list_iam_user_login_col'>
+                                        <div class='list_readonly'>${user_logon.long ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_logon_col'>
-                                        <div class='list_readonly'>${user_logon.client_latitude ?? ''}</div>
+                                    <div class='list_iam_user_login_col'>
+                                        <div class='list_readonly'>${user_logon.lat ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_logon_col'>
-                                        <div class='list_readonly'>${user_logon.client_user_agent}</div>
+                                    <div class='list_iam_user_login_col'>
+                                        <div class='list_readonly'>${user_logon.ua}</div>
                                     </div>
-                                    <div class='list_user_account_logon_col'>
-                                        <div class='list_readonly'>${user_logon.access_token ?? ''}</div>
+                                    <div class='list_iam_user_login_col'>
+                                        <div class='list_readonly'>${user_logon.token ?? ''}</div>
                                     </div>
                                 </div>`
                             ).join('')
@@ -70,7 +69,7 @@ const template = props => ` <div id='list_user_account_logon_row_title' class='l
 *                      template:string}>}
 */
 const component = async props => {
-    const user_logon = await props.methods.commonFFB({path:'/server-db_admin/user_account_logon', query:`data_user_account_id=${props.data.user_account_id}&data_app_id=''`, method:'GET', authorization_type:'APP_ACCESS'})
+    const user_logon = await props.methods.commonFFB({path:'/server-iam/iam_user_login', query:`data_user_account_id=${props.data.user_account_id}&data_app_id=`, method:'GET', authorization_type:'APP_ACCESS'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result));
  
     return {

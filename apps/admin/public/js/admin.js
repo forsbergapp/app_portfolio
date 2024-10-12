@@ -180,14 +180,6 @@ const app_event_click = event => {
                     admin_login();
                     break;
                 }
-                /* Dialogue user menu */
-                case 'common_dialogue_user_menu_username':{
-                    if (common.COMMON_GLOBAL.system_admin == null){
-                        common.commonProfileShow(null,null);
-                        common.commonComponentRemove('common_dialogue_user_menu');
-                    }
-                    break;
-                }
                 /**Dialogue profile */
                 case 'common_dialogue_profile_home':{
                     common.commonProfileStat(1);

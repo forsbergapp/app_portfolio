@@ -5,10 +5,14 @@
 /**
  * 
  * @param {{username:string,
+ *          system_admin:string,
  *          countdown:0|1}} props 
  * @returns 
  */
-const template = props =>`  <div id='common_dialogue_user_menu_username'>${props.username}</div>
+const template = props =>`  ${(props.system_admin !='' && props.system_admin!=null)?
+                                `<div id='common_dialogue_user_menu_system_admin'>${props.system_admin ?? ''}</div>`:
+                                `<div id='common_dialogue_user_menu_username'>${props.username}</div>`
+                            }
                             ${props.countdown==1?
                                 `<div id='common_dialogue_user_menu_token_countdown'>
                                     <div id='common_dialogue_user_menu_token_countdown_time'></div>
@@ -209,7 +213,8 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template({  username:props.data.username ?? props.data.system_admin ?? '',
+        template:   template({  username:props.data.username,
+                                system_admin:props.data.system_admin,
                                 countdown:(props.data.token_exp && props.data.token_iat)?1:0})
     };
 };

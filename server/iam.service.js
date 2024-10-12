@@ -183,13 +183,14 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
             //authenticate id token
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
             const id_token_decoded = jwt.verify(id_token, ConfigGetApp(app_id_host, app_id_host, 'SECRETS').APP_ID_SECRET);
-            /**@type{import('./types.js').server_iam_app_token_record[]}*/
-            const log_id_token = await fileFsReadLog('IAM_APP_TOKEN', '');
+            /**@type{import('./types.js').server_iam_app_token_record}*/
+            const log_id_token = await fileFsReadLog('IAM_APP_TOKEN', '').then(result=>result.filter((/**@type{import('./types.js').server_iam_app_token_record}*/row)=> 
+                                                                                row.id == app_id_host && row.ip == ip && row.token == id_token
+                                                                                )[0]);
             if (id_token_decoded.app_id == app_id_host && 
                 id_token_decoded.scope == 'APP' && 
                 id_token_decoded.ip == ip &&
-                log_id_token.filter((/**@type{import('./types.js').server_iam_app_token_record}*/row)=> 
-                                    row.id == app_id_host && row.ip == ip && row.token == id_token).length==1){
+                log_id_token){
                 if (scope=='APP_DATA')
                     next();
                 else{
@@ -233,18 +234,25 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
                             const access_token_decoded = jwt.verify(access_token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '');
                             /**@type{import('./types.js').server_iam_admin_login_record[]}*/
-                            const log_access_token = await fileFsReadLog('IAM_ADMIN_LOGIN', '');
-
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
-                                access_token_decoded.name == iam_decode(iam).get('system_admin') &&
-                                log_access_token.filter((/**@type{import('./types.js').server_iam_admin_login_record}*/row)=>
-                                    row.id == app_id_host && 
-                                    row.user == access_token_decoded.name && 
-                                    row.ip == ip && 
-                                    row.token == access_token).length==1)
-                                next();
+                                access_token_decoded.name == iam_decode(iam).get('system_admin'))
+                                await fileFsReadLog('IAM_ADMIN_LOGIN', null,'')
+                                .then(result=>{
+                                    /**@type{import('./types.js').server_iam_admin_login_record}*/
+                                    const iam_admin_login = result.filter((/**@type{import('./types.js').server_iam_admin_login_record}*/row)=>
+                                                                            row.id      == app_id_host && 
+                                                                            row.user    == access_token_decoded.name && 
+                                                                            row.res     == 1 &&
+                                                                            row.ip      == ip &&
+                                                                            row.token   == access_token
+                                                                        )[0];
+                                    if (iam_admin_login)
+                                        next();
+                                    else
+                                    not_authorized(res, 401, 'AuthenticateUserCommon');
+                                });
                             else
                                 not_authorized(res, 401, 'AuthenticateUserCommon');
                             break;
@@ -269,23 +277,20 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                 ((scope=='APP_ACCESS_SUPERADMIN' && await superadmin(user_id))|| scope!='APP_ACCESS_SUPERADMIN'))
                                 //check access token belongs to user_account.id, app_id and ip saved when logged in
                                 //and if app_id=0 then check user is admin
-                                import(`file://${process.cwd()}/server/db/sql/user_account_logon.service.js`)
-                                .then((/**@type{import('./db/sql/user_account_logon.service.js')} */{checkLogin}) => {
-                                    checkLogin(app_id_host, user_id)
-                                    .then((/**@type{import('./types.js').server_db_sql_result_user_account_logon_Checklogin[]}*/result)=>{
-                                        if (result.filter(row=>
-                                            JSON.parse(row.json_data).result==1 && 
-                                            JSON.parse(row.json_data).access_token == access_token && 
-                                            JSON.parse(row.json_data).client_ip == ip).length==1)
-                                            next();
-                                        else
-                                            not_authorized(res, 401, 'AuthenticateUserCommon, no record APP_ACCESS');
-                                    })
-                                    .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
-                                        res.status(500).send(
-                                            error
-                                        );
-                                    });
+                                await fileFsReadLog('IAM_USER_LOGIN', null,'')
+                                .then(result=>{
+                                    /**@type{import('./types.js').server_iam_user_login_record}*/
+                                    const iam_user_login = result.filter((/**@type{import('./types.js').server_iam_user_login_record}*/row)=>
+                                                                            row.id      == user_id && 
+                                                                            row.res     == 1 &&
+                                                                            row.app_id  == app_id_host &&
+                                                                            row.token   == access_token &&
+                                                                            row.ip      == ip
+                                                                        )[0];
+                                    if (iam_user_login)
+                                        next();
+                                    else
+                                        not_authorized(res, 401, 'AuthenticateUserCommon, no record APP_ACCESS');
                                 });
                             else
                                 not_authorized(res, 401, 'AuthenticateUserCommon, token claim error');
@@ -615,6 +620,22 @@ const AuthenticateResource = parameters =>  {
             tokentimestamp:jwt.decode(token, { complete: true }).payload.tokentimestamp};
 };
 
+/**
+ * @param {number} app_id
+ * @param {*} query
+ */
+const userLogin = async (app_id, query) => {const rows = await fileFsReadLog('IAM_USER_LOGIN', null, '')
+                                                    .then(result=>result
+                                                    .filter((/**@type{import('./types.js').server_iam_user_login_record}*/row)=>
+                                                        row.id==getNumberValue(query.get('data_user_account_id')) &&  
+                                                        row.id==(getNumberValue(query.get('data_app_id')==''?null:query.get('data_app_id')) ?? row.id)));
+                                                return rows.sort(( /**@type{import('./types.js').server_iam_user_login_record}*/a,
+                                                    /**@type{import('./types.js').server_iam_user_login_record}*/b)=> 
+                                                        //sort descending on created
+                                                        a.created.localeCompare(b.created)==1?-1:1);
+                                            };
+                                                    
+
 export{ iam_decode,
         expired_token,
         not_authorized,
@@ -626,4 +647,5 @@ export{ iam_decode,
         AuthenticateApp,
         AuthenticateResource,
         AuthorizeTokenApp,
-        AuthorizeToken}; 
+        AuthorizeToken,
+        userLogin}; 
