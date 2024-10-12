@@ -38,7 +38,6 @@
  * @module apps/admin/secure
  */
 
-
 /**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
  const COMMON_DOCUMENT = document;
 
@@ -48,20 +47,26 @@ const common = await import(common_path);
 
 /**
  * App globals
- * @type{{  page_navigation:function, 
- *          monitor_detail_server_log:function, 
- *          limit:number, 
- *          previous_row:{}, 
- *          moduleLeafletDiv:*, 
- *          service_log_file_interval:string}}
+ * @type{{  component: {MENU_MONITOR:{ monitorShow:                function,
+ *                                     monitorDetailShowLogDir:    function,
+ *                                     monitorDetailShowServerLog: function,
+ *                                     monitorDetailPage:          function,
+ *                                     monitorDetailClickSort:     function,
+ *                                     monitorDetailClickItem:     function
+ *                                  }
+ *                      },
+ *          previous_row:{}}}
  */
 const APP_GLOBAL = {
-    page_navigation:()=>null,
-    monitor_detail_server_log:()=>null,
-    limit:0,
-    previous_row:{},
-    moduleLeafletDiv:'',
-    service_log_file_interval:''
+    component: {MENU_MONITOR : {monitorShow:                ()=>null,
+                                monitorDetailShowLogDir:    ()=>null,
+                                monitorDetailShowServerLog: ()=>null,
+                                monitorDetailPage:          ()=>null,
+                                monitorDetailClickSort:     ()=>null,
+                                monitorDetailClickItem:     ()=>null
+                            }
+                },
+    previous_row:{}
 };
 Object.seal(APP_GLOBAL);
 /**
@@ -69,12 +74,15 @@ Object.seal(APP_GLOBAL);
  * @returns {void}
  */
 const delete_globals = () => {
-    APP_GLOBAL.page_navigation = ()=>null,
-    APP_GLOBAL.monitor_detail_server_log = ()=>null,
-    APP_GLOBAL.limit = 0;
+    APP_GLOBAL.component = {MENU_MONITOR : {monitorShow:                ()=>null,
+                                            monitorDetailShowLogDir:    ()=>null,
+                                            monitorDetailShowServerLog: ()=>null,
+                                            monitorDetailPage:          ()=>null,
+                                            monitorDetailClickSort:     ()=>null,
+                                            monitorDetailClickItem:     ()=>null
+                                        }
+                            };
     APP_GLOBAL.previous_row = {};
-    APP_GLOBAL.moduleLeafletDiv = '';
-    APP_GLOBAL.service_log_file_interval = '';
 };
 
 /**
@@ -130,21 +138,38 @@ const show_menu = menu => {
         }
         //MONITOR
         case 5:{
+            /**
+             * @param {*} parameters
+             */
+            const map_update = (...parameters) =>common.COMMON_GLOBAL.moduleLeaflet.methods.map_update(...parameters);
             common.commonComponentRender({
                 mountDiv:   'menu_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id, 
-                            system_admin:common.COMMON_GLOBAL.system_admin
+                            system_admin:common.COMMON_GLOBAL.system_admin,
+                            system_admin_only:common.COMMON_GLOBAL.system_admin_only,
+                            service_socket_client_ID: common.COMMON_GLOBAL.service_socket_client_ID,
+                            client_latitude:common.COMMON_GLOBAL.client_latitude,
+                            client_longitude:common.COMMON_GLOBAL.client_longitude,
+                            client_place:common.COMMON_GLOBAL.client_place
                             },
                 methods:    {
-                            map_mount:map_mount,
+                            show_broadcast_dialogue:show_broadcast_dialogue,
+                            map_update:map_update,
+                            commonModuleLeafletInit:common.commonModuleLeafletInit,
+                            commonElementRow:common.commonElementRow,
+                            commonInputControl:common.commonInputControl,
                             commonComponentRender:common.commonComponentRender,
+                            commonWindowUserAgentPlatform:common.commonWindowUserAgentPlatform,
+                            commonRoundOff:common.commonRoundOff,
+                            commonLovClose:common.commonLovClose,
+                            commonLovShow:common.commonLovShow,
                             commonFFB:common.commonFFB
                             },
                 path:       '/component/menu_monitor.js'})
-            .then((/**@type{{data:{limit:number}, methods:null}}*/result)=>{
-                APP_GLOBAL.limit = result.data.limit;
-                nav_click('list_monitor_nav_connected');
+            .then(result=>{
+                APP_GLOBAL.component.MENU_MONITOR  = result.methods;
+                COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').click();
             });
             break;
         }
@@ -153,7 +178,7 @@ const show_menu = menu => {
             common.commonComponentRender({
                 mountDiv:   'menu_content',
                 data:       null,
-                methods:    {nav_click:nav_click},
+                methods:    null,
                 path:       '/component/menu_config.js'});
             break;
         }
@@ -494,7 +519,7 @@ const button_save = async (item) => {
                 return config_server;
             };
             const file = COMMON_DOCUMENT.querySelectorAll('#menu_content .list_nav .list_nav_selected_tab')[0].id.substring('list_config_nav_'.length).toUpperCase();
-            //file:'CONFIG_SERVER', 'CONFIG_APPS', 'CONFIG_IAM_BLOCKIP', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_IAM_USER', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
+            //file:'CONFIG_SERVER', 'CONFIG_APPS', 'CONFIG_IAM_BLOCKIP', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
             const json_data = { config:    file=='CONFIG_SERVER'?
                                                 config_server():
                                                     JSON.parse(COMMON_DOCUMENT.querySelector('#list_config_edit').textContent)};
@@ -578,361 +603,7 @@ const update_record = async (table,
     await common.commonFFB({path:path, method:method, authorization_type:token_type, body:json_data, spinner_id:button})
             .then(()=>row_element.setAttribute('data-changed-record', '0'));
 };
-/**
- * Mounts map in monitor component
- */
-const map_mount = () =>{
-    //show map only for this condition
-    if (common.COMMON_GLOBAL.system_admin_only != 1)
-        common.commonModuleLeafletInit(APP_GLOBAL.moduleLeafletDiv,
-                        common.COMMON_GLOBAL.client_longitude,
-                        common.COMMON_GLOBAL.client_latitude,
-                        null).then(() => {
-            common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:common.COMMON_GLOBAL.client_longitude,
-                                latitude:common.COMMON_GLOBAL.client_latitude,
-                                text_place:common.COMMON_GLOBAL.client_place,
-                                country:'',
-                                city:'',
-                                timezone_text :null
-                            });
-        });
-};
 
-/**
- * Navigation click
- * @param {string} item_id 
- * @returns{void}
- */
-const nav_click = (item_id) => {
-    const reset_monitor = () => {
-        COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').classList.remove('list_nav_selected_tab');
-        if (COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log'))
-            COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_selected_tab');
-        if (COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log'))
-            COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_selected_tab');
-    };
-    const reset_config = () => {
-        COMMON_DOCUMENT.querySelector('#list_config_nav_config_server').classList.remove('list_nav_selected_tab');
-        COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_blockip').classList.remove('list_nav_selected_tab');
-        COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_useragent').classList.remove('list_nav_selected_tab');
-        COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_policy').classList.remove('list_nav_selected_tab');
-    };
-    
-    switch (item_id){
-        //MONITOR
-        case 'list_monitor_nav_connected':{
-            reset_monitor();
-            COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').classList.add('list_nav_selected_tab');
-            show_connected();
-            break;
-        }
-        case 'list_monitor_nav_app_log':{
-            reset_monitor();
-            COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
-            show_app_log();
-            break;
-        }
-        case 'list_monitor_nav_server_log':{
-            reset_monitor();
-            COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
-            show_server_logs('logdate', 'desc');
-            break;
-        }
-        //SERVER CONFIG
-        case 'list_config_nav_config_server':{
-            reset_config();
-            COMMON_DOCUMENT.querySelector('#list_config_nav_config_server').classList.add('list_nav_selected_tab');
-            common.commonComponentRender({
-                mountDiv:       'list_config_container',
-                data:           {file:'CONFIG_SERVER'},
-                methods:        {commonFFB:common.commonFFB},
-                path:           '/component/menu_config_detail.js'});
-            break;
-        }
-        case 'list_config_nav_config_iam_blockip':{
-            reset_config();
-            COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_blockip').classList.add('list_nav_selected_tab');
-            common.commonComponentRender({
-                mountDiv:       'list_config_container',
-                data:           {file:'CONFIG_IAM_BLOCKIP'},
-                methods:        {commonFFB:common.commonFFB},
-                path:           '/component/menu_config_detail.js'});
-            break;
-        }
-        case 'list_config_nav_config_iam_useragent':{
-            reset_config();
-            COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_useragent').classList.add('list_nav_selected_tab');
-            common.commonComponentRender({
-                mountDiv:       'list_config_container',
-                data:           {file:'CONFIG_IAM_USERAGENT'},
-                methods:        {commonFFB:common.commonFFB},
-                path:           '/component/menu_config_detail.js'});
-            break;
-        }
-        case 'list_config_nav_config_iam_policy':{
-            reset_config();
-            COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_policy').classList.add('list_nav_selected_tab');
-            common.commonComponentRender({
-                mountDiv:       'list_config_container',
-                data:           {file:'CONFIG_IAM_POLICY'},
-                methods:        {commonFFB:common.commonFFB},
-                path:           '/component/menu_config_detail.js'});
-            break;
-        }
-    }
-};
-/**
- * Show list
- * @param {'CONNECTED'|'APP_LOG'|'SERVER_LOG'} list_detail
- * @param {string} query
- * @param {string} sort 
- * @param {string} order_by 
- */
-const show_list = async (list_detail, query, sort, order_by) => {
-    common.commonComponentRender({
-        mountDiv:   'list_monitor',
-        data:       {
-                    app_id:common.COMMON_GLOBAL.app_id,
-                    system_admin:common.COMMON_GLOBAL.system_admin,
-                    monitor_detail:list_detail,
-                    query:query,
-                    sort:sort,
-                    order_by:order_by,
-                    service_socket_client_ID:common.COMMON_GLOBAL.service_socket_client_ID,
-                    limit:APP_GLOBAL.limit
-                    },
-        methods:    {
-                    get_log_parameters:get_log_parameters,
-                    show_app_log:show_app_log,
-                    commonInputControl:common.commonInputControl,
-                    commonComponentRender:common.commonComponentRender,
-                    commonWindowUserAgentPlatform:common.commonWindowUserAgentPlatform,
-                    commonRoundOff:common.commonRoundOff,
-                    commonFFB:common.commonFFB
-                    },
-        path:       '/component/menu_monitor_detail.js'})
-    .then((/**@type{{   data:null, 
-                        methods:{page_navigation:function, monitor_detail_server_log:function}}}*/result)=>{
-        APP_GLOBAL.page_navigation = result.methods.page_navigation;
-        APP_GLOBAL.monitor_detail_server_log = result.methods.monitor_detail_server_log;
-    });
-};
-/**
- * Show connected
- * @param {string} sort 
- * @param {string} order_by
- */
-const show_connected = async (sort='connection_date', order_by='desc') => {
-    show_list('CONNECTED', 
-              '', 
-              sort,
-              order_by);
-};    
-
-/**
- * Show app log
- * @param {string} sort 
- * @param {string} order_by
- * @param {number} offset 
- * @returns{Promise.&lt;void>}
- */
-const show_app_log = async (sort='date_created', order_by='desc', offset=0) => {
-    show_list('APP_LOG', 
-              `&amp;offset=${offset}`, 
-              sort,
-              order_by);
-};
-/**
- * List sort click
- * @param {string} list 
- * @param {string} sortcolumn 
- * @param {string} order_by 
- * @returns {void}
- */
-const list_sort_click = (list, sortcolumn, order_by) => {
-    switch (list){
-        case 'list_app_log':{
-            show_app_log(sortcolumn, order_by);    
-            break;
-        }
-        case 'list_connected':{
-            show_connected(sortcolumn, order_by);
-            break;
-        }
-        case 'list_server_log':{
-            APP_GLOBAL.monitor_detail_server_log(sortcolumn, order_by);
-            break;
-        }
-        case 'list_user_account':{
-            search_users(sortcolumn, order_by);
-            break;
-        }
-    }
-};
-/**
- * List item click
- * @param {string} item_type 
- * @param {{ip:string,
- *          latitude:string,
- *          longitude:string,
- *          id:number}} data 
- */
-const list_item_click = (item_type, data) => {
-    //check if gps_click and if not system admin only when map is not loaded
-    if (item_type=='GPS' &amp;&amp; common.COMMON_GLOBAL.system_admin_only != 1){
-        if (data['ip']){
-            common.commonFFB({path:'/geolocation/ip', query:data['ip'] != '::1'?`ip=${data['ip']}`:null, method: 'GET', authorization_type:'APP_DATA'})
-            .then((/**@type{string}*/result)=>{
-                const geodata = JSON.parse(result);
-                common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:geodata.geoplugin_longitude,
-                                                                        latitude:geodata.geoplugin_latitude,
-                                                                        text_place: geodata.geoplugin_city + ', ' +
-                                                                                    geodata.geoplugin_regionName + ', ' +
-                                                                                    geodata.geoplugin_countryName,
-                                                                        country:'',
-                                                                        city:'',
-                                                                        timezone_text :null
-                                                                    });
-            })
-            .catch(()=>null);
-        }
-        else{
-            common.commonFFB({path:'/geolocation/place', query:`latitude=${data['latitude']}&amp;longitude=${data['longitude']}`, method:'GET', authorization_type:'APP_DATA'})
-            .then((/**@type{string}*/result)=>{
-                /**@type{{geoplugin_place:string, geoplugin_region:string, geoplugin_countryCode:string}} */
-                const geodata = JSON.parse(result);
-                common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:data['longitude'],
-                                                                        latitude:data['latitude'],
-                                                                        text_place: geodata.geoplugin_place + ', ' + 
-                                                                                    geodata.geoplugin_region + ', ' + 
-                                                                                    geodata.geoplugin_countryCode,
-                                                                        country:'',
-                                                                        city:'',
-                                                                        timezone_text :null
-                                                                    });
-            })
-            .catch(()=>null);
-        }
-    }
-    else
-        if (item_type=='CHAT'){
-            show_broadcast_dialogue('CHAT', data['id']);
-        }
-    
-};
-/**
- * Get log parameters
- * @returns {Promise.&lt;{parameters:{ SCOPE_REQUEST:string,
- *                                  SCOPE_SERVER:string, 
- *                                  SCOPE_SERVICE:string,
- *                                  SCOPE_APP:string,
- *                                  SCOPE_DB:string,
- *                                  REQUEST_LEVEL:number,
- *                                  SERVICE_LEVEL:number,
- *                                  DB_LEVEL:number,
- *                                  APP_LEVEL:number,
- *                                  LEVEL_VERBOSE:string 
- *                                  LEVEL_ERROR:string
- *                                  LEVEL_INFO:string,
- *                                  FILE_INTERVAL:string},
- *                     logscope_level_options:{log_scope:string, log_level:string}[]}>}
- */
-const get_log_parameters = async () => {
-    return new Promise((resolve)=>{
-        common.commonFFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'SYSTEMADMIN'})
-        .then((/**@type{string}*/result)=>{
-            const log_parameters = {
-                SCOPE_REQUEST : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],
-                SCOPE_SERVER :  JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_SERVER' in row)[0]['SCOPE_SERVER'],
-                SCOPE_SERVICE : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_SERVICE' in row)[0]['SCOPE_SERVICE'],
-                SCOPE_APP :     JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_APP' in row)[0]['SCOPE_APP'],
-                SCOPE_DB :      JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_DB' in row)[0]['SCOPE_DB'],
-                REQUEST_LEVEL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
-                SERVICE_LEVEL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SERVICE_LEVEL' in row)[0]['SERVICE_LEVEL'],
-                DB_LEVEL :      JSON.parse(result).data.filter((/**@type{*}*/row)=>'DB_LEVEL' in row)[0]['DB_LEVEL'],
-                APP_LEVEL :     JSON.parse(result).data.filter((/**@type{*}*/row)=>'APP_LEVEL' in row)[0]['APP_LEVEL'],
-                LEVEL_INFO :    JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_INFO' in row)[0]['LEVEL_INFO'],
-                LEVEL_ERROR :   JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_ERROR' in row)[0]['LEVEL_ERROR'],
-                LEVEL_VERBOSE : JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_VERBOSE' in row)[0]['LEVEL_VERBOSE'],
-                FILE_INTERVAL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'FILE_INTERVAL' in row)[0]['FILE_INTERVAL']
-               };
-            const logscope_level_options = [
-                {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_INFO},
-                {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_ERROR},
-                {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_VERBOSE},
-                {log_scope:log_parameters.SCOPE_SERVER,     log_level: log_parameters.LEVEL_INFO},
-                {log_scope:log_parameters.SCOPE_SERVER,     log_level: log_parameters.LEVEL_ERROR},
-                {log_scope:log_parameters.SCOPE_APP,        log_level: log_parameters.LEVEL_INFO},
-                {log_scope:log_parameters.SCOPE_APP,        log_level: log_parameters.LEVEL_ERROR},
-                {log_scope:log_parameters.SCOPE_SERVICE,    log_level: log_parameters.LEVEL_INFO},
-                {log_scope:log_parameters.SCOPE_SERVICE,    log_level: log_parameters.LEVEL_ERROR},
-                {log_scope:log_parameters.SCOPE_DB,         log_level: log_parameters.LEVEL_INFO},
-                {log_scope:log_parameters.SCOPE_DB,         log_level: log_parameters.LEVEL_ERROR}
-            ];
-            APP_GLOBAL.service_log_file_interval = log_parameters.FILE_INTERVAL;
-            resolve({   parameters:log_parameters,
-                        logscope_level_options:logscope_level_options});
-        });
-    })
-    .catch(()=>null);
-};
-/**
- * Show server logs
- * @param {string} sort 
- * @param {string} order_by 
- * @returns {void}
- */
-const show_server_logs = (sort='logdate', order_by='desc') => {
-    
-
-    show_list('SERVER_LOG', 
-              '',
-              sort,
-              order_by);
-};
-/**
- * Show existing logfiles
- * @returns {void}
- */
-const show_existing_logfiles = () => {
-    /**
-     * Event for LOV
-     * @param {import('../../../common_types.js').CommonAppEvent} event 
-     */
-    const function_event = event => {
-                            //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
-                            //logscope and loglevel
-                            let filename = common.commonElementRow(event.target).getAttribute('data-value') ?? '';
-                            const logscope = filename.substring(0,filename.indexOf('_'));
-                            filename = filename.substring(filename.indexOf('_')+1);
-                            const loglevel = filename.substring(0,filename.indexOf('_'));
-                            filename = filename.substring(filename.indexOf('_')+1);
-                            const year     = parseInt(filename.substring(0, 4));
-                            const month    = parseInt(filename.substring(4, 6));
-                            const day      = parseInt(filename.substring(6, 8));
-
-                            //logscope and loglevel
-                            COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
-                            COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').textContent = `${logscope} - ${loglevel}`;
-                            //year
-                            COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').setAttribute('data-value', year);
-                            COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').textContent = year;
-
-                            //month
-                            COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').setAttribute('data-value', month);
-                            COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').textContent = month;
-                            //day if applicable
-                            if (APP_GLOBAL.service_log_file_interval=='1D'){
-                                COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').setAttribute('data-value', day);
-                                COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').textContent = day;
-                            }
-                                
-
-                            APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
-                            common.commonLovClose();
-                        };
-    common.commonLovShow({lov:'SERVER_LOG_FILES', function_event:function_event});
-};
 
 /**
  * Executes installation rest API and presents the result
@@ -1028,19 +699,32 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     if( event_target_id == 'select_broadcast_type')
                         set_broadcast_type();
                     //menu monitor
-                    if( event_target_id == 'select_app_menu5')
-                        nav_click(COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id);
-                    if( event_target_id == 'select_year_menu5'||
+                    if( event_target_id == 'select_app_menu5'||
+                        event_target_id == 'select_year_menu5'||
                         event_target_id == 'select_month_menu5'||
                         event_target_id == 'select_day_menu5'){
-                            const current_tab = COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id;
-                            if (current_tab=='list_monitor_nav_server_log')
-                                APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
-                            else
-                                nav_click(current_tab);
+                            switch (COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id){
+                                case 'list_monitor_nav_server_log':{
+                                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
+                                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
+                                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
+                                    break;
+                                }
+                                case 'list_monitor_nav_connected':{
+                                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').click();
+                                    break;
+                                }
+                                case 'list_monitor_nav_app_log':{
+                                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').click();
+                                    break;
+                                }
+                                default:{
+                                    break;
+                                }
+                            }
                         }
                     if( event_target_id == 'select_logscope5')
-                        APP_GLOBAL.monitor_detail_server_log('logdate', 'desc');
+                        APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
                     break;
                 }
                 case 'menu_1_broadcast_button':{
@@ -1065,25 +749,37 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case 'filesearch_menu5':{
-                    show_existing_logfiles();
+                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowLogDir();
                     break;
                 }
                 case 'list_server_log_search_icon':{
                     COMMON_DOCUMENT.querySelector('#list_server_log_search_input').focus();
-                    APP_GLOBAL.monitor_detail_server_log('logdate','desc');
+                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate','desc');
                     break;
                 }
-                case 'list_monitor_nav_connected':
-                case 'list_monitor_nav_app_log':
+                case 'list_monitor_nav_connected':{
+                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').classList.add('list_nav_selected_tab');
+                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('CONNECTED', '', 'connection_date', 'desc');
+                    break;
+                }
+                case 'list_monitor_nav_app_log':{
+                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
+                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('APP_LOG', 0, 'date_created', 'desc');
+                    break;
+                }
                 case 'list_monitor_nav_server_log':{
-                    nav_click(event_target_id);    
+                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
+                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('SERVER_LOG', '', 'logdate', 'desc');
                     break;
                 }
-                case 'list_app_log_first':
-                case 'list_app_log_previous':
-                case 'list_app_log_next':
-                case 'list_app_log_last':{
-                    APP_GLOBAL.page_navigation(event_target_id);
+                case 'list_monitor_first':
+                case 'list_monitor_previous':
+                case 'list_monitor_next':
+                case 'list_monitor_last':{
+                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailPage(event_target_id);
                     break;
                 }
                 case 'config_save':{
@@ -1094,7 +790,13 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 case 'list_config_nav_config_iam_blockip':
                 case 'list_config_nav_config_iam_useragent':
                 case 'list_config_nav_config_iam_policy':{
-                    nav_click(event_target_id);
+                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('list_nav_selected_tab');
+                    common.commonComponentRender({
+                        mountDiv:       'list_config_container',
+                        data:           {file:`${event_target_id.substring('list_config_nav_'.length).toUpperCase()}`},
+                        methods:        {commonFFB:common.commonFFB},
+                        path:           '/component/menu_config_detail.js'});
                     break;
                 }
                 case 'install_db_button_install':{
@@ -1114,14 +816,17 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case event_list_title &amp;&amp; event_list_title.classList.contains('list_sort_click')?event_target_id:'':{
-                    event_list_title!=null?list_sort_click(event_target_id, 
-                                    event_list_title.getAttribute('data-column') ?? '',
-                                    event_list_title.classList.contains('desc')?'asc':'desc'
-                                    ):null;
+                    if (event_target_id == 'list_user_account')
+                        search_users(event_list_title?.getAttribute('data-column') ?? '', event_list_title?.classList.contains('desc')?'asc':'desc');
+                    else
+                        event_list_title!=null?APP_GLOBAL.component.MENU_MONITOR.monitorDetailClickSort(event_target_id, 
+                                        event_list_title.getAttribute('data-column') ?? '',
+                                        event_list_title.classList.contains('desc')?'asc':'desc'
+                                        ):null;
                     break;
                 }
                 case event.target.classList.contains('gps_click')?event_target_id:'':{
-                    list_item_click('GPS',
+                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailClickItem('GPS',
                                     {
                                         latitude:   event.target.getAttribute('data-latitude') ?? '',
                                         longitude:  event.target.getAttribute('data-longitude') ?? '',
@@ -1131,10 +836,13 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case event.target.classList.contains('chat_click')?event_target_id:'':{
-                    list_item_click('CHAT', {latitude:'',
-                                             longitude:'',
-                                             ip:'',
-                                             id: Number(event.target.getAttribute('data-id'))});
+                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailClickItem('CHAT', 
+                                    {   
+                                        latitude:'',
+                                        longitude:'',
+                                        ip:'',
+                                        id: Number(event.target.getAttribute('data-id'))
+                                    });
                     break;
                 }
                 case 'list_apps':{
@@ -1177,7 +885,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     if (APP_GLOBAL.previous_row != common.commonElementRow(event.target)){
                         APP_GLOBAL.previous_row = common.commonElementRow(event.target);
                         common.commonComponentRender({
-                            mountDiv:   'list_user_account_logon',
+                            mountDiv:   'list_iam_user_login',
                             data:       {user_account_id:parseInt(common.commonElementRow(event.target).getAttribute('data-user_account_id') ?? '')},
                             methods:    {commonFFB:common.commonFFB},
                             path:       '/component/menu_users_logon.js'});
@@ -1227,7 +935,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.code != 'End' &amp;&amp;
                         event.code != 'PageUp' &amp;&amp;
                         event.code != 'PageDown')
-                        common.commonTypewatch(APP_GLOBAL.monitor_detail_server_log, 'logdate', 'desc');
+                        common.commonTypewatch(APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog, 'logdate', 'desc');
                     break;
                 }
             }
@@ -1268,8 +976,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
 const init = () => {
     //SET GLOBALS
     APP_GLOBAL.previous_row= {};
-    APP_GLOBAL.moduleLeafletDiv      ='mapid';
-    APP_GLOBAL.service_log_file_interval= '';
 
     for (let i=1;i&lt;=10;i++){
         COMMON_DOCUMENT.querySelector(`#menu_${i}`).style.display='none';
@@ -1283,7 +989,7 @@ const init = () => {
         show_menu(1);
     }
 };
-export {delete_globals, show_menu, nav_click, get_log_parameters, show_app_log, map_mount, app_events, init};</code></pre>
+export {delete_globals, show_menu, app_events, init,show_broadcast_dialogue};</code></pre>
         </article>
     </section>
 
@@ -1293,7 +999,7 @@ export {delete_globals, show_menu, nav_click, get_log_parameters, show_app_log, 
 </div>
 
 <nav>
-    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common.html">apps/common/src/common</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_logon.html">server/db/sql/user_account_logon</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common.html">apps/common/src/common</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
