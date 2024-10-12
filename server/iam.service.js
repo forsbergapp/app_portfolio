@@ -3,9 +3,10 @@
 /**@type{import('./server.service.js')} */
 const {response_send_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('./config.service.js')} */
-const {ConfigGet, ConfigFileGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet, ConfigFileGet, ConfigGetApp, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
+
 /**@type{import('./db/file.service.js')} */
-const {fileFsRead, fileFsReadLog, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {fileFsRead, fileFsReadLog, fileFsAppend, fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 /**@type{import('../apps/common/src/common.service.js')} */
 const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
@@ -91,25 +92,25 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
         const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
             /**@type{import('./security.service.js')} */
             const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.service.js`);
-            const config_username = ConfigGetUser('username');
-            const config_password = ConfigGetUser('password');
+            /**@type{import('./types.js').server_iam_user_record}*/
+            const user =  fileCache('IAM_USER').USER.filter((/**@type{import('./types.js').server_iam_user_record}*/user)=>user.username == username)[0];
             let result = 0;
-            if (username == config_username && await PasswordCompare(password, config_password) && app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID')))
+            if (user && user.username == username && await PasswordCompare(password, user.password) && app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID')))
                 result = 1;
             else
                 result = 0;
             const jwt_data = AuthorizeToken(app_id, 'SYSTEMADMIN', {id:null, name:username, ip:ip, scope:'USER'});
-            /**@type{import('./types.js').server_iam_systemadmin_login_record} */
-            const file_content = {	app_id:             app_id,
-                                    username:		    username,
-                                    result:				1,
-                                    systemadmin_token:  jwt_data.token,
-                                    client_ip:          ip,
-                                    client_user_agent:  null,
-                                    client_longitude:   null,
-                                    client_latitude:    null,
-                                    date_created:       new Date().toISOString()};
-            await fileFsAppend('IAM_SYSTEMADMIN_LOGIN', file_content, 'YYYYMMDD')
+            /**@type{import('./types.js').server_iam_admin_login_record} */
+            const file_content = {	id:         app_id,
+                                    user:		username,
+                                    res:		1,
+                                    token:      jwt_data.token,
+                                    ip:         ip,
+                                    ua:         null,
+                                    long:       null,
+                                    lat:        null,
+                                    created:    new Date().toISOString()};
+            await fileFsAppend('IAM_ADMIN_LOGIN', file_content, '')
             .then(()=>{
                 if (result == 1){
                     ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), null, username, iam_decode(iam).get('authorization_bearer'), null, jwt_data.token, ip, user_agent, accept_language, res)
@@ -182,12 +183,12 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
             const id_token_decoded = jwt.verify(id_token, ConfigGetApp(app_id_host, app_id_host, 'SECRETS').APP_ID_SECRET);
             /**@type{import('./types.js').server_iam_app_token_record[]}*/
-            const log_id_token = await fileFsReadLog('IAM_APP_TOKEN', 'YYYYMMDD');
+            const log_id_token = await fileFsReadLog('IAM_APP_TOKEN', '');
             if (id_token_decoded.app_id == app_id_host && 
                 id_token_decoded.scope == 'APP' && 
                 id_token_decoded.ip == ip &&
                 log_id_token.filter((/**@type{import('./types.js').server_iam_app_token_record}*/row)=> 
-                                    row.app_id == app_id_host && row.client_ip == ip && row.app_token == id_token).length==1){
+                                    row.id == app_id_host && row.ip == ip && row.token == id_token).length==1){
                 if (scope=='APP_DATA')
                     next();
                 else{
@@ -230,18 +231,18 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
                             const access_token_decoded = jwt.verify(access_token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '');
-                            /**@type{import('./types.js').server_iam_systemadmin_login_record[]}*/
-                            const log_access_token = await fileFsReadLog('IAM_SYSTEMADMIN_LOGIN', 'YYYYMMDD');
+                            /**@type{import('./types.js').server_iam_admin_login_record[]}*/
+                            const log_access_token = await fileFsReadLog('IAM_ADMIN_LOGIN', '');
 
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
                                 access_token_decoded.name == iam_decode(iam).get('system_admin') &&
-                                log_access_token.filter((/**@type{import('./types.js').server_iam_systemadmin_login_record}*/row)=>
-                                    row.app_id == app_id_host && 
-                                    row.username == access_token_decoded.name && 
-                                    row.client_ip == ip && 
-                                    row.systemadmin_token == access_token).length==1)
+                                log_access_token.filter((/**@type{import('./types.js').server_iam_admin_login_record}*/row)=>
+                                    row.id == app_id_host && 
+                                    row.user == access_token_decoded.name && 
+                                    row.ip == ip && 
+                                    row.token == access_token).length==1)
                                 next();
                             else
                                 not_authorized(res, 401, 'AuthenticateUserCommon');
@@ -540,15 +541,15 @@ const AuthenticateResource = parameters =>  {
                                                         scope:'APP'});
 
     /**@type{import('./types.js').server_iam_app_token_record} */
-    const file_content = {	app_id:             app_id,
-                            result:				1,
-                            app_token:   	    jwt_data.token,
-                            client_ip:          ip ?? '',
-                            client_user_agent:  null,
-                            client_longitude:   null,
-                            client_latitude:    null,
-                            date_created:       new Date().toISOString()};
-    return await fileFsAppend('IAM_APP_TOKEN', file_content, 'YYYYMMDD').then(()=>jwt_data.token);
+    const file_content = {	id:         app_id,
+                            res:		1,
+                            token:   	jwt_data.token,
+                            ip:         ip ?? '',
+                            ua:         null,
+                            long:       null,
+                            lat:        null,
+                            created:    new Date().toISOString()};
+    return await fileFsAppend('IAM_APP_TOKEN', file_content, '').then(()=>jwt_data.token);
  };
 /**
  * Authorize token
@@ -583,7 +584,7 @@ const AuthenticateResource = parameters =>  {
             expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_EXPIRE;
             break;
         }
-        //USER Access token
+        //Systemadmin Access token
         case 'SYSTEMADMIN':{
             secret = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '';
             expiresin = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_EXPIRE_ACCESS') ?? '';

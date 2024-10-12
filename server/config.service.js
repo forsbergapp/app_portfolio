@@ -7,14 +7,6 @@ const app_portfolio_title = 'App Portfolio';
 
 
 /**
- * Config get user
- * @param {import('./types.js').config_user_parameter} parameter
- * @returns {string}
- */
- const ConfigGetUser = (parameter) => {
-    return fileCache('CONFIG_IAM_USER')[parameter];
- };
-/**
  * Config get apps
  * @param {number|null} app_id
  * @param {string|null} key
@@ -152,10 +144,10 @@ const ConfigExists = async () => {
         await fileFsRead('CONFIG_SERVER');
         await fileFsRead('CONFIG_IAM_BLOCKIP');
         await fileFsRead('CONFIG_IAM_POLICY');
-        await fileFsRead('CONFIG_IAM_USER');
         await fileFsRead('CONFIG_IAM_USERAGENT');
         await fileFsRead('CONFIG_MICROSERVICE');
         await fileFsRead('CONFIG_MICROSERVICE_SERVICES');
+        await fileFsRead('IAM_USER');
         return true;
     } catch (error) {
         return false;
@@ -182,19 +174,20 @@ const DefaultConfig = async () => {
                 [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_blockip],
                 [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_policy],
                 [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_useragent],
-                [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_user],
                 [import('./types.js').server_db_file_db_name, import('../microservice/types.js').microservice_config],
-                [import('./types.js').server_db_file_db_name, import('../microservice/types.js').microservice_config_service]]} 
+                [import('./types.js').server_db_file_db_name, import('../microservice/types.js').microservice_config_service],
+                [import('./types.js').server_db_file_db_name, import('./types.js').server_iam_user]
+            ]} 
     */
     const config_obj = [
-                            ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_APPS',                     await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_apps.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_IAM_BLOCKIP',              await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_iam_blockip.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_IAM_POLICY',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_IAM_USERAGENT',            await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_iam_useragent.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_IAM_USER',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_iam_user.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_MICROSERVICE',             await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_microservice.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_MICROSERVICE_SERVICES',    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_microservice_services.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
+                            ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_APPS',                     await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_apps.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_BLOCKIP',              await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_iam_blockip.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_POLICY',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_USERAGENT',            await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_iam_useragent.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_MICROSERVICE',             await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_microservice.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_MICROSERVICE_SERVICES',    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_microservice_services.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IAM_USER',                        await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}iam_user.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
                         ]; 
     //set server parameters
     config_obj[0][1].SERVER.map((/**@type{import('./types.js').server_config_server_server}*/row)=>{
@@ -232,14 +225,14 @@ const DefaultConfig = async () => {
         row.SECRETS.APP_ACCESS_SECRET = createSecret();
     });
     //set created for user
-    config_obj[5][1].created = new Date().toISOString();
+    config_obj[7][1].USER[0].created = new Date().toISOString();
     
     //set paths in microservice config
     /**@type{import('../microservice/types.js').microservice_config} */
-    const microservice_config = config_obj[6][1];
+    const microservice_config = config_obj[5][1];
     microservice_config?microservice_config.PATH_DATA             = `${SLASH}data${SLASH}microservice${SLASH}data${SLASH}`:'';
     //set paths in microservice services
-    config_obj[7][1].SERVICES.map((/**@type{import('../microservice/types.js').microservice_config_service_record}*/row)=>{
+    config_obj[6][1].SERVICES.map((/**@type{import('../microservice/types.js').microservice_config_service_record}*/row)=>{
         row.HTTPS_KEY             = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_KEY}`;
         row.HTTPS_CERT            = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_CERT}`;
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
@@ -339,7 +332,7 @@ const ConfigFileSave = async (resource_id, config, maintenance, configuration, c
  * @returns {boolean}
  */
 const CheckFirstTime = () => {
-    if (fileCache('CONFIG_IAM_USER').username=='')
+    if (fileCache('IAM_USER').USER[0].username=='')
         return true;
     else
         return false;
@@ -354,14 +347,19 @@ const CheckFirstTime = () => {
 const CreateSystemAdmin = async (admin_name, admin_password) => {
     /**@type{import('./security.service.js')} */
     const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.service.js`);
-    const file = await fileFsRead('CONFIG_IAM_USER', true);
-    file.file_content.username = admin_name;
-    file.file_content.password = await PasswordCreate(admin_password);
-    file.file_content.modified = new Date().toISOString();
-    await fileFsWrite('CONFIG_IAM_USER', file.transaction_id, file.file_content)
+    
+    /**@type{import('./types.js').server_db_file_result_fileFsRead} */
+    const file = await fileFsRead('IAM_USER', true);
+    /**@type{import('./types.js').server_iam_user['USER']} */
+    const user = file.file_content.USER;
+    user[0].username = admin_name;
+    user[0].password = await PasswordCreate(admin_password);
+    user[0].modified = new Date().toISOString();
+    file.file_content.USER = user;
+    await fileFsWrite('IAM_USER', file.transaction_id, file.file_content)
     .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
 };
 
 export{ ConfigFileGet, ConfigFileSave, CheckFirstTime,
         CreateSystemAdmin, 
-        ConfigGet, ConfigGetUser, ConfigGetApps, ConfigGetApp, ConfigAppSecretDBReset, ConfigAppSecretUpdate, ConfigAppParameterUpdate, InitConfig};
+        ConfigGet, ConfigGetApps, ConfigGetApp, ConfigAppSecretDBReset, ConfigAppSecretUpdate, ConfigAppParameterUpdate, InitConfig};
