@@ -884,6 +884,7 @@
  *              'IAM_APP_TOKEN'|
  *              'IAM_ADMIN_LOGIN'|
  *              'IAM_USER'|
+ *              'IAM_USER_LOGIN'|
  *              'LOG_APP_INFO'|
  *              'LOG_APP_ERROR'|
  *              'LOG_DB_INFO'|
@@ -943,7 +944,20 @@
  *		        lat:    string|null,
  *		        created:string}} server_iam_admin_login_record
  */
-
+/**
+ * Server - IAM user login record
+ * @typedef {{	id:		number|null,
+ *              app_id: number,
+ *              user:   string,
+ *              db:     number|null,
+ *              res:	0|1,
+ *   	        token:  string|null,
+ *		        ip:     string,
+ *		        ua:     string|null,
+ *		        long:   string|null,
+ *		        lat:    string|null,
+ *		        created:string}} server_iam_user_login_record
+ */
 /**
  * Server - db database install result
  * @typedef {object[]}  server_db_database_install_result - Log variable with object with any key
@@ -2000,30 +2014,6 @@
 
 /**
  * @typedef {   server_db_common_result_delete} server_db_sql_result_user_account_like_unlike
- */
-
-/**
- * USER ACCOUNT LOGON
- * @typedef {{  user_account_id:number,
- *              app_id:number,
- *              json_data:string,
- *              date_created:string}} server_db_sql_result_user_account_logon_getUserAccountLogon
- */
-/**
- * @typedef {{  json_data:string}} server_db_sql_result_user_account_logon_Checklogin
- */
-
-/**
- * @typedef {{  access_token:string|null,
- *              result:number,
- *              client_ip:string,
- *              client_user_agent:string,
- *              client_longitude:string,
- *              client_latitude:string}} server_db_sql_parameter_user_account_logon_insertUserAccountLogon
- */
-
-/**
- * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_logon_insertUserAccountLogon
  */
 
 /**

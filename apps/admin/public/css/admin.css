@@ -41,7 +41,7 @@
 
 #list_user_account_title::before{													content:var(--common_app_icon_users)}
 #list_user_search_icon::before{														content:var(--common_app_icon_reload)}
-#list_user_account_logon_title::before{												content:var(--common_app_icon_login)}
+#list_iam_user_login_title::before{												content:var(--common_app_icon_login)}
 #users_save::before{																content:var(--common_app_icon_save)}
 #list_user_account .list_title[data-column='avatar']::before{						content:var(--common_app_icon_user_avatar)}
 #list_user_account .list_title[data-column='id']::before{							content:var(--common_app_icon_provider_id)}
@@ -513,29 +513,29 @@ body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 	display:inline-block;
 	cursor:pointer;
 }
-#list_user_account_title, #list_user_account_logon_title{
+#list_user_account_title, #list_iam_user_login_title{
 	text-transform: uppercase;
 	display:inline-block;
 	width:100%;
 	font-size:1.2em;
 }
-#list_user_account .css_spinner, #list_user_account_logon .css_spinner{
+#list_user_account .css_spinner, #list_iam_user_login .css_spinner{
 	display: inline-block;
 }
-#list_user_account, #list_user_account_logon{
+#list_user_account, #list_iam_user_login{
 	display:block;
 	overflow-y: auto;
 	overflow-x: auto;
 	margin-bottom: 10px;
 	border-radius: 4px;
 }
-.list_user_account_row, .list_user_account_logon_row{
+.list_user_account_row, .list_iam_user_login_row{
 	padding-top:4px;
 	padding-bottom: 4px;
 	padding-inline-start: 5px;
 	text-align: start;
 }
-.list_user_account_col, .list_user_account_logon_col{
+.list_user_account_col, .list_iam_user_login_col{
 	display:inline-block;
 }
 .list_user_account_col:nth-child(1){
@@ -578,22 +578,22 @@ body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 .list_user_account_col:nth-child(24){
 	width: 120px;
 }
-.list_user_account_logon_col:nth-child(1){
+.list_iam_user_login_col:nth-child(1){
 	display: none;
 }
-.list_user_account_logon_col:nth-child(2){
+.list_iam_user_login_col:nth-child(2){
 	width: 120px;
 }
-.list_user_account_logon_col:nth-child(3),
-.list_user_account_logon_col:nth-child(4){
+.list_iam_user_login_col:nth-child(3),
+.list_iam_user_login_col:nth-child(4){
 	width:50px;
 }
-.list_user_account_logon_col:nth-child(5),
-.list_user_account_logon_col:nth-child(6),
-.list_user_account_logon_col:nth-child(7){
+.list_iam_user_login_col:nth-child(5),
+.list_iam_user_login_col:nth-child(6),
+.list_iam_user_login_col:nth-child(7){
 	width:70px;
 }
-.list_user_account_logon_col:nth-child(8){
+.list_iam_user_login_col:nth-child(8){
 	width: 600px;
 }
 /* MENU 4 APP ADMIN*/
@@ -1532,7 +1532,7 @@ body{
 }
 .menu_8_db_info_space_detail_row,
 .list_user_account_row,
-.list_user_account_logon_row,
+.list_iam_user_login_row,
 .list_apps_row,
 .list_app_parameter_row,
 .list_app_log_row,
@@ -1542,14 +1542,14 @@ body{
 	font-size: 9px;
 }
 .list_user_account_row .common_input,
-.list_user_account_logon_row .common_input,
+.list_iam_user_login_row .common_input,
 .list_apps_row .common_input,
 .list_app_parameter_row .common_input{
 	font-size: 9px;
 }
 .list_search,
 #list_user_account,
-#list_user_account_logon,
+#list_iam_user_login,
 #list_apps,
 #list_app_parameter,
 #list_config{
@@ -1592,7 +1592,7 @@ body{
 	background-color: var(--app_theme_dialogue_background_color);
 }
 #list_user_account .css_spinner::before,
-#list_user_account_logon .css_spinner::before,
+#list_iam_user_login .css_spinner::before,
 #list_app_parameter .css_spinner::before
 {
 	background-color: var(--app_theme_list_background_color) !important;
