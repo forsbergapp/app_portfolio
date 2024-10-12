@@ -20,8 +20,7 @@ const template = () => ` <div id='menu_6_content_widget1' class='widget'>
 /**
 * 
 * @param {{ data:{      commonMountdiv:string},
-*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
-*                       nav_click:import('../js/secure.js').nav_click},
+*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT},
 *           lifecycle:  null}} props 
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null, 
@@ -30,7 +29,7 @@ const template = () => ` <div id='menu_6_content_widget1' class='widget'>
 */
 const component = async props => {
     const onMounted = () =>{
-        props.methods.nav_click('list_config_nav_config_server');
+        props.methods.COMMON_DOCUMENT.querySelector('#list_config_nav_config_server').click();
     };
  
     return {

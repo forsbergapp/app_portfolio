@@ -142,7 +142,7 @@ const show_menu = menu => {
             common.commonComponentRender({
                 mountDiv:   'menu_content',
                 data:       null,
-                methods:    {nav_click:nav_click},
+                methods:    null,
                 path:       '/component/menu_config.js'});
             break;
         }
@@ -568,63 +568,6 @@ const update_record = async (table,
             .then(()=>row_element.setAttribute('data-changed-record', '0'));
 };
 
-/**
- * Navigation click
- * @param {string} item_id 
- * @returns{void}
- */
-const nav_click = (item_id) => {
-    const reset_config = () => {
-        COMMON_DOCUMENT.querySelector('#list_config_nav_config_server').classList.remove('list_nav_selected_tab');
-        COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_blockip').classList.remove('list_nav_selected_tab');
-        COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_useragent').classList.remove('list_nav_selected_tab');
-        COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_policy').classList.remove('list_nav_selected_tab');
-    };
-    
-    switch (item_id){
-        //SERVER CONFIG
-        case 'list_config_nav_config_server':{
-            reset_config();
-            COMMON_DOCUMENT.querySelector('#list_config_nav_config_server').classList.add('list_nav_selected_tab');
-            common.commonComponentRender({
-                mountDiv:       'list_config_container',
-                data:           {file:'CONFIG_SERVER'},
-                methods:        {commonFFB:common.commonFFB},
-                path:           '/component/menu_config_detail.js'});
-            break;
-        }
-        case 'list_config_nav_config_iam_blockip':{
-            reset_config();
-            COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_blockip').classList.add('list_nav_selected_tab');
-            common.commonComponentRender({
-                mountDiv:       'list_config_container',
-                data:           {file:'CONFIG_IAM_BLOCKIP'},
-                methods:        {commonFFB:common.commonFFB},
-                path:           '/component/menu_config_detail.js'});
-            break;
-        }
-        case 'list_config_nav_config_iam_useragent':{
-            reset_config();
-            COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_useragent').classList.add('list_nav_selected_tab');
-            common.commonComponentRender({
-                mountDiv:       'list_config_container',
-                data:           {file:'CONFIG_IAM_USERAGENT'},
-                methods:        {commonFFB:common.commonFFB},
-                path:           '/component/menu_config_detail.js'});
-            break;
-        }
-        case 'list_config_nav_config_iam_policy':{
-            reset_config();
-            COMMON_DOCUMENT.querySelector('#list_config_nav_config_iam_policy').classList.add('list_nav_selected_tab');
-            common.commonComponentRender({
-                mountDiv:       'list_config_container',
-                data:           {file:'CONFIG_IAM_POLICY'},
-                methods:        {commonFFB:common.commonFFB},
-                path:           '/component/menu_config_detail.js'});
-            break;
-        }
-    }
-};
 
 /**
  * Executes installation rest API and presents the result
@@ -811,7 +754,13 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 case 'list_config_nav_config_iam_blockip':
                 case 'list_config_nav_config_iam_useragent':
                 case 'list_config_nav_config_iam_policy':{
-                    nav_click(event_target_id);
+                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('list_nav_selected_tab');
+                    common.commonComponentRender({
+                        mountDiv:       'list_config_container',
+                        data:           {file:`${event_target_id.substring('list_config_nav_'.length).toUpperCase()}`},
+                        methods:        {commonFFB:common.commonFFB},
+                        path:           '/component/menu_config_detail.js'});
                     break;
                 }
                 case 'install_db_button_install':{
@@ -1004,4 +953,4 @@ const init = () => {
         show_menu(1);
     }
 };
-export {delete_globals, show_menu, nav_click, app_events, init,show_broadcast_dialogue};
+export {delete_globals, show_menu, app_events, init,show_broadcast_dialogue};
