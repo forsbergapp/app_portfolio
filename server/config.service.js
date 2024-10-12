@@ -187,14 +187,14 @@ const DefaultConfig = async () => {
                 [import('./types.js').server_db_file_db_name, import('../microservice/types.js').microservice_config_service]]} 
     */
     const config_obj = [
-                            ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_APPS',                     await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_apps.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_IAM_BLOCKIP',              await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_iam_blockip.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_IAM_POLICY',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_IAM_USERAGENT',            await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_iam_useragent.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_IAM_USER',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_iam_user.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_MICROSERVICE',             await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_microservice.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_MICROSERVICE_SERVICES',    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default_config_microservice_services.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
+                            ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_APPS',                     await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_apps.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_BLOCKIP',              await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_iam_blockip.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_POLICY',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_USERAGENT',            await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_iam_useragent.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_USER',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_iam_user.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_MICROSERVICE',             await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_microservice.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_MICROSERVICE_SERVICES',    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}config_microservice_services.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
                         ]; 
     //set server parameters
     config_obj[0][1].SERVER.map((/**@type{import('./types.js').server_config_server_server}*/row)=>{
