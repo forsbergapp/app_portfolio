@@ -528,7 +528,7 @@
  *              server_config_server|
  *              server_config_iam_blockip|
  *              server_config_iam_policy|
- *              server_config_iam_user|
+ *              server_iam_user|
  *              server_config_iam_useragent|
  *              import('../microservice/types.js').microservice_config|
  *              import('../microservice/types.js').microservice_config_service} server_db_file_config_files
@@ -686,11 +686,27 @@
  */
 
 /**
+ * Server - Config IAM user record
+ * @typedef {{
+ *          id:string, 
+ *          username:string, 
+ *          password:string, 
+ *          type: 'ADMIN'|'USER', 
+ *          bio:string|null, 
+ *          private:number|null, 
+ *          user_level:number|null, 
+ *          email:string|null, 
+ *          email_unverified:string|null, 
+ *          avatar:string|null,
+ *          verification_code: number|null, 
+ *          status:number|null, 
+ *          created:string, 
+ *          modified:string}} server_iam_user_record
+ */
+
+/**
  * Server - Config IAM user
- * @typedef {{  ['username']:string, 
- *              ['password']:string, 
- *              ['created']:string,
- *              ['modified']:string}} server_config_iam_user
+ * @typedef {{ USER: server_iam_user_record[]}} server_iam_user
  */
 
 /**
@@ -861,13 +877,13 @@
  *              'CONFIG_SERVER'|
  *              'CONFIG_IAM_BLOCKIP'|
  *              'CONFIG_IAM_POLICY'|
- *              'CONFIG_IAM_USER'|
  *              'CONFIG_IAM_USERAGENT'|
  *              'CONFIG_MICROSERVICE'|
  *              'CONFIG_MICROSERVICE_SERVICES'| 
  *              'DB_FILE'| 
  *              'IAM_APP_TOKEN'|
- *              'IAM_SYSTEMADMIN_LOGIN'|
+ *              'IAM_ADMIN_LOGIN'|
+ *              'IAM_USER'|
  *              'LOG_APP_INFO'|
  *              'LOG_APP_ERROR'|
  *              'LOG_DB_INFO'|
@@ -905,27 +921,27 @@
 
 /** 
  * Server - IAM app token record 
- * @typedef {{	app_id:				number,
- *		        result:				0|1,
- *   	        app_token:   	    string,
- *		        client_ip:          string,
- *		        client_user_agent:  string|null,
- *		        client_longitude:   string|null,
- *		        client_latitude:    string|null,
- *		        date_created:       string}} server_iam_app_token_record
+ * @typedef {{	id:			number,
+ *		        res:		0|1,
+ *   	        token:   	string,
+ *		        ip:         string,
+ *		        ua:         string|null,
+ *		        long:       string|null,
+ *		        lat:        string|null,
+ *		        created:    string}} server_iam_app_token_record
  */
 
 /**
  * Server - IAM systemadmin login record
- * @typedef {{	app_id:				number,
- *              username:           string,
- *              result:				0|1,
- *   	        systemadmin_token:  string,
- *		        client_ip:          string,
- *		        client_user_agent:  string|null,
- *		        client_longitude:   string|null,
- *		        client_latitude:    string|null,
- *		        date_created:       string}} server_iam_systemadmin_login_record
+ * @typedef {{	id:		number,
+ *              user:   string,
+ *              res:	0|1,
+ *   	        token:  string,
+ *		        ip:     string,
+ *		        ua:     string|null,
+ *		        long:   string|null,
+ *		        lat:    string|null,
+ *		        created:string}} server_iam_admin_login_record
  */
 
 /**
