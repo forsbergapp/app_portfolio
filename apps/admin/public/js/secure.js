@@ -483,7 +483,7 @@ const button_save = async (item) => {
                 return config_server;
             };
             const file = COMMON_DOCUMENT.querySelectorAll('#menu_content .list_nav .list_nav_selected_tab')[0].id.substring('list_config_nav_'.length).toUpperCase();
-            //file:'CONFIG_SERVER', 'CONFIG_APPS', 'CONFIG_IAM_BLOCKIP', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_IAM_USER', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
+            //file:'CONFIG_SERVER', 'CONFIG_APPS', 'CONFIG_IAM_BLOCKIP', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
             const json_data = { config:    file=='CONFIG_SERVER'?
                                                 config_server():
                                                     JSON.parse(COMMON_DOCUMENT.querySelector('#list_config_edit').textContent)};
