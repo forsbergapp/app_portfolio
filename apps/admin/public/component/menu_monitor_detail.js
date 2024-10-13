@@ -16,11 +16,9 @@
  */
 /**
  * @param {{
- *          system_admin:string|null,
  *          service_socket_client_ID:number,
  *          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
  *          function_commonWindowUserAgentPlatform:function,
- *          function_role_icon_class:function,
  *          function_get_order_by:function,
  *          function_roundOff:function,
  *          logs:[],
@@ -51,14 +49,11 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                             <div data-column='app_id' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
                                                 APP ID
                                             </div>
-                                            <div data-column='app_role_icon' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('app_role_icon')}'>
-                                                ROLE
-                                            </div>
                                             <div data-column='user_account_id' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('user_account_id')}'>
                                                 USER ID
                                             </div>
-                                            <div data-column='system_admin' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('system_admin')}'>
-                                                SYSTEM ADMIN
+                                            <div data-column='admin' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('admin')}'>
+                                                ADMIN
                                             </div>
                                             <div data-column='ip' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('ip')}'>
                                                 IP
@@ -85,10 +80,8 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                         ${props.logs.map((/**@type{{id:number,
                                                                     connection_date:string,
                                                                     app_id:number,
-                                                                    system_admin:string,
+                                                                    admin:string,
                                                                     ip:string,
-                                                                    app_role_id:number,
-                                                                    app_role_icon:string,
                                                                     user_account_id:number,
                                                                     gps_latitude:string,
                                                                     gps_longitude:string,
@@ -106,14 +99,11 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 <div class='list_connected_col'>
                                                     ${log.app_id}
                                                 </div>
-                                                <div class='list_connected_col ${props.function_role_icon_class(log.system_admin, log.app_role_id)}'>
-                                                    ${log.system_admin!=''?'':log.app_role_icon}
-                                                </div>
                                                 <div class='list_connected_col'>
                                                     ${log.user_account_id ?? ''}
                                                 </div>
                                                 <div class='list_connected_col'>
-                                                    ${log.system_admin}
+                                                    ${log.admin}
                                                 </div>
                                                 <div class='list_connected_col'>
                                                     ${log.ip.replace('::ffff:','')}
@@ -322,8 +312,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 * @param {{ data:       {
 *                       commonMountdiv:string,
 *                       app_id:number,
-*                       system_admin:string,
-*                       system_admin_only:number,
+*                       admin_only:number,
 *                       monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
 *                       offset:number,
 *                       sort:string,
@@ -428,19 +417,11 @@ const component = async props => {
     let page = 0;
     let page_last= 0;
 
-    /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
-    let token_type = 'APP_ACCESS';
     let path = '';
     
     switch (props.data.monitor_detail){
         case 'CONNECTED':{
-            if (props.data.system_admin!=null){
-                path = '/server-socket/socket';
-                token_type = 'SYSTEMADMIN';
-            }
-            else{
-                path = '/server-socket/socket';
-            }
+            path = '/server-socket/socket';
             break;
         }
         case 'APP_LOG':{
@@ -449,7 +430,7 @@ const component = async props => {
         }
     }
     //fetch logs except for SERVER_LOG
-    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     if (props.data.monitor_detail=='APP_LOG'){
         page_last = logs.length>0?(Math.floor(logs[0].total_rows/props.data.LIMIT) * props.data.LIMIT):0;
         props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page').textContent = page; 
@@ -585,7 +566,7 @@ const component = async props => {
      */
     const monitorDetailClickItem = (item_type, data) => {
         //check if gps_click and if not system admin only when map is not loaded
-        if (item_type=='GPS' && props.data.system_admin_only != 1){
+        if (item_type=='GPS' && props.data.admin_only != 1){
             if (data['ip']){
                 props.methods.commonFFB({path:'/geolocation/ip', query:data['ip'] != '::1'?`ip=${data['ip']}`:null, method: 'GET', authorization_type:'APP_DATA'})
                 .then((/**@type{string}*/result)=>{
@@ -684,10 +665,9 @@ const component = async props => {
         props.methods.commonComponentRender(
                 {   mountDiv:'list_server_log',
                     data:{  
-                                system_admin:props.data.system_admin,
                                 path:'/server-log/log',
                                 query:`${get_query('SERVER_LOG', offset, sort, order_by)}&search=${search ?? ''}`,
-                                token_type: 'SYSTEMADMIN',
+                                token_type: 'ADMIN',
                                 sort:sort,
                                 order_by:order_by,
                                 LIMIT:props.data.LIMIT
@@ -702,27 +682,6 @@ const component = async props => {
                     });
     };
    
-    /**
-     * @param {string} system_admin
-     * @param {number|null} app_role_id
-     * @returns {string}
-     */
-    const role_icon_class =(system_admin, app_role_id) =>{
-        if (system_admin!='')
-            return 'app_role_system_admin common_icon';
-        else
-            switch (app_role_id){
-                case 0:{
-                    return 'app_role_superadmin';
-                }
-                case 1:{
-                    return 'app_role_admin';
-                }
-                default:{
-                    return 'app_role_user';
-                }
-            }
-        };
     /**
      * Get order by if column matches
      * @param {string} column
@@ -764,11 +723,9 @@ const component = async props => {
                     monitorDetailClickSort:monitorDetailClickSort,
                     monitorDetailClickItem:monitorDetailClickItem
         },
-        template:   template({  system_admin:props.data.system_admin, 
-                                service_socket_client_ID:props.data.service_socket_client_ID,
+        template:   template({  service_socket_client_ID:props.data.service_socket_client_ID,
                                 monitor_detail:props.data.monitor_detail,
                                 function_commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
-                                function_role_icon_class:role_icon_class,
                                 function_get_order_by:get_order_by,
                                 function_roundOff: props.methods.commonRoundOff,
                                 logs:logs,

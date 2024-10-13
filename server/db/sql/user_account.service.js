@@ -62,7 +62,7 @@ const verification_code = () => {
  * 
  * @param {	import('../../types.js').server_db_sql_parameter_user_account_create|
  * 			import('../../types.js').server_db_sql_parameter_user_account_updateUserLocal|
- *         	import('../../types.js').server_db_sql_parameter_user_account_updateUserSuperAdmin} data 
+ *         	import('../../types.js').server_db_sql_parameter_user_account_updateAdmin} data 
  * @returns {object|null}
  */
 const data_validation = data => {
@@ -163,10 +163,6 @@ const data_validation = data => {
 const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 		const sql = `SELECT ua.id "id",
 							ua.avatar "avatar",
-							ua.app_role_id "app_role_id",
-							(SELECT ap_user.icon
-								FROM <DB_SCHEMA/>.app_role ap_user
-								WHERE ap_user.id = COALESCE(ua.app_role_id,2)) "app_role_icon",
 							ua.active "active",
 							ua.user_level "user_level",
 							ua.private "private",
@@ -191,8 +187,6 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 						FROM <DB_SCHEMA/>.user_account ua
 							LEFT OUTER JOIN <DB_SCHEMA/>.identity_provider ip
 								ON ip.id = ua.identity_provider_id
-							LEFT OUTER JOIN <DB_SCHEMA/>.app_role ap
-								ON ap.id = ua.app_role_id
 						WHERE (ua.username LIKE :search
 						OR ua.bio LIKE :search
 						OR ua.email LIKE :search
@@ -212,19 +206,6 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 							};
 		return await db_execute(app_id, sql, parameters, null, null);
     };
-/**
- * 
- * @param {number} app_id 
- * @param {number} id 
- * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_getUserAppRoleAdmin[]>}
- */
-const getUserAppRoleAdmin = async (app_id, id) => {
-	const sql = `SELECT app_role_id "app_role_id"
-				   FROM <DB_SCHEMA/>.user_account
-				  WHERE id = :id`;
-	const parameters = {id: id};
-	return await db_execute(app_id, sql, parameters, null, null);
-};
 /**
  * 
  * @param {number} app_id 
@@ -251,10 +232,10 @@ const getStatCountAdmin = async app_id => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {import('../../types.js').server_db_sql_parameter_user_account_updateUserSuperAdmin} data 
- * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_updateUserSuperAdmin>}
+ * @param {import('../../types.js').server_db_sql_parameter_user_account_updateAdmin} data 
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_updateAdmin>}
  */
-const updateUserSuperAdmin = async (app_id, id, data) => {
+const updateAdmin = async (app_id, id, data) => {
 	let sql;
 	let parameters;
 	if (data.email_unverified =='')
@@ -268,8 +249,7 @@ const updateUserSuperAdmin = async (app_id, id, data) => {
 	const error_code = data_validation(data);
 	if (error_code==null){
 		sql = `UPDATE <DB_SCHEMA/>.user_account
-				SET app_role_id = :app_role_id,
-					active = :active,
+				SET active = :active,
 					user_level = :user_level,
 					private = :private,
 					username = :username,
@@ -285,7 +265,6 @@ const updateUserSuperAdmin = async (app_id, id, data) => {
 					verification_code = :verification_code
 				WHERE id = :id`;
 		parameters = {id: id,
-					app_role_id: data.app_role_id,
 					active: data.active,
 					user_level: data.user_level,
 					private: data.private,
@@ -866,8 +845,7 @@ const userLogin = async (app_id, data) => {
 						password "password",
 						email "email",
 						active "active",
-						avatar "avatar",
-						app_role_id "app_role_id"
+						avatar "avatar"
 				   FROM <DB_SCHEMA/>.user_account
 				  WHERE username = :username 
 					AND provider_id IS NULL`;
@@ -931,8 +909,7 @@ const providerSignIn = async (app_id, identity_provider_id, search_id) => {
 						u.provider_last_name "provider_last_name",
 						u.provider_image "provider_image",
 						u.provider_image_url "provider_image_url",
-						u.provider_email "provider_email",
-						u.app_role_id "app_role_id"
+						u.provider_email "provider_email"
 				FROM <DB_SCHEMA/>.user_account u
 				WHERE u.provider_id = :provider_id
 				AND u.identity_provider_id = :identity_provider_id`;
@@ -958,35 +935,7 @@ const getEmailUser = async (app_id, email) => {
 				};
 	return await db_execute(app_id, sql, parameters, null, null);
 };
-/**
- * 
- * @param {number} app_id 
- * @param {number|null} user_account_id 
- * @param {number} dba 
- * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_getUserRoleAdmin[]>}
- */
-const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
-	const sql = `SELECT app_role_id "app_role_id",
-						COALESCE(ar.icon,ar_user.icon) "icon"
-				   FROM <DB_SCHEMA/>.user_account ua
-						LEFT OUTER JOIN <DB_SCHEMA/>.app_role ar
-						ON ar.id = ua.app_role_id,
-						<DB_SCHEMA/>.app_role ar_user
-				  WHERE ua.id = :id 
-					AND ar_user.id = :id_user_icon
-					AND :id IS NOT NULL
-				UNION ALL
-				 SELECT	NULL "app_role_id",
-						ar.icon "icon"
-				   FROM <DB_SCHEMA/>.app_role ar
-				  WHERE ar.id = :id_user_icon
-					AND :id IS NULL`;
-	const parameters ={
-					id: user_account_id,
-					id_user_icon: 2
-				};
-	return await db_execute(app_id, sql, parameters, dba, null);
-};
+
 /**
  * 
  * @param {number} app_id
@@ -1005,8 +954,8 @@ const getDemousers = async app_id => {
 
 export{	verification_code,
 		/* database functions */
-		getUsersAdmin, getUserAppRoleAdmin, getStatCountAdmin, updateUserSuperAdmin, create,
+		getUsersAdmin, getStatCountAdmin, updateAdmin, create,
 		activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
 		getProfileDetail, getProfileStat, checkPassword, updatePassword,
 		updateUserLocal, updateUserCommon, deleteUser, userLogin, updateSigninProvider, providerSignIn,
-		getEmailUser, getUserRoleAdmin, getDemousers};
+		getEmailUser, getDemousers};

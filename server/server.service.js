@@ -99,10 +99,7 @@ const COMMON = {
  *  /bff/app_access/v1*                 all     iam.AuthenticateAccessToken                 BFF_app_access
  *  /bff/app_external/v1/app-function*  post    iam.AuthenticateExternal                    BFF_app_external
  *  /bff/admin/v1*                      all     iam.AuthenticateAccessTokenAdmin            BFF_admin
- *  /bff/superadmin/v1*                 all     iam.AuthenticateAccessTokenSuperAdmin       BFF_superadmin
- *  /bff/systemadmin/v1*                all     iam.AuthenticateAccessTokenSystemAdmin      BFF_systemadmin
  *  /bff/socket/v1*                     get     iam.AuthenticateSocket                      BFF_socket
- *  /bff/iam_systemadmin/v1*            post    iam.AuthenticateIAMSystemAdmin              BFF_iam_systemadmin
  *  /bff/iam_admin/v1*                  post    iam.AuthenticateIAMAdmin                    BFF_iam_admin
  *  /bff/iam_user/v1*                   post    iam.AuthenticateIAMUser                     BFF_iam_user
  *  /bff/iam_provider/v1*               post    iam.AuthenticateIAMProvider                 BFF_iam_provider
@@ -147,8 +144,8 @@ const COMMON = {
     //ROUTES MIDDLEWARE
     //apps
     /**@type{import('./bff.js')} */
-    const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_app_external, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, 
-            BFF_iam_systemadmin, BFF_iam_admin, BFF_iam_user, BFF_iam_provider} = await import(`file://${process.cwd()}/server/bff.js`);
+    const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_app_external, BFF_admin, BFF_socket, 
+            BFF_iam_admin, BFF_iam_user, BFF_iam_provider} = await import(`file://${process.cwd()}/server/bff.js`);
     //auth
     /**@type{import('./iam.js')} */
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
@@ -168,12 +165,9 @@ const COMMON = {
     app.route('/bff/app_data/v1*').all                  (iam.AuthenticateIdToken,                   BFF_app_data);
     app.route('/bff/app_signup/v1*').post               (iam.AuthenticateIdTokenRegistration,       BFF_app_signup);
     app.route('/bff/app_access/v1*').all                (iam.AuthenticateAccessToken,               BFF_app_access);
-    app.route('/bff/app_external/v1/app-function*').post (iam.AuthenticateExternal,                  BFF_app_external);
-    app.route('/bff/admin/v1*').all                     (iam.AuthenticateAccessTokenAdmin,          BFF_admin);    
-    app.route('/bff/superadmin/v1*').all                (iam.AuthenticateAccessTokenSuperAdmin,     BFF_superadmin);
-    app.route('/bff/systemadmin/v1*').all               (iam.AuthenticateAccessTokenSystemAdmin,    BFF_systemadmin);
+    app.route('/bff/app_external/v1/app-function*').post (iam.AuthenticateExternal,                 BFF_app_external);
+    app.route('/bff/admin/v1*').all                     (iam.AuthenticateAccessTokenAdmin,          BFF_admin);
     app.route('/bff/socket/v1*').get                    (iam.AuthenticateSocket,                    BFF_socket);
-    app.route('/bff/iam_systemadmin/v1*').post          (iam.AuthenticateIAMSystemAdmin,            BFF_iam_systemadmin);
     app.route('/bff/iam_admin/v1*').post                (iam.AuthenticateIAMAdmin,                  BFF_iam_admin);
     app.route('/bff/iam_user/v1*').post                 (iam.AuthenticateIAMUser,                   BFF_iam_user);
     app.route('/bff/iam_provider/v1*').post             (iam.AuthenticateIAMProvider,               BFF_iam_provider);
@@ -248,9 +242,6 @@ const COMMON = {
 
     /**@type{import('./db/components/app_data_stat.js')} */
     const db_app_data_stat = await import(`file://${process.cwd()}/server/db/components/app_data_stat.js`);
-
-    /**@type{import('./db/components/app_role.js')} */
-    const db_app_role = await import(`file://${process.cwd()}/server/db/components/app_role.js`);
 
     /**@type{import('./db/components/app_setting.js')} */
     const db_app_setting = await import(`file://${process.cwd()}/server/db/components/app_setting.js`);
@@ -402,6 +393,7 @@ const COMMON = {
                 //using switch (true) pattern
                 switch (true){
                     //server routes
+                    //app data open routes to apps that got id token at start
                     case route({url:`/bff/app_data/v1/app/apps/${resource_id_string}`, method:'GET'}):{
                         resolve(app.getApps(routesparameters.app_id, resource_id_get_number(), app_query)
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
@@ -487,6 +479,7 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
+                    //server functions for app_data, app_external or app_access
                     case route({url:`/bff/app_data/v1/app-function/${resource_id_string}`, method:'POST', 
                                 resource_validate_app_data_app_id: routesparameters.body.data_app_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_DATA'}):
                     case route({url:`/bff/app_external/v1/app-function/${resource_id_string}`, method:'POST', 
@@ -504,6 +497,166 @@ const COMMON = {
                                                 res:routesparameters.res}).then(result=>iso_return_message(result, false)));
                         break;
                     }
+                    //app access routes, for users with an access token
+                    case route({url:`/bff/app_access/v1/server-db/user_account-password/${resource_id_string}`, method:'PATCH', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.updatePassword(routesparameters.app_id, 
+                                                                /**@ts-ignore */
+                                                                resource_id_get_number(), 
+                                                                routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    //admin can update any user and uses same function as users
+                    //user can only update their own records
+                    case route({url:`/bff/admin/v1/server-db/user_account/${resource_id_string}`, method:'PATCH', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
+                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'PATCH', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.updateUserLocal(routesparameters.app_id, 
+                                                                /**@ts-ignore */ 
+                                                                resource_id_get_number(), 
+                                                                routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'GET', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.getUserByUserId(routesparameters.app_id, 
+                                                                /**@ts-ignore */
+                                                                resource_id_get_number(), 
+                                                                app_query, routesparameters.res)
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account-common/${resource_id_string}`, method:'PATCH', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.updateUserCommon(routesparameters.app_id, 
+                                                                    /**@ts-ignore */
+                                                                    resource_id_get_number(), 
+                                                                    app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.deleteUser(routesparameters.app_id, 
+                                                            /**@ts-ignore */
+                                                            resource_id_get_number(), 
+                                                            app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account-profile-detail/${resource_id_string}`, method:'GET', required:true}):{
+                        resolve(db_user_account.getProfileDetail(routesparameters.app_id, 
+                                                                    /**@ts-ignore */
+                                                                    resource_id_get_number(), 
+                                                                    app_query, routesparameters.res)
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, method:'POST', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.follow(routesparameters.app_id, 
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number(), 
+                                                        routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.unfollow(routesparameters.app_id, 
+                                                            /**@ts-ignore */
+                                                            resource_id_get_number(), 
+                                                            routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, method:'POST', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.like(routesparameters.app_id, 
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number(), 
+                                                        routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.unlike(routesparameters.app_id, 
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number(), 
+                                                        routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'GET', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, 
+                                                                        /**@ts-ignore */
+                                                                        resource_id_get_number())
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_string}`, method:'GET', required:true}):{
+                        resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, 
+                                                                        /**@ts-ignore */
+                                                                        resource_id_get_number())
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'PATCH', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account_app.update(routesparameters.app_id, 
+                                                            /**@ts-ignore */
+                                                            resource_id_get_number(), 
+                                                            app_query, routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account_app.deleteUserAccountApp(routesparameters.app_id, 
+                                                                            /**@ts-ignore */
+                                                                            resource_id_get_number(), 
+                                                                            app_query));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post-profile-detail/${resource_id_string}`, method:'GET', required:true}):{
+                        resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, 
+                                                                                        /**@ts-ignore */
+                                                                                        resource_id_get_number(), 
+                                                                                        app_query, routesparameters.res)
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:'/bff/app_access/v1/server-db/user_account_app_data_post', method:'POST', 
+                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id}):{
+                        resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, app_query, routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'PUT', 
+                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true}):{
+                        resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, resource_id_get_number(), app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true}):{
+                        resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, 
+                                                                                /**@ts-ignore */
+                                                                                resource_id_get_number(), 
+                                                                                app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, method:'POST', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account_app_data_post.like(routesparameters.app_id, 
+                                                                    /**@ts-ignore */
+                                                                    resource_id_get_number(), 
+                                                                    routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account_app_data_post.unlike(routesparameters.app_id, 
+                                                                        /**@ts-ignore */
+                                                                        resource_id_get_number(), 
+                                                                        routesparameters.body));
+                        break;
+                    }
+                    //admin routes and available only in admin app with admin token
                     case route({url:`/bff/admin/v1/server-db/app_data_entity/${resource_id_string}`, method:'GET'}):{
                         resolve(db_app_data_entity.getEntity(routesparameters.app_id, resource_id_get_number(), app_query)
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
@@ -598,177 +751,6 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:`/bff/app_access/v1/server-db/user_account-password/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.updatePassword(routesparameters.app_id, 
-                                                                /**@ts-ignore */
-                                                                resource_id_get_number(), 
-                                                                routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.updateUserLocal(routesparameters.app_id, 
-                                                                /**@ts-ignore */ 
-                                                                resource_id_get_number(), 
-                                                                routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account/${resource_id_string}`, method:'GET', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'GET', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.getUserByUserId(routesparameters.app_id, 
-                                                                /**@ts-ignore */
-                                                                resource_id_get_number(), 
-                                                                app_query, routesparameters.res)
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account-common/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.updateUserCommon(routesparameters.app_id, 
-                                                                    /**@ts-ignore */
-                                                                    resource_id_get_number(), 
-                                                                    app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.deleteUser(routesparameters.app_id, 
-                                                            /**@ts-ignore */
-                                                            resource_id_get_number(), 
-                                                            app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account-profile-detail/${resource_id_string}`, method:'GET', required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account-profile-detail/${resource_id_string}`, method:'GET', required:true}):{
-                        resolve(db_user_account.getProfileDetail(routesparameters.app_id, 
-                                                                    /**@ts-ignore */
-                                                                    resource_id_get_number(), 
-                                                                    app_query, routesparameters.res)
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_follow/${resource_id_string}`, method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.follow(routesparameters.app_id, 
-                                                        /**@ts-ignore */
-                                                        resource_id_get_number(), 
-                                                        routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_follow/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.unfollow(routesparameters.app_id, 
-                                                            /**@ts-ignore */
-                                                            resource_id_get_number(), 
-                                                            routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_like/${resource_id_string}`, method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.like(routesparameters.app_id, 
-                                                        /**@ts-ignore */
-                                                        resource_id_get_number(), 
-                                                        routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_like/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.unlike(routesparameters.app_id, 
-                                                        /**@ts-ignore */
-                                                        resource_id_get_number(), 
-                                                        routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_app/${resource_id_string}`, method:'GET', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'GET', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, 
-                                                                        /**@ts-ignore */
-                                                                        resource_id_get_number())
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_string}`, method:'GET', required:true}):{
-                        resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, 
-                                                                        /**@ts-ignore */
-                                                                        resource_id_get_number())
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_app/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account_app.update(routesparameters.app_id, 
-                                                            /**@ts-ignore */
-                                                            resource_id_get_number(), 
-                                                            app_query, routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account_app.deleteUserAccountApp(routesparameters.app_id, 
-                                                                            /**@ts-ignore */
-                                                                            resource_id_get_number(), 
-                                                                            app_query));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post-profile-detail/${resource_id_string}`, method:'GET', required:true}):{
-                        resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, 
-                                                                                        /**@ts-ignore */
-                                                                                        resource_id_get_number(), 
-                                                                                        app_query, routesparameters.res)
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:'/bff/app_access/v1/server-db/user_account_app_data_post', method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id}):{
-                        resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, app_query, routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'PUT', 
-                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true}):{
-                        resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, resource_id_get_number(), app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true}):{
-                        resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, 
-                                                                                /**@ts-ignore */
-                                                                                resource_id_get_number(), 
-                                                                                app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account_app_data_post.like(routesparameters.app_id, 
-                                                                    /**@ts-ignore */
-                                                                    resource_id_get_number(), 
-                                                                    routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account_app_data_post.unlike(routesparameters.app_id, 
-                                                                        /**@ts-ignore */
-                                                                        resource_id_get_number(), 
-                                                                        routesparameters.body));
-                        break;
-                    }
                     case route({url:'/bff/admin/v1/server-socket/message', method:'POST'}):{
                         resolve(socket.SocketSendAdmin(routesparameters.body));
                         break;
@@ -808,11 +790,6 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:'/bff/admin/v1/server-db_admin/app_role', method:'GET'}):{
-                        resolve(db_app_role.getAppRoleAdmin(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, false)));
-                        break;
-                    }
                     case route({url:'/bff/admin/v1/server-db_admin/user_account-stat', method:'GET'}):{
                         resolve(db_user_account.getStatCountAdmin(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, false)));
@@ -823,20 +800,11 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:`/bff/superadmin/v1/server-db_admin/user_account/${resource_id_string}`, method:'PATCH', required:true}):{
+                    case route({url:`/bff/admin/v1/server-db_admin/user_account/${resource_id_string}`, method:'PATCH', required:true}):{
                         resolve(db_user_account.updateAdmin(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:'/bff/systemadmin/v1/server-socket/message', method:'POST'}):{
-                        resolve(socket.SocketSendSystemAdmin(routesparameters.body));
-                        break;
-                    }
-                    case route({url:'/bff/systemadmin/v1/server-socket/socket', method:'GET'}):{
-                        resolve(socket.ConnectedListSystemadmin(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, false)));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-config/config-apps-parameter/${resource_id_string}`, method:'PATCH', required:true}):{
@@ -846,7 +814,6 @@ const COMMON = {
                                                                 routesparameters.body));
                         break;
                     }
-                    case route({url:`/bff/systemadmin/v1/server-config/config-apps/${resource_id_string}`, method:'GET'}):
                     case route({url:`/bff/admin/v1/server-config/config-apps/${resource_id_string}`, method:'GET'}):{
                         resolve(iso_return_message(config.ConfigGetApps(
                                                         /**@ts-ignore */
@@ -855,8 +822,7 @@ const COMMON = {
                                                         resource_id_get_number()!=null));
                         break;
                     }
-                    case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'GET', required:true}):
-                    case route({url:`/bff/systemadmin/v1/server-config/config/${resource_id_string}`, method:'GET', required:true}):{
+                    case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'GET', required:true}):{
                         resolve(config.ConfigFileGet(
                                                         /**@ts-ignore */
                                                         resource_id_get_string(), 
@@ -864,80 +830,82 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, resource_id_get_string()!=null)));
                         break;
                     }
-                    case route({url:`/bff/systemadmin/v1/server-config/config/${resource_id_string}`, method:'PUT', required:true}):{
+                    case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'PUT', required:true}):{
                         resolve(config.ConfigFileSave(
                                                         /**@ts-ignore */
                                                         resource_id_get_string(), 
                                                         routesparameters.body));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server/info', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server/info', method:'GET'}):{
                         resolve(info.Info()
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database-installation', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database-installation', method:'GET'}):{
                         resolve(db_database.InstalledCheck(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database-space', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database-space', method:'GET'}):{
                         resolve(db_database.InfoSpace(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database-spacesum', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database-spacesum', method:'GET'}):{
                         resolve(db_database.InfoSpaceSum(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database', method:'GET'}):{
                         resolve(db_database.Info(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database', method:'POST'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database', method:'POST'}):{
                         resolve(db_database.Install(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database', method:'DELETE'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database', method:'DELETE'}):{
                         resolve(db_database.Uninstall(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-log/log', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-log/log', method:'GET'}):{
                         resolve(log.getLogs(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server/info-statuscode', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server/info-statuscode', method:'GET'}):{
                         resolve(log.getStatusCodes()
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-log/log-stat', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-log/log-stat', method:'GET'}):{
                         resolve(log.getLogStats(app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-log/log-files', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-log/log-files', method:'GET'}):{
                         resolve(log.getFiles()
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
+                    //socket using EventSource route
                     case route({url:'/bff/socket/v1/server-socket/socket', method:'GET'}):{
                         //EventSource uses GET method, should otherwise be POST
                         resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
+                    // app_signup route
                     case route({url:'/bff/app_signup/v1/server-db/user_account-signup', method:'POST'}):{
                         resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route({url:'/bff/iam_systemadmin/v1/server-iam/login', method:'POST'}):{
-                        resolve(iam_service.AuthenticateSystemadmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
+                    //iam routes
+                    case route({url:'/bff/iam_admin/v1/server-iam/login', method:'POST'}):{
+                        resolve(iam_service.AuthenticateAdmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
-                    case route({url:'/bff/iam_admin/v1/server-iam/login', method:'POST'}):
                     case route({url:'/bff/iam_user/v1/server-iam/login', method:'POST'}):{
                         resolve(db_user_account.login(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.body, routesparameters.res));
                         break;

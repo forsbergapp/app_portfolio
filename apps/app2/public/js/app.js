@@ -1003,13 +1003,13 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
 
 /**
  * User login
- * @param {boolean} system_admin
+ * @param {boolean} admin
  * @param {string|null} username_verify
  * @param {string|null} password_verify
  * @returns {Promise.<void>}
  */
-const user_login_app = async (system_admin=false, username_verify=null, password_verify=null) => {
-    await common.commonUserLogin(system_admin, username_verify, password_verify)
+const user_login_app = async (admin=false, username_verify=null, password_verify=null) => {
+    await common.commonUserLogin(admin, username_verify, password_verify)
     .then(result=>{
         //create intitial user setting if not exist, send initial=true
         login_common(result.avatar);
@@ -2020,7 +2020,7 @@ const app_event_click = event => {
                                         token_exp:common.COMMON_GLOBAL.token_exp,
                                         token_iat:common.COMMON_GLOBAL.token_iat,
                                         token_timestamp: common.COMMON_GLOBAL.token_timestamp,
-                                        system_admin:common.COMMON_GLOBAL.system_admin,
+                                        admin:common.COMMON_GLOBAL.admin,
                                         user_locale:common.COMMON_GLOBAL.user_locale,
                                         user_timezone:common.COMMON_GLOBAL.user_timezone,
                                         user_direction:common.COMMON_GLOBAL.user_direction,
@@ -2310,7 +2310,7 @@ const framework_set = async (framework=null) => {
 /**
  * 
  * @param {{app:*[],
- *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ *          app_service:{admin_only:number, first_time:number}}} parameters 
  * @returns {Promise.<void>}
  */
 const init_app = async parameters => {
@@ -2522,7 +2522,7 @@ const init = parameters => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
     common.COMMON_GLOBAL.app_function_session_expired = user_logout_app;
-    common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
+    common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{admin_only:number, first_time:number}}}*/decodedparameters)=>{
         init_app(decodedparameters);
     });
 };

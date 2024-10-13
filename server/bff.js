@@ -153,33 +153,6 @@ const BFF_app_external = (req, res) =>{
                             };
     service.BFF(bff_parameters);
 };
-/**
- * Backend for frontend (BFF) SUPERADMIN
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
- */
- const BFF_superadmin = (req, res) =>{
-    /**@type{import('./types.js').server_bff_parameters} */
-    const bff_parameters = {endpoint:'SUPERADMIN', 
-                            ...BFF_common(req, res)
-                            };
-    service.BFF(bff_parameters);
-};
-
-/**
- * Backend for frontend (BFF) SYSTEMADMIN
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
- */
- const BFF_systemadmin = (req, res) =>{
-    /**@type{import('./types.js').server_bff_parameters} */
-    const bff_parameters = {endpoint:'SYSTEMADMIN', 
-                            ...BFF_common(req, res)
-                            };
-    service.BFF(bff_parameters);
-};
 
 /**
  * Backend for frontend (BFF) socket
@@ -195,25 +168,12 @@ const BFF_socket = (req, res) =>{
     service.BFF(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) IAM_SYSTEMADMIN
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
- */
-const BFF_iam_systemadmin = (req, res) =>{
-    /**@type{import('./types.js').server_bff_parameters} */
-    const bff_parameters = {endpoint:'IAM_SYSTEMADMIN', 
-                            ...BFF_common(req, res)
-                            };
-    service.BFF(bff_parameters);
-};
-/**
  * Backend for frontend (BFF) IAM_ADMIN
  * 
  * @param {import('./types.js').server_server_req} req - Request
  * @param {import('./types.js').server_server_res} res
  */
- const BFF_iam_admin = (req, res) =>{
+const BFF_iam_admin = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'IAM_ADMIN', 
                             ...BFF_common(req, res)
@@ -247,5 +207,5 @@ const BFF_iam_systemadmin = (req, res) =>{
     service.BFF(bff_parameters);
 };
 
-export{ BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_app_external, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, 
-        BFF_iam_systemadmin, BFF_iam_admin, BFF_iam_user, BFF_iam_provider};
+export{ BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_app_external, BFF_admin, BFF_socket, 
+        BFF_iam_admin, BFF_iam_user, BFF_iam_provider};
