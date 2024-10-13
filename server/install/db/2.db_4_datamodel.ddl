@@ -518,17 +518,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_like TO app_po
 ALTER TABLE <DB_SCHEMA/>.user_account_like ADD CONSTRAINT user_account_like_pk PRIMARY KEY ( user_account_id,
                                                                                               user_account_id_like );
 
-CREATE TABLE <DB_SCHEMA/>.user_account_logon (
-    app_id          INTEGER NOT NULL,
-    json_data       CLOB,
-    date_created    DATE NOT NULL,
-    user_account_id INTEGER
-);
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_logon TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_logon TO app_portfolio_role_app_admin;
-
 CREATE TABLE <DB_SCHEMA/>.user_account_view (
     client_ip            VARCHAR2(1000),
     client_user_agent    VARCHAR2(1000),
@@ -831,17 +820,6 @@ ALTER TABLE <DB_SCHEMA/>.user_account_like
 
 ALTER TABLE <DB_SCHEMA/>.user_account_like
     ADD CONSTRAINT user_account_like_user_account_like_fk FOREIGN KEY ( user_account_id_like )
-        REFERENCES <DB_SCHEMA/>.user_account ( id )
-            ON DELETE CASCADE
-    NOT DEFERRABLE;
-
-ALTER TABLE <DB_SCHEMA/>.user_account_logon
-    ADD CONSTRAINT user_account_logon_app_fk FOREIGN KEY ( app_id )
-        REFERENCES <DB_SCHEMA/>.app ( id )
-    NOT DEFERRABLE;
-
-ALTER TABLE <DB_SCHEMA/>.user_account_logon
-    ADD CONSTRAINT user_account_logon_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE
     NOT DEFERRABLE;
