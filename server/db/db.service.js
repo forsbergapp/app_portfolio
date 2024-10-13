@@ -209,28 +209,30 @@ const pool_start = async (dbparameters) =>{
  * @param {number|null} pool_id 
  * @param {number|null} db_use 
  * @param {number} dba 
- * @returns 
+ * @returns {Promise.<void>}
  */
 const pool_close = async (pool_id, db_use, dba) =>{
-   try {
+
       if (dba==1)
          POOL_DB.map(db=>{
                            if (db[0]==db_use)
                               db[1] = null;
          });
       else
-         if (pool_id)
+         if (db_use==5){
             POOL_DB.map(db=>{
                if (db[0]==db_use)
-                  if (db[2])
-                     db[2][pool_id] = null;
-            });
+                  db[1] = null;
+            });           
+         }
          else
-            return null;   
-   } catch (err) {
-      return null;
-   }
-   return null;
+            if (pool_id)
+               POOL_DB.map(db=>{
+                  if (db[0]==db_use)
+                     if (db[2])
+                        db[2][pool_id] = null;
+               });
+      
 
 };
 /**
@@ -380,7 +382,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             const parsed_result = queryConvert(sql, parameters);
             try {
                /**@ts-ignore */
-               pool_get(pool_id, db_use, dba).connect().then((/**@type{import('../types.js').pool_connection_3}*/pool3)=>{
+               pool_get(pool_id, db_use, dba).connect().then((/**@type{import('../types.js').server_db_db_pool_connection_3}*/pool3)=>{
                   pool3.query(parsed_result.text, parsed_result.values)
                   .then((/**@type{import('../types.js').server_db_db_pool_connection_3_result}*/result) => {
                      pool3.release();

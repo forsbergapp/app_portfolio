@@ -255,21 +255,6 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
         });
     }
 };
-/**
- * 
- * @param {import('../types.js').server_db_file_db_name} file 
- * @param {import('../types.js').server_db_file_config_files} file_content 
- */
-const fileFsWriteAdmin = async (file, file_content) =>{
-    const filepath = fileRecord(file).PATH + (fileRecord(file).FILENAME?fileRecord(file).FILENAME:'');
-    await fs.promises.writeFile(process.cwd() + filepath, JSON.stringify(file_content, undefined, 2),  'utf8')
-    .then(() => {
-        return null;
-    })
-    .catch((error)=> {
-        throw error;
-    });
-};
 
 /**
  * 
@@ -320,5 +305,28 @@ const fileFsAccessMkdir = async () => {
         });
     }
 };
+/**
+ * 
+ * @param {import('../types.js').server_db_file_db_name} file 
+ * @param {import('../types.js').server_db_file_config_files} file_content 
+ */
+const fileFsWriteAdmin = async (file, file_content) =>{
+    const filepath = fileRecord(file).PATH + (fileRecord(file).FILENAME?fileRecord(file).FILENAME:'');
+    await fs.promises.writeFile(process.cwd() + filepath, file_content?JSON.stringify(file_content, undefined, 2):'',  'utf8')
+    .then(() => {
+        return null;
+    })
+    .catch((error)=> {
+        throw error;
+    });
+};
 
-export {SLASH, filePath, fileCache, fileFsRead, fileFsDir, fileFsReadLog, fileFsCacheSet, fileFsWrite, fileFsWriteAdmin, fileFsAppend, fileFsAccessMkdir};
+/**
+ * Delete as file
+ * @param {import('../types.js').server_db_file_db_name} file 
+ */
+const fileFsDeleteAdmin = async file => {
+    const filepath = process.cwd() + fileRecord(file).PATH + (fileRecord(file).FILENAME?fileRecord(file).FILENAME:'');
+    await fs.promises.rm(filepath).catch((error=>{throw error;}));
+};
+export {SLASH, filePath, fileCache, fileFsRead, fileFsDir, fileFsReadLog, fileFsCacheSet, fileFsWrite, fileFsAppend, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin};

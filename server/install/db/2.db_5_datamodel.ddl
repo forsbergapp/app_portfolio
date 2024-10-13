@@ -462,18 +462,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_like (
 		    ON DELETE CASCADE
 );
 
-CREATE TABLE <DB_SCHEMA/>.user_account_logon (
-    app_id             INTEGER NOT NULL,
-    json_data          TEXT,
-    date_created       DATETIME NOT NULL,
-    user_account_id    INTEGER,
-    CONSTRAINT user_account_logon_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id ),
-    CONSTRAINT user_account_logon_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
-            ON DELETE CASCADE
-);
-
 CREATE TABLE <DB_SCHEMA/>.user_account_view (
     client_ip             VARCHAR(1000),
     client_user_agent     VARCHAR(1000),

@@ -320,6 +320,10 @@ const install_db_get_files = async (install_type) =>{
  const Uninstall = async (app_id, query)=> {
     /**@type{import('../../config.service.js')} */
     const {ConfigAppSecretDBReset} = await import(`file://${process.cwd()}/server/config.service.js`);
+    
+    /**@type{import('../../db/file.service.js')} */
+    const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+
     /**@type{import('../../db/db.service.js')} */
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     /**@type{import('../../log.service.js')} */
@@ -328,62 +332,72 @@ const install_db_get_files = async (install_type) =>{
     const {SocketSendSystemAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
     /**@type{import('../../db/common.service.js')} */
     const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+    
 
     const fs = await import('node:fs');
 
     let count_statements = 0;
     let count_statements_fail = 0;
     
-    const files = await install_db_get_files('uninstall');
+    
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
-    let install_count=0;
-    for (const file of  files){
-        SocketSendSystemAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]})));
-        install_count++;
-        const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
-        const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{import('../../types.js').server_db_database_uninstall_database_script|import('../../types.js').server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
-        for (const sql_row of uninstall_sql){
-            if (db_use==3 && sql_row.sql.toUpperCase().includes('DROP DATABASE')){
-                //add database name in dba pool
-                await pool_close(null, db_use, DBA);
-                /**@type{import('../../types.js').server_db_db_pool_parameters} */
-                const json_data = {
-                    use:                       db_use,
-                    pool_id:                   null,
-                    port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
-                    host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
-                    dba:                       DBA,
-                    user:                      ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
-                    password:                  ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
-                    database:                  null,
-                    //db 1 + 2 not used here
-                    charset:                   null,
-                    connectionLimit:           null,
-                    //db 3
-                    connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                    idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                    max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
-                    //db 4 not used here
-                    connectString:             null,
-                    poolMin:                   null,
-                    poolMax:                   null,
-                    poolIncrement:             null
-                };
-                await pool_start(json_data);
-            }
-            if (file[2]==null)
-                sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app_admin');
-            else
-                sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app' + file[2]);
-            sql_row.sql = sql_row.sql.replaceAll('<APP_ID/>', file[2]?file[2]:'0');
-            await db_execute(app_id, sql_row.sql, {}, DBA)
-            .then(()=>{count_statements += 1;})
-            .catch(()=>{count_statements_fail += 1;});
-            
-        }      
+    if (db_use==5){
+        await pool_close(null, db_use, 0);
+        await fileFsWriteAdmin('DB_FILE', null);
+        await pool_db(db_use, 0, null, null, null);
+        count_statements++;
     }
-    //remove db users and password
-    ConfigAppSecretDBReset();
+    else{
+        let install_count=0;
+        const files = await install_db_get_files('uninstall');
+        for (const file of  files){
+            SocketSendSystemAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]})));
+            install_count++;
+            const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
+            const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{import('../../types.js').server_db_database_uninstall_database_script|import('../../types.js').server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
+            for (const sql_row of uninstall_sql){
+                if (db_use==3 && sql_row.sql.toUpperCase().includes('DROP DATABASE')){
+                    //add database name in dba pool
+                    await pool_close(null, db_use, DBA);
+                    /**@type{import('../../types.js').server_db_db_pool_parameters} */
+                    const json_data = {
+                        use:                       db_use,
+                        pool_id:                   null,
+                        port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                        host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                        dba:                       DBA,
+                        user:                      ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
+                        password:                  ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
+                        database:                  null,
+                        //db 1 + 2 not used here
+                        charset:                   null,
+                        connectionLimit:           null,
+                        //db 3
+                        connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                        idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                        max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+                        //db 4 not used here
+                        connectString:             null,
+                        poolMin:                   null,
+                        poolMax:                   null,
+                        poolIncrement:             null
+                    };
+                    await pool_start(json_data);
+                }
+                if (file[2]==null)
+                    sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app_admin');
+                else
+                    sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app' + file[2]);
+                sql_row.sql = sql_row.sql.replaceAll('<APP_ID/>', file[2]?file[2]:'0');
+                await db_execute(app_id, sql_row.sql, {}, DBA)
+                .then(()=>{count_statements += 1;})
+                .catch(()=>{count_statements_fail += 1;});
+                
+            }      
+        }
+        //remove db users and password
+        ConfigAppSecretDBReset();
+    }
     LogServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {info:[  { count    : count_statements},
                     {count_fail: count_statements_fail}
