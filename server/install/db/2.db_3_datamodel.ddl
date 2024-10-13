@@ -470,16 +470,6 @@ GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_like TO app_po
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_like TO app_portfolio_role_app_admin;
 
-CREATE TABLE <DB_SCHEMA/>.user_account_logon (
-    app_id             INTEGER NOT NULL,
-    json_data          TEXT,
-    date_created       TIMESTAMP NOT NULL,
-    user_account_id    INTEGER
-);
-GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_logon TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_logon TO app_portfolio_role_app_admin;
-
 CREATE TABLE <DB_SCHEMA/>.user_account_view (
     client_ip             VARCHAR(1000),
     client_user_agent     VARCHAR(1000),
@@ -737,15 +727,6 @@ ALTER TABLE <DB_SCHEMA/>.user_account_like
     ADD CONSTRAINT user_account_like_user_account_like_fk FOREIGN KEY ( user_account_id_like )
         REFERENCES <DB_SCHEMA/>.user_account ( id )
 		    ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.user_account_logon
-    ADD CONSTRAINT user_account_logon_app_fk FOREIGN KEY ( app_id )
-        REFERENCES <DB_SCHEMA/>.app ( id );
-
-ALTER TABLE <DB_SCHEMA/>.user_account_logon
-    ADD CONSTRAINT user_account_logon_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES <DB_SCHEMA/>.user_account ( id )
-            ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.user_account_view
     ADD CONSTRAINT user_account_view_user_account_fk FOREIGN KEY ( user_account_id )
