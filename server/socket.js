@@ -8,7 +8,7 @@ const service = await import(`file://${process.cwd()}/server/socket.service.js`)
 const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 /**
- * Updates socket connection info removing user_id, systemadmin, token_access and token_systemadmin
+ * Updates socket connection info removing user_id, admin, token_access and token_admin
  * @param {number} app_id
  * @param {string} iam
  * @param {string} ip
@@ -38,52 +38,27 @@ const CheckOnline = resource_id =>service.ConnectedGet(resource_id).length>0?{on
  * 
  * @param {*} data 
  */
-const SocketSendSystemAdmin = (data) =>service.SocketSendSystemAdmin(   getNumberValue(data.app_id), 
-                                                                        getNumberValue(data.client_id), 
-                                                                        getNumberValue(data.client_id_current),
-                                                                        data.broadcast_type, 
-                                                                        data.broadcast_message);
-
-/**
- * 
- * @param {number} app_id 
- * @param {*} query 
- * @returns 
- */
-const ConnectedListSystemadmin = (app_id, query) =>service.ConnectedList(   app_id, 
-                                                                            getNumberValue(query.get('select_app_id')), 
-                                                                            getNumberValue(query.get('limit')), 
-                                                                            getNumberValue(query.get('year')), 
-                                                                            getNumberValue(query.get('month')), 
-                                                                            getNumberValue(query.get('day')), 
-                                                                            query.get('order_by'), 
-                                                                            query.get('sort'),  
-                                                                            1);
-
-/**
- * 
- * @param {*} data 
- * @returns 
- */
-const SocketSendAdmin = (data) => service.SocketSendAdmin(  getNumberValue(data.app_id), 
+const SocketSendAdmin = (data) =>service.SocketSendAdmin(   getNumberValue(data.app_id), 
                                                             getNumberValue(data.client_id), 
                                                             getNumberValue(data.client_id_current),
                                                             data.broadcast_type, 
                                                             data.broadcast_message);
+
 /**
  * 
  * @param {number} app_id 
  * @param {*} query 
  * @returns 
  */
-const ConnectedListAdmin = (app_id, query) =>service.ConnectedList(app_id, 
-                                                                        getNumberValue(query.get('select_app_id')), 
-                                                                        getNumberValue(query.get('limit')), 
-                                                                        getNumberValue(query.get('year')), 
-                                                                        getNumberValue(query.get('month')), 
-                                                                        getNumberValue(query.get('day')), 
-                                                                        query.get('order_by'), 
-                                                                        query.get('sort'), 0);
+const ConnectedListAdmin = (app_id, query) =>service.ConnectedList( app_id, 
+                                                                    getNumberValue(query.get('select_app_id')), 
+                                                                    getNumberValue(query.get('limit')), 
+                                                                    getNumberValue(query.get('year')), 
+                                                                    getNumberValue(query.get('month')), 
+                                                                    getNumberValue(query.get('day')), 
+                                                                    query.get('order_by'), 
+                                                                    query.get('sort'));
+
 /**
  * 
  * @param {*} query 
@@ -103,11 +78,11 @@ const ConnectedCount = (query) => service.ConnectedCount(   getNumberValue(query
  */
 const SocketConnect = (app_id, iam, ip, user_agent, accept_language, res) => service.SocketConnect( app_id, 
                                                                                                     getNumberValue(iam_decode(iam).get('user_id')),
-                                                                                                    iam_decode(iam).get('system_admin'),
+                                                                                                    iam_decode(iam).get('admin'),
                                                                                                     iam_decode(iam).get('authorization_bearer'),
                                                                                                     user_agent,
                                                                                                     accept_language,
                                                                                                     ip,
                                                                                                     res); 
 
-export{ConnectedUpdate, CheckOnline, SocketSendSystemAdmin, ConnectedListSystemadmin, SocketSendAdmin, ConnectedListAdmin, ConnectedCount, SocketConnect};
+export{ConnectedUpdate, CheckOnline, SocketSendAdmin, ConnectedListAdmin, ConnectedCount, SocketConnect};

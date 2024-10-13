@@ -101,8 +101,8 @@
 	- dynamic app installation
 	- admin app with monitoring of live connections and logs, statistics, broadcast maintenance, messaging to clients,
 	  database info, OS info, process info and user role management.
-	- admin app with access for admin database user supporting superadmin role to monitor apps
-	- admin app with access for system admin to manage installation, configuration and server
+	- admin app with admin user with DBA database role 
+	- admin app with admin user to manage installation, configuration and server
 	- vendor specific coding as for example -webkit-, -moz-, -o-, -ms- and filter: progid:DXImageTransform.Microsoft 
 	  in CSS removed. 
 	- third party modules should be canvas free solutions or configured to not use canvas.

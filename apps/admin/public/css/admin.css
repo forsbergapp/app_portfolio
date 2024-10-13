@@ -25,10 +25,8 @@
 #client_id_label::before{															content:var(--common_app_icon_user)}
 .icon_infinite::before{																content:var(--common_app_icon_infinite)}
 
-#box1_title.system_admin::before{													content:var(--common_app_icon_internet) ' ' var(--common_app_icon_server) ' ' var(--common_app_icon_chart)}
-#box2_title.system_admin::before{													content:var(--common_app_icon_internet) ' ' var(--common_app_icon_server) ' ' var(--common_app_icon_regional_numbersystem)}
-#box1_title.admin::before{															content:var(--common_app_icon_users) ' ' var(--common_app_icon_apps) ' ' var(--common_app_icon_chart)}
-#box2_title.admin::before{															content:var(--common_app_icon_users) ' ' var(--common_app_icon_apps) ' ' var(--common_app_icon_regional_numbersystem)}
+#box1_title::before{																content:var(--common_app_icon_internet) ' ' var(--common_app_icon_server) ' ' var(--common_app_icon_chart)}
+#box2_title::before{																content:var(--common_app_icon_internet) ' ' var(--common_app_icon_server) ' ' var(--common_app_icon_regional_numbersystem)}
 #menu_1_maintenance_title::before{													content:var(--common_app_icon_maintenance)}
 #menu_1_broadcast_title::before{													content:var(--common_app_icon_broadcast)}
 #menu_1_broadcast_button::before{													content:var(--common_app_icon_chat)}
@@ -41,12 +39,10 @@
 
 #list_user_account_title::before{													content:var(--common_app_icon_users)}
 #list_user_search_icon::before{														content:var(--common_app_icon_reload)}
-#list_iam_user_login_title::before{												content:var(--common_app_icon_login)}
+#list_iam_user_login_title::before{													content:var(--common_app_icon_login)}
 #users_save::before{																content:var(--common_app_icon_save)}
 #list_user_account .list_title[data-column='avatar']::before{						content:var(--common_app_icon_user_avatar)}
 #list_user_account .list_title[data-column='id']::before{							content:var(--common_app_icon_provider_id)}
-#list_user_account .list_title[data-column='app_role_id']::before{					content:var(--common_app_icon_role)}
-#list_user_account .list_title[data-column='app_role_icon']::before{				content:var(--common_app_icon_role) ' ' var(--common_app_icon_misc_image)}
 #list_user_account .list_title[data-column='active']::before{						content:var(--common_app_icon_inactive) ' ' var(--common_app_icon_active)}
 #list_user_account .list_title[data-column='user_level']::before{					content:'LEVEL'}
 #list_user_account .list_title[data-column='private']::before{						content:var(--common_app_icon_private)}
@@ -134,34 +130,9 @@ body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 #menu_10_process_title::before{							content:var(--common_app_icon_server) ' ' var(--common_app_icon_apps)}
 
 
-#menu_secure .menuitem{
-	display: none;
-}
-#menu_secure.system_admin #menu_1,
-#menu_secure.system_admin #menu_5,
-#menu_secure.system_admin #menu_6,
-#menu_secure.system_admin #menu_7,
-#menu_secure.system_admin #menu_8,
-#menu_secure.system_admin #menu_9,
-#menu_secure.system_admin #menu_10,
-#menu_secure.system_admin #menu_11{
-	display: block !important;
-}
-#menu_secure.admin #menu_1,
-#menu_secure.admin #menu_2,
-#menu_secure.admin #menu_3,
-#menu_secure.admin #menu_4,
-#menu_secure.admin #menu_5,
-#menu_secure.admin #menu_7,
-#menu_secure.admin #menu_11{
-	display: block !important;
-}
-
-
 #common_user_start_logo{
 	background-image: url('/images/logo.png') !important;
 }
-
 
 #admin_secure{
 	width:100%;
@@ -195,16 +166,6 @@ body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 }
 #client_id_label{
 	width:100%;
-}
-#select_broadcast_type.admin .common_select_option[data-value='ALERT'],
-#select_broadcast_type.system_admin .common_select_option[data-value='ALERT']{
-	display: block;
-}
-#select_broadcast_type.system_admin .common_select_option[data-value='MAINTENANCE']{
-	display: block;
-}
-#select_broadcast_type .common_select_option[data-value='MAINTENANCE']{
-	display: none;
 }
 #select_broadcast_type{
 	text-align: center;    
@@ -240,6 +201,7 @@ body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 	margin: 0.5em;
 	font-size: 1.2em;
 	text-transform:uppercase;
+	display: block !important;
 }
 #menu_open{
 	margin-inline-start: 20px;
@@ -312,7 +274,7 @@ body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 #menu_1_content_widget1 .common_select_options{
 	max-height: 550px;
 }
-#select_system_admin_stat{
+#select_admin_stat{
 	white-space: nowrap;
 }
 #menu_1_content_widget2{
@@ -535,66 +497,16 @@ body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 	padding-inline-start: 5px;
 	text-align: start;
 }
-.list_user_account_col, .list_iam_user_login_col{
-	display:inline-block;
+.list_user_account_row{
+	display:grid;
+	grid-template-columns: 3em 5em 5em 5em 5em 20em 40em 15em 10em 10em 10em 10em 10em 10em 10em 10em 10em 10em 10em 12em 12em 12em;
 }
-.list_user_account_col:nth-child(1){
-	width:30px;
-}
-.list_user_account_col:nth-child(2){
-	width: 70px;
-}
-.list_user_account_col:nth-child(3),
-.list_user_account_col:nth-child(4),
-.list_user_account_col:nth-child(5),
-.list_user_account_col:nth-child(6){
-	width: 50px;
-}
-.list_user_account_col:nth-child(7){
-	width: 70px;
-}
-.list_user_account_col:nth-child(8),
-.list_user_account_col:nth-child(9),
-.list_user_account_col:nth-child(10),
-.list_user_account_col:nth-child(11),
-.list_user_account_col:nth-child(12),
-.list_user_account_col:nth-child(13),
-.list_user_account_col:nth-child(14),
-.list_user_account_col:nth-child(15),
-.list_user_account_col:nth-child(16),
-.list_user_account_col:nth-child(17),
-.list_user_account_col:nth-child(18),
-.list_user_account_col:nth-child(19){
-	width: 100px;
-}
-.list_user_account_col:nth-child(20){
-	width:30px;
-}
-.list_user_account_col:nth-child(21),
-.list_user_account_col:nth-child(22){
-	width: 140px;
-}
-.list_user_account_col:nth-child(23),
-.list_user_account_col:nth-child(24){
-	width: 120px;
+.list_iam_user_login_row{
+	display:grid;
+	grid-template-columns: 15em 5em 5em 10em 7em 7em 60em auto;
 }
 .list_iam_user_login_col:nth-child(1){
 	display: none;
-}
-.list_iam_user_login_col:nth-child(2){
-	width: 120px;
-}
-.list_iam_user_login_col:nth-child(3),
-.list_iam_user_login_col:nth-child(4){
-	width:50px;
-}
-.list_iam_user_login_col:nth-child(5),
-.list_iam_user_login_col:nth-child(6),
-.list_iam_user_login_col:nth-child(7){
-	width:70px;
-}
-.list_iam_user_login_col:nth-child(8){
-	width: 600px;
 }
 /* MENU 4 APP ADMIN*/
 #menu_4_content_widget1{
@@ -731,7 +643,7 @@ body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 	display: inline-block;
 }
 /*CONNECTED*/
-.app_role_superadmin, .app_role_admin, .app_role_user, .app_role_system_admin{
+.app_role_admin{
 	transform: translate(5px,-1px) scale(1.5);
 }
 .list_connected_col{
@@ -986,12 +898,12 @@ body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 }
 /* MENU INSTALLATION*/
 #menu_7_content_widget1{
-	height: calc(100%  + 10px);
+	height: calc(50% - 10px);
 	display: flex;
 	flex-direction: column;
 }
 #menu_7_content_widget2{
-	height: calc(100%  + 10px);
+	height: calc(50% - 10px);
 	display: flex;
 	flex-direction: column;
 }
@@ -1164,10 +1076,6 @@ body.rtl #list_monitor_last::before{					content:var(--common_app_icon_first)}
 	height: auto !important;
 	text-align: center;
 }
-#common_user_start_close{
-	display: none;
-}
-
 #common_profile_input_row,
 #common_profile_search_list_wrap{
 	visibility: hidden;

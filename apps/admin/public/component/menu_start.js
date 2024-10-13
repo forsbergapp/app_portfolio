@@ -6,15 +6,11 @@
  * 
  */
 /**
- * @param {{system_admin:string|null,
- *          maintenance:0|1|null}} props
+ * @param {{maintenance:0|1|null}} props
  */
 const template = props => ` <div id='menu_1_content_widget1' class='widget'>
                                 <div id='menu_1_row_sample'>
-                                    ${props.system_admin!=null?
-                                        '<div id=\'select_system_admin_stat\'></div>':
-                                        ''
-                                    }
+                                    <div id='select_admin_stat'></div>':    
                                     <div id='select_app_menu1'></div>
                                     <div id='select_year_menu1'></div>
                                     <div id='select_month_menu1'></div>
@@ -22,15 +18,12 @@ const template = props => ` <div id='menu_1_content_widget1' class='widget'>
                                 <div id='graphBox'></div>
                             </div>
                             <div id='menu_1_content_widget2' class='widget'>
-                                    ${props.system_admin!=null?
-                                        `<div id='menu_1_maintenance'>
-                                            <div id='menu_1_maintenance_title' class='common_icon'></div>
-                                            <div id='menu_1_maintenance_checkbox'>
-                                                <div id='menu_1_checkbox_maintenance' class='common_switch ${props.maintenance==1?'checked':''}'></div>
-                                            </div>
-                                        </div>`:
-                                        ''
-                                    }
+                                <div id='menu_1_maintenance'>
+                                    <div id='menu_1_maintenance_title' class='common_icon'></div>
+                                    <div id='menu_1_maintenance_checkbox'>
+                                        <div id='menu_1_checkbox_maintenance' class='common_switch ${props.maintenance==1?'checked':''}'></div>
+                                    </div>
+                                </div>
                                 <div id='menu_1_broadcast'>
                                     <div id='menu_1_broadcast_title' class='common_icon'></div>
                                     <div id='menu_1_broadcast_button' class='chat_click common_icon'></div>
@@ -38,11 +31,12 @@ const template = props => ` <div id='menu_1_content_widget1' class='widget'>
                             </div>`;
 /**
 * 
-* @param {{ data:{      commonMountdiv:string,
-*                       system_admin:string},
-*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+* @param {{ data:       {commonMountdiv:string},
+*           methods:    {
+*                       COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
 *                       commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
+*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+*                       },
 *           lifecycle:  null}} props
 * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
 *                      data:null,
@@ -52,12 +46,12 @@ const template = props => ` <div id='menu_1_content_widget1' class='widget'>
 const component = async props => {
     //system admin
     /**@type{{status_codes:[number, string][]}} */
-    const result_obj = props.data.system_admin!=null?await props.methods.commonFFB({path:'/server/info-statuscode', method:'GET', authorization_type:'SYSTEMADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result)):[];
+    const result_obj = await props.methods.commonFFB({path:'/server/info-statuscode', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result));
 
     //system admin
     // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]', TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']}
     // response has empty statgroup
-    const stat_options = props.data.system_admin!=null?[
+    const stat_options = [
         {VALUE:'request#ip_total#0#ip',                             TEXT:'REQUEST - IP TOTAL'},
         {VALUE:'request#ip_unqiue#1#ip',                            TEXT:'REQUEST - IP UNIQUE'},
         {VALUE:'request#url_total#0#url',                           TEXT:'REQUEST - URL TOTAL'},
@@ -70,29 +64,27 @@ const component = async props => {
         ...Object.entries(result_obj.status_codes).map(code=>{
             return {VALUE:`response#${code[0]}#1#`, TEXT:`RESPONSE - ${code[0]} - ${code[1]}`};
         })
-    ]:[];
-    //system admin
+    ];
     /**@type{0|1|null} */
-    const maintenance = props.data.system_admin!=null?await props.methods.commonFFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=METADATA&parameter=MAINTENANCE', method:'GET', authorization_type:'SYSTEMADMIN'})
-                                .then((/**@type{string}*/result)=>JSON.parse(result).data):null;
+    const maintenance = await props.methods.commonFFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=METADATA&parameter=MAINTENANCE', method:'GET', authorization_type:'ADMIN'})
+                                .then((/**@type{string}*/result)=>JSON.parse(result).data);
 
    const onMounted = async () =>{
         //mount select
-        if (props.data.system_admin)
-            await props.methods.commonComponentRender({mountDiv:'select_system_admin_stat',
-                data:{
-                    default_value:'REQUEST - IP TOTAL',
-                    default_data_value:'request#ip_total#0#ip',
-                    options:stat_options,
-                    path:'',
-                    query:'',
-                    method:'',
-                    authorization_type:'',
-                    column_value:'VALUE',
-                    column_text:'TEXT'
-                    },
-                methods:{commonFFB:props.methods.commonFFB},
-                path:'/common/component/common_select.js'});
+        await props.methods.commonComponentRender({mountDiv:'select_admin_stat',
+            data:{
+                default_value:'REQUEST - IP TOTAL',
+                default_data_value:'request#ip_total#0#ip',
+                options:stat_options,
+                path:'',
+                query:'',
+                method:'',
+                authorization_type:'',
+                column_value:'VALUE',
+                column_text:'TEXT'
+                },
+            methods:{commonFFB:props.methods.commonFFB},
+            path:'/common/component/common_select.js'});
 
         await props.methods.commonComponentRender({mountDiv:'select_year_menu1',
                 data:{
@@ -135,7 +127,7 @@ const component = async props => {
                     path:'/server-config/config-apps/',
                     query:'key=NAME',
                     method:'GET',
-                    authorization_type:props.data.system_admin?'SYSTEMADMIN':'APP_ACCESS',
+                    authorization_type:'ADMIN',
                     column_value:'APP_ID',
                     column_text:'NAME'
                    },
@@ -146,7 +138,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:   null,
         methods:null,
-        template: template({system_admin:props.data.system_admin, maintenance:maintenance})
+        template: template({maintenance:maintenance})
     };
 };
 export default component;

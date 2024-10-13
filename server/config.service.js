@@ -338,13 +338,13 @@ const CheckFirstTime = () => {
         return false;
 };
 /**
- * Create system admin
+ * Create admin
  * @async
  * @param {string} admin_name
  * @param {string} admin_password
  * @returns {Promise.<void>}
  */
-const CreateSystemAdmin = async (admin_name, admin_password) => {
+const CreateAdmin = async (admin_name, admin_password) => {
     /**@type{import('./security.service.js')} */
     const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.service.js`);
     
@@ -361,5 +361,5 @@ const CreateSystemAdmin = async (admin_name, admin_password) => {
 };
 
 export{ ConfigFileGet, ConfigFileSave, CheckFirstTime,
-        CreateSystemAdmin, 
+        CreateAdmin, 
         ConfigGet, ConfigGetApps, ConfigGetApp, ConfigAppSecretDBReset, ConfigAppSecretUpdate, ConfigAppParameterUpdate, InitConfig};

@@ -175,18 +175,6 @@ GRANT SELECT ON <DB_SCHEMA/>.app_device TO app_portfolio_role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_device TO app_portfolio_role_app_admin;
 
-CREATE TABLE <DB_SCHEMA/>.app_role (
-    id        INTEGER NOT NULL,
-    role_name VARCHAR(100) NOT NULL,
-    icon      VARCHAR(10) NOT NULL
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.app_role TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_role TO app_portfolio_role_app_admin;
-
-ALTER TABLE <DB_SCHEMA/>.app_role ADD CONSTRAINT app_role_pk PRIMARY KEY ( id );
-
 CREATE TABLE <DB_SCHEMA/>.app_setting (
     id                                      INT NOT NULL AUTO_INCREMENT,
     app_setting_type_app_id                 INTEGER NOT NULL,
@@ -343,7 +331,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account (
     provider_image        TEXT,
     provider_image_url    VARCHAR(1000),
     provider_email        VARCHAR(1000),
-    app_role_id           INTEGER,
 	CONSTRAINT user_account_pk PRIMARY KEY ( id )
 );
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account TO app_portfolio_role_app_common;
@@ -664,11 +651,6 @@ ALTER TABLE <DB_SCHEMA/>.user_account_app_data_post_view
     ADD CONSTRAINT user_account_app_data_post_view_user_account_app_data_post_fk FOREIGN KEY ( user_account_app_data_post_id )
         REFERENCES <DB_SCHEMA/>.user_account_app_data_post ( id )
             ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.user_account
-    ADD CONSTRAINT user_account_app_role_fk FOREIGN KEY ( app_role_id )
-        REFERENCES <DB_SCHEMA/>.app_role ( id );
-
 
 ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_user_account_fk FOREIGN KEY ( user_account_id )

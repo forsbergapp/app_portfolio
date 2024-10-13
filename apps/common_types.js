@@ -172,10 +172,9 @@
  *              info_link_disclaimer_url:string|null,
  *              info_link_terms_url:string|null,
  *              info_link_about_url:string|null,
- *              user_app_role_id:number|null,
- *              system_admin:string|null,
- *              system_admin_first_time:number|null,
- *              system_admin_only:number|null,
+ *              admin:string|null,
+ *              admin_first_time:number|null,
+ *              admin_only:number|null,
  *              user_identity_provider_id:number|null,
  *              user_account_id:number|null,
  *              user_account_username:string|null,
@@ -318,7 +317,7 @@
  */
 /**
  * Type CommonRESTAPIMethod
- * @typedef{'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'SUPERADMIN'|'SYSTEMADMIN'|'SOCKET'|'IAM_SYSTEMADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
+ * @typedef{'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
  */
 
 /**

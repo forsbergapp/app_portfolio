@@ -928,37 +928,6 @@
 </FontObject>
 </fonts>
 </OView>
-<OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="D39180CE-5E3C-B738-D8DD-9F7017611F58" otype="Entity" vid="6E006052-C48C-7457-B8C7-657581A5D404">
-<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="837" y="83" width="170" height="83"/>
-<useCustomFormat>true</useCustomFormat>
-<useDefaultColor>false</useDefaultColor>
-<backgroundColor>-11446785</backgroundColor>
-<foregroundColor>-1</foregroundColor>
-<fonts itemClass="oracle.dbtools.crest.model.design.FontObjectWr">
-<FontObject>
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-1</colorRGB>
-<foTypeID>1</foTypeID>
-</FontObject>
-<FontObject>
-<foType>Attribute</foType>
-<colorRGB>-1</colorRGB>
-<foTypeID>3</foTypeID>
-</FontObject>
-<FontObject>
-<foType>PK Element</foType>
-<colorRGB>-1</colorRGB>
-<foTypeID>7</foTypeID>
-</FontObject>
-<FontObject>
-<foType>Not Null</foType>
-<colorRGB>-1</colorRGB>
-<foTypeID>10</foTypeID>
-</FontObject>
-</fonts>
-</OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="DEE931AE-D5EF-57E2-31C1-C310058B8C88" otype="Entity" vid="5FC3B7A4-B831-D840-E4E3-B40BA4BF224C">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
 <bounds x="1034" y="1999" width="243" height="81"/>
@@ -1409,15 +1378,6 @@
 <points>
 <point x="404" y="738"/>
 <point x="404" y="1079"/>
-</points>
-</Connector>
-<Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="C1134DFF-AA11-B1C7-660D-20DE52748937" otype="Relation" vid_source="6E006052-C48C-7457-B8C7-657581A5D404" vid_target="7834D8AE-E916-ED58-EDE3-2FDEAE93D12E">
-<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<backgroundColor>-16777216</backgroundColor>
-<lineWidth>1</lineWidth>
-<points>
-<point x="837" y="124"/>
-<point x="572" y="124"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="C16F3393-F82B-8713-E9FA-52E1F2B71FC6" otype="Hierarchy relation" vid_source="7834D8AE-E916-ED58-EDE3-2FDEAE93D12E" vid_target="54409511-1D54-0049-67D7-B64B536932B7">

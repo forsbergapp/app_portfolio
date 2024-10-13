@@ -89,7 +89,7 @@ const app_event_click = event => {
                                         token_exp:common.COMMON_GLOBAL.token_exp,
                                         token_iat:common.COMMON_GLOBAL.token_iat,
                                         token_timestamp: common.COMMON_GLOBAL.token_timestamp,
-                                        system_admin:common.COMMON_GLOBAL.system_admin,
+                                        admin:common.COMMON_GLOBAL.admin,
                                         user_locale:common.COMMON_GLOBAL.user_locale,
                                         user_timezone:common.COMMON_GLOBAL.user_timezone,
                                         user_direction:common.COMMON_GLOBAL.user_direction,
@@ -97,7 +97,7 @@ const app_event_click = event => {
                                         },
                             methods:    {
                                         commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
-                                       commonFFB:common.commonFFB,
+                                        commonFFB:common.commonFFB,
                                         commonComponentRender:common.commonComponentRender,
                                         commonUserSessionCountdown:common.commonUserSessionCountdown,
                                         commonMessageShow:common.commonMessageShow
@@ -245,14 +245,14 @@ const app_theme_update = (toggle_theme=false) => {
 
 /**
  * User login app
- * @param {boolean|null} system_admin 
+ * @param {boolean|null} admin 
  * @param {string|null} username_verify
  * @param {string|null} password_verify
  * @param {number|null} provider_id 
  * @returns {Promise.<void>}
  */
-const user_login_app = async (system_admin=false, username_verify=null, password_verify=null, provider_id=null) =>{
-    common.commonUserLogin(system_admin, username_verify, password_verify, provider_id)
+const user_login_app = async (admin=false, username_verify=null, password_verify=null, provider_id=null) =>{
+    common.commonUserLogin(admin, username_verify, password_verify, provider_id)
     .then(()=>get_apps());
 };
 /**
@@ -310,7 +310,7 @@ const framework_set = async (framework=null) => {
 /**
  * Init app
  * @param {{app:*[],
- *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ *          app_service:{admin_only:number, first_time:number}}} parameters 
  * @returns {Promise.<void>}
  */
 const init_app = async (parameters) => {
@@ -366,7 +366,7 @@ const init = parameters => {
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
     common.COMMON_GLOBAL.app_function_exception = app_exception;
     common.COMMON_GLOBAL.app_function_session_expired = user_logout_app;
-    common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
+    common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{admin_only:number, first_time:number}}}*/decodedparameters)=>{
         init_app(decodedparameters);
     });
 };

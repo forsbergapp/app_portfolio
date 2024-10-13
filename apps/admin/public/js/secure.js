@@ -62,7 +62,7 @@ const show_menu = menu => {
         //START
         case 1:{
             common.commonComponentRender({mountDiv:   'menu_content',
-                                    data:       {system_admin:common.COMMON_GLOBAL.system_admin},
+                                    data:       null,
                                     methods:    {
                                                 commonComponentRender:common.commonComponentRender, 
                                                 commonFFB:common.commonFFB
@@ -110,8 +110,7 @@ const show_menu = menu => {
                 mountDiv:   'menu_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id, 
-                            system_admin:common.COMMON_GLOBAL.system_admin,
-                            system_admin_only:common.COMMON_GLOBAL.system_admin_only,
+                            admin_only:common.COMMON_GLOBAL.admin_only,
                             service_socket_client_ID: common.COMMON_GLOBAL.service_socket_client_ID,
                             client_latitude:common.COMMON_GLOBAL.client_latitude,
                             client_longitude:common.COMMON_GLOBAL.client_longitude,
@@ -150,7 +149,7 @@ const show_menu = menu => {
         case 7:{
             common.commonComponentRender({
                 mountDiv:   'menu_content',
-                data:       {system_admin:common.COMMON_GLOBAL.system_admin},
+                data:       null,
                 methods:    {commonFFB:common.commonFFB},
                 path:       '/component/menu_installation.js'});
             break;
@@ -189,7 +188,7 @@ const show_menu = menu => {
 const show_charts = async () => {
     common.commonComponentRender({
         mountDiv:   'graphBox',
-        data:       {system_admin:common.COMMON_GLOBAL.system_admin},
+        data:       null,
         methods:    {
                     commonComponentRender:common.commonComponentRender,
                     commonFFB:common.commonFFB
@@ -227,17 +226,13 @@ const sendBroadcast = () => {
                             broadcast_type:     broadcast_type, 
                             broadcast_message:  common.commonWindowToBase64(broadcast_message)};
         let path='';
-        /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
-        let token_type;
-        if (common.COMMON_GLOBAL.system_admin!=null){
+        if (common.COMMON_GLOBAL.admin!=null){
             path = '/server-socket/message';
-            token_type = 'SYSTEMADMIN';
         }
         else{
             path = '/server-socket/message';
-            token_type = 'APP_ACCESS';
         }
-        common.commonFFB({path:path, method:'POST', authorization_type:token_type, body:json_data})
+        common.commonFFB({path:path, method:'POST', authorization_type:'ADMIN', body:json_data})
         .then((/**@type{string}*/result)=>{
             if (Number(JSON.parse(result).sent) > 0)
                 common.commonMessageShow('INFO', null, null, 'message_success', `(${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
@@ -263,7 +258,7 @@ const closeBroadcast = () => {
 const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
     common.commonComponentRender({
         mountDiv:       'dialogue_send_broadcast',
-        data:           {system_admin:common.COMMON_GLOBAL.system_admin},
+        data:           null,
         methods:        {
                         commonComponentRender:common.commonComponentRender,
                         commonFFB:common.commonFFB
@@ -344,7 +339,7 @@ const set_maintenance = () => {
     else
         check_value = 0;
     const json_data = {maintenance:check_value};
-    common.commonFFB({path:'/server-config/config/CONFIG_SERVER', method:'PUT', authorization_type:'SYSTEMADMIN', body:json_data}).catch(()=>null);
+    common.commonFFB({path:'/server-config/config/CONFIG_SERVER', method:'PUT', authorization_type:'ADMIN', body:json_data}).catch(()=>null);
 };
 /**
  * 
@@ -357,7 +352,6 @@ const search_users = (sort='username', order_by='asc') => {
         mountDiv:   'list_user_account',
         data:       {
                     user_account_id:common.COMMON_GLOBAL.user_account_id,
-                    user_app_role_id:common.COMMON_GLOBAL.user_app_role_id,
                     sort:sort,
                     order_by:order_by
                     },
@@ -381,7 +375,6 @@ const button_save = async (item) => {
                                         record,
                                         item,
                                         {   user_account:{  id:0,
-                                                            app_role_id:0,
                                                             active:0,
                                                             user_level:0,
                                                             private:0,
@@ -408,7 +401,6 @@ const button_save = async (item) => {
                                         record,
                                         item,
                                         {   user_account:{  id:0,
-                                                            app_role_id:0,
                                                             active:0,
                                                             user_level:0,
                                                             private:0,
@@ -438,7 +430,6 @@ const button_save = async (item) => {
                                         record,
                                         item,
                                         {   user_account:{  id:record.children[1].children[0].textContent,
-                                                            app_role_id:record.children[2].children[0].textContent,
                                                             active:record.children[4].children[0].textContent,
                                                             user_level:record.children[5].children[0].textContent,
                                                             private:record.children[6].children[0].textContent,
@@ -488,7 +479,7 @@ const button_save = async (item) => {
                                                 config_server():
                                                     JSON.parse(COMMON_DOCUMENT.querySelector('#list_config_edit').textContent)};
 
-            common.commonFFB({path:`/server-config/config/${file}`, method: 'PUT', authorization_type:'SYSTEMADMIN', body:json_data, spinner_id:item});
+            common.commonFFB({path:`/server-config/config/${file}`, method: 'PUT', authorization_type:'ADMIN', body:json_data, spinner_id:item});
             break;
         }
     }
@@ -499,7 +490,6 @@ const button_save = async (item) => {
  * @param {HTMLElement} row_element 
  * @param {string} button 
  * @param {{user_account:{  id:number,
- *                          app_role_id:number,
  *                          active:number,
  *                          user_level:number,
  *                          private:number,
@@ -523,14 +513,11 @@ const update_record = async (table,
                              parameters) => {
     let path = '';
     let json_data;
-    /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
-    let token_type;
     /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
     let method;
     switch (table){
         case 'user_account':{
-            json_data = {   app_role_id:        parameters.user_account.app_role_id,
-                            active:             parameters.user_account.active,
+            json_data = {   active:             parameters.user_account.active,
                             user_level:         parameters.user_account.user_level,
                             private:            parameters.user_account.private,
                             username:           parameters.user_account.username,
@@ -541,7 +528,6 @@ const update_record = async (table,
                             password_reminder:  parameters.user_account.password_reminder,
                             verification_code:  parameters.user_account.verification_code};
             path = `/server-db_admin/user_account/${parameters.user_account.id}`;
-            token_type = 'SUPERADMIN';
             method = 'PATCH';
             break;
         }
@@ -550,7 +536,6 @@ const update_record = async (table,
                             app_category_id:parameters.app.app_category_id
                         };
             path = `/server-db_admin/apps/${parameters.app.id}`;
-            token_type = 'APP_ACCESS';
             method = 'PUT';
             break;
         }
@@ -559,12 +544,11 @@ const update_record = async (table,
                             parameter_value:    parameters.app_parameter.parameter_value,
                             parameter_comment:  parameters.app_parameter.parameter_comment};
             path = `/server-config/config-apps-parameter/${parameters.app_parameter.app_id}`;
-            token_type = 'APP_ACCESS';
             method = 'PATCH';
             break;
         }
     }
-    await common.commonFFB({path:path, method:method, authorization_type:token_type, body:json_data, spinner_id:button})
+    await common.commonFFB({path:path, method:method, authorization_type:'ADMIN', body:json_data, spinner_id:button})
             .then(()=>row_element.setAttribute('data-changed-record', '0'));
 };
 
@@ -576,12 +560,11 @@ const update_record = async (table,
  * @param {string} path 
  * @param {string} query
  * @param {import('../../../common_types.js').CommonRESTAPIMethod} method 
- * @param {import('../../../common_types.js').CommonRESTAPIAuthorizationType} tokentype 
  * @param {{demo_password:string}|null} data 
  * @returns {void}
  */
-const installation_function = (id, db_icon, path, query, method, tokentype, data) => {
-    common.commonFFB({path:path, query:query, method:method, authorization_type:tokentype, body:data, spinner_id:id})
+const installation_function = (id, db_icon, path, query, method, data) => {
+    common.commonFFB({path:path, query:query, method:method, authorization_type:'ADMIN', body:data, spinner_id:id})
     .then((/**@type{string}*/result)=>{
         if (db_icon!=null)
             if (db_icon)
@@ -600,7 +583,7 @@ const db_install = () =>{
     installation_function(  'install_db_button_install', true, 
                             '/server-db_admin/database', 
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 
-                            'POST', 'SYSTEMADMIN', null);
+                            'POST', null);
 };
 /**
  * Uninstalls DB
@@ -610,7 +593,7 @@ const db_uninstall = () =>{
     common.commonComponentRemove('common_dialogue_message');
     installation_function(  'install_db_button_uninstall', false, 
                             '/server-db_admin/database', 
-                            `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 'DELETE', 'SYSTEMADMIN', null);
+                            `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 'DELETE', null);
 };
 /**
  * Installs Demo data
@@ -625,7 +608,7 @@ const demo_install = () =>{
         installation_function(  'install_demo_button_install', null, 
                                 '/server-db_admin/database-demo', 
                                 `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
-                                'POST', 'APP_ACCESS', json_data);
+                                'POST', json_data);
     }
 };
 /**
@@ -636,7 +619,7 @@ const demo_uninstall = () =>{
     installation_function(  'install_demo_button_uninstall', null, 
                             '/server-db_admin/database-demo', 
                             `?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
-                            'DELETE', 'APP_ACCESS', null);
+                            'DELETE', null);
 };
 
 /**
@@ -657,7 +640,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     if( event_target_id == 'select_app_menu1' ||
                         event_target_id == 'select_year_menu1'||
                         event_target_id == 'select_month_menu1' ||
-                        event_target_id == 'select_system_admin_stat'){
+                        event_target_id == 'select_admin_stat'){
                         show_charts();    
                     }
                     if( event_target_id == 'select_broadcast_type')
@@ -814,11 +797,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         common.commonLovEvent(event, 'APP_CATEGORY');
                     break;
                 }
-                case 'list_user_account':{
-                    if (event.target.classList.contains('common_list_lov_click'))
-                        common.commonLovEvent(event, 'APP_ROLE');
-                    break;
-                }
                 case 'send_broadcast_send':{
                     sendBroadcast();
                     break;
@@ -868,17 +846,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').textContent = '';
                     else
                         common.commonLovAction(event, 'APP_CATEGORY', null, '/server-db_admin/app_category', `id=${event.target.textContent}`, 'GET', 'APP_ACCESS', null);
-                //app role LOV
-                if (common.commonElementRow(event.target).classList.contains('list_user_account_row') && event.target.classList.contains('common_input_lov')){
-                    let app_role_id_lookup='';
-                    const old_value =event.target.textContent;
-                    //if empty then lookup default
-                    if (event.target.textContent=='')
-                        app_role_id_lookup='2';
-                    else
-                        app_role_id_lookup=event.target.textContent;
-                    common.commonLovAction(event, 'APP_ROLE', old_value, '/server-db_admin/app_role', `id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null);
-                }
             }
             break;
         }
@@ -941,16 +908,6 @@ const init = () => {
     //SET GLOBALS
     APP_GLOBAL.previous_row= {};
 
-    for (let i=1;i<=10;i++){
-        COMMON_DOCUMENT.querySelector(`#menu_${i}`).style.display='none';
-    }
-    if (common.COMMON_GLOBAL.system_admin!=null){
-        COMMON_DOCUMENT.querySelector('#menu_secure').classList.add('system_admin');
-        show_menu(1);
-    }
-    else{
-        COMMON_DOCUMENT.querySelector('#menu_secure').classList.add('admin');
-        show_menu(1);
-    }
+    show_menu(1);
 };
 export {delete_globals, show_menu, app_events, init,show_broadcast_dialogue};

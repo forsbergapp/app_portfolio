@@ -43,7 +43,7 @@ const template = props => ` <div id='list_app_parameter_row_title' class='list_a
  *                      template:string}>}
  */
 const component = async props => {
-    const app_parameters = await props.methods.commonFFB({path:`/server-config/config-apps/${props.data.app_id_data}`, query:'key=PARAMETERS', method:'GET', authorization_type:'APP_ACCESS'})
+    const app_parameters = await props.methods.commonFFB({path:`/server-config/config-apps/${props.data.app_id_data}`, query:'key=PARAMETERS', method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result)[0].PARAMETERS);
 
     return {

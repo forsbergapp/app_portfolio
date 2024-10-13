@@ -445,7 +445,7 @@ const commonComponentCreate = async parameters =>{
                                                         user_agent:parameters.componentParameters.user_agent ??'', 
                                                         accept_language:parameters.componentParameters.locale??''}):
                                     null;
-    const system_admin_only = await commonAppStart()==true?0:1;
+    const admin_only = await commonAppStart()==true?0:1;
     
     switch (parameters.type){
         case 'APP':{
@@ -466,14 +466,14 @@ const commonComponentCreate = async parameters =>{
                 app_rest_api_version:   getNumberValue(fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS.filter((/**@type{*}*/parameter)=>'APP_REST_API_VERSION' in parameter)[0].APP_REST_API_VERSION) ?? 1,
                 app_idtoken:            idtoken ?? '',
                 locale:                 parameters.componentParameters.locale ?? '',
-                system_admin_only:      system_admin_only,
+                admin_only:      admin_only,
                 client_latitude:        result_geodata?.latitude,
                 client_longitude:       result_geodata?.longitude,
                 client_place:           result_geodata?.place ?? '',
                 client_timezone:        result_geodata?.timezone,
                 common_app_id:          common_app_id,
                 rest_resource_bff:      fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'REST_RESOURCE_BFF' in key)[0].REST_RESOURCE_BFF ?? '/bff',
-                first_time:             system_admin_only==1?(CheckFirstTime()==true?1:0):0
+                first_time:             admin_only==1?(CheckFirstTime()==true?1:0):0
             };
             const ITEM_COMMON_PARAMETERS  = {app:   fileCache('CONFIG_APPS').APPS[parameters.app_id].PARAMETERS
                                                                         .map((/**@type{*}*/parameter)=>{

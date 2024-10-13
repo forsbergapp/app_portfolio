@@ -67,21 +67,13 @@ const component = async props => {
             lov_column = 'filename';
             path = '/server-log/log-files';
             query= null;
-            token_type = 'SYSTEMADMIN';
+            token_type = 'ADMIN';
             break;
         }
         case 'APP_CATEGORY':{
             method = 'GET';
             lov_column = 'app_category_text';
             path = '/server-db_admin/app_category';
-            query= null;
-            token_type = 'APP_ACCESS';
-            break;
-        }
-        case 'APP_ROLE':{
-            method = 'GET';
-            lov_column = 'icon';
-            path = '/server-db_admin/app_role';
             query= null;
             token_type = 'APP_ACCESS';
             break;

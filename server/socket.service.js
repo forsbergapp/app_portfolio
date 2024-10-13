@@ -112,17 +112,17 @@ const ClientAdd = (newClient) => {
  * @param {number} app_id,
  * @param {number|null} client_id
  * @param {number|null} user_account_id
- * @param {string|null} system_admin
+ * @param {string|null} admin
  * @param {string|null} authorization_bearer
  * @param {string|null} token_access
- * @param {string|null} token_systemadmin
+ * @param {string|null} token_admin
  * @param {string} ip
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
  * @param {import('./types.js').server_server_res} res
  * @returns {Promise.<void>}
  */
- const ConnectedUpdate = async (app_id, client_id, user_account_id, system_admin, authorization_bearer, token_access, token_systemadmin, ip, headers_user_agent, headers_accept_language, res) => {
+ const ConnectedUpdate = async (app_id, client_id, user_account_id, admin, authorization_bearer, token_access, token_admin, ip, headers_user_agent, headers_accept_language, res) => {
     if (CONNECTED_CLIENTS.filter(row=>row.id==client_id && row.authorization_bearer == authorization_bearer).length==0){
         /**@type{import('./iam.service.js')} */
         const {not_authorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
@@ -136,8 +136,8 @@ const ClientAdd = (newClient) => {
                 connected.user_account_id = user_account_id;
                 connected.token_access = token_access;
                 connected.identity_provider_id = connectUserData.identity_provider_id;
-                connected.system_admin = system_admin ?? '';
-                connected.token_systemadmin = token_systemadmin;
+                connected.admin = admin ?? '';
+                connected.token_admin = token_admin;
                 connected.gps_latitude = connectUserData.latitude;
                 connected.gps_longitude = connectUserData.longitude;
                 connected.place = connectUserData.place;
@@ -170,7 +170,7 @@ const ClientAdd = (newClient) => {
  * @param {string} broadcast_message
  * @returns {{sent:number}}
  */
- const SocketSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
+ const SocketSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
     if (broadcast_type=='ALERT' || broadcast_type=='MAINTENANCE'){
         //broadcast INFO or MAINTENANCE to all connected to given app_id 
         //except MAINTENANCE to admin and current user
@@ -209,13 +209,10 @@ const ClientAdd = (newClient) => {
  * @param {number|null} day
  * @param {string} order_by
  * @param {import('./types.js').server_socket_connected_list_sort} sort
- * @param {number} dba
  * @returns {Promise.<import('./types.js').server_socket_connected_list_no_res[]>}
  */
- const ConnectedList = async (app_id, app_id_select, limit, year, month, day, order_by, sort, dba) => {
+ const ConnectedList = async (app_id, app_id_select, limit, year, month, day, order_by, sort) => {
     
-    /**@type{import('../apps/common/src/common.service.js')} */
-    const { commonAppStart } = await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
     //filter    
     /**@type{import('./types.js').server_socket_connected_list_no_res[]} */
     let connected_clients_no_res =[];
@@ -224,11 +221,9 @@ const ClientAdd = (newClient) => {
         connected_clients_no_res.push({ id: client.id,
                                         app_id: client.app_id, 
                                         authorization_bearer:client.authorization_bearer,
-                                        app_role_icon:'',
-                                        app_role_id:'',
                                         user_account_id: client.user_account_id,
                                         identity_provider_id: client.identity_provider_id,
-                                        system_admin: client.system_admin,
+                                        admin: client.admin,
                                         connection_date: client.connection_date,
                                         gps_latitude: client.gps_latitude ?? '',
                                         gps_longitude: client.gps_longitude ?? '',
@@ -283,64 +278,10 @@ const ClientAdd = (newClient) => {
         });
     };
     if (connected_clients_no_res.length>0){
-        //update with user role
-        /**@type{import('./db/sql/user_account.service.js')} */
-        const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
-        for (const client of connected_clients_no_res){
-            if (client.system_admin=='')
-                if (await commonAppStart()==true){    
-                    await getUserRoleAdmin(app_id, client.user_account_id, dba)
-                    .then((/**@type{import('./types.js').server_db_sql_result_user_account_getUserRoleAdmin[]}*/result_app_role)=>{
-                        if (result_app_role[0]){
-                            client.app_role_id = result_app_role[0].app_role_id;
-                            client.app_role_icon = result_app_role[0].icon;
-                        }
-                    });
-                }
-            else{
-                client.app_role_id = '';
-                client.app_role_icon = '';
-            } 
-        }
         return sort_and_return(sort);
     }
     else
         return [];
-};
-/**
- * Socket client send as admin
- * @param {number|null} app_id
- * @param {number|null} client_id
- * @param {number|null} client_id_current
- * @param {import('./types.js').server_socket_broadcast_type_admin} broadcast_type
- * @param {string} broadcast_message
- * @returns {{sent:number}}
- */
- const SocketSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
-    if (broadcast_type=='ALERT' || broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
-        //admin can only broadcast INFO or CHAT
-        if (broadcast_type=='ALERT'){
-            let sent = 0;
-            for (const client of CONNECTED_CLIENTS){
-                if (client.id != client_id_current)
-                    if (client.app_id == app_id || app_id == null){
-                        ClientSend(client.response, broadcast_message, broadcast_type);
-                        sent++;
-                    }
-            }
-            return {sent:sent};
-        }
-        if (broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
-            //broadcast CHAT to specific client
-            for (const client of CONNECTED_CLIENTS){
-                if (client.id == client_id){
-                    ClientSend(client.response, broadcast_message, broadcast_type);
-                    return {sent:1};
-                }
-            }
-        }
-    }    
-    return {sent:0};
 };
 /**
  * 
@@ -377,12 +318,12 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
                                                         connected.user_account_id != null)||
                                                         (identity_provider_id ==null &&
                                                         connected.identity_provider_id ==null &&
-                                                        (connected.user_account_id != null ||connected.system_admin != ''))).length};
+                                                        (connected.user_account_id != null ||connected.admin != ''))).length};
     else
         return {count_connected:CONNECTED_CLIENTS.filter(connected =>identity_provider_id ==null &&
                                                     connected.identity_provider_id ==null &&
                                                     connected.user_account_id ==null &&
-                                                    connected.system_admin == '').length};
+                                                    connected.admin == '').length};
 };
 
 /**
@@ -390,7 +331,7 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
  * Used by EventSource and leaves connection open
  * @param {number} app_id
  * @param {number|null} user_account_id
- * @param {string|null} system_admin
+ * @param {string|null} admin
  * @param {string|null} authorization_bearer
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
@@ -400,7 +341,7 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
  */
  const SocketConnect = async (  app_id, 
                                 user_account_id, 
-                                system_admin,
+                                admin,
                                 authorization_bearer,
                                 headers_user_agent, 
                                 headers_accept_language,
@@ -426,8 +367,8 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
                             user_account_id:        user_account_id,
                             token_access:           null,
                             identity_provider_id:   connectUserData.identity_provider_id,
-                            system_admin:           system_admin,
-                            token_systemadmin:      null,
+                            admin:                  admin,
+                            token_admin:            null,
                             connection_date:        new Date().toISOString(),
                             gps_latitude:           connectUserData.latitude,
                             gps_longitude:          connectUserData.longitude,
@@ -459,7 +400,7 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
     if (ConfigGetApp(app_id, app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START =='1'){
         setInterval(() => {
             if (getNumberValue(fileCache('CONFIG_SERVER').METADATA.MAINTENANCE)==1){
-                SocketSendSystemAdmin(null, null, null, 'MAINTENANCE', '');
+                SocketSendAdmin(null, null, null, 'MAINTENANCE', '');
             }
             SocketUpdateExpiredTokens();
         //set default interval to 5 seconds if no parameter is set
@@ -467,15 +408,15 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
     }
 };
 /**
- * Sends SESSIONE_EXPIRED message to clients with expired token
+ * Sends SESSION_EXPIRED message to clients with expired token
  * @returns {void}
  */
 const SocketUpdateExpiredTokens = () =>{
     for (const client of CONNECTED_CLIENTS){
         if (client.token_access && expired_token(client.app_id, 'APP_ACCESS', client.token_access)||
-            client.token_systemadmin && expired_token(null, 'SYSTEMADMIN', client.token_systemadmin))
+            client.token_admin && expired_token(null, 'ADMIN', client.token_admin))
             ClientSend(client.response, '', 'SESSION_EXPIRED');
     }
 };
 
-export {ClientSend, ConnectedUpdate, ConnectedGet, SocketSendSystemAdmin, ConnectedList, SocketSendAdmin, SocketSendAppServerFunction, ConnectedCount, SocketConnect, SocketCheckInterval};
+export {ClientSend, ConnectedUpdate, ConnectedGet, ConnectedList, SocketSendAdmin, SocketSendAppServerFunction, ConnectedCount, SocketConnect, SocketCheckInterval};
