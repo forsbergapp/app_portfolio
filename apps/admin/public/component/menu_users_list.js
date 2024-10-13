@@ -4,11 +4,8 @@
 /**
  * Displays stat of users
  * @param {{user_account_id:number,
- *          user_app_role_id:number,
  *          users:[{id:number,
  *                  avatar:string, 
- *                  app_role_id:number|null, 
- *                  app_role_icon:string, 
  *                  active:0|1|null,
  *                  level:number|null,
  *                  private:number|null,
@@ -34,8 +31,6 @@
 const template = props => ` <div class='list_user_account_row'>
                                 <div data-column='avatar' class='list_user_account_col list_title common_icon ${props.function_get_order_by('avatar')}'></div>
                                 <div data-column='id' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('id')}'></div>
-                                <div data-column='app_role_id' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('app_role_id')}'></div>
-                                <div data-column='app_role_icon' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('app_role_icon')}'></div>
                                 <div data-column='active' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('active')}'></div>
                                 <div data-column='user_level' class='list_user_account_col list_sort_click list_title ${props.function_get_order_by('user_level')}'></div>
                                 <div data-column='private' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('private')}'></div>
@@ -68,45 +63,34 @@ const template = props => ` <div class='list_user_account_row'>
                                         <div class='list_readonly'>${user.id}</div>
                                     </div>
                                     <div class='list_user_account_col'>
-                                        <div    contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit ${props.user_app_role_id==0?'common_input_lov':''}' 
-                                                data-defaultValue='${user.app_role_id ?? ''}'>${user.app_role_id ?? ''}</div>
-                                        ${props.user_app_role_id==0?
-                                            '<div class=\'common_lov_button common_list_lov_click common_icon\'></div>':
-                                            ''
-                                        }
+                                        <div contentEditable='true' class='common_input list_edit'>${user.active ?? ''}</div>
                                     </div>
                                     <div class='list_user_account_col'>
-                                        <div class='list_readonly common_lov_value'>${user.app_role_icon}</div>
+                                        <div contentEditable='true' class='common_input list_edit'>${user.level ?? ''}</div>
                                     </div>
                                     <div class='list_user_account_col'>
-                                        <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.active ?? ''}</div>
+                                        <div contentEditable='true' class='common_input list_edit'>${user.private ?? ''}</div>
                                     </div>
                                     <div class='list_user_account_col'>
-                                        <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.level ?? ''}</div>
+                                        <div contentEditable='true' class='common_input list_edit'>${user.username ?? ''}</div>
                                     </div>
                                     <div class='list_user_account_col'>
-                                        <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.private ?? ''}</div>
+                                        <div contentEditable='true' class='common_input list_edit'>${user.bio ?? ''}</div>
                                     </div>
                                     <div class='list_user_account_col'>
-                                        <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.username ?? ''}</div>
+                                        <div contentEditable='true' class='common_input list_edit'>${user.email ?? ''}</div>
                                     </div>
                                     <div class='list_user_account_col'>
-                                        <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.bio ?? ''}</div>
+                                        <div contentEditable='true' class='common_input list_edit'>${user.email_unverified ?? ''}</div>
                                     </div>
                                     <div class='list_user_account_col'>
-                                        <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.email ?? ''}</div>
+                                        <div contentEditable='true' class='common_input list_edit common_input_password' placeholder='******'></div>
                                     </div>
                                     <div class='list_user_account_col'>
-                                        <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.email_unverified ?? ''}</div>
+                                        <div contentEditable='true' class='common_input list_edit'>${user.password_reminder ?? ''}</div>
                                     </div>
                                     <div class='list_user_account_col'>
-                                        <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit common_input_password' placeholder='******'></div>
-                                    </div>
-                                    <div class='list_user_account_col'>
-                                        <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.password_reminder ?? ''}</div>
-                                    </div>
-                                    <div class='list_user_account_col'>
-                                        <div contentEditable='${props.user_app_role_id==0?'true':'false'}' class='common_input list_edit'>${user.verification_code ?? ''}</div>
+                                        <div contentEditable='true' class='common_input list_edit'>${user.verification_code ?? ''}</div>
                                     </div>
                                     <div class='list_user_account_col'>
                                         <div class='list_readonly'>${user.identity_provider ?? ''}</div>
@@ -147,7 +131,6 @@ const template = props => ` <div class='list_user_account_row'>
 * 
 * @param {{ data:{      commonMountdiv:string,
 *                       user_account_id:number,
-*                       user_app_role_id:number,
 *                       sort:string,
 *                       order_by:string},
 *           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
@@ -171,7 +154,7 @@ const component = async props => {
     //show all records if no search criteria
     if (props.methods.COMMON_DOCUMENT.querySelector('#list_user_account_search_input').textContent.replaceAll('\n','')!='')
         search_user = encodeURI(props.methods.COMMON_DOCUMENT.querySelector('#list_user_account_search_input').textContent.replaceAll('\n',''));
-    const users = await props.methods.commonFFB({path:'/server-db_admin/user_account', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'APP_ACCESS'})
+    const users = await props.methods.commonFFB({path:'/server-db_admin/user_account', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{
@@ -193,7 +176,6 @@ const component = async props => {
       data:         null,
       methods:      null,
       template:     template({  user_account_id:props.data.user_account_id,
-                                user_app_role_id:props.data.user_app_role_id,
                                 users:users,
                                 function_get_order_by:get_order_by
       })

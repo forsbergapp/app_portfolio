@@ -36,10 +36,9 @@ const COMMON_GLOBAL = {
     info_link_disclaimer_url:null,
     info_link_terms_url:null,
     info_link_about_url:null,
-    user_app_role_id:null,
-    system_admin:null,
-    system_admin_first_time:null,
-    system_admin_only:null,
+    admin:null,
+    admin_first_time:null,
+    admin_only:null,
     user_identity_provider_id:null,
     user_account_id:null,
     user_account_username:null,
@@ -975,11 +974,11 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
             await commonComponentRender({
                 mountDiv:       'common_dialogue_user_start',
                 data:           {
-                                user_click:                     COMMON_GLOBAL.system_admin_only==1?'common_user_start_login_system_admin':'common_user_start_login',
-                                app_id:                         COMMON_GLOBAL.app_id,
-                                common_app_id:                  COMMON_GLOBAL.common_app_id,
-                                system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
-                                system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time
+                                user_click:         'common_user_start_login_admin',
+                                app_id:             COMMON_GLOBAL.app_id,
+                                common_app_id:      COMMON_GLOBAL.common_app_id,
+                                admin_only: 		COMMON_GLOBAL.admin_only,
+                                admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
                 methods:        {commonFFB:commonFFB},
                 path:           '/common/component/common_dialogue_user_start.js'});
@@ -991,11 +990,11 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
             await commonComponentRender({
                 mountDiv:       'common_dialogue_user_start',
                 data:           {
-                                user_click:                     `common_user_start_${dialogue.toLowerCase()}`,
-                                app_id:                         COMMON_GLOBAL.app_id,
-                                common_app_id:                  COMMON_GLOBAL.common_app_id,
-                                system_admin_only: 		        COMMON_GLOBAL.system_admin_only,
-                                system_admin_first_time:        COMMON_GLOBAL.system_admin_first_time
+                                user_click:         `common_user_start_${dialogue.toLowerCase()}`,
+                                app_id:             COMMON_GLOBAL.app_id,
+                                common_app_id:      COMMON_GLOBAL.common_app_id,
+                                admin_only: 		COMMON_GLOBAL.admin_only,
+                                admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
                 methods:        {commonFFB:commonFFB},
                 path:           '/common/component/common_dialogue_user_start.js'});
@@ -1041,7 +1040,7 @@ const commonDialoguePasswordNewClear = () => {
 /**
  * LOV event
  * @param {import('../../../common_types.js').CommonAppEvent} event
- * @param {'APP_CATEGORY'|'APP_ROLE'} lov
+ * @param {'APP_CATEGORY'} lov
  */
 const commonLovEvent = (event, lov) => {
     /**
@@ -1109,11 +1108,6 @@ const commonLovAction = (event, lov, old_value, path, query, method, authorizati
             event.target.focus();    
             //dispatch click on lov button
             event.target.nextElementSibling.dispatchEvent(new Event('click'));
-        }
-        if (lov=='APP_ROLE'){
-            //if wrong value then field is empty again, fetch default value for empty app_role
-            if (old_value!='' && event.target.textContent=='')
-                event.target.dispatchEvent(new Event('input'));
         }
     })
     .catch(()=>{
@@ -1503,35 +1497,35 @@ const commonListKeyEvent = (event, module, event_function=null) => {
 };
 /**
  * User login
- * @param {boolean|null} system_admin 
+ * @param {boolean|null} admin 
  * @param {string|null} username_verify
  * @param {string|null} password_verify
  * @param {number|null} provider_id 
  * @returns {Promise. <{    avatar: string|null}>}
  */
-const commonUserLogin = async (system_admin=false, username_verify=null, password_verify=null, provider_id=null) => {
+const commonUserLogin = async (admin=false, username_verify=null, password_verify=null, provider_id=null) => {
     /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
     let authorization_type;
     let path = '';
     let json_data = {};
     let spinner_item = '';
     let current_dialogue = '';
-    if (system_admin) {
-        spinner_item = 'common_user_start_login_system_admin_button';
+    if (admin) {
+        spinner_item = 'common_user_start_login_admin_button';
         current_dialogue = 'common_dialogue_user_start';
         // ES6 object spread operator for user variables
-        json_data = {   username:  encodeURI(COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_username').textContent),
-                        password:  encodeURI(COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_password').textContent),
+        json_data = {   username:  encodeURI(COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_username').textContent),
+                        password:  encodeURI(COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_password').textContent),
                         ...commonUservariables()
         };
         path = '/server-iam/login';
-        authorization_type = 'IAM_SYSTEMADMIN';
+        authorization_type = 'IAM_ADMIN';
         if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_start'),
                         {
-                        username: COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_username'),
-                        password: COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_password'),
-                        password_confirm: COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_password_confirm')?
-                                            COMMON_DOCUMENT.querySelector('#common_user_start_login_system_admin_password_confirm'):
+                        username: COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_username'),
+                        password: COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_password'),
+                        password_confirm: COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_password_confirm')?
+                                            COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_password_confirm'):
                                                 null
                         })==false)
             throw 'ERROR';
@@ -1597,8 +1591,8 @@ const commonUserLogin = async (system_admin=false, username_verify=null, passwor
         }            
     }
     const result_iam = await commonFFB({path:path, method:'POST', authorization_type:authorization_type, body:json_data, spinner_id:spinner_item});
-    if (system_admin){
-        COMMON_GLOBAL.system_admin = JSON.parse(result_iam).username==''?null:JSON.parse(result_iam).username;
+    if (admin){
+        COMMON_GLOBAL.admin = JSON.parse(result_iam).username==''?null:JSON.parse(result_iam).username;
         COMMON_GLOBAL.token_admin_at = JSON.parse(result_iam).token_at;
         COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
@@ -1617,7 +1611,6 @@ const commonUserLogin = async (system_admin=false, username_verify=null, passwor
 
         COMMON_GLOBAL.user_account_username = login_data.username;
         COMMON_GLOBAL.user_identity_provider_id = provider_id?login_data.identity_provider_id:null;
-        COMMON_GLOBAL.user_app_role_id = login_data.app_role_id;
 
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
             //set avatar or empty if not in admin app
@@ -1726,7 +1719,7 @@ const commonUserLogout = async () => {
     })
     .finally(()=>{
         COMMON_GLOBAL.token_admin_at = '';
-        COMMON_GLOBAL.system_admin = null;
+        COMMON_GLOBAL.admin = null;
 
         COMMON_GLOBAL.token_at ='';
         COMMON_GLOBAL.user_account_id = null;
@@ -2266,22 +2259,13 @@ const commonFFB = async parameter => {
         case 'APP_ACCESS':{
             //user or admins authorization
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_at}`;
-            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id)
-                service_path = `${COMMON_GLOBAL.rest_resource_bff}/admin`;
-            else
-                service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_access`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_access`;
             break;
         }
-        case 'SUPERADMIN':{
-            // super admin authorization
-            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_at}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/superadmin`;
-            break;
-        }
-        case 'SYSTEMADMIN':{
-            //systemadmin authorization
+        case 'ADMIN':{
+            //admin authorization
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_admin_at}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/systemadmin`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/admin`;
             break;
         }
         case 'SOCKET':{
@@ -2292,7 +2276,7 @@ const commonFFB = async parameter => {
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/socket`;
             break;
         }
-        case 'IAM_SYSTEMADMIN':
+        case 'IAM_ADMIN':
         case 'IAM_PROVIDER':
         case 'IAM_USER':{
             //user,admin or system admin login
@@ -2312,7 +2296,7 @@ const commonFFB = async parameter => {
     const encodedparameters = parameter.query?commonWindowToBase64(parameter.query):'';
     //add and encode IAM parameters, always use Bearer id token in iam to validate EventSource connections
     const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
-    const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&system_admin=${COMMON_GLOBAL.system_admin ?? ''}` + 
+    const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&admin=${COMMON_GLOBAL.admin ?? ''}` + 
                                     `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                                     `&app_id=${COMMON_GLOBAL.app_id??''}`);
 
@@ -2598,9 +2582,9 @@ const commonParametersAppServiceSet = async parameters => {
     COMMON_GLOBAL.token_dt = parameters.app_idtoken;
 
     //system admin
-    COMMON_GLOBAL.system_admin = null;
-    COMMON_GLOBAL.system_admin_only = parameters.system_admin_only;
-    COMMON_GLOBAL.system_admin_first_time = parameters.first_time;
+    COMMON_GLOBAL.admin = null;
+    COMMON_GLOBAL.admin_only = parameters.admin_only;
+    COMMON_GLOBAL.admin_first_time = parameters.first_time;
 
     //user info
     COMMON_GLOBAL.user_identity_provider_id=null;
@@ -2612,7 +2596,7 @@ const commonParametersAppServiceSet = async parameters => {
     COMMON_GLOBAL.client_place     = parameters.client_place;
     COMMON_GLOBAL.client_timezone  = parameters.client_timezone==''?null:parameters.client_timezone;
     
-    if (COMMON_GLOBAL.system_admin_only==0){
+    if (COMMON_GLOBAL.admin_only==0){
         commonUserPreferencesGlobalSetDefault('LOCALE');
         commonUserPreferencesGlobalSetDefault('TIMEZONE');
         commonUserPreferencesGlobalSetDefault('DIRECTION');
@@ -2686,7 +2670,7 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                         // dialogue login/signup/forgot
                         case 'common_user_start_login':
-                        case 'common_user_start_login_system_admin':
+                        case 'common_user_start_login_admin':
                         case 'common_user_start_signup':
                         case 'common_user_start_forgot':{
                             COMMON_DOCUMENT.querySelectorAll('#common_user_start_nav > div').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('common_user_start_selected'));
@@ -3565,13 +3549,13 @@ const custom_framework = () => {
  * Init common
  * @param {string} parameters 
  * @returns {Promise.<{ app:{}[],
- *                      app_service:{system_admin_only:number, first_time:number}}>}
+ *                      app_service:{admin_only:number, first_time:number}}>}
  */
 const commonInit = async (parameters) => {
     /**
      * Encoded parameters
      * @type {{ app:{}[],
-     *          app_service:{system_admin_only:number, first_time:number}}}
+     *          app_service:{admin_only:number, first_time:number}}}
      */
     const decoded_parameters = JSON.parse(commonWindowFromBase64(parameters));
     setUserAgentAttributes();
@@ -3596,7 +3580,7 @@ const commonInit = async (parameters) => {
         }
             
         commonSocketConnectOnline();
-        if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.system_admin_only==1){
+        if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.admin_only==1){
             resolve(decoded_parameters);
         }
         else{

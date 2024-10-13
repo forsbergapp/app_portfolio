@@ -107,11 +107,6 @@
 <createdTime>2022-11-30 18:38:15 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_role_id" id="F36F594F-9AE6-7FA0-B46B-315BDE3AB3AD">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 20:37:26 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="email" id="FB8A16B6-EBE2-5962-9B04-13F589B1945F">
 <createdBy>admin</createdBy>
 <createdTime>2022-11-30 18:38:15 UTC</createdTime>
@@ -124,11 +119,6 @@
 </ColumnProxy>
 </columnProxies>
 <foreignKeys>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_app_role_FK" id="38FC3C73-5FC2-3E05-59E4-E573EE6CE27A">
-<createdBy>admin</createdBy>
-<createdTime>2024-03-02 19:12:43 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ForeignKey>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_identity_provider_FK" id="3C762A3F-615A-296F-B87C-B66A61B0D806">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-11 04:05:34 UTC</createdTime>

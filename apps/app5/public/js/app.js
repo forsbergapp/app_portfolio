@@ -191,7 +191,7 @@ const app_event_click = event => {
                                     token_exp:common.COMMON_GLOBAL.token_exp,
                                     token_iat:common.COMMON_GLOBAL.token_iat,
                                     token_timestamp: common.COMMON_GLOBAL.token_timestamp,
-                                    system_admin:common.COMMON_GLOBAL.system_admin,
+                                    admin:common.COMMON_GLOBAL.admin,
                                     user_locale:common.COMMON_GLOBAL.user_locale,
                                     user_timezone:common.COMMON_GLOBAL.user_timezone,
                                     user_direction:common.COMMON_GLOBAL.user_direction,

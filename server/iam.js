@@ -12,7 +12,7 @@ const service = await import(`file://${process.cwd()}/server/iam.service.js`);
  * @param {import('./types.js').server_server_res} res
  * @param {function} next
  */
- const AuthenticateAccessTokenSystemAdmin = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_SYSTEMADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
+ const AuthenticateAccessTokenAdmin = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * Middleware authenticates id token
@@ -30,22 +30,6 @@ const AuthenticateIdToken = (req, res, next) => service.AuthenticateUserCommon(r
  */
 const AuthenticateIdTokenRegistration = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_DATA_REGISTRATION', req.headers.authorization, req.headers.host, req.ip, res, next);
 
-/**
- * Middleware authenticates access token superadmin
- * @param {import('./types.js').server_server_req} req
- * @param {import('./types.js').server_server_res} res
- * @param {function} next
- */
-const AuthenticateAccessTokenSuperAdmin = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_ACCESS_SUPERADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
-    
-/**
- * Middleware authenticates access token admin
- * @param {import('./types.js').server_server_req} req
- * @param {import('./types.js').server_server_res} res
- * @param {function} next
- */
-const AuthenticateAccessTokenAdmin = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'APP_ACCESS_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
-    
 /**
  * Middleware authenticates access token
  * @param {import('./types.js').server_server_req} req
@@ -70,20 +54,12 @@ const AuthenticateExternal = (req, res, next) => service.AuthenticateExternal('A
  const AuthenticateSocket = (req, res, next) => service.AuthenticateSocket(req.query.iam, req.originalUrl.substring(req.route.path.indexOf('*')), req.headers.host, req.ip, res, next);    
 
 /**
- * Middleware authenticates IAM System Admin
- * @param {import('./types.js').server_server_req} req
- * @param {import('./types.js').server_server_res} res
- * @param {function} next
- */
-const AuthenticateIAMSystemAdmin = (req, res, next)  => service.AuthenticateUserCommon(req.query.iam, 'AUTH_SYSTEMADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
-
-/**
  * Middleware authenticates IAM Admin
  * @param {import('./types.js').server_server_req} req
  * @param {import('./types.js').server_server_res} res
  * @param {function} next
  */
-const AuthenticateIAMAdmin = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'AUTH_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
+const AuthenticateIAMAdmin = (req, res, next)  => service.AuthenticateUserCommon(req.query.iam, 'AUTH_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * Middleware authenticates IAM User
@@ -101,8 +77,7 @@ const AuthenticateIAMUser = (req, res, next) => service.AuthenticateUserCommon(r
  */
 const AuthenticateIAMProvider = (req, res, next) => service.AuthenticateUserCommon(req.query.iam, 'AUTH_PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
-export{ AuthenticateAccessTokenSystemAdmin, 
-        AuthenticateIdToken, AuthenticateIdTokenRegistration,
-        AuthenticateAccessTokenSuperAdmin, AuthenticateAccessTokenAdmin, AuthenticateAccessToken, AuthenticateExternal,
+export{ AuthenticateIdToken, AuthenticateIdTokenRegistration,
+        AuthenticateAccessTokenAdmin, AuthenticateAccessToken, AuthenticateExternal,
         AuthenticateSocket,
-        AuthenticateIAMSystemAdmin, AuthenticateIAMAdmin, AuthenticateIAMUser,AuthenticateIAMProvider};
+        AuthenticateIAMAdmin, AuthenticateIAMUser,AuthenticateIAMProvider};

@@ -6,12 +6,11 @@
  * 
  */
 /**
- * @param {{system_admin:string|null,
-*          function_get_order_by:function,
-*          function_roundOff:function,
-*          logs:[],
-*          logscope:'REQUEST'|'SERVER'|'APP'|'SERVICE'|'DB'|''}} props
-*/
+ * @param {{function_get_order_by:function,
+ *          function_roundOff:function,
+ *          logs:[],
+ *          logscope:'REQUEST'|'SERVER'|'APP'|'SERVICE'|'DB'|''}} props
+ */
 const template = props => ` ${  /*
                                 use this grouping to decide column orders
                                 [log columns][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
@@ -315,7 +314,6 @@ const template = props => ` ${  /*
 /**
 * 
 * @param {{ data:{      commonMountdiv:string,
-*                       system_admin:string,
 *                       path:string,
 *                       query:string,
 *                       token_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
@@ -343,11 +341,10 @@ const component = async props => {
         lifecycle:  null,
         data:       {page_last :logs.rows.length>0?(Math.floor(logs.page_header.total_count/props.data.LIMIT) * props.data.LIMIT):0},
         methods:    null,
-        template:   template({system_admin:props.data.system_admin, 
-                            function_get_order_by:get_order_by,
-                            function_roundOff:props.methods.commonRoundOff,
-                            logs:logs.rows,
-                            logscope:props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
+        template:   template({  function_get_order_by:get_order_by,
+                                function_roundOff:props.methods.commonRoundOff,
+                                logs:logs.rows,
+                                logscope:props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
     };
 };
 export default component;

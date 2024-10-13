@@ -3,7 +3,7 @@
 /**@type{import('./server.service.js')} */
 const {response_send_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('./config.service.js')} */
-const {ConfigGet, ConfigFileGet, ConfigGetApp, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet, ConfigFileGet, ConfigGetApp, CheckFirstTime, CreateAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
 
 /**@type{import('./db/file.service.js')} */
 const {fileFsRead, fileFsReadLog, fileFsAppend, fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
@@ -23,7 +23,7 @@ const {default:jwt} = await import('jsonwebtoken');
 };
 /**
  * @param {number|null}  app_id
- * @param {'APP_ACCESS'|'APP_DATA'|'SYSTEMADMIN'} token_type 
+ * @param {'APP_ACCESS'|'APP_DATA'|'ADMIN'} token_type 
  * @param {string} token 
  * @returns {boolean}
  */
@@ -39,7 +39,7 @@ const expired_token = (app_id, token_type, token) =>{
             }
             
         }
-        case 'SYSTEMADMIN':{
+        case 'ADMIN':{
             //exp, iat, tokentimestamp on token
             try {
                 /**@ts-ignore*/
@@ -85,7 +85,7 @@ const expired_token = (app_id, token_type, token) =>{
  *                  iat:number,
  *                  tokentimestamp:number}>}
  */
-const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agent, accept_language, res)=>{
+const AuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, accept_language, res)=>{
     /**@type{import('./socket.service.js')} */
     const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
     return new Promise((resolve, reject)=>{
@@ -100,7 +100,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
                 result = 1;
             else
                 result = 0;
-            const jwt_data = AuthorizeToken(app_id, 'SYSTEMADMIN', {id:null, name:username, ip:ip, scope:'USER'});
+            const jwt_data = AuthorizeToken(app_id, 'ADMIN', {id:null, name:username, ip:ip, scope:'USER'});
             /**@type{import('./types.js').server_iam_admin_login_record} */
             const file_content = {	id:         app_id,
                                     user:		username,
@@ -125,7 +125,7 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
                     .catch((/**@type{import('./types.js').server_server_error}*/error)=>reject(error));
                 }
                 else
-                    reject (not_authorized(res, 401, 'AuthenticateSystemadmin, fileFsAppend', true));
+                    reject (not_authorized(res, 401, 'AuthenticateAdmin, fileFsAppend', true));
             });
         };
         if(authorization){       
@@ -133,13 +133,13 @@ const AuthenticateSystemadmin = async (app_id, iam, authorization, ip, user_agen
             const username = userpass.split(':')[0];
             const password = userpass.split(':')[1];
             if (CheckFirstTime())
-                CreateSystemAdmin(username, password)
+                CreateAdmin(username, password)
                 .then(()=>check_user(username, password));
             else
                 check_user(username, password);
         }
         else{
-            reject (not_authorized(res, 401, 'AuthenticateSystemadmin, authorization', true));
+            reject (not_authorized(res, 401, 'AuthenticateAdmin, authorization', true));
         }
     });
     
@@ -164,7 +164,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
 /**
  * Middleware authenticate IAM users
  * @param {string} iam
- * @param {'AUTH_SYSTEMADMIN'|'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'APP_SYSTEMADMIN'|'APP_ACCESS'|'APP_ACCESS_ADMIN'|'APP_ACCESS_SUPERADMIN'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
+ * @param {'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'APP_ADMIN'|'APP_ACCESS'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
  * @param {string} authorization
  * @param {string} host
  * @param {string} ip
@@ -194,29 +194,9 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                 if (scope=='APP_DATA')
                     next();
                 else{
-                    /**
-                     * 
-                     * @param {number|null} user_id 
-                     * @returns {Promise.<boolean>}
-                     */
-                    const superadmin = async (user_id) => {
-                        if (user_id){
-                            /**@type{import('./db/sql/user_account.service.js')} */
-                            const {getUserAppRoleAdmin} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
-                            /**@type{import('./types.js').server_db_sql_result_user_account_getUserAppRoleAdmin[]}*/
-                            const result = await getUserAppRoleAdmin(app_id_host, user_id)
-                                                    .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
-                                                        not_authorized(res, 500, error);
-                                                        return [];
-                                                    });
-                            return result[0].app_role_id == 0;
-                        }
-                        else
-                            return false;
-                    };
                     //validate scope, app_id and authorization
                     switch (true){
-                        case (scope=='AUTH_SYSTEMADMIN' || scope=='AUTH_ADMIN') && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BASIC'):{
+                        case (scope=='AUTH_ADMIN') && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BASIC'):{
                             next();
                             break;
                         }
@@ -228,7 +208,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                 not_authorized(res, 403, 'AuthenticateUserCommon, user login disabled');
                             break;
                         }
-                        case scope=='APP_SYSTEMADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
+                        case scope=='APP_ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
@@ -237,7 +217,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
-                                access_token_decoded.name == iam_decode(iam).get('system_admin'))
+                                access_token_decoded.name == iam_decode(iam).get('admin'))
                                 await fileFsReadLog('IAM_ADMIN_LOGIN', null,'')
                                 .then(result=>{
                                     /**@type{import('./types.js').server_iam_admin_login_record}*/
@@ -261,9 +241,6 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             next();
                             break;
                         }
-                        
-                        case scope=='APP_ACCESS_SUPERADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):
-                        case scope=='APP_ACCESS_ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):
                         case scope=='APP_ACCESS' && getNumberValue(ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
@@ -273,8 +250,7 @@ const AuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
-                                access_token_decoded.id == user_id &&
-                                ((scope=='APP_ACCESS_SUPERADMIN' && await superadmin(user_id))|| scope!='APP_ACCESS_SUPERADMIN'))
+                                access_token_decoded.id == user_id )
                                 //check access token belongs to user_account.id, app_id and ip saved when logged in
                                 //and if app_id=0 then check user is admin
                                 await fileFsReadLog('IAM_USER_LOGIN', null,'')
@@ -561,7 +537,7 @@ const AuthenticateResource = parameters =>  {
  * Authorize token
  * 
  * @param {number} app_id
- * @param {'APP_ID'|'APP_ACCESS'|'SYSTEMADMIN'|'APP_CUSTOM'} endpoint
+ * @param {'APP_ID'|'APP_ACCESS'|'ADMIN'|'APP_CUSTOM'} endpoint
  * @param {{id:number|string|null, 
  *          name:string, 
  *          ip:string, 
@@ -590,8 +566,8 @@ const AuthenticateResource = parameters =>  {
             expiresin = ConfigGetApp(app_id, app_id, 'SECRETS').APP_ACCESS_EXPIRE;
             break;
         }
-        //Systemadmin Access token
-        case 'SYSTEMADMIN':{
+        //Admin Access token
+        case 'ADMIN':{
             secret = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '';
             expiresin = ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_EXPIRE_ACCESS') ?? '';
             break;
@@ -639,7 +615,7 @@ const userLogin = async (app_id, query) => {const rows = await fileFsReadLog('IA
 export{ iam_decode,
         expired_token,
         not_authorized,
-        AuthenticateSystemadmin,
+        AuthenticateAdmin,
         AuthenticateSocket,
         AuthenticateUserCommon,
         AuthenticateExternal,

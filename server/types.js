@@ -5,7 +5,7 @@
 
 /** 
  * BFF endpoint types
- * @typedef {'APP'|'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SUPERADMIN'|'SYSTEMADMIN'|'SOCKET'|'IAM_SYSTEMADMIN'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|
+ * @typedef {'APP'|'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|
  *           'SERVER_APP'|'SERVER_REPORT'|'SERVER_SOCKET'|'SERVER_MAIL'} server_bff_endpoint_type
  */
 
@@ -98,7 +98,6 @@
  * @property {string} body.parameter_value                          - app portfolio parameter
  * @property {string} body.parameter_comment                        - app portfolio parameter
  * @property {string} body.parameter_name                           - app portfolio parameter
- * @property {number} body.app_role_id                              - app portfolio parameter
  * @property {number} body.active                                   - app portfolio parameter
  * @property {number} body.user_level                               - app portfolio parameter
  * @property {number} body.private                                  - app portfolio parameter
@@ -167,7 +166,7 @@
  * @property {number|null} query.uid_view                           - Report parameter
  * @property {string|*} query.parameters
  * @property {string} query.iam                                     - encoded string
- *                                                                  - content:authorization_bearer=[string]&user_id=[number]&system_admin=[string]&service=[string]&app_id=[number]
+ *                                                                  - content:authorization_bearer=[string]&user_id=[number]&admin=[string]&service=[string]&app_id=[number]
  * @property {number} query.PATCH_ID                                - app portfolio parameter
  * @property {number} query.data_app_id                             - app portfolio parameter
  * @property {string} query.object                                  - app portfolio parameter
@@ -176,7 +175,7 @@
  * @property {string} query.detailchoice                            - app portfolio parameter
  * @property {number} query.initial                                 - app portfolio parameter
  * @property {string} query.parameter                               - Server parameter
- * @property {string} query.system_admin                            - app portfolio parameter
+ * @property {string} query.admin                            - app portfolio parameter
  * @property {number} query.identity_provider_id
  * @property {0|1|2|3|4|5|6} query.config_type_no                   - Server parameter
  * @property {server_config_server_group} query.server_config_group                      - Server parameter
@@ -290,7 +289,7 @@
  * @typedef {object} server_apps_app_info   - app info
  * @property {number} app_id                - app id
  * @property {string} locale                - locale
- * @property {number} system_admin_only     - 0/1
+ * @property {number} admin_only     - 0/1
  * @property {string} idtoken               - JW token
  * @property {string} latitude              - geodata latitude
  * @property {string} longitude             - geodata longitude
@@ -315,7 +314,7 @@
  * @property {number}       app_rest_api_version
  * @property {string}       app_idtoken
  * @property {string}       locale
- * @property {number}       system_admin_only
+ * @property {number}       admin_only
  * @property {string|null}  client_latitude
  * @property {string|null}  client_longitude
  * @property {string|null}  client_place
@@ -446,8 +445,8 @@
  * Server - config server service db
  * @typedef {{   START:string,
  *               USE:string,
- *               DB1_SYSTEM_ADMIN_USER:string,
- *               DB1_SYSTEM_ADMIN_PASS:string,
+ *               DB1_DBA_USER:string,
+ *               DB1_DBA_PASS:string,
  *               DB1_APP_ADMIN_USER:string,
  *               DB1_APP_ADMIN_PASS:string,
  *               DB1_PORT:string,
@@ -455,8 +454,8 @@
  *               DB1_NAME:string,
  *               DB1_CHARACTERSET:string,
  *               DB1_CONNECTION_LIMIT:string,
- *               DB2_SYSTEM_ADMIN_USER:string,
- *               DB2_SYSTEM_ADMIN_PASS:string,
+ *               DB2_DBA_USER:string,
+ *               DB2_DBA_PASS:string,
  *               DB2_APP_ADMIN_USER:string,
  *               DB2_APP_ADMIN_PASS:string,
  *               DB2_PORT:string,
@@ -464,8 +463,8 @@
  *               DB2_NAME:string,
  *               DB2_CHARACTERSET:string,
  *               DB2_CONNECTION_LIMIT:string,
- *               DB3_SYSTEM_ADMIN_USER:string,
- *               DB3_SYSTEM_ADMIN_PASS:string,
+ *               DB3_DBA_USER:string,
+ *               DB3_DBA_PASS:string,
  *               DB3_APP_ADMIN_USER:string,
  *               DB3_APP_ADMIN_PASS:string,
  *               DB3_PORT:string,
@@ -474,8 +473,8 @@
  *               DB3_TIMEOUT_CONNECTION:string,
  *               DB3_TIMEOUT_IDLE:string,
  *               DB3_MAX:string,
- *               DB4_SYSTEM_ADMIN_USER:string,
- *               DB4_SYSTEM_ADMIN_PASS:string,
+ *               DB4_DBA_USER:string,
+ *               DB4_DBA_PASS:string,
  *               DB4_APP_ADMIN_USER:string,
  *               DB4_APP_ADMIN_PASS:string,
  *               DB4_HOST:string,
@@ -724,8 +723,8 @@
  * @property {number|null} user_account_id
  * @property {string|null} token_access
  * @property {number|null} identity_provider_id
- * @property {string|null} system_admin
- * @property {string|null} token_systemadmin
+ * @property {string|null} admin
+ * @property {string|null} token_admin
  * @property {string} gps_latitude
  * @property {string} gps_longitude
  * @property {string} place
@@ -740,11 +739,9 @@
  * @typedef {{  id:number,
  *              app_id:number,
  *              authorization_bearer:string|null,
- *              app_role_icon:number|string,
- *              app_role_id:number|string,
  *              user_account_id:number|null,
  *              identity_provider_id:number|null,
- *              system_admin:string|null,
+ *              admin:string|null,
  *              connection_date:string,
  *              gps_latitude:string,
  *              gps_longitude:string,
@@ -773,11 +770,9 @@
  * Server - socket connected list sort
  * @typedef {   'id'|
  *              'app_id'|
- *              'app_role_icon'|
- *              'app_role_id'|
  *              'user_account_id'|
  *              'identity_provider_id'|
- *              'system_admin'|
+ *              'admin'|
  *              'connection_date'|
  *              'gps_latitude'|
  *              'gps_longitude'|
@@ -933,7 +928,7 @@
  */
 
 /**
- * Server - IAM systemadmin login record
+ * Server - IAM admin login record
  * @typedef {{	id:		number,
  *              user:   string,
  *              res:	0|1,
@@ -1501,14 +1496,6 @@
  *              json_data:string}} server_db_sql_result_app_data_stat_getStatUniqueVisitor
  */
 
-
-/**
- * APP ROLE
- * @typedef {{  id:number, 
- *              role_nae:string, 
- *              icon:string}} server_db_sql_result_app_role_getAppRoleAdmin
- */
-
 /**
  * APP SETTING
  * @typedef {{  id:string,
@@ -1543,8 +1530,6 @@
  * USER ACCOUNT
  * @typedef {{  id:number,
  *              avatar:string,
- *              app_role_id:number,
- *              app_role_icon:string,
  *              active:number,
  *              user_level:number,
  *              private:number,
@@ -1569,18 +1554,13 @@
  */
 
 /**
- * @typedef {{  app_role_id:number}} server_db_sql_result_user_account_getUserAppRoleAdmin
- */
-
-/**
  * @typedef {{  identity_provider_id:number,
  *              provider_name:string,
  *              count_user:number}} server_db_sql_result_user_account_getStatCountAdmin
  */
 
 /**
- * @typedef {{  app_role_id:number|null,
- *              active:number|null,
+ * @typedef {{  active:number|null,
  *              user_level:number|null,
  *              private:number|null,
  *              username:string,
@@ -1593,11 +1573,11 @@
  *              verification_code:string|null,
  *              provider_id: string|null,
  *              avatar:string|null,
- *              admin:number}} server_db_sql_parameter_user_account_updateUserSuperAdmin
+ *              admin:number}} server_db_sql_parameter_user_account_updateAdmin
  */
 
 /**
- * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_updateUserSuperAdmin
+ * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_updateAdmin
  */
 
 /**
@@ -1767,8 +1747,7 @@
  *              password:string,
  *              email:string,
  *              active:number,
- *              avatar:string,
- *              app_role_id:number}} server_db_sql_result_user_account_userLogin
+ *              avatar:string}} server_db_sql_result_user_account_userLogin
  */
 
 /**
@@ -1792,7 +1771,6 @@
  *              provider_image:string|null,
  *              provider_image_url:string|null,
  *              provider_image_email:string|null,
- *              app_role_id:number,
  *              date_created:string
  *              date_modified:string}} server_db_sql_result_user_account_providerSignIn
  */
@@ -1800,11 +1778,6 @@
 /**
  * @typedef {{  id:number,
  *              email:string}} server_db_sql_result_user_account_getEmailUser
- */
-
-/**
- * @typedef {{  app_role_id:number,
- *              icon:string}} server_db_sql_result_user_account_getUserRoleAdmin
  */
 
 /**

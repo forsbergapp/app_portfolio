@@ -128,71 +128,59 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                 PasswordCompare(data.password, result_login[0].password).then((result_password)=>{
                     data_body.res = result_password?1:0;
                     if (result_password) {
-                        if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
-                                app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
-                            const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER'});
-                            data_body.token = jwt_data.token;
-                            fileFsAppend('IAM_USER_LOGIN', data_body, '')
+                        const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER'});
+                        data_body.token = jwt_data.token;
+                        fileFsAppend('IAM_USER_LOGIN', data_body, '')
+                        .then(()=>{
+                            createUserAccountApp(app_id, result_login[0].id)
                             .then(()=>{
-                                createUserAccountApp(app_id, result_login[0].id)
-                                .then(()=>{
-                                    //if user not activated then send email with new verification code
-                                    const new_code = service.verification_code();
-                                    if (result_login[0].active == 0){
-                                        service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
+                                //if user not activated then send email with new verification code
+                                const new_code = service.verification_code();
+                                if (result_login[0].active == 0){
+                                    service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
+                                    .then(()=>{
+                                        //send email UNVERIFIED
+                                        sendUserEmail(  app_id, 
+                                                        ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_UNVERIFIED, 
+                                                        ip, 
+                                                        user_agent,
+                                                        accept_language,
+                                                        result_login[0].id, 
+                                                        new_code, 
+                                                        result_login[0].email)
                                         .then(()=>{
-                                            //send email UNVERIFIED
-                                            sendUserEmail(  app_id, 
-                                                            ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_UNVERIFIED, 
-                                                            ip, 
-                                                            user_agent,
-                                                            accept_language,
-                                                            result_login[0].id, 
-                                                            new_code, 
-                                                            result_login[0].email)
+                                            ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.token, null, ip, user_agent, accept_language, res)
                                             .then(()=>{
-                                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.token, null, ip, user_agent, accept_language, res)
-                                                .then(()=>{
-                                                    resolve({
-                                                        accessToken: data_body.token,
-                                                        exp:jwt_data.exp,
-                                                        iat:jwt_data.iat,
-                                                        tokentimestamp:jwt_data.tokentimestamp,
-                                                        login: Array(result_login[0])
-                                                    });
-                                                })
-                                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
+                                                resolve({
+                                                    accessToken: data_body.token,
+                                                    exp:jwt_data.exp,
+                                                    iat:jwt_data.iat,
+                                                    tokentimestamp:jwt_data.tokentimestamp,
+                                                    login: Array(result_login[0])
+                                                });
                                             })
                                             .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
-                                        });
-                                    }
-                                    else{
-                                        ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.token, null, ip, user_agent, accept_language, res)
-                                        .then(()=>{
-                                            resolve({
-                                                accessToken: data_body.token,
-                                                exp:jwt_data.exp,
-                                                iat:jwt_data.iat,
-                                                tokentimestamp:jwt_data.tokentimestamp,
-                                                login: Array(result_login[0])
-                                            });
                                         })
                                         .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
-                                    }
-                                })
-                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
+                                    });
+                                }
+                                else{
+                                    ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.token, null, ip, user_agent, accept_language, res)
+                                    .then(()=>{
+                                        resolve({
+                                            accessToken: data_body.token,
+                                            exp:jwt_data.exp,
+                                            iat:jwt_data.iat,
+                                            tokentimestamp:jwt_data.tokentimestamp,
+                                            login: Array(result_login[0])
+                                        });
+                                    })
+                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
+                                }
                             })
                             .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
-                        }
-                        else{
-                            //Unauthorized, only admin allowed to log in to admin
-                            fileFsAppend('IAM_USER_LOGIN', data_body, '')
-                            .then(()=>{
-                                res.statusCode = 401;
-                                login_error(app_id)
-                                .then((/**@type{string}*/text)=>reject(text));
-                            });
-                        }
+                        })
+                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                     } else {
                         //Username or password not found
                         fileFsAppend('IAM_USER_LOGIN', data_body, '')
@@ -262,7 +250,6 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                 provider_image_url:     data.provider_image_url,
                                 provider_email:         data.provider_email,
                                 admin:                  0};
-            const user_account_id = result_signin[0]?result_signin[0].id:null;
             /**@type{import('../../types.js').server_iam_user_login_record} */
             const data_login = {
                                 id:     null,
@@ -277,72 +264,68 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                 lat:    data.client_latitude,
                                 created: new Date().toISOString()
                             };
-            if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && result_signin[0] && (result_signin[0].app_role_id == 0 || result_signin[0].app_role_id == 1))||
-                    app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
-                if (result_signin.length > 0) {        
-                    const jwt_data_exists = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER'});
-                    data_login.token = jwt_data_exists.token;
-                    data_login.res = 1;
-                    data_login.id = result_signin[0].id;
-                    fileFsAppend('IAM_USER_LOGIN', data_login, '')
+            if (result_signin.length > 0) {        
+                const jwt_data_exists = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER'});
+                data_login.token = jwt_data_exists.token;
+                data_login.res = 1;
+                data_login.id = result_signin[0].id;
+                fileFsAppend('IAM_USER_LOGIN', data_login, '')
+                .then(()=>{
+                    service.updateSigninProvider(app_id, result_signin[0].id, data_user)
                     .then(()=>{
-                        service.updateSigninProvider(app_id, result_signin[0].id, data_user)
+                        createUserAccountApp(app_id, result_signin[0].id)
                         .then(()=>{
-                            createUserAccountApp(app_id, result_signin[0].id)
+                            ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), data_login.token, null, ip, user_agent, accept_language, res)
                             .then(()=>{
-                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), data_login.token, null, ip, user_agent, accept_language, res)
-                                .then(()=>{
-                                    resolve({
-                                        accessToken: data_login.token,
-                                        exp:jwt_data_exists.exp,
-                                        iat:jwt_data_exists.iat,
-                                        tokentimestamp:jwt_data_exists.tokentimestamp,
-                                        items: result_signin,
-                                        userCreated: 0
-                                    });
-                                })
-                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
+                                resolve({
+                                    accessToken: data_login.token,
+                                    exp:jwt_data_exists.exp,
+                                    iat:jwt_data_exists.iat,
+                                    tokentimestamp:jwt_data_exists.tokentimestamp,
+                                    items: result_signin,
+                                    userCreated: 0
+                                });
                             })
                             .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                         })
-                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
-                            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
-                        });    
+                        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                     })
-                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
-                }
-                else{
-                    //if provider user not found then create user and one user setting
-                    //avatar not used by providers, set default null
-                    data_user.avatar = data.avatar ?? null;
-                    data_user.provider_image = data.provider_image ?? null;
-                    //generate local username for provider 1
-                    data_user.username = `${data_user.provider_first_name}${Date.now()}`;
-                    
-                    service.create(app_id, data_user)
-                    .then(result_create=>{
-                        const jwt_data_new = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data_user.username ?? '', ip:ip, scope:'USER'});
-                        data_login.token = jwt_data_new.token;
-                        data_login.res = 1;
-                        data_login.id = result_create.insertId;
-                        fileFsAppend('IAM_USER_LOGIN', data_login, '')
+                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
+                        checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                    });    
+                })
+                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
+            }
+            else{
+                //if provider user not found then create user and one user setting
+                //avatar not used by providers, set default null
+                data_user.avatar = data.avatar ?? null;
+                data_user.provider_image = data.provider_image ?? null;
+                //generate local username for provider 1
+                data_user.username = `${data_user.provider_first_name}${Date.now()}`;
+                
+                service.create(app_id, data_user)
+                .then(result_create=>{
+                    const jwt_data_new = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data_user.username ?? '', ip:ip, scope:'USER'});
+                    data_login.token = jwt_data_new.token;
+                    data_login.res = 1;
+                    data_login.id = result_create.insertId;
+                    fileFsAppend('IAM_USER_LOGIN', data_login, '')
+                    .then(()=>{
+                        createUserAccountApp(app_id, result_create.insertId)
                         .then(()=>{
-                            createUserAccountApp(app_id, result_create.insertId)
-                            .then(()=>{
-                                service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
-                                .then(result_signin2=>{
-                                    ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), data_login.token, null, ip, user_agent, accept_language, res)
-                                    .then(()=>{
-                                        resolve({
-                                            accessToken: data_login.token,
-                                            exp:jwt_data_new.exp,
-                                            iat:jwt_data_new.iat,
-                                            tokentimestamp:jwt_data_new.tokentimestamp,
-                                            items: result_signin2,
-                                            userCreated: 1
-                                        });
-                                    })
-                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
+                            service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
+                            .then(result_signin2=>{
+                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), data_login.token, null, ip, user_agent, accept_language, res)
+                                .then(()=>{
+                                    resolve({
+                                        accessToken: data_login.token,
+                                        exp:jwt_data_new.exp,
+                                        iat:jwt_data_new.iat,
+                                        tokentimestamp:jwt_data_new.tokentimestamp,
+                                        items: result_signin2,
+                                        userCreated: 1
+                                    });
                                 })
                                 .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                             })
@@ -351,18 +334,8 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                         .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                     })
                     .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
-                }
-            }
-            else{
-                //Unauthorized, only admin allowed to log in to admin
-                //if data_login.user_account_id is empty then user has not logged in before
-                data_login.id = user_account_id;
-                fileFsAppend('IAM_USER_LOGIN', data_login, '')
-                .then(()=>{
-                    res.statusCode = 401;
-                    login_error(app_id)
-                    .then((/**@type{string}*/text)=>reject(text));
-                });
+                })
+                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
             }
         })
         .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
@@ -758,7 +731,7 @@ const getProfileStat = (app_id, query) => service.getProfileStat(app_id, getNumb
  * @param {*} query 
  * @param {*} data
  * @param {import('../../types.js').server_server_res} res
- * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_updateUserSuperAdmin>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_updateAdmin>}
  */
 const updateAdmin =(app_id, resource_id, query, data, res) =>{
     return new Promise((resolve, reject)=>{
@@ -766,9 +739,8 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
         service.getUserByUserId(app_id, resource_id)
         .then(result_user=>{
             if (result_user[0]) {
-                /**@type{import('../../types.js').server_db_sql_parameter_user_account_updateUserSuperAdmin} */
-                const body = {  app_role_id:        getNumberValue(data.app_role_id),
-                                active:             getNumberValue(data.active),
+                /**@type{import('../../types.js').server_db_sql_parameter_user_account_updateAdmin} */
+                const body = {  active:             getNumberValue(data.active),
                                 user_level:         getNumberValue(data.user_level),
                                 private:            getNumberValue(data.private),
                                 username:           data.username,
@@ -782,20 +754,9 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
                                 provider_id:        result_user[0].provider_id,
                                 avatar:             result_user[0].avatar,
                                 admin:              1};
-                service.updateUserSuperAdmin(app_id, resource_id, body)
+                service.updateAdmin(app_id, resource_id, body)
                 .then(result_update=>{
-                    if (data.app_role_id!=0 && data.app_role_id!=1){
-                        //delete admin app from user if user is not an admin anymore
-                        import(`file://${process.cwd()}/server/db/sql/user_account_app.service.js`)
-                        .then((/**@type{import('../sql/user_account_app.service.js')} */{ deleteUserAccountApp }) => {
-                            deleteUserAccountApp(app_id, resource_id, app_id)
-                            .then(()=>{
-                                resolve(result_update);
-                            });
-                        });
-                    }
-                    else
-                        resolve(result_update);
+                    resolve(result_update);
                 })
                 .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
                     checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));

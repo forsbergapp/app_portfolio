@@ -32,12 +32,8 @@ const admin_logout_app = () => {
  * @returns {Promise.<void>}
  */
 const admin_login = async () => {
-    let system_admin = false;
-    if (COMMON_DOCUMENT.querySelector('#common_user_start_nav .common_user_start_selected').id == 'common_user_start_login_system_admin')
-        system_admin = true;
-    
-    await common.commonUserLogin(system_admin)
-    .then((result)=>{
+    await common.commonUserLogin(true)
+    .then(()=>{
         common.commonComponentRender({
             mountDiv:   'admin_secure',
             data:       null,
@@ -50,17 +46,9 @@ const admin_login = async () => {
                 methods:    null,
                 path:       '/common/component/common_user_account.js'})
             .then(()=>{
-                if (system_admin){
-                    COMMON_DOCUMENT.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
-                    COMMON_DOCUMENT.querySelector('#common_user_menu_logged_in').style.display = 'none';
-                    COMMON_DOCUMENT.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-                }
-                else{
-                    //set avatar or empty
-                    COMMON_DOCUMENT.querySelector('#common_user_menu_avatar_img').style.backgroundImage= result.avatar?`url('${result.avatar}')`:'url()';
-                    COMMON_DOCUMENT.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-                    COMMON_DOCUMENT.querySelector('#common_user_menu_logged_out').style.display = 'none';
-                }
+                COMMON_DOCUMENT.querySelector('#common_user_menu_default_avatar').classList.add('app_role_admin');
+                COMMON_DOCUMENT.querySelector('#common_user_menu_logged_in').style.display = 'none';
+                COMMON_DOCUMENT.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
                 app_secure.init();
             });
         });
@@ -140,8 +128,8 @@ const app_event_click = event => {
                                                     token_exp:common.COMMON_GLOBAL.token_exp,
                                                     token_iat:common.COMMON_GLOBAL.token_iat,
                                                     token_timestamp: common.COMMON_GLOBAL.token_timestamp,
-                                                    system_admin:common.COMMON_GLOBAL.system_admin,
-                                                    system_admin_only:common.COMMON_GLOBAL.system_admin_only,
+                                                    admin:common.COMMON_GLOBAL.admin,
+                                                    admin_only:common.COMMON_GLOBAL.admin_only,
                                                     user_locale:common.COMMON_GLOBAL.user_locale,
                                                     user_timezone:common.COMMON_GLOBAL.user_timezone,
                                                     user_direction:common.COMMON_GLOBAL.user_direction,
@@ -176,7 +164,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'common_user_start_login_button':
-                case 'common_user_start_login_system_admin_button':{
+                case 'common_user_start_login_admin_button':{
                     admin_login();
                     break;
                 }
@@ -266,9 +254,9 @@ const app_event_keyup = event => {
             switch (event_target_id){
                 case 'common_user_start_login_username':
                 case 'common_user_start_login_password':
-                case 'common_user_start_login_system_admin_username':
-                case 'common_user_start_login_system_admin_password':
-                case 'common_user_start_login_system_admin_password_confirm':{
+                case 'common_user_start_login_admin_username':
+                case 'common_user_start_login_admin_password':
+                case 'common_user_start_login_admin_password_confirm':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
                         admin_login().catch(()=>null);
@@ -362,14 +350,14 @@ const framework_set = async (framework=null) => {
                         Focus: app_event_focus,
                         Input:app_event_input})
     .then(()=>{
-        if (common.COMMON_GLOBAL.user_account_id ==null && common.COMMON_GLOBAL.system_admin==null)
+        if (common.COMMON_GLOBAL.user_account_id ==null && common.COMMON_GLOBAL.admin==null)
             common.commonDialogueShow('LOGIN_ADMIN');
     });                        
 };
 /**
  * App init
  * @param {{app:*[],
- *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ *          app_service:{admin_only:number, first_time:number}}} parameters 
  * @returns {Promise.<void>}
  */
 const init_app = async (parameters) => {
@@ -377,7 +365,7 @@ const init_app = async (parameters) => {
                                     data:       null,
                                     methods:    null,
                                     path:       '/component/app.js'});
-    if (parameters.app_service.system_admin_only == 0)
+    if (parameters.app_service.admin_only == 0)
         for (const parameter of parameters.app) {
             if (parameter['MODULE_EASY.QRCODE_WIDTH'])
                 common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);
@@ -400,7 +388,7 @@ const init = async parameters => {
     common.COMMON_GLOBAL.app_function_exception = admin_exception;
     common.COMMON_GLOBAL.app_function_session_expired = admin_logout_app;
     
-    common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{system_admin_only:number, first_time:number}}}*/decodedparameters)=>{
+    common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{admin_only:number, first_time:number}}}*/decodedparameters)=>{
         init_app(decodedparameters);
     });
 };

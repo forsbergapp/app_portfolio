@@ -5,12 +5,12 @@
 /**
  * 
  * @param {{username:string,
- *          system_admin:string,
+ *          admin:string,
  *          countdown:0|1}} props 
  * @returns 
  */
-const template = props =>`  ${(props.system_admin !='' && props.system_admin!=null)?
-                                `<div id='common_dialogue_user_menu_system_admin'>${props.system_admin ?? ''}</div>`:
+const template = props =>`  ${(props.admin !='' && props.admin!=null)?
+                                `<div id='common_dialogue_user_menu_admin'>${props.admin ?? ''}</div>`:
                                 `<div id='common_dialogue_user_menu_username'>${props.username}</div>`
                             }
                             ${props.countdown==1?
@@ -58,8 +58,8 @@ const template = props =>`  ${(props.system_admin !='' && props.system_admin!=nu
  *                      token_exp:number|null,
  *                      token_iat:number|null,
  *                      token_timestamp:number|null,
- *                      system_admin:string,
- *                      system_admin_only:number,
+ *                      admin:string,
+ *                      admin_only:number,
  *                      user_locale:string,
  *                      user_timezone:string,
  *                      user_direction:string,
@@ -83,7 +83,7 @@ const component = async props => {
 
     //Fetch settings with direction, timezone and arabic script
     /**@type{{id:number, app_setting_type_name:string, value:string, display_data:string}[]} */
-    const settings = props.data.system_admin_only == 1?[]:await props.methods.commonFFB({path:'/server-db/app_settings_display', query:`data_app_id=${props.data.data_app_id}`, method:'GET', authorization_type:'APP_DATA'})
+    const settings = props.data.admin_only == 1?[]:await props.methods.commonFFB({path:'/server-db/app_settings_display', query:`data_app_id=${props.data.data_app_id}`, method:'GET', authorization_type:'APP_DATA'})
                                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const user = (props.data.username || props.data.user_account_id!=null)?await props.methods.commonFFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
@@ -117,7 +117,7 @@ const component = async props => {
                 props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_log_out').style.display = 'none';
         }
         else
-            if (props.data.system_admin){
+            if (props.data.admin){
                 props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'none';
                 props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'none';
             }
@@ -130,23 +130,24 @@ const component = async props => {
     const onMounted = async () =>{                                                               
         
         //mount select
-        if (props.data.system_admin_only!=1){
-            //Locale
-            await props.methods.commonComponentRender({
-                mountDiv:   'common_dialogue_user_menu_user_locale_select', 
-                data:       {
-                            default_data_value:props.data.user_locale,
-                            default_value:'',
-                            options: locales,
-                            path:null,
-                            query:null,
-                            method:null,
-                            authorization_type:null,
-                            column_value:'locale',
-                            column_text:'text'
-                            },
-                methods:    {commonFFB:props.methods.commonFFB},
-                path:       '/common/component/common_select.js'});
+        //Locale, no db access
+        await props.methods.commonComponentRender({
+            mountDiv:   'common_dialogue_user_menu_user_locale_select', 
+            data:       {
+                        default_data_value:props.data.user_locale,
+                        default_value:'',
+                        options: locales,
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'locale',
+                        column_text:'text'
+                        },
+            methods:    {commonFFB:props.methods.commonFFB},
+            path:       '/common/component/common_select.js'});
+        if (props.data.admin_only!=1){
+            //db access
             //Timezone
             await props.methods.commonComponentRender({
                 mountDiv:  'common_dialogue_user_menu_user_timezone_select', 
@@ -196,9 +197,9 @@ const component = async props => {
                 methods:    {commonFFB:props.methods.commonFFB},
                 path:       '/common/component/common_select.js'});
         }
-        if ((props.data.system_admin_only == 1)==false){
-            //set current value on all the selects
-            props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_locale_select', props.data.user_locale);
+        //set current value on all the selects
+        props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_locale_select', props.data.user_locale);
+        if ((props.data.admin_only == 1)==false){
             props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_timezone_select', props.data.user_timezone);
             props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_direction_select', props.data.user_direction ?? '');
             props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_arabic_script_select', props.data.user_arabic_script ?? '');
@@ -214,7 +215,7 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({  username:props.data.username,
-                                system_admin:props.data.system_admin,
+                                admin:props.data.admin,
                                 countdown:(props.data.token_exp && props.data.token_iat)?1:0})
     };
 };

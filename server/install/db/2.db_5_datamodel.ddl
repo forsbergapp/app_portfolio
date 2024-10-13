@@ -192,13 +192,6 @@ CREATE TABLE <DB_SCHEMA/>.app_device (
         REFERENCES app_setting ( id )
 );
 
-CREATE TABLE <DB_SCHEMA/>.app_role (
-    id        INTEGER NOT NULL,
-    role_name VARCHAR(100) NOT NULL,
-    icon      VARCHAR(10) NOT NULL,
-    CONSTRAINT app_role_pk PRIMARY KEY ( id )
-);
-
 CREATE TABLE <DB_SCHEMA/>.app_setting (
     id                                      INTEGER NOT NULL CONSTRAINT app_setting_pk PRIMARY KEY AUTOINCREMENT,
     app_setting_type_app_id                 INTEGER NOT NULL,
@@ -326,12 +319,9 @@ CREATE TABLE <DB_SCHEMA/>.user_account (
     provider_image        TEXT,
     provider_image_url    VARCHAR(1000),
     provider_email        VARCHAR(1000),
-    app_role_id           INTEGER,
     CONSTRAINT user_account_provider_id_un UNIQUE ( provider_id ),
     CONSTRAINT user_account_username_un UNIQUE ( username ),
     CONSTRAINT user_account_email_un UNIQUE ( email ),
-    CONSTRAINT user_account_app_role_fk FOREIGN KEY ( app_role_id )
-        REFERENCES app_role ( id ),
     CONSTRAINT user_account_identity_provider_fk FOREIGN KEY ( identity_provider_id )
         REFERENCES identity_provider ( id )
 );

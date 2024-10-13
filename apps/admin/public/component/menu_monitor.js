@@ -5,14 +5,12 @@
  * Displays config
  * 
  */
-/**
- * @param {{system_admin:string|null}} props
- */
-const template = props => `<div id='menu_5_content_widget1' class='widget'>
+
+const template = () => `<div id='menu_5_content_widget1' class='widget'>
                                 <div id='list_monitor_nav' class='list_nav'>
                                     <div id='list_monitor_nav_connected' class='list_nav_list list_button common_icon'></div>
-                                    ${props.system_admin==null?'<div id=\'list_monitor_nav_app_log\' class=\'list_nav_list list_button common_icon\'></div>':''}
-                                    ${props.system_admin!=null?'<div id=\'list_monitor_nav_server_log\' class=\'list_nav_list list_button common_icon\'></div>':''}
+                                    <div id='list_monitor_nav_app_log' class='list_nav_list list_button common_icon'></div>
+                                    <div id='list_monitor_nav_server_log' class='list_nav_list list_button common_icon'></div>
                                 </div>
                                 <div id='list_row_sample'>
                                     <div id='select_app_menu5'></div>
@@ -40,8 +38,7 @@ const template = props => `<div id='menu_5_content_widget1' class='widget'>
  * 
  * @param {{data:{      commonMountdiv:string,
  *                      app_id:number,
- *                      system_admin:string,
- *                      system_admin_only:number,
+ *                      admin_only:number,
  *                      service_socket_client_ID: number,
  *                      client_latitude:string,
  *                      client_longitude:string,
@@ -105,8 +102,8 @@ const component = async props => {
      */
     let monitorDetailClickItemDetail = (item_type, data) => {item_type;data;};
 
-    const LIMIT = await props.methods.commonFFB({path:`/server-config/config-apps/${props.data.app_id}`, query:'key=PARAMETERS', method:'GET', authorization_type:props.data.system_admin!=null?'SYSTEMADMIN':'APP_ACCESS'})
-                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS));                            
+    const LIMIT = await props.methods.commonFFB({path:`/server-config/config-apps/${props.data.app_id}`, query:'key=PARAMETERS', method:'GET', authorization_type:'ADMIN'})
+                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS)); 
         
     /**
      * Get log parameters
@@ -128,7 +125,7 @@ const component = async props => {
      */
     const get_log_parameters = async () => {
        return new Promise((resolve)=>{
-           props.methods.commonFFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'SYSTEMADMIN'})
+           props.methods.commonFFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'})
            .then((/**@type{string}*/result)=>{
                const log_parameters = {
                    SCOPE_REQUEST : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],
@@ -165,20 +162,7 @@ const component = async props => {
        })
        .catch(()=>null);
     };
-    //fetch log parameter data if SYSTEMADMIN
-    const SERVICE_LOG_DATA = props.data.system_admin? await get_log_parameters():{ parameters:{SCOPE_REQUEST:'',
-                                                            SCOPE_SERVER:'', 
-                                                            SCOPE_SERVICE:'',
-                                                            SCOPE_APP:'',
-                                                            SCOPE_DB:'',
-                                                            REQUEST_LEVEL:0,
-                                                            SERVICE_LEVEL:0,
-                                                            DB_LEVEL:0,
-                                                            LEVEL_VERBOSE:'',
-                                                            LEVEL_ERROR:'',
-                                                            LEVEL_INFO:'',
-                                                            FILE_INTERVAL:''},
-                                                logscope_level_options:[]};
+    const SERVICE_LOG_DATA = await get_log_parameters();
     //save value for query
     const SERVICE_LOG_FILE_INTERVAL = SERVICE_LOG_DATA.parameters.FILE_INTERVAL ?? '';
     
@@ -195,8 +179,7 @@ const component = async props => {
             mountDiv:   'list_monitor',
             data:       {
                         app_id:props.data.app_id,
-                        system_admin:props.data.system_admin,
-                        system_admin_only:props.data.system_admin_only,
+                        admin_only:props.data.admin_only,
                         monitor_detail:list_detail,
                         offset:offset,
                         sort:sort,
@@ -326,7 +309,7 @@ const component = async props => {
                     path:'/server-config/config-apps/',
                     query:'key=NAME',
                     method:'GET',
-                    authorization_type:props.data.system_admin?'SYSTEMADMIN':'APP_ACCESS',
+                    authorization_type:'ADMIN',
                     column_value:'APP_ID',
                     column_text:'NAME'
                   },
@@ -335,7 +318,7 @@ const component = async props => {
 
         //mount the map
         //show map only for this condition
-        if (props.data.system_admin_only != 1)
+        if (props.data.admin_only != 1)
             props.methods.commonModuleLeafletInit({mount_div:'mapid',
                             longitude:props.data.client_longitude,
                             latitude:props.data.client_latitude,
@@ -355,7 +338,7 @@ const component = async props => {
                         monitorDetailClickSort:     monitorDetailClickSort,
                         monitorDetailClickItem:     monitorDetailClickItem
                     },
-        template:   template({system_admin:props.data.system_admin})
+        template:   template()
     };
 };
 
