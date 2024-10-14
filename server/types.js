@@ -636,15 +636,12 @@
  */
 
 /** 
- * Server - config apps admin with db columns
- * @typedef  {object} server_config_apps_admin
+ * Server - config apps admin
+ * @typedef  {object} server_apps_result_getAppsAdmin
  * @property {number} ID
  * @property {string} NAME
  * @property {string} SUBDOMAIN
- * @property {string} PATH
  * @property {string} LOGO
- * @property {string} SHOWPARAM
- * @property {string} CLIENT_ID
  * @property {server_config_apps_status} STATUS
  * @property {string} PROTOCOL
  * @property {string|null} HOST
