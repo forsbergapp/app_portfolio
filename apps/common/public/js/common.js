@@ -2556,24 +2556,14 @@ const commonException = (app_exception_function, error) => {
 /**
  * Set app service parameters
  * @param {*} parameters 
- * @returns {Promise.<void>}
+ * @returns {void}
  */
-const commonParametersAppServiceSet = async parameters => {
+const commonParametersAppServiceSet = parameters => {
     //app info
     COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
     COMMON_GLOBAL.app_id = parameters.app_id;
     COMMON_GLOBAL.app_logo = parameters.app_logo;
-
-    COMMON_GLOBAL.app_email= parameters.app_email;
-    COMMON_GLOBAL.app_copyright= parameters.app_copyright;
-    COMMON_GLOBAL.app_link_url= parameters.app_link_url;
-    COMMON_GLOBAL.app_link_title= parameters.app_link_title;
-    COMMON_GLOBAL.app_text_edit= parameters.app_text_edit;
-    
-    COMMON_GLOBAL.app_framework = parameters.app_framework;
-    COMMON_GLOBAL.app_framework_messages = parameters.app_framework_messages;
-    COMMON_GLOBAL.app_rest_api_version = parameters.app_rest_api_version;
-    
+   
     //rest 
     COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
 
@@ -3176,31 +3166,49 @@ const commonEventCommonRemove = () => {
 
 /**
  * Set app parameters
+ * Set common parameters and common app parameters 
  * @param {*[]} common_parameters 
  * @returns {void}
  */
-const commonParametersAppSet = (common_parameters) => {
-    //set parameters for common_app_id, each app set its own parameters in the app
-    for (const parameter of common_parameters.filter(parameter=>parameter.app_id == COMMON_GLOBAL.common_app_id)){
-        switch (true){
-            case ('INFO_LINK_POLICY_NAME' in parameter)                :{COMMON_GLOBAL.info_link_policy_name = parameter['INFO_LINK_POLICY_NAME'];break;}
-            case ('INFO_LINK_DISCLAIMER_NAME' in parameter)            :{COMMON_GLOBAL.info_link_disclaimer_name = parameter['INFO_LINK_DISCLAIMER_NAME'];break;}
-            case ('INFO_LINK_TERMS_NAME' in parameter)                 :{COMMON_GLOBAL.info_link_terms_name = parameter['INFO_LINK_TERMS_NAME'];break;}
-            case ('INFO_LINK_ABOUT_NAME' in parameter)                 :{COMMON_GLOBAL.info_link_about_name = parameter['INFO_LINK_ABOUT_NAME'];break;}
-            case ('INFO_LINK_POLICY_URL' in parameter)                 :{COMMON_GLOBAL.info_link_policy_url = parameter['INFO_LINK_POLICY_URL'];break;}
-            case ('INFO_LINK_DISCLAIMER_URL' in parameter)             :{COMMON_GLOBAL.info_link_disclaimer_url = parameter['INFO_LINK_DISCLAIMER_URL'];break;}
-            case ('INFO_LINK_TERMS_URL' in parameter)                  :{COMMON_GLOBAL.info_link_terms_url = parameter['INFO_LINK_TERMS_URL'];break;}
-            case ('INFO_LINK_ABOUT_URL' in parameter)                  :{COMMON_GLOBAL.info_link_about_url = parameter['INFO_LINK_ABOUT_URL'];break;}
-            case ('IMAGE_FILE_ALLOWED_TYPE1' in parameter)             :{COMMON_GLOBAL.image_file_allowed_type1 = parameter['IMAGE_FILE_ALLOWED_TYPE1'];break;}
-            case ('IMAGE_FILE_ALLOWED_TYPE2' in parameter)             :{COMMON_GLOBAL.image_file_allowed_type2 = parameter['IMAGE_FILE_ALLOWED_TYPE2'];break;}
-            case ('IMAGE_FILE_ALLOWED_TYPE3' in parameter)             :{COMMON_GLOBAL.image_file_allowed_type3 = parameter['IMAGE_FILE_ALLOWED_TYPE3'];break;}
-            case ('IMAGE_FILE_ALLOWED_TYPE4' in parameter)             :{COMMON_GLOBAL.image_file_allowed_type4 = parameter['IMAGE_FILE_ALLOWED_TYPE4'];break;}
-            case ('IMAGE_FILE_ALLOWED_TYPE5' in parameter)             :{COMMON_GLOBAL.image_file_allowed_type5 = parameter['IMAGE_FILE_ALLOWED_TYPE5'];break;}
-            case ('IMAGE_FILE_MIME_TYPE' in parameter)                 :{COMMON_GLOBAL.image_file_mime_type = parameter['IMAGE_FILE_MIME_TYPE'];break;}
-            case ('IMAGE_FILE_MAX_SIZE' in parameter)                  :{COMMON_GLOBAL.image_file_max_size = parseInt(parameter['IMAGE_FILE_MAX_SIZE']);break;}
-            case ('IMAGE_AVATAR_WIDTH' in parameter)                   :{COMMON_GLOBAL.image_avatar_width = parseInt(parameter['IMAGE_AVATAR_WIDTH']);break;}
-            case ('IMAGE_AVATAR_HEIGHT' in parameter)                  :{COMMON_GLOBAL.image_avatar_height = parseInt(parameter['IMAGE_AVATAR_HEIGHT']);break;}
-        }
+const commonParametersAppSet = common_parameters => {
+    for (const parameter of common_parameters){
+        if (parameter.app_id == COMMON_GLOBAL.common_app_id)
+            switch (true){
+                case ('APP_FRAMEWORK' in parameter)                     :{COMMON_GLOBAL.app_framework = parseInt(parameter['APP_FRAMEWORK']);break;}
+                case ('APP_FRAMEWORK_MESSAGES' in parameter)            :{COMMON_GLOBAL.app_framework_messages = parseInt(parameter['APP_FRAMEWORK_MESSAGES']);break;}
+                case ('APP_REST_API_VERSION' in parameter)              :{COMMON_GLOBAL.app_rest_api_version = parseInt(parameter['APP_REST_API_VERSION']);break;}    
+
+                case ('INFO_LINK_POLICY_NAME' in parameter)             :{COMMON_GLOBAL.info_link_policy_name = parameter['INFO_LINK_POLICY_NAME'];break;}
+                case ('INFO_LINK_POLICY_URL' in parameter)              :{COMMON_GLOBAL.info_link_policy_url = parameter['INFO_LINK_POLICY_URL'];break;}
+                case ('INFO_LINK_DISCLAIMER_NAME' in parameter)         :{COMMON_GLOBAL.info_link_disclaimer_name = parameter['INFO_LINK_DISCLAIMER_NAME'];break;}
+                case ('INFO_LINK_DISCLAIMER_URL' in parameter)          :{COMMON_GLOBAL.info_link_disclaimer_url = parameter['INFO_LINK_DISCLAIMER_URL'];break;}
+                case ('INFO_LINK_TERMS_NAME' in parameter)              :{COMMON_GLOBAL.info_link_terms_name = parameter['INFO_LINK_TERMS_NAME'];break;}
+                case ('INFO_LINK_TERMS_URL' in parameter)               :{COMMON_GLOBAL.info_link_terms_url = parameter['INFO_LINK_TERMS_URL'];break;}
+                case ('INFO_LINK_ABOUT_NAME' in parameter)              :{COMMON_GLOBAL.info_link_about_name = parameter['INFO_LINK_ABOUT_NAME'];break;}
+                case ('INFO_LINK_ABOUT_URL' in parameter)               :{COMMON_GLOBAL.info_link_about_url = parameter['INFO_LINK_ABOUT_URL'];break;}
+
+                case ('IMAGE_FILE_ALLOWED_TYPE1' in parameter)          :{COMMON_GLOBAL.image_file_allowed_type1 = parameter['IMAGE_FILE_ALLOWED_TYPE1'];break;}
+                case ('IMAGE_FILE_ALLOWED_TYPE2' in parameter)          :{COMMON_GLOBAL.image_file_allowed_type2 = parameter['IMAGE_FILE_ALLOWED_TYPE2'];break;}
+                case ('IMAGE_FILE_ALLOWED_TYPE3' in parameter)          :{COMMON_GLOBAL.image_file_allowed_type3 = parameter['IMAGE_FILE_ALLOWED_TYPE3'];break;}
+                case ('IMAGE_FILE_ALLOWED_TYPE4' in parameter)          :{COMMON_GLOBAL.image_file_allowed_type4 = parameter['IMAGE_FILE_ALLOWED_TYPE4'];break;}
+                case ('IMAGE_FILE_ALLOWED_TYPE5' in parameter)          :{COMMON_GLOBAL.image_file_allowed_type5 = parameter['IMAGE_FILE_ALLOWED_TYPE5'];break;}
+                case ('IMAGE_FILE_MIME_TYPE' in parameter)              :{COMMON_GLOBAL.image_file_mime_type = parameter['IMAGE_FILE_MIME_TYPE'];break;}
+                case ('IMAGE_FILE_MAX_SIZE' in parameter)               :{COMMON_GLOBAL.image_file_max_size = parseInt(parameter['IMAGE_FILE_MAX_SIZE']);break;}
+                case ('IMAGE_AVATAR_WIDTH' in parameter)                :{COMMON_GLOBAL.image_avatar_width = parseInt(parameter['IMAGE_AVATAR_WIDTH']);break;}
+                case ('IMAGE_AVATAR_HEIGHT' in parameter)               :{COMMON_GLOBAL.image_avatar_height = parseInt(parameter['IMAGE_AVATAR_HEIGHT']);break;}
+            }
+        else
+            switch (true){
+                case ('EMAIL' in parameter)                             :{COMMON_GLOBAL.app_email = parameter['EMAIL'];break;}
+                case ('COPYRIGHT' in parameter)                         :{COMMON_GLOBAL.app_copyright = parameter['COPYRIGHT'];break;}
+                case ('LINK_URL' in parameter)                          :{COMMON_GLOBAL.app_link_url = parameter['LINK_URL'];break;}
+                case ('LINK_TITLE' in parameter)                        :{COMMON_GLOBAL.app_link_title = parameter['LINK_TITLE'];break;}
+                case ('TEXT_EDIT' in parameter)                         :{COMMON_GLOBAL.app_text_edit = parameter['TEXT_EDIT'];break;}
+                case ('MODULE_EASY.QRCODE_WIDTH' in parameter)          :{COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);break;}
+                case ('MODULE_EASY.QRCODE_HEIGHT' in parameter)         :{COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter['MODULE_EASY.QRCODE_HEIGHT']);break;}
+                case ('MODULE_EASY.QRCODE_COLOR_DARK' in parameter)     :{COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter['MODULE_EASY.QRCODE_COLOR_DARK'];break;}
+                case ('MODULE_EASY.QRCODE_COLOR_LIGHT' in parameter)    :{COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];break;}
+            }
     }
 };
 /**
@@ -3553,35 +3561,28 @@ const commonInit = async (parameters) => {
     const decoded_parameters = JSON.parse(commonWindowFromBase64(parameters));
     setUserAgentAttributes();
     custom_framework();
-    await commonComponentRender({ mountDiv:   'common_app',
-                            data:       {
-                                        font_default:   true,
-                                        font_arabic:    true,
-                                        font_asian:     true,
-                                        font_prio1:     true,
-                                        font_prio2:     true,
-                                        font_prio3:     true
-                                        },
-                            methods:    null,
-                            path:       '/common/component/common_app.js'});
-    return new Promise((resolve) =>{
-        if (COMMON_GLOBAL.app_id ==null)
-            commonParametersAppServiceSet(decoded_parameters.app_service);
-        if (COMMON_GLOBAL.app_framework==0){
-            COMMON_DOCUMENT.querySelector('#common_toolbar_framework').classList.add('show');
-            COMMON_DOCUMENT.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
-        }
-            
-        commonSocketConnectOnline();
-        if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.admin_only==1){
-            resolve(decoded_parameters);
-        }
-        else{
-            commonParametersAppSet(decoded_parameters.app);
-            commonEventCommonAdd();
-            resolve(decoded_parameters);
-        }
-    });
+    await commonComponentRender({   mountDiv:   'common_app',
+                                    data:       {
+                                                font_default:   true,
+                                                font_arabic:    true,
+                                                font_asian:     true,
+                                                font_prio1:     true,
+                                                font_prio2:     true,
+                                                font_prio3:     true
+                                                },
+                                    methods:    null,
+                                    path:       '/common/component/common_app.js'});
+    if (COMMON_GLOBAL.app_id ==null){
+        commonParametersAppServiceSet(decoded_parameters.app_service);
+        commonParametersAppSet(decoded_parameters.app);
+        commonEventCommonAdd();
+    }
+    if (COMMON_GLOBAL.app_framework==0){
+        COMMON_DOCUMENT.querySelector('#common_toolbar_framework').classList.add('show');
+        COMMON_DOCUMENT.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
+    }
+    await commonSocketConnectOnline();
+    return decoded_parameters;
 };
 export{/* GLOBALS*/
        COMMON_GLOBAL, 

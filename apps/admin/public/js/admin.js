@@ -302,21 +302,11 @@ const framework_set = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const init_app = async (parameters) => {
+    parameters;
     await common.commonComponentRender({  mountDiv:   common.COMMON_GLOBAL.app_div,
                                     data:       null,
                                     methods:    null,
                                     path:       '/component/app.js'});
-    if (parameters.app_service.admin_only == 0)
-        for (const parameter of parameters.app) {
-            if (parameter['MODULE_EASY.QRCODE_WIDTH'])
-                common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);
-            if (parameter['MODULE_EASY.QRCODE_HEIGHT'])
-                common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter['MODULE_EASY.QRCODE_HEIGHT']);
-            if (parameter['MODULE_EASY.QRCODE_COLOR_DARK'])
-                common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter['MODULE_EASY.QRCODE_COLOR_DARK'];
-            if (parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'])
-                common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];
-        }
    framework_set();
 };
 /**
