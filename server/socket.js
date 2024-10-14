@@ -52,7 +52,8 @@ const SocketSendAdmin = (data) =>service.SocketSendAdmin(   getNumberValue(data.
  */
 const ConnectedListAdmin = (app_id, query) =>service.ConnectedList( app_id, 
                                                                     getNumberValue(query.get('select_app_id')), 
-                                                                    getNumberValue(query.get('limit')), 
+                                                                    getNumberValue(query.get('limit')) ?? 0, 
+                                                                    getNumberValue(query.get('offset')) ?? 0,
                                                                     getNumberValue(query.get('year')), 
                                                                     getNumberValue(query.get('month')), 
                                                                     getNumberValue(query.get('day')), 

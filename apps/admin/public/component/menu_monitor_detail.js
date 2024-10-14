@@ -316,6 +316,8 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                       offset:number,
 *                       sort:string,
 *                       order_by:string,
+*                       page:number|null,
+*                       page_last:number|null,
 *                       service_socket_client_ID:number,
 *                       LIMIT:number,
 *                       SERVICE_LOG_FILE_INTERVAL:string,
@@ -413,8 +415,9 @@ const component = async props => {
             }
         }
     };
-    let page = 0;
-    let page_last= 0;
+    //use page navigation values or 1 if component with new query
+    let page =      props.data.page?props.data.page:1;
+    let page_last=  props.data.page_last?props.data.page_last:1;
 
     let path = '';
     
@@ -429,11 +432,12 @@ const component = async props => {
         }
     }
     //fetch logs except for SERVER_LOG
-    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-    if (props.data.monitor_detail=='APP_LOG'){
-        page_last = logs.length>0?(Math.floor(logs[0].total_rows/props.data.LIMIT) * props.data.LIMIT):0;
+    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result));
+    if (props.data.monitor_detail=='APP_LOG'||props.data.monitor_detail=='CONNECTED'){
+        page_last = logs.rows.length>0?(Math.ceil(logs.page_header.total_count/props.data.LIMIT)):0;
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_total_count').textContent = logs.page_header.total_count;
     }
         
 
@@ -463,20 +467,19 @@ const component = async props => {
                         else
                             return 'desc';
                 }
-            else
-                if (props.data.monitor_detail=='SERVER_LOG')
-                    for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_monitor_detail_server_log .list_title')){
-                        if (col_title.classList.contains('asc'))
-                            if (order_by==0)
-                                    return col_title.getAttribute('data-column');
-                            else
-                                return 'asc';
-                        if (col_title.classList.contains('desc'))
-                            if (order_by==0)
-                                    return col_title.getAttribute('data-column');
-                            else
-                                return 'desc';
-                    }
+            if (props.data.monitor_detail=='CONNECTED' || props.data.monitor_detail=='SERVER_LOG')
+                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll(`#menu_monitor_detail_${props.data.monitor_detail.toLowerCase()} .list_title`)){
+                    if (col_title.classList.contains('asc'))
+                        if (order_by==0)
+                                return col_title.getAttribute('data-column');
+                        else
+                            return 'asc';
+                    if (col_title.classList.contains('desc'))
+                        if (order_by==0)
+                                return col_title.getAttribute('data-column');
+                        else
+                            return 'desc';
+                }
                     
             return sort;
         };    
@@ -486,45 +489,35 @@ const component = async props => {
             sort = 'date_created';
         switch (item){
             case 'menu_monitor_pagination_first':{
-                page = 0;
-                if (props.data.monitor_detail=='APP_LOG')
-                    props.methods.monitorShow('APP_LOG', 0, sort, order_by);
-                if (props.data.monitor_detail=='SERVER_LOG')
-                    monitorDetailShowServerLog(0,props.data.sort, props.data.order_by);
+                page = 1;
                 break;
             }
             case 'menu_monitor_pagination_previous':{
-                page = page - props.data.LIMIT;
-                if (page - props.data.LIMIT < 0)
-                    page = 0;
+                if (page - 1 < 1)
+                    page = 1;
                 else
-                    page = page - props.data.LIMIT;
-                if (props.data.monitor_detail=='APP_LOG')
-                    props.methods.monitorShow('APP_LOG', page, sort, order_by);
-                if (props.data.monitor_detail=='SERVER_LOG')
-                    monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
+                    page = page - 1;
                 break;
             }
             case 'menu_monitor_pagination_next':{
-                if (page + props.data.LIMIT > page_last)
+                if (page + 1 > page_last)
                     page = page_last;
                 else
-                    page = page + props.data.LIMIT;
-                if (props.data.monitor_detail=='APP_LOG')
-                    props.methods.monitorShow('APP_LOG', page, sort, order_by);
-                if (props.data.monitor_detail=='SERVER_LOG')
-                    monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
+                    page = page + 1;
                 break;
             }
             case 'menu_monitor_pagination_last':{
                 page = page_last;
-                if (props.data.monitor_detail=='APP_LOG')
-                    props.methods.monitorShow('APP_LOG', page, sort, order_by);
-                if (props.data.monitor_detail=='SERVER_LOG')
-                    monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
                 break;
             }
         }
+        if (props.data.monitor_detail=='CONNECTED')
+            props.methods.monitorShow('CONNECTED',  (page==1?0:page-1) * props.data.LIMIT, sort, order_by, page, page_last);
+        if (props.data.monitor_detail=='APP_LOG')
+            props.methods.monitorShow('APP_LOG',    (page==1?0:page-1) * props.data.LIMIT, sort, order_by, page, page_last);
+        if (props.data.monitor_detail=='SERVER_LOG')
+            monitorDetailShowServerLog(             (page==1?0:page-1) * props.data.LIMIT,props.data.sort, props.data.order_by);
+
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
     };
@@ -678,6 +671,7 @@ const component = async props => {
                         page_last=result.data.page_last;
                         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
                         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
+                        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_total_count').textContent = result.data.total_count;
                     });
     };
    
@@ -727,7 +721,7 @@ const component = async props => {
                                 function_commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
                                 function_get_order_by:get_order_by,
                                 function_roundOff: props.methods.commonRoundOff,
-                                logs:logs,
+                                logs:logs.rows,
                                 SERVICE_LOG_DATA_PARAMETERS:props.data.SERVICE_LOG_DATA.parameters})
     };
 };
