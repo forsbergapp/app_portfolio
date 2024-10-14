@@ -101,27 +101,34 @@ const getApps = async (app_id, resource_id, lang_code) =>{
 
 /**
  * Get all apps from app registry
+ * @returns {Promise.<import('../server/types.js').server_apps_result_getAppsAdmin[]>}
  */
  const getAppsAdmin = async () =>{
     /**@type{import('../server/db/file.service.js')} */
     const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
-    /**@type{import('../server/types.js').server_config_apps_admin[]}*/
-    const apps = fileCache('CONFIG_APPS').APPS.map((/**@type{import('../server/types.js').server_config_apps_admin}*/app)=>{
-        return {ID:app.ID,
+    /**@type{import('../server/types.js').server_apps_result_getAppsAdmin[]}*/
+    const apps = fileCache('CONFIG_APPS').APPS.map((/**@type{import('../server/types.js').server_config_apps_record}*/app)=>{
+        return {ID:app.APP_ID,
                 NAME:app.NAME,
                 SUBDOMAIN:app.SUBDOMAIN,
                 LOGO:app.LOGO,
                 STATUS:app.STATUS,
     };});
     const HTTPS_ENABLE = fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE;
-    apps.map(app=>{
-        app.PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
-        app.HOST = fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HOST' in row)[0].HOST;
-        app.PORT = getNumberValue(HTTPS_ENABLE=='1'?
-                                    fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_PORT' in row)[0].HTTPS_PORT:
-                                        fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTP_PORT' in row)[0].HTTP_PORT);
+    return apps.map(app=>{
+        return {
+                ID: app.ID,
+                NAME:app.NAME,
+                SUBDOMAIN:app.SUBDOMAIN,
+                LOGO:app.LOGO,
+                STATUS:app.STATUS,
+                PROTOCOL : HTTPS_ENABLE =='1'?'https://':'http://',
+                HOST : fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HOST' in row)[0].HOST,
+                PORT : getNumberValue(HTTPS_ENABLE=='1'?
+                                            fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_PORT' in row)[0].HTTPS_PORT:
+                                                fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTP_PORT' in row)[0].HTTP_PORT)
+                };
     });
-    return apps;
 };
 
 
