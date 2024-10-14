@@ -135,10 +135,7 @@ const COMMON = {
  *  /bff/app_access/v1*                 all     iam.AuthenticateAccessToken                 BFF_app_access
  *  /bff/app_external/v1/app-function*  post    iam.AuthenticateExternal                    BFF_app_external
  *  /bff/admin/v1*                      all     iam.AuthenticateAccessTokenAdmin            BFF_admin
- *  /bff/superadmin/v1*                 all     iam.AuthenticateAccessTokenSuperAdmin       BFF_superadmin
- *  /bff/systemadmin/v1*                all     iam.AuthenticateAccessTokenSystemAdmin      BFF_systemadmin
  *  /bff/socket/v1*                     get     iam.AuthenticateSocket                      BFF_socket
- *  /bff/iam_systemadmin/v1*            post    iam.AuthenticateIAMSystemAdmin              BFF_iam_systemadmin
  *  /bff/iam_admin/v1*                  post    iam.AuthenticateIAMAdmin                    BFF_iam_admin
  *  /bff/iam_user/v1*                   post    iam.AuthenticateIAMUser                     BFF_iam_user
  *  /bff/iam_provider/v1*               post    iam.AuthenticateIAMProvider                 BFF_iam_provider
@@ -183,8 +180,8 @@ const COMMON = {
     //ROUTES MIDDLEWARE
     //apps
     /**@type{import('./bff.js')} */
-    const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_app_external, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, 
-            BFF_iam_systemadmin, BFF_iam_admin, BFF_iam_user, BFF_iam_provider} = await import(`file://${process.cwd()}/server/bff.js`);
+    const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_app_external, BFF_admin, BFF_socket, 
+            BFF_iam_admin, BFF_iam_user, BFF_iam_provider} = await import(`file://${process.cwd()}/server/bff.js`);
     //auth
     /**@type{import('./iam.js')} */
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
@@ -204,12 +201,9 @@ const COMMON = {
     app.route('/bff/app_data/v1*').all                  (iam.AuthenticateIdToken,                   BFF_app_data);
     app.route('/bff/app_signup/v1*').post               (iam.AuthenticateIdTokenRegistration,       BFF_app_signup);
     app.route('/bff/app_access/v1*').all                (iam.AuthenticateAccessToken,               BFF_app_access);
-    app.route('/bff/app_external/v1/app-function*').post (iam.AuthenticateExternal,                  BFF_app_external);
-    app.route('/bff/admin/v1*').all                     (iam.AuthenticateAccessTokenAdmin,          BFF_admin);    
-    app.route('/bff/superadmin/v1*').all                (iam.AuthenticateAccessTokenSuperAdmin,     BFF_superadmin);
-    app.route('/bff/systemadmin/v1*').all               (iam.AuthenticateAccessTokenSystemAdmin,    BFF_systemadmin);
+    app.route('/bff/app_external/v1/app-function*').post (iam.AuthenticateExternal,                 BFF_app_external);
+    app.route('/bff/admin/v1*').all                     (iam.AuthenticateAccessTokenAdmin,          BFF_admin);
     app.route('/bff/socket/v1*').get                    (iam.AuthenticateSocket,                    BFF_socket);
-    app.route('/bff/iam_systemadmin/v1*').post          (iam.AuthenticateIAMSystemAdmin,            BFF_iam_systemadmin);
     app.route('/bff/iam_admin/v1*').post                (iam.AuthenticateIAMAdmin,                  BFF_iam_admin);
     app.route('/bff/iam_user/v1*').post                 (iam.AuthenticateIAMUser,                   BFF_iam_user);
     app.route('/bff/iam_provider/v1*').post             (iam.AuthenticateIAMProvider,               BFF_iam_provider);
@@ -270,12 +264,6 @@ const COMMON = {
     /**@type{import('./db/components/database.js')} */
     const db_database = await import(`file://${process.cwd()}/server/db/components/database.js`);
 
-    /**@type{import('./db/components/app.js')} */
-    const db_app = await import(`file://${process.cwd()}/server/db/components/app.js`);
-
-    /**@type{import('./db/components/app_category.js')} */
-    const db_app_category = await import(`file://${process.cwd()}/server/db/components/app_category.js`);
-
     /**@type{import('./db/components/app_data_entity.js')} */
     const db_app_data_entity = await import(`file://${process.cwd()}/server/db/components/app_data_entity.js`);
 
@@ -284,9 +272,6 @@ const COMMON = {
 
     /**@type{import('./db/components/app_data_stat.js')} */
     const db_app_data_stat = await import(`file://${process.cwd()}/server/db/components/app_data_stat.js`);
-
-    /**@type{import('./db/components/app_role.js')} */
-    const db_app_role = await import(`file://${process.cwd()}/server/db/components/app_role.js`);
 
     /**@type{import('./db/components/app_setting.js')} */
     const db_app_setting = await import(`file://${process.cwd()}/server/db/components/app_setting.js`);
@@ -438,6 +423,7 @@ const COMMON = {
                 //using switch (true) pattern
                 switch (true){
                     //server routes
+                    //app data open routes to apps that got id token at start
                     case route({url:`/bff/app_data/v1/app/apps/${resource_id_string}`, method:'GET'}):{
                         resolve(app.getApps(routesparameters.app_id, resource_id_get_number(), app_query)
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
@@ -523,6 +509,7 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
+                    //server functions for app_data, app_external or app_access
                     case route({url:`/bff/app_data/v1/app-function/${resource_id_string}`, method:'POST', 
                                 resource_validate_app_data_app_id: routesparameters.body.data_app_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_DATA'}):
                     case route({url:`/bff/app_external/v1/app-function/${resource_id_string}`, method:'POST', 
@@ -540,6 +527,166 @@ const COMMON = {
                                                 res:routesparameters.res}).then(result=>iso_return_message(result, false)));
                         break;
                     }
+                    //app access routes, for users with an access token
+                    case route({url:`/bff/app_access/v1/server-db/user_account-password/${resource_id_string}`, method:'PATCH', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.updatePassword(routesparameters.app_id, 
+                                                                /**@ts-ignore */
+                                                                resource_id_get_number(), 
+                                                                routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    //admin can update any user and uses same function as users
+                    //user can only update their own records
+                    case route({url:`/bff/admin/v1/server-db/user_account/${resource_id_string}`, method:'PATCH', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
+                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'PATCH', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.updateUserLocal(routesparameters.app_id, 
+                                                                /**@ts-ignore */ 
+                                                                resource_id_get_number(), 
+                                                                routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'GET', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.getUserByUserId(routesparameters.app_id, 
+                                                                /**@ts-ignore */
+                                                                resource_id_get_number(), 
+                                                                app_query, routesparameters.res)
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account-common/${resource_id_string}`, method:'PATCH', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.updateUserCommon(routesparameters.app_id, 
+                                                                    /**@ts-ignore */
+                                                                    resource_id_get_number(), 
+                                                                    app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.deleteUser(routesparameters.app_id, 
+                                                            /**@ts-ignore */
+                                                            resource_id_get_number(), 
+                                                            app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account-profile-detail/${resource_id_string}`, method:'GET', required:true}):{
+                        resolve(db_user_account.getProfileDetail(routesparameters.app_id, 
+                                                                    /**@ts-ignore */
+                                                                    resource_id_get_number(), 
+                                                                    app_query, routesparameters.res)
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, method:'POST', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.follow(routesparameters.app_id, 
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number(), 
+                                                        routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.unfollow(routesparameters.app_id, 
+                                                            /**@ts-ignore */
+                                                            resource_id_get_number(), 
+                                                            routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, method:'POST', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.like(routesparameters.app_id, 
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number(), 
+                                                        routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account.unlike(routesparameters.app_id, 
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number(), 
+                                                        routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'GET', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, 
+                                                                        /**@ts-ignore */
+                                                                        resource_id_get_number())
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_string}`, method:'GET', required:true}):{
+                        resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, 
+                                                                        /**@ts-ignore */
+                                                                        resource_id_get_number())
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'PATCH', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account_app.update(routesparameters.app_id, 
+                                                            /**@ts-ignore */
+                                                            resource_id_get_number(), 
+                                                            app_query, routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account_app.deleteUserAccountApp(routesparameters.app_id, 
+                                                                            /**@ts-ignore */
+                                                                            resource_id_get_number(), 
+                                                                            app_query));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post-profile-detail/${resource_id_string}`, method:'GET', required:true}):{
+                        resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, 
+                                                                                        /**@ts-ignore */
+                                                                                        resource_id_get_number(), 
+                                                                                        app_query, routesparameters.res)
+                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
+                        break;
+                    }
+                    case route({url:'/bff/app_access/v1/server-db/user_account_app_data_post', method:'POST', 
+                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id}):{
+                        resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, app_query, routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'PUT', 
+                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true}):{
+                        resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, resource_id_get_number(), app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true}):{
+                        resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, 
+                                                                                /**@ts-ignore */
+                                                                                resource_id_get_number(), 
+                                                                                app_query, routesparameters.body, routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, method:'POST', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account_app_data_post.like(routesparameters.app_id, 
+                                                                    /**@ts-ignore */
+                                                                    resource_id_get_number(), 
+                                                                    routesparameters.body));
+                        break;
+                    }
+                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, method:'DELETE', 
+                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
+                        resolve(db_user_account_app_data_post.unlike(routesparameters.app_id, 
+                                                                        /**@ts-ignore */
+                                                                        resource_id_get_number(), 
+                                                                        routesparameters.body));
+                        break;
+                    }
+                    //admin routes and available only in admin app with admin token
                     case route({url:`/bff/admin/v1/server-db/app_data_entity/${resource_id_string}`, method:'GET'}):{
                         resolve(db_app_data_entity.getEntity(routesparameters.app_id, resource_id_get_number(), app_query)
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
@@ -634,177 +781,6 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:`/bff/app_access/v1/server-db/user_account-password/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.updatePassword(routesparameters.app_id, 
-                                                                /**@ts-ignore */
-                                                                resource_id_get_number(), 
-                                                                routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.updateUserLocal(routesparameters.app_id, 
-                                                                /**@ts-ignore */ 
-                                                                resource_id_get_number(), 
-                                                                routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account/${resource_id_string}`, method:'GET', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'GET', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.getUserByUserId(routesparameters.app_id, 
-                                                                /**@ts-ignore */
-                                                                resource_id_get_number(), 
-                                                                app_query, routesparameters.res)
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account-common/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.updateUserCommon(routesparameters.app_id, 
-                                                                    /**@ts-ignore */
-                                                                    resource_id_get_number(), 
-                                                                    app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.deleteUser(routesparameters.app_id, 
-                                                            /**@ts-ignore */
-                                                            resource_id_get_number(), 
-                                                            app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account-profile-detail/${resource_id_string}`, method:'GET', required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account-profile-detail/${resource_id_string}`, method:'GET', required:true}):{
-                        resolve(db_user_account.getProfileDetail(routesparameters.app_id, 
-                                                                    /**@ts-ignore */
-                                                                    resource_id_get_number(), 
-                                                                    app_query, routesparameters.res)
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_follow/${resource_id_string}`, method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.follow(routesparameters.app_id, 
-                                                        /**@ts-ignore */
-                                                        resource_id_get_number(), 
-                                                        routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_follow/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.unfollow(routesparameters.app_id, 
-                                                            /**@ts-ignore */
-                                                            resource_id_get_number(), 
-                                                            routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_like/${resource_id_string}`, method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.like(routesparameters.app_id, 
-                                                        /**@ts-ignore */
-                                                        resource_id_get_number(), 
-                                                        routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_like/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account.unlike(routesparameters.app_id, 
-                                                        /**@ts-ignore */
-                                                        resource_id_get_number(), 
-                                                        routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_app/${resource_id_string}`, method:'GET', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'GET', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, 
-                                                                        /**@ts-ignore */
-                                                                        resource_id_get_number())
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_string}`, method:'GET', required:true}):{
-                        resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, 
-                                                                        /**@ts-ignore */
-                                                                        resource_id_get_number())
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db/user_account_app/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'PATCH', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account_app.update(routesparameters.app_id, 
-                                                            /**@ts-ignore */
-                                                            resource_id_get_number(), 
-                                                            app_query, routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account_app.deleteUserAccountApp(routesparameters.app_id, 
-                                                                            /**@ts-ignore */
-                                                                            resource_id_get_number(), 
-                                                                            app_query));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post-profile-detail/${resource_id_string}`, method:'GET', required:true}):{
-                        resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, 
-                                                                                        /**@ts-ignore */
-                                                                                        resource_id_get_number(), 
-                                                                                        app_query, routesparameters.res)
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:'/bff/app_access/v1/server-db/user_account_app_data_post', method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id}):{
-                        resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, app_query, routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'PUT', 
-                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true}):{
-                        resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, resource_id_get_number(), app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true}):{
-                        resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, 
-                                                                                /**@ts-ignore */
-                                                                                resource_id_get_number(), 
-                                                                                app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, method:'POST', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account_app_data_post.like(routesparameters.app_id, 
-                                                                    /**@ts-ignore */
-                                                                    resource_id_get_number(), 
-                                                                    routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, method:'DELETE', 
-                                resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(db_user_account_app_data_post.unlike(routesparameters.app_id, 
-                                                                        /**@ts-ignore */
-                                                                        resource_id_get_number(), 
-                                                                        routesparameters.body));
-                        break;
-                    }
                     case route({url:'/bff/admin/v1/server-socket/message', method:'POST'}):{
                         resolve(socket.SocketSendAdmin(routesparameters.body));
                         break;
@@ -827,25 +803,7 @@ const COMMON = {
                         break;
                     }
                     case route({url:'/bff/admin/v1/app_admin/apps', method:'GET'}):{
-                        resolve(app.getAppsAdmin(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, false)));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db_admin/apps/${resource_id_string}`, method:'PUT', required:true}):{
-                        resolve(db_app.updateAdmin( routesparameters.app_id, 
-                                                    /**@ts-ignore */
-                                                    resource_id_get_number(), 
-                                                    routesparameters.body)
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:'/bff/admin/v1/server-db_admin/app_category', method:'GET'}):{
-                        resolve(db_app_category.getAppCategoryAdmin(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, false)));
-                        break;
-                    }
-                    case route({url:'/bff/admin/v1/server-db_admin/app_role', method:'GET'}):{
-                        resolve(db_app_role.getAppRoleAdmin(routesparameters.app_id, app_query)
+                        resolve(app.getAppsAdmin()
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
@@ -859,20 +817,11 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:`/bff/superadmin/v1/server-db_admin/user_account/${resource_id_string}`, method:'PATCH', required:true}):{
+                    case route({url:`/bff/admin/v1/server-db_admin/user_account/${resource_id_string}`, method:'PATCH', required:true}):{
                         resolve(db_user_account.updateAdmin(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:'/bff/systemadmin/v1/server-socket/message', method:'POST'}):{
-                        resolve(socket.SocketSendSystemAdmin(routesparameters.body));
-                        break;
-                    }
-                    case route({url:'/bff/systemadmin/v1/server-socket/socket', method:'GET'}):{
-                        resolve(socket.ConnectedListSystemadmin(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, false)));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-config/config-apps-parameter/${resource_id_string}`, method:'PATCH', required:true}):{
@@ -882,7 +831,6 @@ const COMMON = {
                                                                 routesparameters.body));
                         break;
                     }
-                    case route({url:`/bff/systemadmin/v1/server-config/config-apps/${resource_id_string}`, method:'GET'}):
                     case route({url:`/bff/admin/v1/server-config/config-apps/${resource_id_string}`, method:'GET'}):{
                         resolve(iso_return_message(config.ConfigGetApps(
                                                         /**@ts-ignore */
@@ -891,8 +839,7 @@ const COMMON = {
                                                         resource_id_get_number()!=null));
                         break;
                     }
-                    case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'GET', required:true}):
-                    case route({url:`/bff/systemadmin/v1/server-config/config/${resource_id_string}`, method:'GET', required:true}):{
+                    case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'GET', required:true}):{
                         resolve(config.ConfigFileGet(
                                                         /**@ts-ignore */
                                                         resource_id_get_string(), 
@@ -900,80 +847,82 @@ const COMMON = {
                                     .then(result=>iso_return_message(result, resource_id_get_string()!=null)));
                         break;
                     }
-                    case route({url:`/bff/systemadmin/v1/server-config/config/${resource_id_string}`, method:'PUT', required:true}):{
+                    case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'PUT', required:true}):{
                         resolve(config.ConfigFileSave(
                                                         /**@ts-ignore */
                                                         resource_id_get_string(), 
                                                         routesparameters.body));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server/info', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server/info', method:'GET'}):{
                         resolve(info.Info()
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database-installation', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database-installation', method:'GET'}):{
                         resolve(db_database.InstalledCheck(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database-space', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database-space', method:'GET'}):{
                         resolve(db_database.InfoSpace(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database-spacesum', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database-spacesum', method:'GET'}):{
                         resolve(db_database.InfoSpaceSum(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database', method:'GET'}):{
                         resolve(db_database.Info(routesparameters.app_id)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database', method:'POST'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database', method:'POST'}):{
                         resolve(db_database.Install(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-db_admin/database', method:'DELETE'}):{
+                    case route({url:'/bff/admin/v1/server-db_admin/database', method:'DELETE'}):{
                         resolve(db_database.Uninstall(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-log/log', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-log/log', method:'GET'}):{
                         resolve(log.getLogs(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server/info-statuscode', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server/info-statuscode', method:'GET'}):{
                         resolve(log.getStatusCodes()
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-log/log-stat', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-log/log-stat', method:'GET'}):{
                         resolve(log.getLogStats(app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    case route({url:'/bff/systemadmin/v1/server-log/log-files', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/server-log/log-files', method:'GET'}):{
                         resolve(log.getFiles()
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
+                    //socket using EventSource route
                     case route({url:'/bff/socket/v1/server-socket/socket', method:'GET'}):{
                         //EventSource uses GET method, should otherwise be POST
                         resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
+                    // app_signup route
                     case route({url:'/bff/app_signup/v1/server-db/user_account-signup', method:'POST'}):{
                         resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route({url:'/bff/iam_systemadmin/v1/server-iam/login', method:'POST'}):{
-                        resolve(iam_service.AuthenticateSystemadmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
+                    //iam routes
+                    case route({url:'/bff/iam_admin/v1/server-iam/login', method:'POST'}):{
+                        resolve(iam_service.AuthenticateAdmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
-                    case route({url:'/bff/iam_admin/v1/server-iam/login', method:'POST'}):
                     case route({url:'/bff/iam_user/v1/server-iam/login', method:'POST'}):{
                         resolve(db_user_account.login(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.body, routesparameters.res));
                         break;
@@ -1137,7 +1086,7 @@ export {COMMON, response_send_error, getNumberValue, responsetime, serverRoutes,
 </div>
 
 <nav>
-    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common.html">apps/common/src/common</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common.html">apps/common/src/common</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
