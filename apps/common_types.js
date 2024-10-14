@@ -371,11 +371,10 @@
 
 /**
  * Type CommonModuleLeafletMapLayer
- * @typedef {{  id:number|null,
- *              display_data: string|null, 
- *              value?:string|null, 
+ * @typedef {{  display_data: string, 
+ *              value:string, 
  *              data2:string|null, 
- *              data3:string|null, 
+ *              data3:string|number|null, 
  *              data4:string|null,
  *              session_map_layer:string|null}}  CommonModuleLeafletMapLayer
  */

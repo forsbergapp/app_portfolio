@@ -9,7 +9,6 @@ INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('ARABIC_SCRIPT', 0);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('CALENDAR_HIJRI_TYPE', 0);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('DIRECTION', 0);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('MAP_STYLE', 0);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('MESSAGE', 0);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('NUMBER_SYSTEM', 0);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('RESOURCE_TYPE', 0);
@@ -39,9 +38,6 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DIRECTION','ltr','🠆',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DIRECTION','rtl','🠄',NULL,NULL,NULL,NULL);
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MAP_STYLE','OpenStreetMap_Mapnik','OpenStreetMap_Mapnik','https://tile.openstreetmap.org/{z}/{x}/{y}.png',19,'© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MAP_STYLE','Esri.WorldImagery','Esri.WorldImagery','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',NULL,'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',NULL);
 
 --  db info/errors
 --	20100-20199
