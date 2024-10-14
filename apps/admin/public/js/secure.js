@@ -560,10 +560,15 @@ const installation_function = (id, db_icon, path, query, method, data) => {
     common.commonFFB({path:path, query:query, method:method, authorization_type:'ADMIN', body:data, spinner_id:id})
     .then((/**@type{string}*/result)=>{
         if (db_icon!=null)
-            if (db_icon)
+            if (db_icon){
+                common.COMMON_GLOBAL.admin_only = 0;
                 COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.add('installed');
-            else
+            }
+            else{
+                common.COMMON_GLOBAL.admin_only = 1;
                 COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.remove('installed');
+            }
+                
         common.commonMessageShow('LOG', null, null, null, JSON.parse(result).info, common.COMMON_GLOBAL.common_app_id);
     });
 };
