@@ -2470,14 +2470,6 @@ const init_app = async parameters => {
             APP_GLOBAL.prayer_default_show_midnight = (parameter['PRAYER_DEFAULT_SHOW_MIDNIGHT']=== 'true');
         if (parameter['PRAYER_DEFAULT_SHOW_FAST_START_END'])
             APP_GLOBAL.prayer_default_show_fast_start_end = parseInt(parameter['PRAYER_DEFAULT_SHOW_FAST_START_END']);
-        if (parameter['MODULE_EASY.QRCODE_WIDTH'])
-            common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);
-        if (parameter['MODULE_EASY.QRCODE_HEIGHT'])
-            common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter['MODULE_EASY.QRCODE_HEIGHT']);
-        if (parameter['MODULE_EASY.QRCODE_COLOR_DARK'])
-            common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter['MODULE_EASY.QRCODE_COLOR_DARK'];
-        if (parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'])
-            common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];
     }
 
     //set current date for report month
