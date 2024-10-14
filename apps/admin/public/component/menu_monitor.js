@@ -38,7 +38,6 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  * 
  * @param {{data:{      commonMountdiv:string,
  *                      app_id:number,
- *                      admin_only:number,
  *                      service_socket_client_ID: number,
  *                      client_latitude:string,
  *                      client_longitude:string,
@@ -179,7 +178,6 @@ const component = async props => {
             mountDiv:   'menu_monitor_detail',
             data:       {
                         app_id:props.data.app_id,
-                        admin_only:props.data.admin_only,
                         monitor_detail:list_detail,
                         offset:offset,
                         sort:sort,
@@ -317,14 +315,12 @@ const component = async props => {
                 path:'/common/component/common_select.js'});
 
         //mount the map
-        //show map only for this condition
-        if (props.data.admin_only != 1)
-            props.methods.commonModuleLeafletInit({mount_div:'menu_monitor_mapid',
-                            longitude:props.data.client_longitude,
-                            latitude:props.data.client_latitude,
-                            place:props.data.client_place,
-                            doubleclick_event:null,
-                            update_map:true});
+        props.methods.commonModuleLeafletInit({mount_div:'menu_monitor_mapid',
+                        longitude:props.data.client_longitude,
+                        latitude:props.data.client_latitude,
+                        place:props.data.client_place,
+                        doubleclick_event:null,
+                        update_map:true});
     };
 
     return {

@@ -312,7 +312,6 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 * @param {{ data:       {
 *                       commonMountdiv:string,
 *                       app_id:number,
-*                       admin_only:number,
 *                       monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
 *                       offset:number,
 *                       sort:string,
@@ -566,7 +565,7 @@ const component = async props => {
      */
     const monitorDetailClickItem = (item_type, data) => {
         //check if gps_click and if not system admin only when map is not loaded
-        if (item_type=='GPS' && props.data.admin_only != 1){
+        if (item_type=='GPS'){
             if (data['ip']){
                 props.methods.commonFFB({path:'/geolocation/ip', query:data['ip'] != '::1'?`ip=${data['ip']}`:null, method: 'GET', authorization_type:'APP_DATA'})
                 .then((/**@type{string}*/result)=>{
