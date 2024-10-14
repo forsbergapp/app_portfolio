@@ -94,7 +94,6 @@
  * @property {string} body.url                                      - app portfolio parameter
  * @property {string} body.logo                                     - app portfolio parameter
  * @property {string} body.enabled                                  - app portfolio parameter
- * @property {number} body.app_category_id                          - app portfolio parameter
  * @property {string} body.parameter_value                          - app portfolio parameter
  * @property {string} body.parameter_comment                        - app portfolio parameter
  * @property {string} body.parameter_name                           - app portfolio parameter
@@ -631,7 +630,6 @@
  * @property {string} CLIENT_ID
  * @property {server_config_apps_status} STATUS
  * @property {string} APP_NAME_TRANSLATION
- * @property {string} APP_CATEGORY
  * @property {string} PROTOCOL
  * @property {string|null} HOST
  * @property {number|null} PORT
@@ -639,7 +637,7 @@
 
 /** 
  * Server - config apps admin with db columns
- * @typedef  {object} server_config_apps_admin_with_db_columns
+ * @typedef  {object} server_config_apps_admin
  * @property {number} ID
  * @property {string} NAME
  * @property {string} SUBDOMAIN
@@ -648,8 +646,6 @@
  * @property {string} SHOWPARAM
  * @property {string} CLIENT_ID
  * @property {server_config_apps_status} STATUS
- * @property {number} APP_CATEGORY_ID
- * @property {string} APP_CATEGORY_TEXT
  * @property {string} PROTOCOL
  * @property {string|null} HOST
  * @property {number|null} PORT
@@ -1251,35 +1247,19 @@
  *  server_db_sql_parameter_[TABLE]_[function name]
  * result:
  *  server_db_sql_result_[TABLE]_[function name]
+ */
+
+/**
+ * 
  * APP
- * @typedef {{  app_category_id:number|null}} server_db_sql_parameter_app_updateAppAdmin
- */
-
-/**
  * @typedef {{  id:number, 
- *              app_translation:string, 
- *              app_category:string}} server_db_sql_result_app_getApp
- */
-
-/**
- * @typedef {{  id:number, 
- *              app_category_id:number, 
- *              app_category_text:string}} server_db_sql_result_app_getAppsAdmin
+ *              app_translation:string}} server_db_sql_result_app_getApp
  */
 
 /**
  * @typedef {{  id:number}} server_db_sql_result_app_getAppsAdminId
  */
 
-/**
- * @typedef {   server_db_common_result_update} server_db_sql_result_app_updateAppAdmin
- */
-
-/**
- * 
- * APP CATEGORY
- * @typedef {{id:number, category_name:string, app_category_text:string}} server_db_sql_result_app_category_getAppCategoryAdmin
- */
 
 /**
  * APP_DATA_ENTITY

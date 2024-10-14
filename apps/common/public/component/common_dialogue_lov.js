@@ -70,14 +70,6 @@ const component = async props => {
             token_type = 'ADMIN';
             break;
         }
-        case 'APP_CATEGORY':{
-            method = 'GET';
-            lov_column = 'app_category_text';
-            path = '/server-db_admin/app_category';
-            query= null;
-            token_type = 'APP_ACCESS';
-            break;
-        }
         case 'COUNTRY':{
             method = 'POST', 
             lov_column = 'text';

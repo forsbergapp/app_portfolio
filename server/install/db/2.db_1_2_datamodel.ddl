@@ -10,23 +10,12 @@ GRANT ALL PRIVILEGES ON <DB_SCHEMA/>.* TO app_portfolio_role_app_dba;
 
 CREATE TABLE <DB_SCHEMA/>.app (
     id        INTEGER NOT NULL,
-    app_category_id INTEGER,
 	CONSTRAINT app_pk PRIMARY KEY ( id )
 );
 
 GRANT SELECT ON <DB_SCHEMA/>.app TO app_portfolio_role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app TO app_portfolio_role_app_admin;
-
-CREATE TABLE <DB_SCHEMA/>.app_category (
-    id            INT NOT NULL AUTO_INCREMENT,
-    category_name VARCHAR(100) NOT NULL,
-    CONSTRAINT app_category_pk PRIMARY KEY ( id )
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.app_category TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_category TO app_portfolio_role_app_admin;
 
 CREATE TABLE <DB_SCHEMA/>.app_data_entity (
     id        INT NOT NULL AUTO_INCREMENT,
@@ -211,7 +200,6 @@ GRANT SELECT ON <DB_SCHEMA/>.app_setting_type TO app_portfolio_role_app_common;
 CREATE TABLE <DB_SCHEMA/>.app_translation (
     language_id                            INTEGER NOT NULL,
     app_id                                 INTEGER,
-    app_category_id                        INTEGER,
     app_setting_id                         INTEGER,
     text                                   VARCHAR(2000),
     json_data                              TEXT
@@ -219,14 +207,9 @@ CREATE TABLE <DB_SCHEMA/>.app_translation (
 
 ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT arc_3 CHECK ( ( ( app_setting_id IS NOT NULL )
-                                   AND ( app_id IS NULL )
-                                   AND ( app_category_id IS NULL ) )
+                                   AND ( app_id IS NULL ) )
                                  OR ( ( app_id IS NOT NULL )
-                                      AND ( app_setting_id IS NULL )
-                                      AND ( app_category_id IS NULL ) )
-                                 OR ( ( app_category_id IS NOT NULL )
-                                      AND ( app_setting_id IS NULL )
-                                      AND ( app_id IS NULL ) ) );
+                                      AND ( app_setting_id IS NULL ) ) );
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_admin;
 
@@ -234,11 +217,6 @@ GRANT SELECT ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_common;
 
 ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
                                                                                          language_id );
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
-                                                            app_id,
-                                                            language_id );
 
 ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
                                                                                                  language_id );
@@ -454,10 +432,6 @@ GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_view TO app_po
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_view TO app_portfolio_role_app_admin;
 
-ALTER TABLE <DB_SCHEMA/>.app
-    ADD CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
-        REFERENCES <DB_SCHEMA/>.app_category ( id );
-
 ALTER TABLE <DB_SCHEMA/>.app_data_entity
     ADD CONSTRAINT app_data_entity_app_fk FOREIGN KEY ( app_id )
         REFERENCES <DB_SCHEMA/>.app ( id )
@@ -581,10 +555,6 @@ ALTER TABLE <DB_SCHEMA/>.app_setting_type
     ADD CONSTRAINT app_setting_type_app_fk FOREIGN KEY ( app_id )
         REFERENCES <DB_SCHEMA/>.app ( id )
             ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_app_category_fk FOREIGN KEY ( app_category_id )
-        REFERENCES <DB_SCHEMA/>.app_category ( id );
 
 ALTER TABLE <DB_SCHEMA/>.app_translation
     ADD CONSTRAINT app_translation_app_fk FOREIGN KEY ( app_id )

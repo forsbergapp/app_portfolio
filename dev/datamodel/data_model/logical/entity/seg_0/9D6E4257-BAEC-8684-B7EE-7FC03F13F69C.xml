@@ -28,21 +28,6 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="app_category_id" id="395B5474-CF95-AD19-29A1-C62F74C0ED23">
-<createdBy>admin</createdBy>
-<createdTime>2022-07-19 21:57:48 UTC</createdTime>
-<generatorID>ED4AA069-A5DE-651C-32DA-D4C90AF3A0B4</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>40C89E95-404E-CE8E-2BBA-6FE0899EE2A2</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="4EC86741-CA59-03DF-66F9-9A79A7291368" name="APP PK">
