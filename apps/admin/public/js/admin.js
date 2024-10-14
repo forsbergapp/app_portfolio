@@ -68,11 +68,11 @@ const app_event_click = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'secure_menu_open':{
-                    COMMON_DOCUMENT.querySelector('#menu').style.display = 'block';
+                    COMMON_DOCUMENT.querySelector('#secure_menu').style.display = 'block';
                     break;
                 }
                 case 'secure_menu_close': {
-                    COMMON_DOCUMENT.querySelector('#menu').style.display = 'none';
+                    COMMON_DOCUMENT.querySelector('#secure_menu').style.display = 'none';
                     break;
                 }
                 case 'secure_menu_1':

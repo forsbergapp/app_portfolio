@@ -27,7 +27,8 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
                                     <div id='menu_monitor_pagination_next' class='common_icon'></div>
                                     <div id='menu_monitor_pagination_last' class='common_icon'></div>
                                     <div id='menu_monitor_pagination_page'></div>
-                                    <div id='menu_monitor_pagination_page_last'>
+                                    <div id='menu_monitor_pagination_page_last'></div>
+                                    <div id='menu_monitor_pagination_page_total_count'></div>
                                 </div>
                             </div>
                             </div>
@@ -171,8 +172,10 @@ const component = async props => {
      * @param {number} offset
      * @param {string} sort 
      * @param {string} order_by 
+     * @param {number|null} page
+     * @param {number|null} page_last
      */
-    const monitorShow = async (list_detail, offset, sort, order_by) => {
+    const monitorShow = async (list_detail, offset, sort, order_by, page=null, page_last=null) => {
         
         props.methods.commonComponentRender({
             mountDiv:   'menu_monitor_detail',
@@ -182,6 +185,8 @@ const component = async props => {
                         offset:offset,
                         sort:sort,
                         order_by:order_by,
+                        page:page,
+                        page_last:page_last,
                         service_socket_client_ID:props.data.service_socket_client_ID,
                         LIMIT:LIMIT,
                         SERVICE_LOG_FILE_INTERVAL:SERVICE_LOG_FILE_INTERVAL,

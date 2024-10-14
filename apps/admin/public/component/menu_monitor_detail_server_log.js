@@ -325,7 +325,7 @@ const template = props => ` ${  /*
 *                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
 *           lifeycle:   null}} props 
 * @returns {Promise.<{ lifecycle:   import('../../../common_types.js').CommonComponentLifecycle, 
-*                      data:        {page_last:number},
+*                      data:        {page_last:number, total_count:number},
 *                      methods:     null,
 *                      template:    string}>}
 */
@@ -339,7 +339,9 @@ const component = async props => {
 
     return {
         lifecycle:  null,
-        data:       {page_last :logs.rows.length>0?(Math.floor(logs.page_header.total_count/props.data.LIMIT) * props.data.LIMIT):0},
+        data:       {page_last :logs.rows.length>0?(Math.ceil(logs.page_header.total_count/props.data.LIMIT)):0,
+                     total_count: logs.page_header.total_count
+        },
         methods:    null,
         template:   template({  function_get_order_by:get_order_by,
                                 function_roundOff:props.methods.commonRoundOff,
