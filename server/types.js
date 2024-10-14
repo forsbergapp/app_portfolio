@@ -304,14 +304,6 @@
  * @typedef {object}        server_apps_app_service_parameters
  * @property {number}       app_id
  * @property {string}       app_logo
- * @property {string|null}  app_email
- * @property {string|null}  app_copyright
- * @property {string|null}  app_link_url
- * @property {string|null}  app_link_title
- * @property {string|null}  app_text_edit
- * @property {number}       app_framework
- * @property {number}       app_framework_messages
- * @property {number}       app_rest_api_version
  * @property {string}       app_idtoken
  * @property {string}       locale
  * @property {number}       admin_only
