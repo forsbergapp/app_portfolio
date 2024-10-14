@@ -110,7 +110,6 @@ const show_menu = menu => {
                 mountDiv:   'secure_menu_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id, 
-                            admin_only:common.COMMON_GLOBAL.admin_only,
                             service_socket_client_ID: common.COMMON_GLOBAL.service_socket_client_ID,
                             client_latitude:common.COMMON_GLOBAL.client_latitude,
                             client_longitude:common.COMMON_GLOBAL.client_longitude,

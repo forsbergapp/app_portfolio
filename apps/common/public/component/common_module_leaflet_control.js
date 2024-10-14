@@ -70,13 +70,26 @@ const component = async props => {
     const MODULE_LEAFLET_ZOOM_CITY  =14;
     const MODULE_LEAFLET_FLY_TO_DURATION  =8; //seconds
     
-    //get supported layers in database
     /** @type {import('../../../common_types.js').CommonModuleLeafletMapLayer[]}*/
-    const MAP_LAYERS = await props.methods.commonFFB({path:'/server-db/app_settings_display', query:`data_app_id=${props.data.data_app_id}&setting_type=MAP_STYLE`, method:'GET', authorization_type:'APP_DATA'})
-                                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const  MAP_LAYERS = [{
+                            display_data: 'OpenStreetMap_Mapnik',
+                            value: 'OpenStreetMap_Mapnik',
+                            data2: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            data3: 19,
+                            data4: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                            session_map_layer: null
+                        },
+                        {
+                            display_data: 'Esri.WorldImagery',
+                            value: 'Esri.WorldImagery',
+                            data2: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                            data3: null,
+                            data4: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+                            session_map_layer: null
+                        }];
     
     //format layers to use on Leaflet                                
-    const MODULE_LEAFLET_SELECT_MAP_LAYERS =   MAP_LAYERS.map(map_layer=>{return {id:map_layer.id, 
+    const MODULE_LEAFLET_SELECT_MAP_LAYERS =   MAP_LAYERS.map(map_layer=>{return {
                                                             display_data:map_layer.display_data, 
                                                             value:map_layer.value, 
                                                             data2:map_layer.data2, 
