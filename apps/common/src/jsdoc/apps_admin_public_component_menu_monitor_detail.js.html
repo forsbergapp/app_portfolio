@@ -41,22 +41,20 @@
  * Displays monitor
  * 
  * Connected
- *      list_connected          contains records
+ *      menu_monitor_detail_connected          contains records
  * App log
- *      list_app_log            contains records
+ *      menu_monitor_detail_app_log            contains records
  *      list_app_pagination     contains page navigation buttons
  * Server log 
- *      list_server_log_form    contains log parameters and is mounted first so records knows what logscope is used
- *      list_server_log         contains records
+ *      menu_monitor_detail_server_log_form    contains log parameters and is mounted first so records knows what logscope is used
+ *      menu_monitor_detail_server_log         contains records
  * 
  */
 /**
  * @param {{
- *          system_admin:string|null,
  *          service_socket_client_ID:number,
  *          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
  *          function_commonWindowUserAgentPlatform:function,
- *          function_role_icon_class:function,
  *          function_get_order_by:function,
  *          function_roundOff:function,
  *          logs:[],
@@ -75,56 +73,51 @@
  *                                      FILE_INTERVAL:string}}} props
  */
 const template = props => ` ${props.monitor_detail=='CONNECTED'?
-                                `&lt;div id='list_connected_form'>    
-                                    &lt;div id='list_connected' class='common_list_scrollbar'>
-                                        &lt;div class='list_connected_row'>
-                                            &lt;div data-column='id' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('id')}'>
+                                `&lt;div id='menu_monitor_detail_connected_form'>    
+                                    &lt;div id='menu_monitor_detail_connected' class='common_list_scrollbar'>
+                                        &lt;div class='menu_monitor_detail_connected_row'>
+                                            &lt;div data-column='id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                                 ID
                                             &lt;/div>
-                                            &lt;div data-column='connection_date' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('connection_date')}'>
+                                            &lt;div data-column='connection_date' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('connection_date')}'>
                                                 CONNECTION DATE
                                             &lt;/div>
-                                            &lt;div data-column='app_id' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                            &lt;div data-column='app_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
                                                 APP ID
                                             &lt;/div>
-                                            &lt;div data-column='app_role_icon' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('app_role_icon')}'>
-                                                ROLE
-                                            &lt;/div>
-                                            &lt;div data-column='user_account_id' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('user_account_id')}'>
+                                            &lt;div data-column='user_account_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('user_account_id')}'>
                                                 USER ID
                                             &lt;/div>
-                                            &lt;div data-column='system_admin' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('system_admin')}'>
-                                                SYSTEM ADMIN
+                                            &lt;div data-column='admin' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('admin')}'>
+                                                ADMIN
                                             &lt;/div>
-                                            &lt;div data-column='ip' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('ip')}'>
+                                            &lt;div data-column='ip' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('ip')}'>
                                                 IP
                                             &lt;/div>
-                                            &lt;div data-column='gps_latitude' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('gps_latitude')}'>
+                                            &lt;div data-column='gps_latitude' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('gps_latitude')}'>
                                                 GPS LAT
                                             &lt;/div>
-                                            &lt;div data-column='gps_longitude' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('gps_longitude')}'>
+                                            &lt;div data-column='gps_longitude' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('gps_longitude')}'>
                                                 GPS LONG
                                             &lt;/div>
-                                            &lt;div data-column='place' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('place')}'>
+                                            &lt;div data-column='place' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('place')}'>
                                                 PLACE
                                             &lt;/div>
-                                            &lt;div data-column='timezone' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('timezone')}'>
+                                            &lt;div data-column='timezone' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('timezone')}'>
                                                 TIMEZONE
                                             &lt;/div>
-                                            &lt;div data-column='user_agent' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('user_agent')}'>
+                                            &lt;div data-column='user_agent' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('user_agent')}'>
                                                 USER AGENT
                                             &lt;/div>
-                                            &lt;div data-column='broadcast' class='list_connected_col list_title ${props.function_get_order_by('broadcast')}'>
+                                            &lt;div data-column='broadcast' class='menu_monitor_detail_connected_col list_title ${props.function_get_order_by('broadcast')}'>
                                                 BROADCAST
                                             &lt;/div>
                                         &lt;/div>
                                         ${props.logs.map((/**@type{{id:number,
                                                                     connection_date:string,
                                                                     app_id:number,
-                                                                    system_admin:string,
+                                                                    admin:string,
                                                                     ip:string,
-                                                                    app_role_id:number,
-                                                                    app_role_icon:string,
                                                                     user_account_id:number,
                                                                     gps_latitude:string,
                                                                     gps_longitude:string,
@@ -132,48 +125,45 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                                     timezone:string,
                                                                     user_agent:string
                                                                     }}*/log)=>
-                                            `&lt;div class='list_connected_row ${log.id==props.service_socket_client_ID?'list_current_user_row':''}'>
-                                                &lt;div class='list_connected_col'>
+                                            `&lt;div class='menu_monitor_detail_connected_row ${log.id==props.service_socket_client_ID?'list_current_user_row':''}'>
+                                                &lt;div class='menu_monitor_detail_connected_col'>
                                                     ${log.id}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col'>
+                                                &lt;div class='menu_monitor_detail_connected_col'>
                                                     ${log.connection_date}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col'>
+                                                &lt;div class='menu_monitor_detail_connected_col'>
                                                     ${log.app_id}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col ${props.function_role_icon_class(log.system_admin, log.app_role_id)}'>
-                                                    ${log.system_admin!=''?'':log.app_role_icon}
-                                                &lt;/div>
-                                                &lt;div class='list_connected_col'>
+                                                &lt;div class='menu_monitor_detail_connected_col'>
                                                     ${log.user_account_id ?? ''}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col'>
-                                                    ${log.system_admin}
+                                                &lt;div class='menu_monitor_detail_connected_col'>
+                                                    ${log.admin}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col'>
+                                                &lt;div class='menu_monitor_detail_connected_col'>
                                                     ${log.ip.replace('::ffff:','')}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col gps_click' 
+                                                &lt;div class='menu_monitor_detail_connected_col gps_click' 
                                                     data-latitude='${log.gps_latitude ?? ''}'
                                                     data-longitude='${log.gps_longitude ?? ''}'>
                                                     ${log.gps_latitude ?? ''}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col gps_click'
+                                                &lt;div class='menu_monitor_detail_connected_col gps_click'
                                                     data-latitude='${log.gps_latitude ?? ''}'
                                                     data-longitude='${log.gps_longitude ?? ''}'>
                                                     ${log.gps_longitude ?? ''}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col'>
+                                                &lt;div class='menu_monitor_detail_connected_col'>
                                                     ${log.place}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col'>
+                                                &lt;div class='menu_monitor_detail_connected_col'>
                                                     ${log.timezone}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col common_wide_list_column'>
+                                                &lt;div class='menu_monitor_detail_connected_col common_wide_list_column'>
                                                     ${props.function_commonWindowUserAgentPlatform(log.user_agent) ?? ''}
                                                 &lt;/div>
-                                                &lt;div class='list_connected_col chat_click common_icon' data-id='${log.id}'>&lt;/div>
+                                                &lt;div class='menu_monitor_detail_connected_col chat_click common_icon' data-id='${log.id}'>&lt;/div>
                                             &lt;/div>`
                                             ).join('')
                                         }
@@ -182,58 +172,58 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 ''
                             }
                             ${props.monitor_detail=='APP_LOG'?`
-                                &lt;div id='list_app_log_form'>
-                                    &lt;div id='list_app_log' class='common_list_scrollbar'>
-                                        &lt;div class='list_app_log_row'>
-                                            &lt;div data-column='date_created' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('date_created')}'>
+                                &lt;div id='menu_monitor_detail_app_log_form'>
+                                    &lt;div id='menu_monitor_detail_app_log' class='common_list_scrollbar'>
+                                        &lt;div class='menu_monitor_detail_app_log_row'>
+                                            &lt;div data-column='date_created' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('date_created')}'>
                                                 DATE
                                             &lt;/div>
-                                            &lt;div data-column='server_http_host' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('server_http_host')}'>
+                                            &lt;div data-column='server_http_host' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('server_http_host')}'>
                                                 HOST
                                             &lt;/div>
-                                            &lt;div  data-column='app_id' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                            &lt;div  data-column='app_id' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
                                                 APP ID
                                             &lt;/div>
-                                            &lt;div data-column='app_module' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module')}'>
+                                            &lt;div data-column='app_module' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module')}'>
                                                 MODULE
                                             &lt;/div>
-                                            &lt;div data-column='app_module_type' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_type')}'>
+                                            &lt;div data-column='app_module_type' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_type')}'>
                                                 MODULE TYPE
                                             &lt;/div>
-                                            &lt;div data-column='app_module_request' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_request')}'>
+                                            &lt;div data-column='app_module_request' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_request')}'>
                                                 MODULE REQUEST
                                             &lt;/div>
-                                            &lt;div data-column='app_module_result' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_result')}'>
+                                            &lt;div data-column='app_module_result' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_result')}'>
                                                 MODULE RESULT
                                             &lt;/div>
-                                            &lt;div data-column='app_user_id' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_user_id')}'>
+                                            &lt;div data-column='app_user_id' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_user_id')}'>
                                                 USER ID
                                             &lt;/div>
-                                            &lt;div data-column='server_remote_addr' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('server_remote_addr')}'>
+                                            &lt;div data-column='server_remote_addr' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('server_remote_addr')}'>
                                                 IP
                                             &lt;/div>
-                                            &lt;div data-column='client_latitude' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('client_latitude')}'>
+                                            &lt;div data-column='client_latitude' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('client_latitude')}'>
                                                 GPS LAT
                                             &lt;/div>
-                                            &lt;div data-column='client_longitude' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('client_longitude')}'>
+                                            &lt;div data-column='client_longitude' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('client_longitude')}'>
                                                 GPS LONG
                                             &lt;/div>
-                                            &lt;div data-column='user_language' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('user_language')}'>
+                                            &lt;div data-column='user_language' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_language')}'>
                                                 USER LANGUAGE
                                             &lt;/div>
-                                            &lt;div data-column='user_timezone' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('user_timezone')}'>
+                                            &lt;div data-column='user_timezone' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_timezone')}'>
                                                 USER TIMEZONE
                                             &lt;/div>
-                                            &lt;div data-column='user_number_system' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('user_number_system')}'>
+                                            &lt;div data-column='user_number_system' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_number_system')}'>
                                                 USER NUMBER_SYSTEM
                                             &lt;/div>
-                                            &lt;div data-column='user_platform' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('user_platform')}'>
+                                            &lt;div data-column='user_platform' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_platform')}'>
                                                 USER PLATFORM
                                             &lt;/div>
-                                            &lt;div data-column='server_user_agent' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('server_user_agent')}'>
+                                            &lt;div data-column='server_user_agent' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('server_user_agent')}'>
                                                 USER AGENT
                                             &lt;/div>
-                                            &lt;div data-column='http_accept_language' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('http_accept_language')}'>
+                                            &lt;div data-column='http_accept_language' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('http_accept_language')}'>
                                                 ACCEPT LANGUAGE
                                             &lt;/div>
                                         &lt;/div>
@@ -255,60 +245,60 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                                     server_user_agent:string,
                                                                     server_http_accept_language:string
                                                                     }}*/log)=>
-                                            `&lt;div class='list_app_log_row'>
-                                                &lt;div class='list_app_log_col'>
+                                            `&lt;div class='menu_monitor_detail_app_log_row'>
+                                                &lt;div class='menu_monitor_detail_app_log_col'>
                                                     ${log.date_created}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col common_wide_list_column'>
+                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.server_http_host}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col'>
+                                                &lt;div class='menu_monitor_detail_app_log_col'>
                                                     ${log.app_id}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col'>
+                                                &lt;div class='menu_monitor_detail_app_log_col'>
                                                     ${log.app_module}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col'>
+                                                &lt;div class='menu_monitor_detail_app_log_col'>
                                                     ${log.app_module_type}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col common_wide_list_column'>
+                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.app_module_request}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col common_wide_list_column'>
+                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.app_module_result}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col'>
+                                                &lt;div class='menu_monitor_detail_app_log_col'>
                                                     ${log.app_user_id}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col'>
+                                                &lt;div class='menu_monitor_detail_app_log_col'>
                                                     ${log.server_remote_addr.replace('::ffff:','')}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col gps_click'
+                                                &lt;div class='menu_monitor_detail_app_log_col gps_click'
                                                     data-latitude='${log.client_latitude ?? ''}'
                                                     data-longitude='${log.client_longitude ?? ''}'>
                                                     ${log.client_latitude ?? ''}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col gps_click'
+                                                &lt;div class='menu_monitor_detail_app_log_col gps_click'
                                                     data-latitude='${log.client_latitude ?? ''}'
                                                     data-longitude='${log.client_longitude ?? ''}'>
                                                     ${log.client_longitude ?? ''}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col common_wide_list_column'>
+                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.user_language}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col common_wide_list_column'>
+                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.user_timezone}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col common_wide_list_column'>
+                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.user_number_system}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col common_wide_list_column'>
+                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.user_platform}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col common_wide_list_column'>
+                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.server_user_agent}
                                                 &lt;/div>
-                                                &lt;div class='list_app_log_col common_wide_list_column'>
+                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.server_http_accept_language}
                                                 &lt;/div>
                                             &lt;/div>`
@@ -319,38 +309,38 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 ''
                             }
                             ${props.monitor_detail=='SERVER_LOG'?
-                                `&lt;div id='list_server_log_form'>
-                                    &lt;div id='select_logscope5'>&lt;/div>
-                                    &lt;div id='filesearch_menu5' class='common_dialogue_button common_icon'>&lt;/div>
-                                    &lt;div id='menu5_row_parameters'>
-                                        &lt;div class='menu5_row_parameters_col'>
-                                            &lt;div id='menu5_row_parameters_col1' class='common_icon'>&lt;/div>
+                                `&lt;div id='menu_monitor_detail_server_log_form'>
+                                    &lt;div id='menu_monitor_detail_select_logscope'>&lt;/div>
+                                    &lt;div id='menu_monitor_detail_filesearch' class='common_dialogue_button common_icon'>&lt;/div>
+                                    &lt;div id='menu_monitor_detail_parameters_row'>
+                                        &lt;div class='menu_monitor_detail_parameters_row_col'>
+                                            &lt;div id='menu_monitor_detail_parameters_row_col1' class='common_icon'>&lt;/div>
                                             ${(props.SERVICE_LOG_DATA_PARAMETERS.REQUEST_LEVEL==1 ||props.SERVICE_LOG_DATA_PARAMETERS.REQUEST_LEVEL==2)?
-                                                '&lt;div id=\'menu5_row_parameters_col1_1\' class=\'common_icon\'>&lt;/div>':
-                                                '&lt;div id=\'menu5_row_parameters_col1_0\' class=\'common_icon\'>&lt;/div>'
+                                                '&lt;div id=\'menu_monitor_detail_parameters_row_col1_1\' class=\'common_icon\'>&lt;/div>':
+                                                '&lt;div id=\'menu_monitor_detail_parameters_row_col1_0\' class=\'common_icon\'>&lt;/div>'
                                             }
                                         &lt;/div>
-                                        &lt;div class='menu5_row_parameters_col'>
-                                            &lt;div id='menu5_row_parameters_col2' class='common_icon'>&lt;/div>
+                                        &lt;div class='menu_monitor_detail_parameters_row_col'>
+                                            &lt;div id='menu_monitor_detail_parameters_row_col2' class='common_icon'>&lt;/div>
                                             ${(props.SERVICE_LOG_DATA_PARAMETERS.SERVICE_LEVEL==1 || props.SERVICE_LOG_DATA_PARAMETERS.SERVICE_LEVEL==2)?
-                                                '&lt;div id=\'menu5_row_parameters_col2_1\' class=\'common_icon\'>&lt;/div>':
-                                                '&lt;div id=\'menu5_row_parameters_col2_0\' class=\'common_icon\'>&lt;/div>'
+                                                '&lt;div id=\'menu_monitor_detail_parameters_row_col2_1\' class=\'common_icon\'>&lt;/div>':
+                                                '&lt;div id=\'menu_monitor_detail_parameters_row_col2_0\' class=\'common_icon\'>&lt;/div>'
                                             }
                                         &lt;/div>
-                                        &lt;div class='menu5_row_parameters_col'>
-                                            &lt;div id='menu5_row_parameters_col3' class='common_icon'>&lt;/div>
+                                        &lt;div class='menu_monitor_detail_parameters_row_col'>
+                                            &lt;div id='menu_monitor_detail_parameters_row_col3' class='common_icon'>&lt;/div>
                                             ${(props.SERVICE_LOG_DATA_PARAMETERS.DB_LEVEL==1 || props.SERVICE_LOG_DATA_PARAMETERS.DB_LEVEL==2)?
-                                                '&lt;div id=\'menu5_row_parameters_col3_1\' class=\'common_icon\'>&lt;/div>':
-                                                '&lt;div id=\'menu5_row_parameters_col3_0\' class=\'common_icon\'>&lt;/div>'
+                                                '&lt;div id=\'menu_monitor_detail_parameters_row_col3_1\' class=\'common_icon\'>&lt;/div>':
+                                                '&lt;div id=\'menu_monitor_detail_parameters_row_col3_0\' class=\'common_icon\'>&lt;/div>'
                                             }
                                         &lt;/div>
                                     &lt;/div>
                                     &lt;div class='list_search'>
-                                        &lt;div id='list_server_log_search_input' contentEditable='true' class='common_input list_search_input'/>&lt;/div>
-                                        &lt;div id='list_server_log_search_icon' class='list_search_icon common_icon'>&lt;/div>
+                                        &lt;div id='menu_monitor_detail_server_log_search_input' contentEditable='true' class='common_input list_search_input'/>&lt;/div>
+                                        &lt;div id='menu_monitor_detail_server_log_search_icon' class='list_search_icon common_icon'>&lt;/div>
                                     &lt;/div>
                                 &lt;/div>
-                                &lt;div id='list_server_log' class='common_list_scrollbar'>&lt;/div>`:
+                                &lt;div id='menu_monitor_detail_server_log' class='common_list_scrollbar'>&lt;/div>`:
                                 ''
                             }`;
 /**
@@ -358,12 +348,12 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 * @param {{ data:       {
 *                       commonMountdiv:string,
 *                       app_id:number,
-*                       system_admin:string,
-*                       system_admin_only:number,
 *                       monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
 *                       offset:number,
 *                       sort:string,
 *                       order_by:string,
+*                       page:number|null,
+*                       page_last:number|null,
 *                       service_socket_client_ID:number,
 *                       LIMIT:number,
 *                       SERVICE_LOG_FILE_INTERVAL:string,
@@ -420,31 +410,31 @@ const component = async props => {
      * @returns {string}
      */
     const get_query = (list_detail, offset, sort, order_by) =>{
-        const app_id = props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5 .common_select_dropdown_value').getAttribute('data-value'); 
-        const year = props.methods.COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        const month = props.methods.COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        const day  = props.methods.COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        const app_id = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app .common_select_dropdown_value').getAttribute('data-value'); 
+        const year = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').getAttribute('data-value');
+        const month = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_month .common_select_dropdown_value').getAttribute('data-value');
+        const day  = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').getAttribute('data-value');
         
         switch (list_detail){
             case 'CONNECTED':
             case 'APP_LOG':{
-                props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'inline-block';
+                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                 //search month + 1 for CONNECTED
                 return `select_app_id=${app_id}&amp;year=${year}&amp;month=${month}&amp;day=${day}&amp;sort=${sort}&amp;order_by=${order_by}&amp;offset=${offset}&amp;limit=${props.data.LIMIT}`;
             }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
-                const logscope = props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
-                const loglevel = props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
+                const logscope = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
+                const loglevel = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
                 let app_id_filter='';
                 if (logscope=='APP' || logscope=='SERVICE' || logscope=='SERVER-DB'){
                     //show app filter and use it
-                    props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'inline-block';
+                    props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                     app_id_filter = `select_app_id=${app_id}&amp;`;
                 }
                 else{
                     //no app filter for request
-                    props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'none';
+                    props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'none';
                     app_id_filter = 'select_app_id=&amp;';
                 }
                 let url_parameters;
@@ -461,22 +451,15 @@ const component = async props => {
             }
         }
     };
-    let page = 0;
-    let page_last= 0;
+    //use page navigation values or 1 if component with new query
+    let page =      props.data.page?props.data.page:1;
+    let page_last=  props.data.page_last?props.data.page_last:1;
 
-    /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
-    let token_type = 'APP_ACCESS';
     let path = '';
     
     switch (props.data.monitor_detail){
         case 'CONNECTED':{
-            if (props.data.system_admin!=null){
-                path = '/server-socket/socket';
-                token_type = 'SYSTEMADMIN';
-            }
-            else{
-                path = '/server-socket/socket';
-            }
+            path = '/server-socket/socket';
             break;
         }
         case 'APP_LOG':{
@@ -485,11 +468,12 @@ const component = async props => {
         }
     }
     //fetch logs except for SERVER_LOG
-    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:token_type}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-    if (props.data.monitor_detail=='APP_LOG'){
-        page_last = logs.length>0?(Math.floor(logs[0].total_rows/props.data.LIMIT) * props.data.LIMIT):0;
-        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page').textContent = page; 
-        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page_last').textContent = page_last;
+    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result));
+    if (props.data.monitor_detail=='APP_LOG'||props.data.monitor_detail=='CONNECTED'){
+        page_last = logs.rows.length>0?(Math.ceil(logs.page_header.total_count/props.data.LIMIT)):0;
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_total_count').textContent = logs.page_header.total_count;
     }
         
 
@@ -507,7 +491,7 @@ const component = async props => {
         const get_sort = (order_by=0) => {
             const sort = '';
             if (props.data.monitor_detail=='APP_LOG')
-                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#list_app_log .list_title')){
+                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_monitor_detail_app_log .list_title')){
                     if (col_title.classList.contains('asc'))
                         if (order_by==0)
                             return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
@@ -519,20 +503,19 @@ const component = async props => {
                         else
                             return 'desc';
                 }
-            else
-                if (props.data.monitor_detail=='SERVER_LOG')
-                    for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#list_server_log .list_title')){
-                        if (col_title.classList.contains('asc'))
-                            if (order_by==0)
-                                    return col_title.getAttribute('data-column');
-                            else
-                                return 'asc';
-                        if (col_title.classList.contains('desc'))
-                            if (order_by==0)
-                                    return col_title.getAttribute('data-column');
-                            else
-                                return 'desc';
-                    }
+            if (props.data.monitor_detail=='CONNECTED' || props.data.monitor_detail=='SERVER_LOG')
+                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll(`#menu_monitor_detail_${props.data.monitor_detail.toLowerCase()} .list_title`)){
+                    if (col_title.classList.contains('asc'))
+                        if (order_by==0)
+                                return col_title.getAttribute('data-column');
+                        else
+                            return 'asc';
+                    if (col_title.classList.contains('desc'))
+                        if (order_by==0)
+                                return col_title.getAttribute('data-column');
+                        else
+                            return 'desc';
+                }
                     
             return sort;
         };    
@@ -541,48 +524,38 @@ const component = async props => {
         if (sort =='')
             sort = 'date_created';
         switch (item){
-            case 'list_monitor_first':{
-                page = 0;
-                if (props.data.monitor_detail=='APP_LOG')
-                    props.methods.monitorShow('APP_LOG', 0, sort, order_by);
-                if (props.data.monitor_detail=='SERVER_LOG')
-                    monitorDetailShowServerLog(0,props.data.sort, props.data.order_by);
+            case 'menu_monitor_pagination_first':{
+                page = 1;
                 break;
             }
-            case 'list_monitor_previous':{
-                page = page - props.data.LIMIT;
-                if (page - props.data.LIMIT &lt; 0)
-                    page = 0;
+            case 'menu_monitor_pagination_previous':{
+                if (page - 1 &lt; 1)
+                    page = 1;
                 else
-                    page = page - props.data.LIMIT;
-                if (props.data.monitor_detail=='APP_LOG')
-                    props.methods.monitorShow('APP_LOG', page, sort, order_by);
-                if (props.data.monitor_detail=='SERVER_LOG')
-                    monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
+                    page = page - 1;
                 break;
             }
-            case 'list_monitor_next':{
-                if (page + props.data.LIMIT > page_last)
+            case 'menu_monitor_pagination_next':{
+                if (page + 1 > page_last)
                     page = page_last;
                 else
-                    page = page + props.data.LIMIT;
-                if (props.data.monitor_detail=='APP_LOG')
-                    props.methods.monitorShow('APP_LOG', page, sort, order_by);
-                if (props.data.monitor_detail=='SERVER_LOG')
-                    monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
+                    page = page + 1;
                 break;
             }
-            case 'list_monitor_last':{
+            case 'menu_monitor_pagination_last':{
                 page = page_last;
-                if (props.data.monitor_detail=='APP_LOG')
-                    props.methods.monitorShow('APP_LOG', page, sort, order_by);
-                if (props.data.monitor_detail=='SERVER_LOG')
-                    monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
                 break;
             }
         }
-        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page').textContent = page; 
-        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page_last').textContent = page_last;
+        if (props.data.monitor_detail=='CONNECTED')
+            props.methods.monitorShow('CONNECTED',  (page==1?0:page-1) * props.data.LIMIT, sort, order_by, page, page_last);
+        if (props.data.monitor_detail=='APP_LOG')
+            props.methods.monitorShow('APP_LOG',    (page==1?0:page-1) * props.data.LIMIT, sort, order_by, page, page_last);
+        if (props.data.monitor_detail=='SERVER_LOG')
+            monitorDetailShowServerLog(             (page==1?0:page-1) * props.data.LIMIT,props.data.sort, props.data.order_by);
+
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
     };
     /**
      * List sort click
@@ -593,18 +566,18 @@ const component = async props => {
      */
     const monitorDetailClickSort = (list, sortcolumn, order_by) => {
         switch (list){
-            case 'list_app_log':{
+            case 'menu_monitor_detail_app_log':{
                 props.methods.monitorShow('APP_LOG', 0,  sortcolumn, order_by);
                 break;
             }
-            case 'list_connected':{
+            case 'menu_monitor_detail_connected':{
                 props.methods.monitorShow('CONNECTED', 
                     '', 
                     sortcolumn,
                     order_by);
                 break;
             }
-            case 'list_server_log':{
+            case 'menu_monitor_detail_server_log':{
                 monitorDetailShowServerLog( 0, sortcolumn, order_by);
                 break;
             }
@@ -621,7 +594,7 @@ const component = async props => {
      */
     const monitorDetailClickItem = (item_type, data) => {
         //check if gps_click and if not system admin only when map is not loaded
-        if (item_type=='GPS' &amp;&amp; props.data.system_admin_only != 1){
+        if (item_type=='GPS'){
             if (data['ip']){
                 props.methods.commonFFB({path:'/geolocation/ip', query:data['ip'] != '::1'?`ip=${data['ip']}`:null, method: 'GET', authorization_type:'APP_DATA'})
                 .then((/**@type{string}*/result)=>{
@@ -685,19 +658,19 @@ const component = async props => {
                                 const day      = parseInt(filename.substring(6, 8));
 
                                 //logscope and loglevel
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').textContent = `${logscope} - ${loglevel}`;
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').textContent = `${logscope} - ${loglevel}`;
                                 //year
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').setAttribute('data-value', year);
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').textContent = year;
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').setAttribute('data-value', year);
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').textContent = year;
 
                                 //month
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').setAttribute('data-value', month);
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').textContent = month;
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_month .common_select_dropdown_value').setAttribute('data-value', month);
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_month .common_select_dropdown_value').textContent = month;
                                 //day if applicable
                                 if (props.data.SERVICE_LOG_FILE_INTERVAL=='1D'){
-                                    props.methods.COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').setAttribute('data-value', day);
-                                    props.methods.COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').textContent = day;
+                                    props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').setAttribute('data-value', day);
+                                    props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').textContent = day;
                                 }
                                 monitorDetailShowServerLog( 0, 'logdate', 'desc');
                                 props.methods.commonLovClose();
@@ -711,19 +684,18 @@ const component = async props => {
      * @param {string} order_by
      */
     const monitorDetailShowServerLog = (offset, sort, order_by) =>{
-        let search = props.methods.COMMON_DOCUMENT.querySelector('#list_server_log_search_input').textContent;
+        let search = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input').textContent;
         if (search != null){
-            if (props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#list_server_log_search_input'),100]]})==false)
+            if (props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input'),100]]})==false)
                 return;
         }
         search=search?encodeURI(search):search;
         props.methods.commonComponentRender(
-                {   mountDiv:'list_server_log',
+                {   mountDiv:'menu_monitor_detail_server_log',
                     data:{  
-                                system_admin:props.data.system_admin,
                                 path:'/server-log/log',
                                 query:`${get_query('SERVER_LOG', offset, sort, order_by)}&amp;search=${search ?? ''}`,
-                                token_type: 'SYSTEMADMIN',
+                                token_type: 'ADMIN',
                                 sort:sort,
                                 order_by:order_by,
                                 LIMIT:props.data.LIMIT
@@ -733,32 +705,12 @@ const component = async props => {
                     path:'/component/menu_monitor_detail_server_log.js'})
                     .then(result=>{
                         page_last=result.data.page_last;
-                        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page').textContent = page; 
-                        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page_last').textContent = page_last;
+                        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
+                        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
+                        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_total_count').textContent = result.data.total_count;
                     });
     };
    
-    /**
-     * @param {string} system_admin
-     * @param {number|null} app_role_id
-     * @returns {string}
-     */
-    const role_icon_class =(system_admin, app_role_id) =>{
-        if (system_admin!='')
-            return 'app_role_system_admin common_icon';
-        else
-            switch (app_role_id){
-                case 0:{
-                    return 'app_role_superadmin';
-                }
-                case 1:{
-                    return 'app_role_admin';
-                }
-                default:{
-                    return 'app_role_user';
-                }
-            }
-        };
     /**
      * Get order by if column matches
      * @param {string} column
@@ -774,7 +726,7 @@ const component = async props => {
                                 return {VALUE:`${row.log_scope}-${row.log_level}`, TEXT:`${row.log_scope} - ${row.log_level}`};});
 
             await props.methods.commonComponentRender({
-                mountDiv:'select_logscope5', 
+                mountDiv:'menu_monitor_detail_select_logscope', 
                 data:{ 
                             default_value:'REQUEST - INFO',
                             default_data_value:'REQUEST-INFO',
@@ -800,14 +752,12 @@ const component = async props => {
                     monitorDetailClickSort:monitorDetailClickSort,
                     monitorDetailClickItem:monitorDetailClickItem
         },
-        template:   template({  system_admin:props.data.system_admin, 
-                                service_socket_client_ID:props.data.service_socket_client_ID,
+        template:   template({  service_socket_client_ID:props.data.service_socket_client_ID,
                                 monitor_detail:props.data.monitor_detail,
                                 function_commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
-                                function_role_icon_class:role_icon_class,
                                 function_get_order_by:get_order_by,
                                 function_roundOff: props.methods.commonRoundOff,
-                                logs:logs,
+                                logs:logs.rows,
                                 SERVICE_LOG_DATA_PARAMETERS:props.data.SERVICE_LOG_DATA.parameters})
     };
 };
@@ -821,7 +771,7 @@ export default component;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common.html">apps/common/src/common</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app.html">server/db/components/app</a></li><li><a href="module-server_db_components_app_category.html">server/db/components/app_category</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_role.html">server/db/components/app_role</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_category.html">server/db/sql/app_category</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_role.html">server/db/sql/app_role</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common.html">apps/common/src/common</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
