@@ -203,54 +203,43 @@ const ClientAdd = (newClient) => {
  * Socket connected list
  * @param {number} app_id
  * @param {number|null} app_id_select
- * @param {number|null} limit
+ * @param {number} limit
+ * @param {number} offset
  * @param {number|null} year
  * @param {number|null} month
  * @param {number|null} day
  * @param {string} order_by
  * @param {import('./types.js').server_socket_connected_list_sort} sort
- * @returns {Promise.<import('./types.js').server_socket_connected_list_no_res[]>}
+ * @returns{Promise.<{page_header:{total_count:number, offset:number, count:number}, rows:import('./types.js').server_socket_connected_list_no_res[]}>}
  */
- const ConnectedList = async (app_id, app_id_select, limit, year, month, day, order_by, sort) => {
-    
-    //filter    
-    /**@type{import('./types.js').server_socket_connected_list_no_res[]} */
-    let connected_clients_no_res =[];
-    for (const client of CONNECTED_CLIENTS)
-        //return keys without response
-        connected_clients_no_res.push({ id: client.id,
-                                        app_id: client.app_id, 
-                                        authorization_bearer:client.authorization_bearer,
-                                        user_account_id: client.user_account_id,
-                                        identity_provider_id: client.identity_provider_id,
-                                        admin: client.admin,
-                                        connection_date: client.connection_date,
-                                        gps_latitude: client.gps_latitude ?? '',
-                                        gps_longitude: client.gps_longitude ?? '',
-                                        place: client.place ?? '',
-                                        timezone: client.timezone ?? '',
-                                        ip: client.ip,
-                                        user_agent: client.user_agent});
-    //return rows controlling limit, app_id, year and month
-    connected_clients_no_res = connected_clients_no_res.filter((client, index)=>{
-        return index<=Number(limit ?? 0) &&
-        (client.app_id == app_id_select || app_id_select==null) &&
-        (parseInt(client.connection_date.substring(0,4)) == year && 
-         parseInt(client.connection_date.substring(5,7)) == month &&
-         parseInt(client.connection_date.substring(8,10)) == day);
-    });
-    /**
-     * Sort
-     * @param {import('./types.js').server_socket_connected_list_sort} sort
-     */
-    const sort_and_return = (sort) =>{
-        let order_by_num = 0;
-        if (order_by =='asc')
-            order_by_num = 1;
-        else   
-            order_by_num = -1;
+ const ConnectedList = async (app_id, app_id_select, limit, offset, year, month, day, order_by, sort) => {
 
-        return connected_clients_no_res = connected_clients_no_res.sort((first, second)=>{
+    const order_by_num = order_by =='asc'?1:-1;
+    const result =  CONNECTED_CLIENTS
+        .filter(client =>
+            //filter rows
+            (client.app_id == app_id_select || app_id_select==null) &&
+            parseInt(client.connection_date.substring(0,4)) == year && 
+            parseInt(client.connection_date.substring(5,7)) == month &&
+            parseInt(client.connection_date.substring(8,10)) == day
+            )
+        .map(client=>{
+            return {id:                     client.id,
+                    app_id:                 client.app_id, 
+                    authorization_bearer:   client.authorization_bearer,
+                    user_account_id:        client.user_account_id,
+                    identity_provider_id:   client.identity_provider_id,
+                    admin:                  client.admin,
+                    connection_date:        client.connection_date,
+                    gps_latitude:           client.gps_latitude ?? '',
+                    gps_longitude:          client.gps_longitude ?? '',
+                    place:                  client.place ?? '',
+                    timezone:               client.timezone ?? '',
+                    ip:                     client.ip,
+                    user_agent:             client.user_agent};
+        })
+        //sort result
+        .sort((first, second)=>{
             //sort default is connection_date if sort missing as argument
             if (typeof first[sort==null?'connection_date':sort] == 'number'){
                 //number sort
@@ -276,12 +265,21 @@ const ClientAdd = (newClient) => {
                     return 0;
             }
         });
-    };
-    if (connected_clients_no_res.length>0){
-        return sort_and_return(sort);
-    }
-    else
-        return [];
+        return { page_header:  {
+                                    total_count:	result.length,
+                                    offset: 		offset,
+                                    count:			result
+                                                    //set offset
+                                                    .filter((client, index)=>offset>0?index+1>=offset:true)
+                                                    //set limit
+                                                    .filter((client, index)=>limit>0?index+1<=limit:true).length
+                                    },
+                    rows:           result
+                                    //set offset
+                                    .filter((client, index)=>offset>0?index+1>=offset:true)
+                                    //set limit
+                                    .filter((client, index)=>limit>0?index+1<=limit:true)
+                };
 };
 /**
  * 
