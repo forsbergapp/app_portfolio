@@ -2,7 +2,7 @@
  * @module apps/admin/component/app
  */
 
-const template = () =>' <div id=\'admin_secure\'></div>';
+const template = () =>' <div id=\'secure\'></div>';
 /**
  * 
  * @param {{data:{      commonMountdiv:string},

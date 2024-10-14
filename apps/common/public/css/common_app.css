@@ -117,7 +117,6 @@
 /*Icons dialogue user start*/
 #common_user_start_login::before{										content:var(--common_app_icon_user)}
 #common_user_start_login_button::before{								content:var(--common_app_icon_login)}
-#common_user_start_login_admin::before{									content:var(--common_app_icon_user_admin)}
 #common_user_start_login_admin_button::before{							content:var(--common_app_icon_login)}
 
 #common_user_start_login_username:empty::before{						content:var(--common_app_icon_user)}
@@ -839,7 +838,6 @@ body.rtl{
 }
 .common_user_start_form{
 	width: 100%;
-	display:none;
 }
 #common_user_start_nav > div{
 	margin:10px;
