@@ -29,21 +29,7 @@ const getApp = async (app_id, id,lang_code) => {
 													)
 								  AND aot.app_id = a.id
 								  AND aot.language_id = l.id
-							) "app_translation",
-						(SELECT act.text 
-							FROM <DB_SCHEMA/>.language l,
-							     <DB_SCHEMA/>.app_translation act
-							WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-													FROM <DB_SCHEMA/>.app_translation act1,
-														<DB_SCHEMA/>.language l1
-												WHERE l1.id  = act1.language_id
-													AND act1.app_category_id  = act.app_category_id
-													AND l1.lang_code IN (<LOCALE/>)
-													AND l.lang_code IN ('en', <LOCALE/>)
-												)
-							  AND act.app_category_id = a.app_category_id
-							  AND act.language_id = l.id
-						) "app_category"
+							) "app_translation"
 				FROM <DB_SCHEMA/>.app a
 				WHERE ( ((id = :id) OR :id IS NULL)
 					OR 
@@ -53,33 +39,7 @@ const getApp = async (app_id, id,lang_code) => {
 							id: id};
 		return await db_execute(app_id, sql, parameters, null, lang_code);
 	};
-/**
- * 
- * @param {number} app_id 
- * @param {string|null} lang_code 
- * @returns {Promise.<import('../../types.js').server_db_sql_result_app_getAppsAdmin[]>}
- */
-const getAppsAdmin = async (app_id, lang_code) => {
-		const sql = `SELECT	a.id "id",
-							a.app_category_id "app_category_id",
-							act.text "app_category_text"
-					   FROM <DB_SCHEMA/>.app a
-					   LEFT OUTER JOIN <DB_SCHEMA/>.app_translation act
-							ON act.app_category_id = a.app_category_id
-							AND act.language_id IN (SELECT id 
-													FROM <DB_SCHEMA/>.language l
-													WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																			FROM <DB_SCHEMA/>.app_translation act1,
-																				<DB_SCHEMA/>.language l1
-																			WHERE l1.id  = act1.language_id
-																			AND act1.app_category_id  = act.app_category_id
-																			AND l1.lang_code IN (<LOCALE/>)
-																		)
-													)
-					ORDER BY 1`;
-		const parameters = {};
-		return await db_execute(app_id, sql, parameters, null, lang_code);
-	};
+
 /**
  * 
  * @param {number} app_id 
@@ -92,19 +52,5 @@ const getAppsAdminId = async (app_id) => {
 	const parameters = {};
 	return await db_execute(app_id, sql, parameters, null,null);
 };
-/**
- * 
- * @param {number} app_id 
- * @param {number} id 
- * @param {import('../../types.js').server_db_sql_parameter_app_updateAppAdmin} data
- * @returns {Promise.<import('../../types.js').server_db_sql_result_app_updateAppAdmin[]>}
- */
-const updateAppAdmin = async (app_id, id, data) => {
-		const sql = `UPDATE <DB_SCHEMA/>.app
-						SET app_category_id = :app_category_id
-					WHERE id = :id`;
-		const parameters = {app_category_id: data.app_category_id,
-							id: id};
-		return await db_execute(app_id, sql, parameters, null);
-	};
-export{getApp, getAppsAdmin, getAppsAdminId, updateAppAdmin};
+
+export{getApp, getAppsAdminId};

@@ -329,7 +329,6 @@
  *              PORT:string,
  *              LOGO:string,
  *              NAME:string,
- *              APP_CATEGORY:string
  *              APP_NAME_TRANSLATION:string}} CommonAppRecord
  */
 

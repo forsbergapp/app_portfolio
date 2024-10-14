@@ -384,8 +384,7 @@ const button_save = async (item) => {
                                                             password:'',
                                                             password_reminder:'',
                                                             verification_code:''},
-                                            app:{           id: record.children[0].children[0].textContent,
-                                                            app_category_id: record.children[5].children[0].textContent},
+                                            app:{           id: record.children[0].children[0].textContent},
                                             app_parameter: {app_id:0,
                                                             parameter_name:'',
                                                             parameter_value:'',
@@ -410,8 +409,7 @@ const button_save = async (item) => {
                                                             password:'',
                                                             password_reminder:'',
                                                             verification_code:''},
-                                            app:{           id: 0,
-                                                            app_category_id: 0},
+                                            app:{           id: 0},
                                             app_parameter: {app_id:record.children[0].children[0].textContent,
                                                             parameter_name:  record.children[1].children[0].textContent,
                                                             parameter_value: record.children[2].children[0].textContent,
@@ -439,8 +437,7 @@ const button_save = async (item) => {
                                                             password: record.children[11].children[0].textContent,
                                                             password_reminder: record.children[12].children[0].textContent,
                                                             verification_code: record.children[13].children[0].textContent},
-                                            app:{           id: 0,
-                                                            app_category_id: 0},
+                                            app:{           id: 0},
                                             app_parameter: {app_id:0,
                                                             parameter_name:  '',
                                                             parameter_value: '',
@@ -499,8 +496,7 @@ const button_save = async (item) => {
  *                          password:string,
  *                          password_reminder:string,
  *                          verification_code:string},
- *          app:{           id:number,
- *                          app_category_id:number},
+ *          app:{           id:number},
  *          app_parameter: {app_id:number,
  *                          parameter_name:string,
  *                          parameter_value:string,
@@ -531,9 +527,7 @@ const update_record = async (table,
             break;
         }
         case 'app':{
-            json_data = {   
-                            app_category_id:parameters.app.app_category_id
-                        };
+            json_data = null;
             path = `/server-db_admin/apps/${parameters.app.id}`;
             method = 'PUT';
             break;
@@ -791,11 +785,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                                     });
                     break;
                 }
-                case 'menu_apps':{
-                    if (event.target.classList.contains('common_list_lov_click'))
-                        common.commonLovEvent(event, 'APP_CATEGORY');
-                    break;
-                }
                 case 'dialogue_send_broadcast_send':{
                     sendBroadcast();
                     break;
@@ -839,12 +828,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
         case 'input':{
             if (event.target.classList.contains('list_edit')){
                 common.commonElementRow(event.target).setAttribute('data-changed-record','1');
-                //app category LOV
-                if (common.commonElementRow(event.target).classList.contains('menu_apps_row') && event.target.classList.contains('common_input_lov'))
-                    if (event.target.textContent=='')
-                        event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').textContent = '';
-                    else
-                        common.commonLovAction(event, 'APP_CATEGORY', null, '/server-db_admin/app_category', `id=${event.target.textContent}`, 'GET', 'APP_ACCESS', null);
             }
             break;
         }
@@ -872,29 +855,32 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
             break;
         }
         case 'keydown':{
-            if (event.target.classList.contains('list_edit')){
-                if (event.code=='ArrowUp') {
-                    APP_GLOBAL.previous_row = common.commonElementRow(event.target);
-                    event.preventDefault();
-                    //focus on first list_edit item in the row
-                    const element_previous = common.commonElementRow(event.target).previousSibling;
-                    /**@ts-ignore */
-                    if (element_previous && element_previous.classList.contains('common_row')){
+            if (event_target_id=='menu_apps' && !event.code.startsWith('Arrow') && event.code !='Tab')
+                event.preventDefault();
+            else
+                if (event.target.classList.contains('list_edit')){
+                    if (event.code=='ArrowUp') {
+                        APP_GLOBAL.previous_row = common.commonElementRow(event.target);
+                        event.preventDefault();
+                        //focus on first list_edit item in the row
+                        const element_previous = common.commonElementRow(event.target).previousSibling;
                         /**@ts-ignore */
-                        element_previous.querySelectorAll('.list_edit')[0].focus();
+                        if (element_previous && element_previous.classList?.contains('common_row')){
+                            /**@ts-ignore */
+                            element_previous.querySelectorAll('.list_edit')[0].focus();
+                        }
+                    }
+                    if (event.code=='ArrowDown') {
+                        APP_GLOBAL.previous_row = common.commonElementRow(event.target);
+                        event.preventDefault();
+                        //focus on first list_edit item in the row
+                        const element_next = common.commonElementRow(event.target).nextSibling;
+                        if (element_next){
+                            /**@ts-ignore */
+                            element_next.querySelectorAll?element_next.querySelectorAll('.list_edit')[0].focus():null;
+                        }
                     }
                 }
-                if (event.code=='ArrowDown') {
-                    APP_GLOBAL.previous_row = common.commonElementRow(event.target);
-                    event.preventDefault();
-                    //focus on first list_edit item in the row
-                    const element_next = common.commonElementRow(event.target).nextSibling;
-                    if (element_next){
-                        /**@ts-ignore */
-                        element_next.querySelectorAll('.list_edit')[0].focus();       
-                    }
-                }
-            }
             break;
         }
     }

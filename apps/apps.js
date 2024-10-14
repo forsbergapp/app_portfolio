@@ -11,11 +11,9 @@ const service = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const getApps = async (app_id, resource_id, query) => service.getApps(app_id, resource_id, query.get('lang_code'));
 
 /**
- * 
- * @param {number} app_id 
- * @param {*} query 
+ * Get all apps from app registry
  */
-const getAppsAdmin = async (app_id, query) => service.getAppsAdmin(app_id, query.get('lang_code'));
+const getAppsAdmin = async () => service.getAppsAdmin();
 
 
 export{getApps, getAppsAdmin};

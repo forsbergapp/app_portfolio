@@ -38,22 +38,6 @@
 <colAssociation fkAssociation="DC0003B9-C408-DA45-FB9A-4F19D0E44EB0" referredColumn="F7F6B3F8-5214-ED25-BF0E-44685E0C79AF"/>
 </associations>
 </Column>
-<Column name="app_category_id" id="D87D7DA9-6BFA-2F3C-A591-B73628E6C537">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>D9496165-7EEB-FD43-004F-96F9A7FD371D</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="7673F9B0-80C8-1EF2-5958-9970213AEF7E" referredColumn="5CC98DDB-CAF6-4AF6-CF7C-6955C92BC01A"/>
-</associations>
-</Column>
 <Column name="app_setting_id" id="731248E8-998E-5F49-DB6A-58095E5C150B">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -117,7 +101,6 @@
 <indexState>Unique Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="D87D7DA9-6BFA-2F3C-A591-B73628E6C537"/>
 <colUsage columnID="145515DA-45DC-6089-FDC7-67E257F1F543"/>
 <colUsage columnID="B6265773-7C95-5239-C73D-DAAD7BBCC650"/>
 </indexColumnUsage>
@@ -143,17 +126,6 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="145515DA-45DC-6089-FDC7-67E257F1F543"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="F902DC1D-0FA3-DE0D-BC87-B81066EBF05B" name="app_translation_app_category_FK">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>04A5B336-138A-B146-CF43-812FC459CA1D</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="D87D7DA9-6BFA-2F3C-A591-B73628E6C537"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="2E4E0ACF-41EC-D3A9-99D7-C2CD0570E15E" name="app_translation_app_setting_FK">

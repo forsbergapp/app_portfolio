@@ -228,12 +228,6 @@ const COMMON = {
     /**@type{import('./db/components/database.js')} */
     const db_database = await import(`file://${process.cwd()}/server/db/components/database.js`);
 
-    /**@type{import('./db/components/app.js')} */
-    const db_app = await import(`file://${process.cwd()}/server/db/components/app.js`);
-
-    /**@type{import('./db/components/app_category.js')} */
-    const db_app_category = await import(`file://${process.cwd()}/server/db/components/app_category.js`);
-
     /**@type{import('./db/components/app_data_entity.js')} */
     const db_app_data_entity = await import(`file://${process.cwd()}/server/db/components/app_data_entity.js`);
 
@@ -773,20 +767,7 @@ const COMMON = {
                         break;
                     }
                     case route({url:'/bff/admin/v1/app_admin/apps', method:'GET'}):{
-                        resolve(app.getAppsAdmin(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, false)));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-db_admin/apps/${resource_id_string}`, method:'PUT', required:true}):{
-                        resolve(db_app.updateAdmin( routesparameters.app_id, 
-                                                    /**@ts-ignore */
-                                                    resource_id_get_number(), 
-                                                    routesparameters.body)
-                                    .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
-                        break;
-                    }
-                    case route({url:'/bff/admin/v1/server-db_admin/app_category', method:'GET'}):{
-                        resolve(db_app_category.getAppCategoryAdmin(routesparameters.app_id, app_query)
+                        resolve(app.getAppsAdmin()
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
