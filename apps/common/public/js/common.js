@@ -1039,7 +1039,7 @@ const commonDialoguePasswordNewClear = () => {
 /**
  * LOV event
  * @param {import('../../../common_types.js').CommonAppEvent} event
- * @param {'APP_CATEGORY'} lov
+ * @param {string} lov
  */
 const commonLovEvent = (event, lov) => {
     /**

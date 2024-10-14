@@ -65,7 +65,7 @@ const createMail = async (app_id, data) =>{
 
 
 /**
- * 
+ * Get all aps from app registry and translated names
  * @param {number} app_id 
  * @param {number|null} resource_id 
  * @param {string} lang_code 
@@ -91,7 +91,6 @@ const getApps = async (app_id, resource_id, lang_code) =>{
         app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
         app.HOST = ConfigGet('SERVER', 'HOST');
         app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
-        app.APP_CATEGORY = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_category;
         app.APP_NAME_TRANSLATION = JSON.parse(apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_translation.toString()).name;
         const image = await fs.promises.readFile(`${process.cwd()}${app.LOGO}`);
         /**@ts-ignore */
@@ -101,33 +100,26 @@ const getApps = async (app_id, resource_id, lang_code) =>{
 };
 
 /**
- * 
- * @param {number} app_id 
- * @param {string} lang_code 
+ * Get all apps from app registry
  */
- const getAppsAdmin = async (app_id, lang_code) =>{
-    /**@type{import('../server/db/sql/app.service.js')} */
-    const {getAppsAdmin} = await import(`file://${process.cwd()}/server/db/sql/app.service.js`);
-    /**@type{import('../server/config.service.js')} */
-    const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
-
-    const apps_db =  await getAppsAdmin(app_id, lang_code);
-    const apps_registry = ConfigGetApps();
-    /**@type{import('../server/types.js').server_config_apps_admin_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{import('../server/types.js').server_config_apps_record} */app, /**@type {import('../server/types.js').server_config_apps_record}*/current)=> 
-                                        app.concat({ID:current.APP_ID,
-                                                    NAME:current.NAME,
-                                                    SUBDOMAIN:current.SUBDOMAIN,
-                                                    LOGO:current.LOGO,
-                                                    STATUS:current.STATUS,
-                                                    }) , []);    
-    
+ const getAppsAdmin = async () =>{
+    /**@type{import('../server/db/file.service.js')} */
+    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+    /**@type{import('../server/types.js').server_config_apps_admin[]}*/
+    const apps = fileCache('CONFIG_APPS').APPS.map((/**@type{import('../server/types.js').server_config_apps_admin}*/app)=>{
+        return {ID:app.ID,
+                NAME:app.NAME,
+                SUBDOMAIN:app.SUBDOMAIN,
+                LOGO:app.LOGO,
+                STATUS:app.STATUS,
+    };});
+    const HTTPS_ENABLE = fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE;
     apps.map(app=>{
-        app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
-        app.HOST = ConfigGet('SERVER', 'HOST');
-        app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
-        app.APP_CATEGORY_ID = apps_db.filter(app_db=>app_db.id==app.ID)[0].app_category_id;
-        app.APP_CATEGORY_TEXT = apps_db.filter(app_db=>app_db.id==app.ID)[0].app_category_text;
+        app.PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
+        app.HOST = fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HOST' in row)[0].HOST;
+        app.PORT = getNumberValue(HTTPS_ENABLE=='1'?
+                                    fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_PORT' in row)[0].HTTPS_PORT:
+                                        fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTP_PORT' in row)[0].HTTP_PORT);
     });
     return apps;
 };

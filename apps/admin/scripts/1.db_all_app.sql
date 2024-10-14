@@ -1,7 +1,7 @@
 --
 -- app
 --
-INSERT INTO <DB_SCHEMA/>.app (id, app_category_id) VALUES (0, null);
+INSERT INTO <DB_SCHEMA/>.app (id) VALUES (0);
 --
 -- setting_type
 --

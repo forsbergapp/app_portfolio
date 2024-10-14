@@ -1,14 +1,6 @@
 CREATE TABLE <DB_SCHEMA/>.app (
     id        INTEGER NOT NULL,
-    app_category_id INTEGER,
-	CONSTRAINT app_pk PRIMARY KEY ( id ),
-    CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
-        REFERENCES app_category ( id )
-);
-
-CREATE TABLE <DB_SCHEMA/>.app_category (
-    id            INTEGER NOT NULL CONSTRAINT app_category_pk PRIMARY KEY AUTOINCREMENT,
-    category_name VARCHAR(100) NOT NULL
+	CONSTRAINT app_pk PRIMARY KEY ( id )
 );
 
 CREATE TABLE <DB_SCHEMA/>.app_data_entity (
@@ -225,26 +217,15 @@ CREATE TABLE <DB_SCHEMA/>.app_setting_type (
 CREATE TABLE <DB_SCHEMA/>.app_translation (
     language_id                            INTEGER NOT NULL,
     app_id                                 INTEGER,
-    app_category_id                        INTEGER,
     app_setting_id                         INTEGER,
     text                                   VARCHAR(2000),
     json_data                              TEXT,
     CONSTRAINT arc_3 CHECK ( ( ( app_setting_id IS NOT NULL )
-                                   AND ( app_id IS NULL )
-                                   AND ( app_category_id IS NULL ) )
+                                   AND ( app_id IS NULL ) )
                                  OR ( ( app_id IS NOT NULL )
-                                      AND ( app_setting_id IS NULL )
-                                      AND ( app_category_id IS NULL ) )
-                                 OR ( ( app_category_id IS NOT NULL )
-                                      AND ( app_setting_id IS NULL )
-                                      AND ( app_id IS NULL ) ) ),
+                                      AND ( app_setting_id IS NULL ) ) ),
     CONSTRAINT app_translation_app_un UNIQUE ( app_id,language_id ),
-    CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
-                                                            app_id,
-                                                            language_id ),
     CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id, language_id ),
-    CONSTRAINT app_translation_app_category_fk FOREIGN KEY ( app_category_id )
-        REFERENCES app_category ( id ),
     CONSTRAINT app_translation_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id )
             ON DELETE CASCADE,

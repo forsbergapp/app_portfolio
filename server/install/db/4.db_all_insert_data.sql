@@ -1,16 +1,4 @@
 --
--- app_category
---
-INSERT INTO <DB_SCHEMA/>.app_category(id, category_name) VALUES(1, 'Business');
-INSERT INTO <DB_SCHEMA/>.app_category(id, category_name) VALUES(2, 'Communications');
-INSERT INTO <DB_SCHEMA/>.app_category(id, category_name) VALUES(3, 'Education');
-INSERT INTO <DB_SCHEMA/>.app_category(id, category_name) VALUES(4, 'Finance');
-INSERT INTO <DB_SCHEMA/>.app_category(id, category_name) VALUES(5, 'House & Home');
-INSERT INTO <DB_SCHEMA/>.app_category(id, category_name) VALUES(6, 'Productivity');
-INSERT INTO <DB_SCHEMA/>.app_category(id, category_name) VALUES(7, 'Shopping');
-INSERT INTO <DB_SCHEMA/>.app_category(id, category_name) VALUES(8, 'Game');
-
---
 -- event_type
 --
 INSERT INTO <DB_SCHEMA/>.event_type (id, event_type_name) VALUES (1,'USER');

@@ -36,11 +36,6 @@
 <createdTime>2024-08-07 06:18:41 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_category_id" id="D87D7DA9-6BFA-2F3C-A591-B73628E6C537">
-<createdBy>admin</createdBy>
-<createdTime>2024-08-07 06:18:41 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 </columnProxies>
 <foreignKeys>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_setting_FK" id="2E4E0ACF-41EC-D3A9-99D7-C2CD0570E15E">
@@ -54,11 +49,6 @@
 <ownerDesignName>data_model</ownerDesignName>
 </ForeignKey>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_FK" id="6BFC6A1C-124A-8EBC-A884-7B44AB392DA2">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ForeignKey>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_category_FK" id="F902DC1D-0FA3-DE0D-BC87-B81066EBF05B">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>

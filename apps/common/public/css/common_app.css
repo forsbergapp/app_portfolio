@@ -633,9 +633,6 @@ body.rtl{
 	font-weight: bold;
 	cursor: default;
 }
-.common_dialogue_apps_app_category{
-	font-size: 0.7em;
-}
 .common_dialogue_apps_app_description{
 	cursor: default;
 	font-size: 0.7em;
@@ -996,8 +993,7 @@ body.rtl{
 #common_lov_list .common_list_lov_col1{
 	display:none;
 }
-#common_lov_list[data-lov=SERVER_LOG_FILES] .common_list_lov_col1,
-#common_lov_list[data-lov=APP_CATEGORY] .common_list_lov_col1{
+#common_lov_list[data-lov=SERVER_LOG_FILES] .common_list_lov_col1{
 	display:inline-block;
 }
 

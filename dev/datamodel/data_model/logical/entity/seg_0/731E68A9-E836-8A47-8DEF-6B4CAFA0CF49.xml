@@ -29,20 +29,6 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="app_category_id" id="D9496165-7EEB-FD43-004F-96F9A7FD371D">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 04:00:41 UTC</createdTime>
-<generatorID>04A5B336-138A-B146-CF43-812FC459CA1D</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>40C89E95-404E-CE8E-2BBA-6FE0899EE2A2</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="app_setting_id" id="7E859F7B-E90E-55B6-655B-87EEC25C8068">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 03:55:48 UTC</createdTime>
@@ -120,9 +106,8 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<newElementsIDs>D9496165-7EEB-FD43-004F-96F9A7FD371D,7DC27455-0B7B-555C-4922-3F29987DA5DD,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<newElementsIDs>7DC27455-0B7B-555C-4922-3F29987DA5DD,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
 <usedAttributes>
-<attributeRef>D9496165-7EEB-FD43-004F-96F9A7FD371D</attributeRef>
 <attributeRef>3CF9F6B9-2CCD-7E2E-FF8A-952A12291B15</attributeRef>
 <attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
 </usedAttributes>
